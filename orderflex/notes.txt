@@ -1667,3 +1667,18 @@ Composer: When working with _public_ GitHub repositories only
 Get token: https://github.com/settings/tokens/new?scopes=&description=Composer+on+Admin+2023-08-03+1928
 composer.phar config --global --auth github-oauth.github.com mytoken
 C:\Users\ch3\AppData\Roaming\Composer\auth.json
+
+Rector:
+[ERROR] Could not process
+         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract
+
+         "System error: "Cannot rename
+         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\Arr345A.tmp" to
+         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract
+         .php":
+         rename(C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\Arr345A.tmp,
+         C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract.
+
+         Run Rector with "--debug" option and post the report here: https://github.com/rectorphp/rector/issues/new". On line: 283
+
+

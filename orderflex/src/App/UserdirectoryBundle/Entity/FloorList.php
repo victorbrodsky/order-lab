@@ -20,33 +20,23 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_floorlist")
- */
+#[ORM\Table(name: 'user_floorlist')]
+#[ORM\Entity]
 class FloorList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="FloorList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'FloorList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FloorList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FloorList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="SuiteList", mappedBy="floors")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'SuiteList', mappedBy: 'floors')]
     protected $suites;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="floors")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'RoomList', mappedBy: 'floors')]
     protected $rooms;
 
 

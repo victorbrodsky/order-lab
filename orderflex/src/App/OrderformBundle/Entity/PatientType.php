@@ -24,34 +24,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientType")
- */
+#[ORM\Table(name: 'scan_patientType')]
+#[ORM\Entity]
 class PatientType extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="type")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'type')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', nullable: true)]
     protected $patient;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PatientTypeList")
-     * @ORM\JoinColumn(name="patientTypeList_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'PatientTypeList')]
+    #[ORM\JoinColumn(name: 'patientTypeList_id', referencedColumnName: 'id', nullable: true)]
     protected $field;
 
     //The values of the PatientType hierarchy should be attached to Systems (multiple systems). Many PatientTypes to Many Systems.
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinTable(name="scan_patientType_system",
-     *      joinColumns={@ORM\JoinColumn(name="patientType_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="system_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_patientType_system')]
+    #[ORM\JoinColumn(name: 'patientType_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'system_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\SourceSystemList')]
     private $sources;
 
 

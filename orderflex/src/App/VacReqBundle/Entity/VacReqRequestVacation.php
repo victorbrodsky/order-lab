@@ -29,10 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="vacreq_vacation")
- */
+#[ORM\Table(name: 'vacreq_vacation')]
+#[ORM\Entity]
 class VacReqRequestVacation extends VacReqRequestBase
 {
 

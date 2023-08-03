@@ -33,39 +33,32 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="scan_messageCategory",
- *  indexes={
- *      @ORM\Index( name="messageCategory_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'scan_messageCategory')]
+#[ORM\Index(name: 'messageCategory_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class MessageCategory extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="MessageCategory", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'MessageCategory', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MessageCategory", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'MessageCategory', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MessageCategory", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'MessageCategory', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MessageCategory", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MessageCategory', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
@@ -73,22 +66,18 @@ class MessageCategory extends BaseCompositeNode {
      * Message Type Classifiers - mapper between the level number and level title.
      * level corresponds to this level integer: 1-Message Class, 2-Message Subclass, 3-Service, 4-Issue
      * Default types have a positive level numbers, all other types have negative level numbers.
-     *
-     * @ORM\ManyToOne(targetEntity="MessageTypeClassifiers", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'MessageTypeClassifiers', cascade: ['persist'])]
     private $organizationalGroupType;
 
 //    /**
-//     * a single form node can be used only by one message category
-//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
-//     */
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FormNode")
-     * @ORM\JoinTable(name="scan_messageCategory_formNode",
-     *      joinColumns={@ORM\JoinColumn(name="messageCategory_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="formNode_id", referencedColumnName="id")}
-     *      )
-     **/
+    //     * a single form node can be used only by one message category
+    //     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
+    //     */
+    #[ORM\JoinTable(name: 'scan_messageCategory_formNode')]
+    #[ORM\JoinColumn(name: 'messageCategory_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'formNode_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\FormNode')]
     private $formNodes;
     
 

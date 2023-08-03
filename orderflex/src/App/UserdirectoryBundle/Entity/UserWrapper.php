@@ -28,87 +28,66 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserWrapperRepository")
- * @ORM\Table(name="user_userWrapper")
- */
+#[ORM\Table(name: 'user_userWrapper')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\UserWrapperRepository')]
 class UserWrapper extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="UserWrapper", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'UserWrapper', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UserWrapper", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'UserWrapper', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 //    /**
-//     * @ORM\Id
-//     * @ORM\Column(type="integer")
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    private $id;
-
-//    /**
-//     * must be synchronised with name in ListAbstract
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $userStr;
+    //     * @ORM\Id
+    //     * @ORM\Column(type="integer")
+    //     * @ORM\GeneratedValue(strategy="AUTO")
+    //     */
+    //    private $id;
+    //    /**
+    //     * must be synchronised with name in ListAbstract
+    //     *
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $userStr;
     //use name in ListAbstract as userStr
-
     /**
      * User object
-     * @ORM\ManyToOne(targetEntity="User")
      */
+    #[ORM\ManyToOne(targetEntity: 'User')]
     private $user;
 
 
     //Phone Number: [free text]
-    /**
-     * @ORM\Column(name="phone", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'phone', type: 'string', nullable: true)]
     private $userWrapperPhone;
 
     //E-Mail: [free text]
-    /**
-     * @ORM\Column(name="email", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
     private $userWrapperEmail;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $userWrapperFirstName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $userWrapperLastName;
 
     //Specialty: [link to the platform list manager's specialty list items here
     // http://collage.med.cornell.edu/order/directory/admin/list-manager/id/69 - allow more than one]
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList', cascade: ['persist', 'remove'])]
     private $userWrapperSpecialty;
 
     //Source Site: [ID/name of the O R D E R site used to create this particular instance of the user wrapper object;
     // for user wrappers created on the Call Log Book, this would have the ID of the Call Log Book]
-    /**
-     * @ORM\ManyToOne(targetEntity="SourceSystemList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'SourceSystemList')]
     private $userWrapperSource;
 
     /**
      * Initial Communication: Inbound, Outbound
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist","remove"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList', cascade: ['persist', 'remove'])]
     private $userWrapperCommunication;
 
 

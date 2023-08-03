@@ -41,117 +41,93 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\DocumentRepository")
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_document")
- */
+#[ORM\Table(name: 'user_document')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\DocumentRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Document {
 
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private  $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     private  $originalname;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     private  $uniquename;
 
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private  $uploadDirectory;
 
-    /**
-     * @ORM\Column(type="decimal", nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', nullable: true)]
     private  $size;
 
     /**
      * @var File  - not a persistent field!
-     *
-     * @Assert\File(maxSize="6000000")
      */
+    #[Assert\File(maxSize: '6000000')]
     private  $file;
 
     /**
      * Used in event type text (i.e. "Fellowship Application Spreadsheet Deleted") and
      * to distinguish "Fellowship Photo" & "Avatar Image" for thumbnails generation
-     *
-     * @ORM\ManyToOne(targetEntity="DocumentTypeList")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'DocumentTypeList')]
+    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id', nullable: true)]
     private $type;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(name: 'creator_id', referencedColumnName: 'id', nullable: true)]
     protected $creator;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="createdate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'createdate', type: 'datetime', nullable: true)]
     private $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="externalCreatedate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'externalCreatedate', type: 'datetime', nullable: true)]
     private $externalCreatedate;
 
     /**
      * Image title
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $title;
 
     /**
      * Unique ID of the file. For example, google drive file id
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $uniqueid;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="GeneralEntity", cascade={"persist","remove"})
-//     * @ORM\JoinColumn(name="useObject_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-//     */
-//    private $useObject;
-
+    //     * @ORM\ManyToOne(targetEntity="GeneralEntity", cascade={"persist","remove"})
+    //     * @ORM\JoinColumn(name="useObject_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+    //     */
+    //    private $useObject;
     //Fields specifying a subject entity
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityNamespace;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityId;
 
     /**
      * MD5 hash (checksum to identify duplicate document)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $documentHash;
 
     //private $subdomain = 'order'; //accommodate 'order' subdomain in view.med.cornell.edu/order/, however it should be independent on the url

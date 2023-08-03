@@ -20,22 +20,16 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_custom018List")
- */
+#[ORM\Table(name: 'user_custom018List')]
+#[ORM\Entity]
 class Custom018List extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="Custom018List", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'Custom018List', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Custom018List", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Custom018List', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

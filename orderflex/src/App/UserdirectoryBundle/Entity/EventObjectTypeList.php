@@ -22,36 +22,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="user_eventObjectTypeList")
- */
+#[ORM\Table(name: 'user_eventObjectTypeList')]
+#[ORM\Entity]
 class EventObjectTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="EventObjectTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'EventObjectTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventObjectTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EventObjectTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $url;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="SiteList")
-     * @ORM\JoinTable(name="user_eventObjectType_site",
-     *      joinColumns={@ORM\JoinColumn(name="eventObjectType_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
-     *      )
-     */
+    #[ORM\JoinTable(name: 'user_eventObjectType_site')]
+    #[ORM\JoinColumn(name: 'eventObjectType_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'site_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'SiteList')]
     private $exclusivelySites;
 
 

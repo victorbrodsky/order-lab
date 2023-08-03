@@ -34,56 +34,40 @@ use Doctrine\Common\Collections\ArrayCollection;
 //    *      @ORM\Index( name="projectTitleStr_idx", columns={"projectTitleStr"} ),
 // *      @ORM\Index( name="setTitleStr_idx", columns={"setTitleStr"} )
 // *  }
-
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\ResearchRepository")
- * @ORM\Table(name="scan_research")
- */
+#[ORM\Table(name: 'scan_research')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\ResearchRepository')]
 class Research
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="research")
-     */
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'research')]
     private $message;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="research")
-     */
+    #[ORM\OneToMany(targetEntity: 'Slide', mappedBy: 'research')]
     private $slides;
 
     //principal as entered by a user. Use a wrapper because research can have multiple PIs
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_research_userWrapper",
-     *      joinColumns={@ORM\JoinColumn(name="research_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_research_userWrapper')]
+    #[ORM\JoinColumn(name: 'research_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'userWrapper_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $userWrappers;
 
     /**
      * primarySet - name of the primary PI. Indicates if the primaryPrincipal was set by this order
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $primarySet;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProjectTitleTree", inversedBy="researches", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'ProjectTitleTree', inversedBy: 'researches', cascade: ['persist'])]
     private $projectTitle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist'])]
     private $primaryPrincipal;
 
 

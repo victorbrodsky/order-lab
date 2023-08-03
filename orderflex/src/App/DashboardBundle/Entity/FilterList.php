@@ -24,22 +24,17 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Dashboard Chart Filter Fields
- *
- * @ORM\Entity
- * @ORM\Table(name="dashboard_filterlist")
  */
+#[ORM\Table(name: 'dashboard_filterlist')]
+#[ORM\Entity]
 class FilterList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="FilterList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'FilterList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FilterList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FilterList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 

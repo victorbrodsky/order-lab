@@ -22,22 +22,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_honorTrainingList")
- */
+#[ORM\Table(name: 'user_honorTrainingList')]
+#[ORM\Entity]
 class HonorTrainingList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="HonorTrainingList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'HonorTrainingList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="HonorTrainingList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'HonorTrainingList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 

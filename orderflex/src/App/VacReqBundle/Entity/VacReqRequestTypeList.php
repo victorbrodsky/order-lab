@@ -23,22 +23,16 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_requestTypeList")
- */
+#[ORM\Table(name: 'vacreq_requestTypeList')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqRequestTypeList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="VacReqRequestTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VacReqRequestTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqRequestTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'VacReqRequestTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 

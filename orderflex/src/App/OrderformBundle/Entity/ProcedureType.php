@@ -23,27 +23,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_procedureType")
- */
+#[ORM\Table(name: 'scan_procedureType')]
+#[ORM\Entity]
 class ProcedureType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureType", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ProcedureType', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProcedureType", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ProcedureType', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureNumber", mappedBy="keytype")
-     */
+    #[ORM\OneToMany(targetEntity: 'ProcedureNumber', mappedBy: 'keytype')]
     protected $procedurenumber;
 
 

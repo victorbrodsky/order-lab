@@ -20,44 +20,35 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_grantComment")
- */
+#[ORM\Table(name: 'user_grantComment')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class GrantComment
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Grant", inversedBy="comments")
-     * @ORM\JoinColumn(name="grant_id", referencedColumnName="id", onDelete="CASCADE")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Grant', inversedBy: 'comments')]
+    #[ORM\JoinColumn(name: 'grant_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $grant;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
     private $author;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
 
@@ -95,9 +86,7 @@ class GrantComment
         return $this->author;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedate()
     {
         $this->createdate = new \DateTime();;

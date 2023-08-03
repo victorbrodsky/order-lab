@@ -20,22 +20,16 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_transfusionReactionTypeList")
- */
+#[ORM\Table(name: 'user_transfusionReactionTypeList')]
+#[ORM\Entity]
 class TransfusionReactionTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="TransfusionReactionTypeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'TransfusionReactionTypeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TransfusionReactionTypeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'TransfusionReactionTypeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

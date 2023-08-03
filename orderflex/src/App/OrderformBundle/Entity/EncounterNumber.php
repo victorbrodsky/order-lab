@@ -20,36 +20,27 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterNumber",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="encounter_unique", columns={"encounter_id", "field", "keytype_id"})}
- * )
- */
+#[ORM\Table(name: 'scan_encounterNumber')]
+#[ORM\UniqueConstraint(name: 'encounter_unique', columns: ['encounter_id', 'field', 'keytype_id'])]
+#[ORM\Entity]
 class EncounterNumber extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="number", cascade={"persist"})
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'number', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $encounter;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
     /**
      * original encounter # enetered by user
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EncounterType", inversedBy="encounternumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'EncounterType', inversedBy: 'encounternumber', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
 

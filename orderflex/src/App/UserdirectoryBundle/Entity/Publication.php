@@ -21,44 +21,32 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_publication")
- */
+#[ORM\Table(name: 'user_publication')]
+#[ORM\Entity]
 class Publication extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="publications")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'publications')]
     private $users;
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $citation;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $pubmedid;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $link;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ImportanceList")
-     * @ORM\JoinColumn(name="importance_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ImportanceList')]
+    #[ORM\JoinColumn(name: 'importance_id', referencedColumnName: 'id', nullable: true)]
     private $importance;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $publicationDate;
 
 

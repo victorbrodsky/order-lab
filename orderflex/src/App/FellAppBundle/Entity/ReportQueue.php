@@ -21,35 +21,26 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_reportQueue")
- */
+#[ORM\Table(name: 'fellapp_reportQueue')]
+#[ORM\Entity]
 class ReportQueue {
     
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;           
     
-    /**
-     * @ORM\OneToMany(targetEntity="Process", mappedBy="reportQueue", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'Process', mappedBy: 'reportQueue', cascade: ['persist', 'remove'])]
     private $processes;
     
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $running;
     
-    /**
-     * @ORM\OneToOne(targetEntity="Process", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="runningProcess_id", referencedColumnName="id")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Process', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'runningProcess_id', referencedColumnName: 'id')]
     private $runningProcess;
     
     

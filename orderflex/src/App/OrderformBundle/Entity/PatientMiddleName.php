@@ -23,33 +23,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientmiddlename",
- *  indexes={
- *      @ORM\Index( name="patientmiddlename_field_idx", columns={"field"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'scan_patientmiddlename')]
+#[ORM\Index(name: 'patientmiddlename_field_idx', columns: ['field'])]
+#[ORM\Entity]
 class PatientMiddleName extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="middlename")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'middlename')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
     /**
      * Last Name
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
     /**
      * Metaphone key string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $fieldMetaphone;
 
 

@@ -23,32 +23,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_permissionObjectList")
- */
+#[ORM\Table(name: 'user_permissionObjectList')]
+#[ORM\Entity]
 class PermissionObjectList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="PermissionObjectList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'PermissionObjectList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PermissionObjectList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'PermissionObjectList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="SiteList", cascade={"persist"})
-     * @ORM\JoinTable(name="user_permissionObjectList_sites",
-     *      joinColumns={@ORM\JoinColumn(name="permissionObjectList_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_permissionObjectList_sites')]
+    #[ORM\JoinColumn(name: 'permissionObjectList_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'site_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'SiteList', cascade: ['persist'])]
     private $sites;
 
 

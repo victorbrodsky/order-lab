@@ -24,56 +24,45 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //Actual observed holidays that are taking in vacation days calculations (subset of the VacReqHolidayList list)
-/**
- * @ORM\Entity
- * @ORM\Table(name="vacreq_observedholidayList")
- */
+#[ORM\Table(name: 'vacreq_observedholidayList')]
+#[ORM\Entity]
 class VacReqObservedHolidayList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="VacReqObservedHolidayList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VacReqObservedHolidayList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqObservedHolidayList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'VacReqObservedHolidayList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
     /**
      * Holiday Name
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $holidayName;
 
     /**
      * Holiday Date
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $holidayDate;
 
     //“Country” attribute (set to [US] by default)
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Countries")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Countries')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $country;
 
     //"Observed By" - showing all organizational groups in a Select2 drop down menu
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_observedholiday_institution",
-     *      joinColumns={@ORM\JoinColumn(name="observedholiday_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'vacreq_observedholiday_institution')]
+    #[ORM\JoinColumn(name: 'observedholiday_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution', cascade: ['persist'])]
     private $institutions;
 
     /**
      * Observed, used, active holiday
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $observed;
 
 

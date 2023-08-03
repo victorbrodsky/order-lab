@@ -22,77 +22,63 @@ use Doctrine\ORM\Mapping as ORM;
 //(repositoryClass="App\OrderformBundle\Repository\ImagingRepository")
 /**
  * Slide Imaging: Scan, Microscopic Image, Whole Slide Image
- *
- * @ORM\Entity
- * @ORM\Table(name="scan_imaging")
  */
+#[ORM\Table(name: 'scan_imaging')]
+#[ORM\Entity]
 class Imaging extends ObjectAbstract
 {
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="imaging")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'imaging')]
     protected $message;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="scan")
-     * @ORM\JoinColumn(name="slide", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Slide', inversedBy: 'scan')]
+    #[ORM\JoinColumn(name: 'slide', referencedColumnName: 'id')]
     private $slide;
 
 //    /**
-//     * @ORM\Column(name="magnification", type="string", nullable=true)
-//     */
-//    private $magnification;
-    /**
-     * @ORM\ManyToOne(targetEntity="Magnification")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     **/
+    //     * @ORM\Column(name="magnification", type="string", nullable=true)
+    //     */
+    //    private $magnification;
+    #[ORM\ManyToOne(targetEntity: 'Magnification')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $magnification;
     
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $scanregion;
     
     /**
-     * Note/Reason for Scan
-     * @ORM\Column(type="text", nullable=true)    
+     * Note/Reason for Scan    
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $note;
     
 
     /**
      * date of scan performed
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $scandate;
 
 
     //Extra fields for datastructure: Whole Slide Image
     //Fields existing in this abstract object: Whole Slide Scan Date & Time, Whole Slide Scanned By, Whole Slide Image Magnification
     //Fields existing in message: Scan Order Source, Order ID, Whole Slide Scanner Device
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $imageId;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $imageLink;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Equipment")
-     */
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $imageLink;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Equipment')]
     private $equipment;
 
     //Microscopic Image
     /**
      * Microscopic Image
      * device: Microscopic Image Device: [select2, one choice for now - "Olympus Camera" - link to Equipment table, filter by Type="Microscope Camera"]
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\DocumentContainer', cascade: ['persist', 'remove'])]
     private $documentContainer;
 
 

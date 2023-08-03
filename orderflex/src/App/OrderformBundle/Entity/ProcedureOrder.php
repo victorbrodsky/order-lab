@@ -22,21 +22,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_procedureOrder")
- */
+#[ORM\Table(name: 'scan_procedureOrder')]
+#[ORM\Entity]
 class ProcedureOrder extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="procedureorder")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'procedureorder')]
     protected $message;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProcedureList", cascade={"persist"})
-     * @ORM\JoinColumn(name="procedurelist_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ProcedureList', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'procedurelist_id', referencedColumnName: 'id', nullable: true)]
     protected $type;
 
 

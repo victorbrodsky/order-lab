@@ -22,88 +22,64 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_fellowshipSubspecialty")
- */
+#[ORM\Table(name: 'user_fellowshipSubspecialty')]
+#[ORM\Entity]
 class FellowshipSubspecialty extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="FellowshipSubspecialty", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'FellowshipSubspecialty', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FellowshipSubspecialty', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 
 
     //ResidencySpecialty - parent
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
     protected $parent;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $boardCertificateAvailable;
 
 
 
     //Fellowship application fields
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     protected $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_fellowshipSubspecialty_coordinator",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coordinator_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_fellowshipSubspecialty_coordinator')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'coordinator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $coordinators;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_fellowshipSubspecialty_director",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="director_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_fellowshipSubspecialty_director')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'director_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $directors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_fellowshipSubspecialty_interviewer",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipSubspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="interviewer_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_fellowshipSubspecialty_interviewer')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'interviewer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $interviewers;
 
     /**
      * Application season start date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearStart;
 
     /**
      * Application season end date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearEnd;
 
 

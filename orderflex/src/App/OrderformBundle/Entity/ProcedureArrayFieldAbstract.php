@@ -28,9 +28,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\OrderformBundle\Entity\ArrayFieldAbstract;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
 
 

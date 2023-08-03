@@ -22,22 +22,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_imageAnalysisOrder")
- */
+#[ORM\Table(name: 'scan_imageAnalysisOrder')]
+#[ORM\Entity]
 class ImageAnalysisOrder extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="imageAnalysisOrder")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'imageAnalysisOrder')]
     protected $message;
 
     /**
      * Image Analysis Algorithm (http://indicalab.com/products/)
-     *
-     * @ORM\ManyToOne(targetEntity="ImageAnalysisAlgorithmList", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'ImageAnalysisAlgorithmList', cascade: ['persist'])]
     private $imageAnalysisAlgorithm;
 
 

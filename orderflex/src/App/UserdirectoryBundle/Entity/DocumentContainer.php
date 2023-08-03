@@ -30,97 +30,73 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_documentContainer")
- */
+#[ORM\Table(name: 'user_documentContainer')]
+#[ORM\Entity]
 class DocumentContainer {
 
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private  $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AttachmentContainer", inversedBy="documentContainers")
-     * @ORM\JoinColumn(name="attachmentContainer_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'AttachmentContainer', inversedBy: 'documentContainers')]
+    #[ORM\JoinColumn(name: 'attachmentContainer_id', referencedColumnName: 'id', nullable: true)]
     private $attachmentContainer;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_documentcontainer_document",
-     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id", onDelete="cascade")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="cascade")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_documentcontainer_document')]
+    #[ORM\JoinColumn(name: 'documentcontainer_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\ManyToMany(targetEntity: 'Document', cascade: ['persist', 'remove'])]
     private $documents;
 
     //Image Title: [plain text]
     /**
      * Document Container title
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $title;
 
     //Image Comment(s): [plain text]
     /**
      * Document Container comment
-     * @ORM\OneToMany(targetEntity="DocumentComment", mappedBy="documentContainer", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: 'DocumentComment', mappedBy: 'documentContainer', cascade: ['persist', 'remove'])]
     private $comments;
 
     //Image Device: [Select2, "Generic Desktop Scanner" are the only two values; link to Equipment table, filter by Type="Requisition Form Scanner"]
-    /**
-     * @ORM\ManyToOne(targetEntity="Equipment")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Equipment')]
     private $device;
 
     //Image Date & Time: [plain text]
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $datetime;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $time;
 
     //Image Scanned By: [Select2; one user from the list of users]
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
     private $provider;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DocumentTypeList")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'DocumentTypeList')]
+    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id', nullable: true)]
     private $type;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Link", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_documentcontainer_link",
-     *      joinColumns={@ORM\JoinColumn(name="documentcontainer_id", referencedColumnName="id", onDelete="cascade")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="link_id", referencedColumnName="id", onDelete="cascade")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_documentcontainer_link')]
+    #[ORM\JoinColumn(name: 'documentcontainer_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\InverseJoinColumn(name: 'link_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\ManyToMany(targetEntity: 'Link', cascade: ['persist', 'remove'])]
     private $links;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $imageId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SourceSystemList")
-     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SourceSystemList')]
+    #[ORM\JoinColumn(name: 'source_id', referencedColumnName: 'id', nullable: true)]
     private $source;
 
 

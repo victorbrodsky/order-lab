@@ -23,26 +23,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_messagetagtypeslist")
- */
+#[ORM\Table(name: 'scan_messagetagtypeslist')]
+#[ORM\Entity]
 class MessageTagTypesList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="MessageTagTypesList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'MessageTagTypesList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MessageTagTypesList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MessageTagTypesList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="MessageTagsList", mappedBy="tagTypes", cascade={"persist"})
-     **/
+    #[ORM\ManyToMany(targetEntity: 'MessageTagsList', mappedBy: 'tagTypes', cascade: ['persist'])]
     private $messageTags;
     
 

@@ -38,56 +38,47 @@ class InvoiceAddItem {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceAddItems")
-//     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
-//     */
-//    private $invoice;
-
-
+    //     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceAddItems")
+    //     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+    //     */
+    //    private $invoice;
     /**
      * Description
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     /**
      * Fee
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fee;
     //////////// EOF Invoice fields ///////////////////
 

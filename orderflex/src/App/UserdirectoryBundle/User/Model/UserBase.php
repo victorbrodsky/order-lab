@@ -40,54 +40,40 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
 {
 
 //    const ROLE_DEFAULT = 'ROLE_USER';
-//    const ROLE_SUPER_ADMIN = 'ROLE_PLATFORM_ADMIN'; //'ROLE_SUPER_ADMIN';
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    //    const ROLE_SUPER_ADMIN = 'ROLE_PLATFORM_ADMIN'; //'ROLE_SUPER_ADMIN';
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(name="username", type="string", length=180)
-     */
+    #[ORM\Column(name: 'username', type: 'string', length: 180)]
     protected $username;
 
-    /**
-     * @ORM\Column(name="username_canonical", type="string", length=180)
-     */
+    #[ORM\Column(name: 'username_canonical', type: 'string', length: 180)]
     protected $usernameCanonical;
 
-    /**
-     * @ORM\Column(name="email", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
     protected $email;
 
-    /**
-     * @ORM\Column(name="email_canonical", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'email_canonical', type: 'string', nullable: true)]
     protected $emailCanonical;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="enabled", type="boolean")
      */
+    #[ORM\Column(name: 'enabled', type: 'boolean')]
     protected $enabled;
 
     /**
      * The salt to use for hashing.
-     *
-     * @ORM\Column(name="salt", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'salt', type: 'string', nullable: true)]
     protected $salt;
 
     /**
      * Encrypted password. Must be persisted.
-     *
-     * @ORM\Column(name="password", type="string")
      */
+    #[ORM\Column(name: 'password', type: 'string')]
     protected $password;
 
     /**
@@ -97,37 +83,32 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
 
     /**
      * @var \DateTime|null
-     *
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'last_login', type: 'datetime', nullable: true)]
     protected $lastLogin;
 
     /**
      * Random string sent to the user email address in order to verify it.
      *
      * @var string|null
-     *
-     * @ORM\Column(name="confirmation_token", type="string", length=180, nullable=true)
      */
+    #[ORM\Column(name: 'confirmation_token', type: 'string', length: 180, nullable: true)]
     protected $confirmationToken;
 
     /**
      * @var \DateTime|null
-     *
-     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'password_requested_at', type: 'datetime', nullable: true)]
     protected $passwordRequestedAt;
 
 //    /**
-//     * @var GroupInterface[]|Collection
-//     */
-//    protected $groups;
-
+    //     * @var GroupInterface[]|Collection
+    //     */
+    //    protected $groups;
     /**
      * @var array
-     *
-     * @ORM\Column(name="roles", type="array")
      */
+    #[ORM\Column(name: 'roles', type: 'array')]
     protected $roles;
 
 

@@ -26,31 +26,21 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * "Message Type Classifiers" with a url of /list/message-type-classifiers
- * @ORM\Entity
- * @UniqueEntity(
- *     fields={"level"},
- *     errorPath="level",
- *     message="This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level."
- * )
- * @ORM\Table(name="scan_messageTypeClassifiers")
  */
+#[ORM\Table(name: 'scan_messageTypeClassifiers')]
+#[ORM\Entity]
+#[UniqueEntity(fields: ['level'], errorPath: 'level', message: 'This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level.')]
 class MessageTypeClassifiers extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="MessageTypeClassifiers", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'MessageTypeClassifiers', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MessageTypeClassifiers", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MessageTypeClassifiers', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $level;
 
     //name is the level title: Institution, Division, Department, Service

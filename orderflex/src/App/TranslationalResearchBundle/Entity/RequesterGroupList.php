@@ -22,22 +22,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_requestergrouplist")
- */
+#[ORM\Table(name: 'transres_requestergrouplist')]
+#[ORM\Entity]
 class RequesterGroupList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="RequesterGroupList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'RequesterGroupList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RequesterGroupList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'RequesterGroupList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
     //Abbreviation URL Slug

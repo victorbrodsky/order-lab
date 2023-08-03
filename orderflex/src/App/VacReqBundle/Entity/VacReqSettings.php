@@ -28,38 +28,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 //Link institutional group with parameters (email users, inform users (bosses), approval group types)
-
-
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_settings")
- */
+#[ORM\Table(name: 'vacreq_settings')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqSettings
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_settings_user",
-     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="emailuser_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'vacreq_settings_user')]
+    #[ORM\JoinColumn(name: 'settings_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'emailuser_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $emailUsers;
 
     /**
@@ -68,36 +58,32 @@ class VacReqSettings
      * //https://stackoverflow.com/questions/49324327/how-not-to-allow-delete-options-in-select2
      * //On the group setting page, admin setup a list of default users (bosses of this fellows institutional group).
      * //On the new request page fellows can add any users in the system to this list, but can not remove the default bosses.
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_settings_informuser",
-     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="informuser_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'vacreq_settings_informuser')]
+    #[ORM\JoinColumn(name: 'settings_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'informuser_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $defaultInformUsers;
 
 //    /**
-//     * Time Away Group Request Submitter - proxy submitter, able to submit only on behalf of
-//     * those who belong as submitters to the same groups + see statistics on the
-//     * "My Group" page for those same groups, but NOT approve requests.
-//     *
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-//     * @ORM\JoinTable(name="vacreq_settings_proxysubmitteruser",
-//     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="proxysubmitteruser_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $proxySubmitterUsers;
-
+    //     * Time Away Group Request Submitter - proxy submitter, able to submit only on behalf of
+    //     * those who belong as submitters to the same groups + see statistics on the
+    //     * "My Group" page for those same groups, but NOT approve requests.
+    //     *
+    //     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+    //     * @ORM\JoinTable(name="vacreq_settings_proxysubmitteruser",
+    //     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="proxysubmitteruser_id", referencedColumnName="id")}
+    //     *      )
+    //     **/
+    //    private $proxySubmitterUsers;
     /**
      * This owning side - repsonsible for this relation
      * mappedBy has to be specified on the inversed side of a (bidirectional) association
      * inversedBy has to be specified on the owning side of a (bidirectional) association
-     * 
-     * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", inversedBy="vacreqSettings")
-     * @ORM\JoinTable(name="vacreq_settings_approvaltype")
      **/
+    #[ORM\JoinTable(name: 'vacreq_settings_approvaltype')]
+    #[ORM\ManyToMany(targetEntity: 'VacReqApprovalTypeList', inversedBy: 'vacreqSettings')]
     private $approvalTypes;
 
 

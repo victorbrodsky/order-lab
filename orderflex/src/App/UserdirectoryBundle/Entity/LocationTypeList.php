@@ -22,28 +22,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_locationTypeList")
- */
+#[ORM\Table(name: 'user_locationTypeList')]
+#[ORM\Entity]
 class LocationTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="LocationTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'LocationTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocationTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LocationTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Location", mappedBy="locationTypes")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Location', mappedBy: 'locationTypes')]
     private $locations;
 
 

@@ -25,31 +25,21 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * "Organizational Group Types" with a url of /list/organizational-group-types
- * @ORM\Entity
- * @UniqueEntity(
- *     fields={"level"},
- *     errorPath="level",
- *     message="This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level."
- * )
- * @ORM\Table(name="user_organizationalGroupType")
  */
+#[ORM\Table(name: 'user_organizationalGroupType')]
+#[ORM\Entity]
+#[UniqueEntity(fields: ['level'], errorPath: 'level', message: 'This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level.')]
 class OrganizationalGroupType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrganizationalGroupType", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'OrganizationalGroupType', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'OrganizationalGroupType', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $level;
 
     //name is the level title: Institution, Division, Department, Service

@@ -24,22 +24,17 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Dashboard Visualization Method
- *
- * @ORM\Entity
- * @ORM\Table(name="dashboard_visualizationlist")
  */
+#[ORM\Table(name: 'dashboard_visualizationlist')]
+#[ORM\Entity]
 class VisualizationList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="VisualizationList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VisualizationList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VisualizationList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'VisualizationList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
     
 

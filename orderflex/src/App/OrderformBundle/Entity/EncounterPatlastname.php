@@ -20,27 +20,19 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterPatlastname")
- */
+#[ORM\Table(name: 'scan_encounterPatlastname')]
+#[ORM\Entity]
 class EncounterPatlastname extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="patlastname", cascade={"persist"})
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'patlastname', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $encounter;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $alias;
 
 

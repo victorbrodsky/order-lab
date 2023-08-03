@@ -23,37 +23,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_labTest")
- */
+#[ORM\Table(name: 'scan_labTest')]
+#[ORM\Entity]
 class LabTest extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="LabTest", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'LabTest', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LabTest", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LabTest', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 
 
     //"Laboratory Test ID Type" field (just like MRN Type; Select2)
-    /**
-     * @ORM\ManyToOne(targetEntity="LabTestType", cascade={"persist"})
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'LabTestType', cascade: ['persist'])]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $labTestType;
 
     //"Laboratory Test ID" field (just like MRN)
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $labTestId;
 
     //"Laboratory Test Title" is list name

@@ -25,263 +25,213 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 //https://pathology.weill.cornell.edu/research/translational-research-services
 //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_request")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_request')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class TransResRequest {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $exportId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * serve as submitted date when button "Complete Submission" ('saveAsComplete') clicked
      *
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
     /**
      * "Saved as Draft on" timestamp field
      *
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $savedAsDraftDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $completedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $completedBy;
 
     /**
      * completedDate is set by script
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $completedDateSet;
 
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $oid;
 
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MessageCategory', cascade: ['persist'])]
     private $messageCategory;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $version;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
-//     */
-//    private $formVersions;
-
+    //     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
+    //     */
+    //    private $formVersions;
     /**
      * Progress State of the request (state machine variable)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $progressState;
 
     /**
      * Billing State of the request (state machine variable)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $billingState;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $progressApprovalDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $billingApprovalDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="requests", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Project', inversedBy: 'requests', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $project;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="Invoice", inversedBy="transresRequests")
-//     * @ORM\JoinTable(name="transres_request_invoice")
-//     */
-//    private $invoices;
-    /**
-     * @ORM\OneToMany(targetEntity="Invoice", mappedBy="transresRequest", cascade={"persist","remove"})
-     */
+    //     * @ORM\OneToMany(targetEntity="Invoice", inversedBy="transresRequests")
+    //     * @ORM\JoinTable(name="transres_request_invoice")
+    //     */
+    //    private $invoices;
+    #[ORM\OneToMany(targetEntity: 'Invoice', mappedBy: 'transresRequest', cascade: ['persist', 'remove'])]
     private $invoices;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_request_principalinvestigator",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'transres_request_principalinvestigator')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'principalinvestigator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $principalInvestigators;
 
     //////////////// fields /////////////////////////
     /**
      * fundedAccountNumber: this field can override the project's fundedAccountNumber
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fundedAccountNumber;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $supportStartDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $supportEndDate;
 
     /**
      * Billing contact is populated from Project's $billingContact
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'contact', referencedColumnName: 'id', nullable: true)]
     private $contact;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="transresRequest", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Product', mappedBy: 'transresRequest', cascade: ['persist', 'remove'])]
     private $products;
 
     //////////////// EOF fields /////////////////////////
-
-    /**
-     * @ORM\OneToMany(targetEntity="DataResult", mappedBy="transresRequest", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'DataResult', mappedBy: 'transresRequest', cascade: ['persist', 'remove'])]
     private $dataResults;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * Request Documents
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_request_document",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_request_document')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $documents;
 
     /**
      * Packing Slip PDFs
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_request_packingSlipPdf",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="packingSlipPdf_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_request_packingSlipPdf')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'packingSlipPdf_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $packingSlipPdfs;
 
     /**
      * Old Packing Slip PDFs
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_request_oldPackingSlipPdf",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="oldPackingSlipPdf_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_request_oldPackingSlipPdf')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'oldPackingSlipPdf_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $oldPackingSlipPdfs;
 
     /**
      * Reference antibody
-     *
-     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\AntibodyList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_request_antibody",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="antibody_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_request_antibody')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'antibody_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\TranslationalResearchBundle\Entity\AntibodyList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $antibodyReferences;
 
     /**
      * Translational Research Work Request Business Purposes
-     *
-     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\BusinessPurposeList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_request_businessPurpose",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="businessPurpose_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_request_businessPurpose')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'businessPurpose_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\TranslationalResearchBundle\Entity\BusinessPurposeList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $businessPurposes;
 
     
@@ -396,9 +346,7 @@ class TransResRequest {
         return $this->updateDate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();
@@ -1209,21 +1157,20 @@ class TransResRequest {
     }
 
 //    /**
-//     * Create new: update project's grandTotal ("Total" in the project list)
-//     *
-//     * @ORM\PostPersist
-//     */
-//    public function updatePostPersistProjectTotal()
-//    {
-//        //exit("request->PostPersist->updateProjectTotal");
-//        $this->updateProjectTotal();
-//    }
+    //     * Create new: update project's grandTotal ("Total" in the project list)
+    //     *
+    //     * @ORM\PostPersist
+    //     */
+    //    public function updatePostPersistProjectTotal()
+    //    {
+    //        //exit("request->PostPersist->updateProjectTotal");
+    //        $this->updateProjectTotal();
+    //    }
     /**
      * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
      * update project's total ("Total" in the project list)
-     *
-     * @ORM\PostUpdate
      */
+    #[ORM\PostUpdate]
     public function updatePostUpdateProjectTotal()
     {
         //exit("request->PostUpdate->updateProjectTotal");

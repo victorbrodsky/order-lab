@@ -20,26 +20,19 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_privateComment")
- */
+#[ORM\Table(name: 'user_privateComment')]
+#[ORM\Entity]
 class PrivateComment extends BaseComment
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="privateComments")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'privateComments')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Document")
-     * @ORM\JoinTable(name="user_privatecomm_document",
-     *      joinColumns={@ORM\JoinColumn(name="comm_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", unique=true)}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_privatecomm_document')]
+    #[ORM\JoinColumn(name: 'comm_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'Document')]
     protected $documents;
 
 

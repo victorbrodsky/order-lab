@@ -21,125 +21,90 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_logger")
- */
+#[ORM\Table(name: 'user_logger')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Logger
 {
 
     /**
      * @var integer
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(name="siteName", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'siteName', type: 'string', nullable: true)]
     private $siteName;
-    /**
-     * @ORM\ManyToOne(targetEntity="SiteList")
-     * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SiteList')]
+    #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id', nullable: true)]
     private $site;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $creationdate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private $user;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $roles = array();
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $username;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ip;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $useragent;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $width;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $height;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventTypeList")
-     * @ORM\JoinColumn(name="eventType_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EventTypeList')]
+    #[ORM\JoinColumn(name: 'eventType_id', referencedColumnName: 'id', nullable: true)]
     private $eventType;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $event;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $serverresponse;
 
 
 
     //Fields specifying a subject entity
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityNamespace;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityName;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventObjectTypeList")
-     * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EventObjectTypeList')]
+    #[ORM\JoinColumn(name: 'objectType_id', referencedColumnName: 'id', nullable: true)]
     private $objectType;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityId;
 
 
 
     //user's institution, department, division, service at the moment of creation/update
-    /**
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="user_logger_institutions",
-     *      joinColumns={@ORM\JoinColumn(name="logger_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_logger_institutions')]
+    #[ORM\JoinColumn(name: 'logger_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $institutionTrees;
 
 
@@ -193,9 +158,7 @@ class Logger
     }
 
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreationdate()
     {
         $this->creationdate = new \DateTime();

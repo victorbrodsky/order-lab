@@ -32,25 +32,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Price lists
- *
- * @ORM\Entity
- * @ORM\Table(name="transres_prices")
  */
+#[ORM\Table(name: 'transres_prices')]
+#[ORM\Entity]
 class Prices
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RequestCategoryTypeList", inversedBy="prices")
-     * @ORM\JoinColumn(name="requestCategoryType_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'RequestCategoryTypeList', inversedBy: 'prices')]
+    #[ORM\JoinColumn(name: 'requestCategoryType_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $requestCategoryType;
 
 
@@ -59,8 +55,8 @@ class Prices
      * External fee - "Fee for one"
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fee;
 
     /**
@@ -68,35 +64,32 @@ class Prices
      * External fee - "Fee per additional item"
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $feeAdditionalItem;
 
     /**
      * Default quantity at initial price, 1 - by default
      *
      * @var integer
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $initialQuantity;
     
     /**
      * Utilize the following price list
-     *
-     * @ORM\ManyToOne(targetEntity="PriceTypeList")
      */
+    #[ORM\ManyToOne(targetEntity: 'PriceTypeList')]
     private $priceList;
 
     /**
      * Work Queue (one per price section)
-     *
-     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\WorkQueueList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_price_workqueue",
-     *      joinColumns={@ORM\JoinColumn(name="price_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_price_workqueue')]
+    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'workqueue_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\TranslationalResearchBundle\Entity\WorkQueueList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $workQueues;
 
 

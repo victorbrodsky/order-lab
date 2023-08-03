@@ -30,105 +30,76 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="resapp_interview")
- */
+#[ORM\Table(name: 'resapp_interview')]
+#[ORM\Entity]
 class Interview {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencyApplication", inversedBy="interviews")
-     * @ORM\JoinColumn(name="resapp_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ResidencyApplication', inversedBy: 'interviews')]
+    #[ORM\JoinColumn(name: 'resapp_id', referencedColumnName: 'id', nullable: true)]
     private $resapp;
 
     /**
      * actual submitter of the scores
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="submitter_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'submitter_id', referencedColumnName: 'id')]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="interviewer_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'interviewer_id', referencedColumnName: 'id', nullable: true)]
     private $interviewer;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $interviewDate;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $startTime;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $endTime;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResAppRank")
-     * @ORM\JoinColumn(name="academicRank_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ResAppRank')]
+    #[ORM\JoinColumn(name: 'academicRank_id', referencedColumnName: 'id', nullable: true)]
     private $academicRank;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResAppRank")
-     * @ORM\JoinColumn(name="personalityRank_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ResAppRank')]
+    #[ORM\JoinColumn(name: 'personalityRank_id', referencedColumnName: 'id', nullable: true)]
     private $personalityRank;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResAppRank")
-     * @ORM\JoinColumn(name="potentialRank_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ResAppRank')]
+    #[ORM\JoinColumn(name: 'potentialRank_id', referencedColumnName: 'id', nullable: true)]
     private $potentialRank;
 
-    /**
-     * @ORM\Column(name="totalRank", type="decimal", precision=2, scale=1, nullable=true)
-     */
+    #[ORM\Column(name: 'totalRank', type: 'decimal', precision: 2, scale: 1, nullable: true)]
     private $totalRank;
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LanguageProficiency")
-     * @ORM\JoinColumn(name="languageProficiency_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'LanguageProficiency')]
+    #[ORM\JoinColumn(name: 'languageProficiency_id', referencedColumnName: 'id', nullable: true)]
     private $languageProficiency;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
-     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Location')]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id', nullable: true)]
     private $location;
 
     /**
      * Fit for residency program
-     *
-     * @ORM\ManyToOne(targetEntity="ResAppFitForProgram")
-     * @ORM\JoinColumn(name="fitForProgram_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'ResAppFitForProgram')]
+    #[ORM\JoinColumn(name: 'fitForProgram_id', referencedColumnName: 'id', nullable: true)]
     private $fitForProgram;
 
 

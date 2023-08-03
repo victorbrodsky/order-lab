@@ -25,33 +25,27 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Dashboard Charts
- *
- * @ORM\Entity
- * @ORM\Table(name="dashboard_chartlist")
  */
+#[ORM\Table(name: 'dashboard_chartlist')]
+#[ORM\Entity]
 class ChartList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ChartList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ChartList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ChartList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ChartList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
     
     //TODO: don't need OID, we have auto generated ID
-//    /**
-//     * “Chart ID” [free-text field only allowing integers]
-//     * 
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $oid;
-
+    //    /**
+    //     * “Chart ID” [free-text field only allowing integers]
+    //     *
+    //     * @var string
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $oid;
     ///////////////////// Access Control ////////////////////
     //We should have a single, centralize access control in ChartList
     //“Accessible to users with the following roles:” [multi-select with roles]
@@ -60,189 +54,161 @@ class ChartList extends ListAbstract
     //“Data can be downloaded by users with the following roles:” [multi-select with roles].
     /**
      * "Accessible to users with the following roles:" [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_accessrole",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_accessrole')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $accessRoles;
 
     /**
      * "Deny access to users with the following roles:" [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_denyrole",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_denyrole')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $denyRoles;
 
     /**
      * "Deny access to the following users:" [multi-select with all users]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_denyuser",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_denyuser')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $denyUsers;
 
     /**
      * "Data can be downloaded by users with the following roles:" [multi-select with roles].
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_downloadrole",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_downloadrole')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $downloadRoles;
     ///////////////////// EOF Access Control ////////////////////
-
     //Width and Height are repeating in TopicList
     //“Default Image Width in Pixels:” [one line free text]
     //”Default Image Height In Pixels:” [one line free text]
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $width;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $height;
 
     /**
      * Display Chart Title: [free text one line field]
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $chartTitle;
 
     //“Associated with the following organizational groups”: [multi-select with the flat list of all organizational groups] - Institution hierarchy
-//    /**
-//     * Organizational Group Types - mapper between the level number and level title.
-//     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
-//     * For example, OrganizationalGroupType with level=1, set this level to 1.
-//     * Default types have a positive level numbers, all other types have negative level numbers.
-//     *
-//     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
-//     */
-//    private $organizationalGroupType;
-//    /**
-//     * Organizational Group
-//     *
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-//     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-//     **/
-//    private $organizationalGroup;
+    //    /**
+    //     * Organizational Group Types - mapper between the level number and level title.
+    //     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
+    //     * For example, OrganizationalGroupType with level=1, set this level to 1.
+    //     * Default types have a positive level numbers, all other types have negative level numbers.
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
+    //     */
+    //    private $organizationalGroupType;
+    //    /**
+    //     * Organizational Group
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+    //     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+    //     **/
+    //    private $organizationalGroup;
     /**
      * "Associated with the following organizational groups": [multi-select with the flat list of all organizational groups] - Institution hierarchy
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_institution",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'dashboard_chart_institution')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution', cascade: ['persist'])]
     private $institutions;
 
     /**
      * “Associated Dashboard Topics”: [multi-select with the flat list of all “Dashboard Topics” above]
-     *
-     * @ORM\ManyToMany(targetEntity="TopicList", inversedBy="charts")
-     * @ORM\JoinTable(name="dashboard_chart_topic")
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_topic')]
+    #[ORM\ManyToMany(targetEntity: 'TopicList', inversedBy: 'charts')]
     private $topics;
 
     /**
      * Dashboard Visualization Method: [Single-select with a list of Dashboard Visualization Method items from the list manager]
-     *
-     * @ORM\ManyToOne(targetEntity="VisualizationList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'VisualizationList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $visualization;
 
     /**
      * Chart Type: [multi-select with the flat list of all “Dashboard Chart Types” above]
-     *
-     * @ORM\ManyToMany(targetEntity="ChartTypeList", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_type",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'dashboard_chart_type')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'type_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'ChartTypeList', cascade: ['persist'])]
     private $chartTypes;
 
     /**
      * “Dashboard Data Source:” [single-select with Dashboard Data Source from step 6 above]
-     *
-     * @ORM\ManyToOne(targetEntity="DataSourceList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'DataSourceList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $dataSource;
 
     /**
      * “Dashboard Update Frequency:” [single-select with Dashboard Update Frequency from step 5 above]
-     *
-     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'UpdateFrequencyList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $updateFrequency;
 
     //“Applicable Dashboard Chart Filter Fields”: [multi-select with the flat list of all “Dashboard Chart Filter Fields” from step 4 above]
     //TODO: how filter fields will be implemented?
-
     /**
      * “Favorited by the following users”: [multi-select with all users]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_chart_favoriteuser",
-     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_chart_favoriteuser')]
+    #[ORM\JoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $favoriteUsers;
 
     /**
      * Path to pre-generated default image for this chart
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $imagePath;
 
     /**
      * Timestamp for the pre-generated default image for this chart
      *
      * @var \DateTime
-     * @ORM\Column(name="imagedate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'imagedate', type: 'datetime', nullable: true)]
     private $imageDate;
 
     /**
      * Chart Comment
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $chartComment;
 
     /**
      * Requested by
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="requester_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'requester_id', referencedColumnName: 'id')]
     private $requester;
 
     /**
      * Requested on
      *
      * @var \DateTime
-     * @ORM\Column(name="requesteddate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'requesteddate', type: 'datetime', nullable: true)]
     private $requestedDate;
 
     //////////////// TO BE IMPLEMENT LATER //////////////////////

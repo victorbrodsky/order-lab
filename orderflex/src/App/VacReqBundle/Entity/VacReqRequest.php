@@ -30,235 +30,189 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_request")
- */
+#[ORM\Table(name: 'vacreq_request')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqRequest
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="exportId", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'exportId', type: 'integer', nullable: true)]
     private $exportId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestBusiness", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="requestBusiness_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
+    #[ORM\OneToOne(targetEntity: 'VacReqRequestBusiness', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'requestBusiness_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $requestBusiness;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="VacReqRequestVacation", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="requestVacation_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
+    #[ORM\OneToOne(targetEntity: 'VacReqRequestVacation', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'requestVacation_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $requestVacation;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $approver;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $approvedRejectDate;
 
 
     //availability
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $availableViaEmail;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $availableEmail;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $availableViaCellPhone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $availableCellPhone;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $availableViaOther;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $availableOther;
 
     /**
      * Not Available
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $availableNone;
 
 //    /**
-//     * Other
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $emergencyComment;
-//
-//    /**
-//     * Cell Phone
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $emergencyPhone;
-//
-//    /**
-//     * E-Mail
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $emergencyEmail;
-
-
+    //     * Other
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $emergencyComment;
+    //
+    //    /**
+    //     * Cell Phone
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $emergencyPhone;
+    //
+    //    /**
+    //     * E-Mail
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $emergencyEmail;
     /**
      * extraStatus: cancellation-request, "Cancellation Requested", "Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $extraStatus;
 
     /**
      * REQUEST_STATUS_ID
      * status: pending, approved, rejected
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
     /**
      * FINAL_FIRST_DAY_AWAY
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $firstDayAway;
 
     /**
      * FINAL_FIRST_DAY_BACK
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $firstDayBackInOffice;
 
     /**
      * COMMENTS
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * UPDATE_COMMENTS
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $updateComment;
 
 
     //Carry Over Request fields: source year, destination year, number of carry over days
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqRequestTypeList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'VacReqRequestTypeList')]
     private $requestType;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $sourceYear;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $destinationYear;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $carryOverDays;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $tentativeInstitution;
 
     /**
      * status: pending, approved, rejected
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $tentativeStatus;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $tentativeApprover;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $tentativeApprovedRejectDate;
 
     //TODO: informUsers - users to inform about status of this request
@@ -268,13 +222,11 @@ class VacReqRequest
      * //https://stackoverflow.com/questions/49324327/how-not-to-allow-delete-options-in-select2
      * //On the group setting page, admin setup a list of default users (bosses, peers of this fellows institutional group).
      * //On the new request page fellows can add any users in the system to this list, but can not remove the default bosses.
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_request_informuser",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="informuser_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'vacreq_request_informuser')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'informuser_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $informUsers;
 
 
@@ -399,9 +351,7 @@ class VacReqRequest
         return $this->updateDate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();

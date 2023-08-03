@@ -22,29 +22,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_fellAppStatus")
- */
+#[ORM\Table(name: 'fellapp_fellAppStatus')]
+#[ORM\Entity]
 class FellAppStatus extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="FellAppStatus", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'FellAppStatus', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellAppStatus", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FellAppStatus', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
     /**
      * action: show this 'action' column in the Action menu and the 'name' column in the Filter menu. (i.e. Rejected)
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $action;
 
 

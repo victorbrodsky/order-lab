@@ -21,84 +21,64 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_roles")
- */
+#[ORM\Table(name: 'user_roles')]
+#[ORM\Entity]
 class Roles extends ListAbstract {
 
     /**
      * Alias is a display name for each role, i.e.: ROLE_SCANORDER_ADMIN => Administrator
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $alias;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="RoleAttributeList", inversedBy="roles", cascade={"persist"})
-     * @ORM\JoinTable(name="user_roles_attributes")
-     **/
+    #[ORM\JoinTable(name: 'user_roles_attributes')]
+    #[ORM\ManyToMany(targetEntity: 'RoleAttributeList', inversedBy: 'roles', cascade: ['persist'])]
     private $attributes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Roles", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'Roles', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Roles", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Roles', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
     //institution: currently used to check if the user can view fellowship application (FellAppImportPopulateUtil.php)
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
     //fellowship type
-    /**
-     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty")
-     */
+    #[ORM\ManyToOne(targetEntity: 'FellowshipSubspecialty')]
     private $fellowshipSubspecialty;
 
     /**
      * Keep "Subspecialty" to be compatible with fellapp source code
-     *
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty")
      */
+    #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty')]
     private $residencySubspecialty;
 
     /**
      * Residency Type (ResidencyTrackList)
-     *
-     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
      */
+    #[ORM\ManyToOne(targetEntity: 'ResidencyTrackList')]
     private $residencyTrack;
 
     /**
      * Each single role page should show the whole associated list of the answered
      * permissions list items ("Submit Orders", "Add a New Slide", etc) and
      * the answers themselves for each (WCMC, NYP) in a Select2 box for each permission.
-     *
-     * @ORM\OneToMany(targetEntity="Permission", mappedBy="role", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: 'Permission', mappedBy: 'role', cascade: ['persist', 'remove'])]
     private $permissions;
 
     //@ORM\ManyToMany(targetEntity="SiteList", inversedBy="roles", cascade={"persist"})
-    /**
-     * @ORM\ManyToMany(targetEntity="SiteList", cascade={"persist"})
-     * @ORM\JoinTable(name="user_roles_sites",
-     *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_roles_sites')]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'site_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'SiteList', cascade: ['persist'])]
     private $sites;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $level;
 
 

@@ -20,71 +20,58 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_identifier")
- */
+#[ORM\Table(name: 'user_identifier')]
+#[ORM\Entity]
 class Identifier
 {
 
     const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
     const STATUS_VERIFIED = 1;      //verified by admin
-
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="IdentifierTypeList")
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'IdentifierTypeList')]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     private $keytype;
 
     /**
      * Note: this is a link to OrderformBundle bundle file App\OrderformBundle\Entity\MrnType.
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytypemrn_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MrnType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytypemrn_id', referencedColumnName: 'id', nullable: true)]
     protected $keytypemrn;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $field;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $link;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="identifiers")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Credentials', inversedBy: 'identifiers')]
+    #[ORM\JoinColumn(name: 'credentials_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $credentials;
 
     /**
      * status: valid, invalid
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
+    #[ORM\Column(type: 'integer', options: ['default' => 0], nullable: true)]
     private $status;
 
     /**
      * public, private
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $publiclyVisible;
 
     /**
      * Identifier enables system/service access
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableAccess;
 
 

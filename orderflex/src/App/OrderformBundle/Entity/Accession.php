@@ -22,42 +22,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\AccessionRepository")
- * @ORM\Table(name="scan_accession")
- */
+#[ORM\Table(name: 'scan_accession')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\AccessionRepository')]
 class Accession extends ObjectAbstract {
 
     /**
      * Accession Number
-     * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="accession", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'AccessionAccession', mappedBy: 'accession', cascade: ['persist'])]
     protected $accession;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionAccessionDate", mappedBy="accession", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'AccessionAccessionDate', mappedBy: 'accession', cascade: ['persist'])]
     protected $accessionDate;
 
     ///////////////////////////////////////////
-    
     //Accession belongs to exactly one Procedure => Accession has only one Procedure
     /**
      * Parent
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="accession")
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'Procedure', inversedBy: 'accession')]
+    #[ORM\JoinColumn(name: 'procedure_id', referencedColumnName: 'id')]
     protected $procedure;
     
     /**
      * Accession might have many parts (children)
-     * @ORM\OneToMany(targetEntity="Part", mappedBy="accession")
      */
+    #[ORM\OneToMany(targetEntity: 'Part', mappedBy: 'accession')]
     protected $part;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accession")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'accession')]
     protected $message;
 
 //    /**

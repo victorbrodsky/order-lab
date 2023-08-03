@@ -20,48 +20,35 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_administrativeTitle")
- */
+#[ORM\Table(name: 'user_administrativeTitle')]
+#[ORM\Entity]
 class AdministrativeTitle extends BaseTitle
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AdminTitleList")
-     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'AdminTitleList')]
+    #[ORM\JoinColumn(name: 'name', referencedColumnName: 'id', nullable: true)]
     protected $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="administrativeTitles")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'administrativeTitles')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_administrative_boss",
-     *      joinColumns={@ORM\JoinColumn(name="administrative_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="boss_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_administrative_boss')]
+    #[ORM\JoinColumn(name: 'administrative_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'boss_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $boss;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="PositionTypeList")
-     * @ORM\JoinTable(name="user_administrative_userPosition",
-     *      joinColumns={@ORM\JoinColumn(name="administrative_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userPosition_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_administrative_userPosition')]
+    #[ORM\JoinColumn(name: 'administrative_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'userPosition_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'PositionTypeList')]
     private $userPositions;
 
     /**
      * Overwrite institution, so we can use join to find out Supervisors for location search.
-     *
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="administrativeTitles")
      */
+    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'administrativeTitles')]
     protected $institution;
 
 

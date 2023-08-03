@@ -23,25 +23,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_procedureList",
- *  indexes={
- *      @ORM\Index( name="procedure_name_idx", columns={"name"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'scan_procedureList')]
+#[ORM\Index(name: 'procedure_name_idx', columns: ['name'])]
+#[ORM\Entity]
 class ProcedureList extends ListAbstract
 {
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ProcedureList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProcedureList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ProcedureList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 //    /**

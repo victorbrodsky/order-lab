@@ -21,150 +21,120 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_googleFormConfig")
- */
+#[ORM\Table(name: 'fellapp_googleFormConfig')]
+#[ORM\Entity]
 class GoogleFormConfig {
     
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
- * @ORM\Column(type="datetime", nullable=true)
- */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $updatedBy;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $acceptingSubmission;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_googleformconfig_fellowshipsubspecialty",
-     *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="fellowshipsubspecialty_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_googleformconfig_fellowshipsubspecialty')]
+    #[ORM\JoinColumn(name: 'googleformconfig_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'fellowshipsubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty', cascade: ['persist', 'remove'])]
     private $fellowshipSubspecialties;
 
     /**
      * text in the wells at the top of the application
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $applicationFormNote;
 
     /**
      * admin email (_adminemail)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $adminEmail;
 
     /**
      * fellowship admin's email (_useremail)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fellappAdminEmail;
 
     /**
      * "exception" account that the application is still shown to for testing purposes even when turned off (i.e. olegivanov@pathologysystems.org)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $exceptionAccount;
 
     /**
      * text shown when the application is submitted
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $submissionConfirmation;
 
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $letterAcceptingSubmission;
 
     /**
      * message shown on Error.html for reference letter page when parameters are not specified
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $letterError;
 
     /**
      * "exception" account that the letter submission is still shown to for testing purposes even when turned off (i.e. olegivanov@pathologysystems.org)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $letterExceptionAccount;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\FellAppBundle\Entity\VisaStatus", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_googleformconfig_visastatus",
-     *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="visastatus_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_googleformconfig_visastatus')]
+    #[ORM\JoinColumn(name: 'googleformconfig_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'visastatus_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\FellAppBundle\Entity\VisaStatus', cascade: ['persist', 'remove'])]
     private $fellowshipVisaStatuses;
 
     /**
      * NYPH-CORNELL ONLY ACCEPTS/SPONSORS J-1 VISAS
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $visaNote;
 
     /**
      * In chronological order, list other educational experiences, jobs, military service or training that is not accounted for above.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $otherExperienceNote;
 
     /**
      * Please indicate national board examination dates and results received.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $nationalBoardNote;
 
     /**
      * Please list any states in which you hold a license to practice medicine. Please provide a license number. If an application is pending in a state, please write “pending.”
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $medicalLicenseNote;
 
     /**
      * Please indicate any areas of board certification.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $boardCertificationNote;
 
     /**
      * Please list the individuals who will write your letters of recommendation. At least three are required.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referenceLetterNote;
 
     /**
@@ -173,69 +143,58 @@ class GoogleFormConfig {
      * serious consideration of training in the Pathology Fellowship indicated.
      * I understand that accepting more than one fellowship position constitutes a violation
      * of professional ethics and may result in the forfeiture of all positions.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $signatureStatement;
 
     //////////// Recommendation Letter script parameters /////////////////////
     /**
      * recSpreadsheetFolderId - Google folder ID for recommendation letters Spreadsheet
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $recSpreadsheetFolderId;
 
     /**
      * recUploadsFolderId - Google folder ID for recommendation letters upload
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $recUploadsFolderId;
 
     /**
      * recTemplateFileId - Google file ID for the Spreadsheet Template for the recommendation letter
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $recTemplateFileId;
 
     /**
      * recBackupTemplateFileId - Google file ID for the Backup Spreadsheet Template for the recommendation letter
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $recBackupTemplateFileId;
     //////////// EOF Recommendation Letter script parameters /////////////////////
-
-
     //////////// Fellowship Application script parameters /////////////////////
     /**
      * felSpreadsheetFolderId - Google folder ID for fellowship application Spreadsheet
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $felSpreadsheetFolderId;
 
     /**
      * felUploadsFolderId - Google folder ID for fellowship application upload
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $felUploadsFolderId;
 
     /**
      * felTemplateFileId - Google file ID for the Spreadsheet Template for the fellowship application
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $felTemplateFileId;
 
     /**
      * felBackupTemplateFileId - Google file ID for the Backup Spreadsheet Template for the fellowship application
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $felBackupTemplateFileId;
     //////////// EOF Fellowship Application script parameters /////////////////////
 

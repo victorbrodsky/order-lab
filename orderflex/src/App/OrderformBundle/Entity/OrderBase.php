@@ -22,38 +22,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class OrderBase {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * Instruction (datetime, author, author roles, text)
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Instruction", cascade={"persist","remove"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\Instruction', cascade: ['persist', 'remove'])]
     protected $instruction;
 
 
     //Prepared On
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $processedDate;
 
     //Prepared By
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     protected $processedByUser;
 
 

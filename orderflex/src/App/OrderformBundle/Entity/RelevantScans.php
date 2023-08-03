@@ -19,22 +19,16 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_relevantScans")
- */
+#[ORM\Table(name: 'scan_relevantScans')]
+#[ORM\Entity]
 class RelevantScans extends SlideArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="relevantScans")
-     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Slide', inversedBy: 'relevantScans')]
+    #[ORM\JoinColumn(name: 'slide_id', referencedColumnName: 'id', nullable: true)]
     protected $slide;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
 }

@@ -20,51 +20,37 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_dataquality_mrnacc")
- */
+#[ORM\Table(name: 'scan_dataquality_mrnacc')]
+#[ORM\Entity]
 class DataQualityMrnAcc extends DataQuality
 {
 
     /**
      * conflicting accession number is replaced, so keep the reference to dataqualityaccmrn object in the message (unlike to dataqualityage)
-     * @ORM\ManyToOne(targetEntity="Message", inversedBy="dataqualitymrnacc")
-     * @ORM\JoinColumn(name="message", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'Message', inversedBy: 'dataqualitymrnacc')]
+    #[ORM\JoinColumn(name: 'message', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $message;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $accession;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
-     * @ORM\JoinColumn(name="accessiontype", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'AccessionType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'accessiontype', referencedColumnName: 'id', nullable: true)]
     protected $accessiontype;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $newaccession;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AccessionType", cascade={"persist"})
-     * @ORM\JoinColumn(name="newaccessiontype", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'AccessionType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'newaccessiontype', referencedColumnName: 'id', nullable: true)]
     protected $newaccessiontype;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $mrn;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MrnType", cascade={"persist"})
-     * @ORM\JoinColumn(name="mrntype", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'MrnType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'mrntype', referencedColumnName: 'id', nullable: true)]
     protected $mrntype;
 
     /**

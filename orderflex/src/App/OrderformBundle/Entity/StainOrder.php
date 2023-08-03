@@ -22,15 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_stainOrder")
- */
+#[ORM\Table(name: 'scan_stainOrder')]
+#[ORM\Entity]
 class StainOrder extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="stainorder")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'stainorder')]
     protected $message;
 
 

@@ -20,38 +20,29 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_pathologyResultSignatoriesList")
- */
+#[ORM\Table(name: 'user_pathologyResultSignatoriesList')]
+#[ORM\Entity]
 class PathologyResultSignatoriesList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="PathologyResultSignatoriesList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'PathologyResultSignatoriesList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PathologyResultSignatoriesList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'PathologyResultSignatoriesList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
     //user ID set by setObject($user)
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="scan_pathologyResultSignatory_userWrapper",
-//     *      joinColumns={@ORM\JoinColumn(name="pathologyResultSignatory_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $userWrappers;
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist","remove"})
-     */
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+    //     * @ORM\JoinTable(name="scan_pathologyResultSignatory_userWrapper",
+    //     *      joinColumns={@ORM\JoinColumn(name="pathologyResultSignatory_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
+    //     *      )
+    //     **/
+    //    private $userWrappers;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $userWrapper;
 
 

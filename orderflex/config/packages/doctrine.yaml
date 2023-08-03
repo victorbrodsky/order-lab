@@ -70,61 +70,62 @@ doctrine:
                 mappings:
                     App\OrderformBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/OrderformBundle/Entity'
                         prefix: 'App\OrderformBundle\Entity'
                         alias: 'AppOrderformBundle'
                     App\UserdirectoryBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/UserdirectoryBundle/Entity'
                         prefix: 'App\UserdirectoryBundle\Entity'
                         alias: 'AppUserdirectoryBundle'
                     App\FellAppBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/FellAppBundle/Entity'
                         prefix: 'App\FellAppBundle\Entity'
                         alias: 'AppFellAppBundle'
                     App\ResAppBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/ResAppBundle/Entity'
                         prefix: 'App\ResAppBundle\Entity'
                         alias: 'AppResAppBundle'
                     App\DeidentifierBundle:
                         is_bundle: false
-                        type: annotation
+                        #type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/DeidentifierBundle/Entity'
                         prefix: 'App\DeidentifierBundle\Entity'
                         alias: 'AppDeidentifierBundle'
                     App\VacReqBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/VacReqBundle/Entity'
                         prefix: 'App\VacReqBundle\Entity'
                         alias: 'AppVacReqBundle'
                     App\CallLogBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/CallLogBundle/Entity'
                         prefix: 'App\CallLogBundle\Entity'
                         alias: 'AppCallLogBundle'
                     App\CrnBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/CrnBundle/Entity'
                         prefix: 'App\CrnBundle\Entity'
                         alias: 'AppCrnBundle'
                     App\TranslationalResearchBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/TranslationalResearchBundle/Entity'
                         prefix: 'App\TranslationalResearchBundle\Entity'
                         alias: 'AppTranslationalResearchBundle'
                     App\DashboardBundle:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/App/DashboardBundle/Entity'
                         prefix: 'App\DashboardBundle\Entity'
                         alias: 'AppDashboardBundle'
@@ -137,8 +138,8 @@ doctrine:
 #                    AppTranslationalResearchBundle: ~
 #                    FOSCommentBundle: ~
                     gedmo_tree:
-#                        type: annotation
-                        type: attribute
+                        type: annotation
+                        #type: attribute
                         prefix: Gedmo\Tree\Entity
 #                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"

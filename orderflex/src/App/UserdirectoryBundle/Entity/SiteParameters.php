@@ -27,139 +27,106 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 // 2) delete cache manually
 // 3) process steps listed in the header of the PostgresqlMigration.php
 // 4) enable back - { resource: "setparameters.php" } in services.yaml
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_siteparameters")
- */
+#[ORM\Table(name: 'user_siteparameters')]
+#[ORM\Entity]
 class SiteParameters {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * Max idle time in minutes
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $maxIdleTime;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $environment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $version;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $siteEmail;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dbServerAddress;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dbServerPort;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dbServerAccountUserName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dbServerAccountPassword;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dbDatabaseName;
 
     //////// email (default gmail free SMTP Server Example) //////////
     /**
      * mailerHost: smtp.gmail.com
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $smtpServerAddress;
 
     /**
      * smtp or gmail (google gmail requires only gmail username and password)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerTransport;
 
     /**
      * oauth
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerAuthMode;
 
     /**
      * tls or ssl
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerUseSecureConnection;
 
     /**
      * GMail account (email@gmail.com)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerUser;
 
     /**
      * GMail password
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerPassword;
 
     /**
      * 465 or 587
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerPort;
 
     /**
      * use spooled email
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $mailerSpool;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $mailerFlushQueueFrequency;
 
     /**
      * emails will deliver only to these emails
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mailerDeliveryAddresses;
 
     //mailer_transport: smtp
     //mailer_user: null
     //mailer_password: null
-
     //transport: smtp
     //host:      smtp.gmail.com
     //username:     #email@gmail.com
@@ -168,862 +135,643 @@ class SiteParameters {
     //port:      587
     //encryption: tls
     //////// EOF email (default gmail free SMTP Server Example) //////////
-
     /**
      * Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $ldapAll;
 
     /////////////// LDAP Server 1 ////////////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAddress;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerPort;
 
     /**
      * LDAP bind used for ldap_search or for simple authentication ldap_bind
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerOu;
 
     /**
      * Used for ldap_search, if null, the ldap_search is not used
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAccountUserName;
 
     /**
      * Used for ldap_search, if null, the ldap_search is not used
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAccountPassword;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ldapExePath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ldapExeFilename;
 
     /**
      * Default Primary Public User ID Type
-     *
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
      */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UsernameType')]
     private $defaultPrimaryPublicUserIdType;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $ldapMapperEmail;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UsernameType')]
     private $ldapMapperPrimaryPublicUserIdType;
     /////////////// EOF LDAP Server 1 ////////////////////
-
     /////////////// LDAP Server 2 ////////////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAddress2;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerPort2;
 
     /**
      * LDAP bind used for ldap_search or for simple authentication ldap_bind
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerOu2;
 
     /**
      * Used for ldap_search, if null, the ldap_search is not used
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAccountUserName2;
 
     /**
      * Used for ldap_search, if null, the ldap_search is not used
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $aDLDAPServerAccountPassword2;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ldapExePath2;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ldapExeFilename2;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $ldapMapperEmail2;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UsernameType')]
     private $ldapMapperPrimaryPublicUserIdType2;
 
 //    /**
-//     * Default Primary Public User ID Type
-//     *
-//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
-//     */
-//    private $defaultPrimaryPublicUserIdType2;
+    //     * Default Primary Public User ID Type
+    //     *
+    //     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\UsernameType")
+    //     */
+    //    private $defaultPrimaryPublicUserIdType2;
     /////////////// EOF LDAP Server 2 ////////////////////
-
-
     /**
      * Enable auto-assignment of Institutional Scope
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableAutoAssignmentInstitutionalScope;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $autoAssignInstitution;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pacsvendorSlideManagerDBServerAddress;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pacsvendorSlideManagerDBServerPort;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pacsvendorSlideManagerDBUserName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pacsvendorSlideManagerDBPassword;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pacsvendorSlideManagerDBName;
 
 
     //Footer
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $institutionurl;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $institutionname;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $departmenturl;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $departmentname;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $subinstitutionurl;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $subinstitutionname;
 
     /**
      * Show copyright line on every footer
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showCopyrightOnFooter;
 
     //Maintanence mode
-    /**
-     * @ORM\Column(type="boolean",nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $maintenance;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $maintenanceenddate;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $maintenancelogoutmsg;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $maintenanceloginmsg;
 
     //uploads path
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $scanuploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $employeesuploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $avataruploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fellappuploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $resappuploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $vacrequploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $transresuploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $callloguploadpath;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $crnuploadpath;
 
     //site titles and messages
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mainHomeTitle;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $listManagerTitle;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $eventLogTitle;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $siteSettingsTitle;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $contentAboutPage;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $underLoginMsgUser;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $underLoginMsgScan;
 
     ///////////////////// FELLAPP /////////////////////
-//    /**
-//     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
-//     */
-//    private $fellappSiteParameter;
-//    /**
-//     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
-//     */
-//    private $fellappSiteParameter;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
-     */
+    //    /**
+    //     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+    //     */
+    //    private $fellappSiteParameter;
+    //    /**
+    //     * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellAppSiteParameter", cascade={"persist","remove"})
+    //     */
+    //    private $fellappSiteParameter;
+    #[ORM\OneToOne(targetEntity: 'App\FellAppBundle\Entity\FellappSiteParameter', cascade: ['persist', 'remove'])]
     private $fellappSiteParameter;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResappSiteParameter", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'App\ResAppBundle\Entity\ResappSiteParameter', cascade: ['persist', 'remove'])]
     private $resappSiteParameter;
 
 //    /**
-//     * Path to the local copy of the fellowship application form
-//     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $codeGoogleFormFellApp;
-
-//    /**
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $allowPopulateFellApp;
-
-//    /**
-//     * Automatically send invitation emails to upload recommendation letters
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $sendEmailUploadLetterFellApp;
-
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $confirmationSubjectFellApp;
-
-//    /**
-//     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $recLetterSaltFellApp;
-    
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $confirmationBodyFellApp;
-
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $confirmationEmailFellApp;
-
-//    /**
-//     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $clientEmailFellApp;
-
-//    /**
-//     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-//     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $p12KeyPathFellApp;
-
-//    /**
-//     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $googleDriveApiUrlFellApp;
-
-//    /**
-//     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $userImpersonateEmailFellApp;
-
-//    /**
-//     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
-//     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $templateIdFellApp;
-
-//    /**
-//     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
-//     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $backupFileIdFellApp;
-
-//    /**
-//     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
-//     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
-//     * where the response spreadsheets (response forms) are saved
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $folderIdFellApp;
-
-//    /**
-//     * Deprecated, not used anymore in new version of google management
-//     * Config.json file folder ID
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $configFileFolderIdFellApp;
-
+    //     * Path to the local copy of the fellowship application form
+    //     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $codeGoogleFormFellApp;
+    //    /**
+    //     * @ORM\Column(type="boolean", nullable=true)
+    //     */
+    //    private $allowPopulateFellApp;
+    //    /**
+    //     * Automatically send invitation emails to upload recommendation letters
+    //     *
+    //     * @ORM\Column(type="boolean", nullable=true)
+    //     */
+    //    private $sendEmailUploadLetterFellApp;
+    //    /**
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $confirmationSubjectFellApp;
+    //    /**
+    //     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $recLetterSaltFellApp;
+    //    /**
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $confirmationBodyFellApp;
+    //    /**
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $confirmationEmailFellApp;
+    //    /**
+    //     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $clientEmailFellApp;
+    //    /**
+    //     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
+    //     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $p12KeyPathFellApp;
+    //    /**
+    //     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $googleDriveApiUrlFellApp;
+    //    /**
+    //     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $userImpersonateEmailFellApp;
+    //    /**
+    //     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
+    //     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $templateIdFellApp;
+    //    /**
+    //     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
+    //     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $backupFileIdFellApp;
+    //    /**
+    //     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
+    //     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
+    //     * where the response spreadsheets (response forms) are saved
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $folderIdFellApp;
+    //    /**
+    //     * Deprecated, not used anymore in new version of google management
+    //     * Config.json file folder ID
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $configFileFolderIdFellApp;
     /**
      * NOT USED
      * Backup Sheet Last Modified Date
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $backupUpdateDatetimeFellApp;
 
 //    /**
-//     * TODO: Move to fellapp site settings
-//     * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $localInstitutionFellApp;
-
-//    /**
-//     * Modify the filename format generated by the Google recommendation letter upload form to include the “institution name” that is supplied in the URL
-//     * Institution for which recommendation letters will be downloaded (fellowship identification string).
-//     * Will be used to filter and only download files that have the matching institution string in the file name.
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $identificationUploadLetterFellApp;
-
-//    /**
-//     * [ checkbox ] Delete successfully imported applications from Google Drive
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $deleteImportedAplicationsFellApp;
-
-//    /**
-//     * checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
-//     * (set it at 2) [this is to delete old excel sheets that are downloaded from google drive.
-//     * Make sure it is functional and Google/Excel sheets containing applications older than
-//     * the amount of years set by this option is auto-deleted along with the linked downloaded documents.
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $deleteOldAplicationsFellApp;
-
-//    /**
-//     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
-//     *
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $yearsOldAplicationsFellApp;
-
-//    /**
-//     * Path to spreadsheets: i.e. Spreadsheets
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $spreadsheetsPathFellApp;
-//
-//    /**
-//     * Path to upload applicants documents: i.e. FellowshipApplicantUploads
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $applicantsUploadPathFellApp;
-//
-//
-//    /**
-//     * Path to upload applicants documents used in ReportGenerator: i.e. Reports
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $reportsUploadPathFellApp;
-
-//    /**
-//     * Link to the Application Page (so the users can click and see how it looks)
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $applicationPageLinkFellApp;
-
+    //     * TODO: Move to fellapp site settings
+    //     * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $localInstitutionFellApp;
+    //    /**
+    //     * Modify the filename format generated by the Google recommendation letter upload form to include the “institution name” that is supplied in the URL
+    //     * Institution for which recommendation letters will be downloaded (fellowship identification string).
+    //     * Will be used to filter and only download files that have the matching institution string in the file name.
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $identificationUploadLetterFellApp;
+    //    /**
+    //     * [ checkbox ] Delete successfully imported applications from Google Drive
+    //     *
+    //     * @ORM\Column(type="boolean", nullable=true)
+    //     */
+    //    private $deleteImportedAplicationsFellApp;
+    //    /**
+    //     * checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+    //     * (set it at 2) [this is to delete old excel sheets that are downloaded from google drive.
+    //     * Make sure it is functional and Google/Excel sheets containing applications older than
+    //     * the amount of years set by this option is auto-deleted along with the linked downloaded documents.
+    //     *
+    //     * @ORM\Column(type="boolean", nullable=true)
+    //     */
+    //    private $deleteOldAplicationsFellApp;
+    //    /**
+    //     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+    //     *
+    //     * @ORM\Column(type="integer", nullable=true)
+    //     */
+    //    private $yearsOldAplicationsFellApp;
+    //    /**
+    //     * Path to spreadsheets: i.e. Spreadsheets
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $spreadsheetsPathFellApp;
+    //
+    //    /**
+    //     * Path to upload applicants documents: i.e. FellowshipApplicantUploads
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $applicantsUploadPathFellApp;
+    //
+    //
+    //    /**
+    //     * Path to upload applicants documents used in ReportGenerator: i.e. Reports
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $reportsUploadPathFellApp;
+    //    /**
+    //     * Link to the Application Page (so the users can click and see how it looks)
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $applicationPageLinkFellApp;
     ////////////////////// third party software //////////////////////////
     /**
      * C:\Program Files (x86)\LibreOffice 5\program
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFPathFellApp;
     /**
      * path\LibreOffice 5\program
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFPathFellAppLinux;
 
     /**
      * soffice
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFFilenameFellApp;
     /**
      * soffice
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFFilenameFellAppLinux;
 
     /**
      * --headless -convert-to pdf -outdir
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFArgumentsdFellApp;
     /**
      * --headless -convert-to pdf -outdir
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $libreOfficeConvertToPDFArgumentsdFellAppLinux;
 
     /**
      * C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkPathFellApp;
     /**
      * path\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkPathFellAppLinux;
 
     /**
      * pdftk
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkFilenameFellApp;
     /**
      * pdftk
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkFilenameFellAppLinux;
 
     /**
      * ###inputFiles### cat output ###outputFile### dont_ask
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkArgumentsFellApp;
     /**
      * ###inputFiles### cat output ###outputFile### dont_ask
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pdftkArgumentsFellAppLinux;
 
     /**
      * Ghostscript
      * C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsPathFellApp;
     /**
      * Ghostscript
      * path\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsPathFellAppLinux;
 
     /**
      * Ghostscript
      * gswin64c.exe
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsFilenameFellApp;
     /**
      * Ghostscript
      * gswin64c.exe
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsFilenameFellAppLinux;
 
     /**
      * Ghostscript
      * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsArgumentsFellApp;
     /**
      * Ghostscript
      * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $gsArgumentsFellAppLinux;
 
     /**
      * C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $wkhtmltopdfpath;
     /**
      * path to wkhtmltopdf binary
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $wkhtmltopdfpathLinux;
 
     /**
      * C:\Program Files\wkhtmltopdf\bin\phantomjs.exe
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $phantomjs;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $phantomjsLinux;
 
     /**
      * C:\Program Files\wkhtmltopdf\examples\rasterize.js
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $rasterize;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $rasterizeLinux;
     ////////////////////// EOF third party software //////////////////////////
     ///////////////////// EOF FELLAPP /////////////////////
-
     // Co-Path //
     //Production
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerAddress;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerPort;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountUserName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountPassword;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisVersion;
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerAddressTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerPortTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountUserNameTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountPasswordTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBNameTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $LISNameTest;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $LISVersionTest;
 
 
     //Development
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerAddressDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBServerPortDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountUserNameDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBAccountPasswordDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lisDBNameDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $LISNameDevelopment;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $LISVersionDevelopment;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $academicYearStart;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $academicYearEnd;
 
 //    /**
-//     * Not Used: Moved to VacReqSiteParameter
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $holidaysUrl;
-
-//    /**
-//     * Not Used: Moved to VacReqSiteParameter
-//     *
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $vacationAccruedDaysPerMonth;
-
+    //     * Not Used: Moved to VacReqSiteParameter
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $holidaysUrl;
+    //    /**
+    //     * Not Used: Moved to VacReqSiteParameter
+    //     *
+    //     * @ORM\Column(type="integer", nullable=true)
+    //     */
+    //    private $vacationAccruedDaysPerMonth;
     //Live Site Root URL: http://c.med.cornell.edu/order/
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $liveSiteRootUrl;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableMetaphone;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pathMetaphone;
 
     /**
      * Initial Configuration Completed
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $initialConfigurationCompleted;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $networkDrivePath;
 
     /**
      * Permitted failed log in attempts
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $permittedFailedLoginAttempt;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $captchaSiteKey;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $captchaSecretKey;
 
     /**
      * Enable Captcha at Sign Up
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $captchaEnabled;
 
 
@@ -1031,291 +779,242 @@ class SiteParameters {
     /**
      * Notice for attempting to reset password for an LDAP-authenticated account.
      * The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noticeAttemptingPasswordResetLDAP;
     
     /**
      * Notice to prompt user to use Active Directory account to log in:
      * Please use your CWID to log in.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $loginInstruction;
 
     /**
      * Notice to prompt user with no Active Directory account to sign up for a new account:
      * Sign up for an account if you have no CWID.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noticeSignUpNoCwid;
 
     /**
      * Account request question asking whether applicant has an Active Directory account:
      * Do you (the person for whom the account is being requested) have a [CWID] username?
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noticeHasLdapAccount;
 
     /**
      * Full local name for active directory account:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noticeLdapName;
     ////////////////////////// EOF LDAP notice messages /////////////////////////
-
-
     /////////////// Specific Site Parameters //////////////////////
     /**
      * New User pre-populated. Defaults for an Organizational Group
-     * @ORM\OneToMany(targetEntity="OrganizationalGroupDefault", mappedBy="siteParameter", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: 'OrganizationalGroupDefault', mappedBy: 'siteParameter', cascade: ['persist', 'remove'])]
     private $organizationalGroupDefaults;
 
     /**
      * Defaults for an Organizational Group
-     * @ORM\OneToOne(targetEntity="App\CallLogBundle\Entity\CalllogSiteParameter", cascade={"persist","remove"})
      */
+    #[ORM\OneToOne(targetEntity: 'App\CallLogBundle\Entity\CalllogSiteParameter', cascade: ['persist', 'remove'])]
     private $calllogSiteParameter;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $calllogResources;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\CrnBundle\Entity\CrnSiteParameter", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnSiteParameter', cascade: ['persist', 'remove'])]
     private $crnSiteParameter;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'App\DashboardBundle\Entity\DashboardSiteParameter', cascade: ['persist', 'remove'])]
     private $dashboardSiteParameter;
 
     /**
      * Navbar Employee List Filter Institution #1: [Dropdown with WCM selected]
-     *
-     * @ORM\ManyToOne(targetEntity="Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $navbarFilterInstitution1;
 
     /**
      * Navbar Employee List Filter Institution #1: [Dropdown with NYP selected]
-     *
-     * @ORM\ManyToOne(targetEntity="Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $navbarFilterInstitution2;
 
     /**
      * Default Accession Type for Deidentifier Defaults
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\AccessionType')]
     private $defaultDeidentifierAccessionType;
 
     /**
      * Default Accession Type for ScanOrder Type
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\AccessionType')]
     private $defaultScanAccessionType;
 
     /**
      * Default Mrn Type for ScanOrder Type
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MrnType')]
     private $defaultScanMrnType;
 
     /**
      * Default Slide Delivery
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\OrderDelivery")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\OrderDelivery')]
     private $defaultScanDelivery;
 
 //    /**
-//     * Default Institutional PHI Scope
-//     *
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-//     */
-//    private $defaultInstitutionalPHIScope;
-
+    //     * Default Institutional PHI Scope
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+    //     */
+    //    private $defaultInstitutionalPHIScope;
     /**
      * Default Organization Recipient
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $defaultOrganizationRecipient;
 
     /**
      * Default Scanner
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Equipment")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Equipment')]
     private $defaultScanner;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="user_siteparameter_platformLogo",
-//     *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", unique=true)}
-//     *      )
-//     **/
-//    protected $platformLogos;
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_siteparameter_platformLogo",
-     *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
-     **/
+    //     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
+    //     * @ORM\JoinTable(name="user_siteparameter_platformLogo",
+    //     *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", unique=true)}
+    //     *      )
+    //     **/
+    //    protected $platformLogos;
+    #[ORM\JoinTable(name: 'user_siteparameter_platformLogo')]
+    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'platformLogo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $platformLogos;
 
     /**
      * http or https or null
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $connectionChannel;
 
     /**
      * Translational Research Project Request Specialty Selection Note
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresProjectSelectionNote;
 
     /**
      * Pathology Department for Translational Research Dashboard
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $transresDashboardInstitution;
 
     /**
      * Name of the group that approves research projects involving human subjects: [IRB]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresHumanSubjectName;
 
     /**
      * Name of the group that approves research projects involving animal subjects: [IACUC]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresAnimalSubjectName;
 
     /**
      * Name of the business entity responsible for the translational research site - default "Center for Translational Pathology"
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresBusinessEntityName;
 
     /**
      * Abbreviated name of the business entity responsible for the translational research site - default "CTP"
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresBusinessEntityAbbreviation;
 
     /**
      * E-Mail Platform Administrator in case of critical errors
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $emailCriticalError;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="user_siteparameter_emailcriticalerrorexceptionuser",
-     *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="exceptionuser_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_siteparameter_emailcriticalerrorexceptionuser')]
+    #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'exceptionuser_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $emailCriticalErrorExceptionUsers;
 
     /**
      * Restart Apache in case of critical this many errors over the course of 10 minutes:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $restartServerErrorCounter;
 
     /**
      * Note Regarding Remote Access
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $remoteAccessUrl;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\VacReqBundle\Entity\VacReqSiteParameter", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'App\VacReqBundle\Entity\VacReqSiteParameter', cascade: ['persist', 'remove'])]
     private $vacreqSiteParameter;
 
-    /**
-     * @ORM\OneToOne(targetEntity="TelephonySiteParameter", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'TelephonySiteParameter', cascade: ['persist', 'remove'])]
     private $telephonySiteParameter;
 
     //Server Monitor
     /**
      * Other, external server monitor by cron: view-med checks if view is running (view's url is responding)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $externalMonitorUrl;
 
     /**
      * This server monitor: independent script checks by cron if url on this server is running
      * This script must be independent from Symfony, PHP, Postgresql
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $monitorScript;
 
     /**
      * Monitor check interval in minutes
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $monitorCheckInterval;
 
     /**
      * Send email notifications to platform administrators when new user records are created: [Yes/No]
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $sendEmailUserAdded;
 
 //    /**
-//     * independent monitor script arguments (i.e. url, smtpServerAddress, mailerPort, mailerUser, mailerPassword, admin emails )
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $monitorScriptArgs;
-
+    //     * independent monitor script arguments (i.e. url, smtpServerAddress, mailerPort, mailerUser, mailerPassword, admin emails )
+    //     *
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $monitorScriptArgs;
     /**
      * Configuration json file for backup DB
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $dbBackupConfig;
 
     /**
      * Configuration json file for backup the uploaded file folder
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $filesBackupConfig;
 
 

@@ -22,119 +22,87 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_credentials")
- */
+#[ORM\Table(name: 'user_credentials')]
+#[ORM\Entity]
 class Credentials extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $dob;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SexList", cascade={"persist"})
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SexList', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'sex_id', referencedColumnName: 'id', nullable: true)]
     protected $sex;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ssn;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $numberCLIA;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $cliaExpirationDate;
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $cliaAttachmentContainer;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $numberPFI;
 
     /**
      * Certificate of Qualification - Serial Number
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $numberCOQ;
 
     /**
      * Certificate of Qualification - Code
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $coqCode;
 
     /**
      * Certificate of Qualification - Expiration Date
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $coqExpirationDate;
 
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $coqAttachmentContainer;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $emergencyContactInfo;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $hobby;
 
-    /**
-     * @ORM\OneToOne(targetEntity="User", mappedBy="credentials")
-     */
+    #[ORM\OneToOne(targetEntity: 'User', mappedBy: 'credentials')]
     private $user;
 
     ///// Collections //////
-    /**
-     * @ORM\OneToMany(targetEntity="StateLicense", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'StateLicense', mappedBy: 'credentials', cascade: ['persist'])]
     private $stateLicense;
 
-    /**
-     * @ORM\OneToMany(targetEntity="BoardCertification", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'BoardCertification', mappedBy: 'credentials', cascade: ['persist'])]
     private $boardCertification;
 
-    /**
-     * @ORM\OneToMany(targetEntity="CodeNYPH", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'CodeNYPH', mappedBy: 'credentials', cascade: ['persist'])]
     private $codeNYPH;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Identifier", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Identifier', mappedBy: 'credentials', cascade: ['persist'])]
     private $identifiers;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Examination", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Examination', mappedBy: 'credentials', cascade: ['persist'])]
     private $examinations;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Citizenship", mappedBy="credentials", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Citizenship', mappedBy: 'credentials', cascade: ['persist'])]
     private $citizenships;
 
 

@@ -22,32 +22,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_laborder")
- */
+#[ORM\Table(name: 'scan_laborder')]
+#[ORM\Entity]
 class LabOrder extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="laborder")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'laborder')]
     protected $message;
 
     //"Signing Provider" field: message.proxyusers
-
     //"Receiving Providers" field: message.orderRecipients
-
-
-
     //"Laboratory Test Title"
     //(Select2 - this should be added to List Manager as "Laboratory Tests" and the "Laboratory Test ID Type" +
     //"Laboratory Test ID" + "Laboratory Test Title" fields should work exactly like the Grant Issuer, Grand ID, and Grant Title -
     //all three should be on the same list in List Manager)
-
-    /**
-     * @ORM\ManyToOne(targetEntity="LabTest", cascade={"persist"})
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'LabTest', cascade: ['persist'])]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $labTest;
 
 

@@ -22,50 +22,36 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_buildingList")
- */
+#[ORM\Table(name: 'user_buildingList')]
+#[ORM\Entity]
 class BuildingList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'BuildingList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'BuildingList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'GeoLocation', cascade: ['persist'])]
     private $geoLocation;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="buildings")
-     * @ORM\JoinTable(name="user_buildings_institutions")
-     **/
+    #[ORM\JoinTable(name: 'user_buildings_institutions')]
+    #[ORM\ManyToMany(targetEntity: 'Institution', inversedBy: 'buildings')]
     private $institutions;
 
     /**
      * This is inverse side, because we link the building to the location (location is responsible for adding building) => mappedBy
-     * @ORM\OneToMany(targetEntity="Location", mappedBy="building", cascade={"persist"})
      **/
+    #[ORM\OneToMany(targetEntity: 'Location', mappedBy: 'building', cascade: ['persist'])]
     private $locations;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="SuiteList", mappedBy="buildings")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'SuiteList', mappedBy: 'buildings')]
     private $suites;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="RoomList", mappedBy="buildings")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'RoomList', mappedBy: 'buildings')]
     private $rooms;
 
 

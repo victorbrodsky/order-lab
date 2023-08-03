@@ -27,278 +27,241 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_invoice")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_invoice')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Invoice {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $oid;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="TransResRequest", mappedBy="invoices")
-//     */
-//    private $transresRequests;
-    /**
-     * @ORM\ManyToOne(targetEntity="TransResRequest", inversedBy="invoices")
-     * @ORM\JoinColumn(name="transresRequest_id", referencedColumnName="id")
-     */
+    //     * @ORM\ManyToOne(targetEntity="TransResRequest", mappedBy="invoices")
+    //     */
+    //    private $transresRequests;
+    #[ORM\ManyToOne(targetEntity: 'TransResRequest', inversedBy: 'invoices')]
+    #[ORM\JoinColumn(name: 'transresRequest_id', referencedColumnName: 'id')]
     private $transresRequest;
 
     /**
      * The same as OID (remove it?)
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $invoiceNumber;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $dueDate;
 
     /**
      * Is not the same as Request's contact (Billing Contact). Pre-populated from default salesperson setting
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'salesperson', referencedColumnName: 'id', nullable: true)]
     private $salesperson;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
-//     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    private $principalInvestigators;
+    //     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
+    //     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
+    //     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
+    //     * )
+    //     **/
+    //    private $principalInvestigators;
     /**
      * Pre-Populated by Request's contact (Billing Contact: "Bill To")
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="principalInvestigator", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'principalInvestigator', referencedColumnName: 'id', nullable: true)]
     private $principalInvestigator;
 
     /**
      * Billing contact (from PI side) is populated from Request's  billing contact ($contact)
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="billingContact", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'billingContact', referencedColumnName: 'id', nullable: true)]
     private $billingContact;
 
     /**
      * Invoice status
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
     
     /**
      * Generated Invoices
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_invoice_document",
-     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_invoice_document')]
+    #[ORM\JoinColumn(name: 'invoice_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $documents;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $invoiceFrom;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $invoiceTo;
 
     /**
      * Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: John Dow)
      *
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $footer;
 
     /**
      * Tel: (212) 111-1111 Fax: (212) 111-1111 Email: email@med.cornell.edu
      *
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $footer2;
 
     /**
      * Detach and return with payment
      *
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $footer3;
 
     /**
      * Discount numeric
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $discountNumeric;
 
     /**
      * Discount numeric
-     *
-     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2, nullable: true)]
     private $discountPercent;
 
     /**
      * Administrative Fee
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $administrativeFee;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $subTotal;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $total;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $paid;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $due;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $subsidy;
 
-    /**
-     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'InvoiceItem', mappedBy: 'invoice', cascade: ['persist', 'remove'])]
     private $invoiceItems;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="InvoiceAddItem", mappedBy="invoice", cascade={"persist","remove"})
-//     */
-//    private $invoiceAddItems;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    //     * @ORM\OneToMany(targetEntity="InvoiceAddItem", mappedBy="invoice", cascade={"persist","remove"})
+    //     */
+    //    private $invoiceAddItems;
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $version;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $latestVersion;
 
     /**
      * fundedAccountNumber - pre-populated from request's $fundedAccountNumber
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fundedAccountNumber;
 
     /**
      * irbNumber - pre-populated from project's $irbNumber
      * NOT USED; project's getIrbIacucNumber() is used to show IRB(IACUC) number in the invoice's list, invoice show and PDF)
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $irbNumber;
 
 //    /**
-//     * iacucNumber - pre-populated from project's $iacucNumber
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $iacucNumber;
-
+    //     * iacucNumber - pre-populated from project's $iacucNumber
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $iacucNumber;
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $issuedDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $paidDate;
 
     /**
      * Invoice Last Reminder Sent Date
      *
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $invoiceLastReminderSentDate;
 
     /**
      * Count of the invoice reminder emails
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $invoiceReminderCount;
     
 
@@ -421,9 +384,7 @@ class Invoice {
         return $this->updateDate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();
@@ -1064,29 +1025,27 @@ class Invoice {
     }
 
 //    public function getGrandTotal() {
-//        $total = $this->getTotal();
-//        $subsidy = $this->getSubsidy();
-//        $grandTotal = (float)$total + (float)$subsidy;
-//        $grandTotal = $this->toDecimal($grandTotal);
-//        return $grandTotal;
-//    }
-
-//    /**
-//     * Create new: update project's grandTotal ("Total" in the project list)
-//     *
-//     * @ORM\PostPersist
-//     */
-//    public function updatePostPersistProjectTotal()
-//    {
-//        //exit("invoice->PostPersist->updateProjectTotal");
-//        $this->updateProjectTotal();
-//    }
+    //        $total = $this->getTotal();
+    //        $subsidy = $this->getSubsidy();
+    //        $grandTotal = (float)$total + (float)$subsidy;
+    //        $grandTotal = $this->toDecimal($grandTotal);
+    //        return $grandTotal;
+    //    }
+    //    /**
+    //     * Create new: update project's grandTotal ("Total" in the project list)
+    //     *
+    //     * @ORM\PostPersist
+    //     */
+    //    public function updatePostPersistProjectTotal()
+    //    {
+    //        //exit("invoice->PostPersist->updateProjectTotal");
+    //        $this->updateProjectTotal();
+    //    }
     /**
      * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
      * update project's total ("Total" in the project list)
-     *
-     * @ORM\PostUpdate
      */
+    #[ORM\PostUpdate]
     public function updatePostUpdateProjectTotal()
     {
         //exit("invoice->PostUpdate->updateProjectTotal");

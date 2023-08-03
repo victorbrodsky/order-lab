@@ -20,51 +20,36 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_partDiseaseType",
- *  indexes={
- *      @ORM\Index( name="partdiseasetype_field_idx", columns={"field"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'scan_partDiseaseType')]
+#[ORM\Index(name: 'partdiseasetype_field_idx', columns: ['field'])]
+#[ORM\Entity]
 class PartDiseaseType extends PartArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="diseaseType", cascade={"persist"})
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Part', inversedBy: 'diseaseType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'part_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $part;
 
     /**
      * //serve as "diseaseType"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="DiseaseTypeList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_diseaseType_diseaseTypeList",
-     *      joinColumns={@ORM\JoinColumn(name="diseaseType_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="diseaseTypeList_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_diseaseType_diseaseTypeList')]
+    #[ORM\JoinColumn(name: 'diseaseType_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'diseaseTypeList_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'DiseaseTypeList', cascade: ['persist', 'remove'])]
     private $diseaseTypes;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="DiseaseOriginList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_diseaseOrigin_diseaseOriginList",
-     *      joinColumns={@ORM\JoinColumn(name="diseaseType_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="diseaseTypeList_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_diseaseOrigin_diseaseOriginList')]
+    #[ORM\JoinColumn(name: 'diseaseType_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'diseaseTypeList_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'DiseaseOriginList', cascade: ['persist', 'remove'])]
     private $diseaseOrigins;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="partprimary", cascade={"persist"})
-     * @ORM\JoinColumn(name="primaryorgan_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'OrganList', inversedBy: 'partprimary', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'primaryorgan_id', referencedColumnName: 'id', nullable: true)]
     protected $primaryOrgan;
 
 

@@ -23,39 +23,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Procedure (use 'procedures', because 'procedure' causes problems (reserved?))
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\ProcedureRepository")
- * @ORM\Table(name="scan_procedure")
  */
+#[ORM\Table(name: 'scan_procedure')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\ProcedureRepository')]
 class Procedure extends ObjectAbstract
 {
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureName", mappedBy="procedure", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'ProcedureName', mappedBy: 'procedure', cascade: ['persist'])]
     protected $name;
 
     /**
      * Procedure Number
-     * @ORM\OneToMany(targetEntity="ProcedureNumber", mappedBy="procedure", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'ProcedureNumber', mappedBy: 'procedure', cascade: ['persist'])]
     protected $number;
     
     /**
      * parent
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="procedure")
-     * @ORM\JoinColumn(name="encounter", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'procedure')]
+    #[ORM\JoinColumn(name: 'encounter', referencedColumnName: 'id')]
     protected $encounter;
     
     /**
      * Procedure might have many Accession (children)
-     * 
-     * @ORM\OneToMany(targetEntity="Accession", mappedBy="procedure")
      */
+    #[ORM\OneToMany(targetEntity: 'Accession', mappedBy: 'procedure')]
     protected $accession;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="procedure")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'procedure')]
     protected $message;
 
 
@@ -63,19 +58,16 @@ class Procedure extends ObjectAbstract
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
      * Procedure location
-     * @ORM\OneToMany(targetEntity="ProcedureLocation", mappedBy="procedure", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'ProcedureLocation', mappedBy: 'procedure', cascade: ['persist'])]
     private $location;
 
 //    /**
-//     * Procedure order
-//     * @ORM\OneToMany(targetEntity="ProcedureOrder", mappedBy="procedure", cascade={"persist"})
-//     */
-//    private $order;
-
-    /**
-     * @ORM\OneToMany(targetEntity="ProcedureDate", mappedBy="procedure", cascade={"persist"})
-     */
+    //     * Procedure order
+    //     * @ORM\OneToMany(targetEntity="ProcedureOrder", mappedBy="procedure", cascade={"persist"})
+    //     */
+    //    private $order;
+    #[ORM\OneToMany(targetEntity: 'ProcedureDate', mappedBy: 'procedure', cascade: ['persist'])]
     private $date;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 

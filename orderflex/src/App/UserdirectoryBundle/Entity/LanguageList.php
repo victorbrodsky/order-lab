@@ -20,32 +20,22 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_languageList")
- */
+#[ORM\Table(name: 'user_languageList')]
+#[ORM\Entity]
 class LanguageList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="LanguageList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'LanguageList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LanguageList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LanguageList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="UserPreferences", mappedBy="languages")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'UserPreferences', mappedBy: 'languages')]
     protected $userpreferences;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $nativeName;
 
 

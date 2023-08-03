@@ -19,22 +19,16 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_titlePositionType")
- */
+#[ORM\Table(name: 'user_titlePositionType')]
+#[ORM\Entity]
 class TitlePositionType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="TitlePositionType", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'TitlePositionType', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TitlePositionType", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'TitlePositionType', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

@@ -27,181 +27,131 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_organizationalGroupDefault")
- */
+#[ORM\Table(name: 'user_organizationalGroupDefault')]
+#[ORM\Entity]
 class OrganizationalGroupDefault
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SiteParameters", inversedBy="organizationalGroupDefaults")
-     */
+    #[ORM\ManyToOne(targetEntity: 'SiteParameters', inversedBy: 'organizationalGroupDefaults')]
     private $siteParameter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
     /**
      * Primary Public User ID Type
-     *
-     * @ORM\ManyToOne(targetEntity="UsernameType")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'UsernameType')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $primaryPublicUserIdType;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $email;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $roles = array();
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $timezone;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $tooltip;
 
     /**
      * Only show this profile to members of the following institution(s)
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="user_organizationalGroupDefault_showToInstitution",
-     *      joinColumns={@ORM\JoinColumn(name="organizationalGroupDefault_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="showToInstitution_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'user_organizationalGroupDefault_showToInstitution')]
+    #[ORM\JoinColumn(name: 'organizationalGroupDefault_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'showToInstitution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $showToInstitutions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $defaultInstitution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="user_organizationalGroupDefault_permittedInstitutionalPHIScope",
-     *      joinColumns={@ORM\JoinColumn(name="permittedInstitutionalPHIScope_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_organizationalGroupDefault_permittedInstitutionalPHIScope')]
+    #[ORM\JoinColumn(name: 'permittedInstitutionalPHIScope_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $permittedInstitutionalPHIScope;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EmploymentType")
-     * @ORM\JoinColumn(name="employmentType_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EmploymentType')]
+    #[ORM\JoinColumn(name: 'employmentType_id', referencedColumnName: 'id', nullable: true)]
     private $employmentType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocaleList")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LocaleList')]
     private $locale;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="LanguageList", inversedBy="userpreferences")
-     * @ORM\JoinTable(name="user_organizationalGroupDefault_language")
-     **/
+    #[ORM\JoinTable(name: 'user_organizationalGroupDefault_language')]
+    #[ORM\ManyToMany(targetEntity: 'LanguageList', inversedBy: 'userpreferences')]
     private $languages;
 
     //Administrative Title Institution or Collaboration: Weill Cornell Medical College
     //Administrative Title Department: Department of Pathology and Laboratory Medicine
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $administrativeTitleInstitution;
 
     //Academic Appointment Title Institution or Collaboration: Weill Cornell Medical College
     //Academic Appointment Department: Department of Pathology and Laboratory Medicine
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $academicTitleInstitution;
 
     //Medical Appointment Title Institution or Collaboration: Weill Cornell Medical College
     //Medical Appointment Title Department: Department of Pathology and Laboratory Medicine
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $medicalTitleInstitution;
 
     //Location Type: Employee Office
-    /**
-     * @ORM\ManyToMany(targetEntity="LocationTypeList", inversedBy="locations", cascade={"persist"})
-     * @ORM\JoinTable(name="user_organizationalGroupDefault_locationtype")
-     **/
+    #[ORM\JoinTable(name: 'user_organizationalGroupDefault_locationtype')]
+    #[ORM\ManyToMany(targetEntity: 'LocationTypeList', inversedBy: 'locations', cascade: ['persist'])]
     private $locationTypes;
 
     //Location Institution or Collaboration: Weill Cornell Medical College
     //Location Department: Department of Pathology and Laboratory Medicine
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $locationInstitution;
 
     //Location City: New York
-    /**
-     * @ORM\ManyToOne(targetEntity="CityList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'CityList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $city;
 
     //Location State: New York (NY)
-    /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'States')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $state;
 
     //Location Zip Code: 10065
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $zip;
 
     //Location Country: United States
-    /**
-     * @ORM\ManyToOne(targetEntity="Countries")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Countries')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $country;
 
     //Medical License Country: United States
-    /**
-     * @ORM\ManyToOne(targetEntity="Countries")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Countries')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $medicalLicenseCountry;
 
     //Medical License State: New York (NY)
-    /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'States')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $medicalLicenseState;
 
     /**
      * Employment Period(s) [visible only to Editors and Administrators]: Organizational Group for Employment Period
-     *
-     * @ORM\ManyToOne(targetEntity="Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $employmentInstitution;
 
 

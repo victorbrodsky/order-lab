@@ -25,27 +25,20 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Note: this file is used in App\UserdirectoryBundle\Entity\Identifier. Do not change!
- *
- * @ORM\Entity
- * @ORM\Table(name="scan_mrntype")
  */
+#[ORM\Table(name: 'scan_mrntype')]
+#[ORM\Entity]
 class MrnType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="MrnType", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'MrnType', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MrnType", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MrnType', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="keytype")
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientMrn', mappedBy: 'keytype')]
     protected $patientmrn;
 
 

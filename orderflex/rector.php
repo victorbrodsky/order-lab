@@ -13,6 +13,7 @@ return function (RectorConfig $rectorConfig): void {
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
         //NetteSetList::ANNOTATIONS_TO_ATTRIBUTES,
         //SensiolabsSetList::FRAMEWORK_EXTRA_61,
+        //SymfonyLevelSetList::UP_TO_SYMFONY_63
     ]);
 };
 

@@ -20,53 +20,43 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_objectTypeText")
- */
+#[ORM\Table(name: 'user_objectTypeText')]
+#[ORM\Entity]
 class ObjectTypeText extends ObjectTypeReceivingBase
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeText", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeText', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ObjectTypeText', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeText")
-//     */
-//    private $formNodes;
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
-//     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
-//     */
-//    private $objectTypeText;
-    /**
-     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeTexts", cascade={"persist"})
-     * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
-     */
+    //     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="objectTypeText")
+    //     */
+    //    private $formNodes;
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
+    //     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
+    //     */
+    //    private $objectTypeText;
+    #[ORM\ManyToOne(targetEntity: 'FormNode', inversedBy: 'objectTypeTexts', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'formNode_id', referencedColumnName: 'id')]
     protected $formNode;
 
     /**
      * Plain text
-     * 
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $value;
 
 
     /**
      * Copy of the value. If the value is html text, this $secondaryValue can store the plain text
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $secondaryValue;
 
 

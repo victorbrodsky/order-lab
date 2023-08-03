@@ -20,22 +20,16 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_CCIPlateletTypeTransfusedList")
- */
+#[ORM\Table(name: 'user_CCIPlateletTypeTransfusedList')]
+#[ORM\Entity]
 class CCIPlateletTypeTransfusedList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="CCIPlateletTypeTransfusedList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'CCIPlateletTypeTransfusedList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CCIPlateletTypeTransfusedList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CCIPlateletTypeTransfusedList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

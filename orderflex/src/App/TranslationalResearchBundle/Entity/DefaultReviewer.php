@@ -27,57 +27,46 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_defaultReviewer")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_defaultReviewer')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DefaultReviewer
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $creator;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $reviewer;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $reviewerDelegate;
 
     /**
@@ -87,38 +76,31 @@ class DefaultReviewer
      * admin_review - ROLE_TRANSRES_ADMIN
      * committee_review - ROLE_TRANSRES_COMMITTEE_REVIEWER
      * final_review - ROLE_TRANSRES_PRIMARY_REVIEWER
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $state;
 
     /**
      * Used for Committee review. One review should be a primary and this review will change the project state.
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $primaryReview;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\TranslationalResearchBundle\Entity\SpecialtyList', cascade: ['persist'])]
     private $projectSpecialty;
 
     /**
      * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
      * Project Type 'string' - 'Funded', 'Non-Funded', 'All'
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $funded;
 
     /**
      * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
      * Project Type 'string' - 'Funded', 'Non-Funded', 'All' ...
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $reviewProjectType;
 
 

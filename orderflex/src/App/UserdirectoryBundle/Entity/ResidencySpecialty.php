@@ -22,85 +22,62 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //TODO: turn it to BaseCompositeNode
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_residencySpecialty")
- */
+#[ORM\Table(name: 'user_residencySpecialty')]
+#[ORM\Entity]
 class ResidencySpecialty extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ResidencySpecialty", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ResidencySpecialty', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 
     //fellowshipSubspecialty - children
-    /**
-     * @ORM\OneToMany(targetEntity="FellowshipSubspecialty", mappedBy="parent", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'FellowshipSubspecialty', mappedBy: 'parent', cascade: ['persist'])]
     private $children;
 
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $boardCertificateAvailable;
 
 
     //Residency application fields
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     protected $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencyspecialty_coordinator",
-     *      joinColumns={@ORM\JoinColumn(name="residencyspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coordinator_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_residencyspecialty_coordinator')]
+    #[ORM\JoinColumn(name: 'residencyspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'coordinator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $coordinators;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencyspecialty_director",
-     *      joinColumns={@ORM\JoinColumn(name="residencyspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="director_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_residencyspecialty_director')]
+    #[ORM\JoinColumn(name: 'residencyspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'director_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $directors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencyspecialty_interviewer",
-     *      joinColumns={@ORM\JoinColumn(name="residencyspecialty_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="interviewer_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_residencyspecialty_interviewer')]
+    #[ORM\JoinColumn(name: 'residencyspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'interviewer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $interviewers;
 
     /**
      * Application season start date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearStart;
 
     /**
      * Application season end date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearEnd;
 
 

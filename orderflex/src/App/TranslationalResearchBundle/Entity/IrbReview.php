@@ -27,24 +27,18 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_irbReview")
- */
+#[ORM\Table(name: 'transres_irbReview')]
+#[ORM\Entity]
 class IrbReview extends ReviewBase
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="irbReviews")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Project', inversedBy: 'irbReviews')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $project;
 
 
     //Claim/Assignment
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $assignment;
 
 //    /**

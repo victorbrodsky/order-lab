@@ -20,166 +20,110 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_location")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user_location')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Location extends ListAbstract
 {
 
     const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
     const STATUS_VERIFIED = 1;      //verified by admin
-
-
-    /**
-     * @ORM\OneToMany(targetEntity="Location", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'Location', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Location", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Location', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
     /**
      * status: valid, invalid
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
+    #[ORM\Column(type: 'integer', options: ['default' => 0], nullable: true)]
     protected $status;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default" = 1}, nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => 1], nullable: true)]
     protected $removable;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="LocationTypeList", inversedBy="locations", cascade={"persist"})
-     * @ORM\JoinTable(name="user_location_locationtype")
-     **/
+    #[ORM\JoinTable(name: 'user_location_locationtype')]
+    #[ORM\ManyToMany(targetEntity: 'LocationTypeList', inversedBy: 'locations', cascade: ['persist'])]
     protected $locationTypes;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $phone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $pager;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $mobile;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $fax;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $email;
 
-    /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'GeoLocation', cascade: ['persist'])]
     protected $geoLocation;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="locations", cascade={"persist"})
-     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'BuildingList', inversedBy: 'locations', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'building_id', referencedColumnName: 'id')]
     private $building;
 
     //floor has many suites. However, floor and suite exist in parallel in the Location object
-    /**
-     * @ORM\ManyToOne(targetEntity="FloorList",cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FloorList', cascade: ['persist'])]
     protected $floor;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $floorSide;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SuiteList",cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'SuiteList', cascade: ['persist'])]
     protected $suite;
 
     //suite has many rooms. However, suite and room exist in parallel in the Location object
-    /**
-     * @ORM\ManyToOne(targetEntity="RoomList",cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'RoomList', cascade: ['persist'])]
     protected $room;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MailboxList",cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MailboxList', cascade: ['persist'])]
     protected $mailbox;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $comment;
 
     /**
      * Associated NYPH Code
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $associatedCode;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $associatedClia;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $associatedCliaExpDate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $associatedPfi;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_location_assistant",
-     *      joinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="assistant_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_location_assistant')]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'assistant_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $assistant;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="locations")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'locations')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ic;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocationPrivacyList", inversedBy="locations")
-     * @ORM\JoinColumn(name="privacy_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LocationPrivacyList', inversedBy: 'locations')]
+    #[ORM\JoinColumn(name: 'privacy_id', referencedColumnName: 'id')]
     private $privacy;
 
 
@@ -907,9 +851,7 @@ class Location extends ListAbstract
 
 
     //set suite, room, floor, building, institution relationship
-    /**
-     * @ORM\PreFlush
-     */
+    #[ORM\PreFlush]
     public function setRoomSuiteFloorBuilding()
     {
         //exit('set room, suite, floor, building');

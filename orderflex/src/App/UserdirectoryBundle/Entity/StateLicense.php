@@ -20,67 +20,50 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_stateLicense")
- */
+#[ORM\Table(name: 'user_stateLicense')]
+#[ORM\Entity]
 class StateLicense
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'States')]
+    #[ORM\JoinColumn(name: 'state_id', referencedColumnName: 'id', nullable: true)]
     private $state;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Countries")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Countries')]
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'id', nullable: true)]
     private $country;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $licenseNumber;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $licenseIssuedDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $licenseExpirationDate;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="stateLicense")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Credentials', inversedBy: 'stateLicense')]
+    #[ORM\JoinColumn(name: 'credentials_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $credentials;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MedicalLicenseStatus")
-     * @ORM\JoinColumn(name="active", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MedicalLicenseStatus')]
+    #[ORM\JoinColumn(name: 'active', referencedColumnName: 'id', nullable: true)]
     private $active;
 
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $attachmentContainer;
 
 

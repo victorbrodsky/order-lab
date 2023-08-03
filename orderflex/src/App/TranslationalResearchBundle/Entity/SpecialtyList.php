@@ -25,37 +25,26 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Project Specialty List
- *
- * @ORM\Entity
- * @ORM\Table(name="transres_specialtyList")
  */
+#[ORM\Table(name: 'transres_specialtyList')]
+#[ORM\Entity]
 class SpecialtyList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="SpecialtyList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'SpecialtyList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SpecialtyList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'SpecialtyList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="RequestCategoryTypeList", mappedBy="projectSpecialties")
-     */
+    #[ORM\ManyToMany(targetEntity: 'RequestCategoryTypeList', mappedBy: 'projectSpecialties')]
     private $requestCategories;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $rolename;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $friendlyname;
 
 

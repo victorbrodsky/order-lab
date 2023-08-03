@@ -21,27 +21,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_procedureDate")
- */
+#[ORM\Table(name: 'scan_procedureDate')]
+#[ORM\Entity]
 class ProcedureDate extends ProcedureArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="date", cascade={"persist"})
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Procedure', inversedBy: 'date', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'procedure_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $procedure;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $field;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $time;
 
 

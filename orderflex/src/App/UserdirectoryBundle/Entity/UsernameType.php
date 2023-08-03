@@ -22,27 +22,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_usernameType")
- */
+#[ORM\Table(name: 'user_usernameType')]
+#[ORM\Entity]
 class UsernameType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="EventTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'EventTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EventTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="User", mappedBy="keytype")
-     */
+    #[ORM\OneToMany(targetEntity: 'User', mappedBy: 'keytype')]
     protected $users;
 
 

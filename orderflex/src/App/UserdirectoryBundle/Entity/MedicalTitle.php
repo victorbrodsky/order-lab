@@ -20,43 +20,31 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_medicalTitle")
- */
+#[ORM\Table(name: 'user_medicalTitle')]
+#[ORM\Entity]
 class MedicalTitle extends BaseTitle
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MedicalTitleList")
-     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'MedicalTitleList')]
+    #[ORM\JoinColumn(name: 'name', referencedColumnName: 'id', nullable: true)]
     protected $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="medicalTitles")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'medicalTitles')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="MedicalSpecialties")
-     * @ORM\JoinTable(name="user_medicaltitle_medicalspeciality",
-     *      joinColumns={@ORM\JoinColumn(name="medicaltitle_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="medicalspeciality_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_medicaltitle_medicalspeciality')]
+    #[ORM\JoinColumn(name: 'medicaltitle_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'medicalspeciality_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'MedicalSpecialties')]
     protected $specialties;
 
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="PositionTypeList")
-     * @ORM\JoinTable(name="user_medicalTitle_userPosition",
-     *      joinColumns={@ORM\JoinColumn(name="medicalTitle_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userPosition_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_medicalTitle_userPosition')]
+    #[ORM\JoinColumn(name: 'medicalTitle_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'userPosition_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'PositionTypeList')]
     private $userPositions;
 
 

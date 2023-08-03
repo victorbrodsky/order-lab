@@ -22,21 +22,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_calllogTaskTypeList")
- */
+#[ORM\Table(name: 'scan_calllogTaskTypeList')]
+#[ORM\Entity]
 class CalllogTaskTypeList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="CalllogTaskTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'CalllogTaskTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CalllogTaskTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CalllogTaskTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 }

@@ -22,18 +22,12 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(
- *  name="user_accessrequest",
- *  indexes={
- *      @ORM\Index( name="user_idx", columns={"user_id"} ),
- *      @ORM\Index( name="status_idx", columns={"status"} ),
- *      @ORM\Index( name="siteName_idx", columns={"siteName"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'user_accessrequest')]
+#[ORM\Index(name: 'user_idx', columns: ['user_id'])]
+#[ORM\Index(name: 'status_idx', columns: ['status'])]
+#[ORM\Index(name: 'siteName_idx', columns: ['siteName'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class AccessRequest
 {
 
@@ -41,142 +35,100 @@ class AccessRequest
     const STATUS_DECLINED = 1;
     const STATUS_APPROVED = 2;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
-    /**
-     * @ORM\Column(name="siteName", type="string")
-     */
+    #[ORM\Column(name: 'siteName', type: 'string')]
     private $siteName;
 
-    /**
-     * @ORM\Column(name="status", type="integer", options={"default" = 0})
-     */
+    #[ORM\Column(name: 'status', type: 'integer', options: ['default' => 0])]
     private $status;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     private $updatedby;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $updateAuthorRoles = array();
 
     /////////////////////// access request details //////////////////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $firstName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $lastName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank(
-     *     message = "The email value should not be blank."
-     * )
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     * )
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank(message: 'The email value should not be blank.')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private $email;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
 
     ///////////////// mobilePhone /////////////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $mobilePhone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $mobilePhoneVerifyCode;
 
     /**
      * mobilePhoneVerifyCode generation Date. Used for expiration date.
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $mobilePhoneVerifyCodeDate;
 
     /**
      * Is the mobile phone number verified?
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $mobilePhoneVerified;
     ///////////////// EOF mobilePhone ///////////////////////
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $job;
 
     /**
      * Organizational Group
-     *
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
      **/
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     private $organizationalGroup;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $reason;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $similaruser;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referencename;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referenceemail;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referencephone;
 
 
@@ -237,8 +189,8 @@ class AccessRequest
 
     /**
      * @param \DateTime $updatedate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();
@@ -254,8 +206,8 @@ class AccessRequest
 
     /**
      * @param \DateTime $createdate
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function setCreatedate()
     {
         $this->createdate = new \DateTime();

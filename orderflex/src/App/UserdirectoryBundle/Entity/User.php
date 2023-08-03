@@ -26,63 +26,75 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 use Doctrine\ORM\Mapping\AttributeOverride;
+use Doctrine\ORM\Mapping\Column;
+
+use App\UserdirectoryBundle\Repository\UserRepository;
 
 //use FOS\UserBundle\Model\User as BaseUser;
-
 //Use FOSUser bundle: https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.md
 //User is a reserved keyword in SQL so you cannot use it as table name
 //Generate unique username (post): primaryPublicUserId + "_" + keytype + "_" _ id
-
-
 //[Doctrine\DBAL\DBALException]
 // An exception occurred while executing 'ALTER TABLE user_fosuser ALTER COLUMN username NVARCHAR(180) NOT NULL':
 // SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]The index 'username_idx' is dependent on column 'username'.
 //Caused by FriendsOfSymfony/FOSUserBundle forked from KnpLabs/KnpUserBundle commit 6fefb7212dfc629ebc74af67d75a62d274a44c95
 //Make username and email length compatible with actual database limitations regarding key and index length
 //So use "friendsofsymfony/user-bundle": "v2.0.0-alpha3"
-
 // *      @ORM\Index( name="username_idx", columns={"username"} )
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserRepository")
- * @UniqueEntity(
- *     fields={"keytype", "primaryPublicUserId"},
- *     errorPath="primaryPublicUserId",
- *     message="Can not create a new user: the combination of the Primary Public User ID Type and Primary Public User ID is already in use."
- * )
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_fosuser",
- *  indexes={
- *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
- *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} )
- *  }
- * )
- * @ORM\AttributeOverrides({
- *      @ORM\AttributeOverride(name="email",
- *          column=@ORM\Column(
- *              name     = "email",
- *              type     = "string",
- *              unique   = false,
- *              nullable = true
- *          )
- *      ),
- *      @ORM\AttributeOverride(name="emailCanonical",
- *          column=@ORM\Column(
- *              name     = "email_canonical",
- *              type     = "string",
- *              unique   = false,
- *              nullable = true
- *          )
- *      )
- * })
- */
+///**
+// * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserRepository")
+// * @UniqueEntity(
+// *     fields={"keytype", "primaryPublicUserId"},
+// *     errorPath="primaryPublicUserId",
+// *     message="Can not create a new user: the combination of the Primary Public User ID Type and Primary Public User ID is already in use."
+// * )
+// * @ORM\HasLifecycleCallbacks
+// * @ORM\AttributeOverrides({
+// *      @ORM\AttributeOverride(name="email",
+// *          column=@ORM\Column(
+// *              name     = "email",
+// *              type     = "string",
+// *              unique   = false,
+// *              nullable = true
+// *          )
+// *      ),
+// *      @ORM\AttributeOverride(name="emailCanonical",
+// *          column=@ORM\Column(
+// *              name     = "email_canonical",
+// *              type     = "string",
+// *              unique   = false,
+// *              nullable = true
+// *          )
+// *      )
+// * })
+// */
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(
+    fields: ['keytype', 'primaryPublicUserId'],
+    errorPath: 'primaryPublicUserId',
+    message: 'Can not create a new user: the combination of the Primary Public User ID Type and Primary Public User ID is already in use.',
+)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: 'user_fosuser')]
+#[ORM\Index(name: 'keytype_idx', columns: ['keytype'])]
+#[ORM\Index(name: 'primaryPublicUserId_idx', columns: ['primaryPublicUserId'])]
+#[AttributeOverrides([
+    new AttributeOverride(
+        name: "email",
+        column: new Column(name: "email", type: "string", unique: false, nullable: true)
+    ),
+    new AttributeOverride(
+        name: "emailCanonical",
+        column: new Column(name: "email_canonical", type: "string", unique: false, nullable: true)
+    )]
+)]
 class User extends UserBase {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
 //    /**
@@ -103,15 +115,12 @@ class User extends UserBase {
 
     /**
      * Primary Public User ID Type
-     *
-     * @ORM\ManyToOne(targetEntity="UsernameType", inversedBy="users")
-     * @ORM\JoinColumn(name="keytype", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'UsernameType', inversedBy: 'users')]
+    #[ORM\JoinColumn(name: 'keytype', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
-    /**
-     * @ORM\Column(name="primaryPublicUserId", type="string")
-     */
+    #[ORM\Column(name: 'primaryPublicUserId', type: 'string')]
     private $primaryPublicUserId;
 
     /**
@@ -120,215 +129,157 @@ class User extends UserBase {
      * //OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"},
      *  indexBy="firstName,middleName,lastName,displayName,email"
      * )
-     *
-     * @ORM\OneToMany(targetEntity="UserInfo", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"displayName" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: 'UserInfo', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['displayName' => 'ASC'])]
     private $infos;
 
     /**
      * system, excel, manual, ldap
-     *
-     * @ORM\Column(name="createdby", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'createdby', type: 'string', nullable: true)]
     private $createdby;
 
     /**
      * otherUserParam: used for creation a new user on the fly and pass additional parameters, for example, transres project's specialty Hema or APCP
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $otherUserParam;
 
-    /**
-     * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'UserPreferences', inversedBy: 'user', cascade: ['persist', 'remove'])]
     private $preferences;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Credentials", inversedBy="user", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\OneToOne(targetEntity: 'Credentials', inversedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'credentials_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $credentials;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Training", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"completionDate" = "DESC", "orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Training', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['completionDate' => 'DESC', 'orderinlist' => 'ASC'])]
     private $trainings;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\FellAppBundle\Entity\FellowshipApplication", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'App\FellAppBundle\Entity\FellowshipApplication', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $fellowshipApplications;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\ResAppBundle\Entity\ResidencyApplication", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'App\ResAppBundle\Entity\ResidencyApplication', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $residencyApplications;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Location', mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $locations;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'AdministrativeTitle', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC', 'priority' => 'ASC', 'endDate' => 'ASC'])]
     private $administrativeTitles;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppointmentTitle", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'AppointmentTitle', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC', 'priority' => 'ASC', 'endDate' => 'ASC'])]
     private $appointmentTitles;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MedicalTitle", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC", "priority" = "ASC", "endDate" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'MedicalTitle', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC', 'priority' => 'ASC', 'endDate' => 'ASC'])]
     private $medicalTitles;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EmploymentStatus", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"terminationDate" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EmploymentStatus', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['terminationDate' => 'ASC'])]
     private $employmentStatus;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="ResearchLab", inversedBy="user", cascade={"persist"})
-     * @ORM\JoinTable(name="user_users_researchlabs")
-     **/
+    #[ORM\JoinTable(name: 'user_users_researchlabs')]
+    #[ORM\ManyToMany(targetEntity: 'ResearchLab', inversedBy: 'user', cascade: ['persist'])]
     private $researchLabs;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Grant", inversedBy="user", cascade={"persist"})
-     * @ORM\JoinTable(name="user_users_grants")
-     **/
+    #[ORM\JoinTable(name: 'user_users_grants')]
+    #[ORM\ManyToMany(targetEntity: 'Grant', inversedBy: 'user', cascade: ['persist'])]
     private $grants;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Publication", inversedBy="users", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_users_publications")
-     * @ORM\OrderBy({"updatedate" = "DESC", "publicationDate" = "DESC"})
-     */
+    #[ORM\JoinTable(name: 'user_users_publications')]
+    #[ORM\ManyToMany(targetEntity: 'Publication', inversedBy: 'users', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['updatedate' => 'DESC', 'publicationDate' => 'DESC'])]
     private $publications;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Book", inversedBy="users", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_users_books")
-     * @ORM\OrderBy({"updatedate" = "DESC", "publicationDate" = "DESC"})
-     */
+    #[ORM\JoinTable(name: 'user_users_books')]
+    #[ORM\ManyToMany(targetEntity: 'Book', inversedBy: 'users', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['updatedate' => 'DESC', 'publicationDate' => 'DESC'])]
     private $books;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Lecture", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lectureDate" = "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Lecture', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lectureDate' => 'DESC'])]
     private $lectures;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PrivateComment", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PrivateComment', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['commentTypeStr' => 'ASC', 'updatedate' => 'DESC', 'orderinlist' => 'ASC'])]
     private $privateComments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PublicComment", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PublicComment', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['commentTypeStr' => 'ASC', 'updatedate' => 'DESC', 'orderinlist' => 'ASC'])]
     private $publicComments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ConfidentialComment", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'ConfidentialComment', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['commentTypeStr' => 'ASC', 'updatedate' => 'DESC', 'orderinlist' => 'ASC'])]
     private $confidentialComments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AdminComment", mappedBy="user", cascade={"persist","remove"})
-     * @ORM\OrderBy({"commentTypeStr" = "ASC", "updatedate" = "DESC", "orderinlist" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'AdminComment', mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['commentTypeStr' => 'ASC', 'updatedate' => 'DESC', 'orderinlist' => 'ASC'])]
     private $adminComments;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="Document")
-     * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Document')]
+    #[ORM\JoinColumn(name: 'avatar_id', referencedColumnName: 'id')]
     private $avatar;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Permission", mappedBy="user", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Permission', mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $permissions;
 
-    /**
-     * @ORM\OneToOne(targetEntity="PerSiteSettings", mappedBy="user", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'PerSiteSettings', mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $perSiteSettings;
 
-    /**
-     * @ORM\Column(name="testingAccount", type="boolean", nullable=true)
-     */
+    #[ORM\Column(name: 'testingAccount', type: 'boolean', nullable: true)]
     private $testingAccount;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $author;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $failedAttemptCounter;
 
 //    /**
-//     * @var \DateTime
-//     * @ORM\Column(type="datetime", nullable=true)
-//     */
-//    private $lastFailedAttemptDate;
-
+    //     * @var \DateTime
+    //     * @ORM\Column(type="datetime", nullable=true)
+    //     */
+    //    private $lastFailedAttemptDate;
     /**
      *  Send email notifications to
-     * 
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $notificationEmailUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="lastActivity", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'lastActivity', type: 'datetime', nullable: true)]
     private $lastActivity;
 
     /**
      * Last visited url, updated by keepalive on the web page => /common/setserveractive
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $lastLoggedUrl;
 
-    /**
-     * @ORM\Column(name="activeAD", type="boolean", nullable=true)
-     */
+    #[ORM\Column(name: 'activeAD', type: 'boolean', nullable: true)]
     private $activeAD;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="lastAdCheck", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'lastAdCheck', type: 'datetime', nullable: true)]
     private $lastAdCheck;
 
 
@@ -1339,9 +1290,7 @@ class User extends UserBase {
 
 
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setDisplaynameIfEmpty(): void
     {
         if( !$this->getDisplayName() || $this->getDisplayName() == "" ) {

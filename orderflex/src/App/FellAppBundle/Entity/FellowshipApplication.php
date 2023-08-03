@@ -30,324 +30,236 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_fellowshipApplication")
- */
+#[ORM\Table(name: 'fellapp_fellowshipApplication')]
+#[ORM\Entity]
 class FellowshipApplication extends BaseUserAttributes {
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $googleFormId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User", inversedBy="fellowshipApplications", cascade={"remove"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User', inversedBy: 'fellowshipApplications', cascade: ['remove'])]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $user;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $startDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $endDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\FellowshipSubspecialty", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty', cascade: ['persist'])]
     private $fellowshipSubspecialty;
 
     /**
      * This should be the link to WCMC's "Department of Pathology and Laboratory Medicine"
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_coverLetter",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coverLetter_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_coverLetter')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'coverLetter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $coverLetters;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_cv",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="cv_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_cv')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'cv_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $cvs;
 
 
     //Reprimands
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $reprimand;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_reprimandDocument",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="reprimandDocument_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_reprimandDocument')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'reprimandDocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $reprimandDocuments;
 
     //Lawsuits
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $lawsuit;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_lawsuitDocument",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="lawsuitDocument_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_lawsuitDocument')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'lawsuitDocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $lawsuitDocuments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Reference", mappedBy="fellapp", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Reference', mappedBy: 'fellapp', cascade: ['persist'])]
     private $references;
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $honors;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $publications;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $memberships;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $signatureName;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $signatureDate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $interviewScore;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $applicationStatus;
-
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $applicationStatus;
     /**
      * application status as a list
-     * @ORM\ManyToOne(targetEntity="FellAppStatus")
      */
+    #[ORM\ManyToOne(targetEntity: 'FellAppStatus')]
     private $appStatus;
 
     /**
      * timestamp when google form is opened
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $timestamp;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_report",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_report')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $reports;
 
     /**
      * Application PDF without attached documents: Will be automatically generated if left empty
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_formReport",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="formReport_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_formReport')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'formReport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $formReports;
 
     /**
      * Manually Uploaded Application PDF without attachments
-     * 
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellapp_manualreports",
-     *      joinColumns={@ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="manualreport_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellapp_manualreports')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'manualreport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $manualReports;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_oldReport",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="oldReport_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_oldReport')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'oldReport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $oldReports;
 
     /**
      * Other Documents
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_document",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_document')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $documents;
 
     /**
      * Itinerarys
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_itinerary",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="itinerary_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_itinerary')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'itinerary_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $itinerarys;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $interviewDate;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Interview", mappedBy="fellapp", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Interview', mappedBy: 'fellapp', cascade: ['persist', 'remove'])]
     private $interviews;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="fellapp_fellApp_observer",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="observer_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_observer')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'observer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $observers;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Rank", inversedBy="fellapp", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="rank_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\OneToOne(targetEntity: 'Rank', inversedBy: 'fellapp', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'rank_id', referencedColumnName: 'id', nullable: true)]
     private $rank;
 
 
     /////////// user objects /////////////
-//    /**
-//     * @ORM\ManyToMany(targetEntity="EmploymentStatus")
-//     * @ORM\JoinTable(name="fellapp_fellowshipApplication_employmentStatus",
-//     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="employmentStatus_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $employmentStatuses;
-
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="EmploymentStatus")
+    //     * @ORM\JoinTable(name="fellapp_fellowshipApplication_employmentStatus",
+    //     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="employmentStatus_id", referencedColumnName="id")}
+    //     *      )
+    //     **/
+    //    private $employmentStatuses;
     /**
      * Other Documents
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellApp_avatar",
-     *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="avatar_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellApp_avatar')]
+    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'avatar_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $avatars;
 
     /**
      * //"completionDate" = "DESC", "orderinlist" = "ASC"
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Training", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_training",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")}
-     *      )
-     * @ORM\OrderBy({"orderinlist" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_training')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'training_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Training', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $trainings;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Examination", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_examination",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="examination_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_examination')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'examination_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Examination', cascade: ['persist', 'remove'])]
     private $examinations;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Location", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_location",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="location_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_location')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'location_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Location', cascade: ['persist', 'remove'])]
     private $locations;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Citizenship", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_citizenship",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="citizenship_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_citizenship')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'citizenship_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Citizenship', cascade: ['persist', 'remove'])]
     private $citizenships;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\StateLicense", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_stateLicense",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="stateLicense_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_stateLicense')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'stateLicense_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\StateLicense', cascade: ['persist', 'remove'])]
     private $stateLicenses;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\BoardCertification", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="fellapp_fellowshipApplication_boardCertification",
-     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="boardCertification_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_boardCertification')]
+    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'boardCertification_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\BoardCertification', cascade: ['persist', 'remove'])]
     private $boardCertifications;
 
     /////////// EOF user objects /////////////

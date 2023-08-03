@@ -20,22 +20,16 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_viewmodelist")
- */
+#[ORM\Table(name: 'user_viewmodelist')]
+#[ORM\Entity]
 class ViewModeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ViewModeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ViewModeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ViewModeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ViewModeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

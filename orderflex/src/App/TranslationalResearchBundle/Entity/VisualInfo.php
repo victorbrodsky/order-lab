@@ -20,75 +20,63 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_visualinfo")
- */
+#[ORM\Table(name: 'transres_visualinfo')]
+#[ORM\Entity]
 class VisualInfo {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'author', referencedColumnName: 'id')]
     protected $author;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     protected $updateAuthor;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updatedate;
 
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $orderinlist;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AntibodyList", inversedBy="visualInfos")
-     * @ORM\JoinColumn(name="antibodylist_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'AntibodyList', inversedBy: 'visualInfos')]
+    #[ORM\JoinColumn(name: 'antibodylist_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $antibody;
 
     
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_visualinfo_document",
-     *      joinColumns={@ORM\JoinColumn(name="visualinfo_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
-     **/
+    #[ORM\JoinTable(name: 'transres_visualinfo_document')]
+    #[ORM\JoinColumn(name: 'visualinfo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     protected $documents;
 
     /**
      * Comment for document
      *
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
@@ -96,8 +84,8 @@ class VisualInfo {
      * catalog (preconfigured, not editable) can be established based on the antibody ID (existing) and the # of panel is accruing.
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $catalog;
 
 
@@ -180,9 +168,7 @@ class VisualInfo {
         return $this->updatedate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

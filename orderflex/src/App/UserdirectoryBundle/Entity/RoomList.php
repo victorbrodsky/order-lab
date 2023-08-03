@@ -20,41 +20,29 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_roomlist")
- */
+#[ORM\Table(name: 'user_roomlist')]
+#[ORM\Entity]
 class RoomList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="RoomList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'RoomList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RoomList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'RoomList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="SuiteList", inversedBy="rooms")
-     * @ORM\JoinTable(name="user_rooms_suites")
-     **/
+    #[ORM\JoinTable(name: 'user_rooms_suites')]
+    #[ORM\ManyToMany(targetEntity: 'SuiteList', inversedBy: 'rooms')]
     private $suites;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="FloorList", inversedBy="rooms")
-     * @ORM\JoinTable(name="user_rooms_floors")
-     **/
+    #[ORM\JoinTable(name: 'user_rooms_floors')]
+    #[ORM\ManyToMany(targetEntity: 'FloorList', inversedBy: 'rooms')]
     private $floors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="BuildingList", inversedBy="rooms")
-     * @ORM\JoinTable(name="user_rooms_buildings")
-     **/
+    #[ORM\JoinTable(name: 'user_rooms_buildings')]
+    #[ORM\ManyToMany(targetEntity: 'BuildingList', inversedBy: 'rooms')]
     private $buildings;
 
 //    /**

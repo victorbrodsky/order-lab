@@ -35,108 +35,90 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
 use App\UtilBundles\FOSCommentBundle\Entity\Comment as FosBaseComment;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_fosComment")
- * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
- */
+#[ORM\Table(name: 'user_fosComment')]
+#[ORM\Entity]
+#[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
 class FosComment extends FosBaseComment // implements SignedCommentInterface
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * Thread of this comment
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\FosThread")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\FosThread')]
     protected $thread;
 
     /**
      * Author of the comment
      *
      * @var User
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     protected $author;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $authorType;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $authorTypeDescription;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $prefix;
 
     //Fields specifying a subject entity
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityNamespace;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $entityId;
 
     //Overwrite with explicit the doctrine fields
-//$this->addSql('ALTER TABLE user_foscomment DROP ancestors');
-//$this->addSql('ALTER TABLE user_foscomment DROP depth');
-//$this->addSql('ALTER TABLE user_foscomment DROP created_at');
-//$this->addSql('ALTER TABLE user_foscomment DROP state');
+    //$this->addSql('ALTER TABLE user_foscomment DROP ancestors');
+    //$this->addSql('ALTER TABLE user_foscomment DROP depth');
+    //$this->addSql('ALTER TABLE user_foscomment DROP created_at');
+    //$this->addSql('ALTER TABLE user_foscomment DROP state');
     /**
      * Comment text.
      * Overwrite with explicit the doctrine type="text". Otherwise the return body value is NULL
-     *
-     * @ORM\Column(name="body", type="text")
      */
+    #[ORM\Column(name: 'body', type: 'text')]
     protected $body;
 
     /**
      * All ancestors of the comment. Length = 1024
-     *
-     * @ORM\Column(name="ancestors", type="string", length=1024, nullable=false)
      */
+    #[ORM\Column(name: 'ancestors', type: 'string', length: 1024, nullable: false)]
     protected $ancestors = '';
 
     /**
      * The depth of the comment.
-     *
-     * @ORM\Column(name="depth", type="integer")
      */
+    #[ORM\Column(name: 'depth', type: 'integer')]
     protected $depth = 0;
 
-    /**
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
     protected $createdAt;
 
     /**
      * Current state of the comment.
-     *
-     * @ORM\Column(name="state", type="integer")
      */
+    #[ORM\Column(name: 'state', type: 'integer')]
     protected $state = 0;
 
 

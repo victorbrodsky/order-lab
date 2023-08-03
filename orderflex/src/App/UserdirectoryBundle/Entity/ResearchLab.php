@@ -20,65 +20,43 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\ResearchLabRepository")
- * @ORM\Table(name="user_researchLab")
- */
+#[ORM\Table(name: 'user_researchLab')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\ResearchLabRepository')]
 class ResearchLab extends ListAbstract  //extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="BuildingList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'BuildingList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="BuildingList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'BuildingList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id')]
     private $institution;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="researchLabs")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'researchLabs')]
     private $user;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $foundedDate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $dissolvedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="location", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Location')]
+    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'id', nullable: true)]
     private $location;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $weblink;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ResearchLabComment", mappedBy="researchLab", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ResearchLabComment', mappedBy: 'researchLab', cascade: ['persist', 'remove'])]
     private $comments;
     private $commentDummy;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ResearchLabPI", mappedBy="researchLab", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ResearchLabPI', mappedBy: 'researchLab', cascade: ['persist', 'remove'])]
     private $pis;
     private $piDummy;
 

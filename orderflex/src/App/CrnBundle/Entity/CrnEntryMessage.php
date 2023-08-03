@@ -25,167 +25,152 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="crn_crnEntryMessage")
- */
+#[ORM\Table(name: 'crn_crnEntryMessage')]
+#[ORM\Entity]
 class CrnEntryMessage extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\OrderformBundle\Entity\Message", mappedBy="crnEntryMessage")
-     **/
+    #[ORM\OneToOne(targetEntity: 'App\OrderformBundle\Entity\Message', mappedBy: 'crnEntryMessage')]
     protected $message;
 
 
     //Patient List
     /**
      * Return order if not completed by deadline
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $addPatientToList;
 
     /**
      * Amount of Time Spent in Minutes
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $timeSpentMinutes;
 
 //    /**
-//     * Linked Object ID. Used to make a link to other lists in the list manager.
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $entityId;
-//    /**
-//     * Used to make a link to other lists in the list manager.
-//     * i.e. "App\OrderformBundle\Entity"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $entityNamespace;
-//    /**
-//     * Used to make a link to other lists in the list manager.
-//     * i.e. "Patient"
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $entityName;
-
+    //     * Linked Object ID. Used to make a link to other lists in the list manager.
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $entityId;
+    //    /**
+    //     * Used to make a link to other lists in the list manager.
+    //     * i.e. "App\OrderformBundle\Entity"
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $entityNamespace;
+    //    /**
+    //     * Used to make a link to other lists in the list manager.
+    //     * i.e. "Patient"
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $entityName;
     //Within each message object, add the following variables for backup
     /**
      * Patient Last Name Backup
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientLastNameBackup;
 
     /**
      * Patient First Name Backup
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientFirstNameBackup;
 
     /**
      * Patient Middle Name Backup
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientMiddleNameBackup;
 
     /**
      * Patient Date of Birth Backup
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $patientDOBBackup;
 
     /**
      * Patient MRN Type Backup
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MrnType', cascade: ['persist'])]
     private $patientMRNTypeBackup;
 
     /**
      * Patient MRN Backup
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientMRNBackup;
 
     /**
      * Encounter Number Type Backup
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\EncounterType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\EncounterType', cascade: ['persist'])]
     private $encounterTypeBackup;
 
     /**
      * Encounter Number Backup
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $encounterNumberBackup;
 
     /**
      * Encounter Date Backup
-     * @ORM\OneToOne(targetEntity="App\OrderformBundle\Entity\EncounterDate", cascade={"persist","remove"})
      */
+    #[ORM\OneToOne(targetEntity: 'App\OrderformBundle\Entity\EncounterDate', cascade: ['persist', 'remove'])]
     private $encounterDateBackup;
 
     //All Message related fields are already exists in Message objects
-//    /**
-//     * Message Type Backup
-//     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
-//     */
-//    private $messageCategoryBackup;
-//    /**
-//     * Message Version Backup
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $messageVersionBackup;
+    //    /**
+    //     * Message Type Backup
+    //     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
+    //     */
+    //    private $messageCategoryBackup;
+    //    /**
+    //     * Message Version Backup
+    //     * @ORM\Column(type="integer", nullable=true)
+    //     */
+    //    private $messageVersionBackup;
     //Form Type Backup
     //Form Version Backup
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="crn_crnentrymessage_document",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'crn_crnentrymessage_document')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $documents;
 
     /**
      * Attachment Types. The same as Call Log (Shared List)
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogAttachmentTypeList")
-     * @ORM\JoinColumn(name="crnattachmenttype_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\CalllogAttachmentTypeList')]
+    #[ORM\JoinColumn(name: 'crnattachmenttype_id', referencedColumnName: 'id', nullable: true)]
     private $crnAttachmentType;
 
     //    /**
-//     * Create different branch for Crn (https://127.0.0.1/scan/admin/list/patient-lists-tree/) and inverse crnEntryMessages in PatientListHierarchy
-//     *
-//     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="crnEntryMessages" )
-//     * @ORM\JoinTable(name="scan_crnEntryMessage_patientList")
-//     **/
-//    private $patientLists;
-    /**
-     * @ORM\ManyToMany(targetEntity="App\OrderformBundle\Entity\PatientListHierarchy", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="crn_crnentrymessage_patientlist",
-     *      joinColumns={@ORM\JoinColumn(name="crnentrymessage_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="patientlist_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    //     * Create different branch for Crn (https://127.0.0.1/scan/admin/list/patient-lists-tree/) and inverse crnEntryMessages in PatientListHierarchy
+    //     *
+    //     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="crnEntryMessages" )
+    //     * @ORM\JoinTable(name="scan_crnEntryMessage_patientList")
+    //     **/
+    //    private $patientLists;
+    #[ORM\JoinTable(name: 'crn_crnentrymessage_patientlist')]
+    #[ORM\JoinColumn(name: 'crnentrymessage_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'patientlist_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\OrderformBundle\Entity\PatientListHierarchy', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $patientLists;
 
     /**
      * TODO: move to the message level, sync DB
      * Crn Entry Tags
-     * @ORM\ManyToMany(targetEntity="CrnEntryTagsList", inversedBy="crnEntryMessages" )
-     * @ORM\JoinTable(name="crn_crnentrymessage_entrytag")
      **/
+    #[ORM\JoinTable(name: 'crn_crnentrymessage_entrytag')]
+    #[ORM\ManyToMany(targetEntity: 'CrnEntryTagsList', inversedBy: 'crnEntryMessages')]
     private $entryTags;
 
     /**
      * Tasks Types. The same as Call Log (Shared List)
-     *
-     * @ORM\OneToMany(targetEntity="App\CrnBundle\Entity\CrnTask", mappedBy="crnEntryMessage", cascade={"persist"})
      **/
+    #[ORM\OneToMany(targetEntity: 'App\CrnBundle\Entity\CrnTask', mappedBy: 'crnEntryMessage', cascade: ['persist'])]
     private $crnTasks;
 //    /**
 //     * Tasks Types. The same as Call Log (Shared List)

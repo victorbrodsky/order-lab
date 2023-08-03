@@ -20,50 +20,39 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\BlockRepository")
- * @ORM\Table(name="scan_block")
- */
+#[ORM\Table(name: 'scan_block')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\BlockRepository')]
 class Block extends ObjectAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="BlockBlockname", mappedBy="block", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'BlockBlockname', mappedBy: 'block', cascade: ['persist'])]
     protected $blockname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="BlockSectionsource", mappedBy="block", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'BlockSectionsource', mappedBy: 'block', cascade: ['persist'])]
     protected $sectionsource;
 
 
     //////////////  OBJECTS /////////////
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="block")
-     * @ORM\JoinColumn(name="part", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Part', inversedBy: 'block')]
+    #[ORM\JoinColumn(name: 'part', referencedColumnName: 'id', nullable: true)]
     protected $part;
     
     //cascade={"persist"}
     /**
      * One Block has Many slides
      * Accession might have many slide s
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="block")
      */
+    #[ORM\OneToMany(targetEntity: 'Slide', mappedBy: 'block')]
     protected $slide;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="block")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'block')]
     protected $message;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="BlockSpecialStains", mappedBy="block", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="blockspecialstain_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\OneToMany(targetEntity: 'BlockSpecialStains', mappedBy: 'block', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'blockspecialstain_id', referencedColumnName: 'id', nullable: true)]
     protected $specialStains;
 
 //    /**

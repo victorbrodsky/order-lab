@@ -29,72 +29,56 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class ArrayFieldAbstract {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-     /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
-     */
+     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'provider', referencedColumnName: 'id')]
     protected $provider;
 
     /**
      * status: valid, invalid, alias
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $status;
 
     //default: 'scanorder'. Other values (old): "import_from_Epic", "import_from_LIS"
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\SourceSystemList')]
+    #[ORM\JoinColumn(name: 'source_id', referencedColumnName: 'id', nullable: true)]
     protected $source;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $creationdate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Message", cascade={"persist"})
-     * @ORM\JoinColumn(name="message", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Message', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'message', referencedColumnName: 'id', nullable: true)]
     protected $message;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinColumn(name="updateSource", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\SourceSystemList')]
+    #[ORM\JoinColumn(name: 'updateSource', referencedColumnName: 'id', nullable: true)]
     protected $updateSource;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     protected $updateAuthor;
 
-    /**
-     * @ORM\OneToOne(targetEntity="DataQualityEventLog")
-     * @ORM\JoinColumn(name="dqeventlog", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\OneToOne(targetEntity: 'DataQualityEventLog')]
+    #[ORM\JoinColumn(name: 'dqeventlog', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $dqeventlog;
 
     private $className;
@@ -129,9 +113,7 @@ abstract class ArrayFieldAbstract {
         return $this->id;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreationdate()
     {
         $this->creationdate = new \DateTime();
@@ -232,9 +214,9 @@ abstract class ArrayFieldAbstract {
     }
 
     /**
-     * @ORM\PreUpdate
      * @param mixed $updateDate
      */
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();;

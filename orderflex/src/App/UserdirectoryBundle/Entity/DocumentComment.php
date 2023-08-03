@@ -22,29 +22,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_documentComment")
- */
+#[ORM\Table(name: 'user_documentComment')]
+#[ORM\Entity]
 class DocumentComment extends BaseUserAttributes {
 
 //    /**
-//     * @var integer
-//     *
-//     * @ORM\Column(name="id", type="integer")
-//     * @ORM\Id
-//     * @ORM\GeneratedValue(strategy="AUTO")
-//     */
-//    private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="DocumentContainer", inversedBy="comments")
-     */
+    //     * @var integer
+    //     *
+    //     * @ORM\Column(name="id", type="integer")
+    //     * @ORM\Id
+    //     * @ORM\GeneratedValue(strategy="AUTO")
+    //     */
+    //    private $id;
+    #[ORM\ManyToOne(targetEntity: 'DocumentContainer', inversedBy: 'comments')]
     private $documentContainer;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
 

@@ -23,213 +23,197 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_antibodyList")
- */
+#[ORM\Table(name: 'transres_antibodyList')]
+#[ORM\Entity]
 class AntibodyList extends ListAbstract
 {
-    /**
-     * @ORM\OneToMany(targetEntity="AntibodyList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'AntibodyList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AntibodyList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'AntibodyList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $type;
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $orderinlist;
 
 //`category` varchar(32) NOT NULL,
-//`name` varchar(255) NOT NULL,
-//`altname` varchar(255) DEFAULT NULL,
-//`company` varchar(255) NOT NULL,
-//`catalog` varchar(255) NOT NULL,
-//`lot` varchar(255) NOT NULL,
-//`igconcentration` varchar(255) NOT NULL,
-//`clone` varchar(255) NOT NULL,
-//`host` varchar(255) NOT NULL,
-//`reactivity` varchar(255) NOT NULL,
-//`control` varchar(255) NOT NULL,
-//`protocol` varchar(255) NOT NULL,
-//`retrieval` varchar(255) NOT NULL,
-//`dilution` varchar(255) NOT NULL,
-//`storage` varchar(255) NOT NULL,
-//`comment` varchar(6255) NOT NULL,
-//`datasheet` varchar(6255) NOT NULL,
-//`pdf` varchar(255) NOT NULL,
-
+    //`name` varchar(255) NOT NULL,
+    //`altname` varchar(255) DEFAULT NULL,
+    //`company` varchar(255) NOT NULL,
+    //`catalog` varchar(255) NOT NULL,
+    //`lot` varchar(255) NOT NULL,
+    //`igconcentration` varchar(255) NOT NULL,
+    //`clone` varchar(255) NOT NULL,
+    //`host` varchar(255) NOT NULL,
+    //`reactivity` varchar(255) NOT NULL,
+    //`control` varchar(255) NOT NULL,
+    //`protocol` varchar(255) NOT NULL,
+    //`retrieval` varchar(255) NOT NULL,
+    //`dilution` varchar(255) NOT NULL,
+    //`storage` varchar(255) NOT NULL,
+    //`comment` varchar(6255) NOT NULL,
+    //`datasheet` varchar(6255) NOT NULL,
+    //`pdf` varchar(255) NOT NULL,
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $category;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $altname;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $company;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $catalog;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $lot;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $igconcentration;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $clone;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $host;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $reactivity;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $control;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $protocol;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $retrieval;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dilution;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $storage;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $datasheet;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $pdf;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_antibody_document",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
-     **/
+    #[ORM\JoinTable(name: 'transres_antibody_document')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $documents;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment1;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment2;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="exportId", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'exportId', type: 'integer', nullable: true)]
     private $exportId;
 
 
     /**
      * Inventory Stock
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $inventory;
 
     /**
      * Unit Price
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $unitPrice;
 
     /**
      * Tissue Type
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $tissueType;
 
     /**
      * Similar to http://store.ihcworld.com/abi-1-ihc-antibody/
-     *
-     * @ORM\OneToMany(targetEntity="VisualInfo", mappedBy="antibody", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC","updatedate" = "DESC"})
      */
+    #[ORM\OneToMany(targetEntity: 'VisualInfo', mappedBy: 'antibody', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC', 'updatedate' => 'DESC'])]
     private $visualInfos;
 
 

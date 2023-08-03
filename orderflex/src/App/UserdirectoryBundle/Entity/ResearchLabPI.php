@@ -20,45 +20,36 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_researchLabPI")
- */
+#[ORM\Table(name: 'user_researchLabPI')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class ResearchLabPI
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResearchLab", inversedBy="pis")
-     * @ORM\JoinColumn(name="researchLab_id", referencedColumnName="id", onDelete="CASCADE")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ResearchLab', inversedBy: 'pis')]
+    #[ORM\JoinColumn(name: 'researchLab_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $researchLab;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="fosuser_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(name: 'fosuser_id', referencedColumnName: 'id')]
     private $pi;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedate()
     {
         $this->createdate = new \DateTime();

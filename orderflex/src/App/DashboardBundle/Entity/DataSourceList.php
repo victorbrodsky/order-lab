@@ -24,22 +24,17 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Dashboard Data Source
- *
- * @ORM\Entity
- * @ORM\Table(name="dashboard_datasourcelist")
  */
+#[ORM\Table(name: 'dashboard_datasourcelist')]
+#[ORM\Entity]
 class DataSourceList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="DataSourceList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'DataSourceList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DataSourceList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'DataSourceList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 

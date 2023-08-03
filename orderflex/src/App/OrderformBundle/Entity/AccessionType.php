@@ -23,27 +23,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_accessiontype")
- */
+#[ORM\Table(name: 'scan_accessiontype')]
+#[ORM\Entity]
 class AccessionType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionType", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'AccessionType', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AccessionType", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'AccessionType', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionAccession", mappedBy="keytype")
-     */
+    #[ORM\OneToMany(targetEntity: 'AccessionAccession', mappedBy: 'keytype')]
     protected $accessionaccession;
 
 

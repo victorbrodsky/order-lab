@@ -20,45 +20,33 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_appointmentTitle")
- */
+#[ORM\Table(name: 'user_appointmentTitle')]
+#[ORM\Entity]
 class AppointmentTitle extends BaseTitle
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppTitleList")
-     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'AppTitleList')]
+    #[ORM\JoinColumn(name: 'name', referencedColumnName: 'id', nullable: true)]
     protected $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="appointmentTitles")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'appointmentTitles')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
 //    /**
-//     * @ORM\Column(name="position", type="string", nullable=true)
-//     */
-//    protected $position;
-    /**
-     * @ORM\ManyToMany(targetEntity="PositionTrackTypeList", inversedBy="appointmentTitles")
-     * @ORM\JoinTable(name="user_appointmenttitle_position")
-     **/
+    //     * @ORM\Column(name="position", type="string", nullable=true)
+    //     */
+    //    protected $position;
+    #[ORM\JoinTable(name: 'user_appointmenttitle_position')]
+    #[ORM\ManyToMany(targetEntity: 'PositionTrackTypeList', inversedBy: 'appointmentTitles')]
     private $positions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
-     * @ORM\JoinColumn(name="residencyTrack_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ResidencyTrackList')]
+    #[ORM\JoinColumn(name: 'residencyTrack_id', referencedColumnName: 'id')]
     private $residencyTrack;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellowshipTypeList")
-     * @ORM\JoinColumn(name="fellowshipType_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FellowshipTypeList')]
+    #[ORM\JoinColumn(name: 'fellowshipType_id', referencedColumnName: 'id')]
     private $fellowshipType;
 
 

@@ -23,26 +23,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_stainlist",
- *  indexes={
- *      @ORM\Index( name="stain_name_idx", columns={"name"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'scan_stainlist')]
+#[ORM\Index(name: 'stain_name_idx', columns: ['name'])]
+#[ORM\Entity]
 class StainList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="StainList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'StainList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="StainList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'StainList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 

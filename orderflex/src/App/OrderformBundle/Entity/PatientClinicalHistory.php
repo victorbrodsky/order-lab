@@ -23,23 +23,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 //@ORM\Entity(repositoryClass="App\OrderformBundle\Repository\ClinicalHistoryRepository")
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientclinicalHistory")
- */
+#[ORM\Table(name: 'scan_patientclinicalHistory')]
+#[ORM\Entity]
 class PatientClinicalHistory extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="clinicalHistory")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'clinicalHistory')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $field;
 
 }

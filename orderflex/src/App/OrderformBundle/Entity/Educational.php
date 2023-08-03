@@ -25,59 +25,44 @@ use Doctrine\Common\Collections\ArrayCollection;
 //    *      @ORM\Index( name="courseTitleStr_idx", columns={"courseTitleStr"} ),
 // *      @ORM\Index( name="lessonTitleStr_idx", columns={"lessonTitleStr"} )
 // *  }
-
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\EducationalRepository")
- * @ORM\Table( name="scan_educational")
- */
+#[ORM\Table(name: 'scan_educational')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\EducationalRepository')]
 class Educational
 {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="educational")
-     */
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'educational')]
     private $message;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="educational")
-     */
+    #[ORM\OneToMany(targetEntity: 'Slide', mappedBy: 'educational')]
     private $slides;
 
     //directors
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_educational_userWrapper",
-     *      joinColumns={@ORM\JoinColumn(name="educational_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_educational_userWrapper')]
+    #[ORM\JoinColumn(name: 'educational_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'userWrapper_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $userWrappers;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="educationals", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'CourseTitleTree', inversedBy: 'educationals', cascade: ['persist'])]
     private $courseTitle;
 
     /**
      * primaryDirector
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper",cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist'])]
     private $primaryPrincipal;
 
 
     /**
      * primarySet - name of the primary Director. Indicates if the primaryDirector was set by this order
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $primarySet;
 
 

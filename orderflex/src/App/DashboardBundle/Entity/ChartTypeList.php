@@ -24,7 +24,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 //Dashboard Chart Type
-
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -33,40 +32,33 @@ use Doctrine\Common\Collections\ArrayCollection;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="dashboard_charttypelist",
- *  indexes={
- *      @ORM\Index( name="charttypelist_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'dashboard_charttypelist')]
+#[ORM\Index(name: 'charttypelist_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class ChartTypeList extends BaseCompositeNode
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ChartTypeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ChartTypeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'ChartTypeList', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'ChartTypeList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
 //    /**

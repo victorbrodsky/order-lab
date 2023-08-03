@@ -22,40 +22,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\OrderformBundle\Entity\AccessionArrayFieldAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_accessionaccession",
- *  indexes={
- *      @ORM\Index( name="accession_field_idx", columns={"field"} ),
- *      @ORM\Index( name="accession_keytype_idx", columns={"keytype_id"} )
- *  },
- *  uniqueConstraints={@ORM\UniqueConstraint(name="accession_unique", columns={"accession_id", "field", "keytype_id"})}
- * )
- */
+#[ORM\Table(name: 'scan_accessionaccession')]
+#[ORM\Index(name: 'accession_field_idx', columns: ['field'])]
+#[ORM\Index(name: 'accession_keytype_idx', columns: ['keytype_id'])]
+#[ORM\UniqueConstraint(name: 'accession_unique', columns: ['accession_id', 'field', 'keytype_id'])]
+#[ORM\Entity]
 class AccessionAccession extends AccessionArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="accession", cascade={"persist"})
-     * @ORM\JoinColumn(name="accession_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Accession', inversedBy: 'accession', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'accession_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $accession;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
     /**
      * original accession # enetered by user
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AccessionType", inversedBy="accessionaccession", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'AccessionType', inversedBy: 'accessionaccession', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
     /**

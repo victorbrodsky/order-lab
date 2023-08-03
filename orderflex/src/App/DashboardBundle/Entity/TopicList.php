@@ -23,7 +23,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 //252(3) - "Dashboard Topic" (same as Organizational Groups)
-
 /**
  *
  * Use Composite pattern:
@@ -33,57 +32,48 @@ use Doctrine\Common\Collections\ArrayCollection;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="dashboard_topiclist",
- *  indexes={
- *      @ORM\Index( name="topiclist_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'dashboard_topiclist')]
+#[ORM\Index(name: 'topiclist_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class TopicList extends BaseCompositeNode
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="TopicList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'TopicList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TopicList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'TopicList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="TopicList", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'TopicList', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TopicList", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'TopicList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
     ///////////// Attributes //////////////////
     //TODO: we have auto generated ID
-//    /**
-//     * “Dashboard Chart Topic ID” [free-text field only allowing integers]
-//     *
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $oid;
-
+    //    /**
+    //     * “Dashboard Chart Topic ID” [free-text field only allowing integers]
+    //     *
+    //     * @var string
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $oid;
     /**
      * “Associated Dashboard Charts”: [multi-select with the flat list of all “Dashboard Charts” created in step 7 below]
-     *
-     * @ORM\ManyToMany(targetEntity="ChartList", mappedBy="topics")
      **/
+    #[ORM\ManyToMany(targetEntity: 'ChartList', mappedBy: 'topics')]
     private $charts;
 
     ///////////////////// Access Control ////////////////////
@@ -94,99 +84,83 @@ class TopicList extends BaseCompositeNode
     //“Data can be downloaded by users with the following roles:” [multi-select with roles].
     /**
      * "Accessible to users with the following roles:" [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_accessrole",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_topic_accessrole')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $accessRoles;
 
     /**
      * "Deny access to users with the following roles:" [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_denyrole",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_topic_denyrole')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $denyRoles;
 
     /**
      * "Deny access to the following users:" [multi-select with all users]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_denyuser",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_topic_denyuser')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $denyUsers;
 
     /**
      * "Data can be downloaded by users with the following roles:" [multi-select with roles].
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_downloadrole",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_topic_downloadrole')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Roles', cascade: ['persist'])]
     private $downloadRoles;
     ///////////////////// EOF Access Control ////////////////////
-
     /**
      * “Favorited by the following users”: [multi-select with all users]
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_favoriteuser",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'dashboard_topic_favoriteuser')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User', cascade: ['persist'])]
     private $favoriteUsers;
 
     /**
      * Requested by
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="requester_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'requester_id', referencedColumnName: 'id')]
     private $requester;
 
     /**
      * Requested on
      *
      * @var \DateTime
-     * @ORM\Column(name="requesteddate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'requesteddate', type: 'datetime', nullable: true)]
     private $requestedDate;
 
     /**
      * "Associated with the following organizational groups": [multi-select with the flat list of all organizational groups] - Institution hierarchy
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_topic_institution",
-     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'dashboard_topic_institution')]
+    #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution', cascade: ['persist'])]
     private $institutions;
 
     /**
      * Topic Comment
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $topicComment;
 
     /**
      * Enable public access without requiring log in
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $publicAccess;
 
 

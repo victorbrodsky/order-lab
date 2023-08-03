@@ -31,58 +31,38 @@ use Doctrine\ORM\Mapping as ORM;
 class SinglePatient {
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType")
-//     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $keytype;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    //     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType")
+    //     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
+    //     */
+    //    private $keytype;
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $keytype;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $mrn;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $lastname;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $firstname;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $middlename;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $suffix;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SexList")
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\SexList')]
+    #[ORM\JoinColumn(name: 'sex_id', referencedColumnName: 'id', nullable: true)]
     private $gender;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     protected $dob;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $email;
 
 

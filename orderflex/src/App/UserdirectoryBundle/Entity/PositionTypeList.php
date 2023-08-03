@@ -20,28 +20,20 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_positionTypeList")
- */
+#[ORM\Table(name: 'user_positionTypeList')]
+#[ORM\Entity]
 class PositionTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="PositionTypeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'PositionTypeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PositionTypeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'PositionTypeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="UserPosition", mappedBy="positionTypes")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'UserPosition', mappedBy: 'positionTypes')]
     private $userPositions;
 
 

@@ -27,135 +27,96 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 //UniqueEntity({"mrn"})
-
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\PatientRepository")
- * @ORM\Table(name="scan_patient")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'scan_patient')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\PatientRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Patient extends ObjectAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
-     * @ORM\OrderBy({"creationdate" = "DESC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientMrn', mappedBy: 'patient', cascade: ['persist'])]
+    #[ORM\OrderBy(['creationdate' => 'DESC'])]
     private $mrn;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientSuffix", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientSuffix', mappedBy: 'patient', cascade: ['persist'])]
     private $suffix;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientLastName", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientLastName', mappedBy: 'patient', cascade: ['persist'])]
     private $lastname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientFirstName", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientFirstName', mappedBy: 'patient', cascade: ['persist'])]
     private $firstname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientMiddleName", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientMiddleName', mappedBy: 'patient', cascade: ['persist'])]
     private $middlename;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientSex", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientSex', mappedBy: 'patient', cascade: ['persist'])]
     private $sex;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientDob", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientDob', mappedBy: 'patient', cascade: ['persist'])]
     private $dob;
 
     //@ORM\OrderBy({"creationdate" = "DESC", "id" = "DESC"})
     /**
      * Patient's Clinical Summary
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="PatientClinicalHistory", mappedBy="patient", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'PatientClinicalHistory', mappedBy: 'patient', cascade: ['persist'])]
     private $clinicalHistory;
         
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="patient", cascade={"persist"})
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'patient', cascade: ['persist'])]
     protected $message;
 
     /**
      * Patient might have many encounters (children)
-     *
-     * @ORM\OneToMany(targetEntity="Encounter", mappedBy="patient")
      */
+    #[ORM\OneToMany(targetEntity: 'Encounter', mappedBy: 'patient')]
     private $encounter;
 
 
 
     ///////////////// additional extra fields not shown on scan order /////////////////
-    /**
-     * @ORM\OneToMany(targetEntity="PatientRace", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientRace', mappedBy: 'patient', cascade: ['persist'])]
     private $race;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientDeceased", mappedBy="patient", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PatientDeceased', mappedBy: 'patient', cascade: ['persist'])]
     private $deceased;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
-//     */
-//    private $contactinfo;
-
+    //     * @ORM\OneToMany(targetEntity="PatientContactinfo", mappedBy="patient", cascade={"persist"})
+    //     */
+    //    private $contactinfo;
     /**
      * Hierarchy Tree
-     * @ORM\OneToMany(targetEntity="PatientType", mappedBy="patient", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'PatientType', mappedBy: 'patient', cascade: ['persist'])]
     private $type;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
-
-//    /**
-//     * Master Merge Record
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $masterMergeRecord;
+    //    /**
+    //     * Master Merge Record
+    //     * @ORM\Column(type="boolean", nullable=true)
+    //     */
+    //    private $masterMergeRecord;
     /**
      * Master Merge Record
-     * @ORM\OneToMany(targetEntity="PatientMasterMergeRecord", mappedBy="patient", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'PatientMasterMergeRecord', mappedBy: 'patient', cascade: ['persist'])]
     private $masterMergeRecord;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PatientRecordStatusList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'PatientRecordStatusList')]
     private $patientRecordStatus;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\LifeFormList")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\LifeFormList')]
     private $lifeForm;
 
 
     /////TODO: Add these fields to SinglePatient to vedit the patient demographic page
-    
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phoneCanonical;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $email;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $emailCanonical;
 
 

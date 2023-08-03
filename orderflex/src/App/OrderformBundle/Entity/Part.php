@@ -20,81 +20,60 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\PartRepository")
- * @ORM\Table(name="scan_part")
- */
+#[ORM\Table(name: 'scan_part')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\PartRepository')]
 class Part extends ObjectAbstract
 {
 
     /**
      * Part belongs to exactly one Accession => Part has only one Accession
-     * @ORM\ManyToOne(targetEntity="Accession", inversedBy="part")
-     * @ORM\JoinColumn(name="accession", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'Accession', inversedBy: 'part')]
+    #[ORM\JoinColumn(name: 'accession', referencedColumnName: 'id', nullable: true)]
     protected $accession;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartPartname", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartPartname', mappedBy: 'part', cascade: ['persist'])]
     protected $partname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartParttitle", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartParttitle', mappedBy: 'part', cascade: ['persist'])]
     protected $parttitle;
     
-    //*********************************************// 
+    //*********************************************//
     // optional fields
-    //*********************************************//     
-
-    /**
-     * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="part", cascade={"persist"})
-     */
+    //*********************************************//
+    #[ORM\OneToMany(targetEntity: 'PartSourceOrgan', mappedBy: 'part', cascade: ['persist'])]
     protected $sourceOrgan;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartDescription", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartDescription', mappedBy: 'part', cascade: ['persist'])]
     protected $description;
 
     //diagnosis: disident (diagnoses causes the problem as reserved word)
-    /**
-     * @ORM\OneToMany(targetEntity="PartDisident", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartDisident', mappedBy: 'part', cascade: ['persist'])]
     protected $disident;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartPaper", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartPaper', mappedBy: 'part', cascade: ['persist'])]
     protected $paper;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartDiffDisident", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartDiffDisident', mappedBy: 'part', cascade: ['persist'])]
     protected $diffDisident;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartDiseaseType", mappedBy="part", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'PartDiseaseType', mappedBy: 'part', cascade: ['persist'])]
     protected $diseaseType;
 
     /**
      * One Part has Many blocks
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="part")
      */
+    #[ORM\OneToMany(targetEntity: 'Block', mappedBy: 'part')]
     protected $block;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="part")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'part')]
     protected $message;
 
     /**
      * For some slides, the slide can be attached to the Part directly, without block
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="part")
      */
+    #[ORM\OneToMany(targetEntity: 'Slide', mappedBy: 'part')]
     protected $slide;
 
     

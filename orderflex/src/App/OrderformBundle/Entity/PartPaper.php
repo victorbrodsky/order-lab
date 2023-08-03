@@ -33,27 +33,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="scan_partPaper")
- */
+#[ORM\Table(name: 'scan_partPaper')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class PartPaper extends PartArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="paper", cascade={"persist"})
-     * @ORM\JoinColumn(name="part_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Part', inversedBy: 'paper', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'part_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     protected $part;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document")
-     * @ORM\JoinTable(name="scan_partpaper_document",
-     *      joinColumns={@ORM\JoinColumn(name="partpaper_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_partpaper_document')]
+    #[ORM\JoinColumn(name: 'partpaper_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document')]
     protected $documents;
 
 

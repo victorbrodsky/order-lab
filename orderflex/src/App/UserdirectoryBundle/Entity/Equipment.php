@@ -23,28 +23,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_equipment")
- */
+#[ORM\Table(name: 'user_equipment')]
+#[ORM\Entity]
 class Equipment extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="Equipment", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'Equipment', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Equipment", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Equipment', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EquipmentType", inversedBy="equipments", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'EquipmentType', inversedBy: 'equipments', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
 

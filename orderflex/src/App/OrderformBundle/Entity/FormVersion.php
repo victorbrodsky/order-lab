@@ -22,44 +22,32 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //UPDATE 'user_formNode' SET version='1' WHERE version IS NULL;
-
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="scan_formVersion")
- */
+#[ORM\Table(name: 'scan_formVersion')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class FormVersion {
 
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Message", inversedBy="formVersions")
-     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Message', inversedBy: 'formVersions')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', nullable: true)]
     private $message;
 
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $formId;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $formTitle;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $formVersion;
 
 

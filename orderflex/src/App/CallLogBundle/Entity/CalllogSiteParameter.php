@@ -27,153 +27,112 @@ namespace App\CallLogBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="calllog_siteParameter")
- */
+#[ORM\Table(name: 'calllog_siteParameter')]
+#[ORM\Entity]
 class CalllogSiteParameter
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 //    /**
-//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\SiteParameters", inversedBy="callogSiteParameter")
-//     */
-//    private $siteParameter;
-
-
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $calllogResources;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType", cascade={"persist"})
-     */
+    //     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\SiteParameters", inversedBy="callogSiteParameter")
+    //     */
+    //    private $siteParameter;
+    //    /**
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $calllogResources;
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MrnType', cascade: ['persist'])]
     private $keytypemrn;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MessageCategory', cascade: ['persist'])]
     private $messageCategory;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $timezone;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\CityList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\CityList')]
     private $city;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\States")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\States')]
     private $state;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Countries")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Countries')]
     private $country;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $county;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $zip;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\PatientListHierarchy" )
-     **/
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\PatientListHierarchy')]
     private $patientList;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $bodySearch1;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $bodySearch2;
-
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $bodySearch1;
+    //
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $bodySearch2;
     /**
      * Use cached values to display entry content preview in lists
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $useCache;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
     /**
      * enable/disable document upload section
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableDocumentUpload;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\AccessionType', cascade: ['persist'])]
     private $defaultAccessionType;
     
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $defaultAccessionPrefix;
 
     /**
      * Default Initial Communication
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList', cascade: ['persist'])]
     private $defaultInitialCommunication;
     
     /**
      * Show Accession Number fields
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showAccession;
 
     /**
      * Show Accession Number on the Homepage
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showAccessionHome;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageTagTypesList", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MessageTagTypesList', cascade: ['persist'])]
     private $defaultTagType;
 
     /**
      * Number of MRN Types to display, if present (0, 1, 2, 3, 4 ...)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $numberOfMrnToDisplay;
 
     /**
      * Default Call Log New Entry View
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ViewModeList")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\ViewModeList')]
     private $viewMode;
 
 

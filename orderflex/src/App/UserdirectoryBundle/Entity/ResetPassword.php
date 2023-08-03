@@ -11,102 +11,70 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_resetPassword")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user_resetPassword')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class ResetPassword {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SiteList")
-     * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SiteList')]
+    #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id', nullable: true)]
     private $site;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     private $updatedby;
 
     ////////////// password recovery details //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank(
-     *     message = "The email value should not be blank."
-     * )
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     * )
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank(message: 'The email value should not be blank.')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private $email;
     ////////////// EOF password recovery details //////////////
-
     ////////////// registration parameters //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $registrationLinkID;
 
     /**
      * Requested, Password Reset Email Sent, Reset
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $registrationStatus;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $emailSentCounter;
     ////////////// EOF registration parameters //////////////
-
-
     ////////////// tech parameters //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ip;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $useragent;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $width;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $height;
     ////////////// EOF tech parameters //////////////
 
@@ -191,8 +159,8 @@ class ResetPassword {
 
     /**
      * @param \DateTime $updatedate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

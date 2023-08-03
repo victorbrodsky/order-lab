@@ -23,611 +23,493 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_project")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_project')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Project {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="exportId", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'exportId', type: 'integer', nullable: true)]
     private $exportId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $importDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $oid;
 
     /**
      * Hematopathology or AP/CP
-     *
-     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\TranslationalResearchBundle\Entity\SpecialtyList', cascade: ['persist'])]
     private $projectSpecialty;
 
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\MessageCategory', cascade: ['persist'])]
     private $messageCategory;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $version;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
-//     */
-//    private $formVersions;
-
+    //     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
+    //     */
+    //    private $formVersions;
     /**
      * State of the project (state machine variable)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $state;
 
     // Project fields
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_principalinvestigator",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'transres_project_principalinvestigator')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'principalinvestigator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $principalInvestigators;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinTable(name="transres_project_principalirbinvestigator",
-//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="principalirbinvestigator_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    private $principalIrbInvestigators;
+    //     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
+    //     * @ORM\JoinTable(name="transres_project_principalirbinvestigator",
+    //     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="principalirbinvestigator_id", referencedColumnName="id")}
+    //     * )
+    //     **/
+    //    private $principalIrbInvestigators;
     /**
      * Principal Investigator listed on the IRB application
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $principalIrbInvestigator;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_coinvestigator",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coinvestigator_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'transres_project_coinvestigator')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'coinvestigator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $coInvestigators;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_pathologist",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'transres_project_pathologist')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'pathologist_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $pathologists;
 
     /**
      * Project's "Contact" filed is pre-populated with the current user (Submitter)
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_contact",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id")}
-     * )
      **/
+    #[ORM\JoinTable(name: 'transres_project_contact')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'contact_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $contacts;
     
     /**
      * user who will process the billing invoice (who will pay) for this PI's project
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $billingContact;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $approvalDate;
 
     /**
      * Date when a Project is submitted to Review
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $startReviewDate;
 
     //IrbReviews (one-to-many, but only one review is valid)
-    /**
-     * @ORM\OneToMany(targetEntity="IrbReview", mappedBy="project", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'IrbReview', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $irbReviews;
 
     //AdminReviews (one-to-many, but only one review is valid)
-    /**
-     * @ORM\OneToMany(targetEntity="AdminReview", mappedBy="project", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'AdminReview', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $adminReviews;
 
     //CommitteeReviews (one-to-many)
-    /**
-     * @ORM\OneToMany(targetEntity="CommitteeReview", mappedBy="project", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'CommitteeReview', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $committeeReviews;
 
     //FinalReviews (one-to-many, but only one review is valid)
-    /**
-     * @ORM\OneToMany(targetEntity="FinalReview", mappedBy="project", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'FinalReview', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $finalReviews;
 
     /**
      * Project Intake Form Documents
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_document",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_document')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $documents;
 
     /**
      * IRB Approval Letter
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_irbApprovalLetter",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="irbApprovalLetters_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_irbApprovalLetter')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'irbApprovalLetters_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $irbApprovalLetters;
 
     /**
      * Human Tissue Form
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_humanTissueForm",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="humanTissueForm_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_humanTissueForm')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'humanTissueForm_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $humanTissueForms;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TransResRequest", mappedBy="project", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'TransResRequest', mappedBy: 'project', cascade: ['persist'])]
     private $requests;
 
     /**
      * Will this project involve human tissue?
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $involveHumanTissue;
 
     /////////// Project fields /////////////
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $title;
 
     /**
      * IRB Expiration Date: copied from the project's formnode field on create and update
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $irbExpirationDate;
 
     /**
      * fundedAccountNumber: copied from the project's formnode field on create and update
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fundedAccountNumber;
 
     //added later
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $irbNumber;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProjectTypeList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ProjectTypeList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $projectType;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $funded;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     /**
      * integer only
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $totalCost;
     
     /**
      * Approved Project Budget
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $approvedProjectBudget;
 
     /**
      * Total including Subsidy
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $total;
 
     /**
      * No Budget Limit
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $noBudgetLimit;
 
     /////////// EOF Project fields /////////////
-
     /**
      * Is this project exempt from IRB approval?
-     *
-     * @ORM\ManyToOne(targetEntity="IrbApprovalTypeList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'IrbApprovalTypeList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $exemptIrbApproval;
 
     /**
      * Is this project exempt from IACUC approval?
-     *
-     * @ORM\ManyToOne(targetEntity="IrbApprovalTypeList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'IrbApprovalTypeList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $exemptIACUCApproval;
 
     /**
      * IACUC Expiration Date
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $iacucExpirationDate;
 
     //added later
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $iacucNumber;
 
     ///////////////// Hide 7 fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
     //Hide fields: $budgetSummary, $hypothesis, $hypothesis, $objective, $numberOfCases, $numberOfCohorts, $expectedResults, $expectedCompletionDate
     //These fields will be replaced by a PDF form included to the project to the Project Documents section
     //$expectedCompletionDate will be set automatically to 1 year after project approval date, after that date the project will change the status to "closed"
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $budgetSummary;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $hypothesis;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $objective;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $numberOfCases;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $numberOfCohorts;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expectedResults;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $expectedCompletionDate;
     ///////////////// EOF Hide the fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
-
-
     //Tissue Request Details
     /**
      * Will this project require tissue procurement/processing:
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $requireTissueProcessing;
 
     /**
      * Total number of patients:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $totalNumberOfPatientsProcessing;
 
     /**
      * Total number of patient cases:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $totalNumberOfSpecimensProcessing;
 
     /**
      * Number of blocks per case:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $tissueNumberOfBlocksPerCase;
 
     /**
      * onDelete="CASCADE"
      * Tissue Processing Services: [v] Paraffin Block Processing [v] Fresh/Frozen Tissue Procurement [v] Frozen Tissue Storage
-     *
-     * @ORM\ManyToMany(targetEntity="TissueProcessingServiceList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_tissueProcessingService",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tissueProcessingService_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_tissueProcessingService')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'tissueProcessingService_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'TissueProcessingServiceList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $tissueProcessingServices;
 
     //Archival Specimens
     /**
      * Will this project require archival specimens:
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $requireArchivalProcessing;
 
     /**
      * Total number of patients
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $totalNumberOfPatientsArchival;
 
     /**
      * Total number of patient cases:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $totalNumberOfSpecimensArchival;
 
     /**
      * Total number of blocks per case:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $totalNumberOfBlocksPerCase;
 
     /**
      * Quantity of slides per block - stained:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfSlidesPerBlockStained;
 
     /**
      * Quantity of slides per block - unstained:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfSlidesPerBlockUnstained;
 
     /**
      * Quantity of slides per block - unstained for IHC:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfSlidesPerBlockUnstainedIHC;
 
     /**
      * Quantity of special stains per block:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfSpecialStainsPerBlock;
 
     /**
      * Quantity of paraffin sections for RNA/DNA (Tube) per block:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfParaffinSectionsRnaDnaPerBlock;
 
     /**
      * Quantity of TMA cores for RNA/DNA analysis (Tube) per block:
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantityOfTmaCoresRnaDnaAnalysisPerBlock;
 
     /**
      * Other Requested Services: [v] Flow Cytometry [v] Immunohistochemistry [v] FISH [v] Tissue Microarray [v] Laser Capture Microdissection
-     *
-     * @ORM\ManyToMany(targetEntity="OtherRequestedServiceList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_restrictedService",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="restrictedService_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_restrictedService')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'restrictedService_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'OtherRequestedServiceList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $restrictedServices;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $tissueFormComment;
 
     /**
      * Implicit Expiration Date: the EARLIEST IRB or IACUC date
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $implicitExpirationDate;
 
     /**
      * Expected Expiration Date
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $expectedExpirationDate;
     
     /**
      * Reason for status change or closure:
-     * 
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $reasonForStatusChange;
 
     /**
      * Upcoming expiration notification state (Counter)
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $expirationNotifyCounter;
     /**
      * Upcoming expired notification state (Counter)
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $expiredNotifyCounter;
     /**
      * auto-closure (Counter)
      * This automatic status switch should only be done ONCE per project ID + Expiration Date value combination
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $autoClosureCounter;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $stateComment;
 
     /**
      * Utilize the following price list
-     *
-     * @ORM\ManyToOne(targetEntity="PriceTypeList")
      */
+    #[ORM\ManyToOne(targetEntity: 'PriceTypeList')]
     private $priceList;
 
     //NOT USED
     //reminder email: identifier(state), reminderEmailDate
     // for each identifier $state - irb_review, admin_review, committee_review, final_review, irb_missinginfo, admin_missinginfo
-//    /**
-//     * @ORM\ManyToMany(targetEntity="ReminderEmail", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="transres_project_reminderEmail",
-//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="reminderEmail_id", referencedColumnName="id", onDelete="CASCADE")}
-//     *      )
-//     * @ORM\OrderBy({"createdate" = "ASC"})
-//     **/
-//    private $reminderEmails;
-
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="ReminderEmail", cascade={"persist","remove"})
+    //     * @ORM\JoinTable(name="transres_project_reminderEmail",
+    //     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="reminderEmail_id", referencedColumnName="id", onDelete="CASCADE")}
+    //     *      )
+    //     * @ORM\OrderBy({"createdate" = "ASC"})
+    //     **/
+    //    private $reminderEmails;
     //////////////////// Project Closure/Reactivation ////////////////////
     //view page: show if not empty
     //edit page: always show
     //"Reason for project closure"
     //"Reason for project reactivation"
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $closureReason;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $reactivationReason;
     //edit page: show only to Platform Admin/Deputy Platform Admin (not TRP Admin)
     //"Target Status" - select of possible project statuses
     //"Target Status Requester" - select of users
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $targetState;
     /**
      * Target Status Requestor
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $targetStateRequester;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
-
     ////////////// Additional fields from #294 //////////////
     //https://bitbucket.org/victorbrodsky/trp/issues/294/update-to-new-project-request-form-fields
     //1) ONLY FOR CP: C- Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”
@@ -638,14 +520,12 @@ class Project {
      * Similar to TissueProcessingServiceList
      * Which labs within Clinical Pathology are you collaborating with, if any?:
      * [] Central Lab [] Cytogenetics [] Molecular [] Transfusion Medicine [] Cellular Therapy [] Microbiology [] N/A
-     *
-     * @ORM\ManyToMany(targetEntity="CollLabList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_colllab",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="colllab_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_colllab')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'colllab_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'CollLabList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $collLabs;
 
     //2) 2. under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”
@@ -654,20 +534,17 @@ class Project {
     /**
      * Which division(s) are you collaborating with?:
      * [] Anatomic Pathology [] Hematopathology [] Clinical Pathology [] Molecular Pathology [] Experimental Pathology [] Computational Pathology [] N/A
-     *
-     * @ORM\ManyToMany(targetEntity="CollDivList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_colldiv",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="colldiv_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_colldiv')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'colldiv_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'CollDivList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $collDivs;
 
     //3) 3. immediately above the “Utilize the following specific price list:” field,
     // add a field titled “Hypothesis (one sentence):” with a one-line free text field.
     //ALREADY EXISTS
-
     //4) 4. immediately below the new “Hypothesis (one sentence):” field, add a field titled
     // “Will you need departmental statistical support?” with radio buttons () Yes () No .
     //5) If () Yes is selected, show an additional field under it titled
@@ -676,15 +553,13 @@ class Project {
     // and hide this “child” form field.
     /**
      * “Will you need departmental statistical support?”
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $needStatSupport;
     /**
      * “What is the estimated quantity of needed statistical support hours?” with a one-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $amountStatSupport;
 
     //6) 5. immediately below the new “What is the estimated quantity of needed statistical support hours?” field,
@@ -694,15 +569,13 @@ class Project {
     // If () No is selected, delete the value in the “Please describe the data and the needed analysis:” field and hide this “child” form field.
     /**
      * “Will you need informatics support?” with radio buttons () Yes () No .
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $needInfSupport;
     /**
      * “Please describe the data and the needed analysis:” with a one-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $amountInfSupport;
 
     //8) 6. immediately below the new “Please describe the data and the needed analysis” field,
@@ -710,27 +583,24 @@ class Project {
     // with a two-line free text field.
     /**
      * “Study population (include a brief description such as health status or primary diagnosis):" with a two-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $studyPopulation;
 
     //9) 7. immediately below the new “Study population (include a brief description such as health status or primary diagnosis):” field,
     // add a field titled “Number of involved patients:” with a one line free text field.
     /**
      * “Number of involved patients:" with a two-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $numberPatient;
 
     //10) 8. immediately below the new “Number of involved patients:” field,
     // add a field titled “Number of involved lab result reports:” with a one line free text field.
     /**
      * “Number of involved lab result reports:" with a two-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $numberLabReport;
 
     //11) 9. immediately below the new “Number of involved lab result reports:” field,
@@ -738,9 +608,8 @@ class Project {
     // with a DATE field (MM/DD/YYYY).
     /**
      * “Study duration (projected end date for the completion of the study including data analysis and manuscript submission):” with a DATE field (MM/DD/YYYY)
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $studyDuration;
 
     //12) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
@@ -751,15 +620,13 @@ class Project {
     /**
      * “IRB Approval Status:” with a drop down menu containing the following options:
      * “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
-     *
-     * @ORM\ManyToOne(targetEntity="IrbStatusList")
      */
+    #[ORM\ManyToOne(targetEntity: 'IrbStatusList')]
     private $irbStatusList;
     /**
      * “Please explain why the IRB submission is not applicable:” with a one-line free text field.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $irbStatusExplain;
 
     //14) 11. immediately under “Principal Investigator listed on the IRB application” field,
@@ -768,22 +635,19 @@ class Project {
     // Test to make sure “Add New” link for this field works and populates this field when a new person is added in that modal window.
     /**
      * “Submitting Investigator, if different from Principal Investigator above (Add New):”
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_subminvestigator",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="subminvestigator_id", referencedColumnName="id")}
-     * )
      **/
+    #[ORM\JoinTable(name: 'transres_project_subminvestigator')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'subminvestigator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $submitInvestigators;
 //    /**
-//     * Submitting Investigator, if different from Principal Investigator above (Add New):
-//     *
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-//     */
-//    private $submitInvestigator;
-
+    //     * Submitting Investigator, if different from Principal Investigator above (Add New):
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+    //     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+    //     */
+    //    private $submitInvestigator;
     // 12. immediately above the “Utilize the following specific price list:” field,
     // add an accordion titled “Additional Details” that gets hidden if “Funded” form field box is checked by the user
     // (and gets shown again if the “Funded” box is unchecked; Show this accordion by default in an open + visible state.
@@ -791,17 +655,15 @@ class Project {
     //15) a. Which department(s) outside of pathology are you collaborating with? [one-line free text field]
     /**
      * Which department(s) outside of pathology are you collaborating with? [one-line free text field]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $collDepartment;
 
     //16) b. Which outside institution(s) are you planning to collaborate with? [one-line free text field]
     /**
      * Which outside institution(s) are you planning to collaborate with? [one-line free text field]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $collInst;
 
     //17) c. If collaborations with outside institutions are planned,
@@ -809,68 +671,57 @@ class Project {
     /**
      * If collaborations with outside institutions are planned,
      * will you (or the principal investigator listed above) be the PI for the entire study? () Yes () No
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $collInstPi;
 
     //18) d. Background (essential information related to the project): [three-line free text field]
     /**
      * Background (essential information related to the project): [three-line free text field]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $essentialInfo;
 
     //19) e. Specific aims (please provide 2 to 3): [three-line free text field]
     //Use already existing objective
-
     //20) f. Research strategy (provide a description of the study design, approach,
     // and statistical methods including sample size calculation): [three-line free text field]
     /**
      * Research strategy (provide a description of the study design, approach,
      * and statistical methods including sample size calculation): [three-line free text field]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $strategy;
 
     //21) g. Expected results (2 to 3 sentences): [three-line free text field]
     //Use already existing expectedResults
-
     //22) h. Other departmental resources requested: [one line free text field]
     /**
      * Other departmental resources requested: [one line free text field]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $otherResource;
 
     ////////////// EOF Additional fields from #294 //////////////
-
     ////////////// Additional fields from #295 //////////////
     /**
      * Progress Updates: [three-line free text]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $progressUpdate;
 
     /**
      * Is funding for this project requested from the Pathology Department? () Yes () No (radio buttons)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $fundByPath;
 
     /**
      * Please describe the planned expenses that comprise the budget for this project: three line free text field
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $fundDescription;
     ////////////// EOF Additional fields from #295 //////////////
-
     ////////////// #295 //////////////
     //#295: add a new field titled “Requester group:” showing the values from the list manager’s
     // new “Translational research project requester group” list
@@ -878,10 +729,9 @@ class Project {
     //Similar to IrbStatusList
     /**
      * Requester group
-     *
-     * @ORM\ManyToOne(targetEntity="RequesterGroupList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'RequesterGroupList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $requesterGroup;
 
     //24- On https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=Internal&collaborating-division=CSP
@@ -895,25 +745,21 @@ class Project {
     // are you collaborating with?:“), CLEAR/uncheck the answers for and hide the “Computational study category:” question/field.
     /**
      * Computational translational project categories (Types): Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
-     *
-     * @ORM\ManyToMany(targetEntity="CompCategoryList")
-     * @ORM\JoinTable(name="transres_project_comptype",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="comptype_id", referencedColumnName="id")}
-     * )
      **/
+    #[ORM\JoinTable(name: 'transres_project_comptype')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'comptype_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'CompCategoryList')]
     private $compTypes;
 
     /**
      * Export project summary to a PDF
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_project_pdf",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="pdf_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'transres_project_pdf')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'pdf_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $projectPdfs;
     ////////////// EOF #295 //////////////
 

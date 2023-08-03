@@ -27,244 +27,186 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Message, Holder of different orders (i.e. scanorder, laborder)
- *
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\MessageRepository")
- * @ORM\Table(name="scan_message",
- *  indexes={
- *      @ORM\Index( name="oid_idx", columns={"oid"} )
- *  }
- * )
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'scan_message')]
+#[ORM\Index(name: 'oid_idx', columns: ['oid'])]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\MessageRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Message {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /////////////////    HIERARCHY OBJECTS    //////////////////////
-    /**
-     * @ORM\ManyToMany(targetEntity="Patient", inversedBy="message" )
-     * @ORM\JoinTable(name="scan_message_patient")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_patient')]
+    #[ORM\ManyToMany(targetEntity: 'Patient', inversedBy: 'message')]
     private $patient;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Encounter", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_encounter")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_encounter')]
+    #[ORM\ManyToMany(targetEntity: 'Encounter', inversedBy: 'message')]
     private $encounter;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Procedure", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_procedure")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_procedure')]
+    #[ORM\ManyToMany(targetEntity: 'Procedure', inversedBy: 'message')]
     private $procedure;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Accession", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_accession")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_accession')]
+    #[ORM\ManyToMany(targetEntity: 'Accession', inversedBy: 'message')]
     private $accession;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Part", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_part")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_part')]
+    #[ORM\ManyToMany(targetEntity: 'Part', inversedBy: 'message')]
     private $part;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Block", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_block")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_block')]
+    #[ORM\ManyToMany(targetEntity: 'Block', inversedBy: 'message')]
     private $block;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Slide", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_slide")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_slide')]
+    #[ORM\ManyToMany(targetEntity: 'Slide', inversedBy: 'message')]
     private $slide;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Imaging", inversedBy="message")
-     * @ORM\JoinTable(name="scan_message_imaging")
-     **/
+    #[ORM\JoinTable(name: 'scan_message_imaging')]
+    #[ORM\ManyToMany(targetEntity: 'Imaging', inversedBy: 'message')]
     private $imaging;
     /////////////////   EOF  HIERARCHY OBJECTS    //////////////////////
-
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $idnumber;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="orderdate", type="datetime", nullable=true)
      *
      */
+    #[ORM\Column(name: 'orderdate', type: 'datetime', nullable: true)]
     private $orderdate;
 
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
-     *
-     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'MessageCategory', cascade: ['persist'])]
     private $messageCategory;
 
     /**
      * Form nodes fields cache (snapshot) used in spreadsheet
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $formnodesCache;
 
     /**
      * Patient's name cache
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientNameCache;
 
     /**
      * Patient's mrn cache
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $patientMrnCache;
 
 //    /**
-//     * Form nodes fields cache (snapshot) used in list and view as table
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $formnodesCacheTable;
-
+    //     * Form nodes fields cache (snapshot) used in list and view as table
+    //     * @ORM\Column(type="text", nullable=true)
+    //     */
+    //    private $formnodesCacheTable;
     /**
      * Name of the form: Message Type name at the time of message submission
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $messageTitle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $provider;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_user",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_message_user')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $proxyuser;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_orderRecipient",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="orderRecipient_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_message_orderRecipient')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'orderRecipient_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $orderRecipients;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_reportRecipient",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="reportRecipient_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_message_reportRecipient')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'reportRecipient_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $reportRecipients;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\InstitutionWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_organizationRecipient",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="organizationRecipient_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_message_organizationRecipient')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'organizationRecipient_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\InstitutionWrapper', cascade: ['persist', 'remove'])]
     private $organizationRecipients;
 
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Status")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Status')]
     private $status;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MessageStatusList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'MessageStatusList')]
     private $messageStatus;
 
     /**
      * Message Status Prior to Deletion
-     * @ORM\ManyToOne(targetEntity="MessageStatusList")
      */
+    #[ORM\ManyToOne(targetEntity: 'MessageStatusList')]
     private $messageStatusPrior;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\ModifierInfo", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\ModifierInfo', cascade: ['persist', 'remove'])]
     private $signeeInfo;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\ModifierInfo", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_editors",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="editorInfo_id", referencedColumnName="id", unique=true)}
-     * )
-     * @ORM\OrderBy({"modifiedOn" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'scan_message_editors')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'editorInfo_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\ModifierInfo', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['modifiedOn' => 'ASC'])]
     private $editorInfos;
 
     /**
      * Equipment associated with this order (object)
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Equipment")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Equipment')]
     private $equipment;
 
     /**
      * Purpose of Order (string)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $purpose;
 
     /**
      * Order priority: routine, stat
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $priority;
 
     /**
      * Order completetion deadline
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deadline;
 
     /**
      * Return order if not completed by deadline
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $returnoption;
 
 
@@ -272,122 +214,84 @@ class Message {
      * oid - id of the original order. Required for amend logic.
      * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
      * @var string
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $oid;
 
     /**
      * Account of the order
-     *
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="message", cascade={"persist"})
-     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'Account', inversedBy: 'message', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'account_id', referencedColumnName: 'id', nullable: true)]
     private $account;
 
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="Educational",
-     *      inversedBy="message",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="educational_id",
-     *      referencedColumnName="id"
-     * )
-     */
+    #[ORM\OneToOne(targetEntity: 'Educational', inversedBy: 'message', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'educational_id', referencedColumnName: 'id')]
     private $educational;
 
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="Research",
-     *      inversedBy="message",
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(
-     *      name="research_id",
-     *      referencedColumnName="id"
-     * )
-     */
+    #[ORM\OneToOne(targetEntity: 'Research', inversedBy: 'message', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'research_id', referencedColumnName: 'id')]
     private $research;
 
 
 
 //    /**
-//     * History of the order
-//     *
-//     * @ORM\ManyToMany(targetEntity="History")
-//     * @ORM\JoinTable(name="scan_message_history",
-//     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
-//     *      )
-//     **/
-//    private $history;
-
-
+    //     * History of the order
+    //     *
+    //     * @ORM\ManyToMany(targetEntity="History")
+    //     * @ORM\JoinTable(name="scan_message_history",
+    //     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id", unique=true)}
+    //     *      )
+    //     **/
+    //    private $history;
     /**
      * Conflicting accession number is replaced, so keep the reference to dataqualitymrnacc object in the message (unlike to dataqualityage)
      * Any message (order) has referenece to patient and accession, hence can create conflict
-     *
-     * @ORM\OneToMany(targetEntity="DataQualityMrnAcc", mappedBy="message", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'DataQualityMrnAcc', mappedBy: 'message', cascade: ['persist'])]
     private $dataqualitymrnacc;
 
-    /**
-     * @ORM\OneToMany(targetEntity="History", mappedBy="message", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'History', mappedBy: 'message', cascade: ['persist'])]
     private $history;
 
 //    /**
-//     * Tracking: can be many
-//     * One-To-Many unidirectional with Join table
-//     *
-//     * @ORM\ManyToMany(targetEntity="Tracking")
-//     * @ORM\JoinTable(name="scan_message_tracking",
-//     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
-//     *      )
-//     **/
-//    private $tracking;
-
-
-
-
-
+    //     * Tracking: can be many
+    //     * One-To-Many unidirectional with Join table
+    //     *
+    //     * @ORM\ManyToMany(targetEntity="Tracking")
+    //     * @ORM\JoinTable(name="scan_message_tracking",
+    //     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="tracking_id", referencedColumnName="id", unique=true)}
+    //     *      )
+    //     **/
+    //    private $tracking;
     /**
      * One-To-Many Unidirectional
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_input",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="input_id", referencedColumnName="id", unique=true)}
-     *      )
      */
+    #[ORM\JoinTable(name: 'scan_message_input')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'input_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\GeneralEntity', cascade: ['persist', 'remove'])]
     private $inputs;
 
     /**
      * One-To-Many Unidirectional
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\GeneralEntity", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_output",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="output_id", referencedColumnName="id", unique=true)}
-     *      )
      */
+    #[ORM\JoinTable(name: 'scan_message_output')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'output_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\GeneralEntity', cascade: ['persist', 'remove'])]
     private $outputs;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="associations")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'associations')]
     private $backAssociations;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", inversedBy="backAssociations", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_associations",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="association_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_message_associations')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'association_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Message', inversedBy: 'backAssociations', cascade: ['persist', 'remove'])]
     private $associations;
 
 
@@ -395,142 +299,104 @@ class Message {
      * Sources: can be many
      * Source: Location, System, comment(string)
      * One-To-Many unidirectional with Join table
-     *
-     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_source",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="source_id", referencedColumnName="id", unique=true)}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_message_source')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'source_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'Endpoint', cascade: ['persist', 'remove'])]
     private $sources;
 
     /**
      * Destinations: can be many
      * One-To-Many unidirectional with Join table
-     *
-     * @ORM\ManyToMany(targetEntity="Endpoint", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_destination",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="destination_id", referencedColumnName="id", unique=true)}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_message_destination')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'destination_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'Endpoint', cascade: ['persist', 'remove'])]
     private $destinations;
     
     /**
      * Message (Entry) Tags. This will replace entryTags in CallogEntryMessage and CrnEntryMessage. This list will have Tag Types
-     *
-     * @ORM\ManyToMany(targetEntity="MessageTagsList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_tag",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_message_tag')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'MessageTagsList', cascade: ['persist', 'remove'])]
     private $entryTags;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\OrderformBundle\Entity\AccessionListHierarchy", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_message_accessionlist",
-     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="accessionlist_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
-     **/
+    #[ORM\JoinTable(name: 'scan_message_accessionlist')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'accessionlist_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\OrderformBundle\Entity\AccessionListHierarchy', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $accessionLists;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $addAccessionToList;
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AttachmentContainer', cascade: ['persist', 'remove'])]
     private $attachmentContainer;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ExternalId", mappedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'ExternalId', mappedBy: 'message', cascade: ['persist', 'remove'])]
     private $externalIds;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $version;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AmendmentReasonList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'AmendmentReasonList')]
     private $amendmentReason;
 
-    /**
-     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToMany(targetEntity: 'FormVersion', mappedBy: 'message', cascade: ['persist', 'remove'])]
     private $formVersions;
 
     ////////////////////////// Specific Messages //////////////////////////
-
-    /**
-     * @ORM\OneToOne(targetEntity="SlideReturnRequest", inversedBy="message", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'SlideReturnRequest', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $slideReturnRequest;
 
-    /**
-     * @ORM\OneToOne(targetEntity="ScanOrder", inversedBy="message", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'ScanOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $scanorder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="ProcedureOrder", inversedBy="message", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'ProcedureOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $procedureorder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="LabOrder", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'LabOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $laborder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="BlockOrder", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'BlockOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $blockorder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="SlideOrder", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'SlideOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $slideorder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="StainOrder", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'StainOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $stainorder;
 
     /**
      * Image Analysis Order
-     * @ORM\OneToOne(targetEntity="ImageAnalysisOrder", inversedBy="message", cascade={"persist","remove"})
      */
+    #[ORM\OneToOne(targetEntity: 'ImageAnalysisOrder', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $imageAnalysisOrder;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Report", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'Report', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $report;
 
-    /**
-     * @ORM\OneToOne(targetEntity="ReportBlock", inversedBy="message", cascade={"persist","remove"})
-     */
+    #[ORM\OneToOne(targetEntity: 'ReportBlock', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $reportBlock;
 
     /**
      * Pathology Call Log Entry (similar to the LabOrder)
-     * @ORM\OneToOne(targetEntity="CalllogEntryMessage", inversedBy="message", cascade={"persist","remove"})
      */
+    #[ORM\OneToOne(targetEntity: 'CalllogEntryMessage', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $calllogEntryMessage;
 
     /**
      * Critical Result Notification Entry
-     * @ORM\OneToOne(targetEntity="App\CrnBundle\Entity\CrnEntryMessage", inversedBy="message", cascade={"persist","remove"})
      */
+    #[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnEntryMessage', inversedBy: 'message', cascade: ['persist', 'remove'])]
     private $crnEntryMessage;
 
     ////////////////////////// EOF Specific Messages //////////////////////////

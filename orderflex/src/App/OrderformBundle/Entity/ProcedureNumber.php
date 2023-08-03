@@ -20,36 +20,27 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_procedureNumber",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="procedure_unique", columns={"procedure_id", "field", "keytype_id"})}
- * )
- */
+#[ORM\Table(name: 'scan_procedureNumber')]
+#[ORM\UniqueConstraint(name: 'procedure_unique', columns: ['procedure_id', 'field', 'keytype_id'])]
+#[ORM\Entity]
 class ProcedureNumber extends ProcedureArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Procedure", inversedBy="number", cascade={"persist"})
-     * @ORM\JoinColumn(name="procedure_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Procedure', inversedBy: 'number', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'procedure_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $procedure;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
     /**
      * original procedure # enetered by user
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProcedureType", inversedBy="procedurenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'ProcedureType', inversedBy: 'procedurenumber', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
 

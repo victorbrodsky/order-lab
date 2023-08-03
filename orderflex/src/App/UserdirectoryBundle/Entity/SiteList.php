@@ -20,94 +20,74 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_siteList")
- */
+#[ORM\Table(name: 'user_siteList')]
+#[ORM\Entity]
 class SiteList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="SiteList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'SiteList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SiteList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'SiteList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $selfSignUp;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="user_sites_lowestRoles",
-     *      joinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'user_sites_lowestRoles')]
+    #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Roles', cascade: ['persist'])]
     private $lowestRoles;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $accessibility;
 
     /**
      * Show Link on Homepage
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showLinkHomePage;
 
     /**
      * Show Link in Navbar
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showLinkNavbar;
 
     /**
      * Logo image
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="user_site_document",
-     *      joinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'user_site_document')]
+    #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $documents;
 
     /**
      * Emails sent by this site will appear to come from the following address
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fromEmail;
 
     /**
      * Require and Verify Mobile Number during Access Requests and Account Requests
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $requireVerifyMobilePhone;
 
     /**
      * Only allow log in if the primary mobile number is verified and ask to verify
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $requireMobilePhoneToLogin;
 
     /**
      * Note at the top of the log in page
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noteOnLoginPage;
 
 

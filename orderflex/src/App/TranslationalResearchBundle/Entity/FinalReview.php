@@ -27,17 +27,13 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_finalReview")
- */
+#[ORM\Table(name: 'transres_finalReview')]
+#[ORM\Entity]
 class FinalReview extends ReviewBase
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="finalReviews")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Project', inversedBy: 'finalReviews')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $project;
 
 //    /**

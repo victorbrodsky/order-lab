@@ -24,22 +24,16 @@ use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientdob")
- */
+#[ORM\Table(name: 'scan_patientdob')]
+#[ORM\Entity]
 class PatientDob extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="dob")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'dob')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     protected $field;
 
 

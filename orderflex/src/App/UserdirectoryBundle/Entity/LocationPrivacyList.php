@@ -20,28 +20,20 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="user_locationPrivacyList")
- */
+#[ORM\Table(name: 'user_locationPrivacyList')]
+#[ORM\Entity]
 class LocationPrivacyList extends ListAbstract
 {
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="LocationPrivacyList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'LocationPrivacyList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocationPrivacyList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LocationPrivacyList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Location", mappedBy="privacy")
-     */
+    #[ORM\OneToMany(targetEntity: 'Location', mappedBy: 'privacy')]
     protected $locations;
 
 

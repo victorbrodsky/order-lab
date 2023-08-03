@@ -22,84 +22,67 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_spot")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user_spot')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Spot {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Tracker", inversedBy="spots", cascade={"persist"})
-     * @ORM\JoinColumn(name="tracker_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Tracker', inversedBy: 'spots', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'tracker_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $tracker;
 
     //Source System
-    /**
-     * @ORM\ManyToOne(targetEntity="SourceSystemList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'SourceSystemList')]
     private $source;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     private $creation;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $spottedOn;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedOn;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id')]
     private $author;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $updatedBy;
 
 
     //Location Spot Purpose
-    /**
-     * @ORM\ManyToOne(targetEntity="SpotPurpose", cascade={"persist"})
-     * @ORM\JoinColumn(name="spotPurpose_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SpotPurpose', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'spotPurpose_id', referencedColumnName: 'id', nullable: true)]
     private $spotPurpose;
 
     //Current Location
-    /**
-     * @ORM\ManyToOne(targetEntity="Location", cascade={"persist"})
-     * @ORM\JoinColumn(name="currentLocation_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Location', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'currentLocation_id', referencedColumnName: 'id', nullable: true)]
     private $currentLocation;
 
     //Intended Destination
-    /**
-     * @ORM\ManyToOne(targetEntity="Location", cascade={"persist"})
-     * @ORM\JoinColumn(name="intendedLocation_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Location', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'intendedLocation_id', referencedColumnName: 'id', nullable: true)]
     private $intendedLocation;
 
 
@@ -149,8 +132,8 @@ class Spot {
 
     /**
      * @param \DateTime $updatedOn
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function setUpdatedOn() //$updated=null
     {
 //        if( $updated ) {

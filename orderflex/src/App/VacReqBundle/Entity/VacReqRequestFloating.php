@@ -30,111 +30,92 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_floating")
- */
+#[ORM\Table(name: 'vacreq_floating')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqRequestFloating
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
     /**
      * status: pending, approved, rejected
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
     /**
      * extraStatus: cancellation-request, "Cancellation Requested", "Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $extraStatus;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $approver;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $approvedRejectDate;
     
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $approverComment;
     
     /**
      * floating day type [Juneteenth]
-     *
-     * @ORM\ManyToOne(targetEntity="VacReqFloatingTypeList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'VacReqFloatingTypeList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $floatingType;
 
     /**
      * I have worked or plan to work on [Juneteenth]
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $work;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $floatingDay;
 
 //    /**
@@ -245,15 +226,13 @@ class VacReqRequestFloating
     }
 
 //    /**
-//     * @param \DateTime $updateDate
-//     */
-//    public function setUpdateDate($updateDate)
-//    {
-//        $this->updateDate = $updateDate;
-//    }
-    /**
-     * @ORM\PreUpdate
-     */
+    //     * @param \DateTime $updateDate
+    //     */
+    //    public function setUpdateDate($updateDate)
+    //    {
+    //        $this->updateDate = $updateDate;
+    //    }
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();

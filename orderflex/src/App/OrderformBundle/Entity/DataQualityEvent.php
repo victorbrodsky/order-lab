@@ -20,24 +20,20 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_dataquality_event")
- */
+#[ORM\Table(name: 'scan_dataquality_event')]
+#[ORM\Entity]
 class DataQualityEvent extends DataQuality
 {
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $roles = array();
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DataQualityEventLog", inversedBy="dqevents")
-     * @ORM\JoinColumn(name="dqeventlog", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'DataQualityEventLog', inversedBy: 'dqevents')]
+    #[ORM\JoinColumn(name: 'dqeventlog', referencedColumnName: 'id')]
     protected $dqeventlog;
 
 

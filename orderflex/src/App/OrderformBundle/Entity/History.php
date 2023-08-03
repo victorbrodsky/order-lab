@@ -20,90 +20,73 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_history")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'scan_history')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class History
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $currentid;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="changedate", type="datetime")
      *
      */
+    #[ORM\Column(name: 'changedate', type: 'datetime')]
     private $changedate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'provider', referencedColumnName: 'id')]
     private $provider;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Status", cascade={"persist"})
-     * @ORM\JoinColumn(name="currentstatus", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Status', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'currentstatus', referencedColumnName: 'id', nullable: true)]
     private $currentstatus;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $roles = array();
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $note;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $selectednote;
 
     /**
      * User id
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="viewed", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'viewed', referencedColumnName: 'id', nullable: true)]
     private $viewed;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="vieweddate", type="datetime", nullable=true)
      *
      */
+    #[ORM\Column(name: 'vieweddate', type: 'datetime', nullable: true)]
     private $vieweddate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ProgressCommentsEventTypeList")
-     * @ORM\JoinColumn(name="eventtype_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ProgressCommentsEventTypeList')]
+    #[ORM\JoinColumn(name: 'eventtype_id', referencedColumnName: 'id', nullable: true)]
     private $eventtype;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Message", inversedBy="history", cascade={"persist"})
-     * @ORM\JoinColumn(name="message", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Message', inversedBy: 'history', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'message', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $message;
 
 
@@ -152,9 +135,7 @@ class History
         return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setChangedate() { //$date=null
 //        if( $date ) {
 //            $this->changedate = $date;

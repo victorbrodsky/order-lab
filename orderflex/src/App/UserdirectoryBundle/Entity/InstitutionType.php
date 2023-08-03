@@ -20,28 +20,20 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_institutiontype")
- */
+#[ORM\Table(name: 'user_institutiontype')]
+#[ORM\Entity]
 class InstitutionType extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="InstitutionType", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'InstitutionType', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="InstitutionType", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'InstitutionType', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="types")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Institution', mappedBy: 'types')]
     private $institutions;
 
 

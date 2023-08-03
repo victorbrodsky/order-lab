@@ -20,22 +20,16 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_objectTypeList")
- */
+#[ORM\Table(name: 'user_objectTypeList')]
+#[ORM\Entity]
 class ObjectTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ObjectTypeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
@@ -44,17 +38,15 @@ class ObjectTypeList extends ListAbstract
     //Received Form Field Value Entity.
     /**
      * i.e. "App\AppUserdirectoryBundle\Entity"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityNamespace;
     /**
      * i.e. "Patient"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityName;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityId;
 
 

@@ -23,28 +23,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientsex")
- */
+#[ORM\Table(name: 'scan_patientsex')]
+#[ORM\Entity]
 class PatientSex extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="sex")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'sex')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $field;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SexList", cascade={"persist"})
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
-     */
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    protected $field;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\SexList', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'sex_id', referencedColumnName: 'id', nullable: true)]
     protected $field;
 
 

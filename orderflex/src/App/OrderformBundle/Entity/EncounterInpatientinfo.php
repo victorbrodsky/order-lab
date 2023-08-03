@@ -20,63 +20,46 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterInpatientinfo")
- */
+#[ORM\Table(name: 'scan_encounterInpatientinfo')]
+#[ORM\Entity]
 class EncounterInpatientinfo extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="inpatientinfo")
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'inpatientinfo')]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', nullable: true)]
     protected $encounter;
 
 
     //Inpatient Info Source: [Select2, pull from "Source Systems" list]
     //$source
-
     //Admission Date:
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $admissiondate;
 
     //Admission Time:
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $admissiontime;
 
     //Diagnosis on Admission:
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $admissiondiagnosis;
 
     //Discharge Date:
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $dischargedate;
 
     //Discharge Time:
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $dischargetime;
 
     //Diagnosis on Discharge:
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $dischargediagnosis;
 
     /**
      * Dummy field required by abstract
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
 

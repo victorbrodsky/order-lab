@@ -32,96 +32,79 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\FormNodeRepository")
- * @ORM\Table(name="user_formNode")
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'user_formNode')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\FormNodeRepository')]
 class FormNode extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="children", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'FormNode', inversedBy: 'children', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
     //@ORM\OrderBy({"lft" = "ASC"})
     //@ORM\OrderBy({"orderinlist" = "ASC"})
-    /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"orderinlist" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'FormNode', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     protected $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="FormNode", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'FormNode', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FormNode', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 //    /**
-//     * Medical, Educational
-//     * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
-//     * @ORM\JoinTable(name="user_institutions_types")
-//     **/
-//    private $types;
-
-//    /**
-//     * Organizational Group Types - mapper between the level number and level title.
-//     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
-//     * For example, OrganizationalGroupType with level=1, set this level to 1.
-//     * Default types have a positive level numbers, all other types have negative level numbers.
-//     *
-//     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
-//     */
-//    private $organizationalGroupType;
-
-
-//    //objectType
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeList", cascade={"persist"})
-//     */
-//    private $objectType;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    //     * Medical, Educational
+    //     * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
+    //     * @ORM\JoinTable(name="user_institutions_types")
+    //     **/
+    //    private $types;
+    //    /**
+    //     * Organizational Group Types - mapper between the level number and level title.
+    //     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
+    //     * For example, OrganizationalGroupType with level=1, set this level to 1.
+    //     * Default types have a positive level numbers, all other types have negative level numbers.
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
+    //     */
+    //    private $organizationalGroupType;
+    //    //objectType
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeList", cascade={"persist"})
+    //     */
+    //    private $objectType;
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showLabel;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $placeholder;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $visible;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $required;
     
     //Received Form Field Value Entity. Used to overwrite the same values in the formnode's ObjectType
     /**
      * i.e. "App\AppUserdirectoryBundle\Entity"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityNamespace;
     /**
      * i.e. "Patient"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityName;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $receivedValueEntityId;
 
 
@@ -131,47 +114,35 @@ class FormNode extends BaseCompositeNode {
     //TODO: choose the best way to link to the list holder:
     //1) "hard" link using FK to ObjectTypeText
     //2) "soft" link using entityNamespace="App\UserdirectoryBundle\Entity" and entityName="ObjectTypeText"
-//    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
-//     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
-//     */
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeText", mappedBy="formNode")
-     */
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeText", inversedBy="formNodes", cascade={"persist"})
+    //     * @ORM\JoinColumn(name="objectTypeText_id", referencedColumnName="id")
+    //     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeText', mappedBy: 'formNode')]
     private $objectTypeTexts;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="formNodes", cascade={"persist"})
-//     */
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeString", mappedBy="formNode")
-     */
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeString", inversedBy="formNodes", cascade={"persist"})
+    //     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeString', mappedBy: 'formNode')]
     private $objectTypeStrings;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
-//     */
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeDropdown", mappedBy="formNode")
-     */
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="formNodes", cascade={"persist"})
+    //     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeDropdown', mappedBy: 'formNode')]
     private $objectTypeDropdowns;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="formNodes", cascade={"persist"})
-//     */
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeDateTime", mappedBy="formNode")
-     */
+    //     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="formNodes", cascade={"persist"})
+    //     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeDateTime', mappedBy: 'formNode')]
     private $objectTypeDateTimes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeCheckbox", mappedBy="formNode")
-     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeCheckbox', mappedBy: 'formNode')]
     private $objectTypeCheckboxs;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeRadioButton", mappedBy="formNode")
-     */
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeRadioButton', mappedBy: 'formNode')]
     private $objectTypeRadioButtons;
 
 

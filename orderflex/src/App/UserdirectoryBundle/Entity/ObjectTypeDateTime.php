@@ -20,53 +20,35 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_objectTypeDateTime")
- */
+#[ORM\Table(name: 'user_objectTypeDateTime')]
+#[ORM\Entity]
 class ObjectTypeDateTime extends ObjectTypeReceivingBase
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeDateTime", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeDateTime', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeDateTime", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ObjectTypeDateTime', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDateTimes", cascade={"persist"})
-     * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'FormNode', inversedBy: 'objectTypeDateTimes', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'formNode_id', referencedColumnName: 'id')]
     protected $formNode;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $value;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $datetimeValue;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $dateValue;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
+    #[ORM\Column(type: 'time', nullable: true)]
     private $timeValue;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $timezone;
 
 

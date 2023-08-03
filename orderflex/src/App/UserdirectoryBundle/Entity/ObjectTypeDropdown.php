@@ -20,39 +20,29 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_objectTypeDropdown")
- */
+#[ORM\Table(name: 'user_objectTypeDropdown')]
+#[ORM\Entity]
 class ObjectTypeDropdown extends ObjectTypeReceivingBase
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ObjectTypeDropdown", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ObjectTypeDropdown', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ObjectTypeDropdown", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ObjectTypeDropdown', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $value;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FormNode", inversedBy="objectTypeDropdowns", cascade={"persist"})
-     * @ORM\JoinColumn(name="formNode_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'FormNode', inversedBy: 'objectTypeDropdowns', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'formNode_id', referencedColumnName: 'id')]
     protected $formNode;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $idValues;
 
 

@@ -23,26 +23,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_account")
- */
+#[ORM\Table(name: 'scan_account')]
+#[ORM\Entity]
 class Account extends ListAbstract
 {
-    /**
-     * @ORM\OneToMany(targetEntity="Account", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'Account', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Account', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="account")
-     */
+    #[ORM\OneToMany(targetEntity: 'Message', mappedBy: 'account')]
     protected $message;
 
 

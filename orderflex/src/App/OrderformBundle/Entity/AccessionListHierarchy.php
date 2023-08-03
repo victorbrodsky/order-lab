@@ -26,7 +26,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //This list has a link to the accession list (i.e. Accessions for Follow-Up Lists) via entityNamespace, entityName, entityId
-
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -35,36 +34,31 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="scan_accessionlisthierarchy"
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'scan_accessionlisthierarchy')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class AccessionListHierarchy extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="AccessionListHierarchy", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'AccessionListHierarchy', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionListHierarchy", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'AccessionListHierarchy', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AccessionListHierarchy", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'AccessionListHierarchy', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AccessionListHierarchy", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'AccessionListHierarchy', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
@@ -73,30 +67,24 @@ class AccessionListHierarchy extends BaseCompositeNode {
      * Organizational Group Types - mapper between the level number and level title.
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      * Default types have a positive level numbers, all other types have negative level numbers.
-     *
-     * @ORM\ManyToOne(targetEntity="AccessionListHierarchyGroupType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'AccessionListHierarchyGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
-//     **/
-//    private $messages;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Accession", cascade={"persist"})
-     */
+    //     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
+    //     **/
+    //    private $messages;
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\Accession', cascade: ['persist'])]
     private $accession;
     
     /**
      * Accession List Types
-     *
-     * @ORM\ManyToMany(targetEntity="AccessionListType", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_accessionlist_accessiontype",
-     *      joinColumns={@ORM\JoinColumn(name="accessionlist_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="accessiontype_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_accessionlist_accessiontype')]
+    #[ORM\JoinColumn(name: 'accessionlist_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'accessiontype_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'AccessionListType', cascade: ['persist', 'remove'])]
     private $accessionListTypes;
 
     

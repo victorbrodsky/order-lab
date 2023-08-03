@@ -30,46 +30,35 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_permission")
- */
+#[ORM\Table(name: 'user_permission')]
+#[ORM\Entity]
 class Permission
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PermissionList")
-     * @ORM\JoinColumn(name="permission", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'PermissionList')]
+    #[ORM\JoinColumn(name: 'permission', referencedColumnName: 'id', nullable: true)]
     private $permission;
 
     /**
      * If institution is not provided then this permission is for all institutions
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="user_permission_institution",
-     *      joinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'user_permission_institution')]
+    #[ORM\JoinColumn(name: 'permission_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $institutions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Roles", inversedBy="permissions")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Roles', inversedBy: 'permissions')]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $role;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="permissions")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'permissions')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
 

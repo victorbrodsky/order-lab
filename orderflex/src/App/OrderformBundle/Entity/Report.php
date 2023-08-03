@@ -22,15 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_report")
- */
+#[ORM\Table(name: 'scan_report')]
+#[ORM\Entity]
 class Report extends ReportBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="report")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'report')]
     protected $message;
 
 

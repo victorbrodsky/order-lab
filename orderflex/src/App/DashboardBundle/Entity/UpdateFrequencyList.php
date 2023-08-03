@@ -24,22 +24,17 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
  * Dashboard Update Frequency
- *
- * @ORM\Entity
- * @ORM\Table(name="dashboard_updatefrequencylist")
  */
+#[ORM\Table(name: 'dashboard_updatefrequencylist')]
+#[ORM\Entity]
 class UpdateFrequencyList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="UpdateFrequencyList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'UpdateFrequencyList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'UpdateFrequencyList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
     
 

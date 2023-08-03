@@ -23,26 +23,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="crn_crnentrytagslist")
- */
+#[ORM\Table(name: 'crn_crnentrytagslist')]
+#[ORM\Entity]
 class CrnEntryTagsList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="CrnEntryTagsList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'CrnEntryTagsList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CrnEntryTagsList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CrnEntryTagsList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="entryTags", cascade={"persist"})
-     **/
+    #[ORM\ManyToMany(targetEntity: 'CrnEntryMessage', mappedBy: 'entryTags', cascade: ['persist'])]
     private $crnEntryMessages;
 
 

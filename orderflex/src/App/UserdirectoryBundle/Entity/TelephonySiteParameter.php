@@ -20,49 +20,42 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_telephonysiteparameter")
- */
+#[ORM\Table(name: 'user_telephonysiteparameter')]
+#[ORM\Entity]
 class TelephonySiteParameter
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
     /**
      * TWILIO_AUTHY_API_KEY (TWILIO Auth Token)
-     * 
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $twilioApiKey;
 
     /**
      * TWILIO Account Sid
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $twilioSid;
 
     /**
      * From phone number
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fromPhoneNumber;
 
     /**
      * Phone number verification = enabled/disabled
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $phoneNumberVerification;
 
 

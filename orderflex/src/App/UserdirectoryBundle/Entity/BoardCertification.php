@@ -20,65 +20,52 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_boardCertification")
- */
+#[ORM\Table(name: 'user_boardCertification')]
+#[ORM\Entity]
 class BoardCertification
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="BoardCertifiedSpecialties")
-     * @ORM\JoinColumn(name="boardSpecialty_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'BoardCertifiedSpecialties')]
+    #[ORM\JoinColumn(name: 'boardSpecialty_id', referencedColumnName: 'id')]
     private $specialty;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $issueDate;
 
     /**
      * Expiration Date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $expirationDate;
 
     /**
      * Recertification Date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $recertificationDate;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Credentials", inversedBy="boardCertification")
-     * @ORM\JoinColumn(name="credentials_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Credentials', inversedBy: 'boardCertification')]
+    #[ORM\JoinColumn(name: 'credentials_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $credentials;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CertifyingBoardOrganization")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CertifyingBoardOrganization')]
     private $certifyingBoardOrganization;
 
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $attachmentContainer;
 
 

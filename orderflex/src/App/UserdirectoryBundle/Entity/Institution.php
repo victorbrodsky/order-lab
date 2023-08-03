@@ -32,46 +32,39 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="user_institution",
- *  indexes={
- *      @ORM\Index( name="institution_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'user_institution')]
+#[ORM\Index(name: 'institution_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class Institution extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="children", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Institution", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Institution", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
     /**
      * Medical, Educational
-     * @ORM\ManyToMany(targetEntity="InstitutionType", inversedBy="institutions")
-     * @ORM\JoinTable(name="user_institutions_types")
      **/
+    #[ORM\JoinTable(name: 'user_institutions_types')]
+    #[ORM\ManyToMany(targetEntity: 'InstitutionType', inversedBy: 'institutions')]
     private $types;
 
     /**
@@ -79,69 +72,58 @@ class Institution extends BaseCompositeNode {
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      * Default types have a positive level numbers, all other types have negative level numbers.
-     *
-     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'OrganizationalGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
     //Mapped objects: BaseTitle, BuildingList, Location, Training, Logger
-    /**
-     * @ORM\ManyToMany(targetEntity="BuildingList", mappedBy="institutions")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'BuildingList', mappedBy: 'institutions')]
     private $buildings;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AdministrativeTitle", mappedBy="institution", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'AdministrativeTitle', mappedBy: 'institution', cascade: ['persist'])]
     private $administrativeTitles;
 
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
-//     **/
-//    private $collaborations;
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
-//     * @ORM\JoinTable(name="user_institutions_collaborations")
-//     **/
-//    private $collaborationInstitutions;
-
+    //     * @ORM\OneToMany(targetEntity="Collaboration", mappedBy="institution", cascade={"persist"})
+    //     **/
+    //    private $collaborations;
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
+    //     * @ORM\JoinTable(name="user_institutions_collaborations")
+    //     **/
+    //    private $collaborationInstitutions;
     //Collaboration
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
-//     */
-//    private $collaborationInstitutions;
-//
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborationInstitutions")
-//     * @ORM\JoinTable(name="user_collaboration_institution",
-//     *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-//     *      )
-//     */
-//    private $collaborations;
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborations")
+    //     */
+    //    private $collaborationInstitutions;
+    //
+    //    /**
+    //     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborationInstitutions")
+    //     * @ORM\JoinTable(name="user_collaboration_institution",
+    //     *      joinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+    //     *      )
+    //     */
+    //    private $collaborations;
     /**
      * Mapped reference to the Collaboration node
-     *
-     * @ORM\ManyToMany(targetEntity="Institution", mappedBy="collaborationInstitutions")
      */
+    #[ORM\ManyToMany(targetEntity: 'Institution', mappedBy: 'collaborationInstitutions')]
     private $collaborations;
 
     /**
      * Collaboration Institutions under this Collaboration node
-     *
-     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="collaborations")
-     * @ORM\JoinTable(name="user_collaborationInstitution_collaboration",
-     *      joinColumns={@ORM\JoinColumn(name="collaborationInstitution_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="collaboration_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'user_collaborationInstitution_collaboration')]
+    #[ORM\JoinColumn(name: 'collaborationInstitution_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'collaboration_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution', inversedBy: 'collaborations')]
     private $collaborationInstitutions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CollaborationTypeList")
-     * @ORM\JoinColumn(name="collaborationType_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'CollaborationTypeList')]
+    #[ORM\JoinColumn(name: 'collaborationType_id', referencedColumnName: 'id', nullable: true)]
     private $collaborationType;
 
 //    /**

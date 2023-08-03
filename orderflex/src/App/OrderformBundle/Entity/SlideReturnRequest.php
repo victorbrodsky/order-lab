@@ -23,78 +23,65 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_slideReturnRequest")
- */
+#[ORM\Table(name: 'scan_slideReturnRequest')]
+#[ORM\Entity]
 class SlideReturnRequest {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="slideReturnRequest", cascade={"persist"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'slideReturnRequest', cascade: ['persist'])]
     private $message;
 
 
 
     /**
      * Additional status variable: Status object to string (active, declined, approved)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
-//     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
-//     * @Assert\NotBlank
-//     **/
-//    private $returnSlide;
-
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
+    //     * @ORM\JoinColumn(name="returnSlide", referencedColumnName="id", nullable=true)
+    //     * @Assert\NotBlank
+    //     **/
+    //    private $returnSlide;
     /**
      * @var string
-     * @ORM\Column(name="urgency", type="string", nullable=true)
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'urgency', type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     private $urgency;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="Slide")
-//     * @ORM\JoinTable(name="scan_returnrequest_slide",
-//     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
-//     * )
-//     */
-//    private $slide;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Message")
-//     * @ORM\JoinColumn(name="message", referencedColumnName="id", nullable=true)
-//     */
-//    protected $message;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    //     * @ORM\ManyToMany(targetEntity="Slide")
+    //     * @ORM\JoinTable(name="scan_returnrequest_slide",
+    //     *      joinColumns={@ORM\JoinColumn(name="slideReturnRequest", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="slide", referencedColumnName="id")}
+    //     * )
+    //     */
+    //    private $slide;
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="Message")
+    //     * @ORM\JoinColumn(name="message", referencedColumnName="id", nullable=true)
+    //     */
+    //    protected $message;
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * Return slide(s) by this date even if not scanned
-     * @ORM\Column(name="returnoption", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'returnoption', type: 'boolean', nullable: true)]
     private $returnoption;
 
-    /**
-     * @ORM\OneToMany(targetEntity="SlideText", mappedBy="slideReturnRequest", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'SlideText', mappedBy: 'slideReturnRequest', cascade: ['persist'])]
     private $slidetext;
 
 

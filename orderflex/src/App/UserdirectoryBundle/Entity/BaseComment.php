@@ -29,26 +29,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class BaseComment extends BaseUserAttributes {
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CommentTypeList", cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CommentTypeList', cascade: ['persist'])]
     private $commentType;
 
     /**
      * This field is required for orderby functionality
-     * @ORM\Column(type="string", nullable=true)
      **/
+    #[ORM\Column(type: 'string', nullable: true)]
     private $commentTypeStr;
 
 //    /**

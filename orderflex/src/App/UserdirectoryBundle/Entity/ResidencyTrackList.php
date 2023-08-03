@@ -20,61 +20,43 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_residencyTrackList")
- */
+#[ORM\Table(name: 'user_residencyTrackList')]
+#[ORM\Entity]
 class ResidencyTrackList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="ResidencyTrackList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'ResidencyTrackList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencyTrackList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ResidencyTrackList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     private $institution;
 
 //    /**
-//     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResAppTypeConfig", cascade={"persist", "remove"})
-//     * @ORM\JoinColumn(name="resapptypeconfig_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $resappTypeConfig;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencytrack_coordinator",
-     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="coordinator_id", referencedColumnName="id")}
-     * )
-     **/
+    //     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResAppTypeConfig", cascade={"persist", "remove"})
+    //     * @ORM\JoinColumn(name="resapptypeconfig_id", referencedColumnName="id", nullable=true)
+    //     */
+    //    private $resappTypeConfig;
+    #[ORM\JoinTable(name: 'user_residencytrack_coordinator')]
+    #[ORM\JoinColumn(name: 'residencytrack_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'coordinator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $coordinators;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencytrack_director",
-     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="director_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_residencytrack_director')]
+    #[ORM\JoinColumn(name: 'residencytrack_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'director_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $directors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="user_residencytrack_interviewer",
-     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="interviewer_id", referencedColumnName="id")}
-     * )
-     **/
+    #[ORM\JoinTable(name: 'user_residencytrack_interviewer')]
+    #[ORM\JoinColumn(name: 'residencytrack_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'interviewer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User')]
     private $interviewers;
 
     //Expected Duration (in years)
@@ -83,23 +65,19 @@ class ResidencyTrackList extends ListAbstract
     //C- For CP/EXP, “Expected Duration (in years): 4
     //D- For AP, “Expected Duration (in years): 3
     //E- For CP, “Expected Duration (in years): 3
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $duration;
 
     /**
      * Application season start date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearStart;
 
     /**
      * Application season end date
-     *
-     * @ORM\Column(type="date", nullable=true)
      */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearEnd;
 
 

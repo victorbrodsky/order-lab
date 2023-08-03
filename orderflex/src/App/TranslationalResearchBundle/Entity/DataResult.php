@@ -13,101 +13,88 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_dataResult")
- */
+#[ORM\Table(name: 'transres_dataResult')]
+#[ORM\Entity]
 class DataResult {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TransResRequest", inversedBy="dataResults")
-     * @ORM\JoinColumn(name="transresRequest_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'TransResRequest', inversedBy: 'dataResults')]
+    #[ORM\JoinColumn(name: 'transresRequest_id', referencedColumnName: 'id')]
     private $transresRequest;
 
 //    /**
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $system;
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
-     * @ORM\JoinColumn(name="system_id", referencedColumnName="id", nullable=true)
-     */
+    //     * @var string
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $system;
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\AccessionType')]
+    #[ORM\JoinColumn(name: 'system_id', referencedColumnName: 'id', nullable: true)]
     private $system;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $accessionId;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $barcode;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $blockId;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $partId;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $slideId;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $stainName;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $otherId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\AntibodyList")
-     * @ORM\JoinColumn(name="antibody_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\TranslationalResearchBundle\Entity\AntibodyList')]
+    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id', nullable: true)]
     private $antibody;
 
 //    /**

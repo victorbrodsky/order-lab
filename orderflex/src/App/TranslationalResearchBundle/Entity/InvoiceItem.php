@@ -27,106 +27,86 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_invoiceItem")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_invoiceItem')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class InvoiceItem {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
-     * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Invoice', inversedBy: 'invoiceItems')]
+    #[ORM\JoinColumn(name: 'invoice_id', referencedColumnName: 'id')]
     private $invoice;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Product')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $product;
 
     //////////// Invoice fields ///////////////////
     /**
      * QTY for the first item (initial quantity)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantity;
 
     //TODO: add initialQuantity?
-
     /**
      * QTY for additional items (additional quantity)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $additionalQuantity;
 
     /**
      * Item Code (i.e. TRP-1003)
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $itemCode;
 
     /**
      * Description
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     /**
      * unitPrice based on $fee
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $unitPrice;
 
     /**
      * Additional unitPrice based on $feeAdditionalItem
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $additionalUnitPrice;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private $total;
     //////////// EOF Invoice fields ///////////////////
 

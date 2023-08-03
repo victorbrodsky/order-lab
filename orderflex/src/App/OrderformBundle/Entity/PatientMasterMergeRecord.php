@@ -23,23 +23,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientMasterMergeRecord")
- */
+#[ORM\Table(name: 'scan_patientMasterMergeRecord')]
+#[ORM\Entity]
 class PatientMasterMergeRecord extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="masterMergeRecord")
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'masterMergeRecord')]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
     /**
      * Master Merge Record
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     protected $field;
 
 }

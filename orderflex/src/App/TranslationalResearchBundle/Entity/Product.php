@@ -14,76 +14,66 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_product")
- */
+#[ORM\Table(name: 'transres_product')]
+#[ORM\Entity]
 class Product {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $submitter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TransResRequest", inversedBy="products")
-     * @ORM\JoinColumn(name="transresRequest_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'TransResRequest', inversedBy: 'products')]
+    #[ORM\JoinColumn(name: 'transresRequest_id', referencedColumnName: 'id')]
     private $transresRequest;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RequestCategoryTypeList")
-     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'RequestCategoryTypeList')]
+    #[ORM\JoinColumn(name: 'category', referencedColumnName: 'id', nullable: true)]
     private $category;
 
     /**
      * Requested
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $requested;
 
     /**
      * Completed
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $completed;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
     /**
      * Note (TRP tech)
      *
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $note;
 
     /**
      * "Not on the invoice" to indicated deleted products on the invoice
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $notInInvoice;
 
     //16- In Platform List manager, add a new list titled “Orderable Status” with the following values:
@@ -95,10 +85,8 @@ class Product {
     // associated with that specific item on the fee schedule.
     // Requested - when work request is created
     // Completed - when work request is completed
-    /**
-     * @ORM\ManyToOne(targetEntity="OrderableStatusList")
-     * @ORM\JoinColumn(name="orderableStatus", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'OrderableStatusList')]
+    #[ORM\JoinColumn(name: 'orderableStatus', referencedColumnName: 'id', nullable: true)]
     private $orderableStatus;
 
 

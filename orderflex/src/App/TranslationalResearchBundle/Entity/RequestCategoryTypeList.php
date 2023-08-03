@@ -25,25 +25,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
 //If use via repository: @ORM\Entity(repositoryClass="App\TranslationalResearchBundle\Repository\RequestCategoryTypeListRepository")
-
 /**
  * Fee Schedule
- *
- * @ORM\Entity
- * @ORM\Table(name="transres_requestCategoryTypeList")
  */
+#[ORM\Table(name: 'transres_requestCategoryTypeList')]
+#[ORM\Entity]
 class RequestCategoryTypeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="RequestCategoryTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'RequestCategoryTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RequestCategoryTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'RequestCategoryTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
@@ -52,8 +46,8 @@ class RequestCategoryTypeList extends ListAbstract
      * External fee - "Fee for one"
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fee;
 
     /**
@@ -61,81 +55,76 @@ class RequestCategoryTypeList extends ListAbstract
      * External fee - "Fee per additional item"
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $feeAdditionalItem;
 
     /**
      * Default quantity at initial price, 1 - by default
      *
      * @var integer
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $initialQuantity;
 
 //    /**
-//     * Price of Product or Service
-//     * Internal fee - "Internal fee for one"
-//     *
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $internalFee;
-//
-//    /**
-//     * Price of Product or Service
-//     * Internal fee - "Internal Fee per additional item"
-//     *
-//     * @var string
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $internalFeeAdditionalItem;
-
+    //     * Price of Product or Service
+    //     * Internal fee - "Internal fee for one"
+    //     *
+    //     * @var string
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $internalFee;
+    //
+    //    /**
+    //     * Price of Product or Service
+    //     * Internal fee - "Internal Fee per additional item"
+    //     *
+    //     * @var string
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $internalFeeAdditionalItem;
     /**
      * Order by priceList->orderinlist ORM\OrderBy({"priceList.orderinlist" = "ASC"})
-     *
-     * @ORM\OneToMany(targetEntity="Prices", mappedBy="requestCategoryType", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: 'Prices', mappedBy: 'requestCategoryType', cascade: ['persist', 'remove'])]
     private $prices;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $feeUnit;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $section;
 
     /**
      * ID of Product or Service
      *
      * @var string
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $productId;
 
     /**
      * Reverse association: Hide this orderable for the work requests that belong to project requests of this type
-     *
-     * @ORM\ManyToMany(targetEntity="SpecialtyList", inversedBy="requestCategories")
-     * @ORM\JoinTable(name="transres_requestcategory_specialty")
      */
+    #[ORM\JoinTable(name: 'transres_requestcategory_specialty')]
+    #[ORM\ManyToMany(targetEntity: 'SpecialtyList', inversedBy: 'requestCategories')]
     private $projectSpecialties;
 
     /**
      * Default Work Queue (one per price section)
-     *
-     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\WorkQueueList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_requestcategory_workqueue",
-     *      joinColumns={@ORM\JoinColumn(name="requestcategory_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_requestcategory_workqueue')]
+    #[ORM\JoinColumn(name: 'requestcategory_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'workqueue_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\TranslationalResearchBundle\Entity\WorkQueueList', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $workQueues;
 
 

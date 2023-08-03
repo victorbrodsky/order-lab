@@ -33,66 +33,54 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="scan_courseTitleTree",
- *  indexes={
- *      @ORM\Index( name="courseTitleTree_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'scan_courseTitleTree')]
+#[ORM\Index(name: 'courseTitleTree_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class CourseTitleTree extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'CourseTitleTree', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="CourseTitleTree", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'CourseTitleTree', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
     /**
      * Organizational Group Types
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Course Title, 2-Lesson Title
      * For example, OrganizationalGroupType with level=1, set this level to 1.
-     *
-     * @ORM\ManyToOne(targetEntity="CourseGroupType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'CourseGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
-    /**
-     * @ORM\OneToMany(targetEntity="CourseTitleTree", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'CourseTitleTree', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CourseTitleTree", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CourseTitleTree', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="Educational", mappedBy="courseTitle", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'Educational', mappedBy: 'courseTitle', cascade: ['persist'])]
     private $educationals;
 
 
     /**
      * keep copy of all users: userWrappers in Educational are subset of this userWrappers
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="scan_courseTitleTree_userWrapper",
-     *      joinColumns={@ORM\JoinColumn(name="courseTitleTree_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_courseTitleTree_userWrapper')]
+    #[ORM\JoinColumn(name: 'courseTitleTree_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'userWrapper_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
     private $userWrappers;
 
 

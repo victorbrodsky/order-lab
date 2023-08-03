@@ -20,103 +20,71 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\GrantRepository")
- * @ORM\Table(name="user_grant")
- */
+#[ORM\Table(name: 'user_grant')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\GrantRepository')]
 class Grant extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="Grant", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'Grant', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Grant", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Grant', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="grants")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'grants')]
     private $user;
 
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SourceOrganization")
-     * @ORM\JoinColumn(name="sourceOrganization_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SourceOrganization')]
+    #[ORM\JoinColumn(name: 'sourceOrganization_id', referencedColumnName: 'id', nullable: true)]
     private $sourceOrganization;
 
 
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $attachmentContainer;
 
     //Link to a page with more information:
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $grantLink;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $grantid;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $startDate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $endDate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $amount;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $currentYearDirectCost;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $currentYearIndirectCost;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $totalCurrentYearCost;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $amountLabSpace;
 
     //User's fields
-    /**
-     * @ORM\OneToMany(targetEntity="GrantComment", mappedBy="grant", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'GrantComment', mappedBy: 'grant', cascade: ['persist', 'remove'])]
     private $comments;
     private $commentDummy;
 
-    /**
-     * @ORM\OneToMany(targetEntity="GrantEffort", mappedBy="grant", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'GrantEffort', mappedBy: 'grant', cascade: ['persist', 'remove'])]
     private $efforts;
     private $effortDummy;
 

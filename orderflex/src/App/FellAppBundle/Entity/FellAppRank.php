@@ -22,27 +22,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_fellAppRank")
- */
+#[ORM\Table(name: 'fellapp_fellAppRank')]
+#[ORM\Entity]
 class FellAppRank extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="FellAppRank", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'FellAppRank', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellAppRank", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'FellAppRank', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\Column(name="value", type="decimal", precision=2, scale=1, nullable=true)
-     */
+    #[ORM\Column(name: 'value', type: 'decimal', precision: 2, scale: 1, nullable: true)]
     private $value;
 
 

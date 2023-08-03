@@ -31,37 +31,38 @@ use Symfony\Component\Validator\Constraints as Assert;
  * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
- *
- * @ORM\MappedSuperclass
  */
+
+#[ORM\MappedSuperclass]
 abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeInterface {  //extends ListAbstract
-
     //children
-
     //parent
-
     /**
-     * @Gedmo\TreeLeft
-     * @ORM\Column(type="integer")
+     * Gedmo\TreeLeft
      */
+    #[Gedmo\TreeLeft]
+    #[ORM\Column(type: 'integer')]
     private $lft;
 
     /**
-     * @Gedmo\TreeRight
-     * @ORM\Column(type="integer")
+     * Gedmo\TreeRight
      */
+    #[Gedmo\TreeRight]
+    #[ORM\Column(type: 'integer')]
     private $rgt;
 
     /**
-     * @Gedmo\TreeLevel
-     * @ORM\Column(type="integer")
+     * Gedmo\TreeLevel
      */
+    #[Gedmo\TreeLevel]
+    #[ORM\Column(type: 'integer')]
     private $level;
 
     /**
-     * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
+     * Gedmo\TreeRoot
      */
+    #[Gedmo\TreeRoot]
+    #[ORM\Column(name: 'root', type: 'integer', nullable: true)]
     private $root;
 
     //May add additional properties of the tree node

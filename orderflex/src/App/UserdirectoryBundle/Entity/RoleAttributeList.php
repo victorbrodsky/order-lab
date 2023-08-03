@@ -20,33 +20,23 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="user_roleAttributeList")
- */
+#[ORM\Table(name: 'user_roleAttributeList')]
+#[ORM\Entity]
 class RoleAttributeList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="RoleAttributeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'RoleAttributeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="RoleAttributeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'RoleAttributeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\Column(name="value", type="string")
-     */
+    #[ORM\Column(name: 'value', type: 'string')]
     private $value;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="attributes")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Roles', mappedBy: 'attributes')]
     private $roles;
 
 

@@ -27,40 +27,30 @@ namespace App\VacReqBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="vacreq_siteparameter")
- */
+#[ORM\Table(name: 'vacreq_siteparameter')]
+#[ORM\Entity]
 class VacReqSiteParameter
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $academicYearStart;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $academicYearEnd;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $holidaysUrl;
 
     ////////// TODO: Moved to the VacReqApprovalTypeList (can be deleted) //////////////
     /**
      * Moved to the VacReqApprovalTypeList - Done
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $vacationAccruedDaysPerMonth;
 
     /**
@@ -68,40 +58,34 @@ class VacReqSiteParameter
      *
      * Maximum number vacation days per year (usually 12*2=24).
      * This should not be used for now, because we rely on the vacationAccruedDaysPerMonth.
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $maxVacationDays;
 
     /**
      * Moved to the VacReqApprovalTypeList - Done
      *
      * Maximum number carry over vacation days per year (usually 15 carry over days)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $maxCarryOverVacationDays;
 
     /**
      * Moved to the VacReqApprovalTypeList - Done ?
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noteForVacationDays;
 
     /**
      * Moved to the VacReqApprovalTypeList - Done ?
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noteForCarryOverDays;
     ////////// EOF Moved to the VacReqApprovalTypeList //////////////
-
     /**
      * field titled “Floating Day Link Name” with a default value of “Floating Day”
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $floatingDayName;
 
     //text field titled “Floating Day Note” with a default value of
@@ -111,43 +95,36 @@ class VacReqSiteParameter
     // It cannot be carried over.”
     /**
      * field titled “Floating Day Note” with a default value of "The Juneteenth Holiday may be used as a floating holiday only..."
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $floatingDayNote;
 
     /**
      * checkbox field titled “Restrict Floating Date Range” and set the value to “checked” by default
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $floatingRestrictDateRange;
 
     /**
      * Enable Floating Day Requests: [Yes/No]
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableFloatingDay;
 
     //URL for US Holiday dates in iCal format:
     /**
      * URL for US Holiday dates in iCal format
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $holidayDatesUrl;
 
     //new field titled “Instance maintained for the following institution”:
     // [Select2 with organizational groups pulled from the Platform List Manager List]”.
     // Set this value to 'Weill Cornell Medicine', 'Brooklyn Methodist', 'NYP Lower Manhattan Hospital Laboratory'
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_siteparameter_institution",
-     *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'vacreq_siteparameter_institution')]
+    #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution', cascade: ['persist'])]
     private $institutions;
 
 

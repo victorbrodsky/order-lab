@@ -29,24 +29,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_attachmentContainer")
- */
+#[ORM\Table(name: 'user_attachmentContainer')]
+#[ORM\Entity]
 class AttachmentContainer {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DocumentContainer", mappedBy="attachmentContainer", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'DocumentContainer', mappedBy: 'attachmentContainer', cascade: ['persist', 'remove'])]
     private $documentContainers;
 
 

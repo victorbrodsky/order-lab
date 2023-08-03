@@ -32,11 +32,8 @@ use Doctrine\ORM\Mapping as ORM;
 //PostgreSQL use $id (@ORM\GeneratedValue(strategy="AUTO")): @ORM\GeneratedValue(strategy="IDENTITY")
 //CREATE SEQUENCE data_sample_id_seq INCREMENT BY 1 MINVALUE 1 START 1;
 //Change id generation strategy to IDENTITY: to ALTER TABLE public.transres_finalreview ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
-
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class BaseUserAttributes {
 
     const TYPE_PUBLIC = 0;          //access by anybody
@@ -45,63 +42,57 @@ abstract class BaseUserAttributes {
 
     const STATUS_UNVERIFIED = 0;    //unverified (not trusted)
     const STATUS_VERIFIED = 1;      //verified by admin
-
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'author', referencedColumnName: 'id')]
     protected $author;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     protected $updateAuthor;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $updateAuthorRoles = array();
 
     /**
      * type: public, private, restricted
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
+    #[ORM\Column(type: 'integer', options: ['default' => 0], nullable: true)]
     protected $type;
 
     /**
      * status: valid, invalid
-     * @ORM\Column(type="integer", options={"default" = 0}, nullable=true)
      */
+    #[ORM\Column(type: 'integer', options: ['default' => 0], nullable: true)]
     protected $status;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updatedate;
 
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $orderinlist;
 
 
@@ -145,9 +136,7 @@ abstract class BaseUserAttributes {
         return $this->author;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedate()
     {
         $this->createdate = new \DateTime();
@@ -236,9 +225,7 @@ abstract class BaseUserAttributes {
         return $this->updateAuthor;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

@@ -19,66 +19,46 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_employmentStatus")
- */
+#[ORM\Table(name: 'user_employmentStatus')]
+#[ORM\Entity]
 class EmploymentStatus extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="employmentStatus")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'employmentStatus')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $user;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $hireDate;
 
     //Employee Type
-    /**
-     * @ORM\ManyToOne(targetEntity="EmploymentType")
-     * @ORM\JoinColumn(name="employmentType_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EmploymentType')]
+    #[ORM\JoinColumn(name: 'employmentType_id', referencedColumnName: 'id', nullable: true)]
     private $employmentType;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $terminationDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EmploymentTerminationType")
-     * @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EmploymentTerminationType')]
+    #[ORM\JoinColumn(name: 'state_id', referencedColumnName: 'id', nullable: true)]
     private $terminationType;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $terminationReason;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $jobDescriptionSummary;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $jobDescription;
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'AttachmentContainer', cascade: ['persist', 'remove'])]
     private $attachmentContainer;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
 

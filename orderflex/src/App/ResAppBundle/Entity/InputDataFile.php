@@ -21,56 +21,44 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="resapp_inputdatafile")
- */
+#[ORM\Table(name: 'resapp_inputdatafile')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class InputDataFile {
     
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
     
     
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $creationdate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
     /**
      * active, completed, failed
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
     /**
      * ERAS (Electronic Residency Application Service) files in PDF
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="resapp_inputdatafile_erasfile",
-     *      joinColumns={@ORM\JoinColumn(name="inputdatafile_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="erasfile_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
      **/
+    #[ORM\JoinTable(name: 'resapp_inputdatafile_erasfile')]
+    #[ORM\JoinColumn(name: 'inputdatafile_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'erasfile_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $erasFiles;
 
-    /**
-     * @ORM\OneToOne(targetEntity="ResidencyApplication")
-     * @ORM\JoinColumn(name="resapp_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: 'ResidencyApplication')]
+    #[ORM\JoinColumn(name: 'resapp_id', referencedColumnName: 'id')]
     private $resapp;
 
     
@@ -124,8 +112,8 @@ class InputDataFile {
 
     /**
      * @param \DateTime $updatedate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

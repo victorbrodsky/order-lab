@@ -43,65 +43,52 @@ use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class ObjectAbstract
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * status: use to indicate if the entity with this key is reserved only but not submitted
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $status;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $creationdate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="provider", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'provider', referencedColumnName: 'id')]
     protected $provider;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\SourceSystemList")
-     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\SourceSystemList')]
+    #[ORM\JoinColumn(name: 'source_id', referencedColumnName: 'id', nullable: true)]
     protected $source;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id')]
     protected $institution;
 
 //    /**
-//     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
-//     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
-//     **/
-//    protected $documentContainer;
-
+    //     * DocumentContainer can have many Documents; each Document has document type (DocumentTypeList)
+    //     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\DocumentContainer", cascade={"persist","remove"})
+    //     **/
+    //    protected $documentContainer;
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\AttachmentContainer", cascade={"persist","remove"})
      **/
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AttachmentContainer', cascade: ['persist', 'remove'])]
     protected $attachmentContainer;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Tracker", cascade={"persist","remove"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Tracker', cascade: ['persist', 'remove'])]
     protected $tracker;
 
 
@@ -185,9 +172,7 @@ abstract class ObjectAbstract
     }
 
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreationdate()
     {
         $this->creationdate = new \DateTime();

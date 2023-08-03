@@ -23,37 +23,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_organlist")
- */
+#[ORM\Table(name: 'scan_organlist')]
+#[ORM\Entity]
 class OrganList extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrganList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'OrganList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OrganList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'OrganList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PartSourceOrgan", mappedBy="field")
-     */
+    #[ORM\OneToMany(targetEntity: 'PartSourceOrgan', mappedBy: 'field')]
     protected $part;
 
 //    /**
-//     * @ORM\OneToMany(targetEntity="Part", mappedBy="primaryOrgan")
-//     */
-//    protected $partprimary;
-
-    /**
-     * @ORM\OneToMany(targetEntity="PartDiseaseType", mappedBy="primaryOrgan")
-     */
+    //     * @ORM\OneToMany(targetEntity="Part", mappedBy="primaryOrgan")
+    //     */
+    //    protected $partprimary;
+    #[ORM\OneToMany(targetEntity: 'PartDiseaseType', mappedBy: 'primaryOrgan')]
     protected $partprimary;
 
 

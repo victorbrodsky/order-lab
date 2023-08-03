@@ -20,56 +20,38 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_geoLocation")
- */
+#[ORM\Table(name: 'user_geoLocation')]
+#[ORM\Entity]
 class GeoLocation
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $street1;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $street2;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CityList")
-     * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'CityList')]
+    #[ORM\JoinColumn(name: 'city', referencedColumnName: 'id', nullable: true)]
     private $city;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="States")
-     * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'States')]
+    #[ORM\JoinColumn(name: 'state', referencedColumnName: 'id', nullable: true)]
     private $state;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Countries")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Countries')]
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'id', nullable: true)]
     private $country;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $county;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $zip;
 
 

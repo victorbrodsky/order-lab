@@ -21,49 +21,36 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\DateTime;
 
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 class BaseTitle extends BaseUserAttributes
 {
 
     /**
      * Primary, Secondary
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $priority;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $startDate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $endDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EffortList")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EffortList')]
     protected $effort;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     protected $institution;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $pgystart;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $pgylevel;
 
 

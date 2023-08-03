@@ -30,159 +30,134 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class ListAbstract
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(name="name", type="string")
-     * @Assert\NotBlank(message = "This value should not be blank.")
-     */
+    #[ORM\Column(name: 'name', type: 'string')]
+    #[Assert\NotBlank(message: 'This value should not be blank.')]
     protected $name;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $abbreviation;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $shortname;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $description;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     protected $type;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
-     * @Assert\NotBlank
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'creator_id', referencedColumnName: 'id')]
+    #[Assert\NotBlank]
     protected $creator;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="createdate", type="datetime", nullable=true)
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'createdate', type: 'datetime', nullable: true)]
+    #[Assert\NotBlank]
     protected $createdate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     protected $updatedby;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="updatedon", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'updatedon', type: 'datetime', nullable: true)]
     protected $updatedon;
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank
      */
+    #[ORM\Column(type: 'integer')]
+    #[Assert\NotBlank]
     protected $orderinlist;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $updateAuthorRoles = array();
 
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $fulltitle;
 
     /**
      * Link to List ID. Specifically only used to link the record with the table "PlatformListManagerRootList"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $linkToListId;
 
     /**
      * for all items/rows "Object Type"="Dropdown Menu Value"
      * Platform List Manager List where all items should have "Object Type"="Form Field - Dropdown Menu"
      * For not form nodes, object type can be "User"
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ObjectTypeList")
-     * @ORM\JoinColumn(name="objectType_id", referencedColumnName="id",nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\ObjectTypeList')]
+    #[ORM\JoinColumn(name: 'objectType_id', referencedColumnName: 'id', nullable: true)]
     protected $objectType;
 
     //Used to make a link to other lists in the list manager.
     /**
      * Linked Object ID. Used to make a link to other lists in the list manager.
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $entityId;
     /**
      * Used to make a link to other lists in the list manager.
      * i.e. "App\OrderformBundle\Entity"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $entityNamespace;
     /**
      * Used to make a link to other lists in the list manager.
      * i.e. "Patient"
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $entityName;
 
-    /**
-     * 
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $version;
     
     /**
      * Additional attributes in JSON format (e.g.
      * {"attributeGroupTitle":{"attribute01Title":"attribute01Value","attribute02Title":"attribute02Value"}} )
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $textAttribute;
 
 //    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $fulltitleunique;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $fulltitlemedium;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $fulltitleshort;
-
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    protected $fulltitleunique;
+    //
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    protected $fulltitlemedium;
+    //
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    protected $fulltitleshort;
     /**
      * URL Slug
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $urlSlug;
 
 
@@ -715,9 +690,7 @@ abstract class ListAbstract
         return $this->updatedby;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedon()
     {
         $this->updatedon = new \DateTime();
@@ -770,10 +743,8 @@ abstract class ListAbstract
     }
 
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function onCreateUpdate() {
         $this->createFullTitle();
     }

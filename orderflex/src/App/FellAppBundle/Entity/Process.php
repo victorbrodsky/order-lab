@@ -20,49 +20,37 @@ namespace App\FellAppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fellapp_process")
- */
+#[ORM\Table(name: 'fellapp_process')]
+#[ORM\Entity]
 class Process {
     
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
     
     
-    /**
-     * @ORM\Column(name="queueTimestamp", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'queueTimestamp', type: 'datetime', nullable: true)]
     private $queueTimestamp;
     
-    /**
-     * @ORM\Column(name="startTimestamp", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'startTimestamp', type: 'datetime', nullable: true)]
     private $startTimestamp;
     
-    /**
-     * @ORM\Column(name="fellappId", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'fellappId', type: 'string', nullable: true)]
     private $fellappId;
     
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ReportQueue", inversedBy="processes")
-     * @ORM\JoinColumn(name="reportQueue_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'ReportQueue', inversedBy: 'processes')]
+    #[ORM\JoinColumn(name: 'reportQueue_id', referencedColumnName: 'id')]
     private $reportQueue;
 
     /**
      * overwrite, asap
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $argument;
         
     

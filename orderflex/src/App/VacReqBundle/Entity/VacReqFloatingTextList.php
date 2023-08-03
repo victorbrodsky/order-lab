@@ -23,22 +23,16 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_floatingtextlist")
- */
+#[ORM\Table(name: 'vacreq_floatingtextlist')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqFloatingTextList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="VacReqFloatingTextList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VacReqFloatingTextList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqFloatingTextList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'VacReqFloatingTextList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 

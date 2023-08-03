@@ -11,155 +11,114 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_signup")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user_signup')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class SignUp {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SiteList")
-     * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SiteList')]
+    #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id', nullable: true)]
     private $site;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updatedby_id", referencedColumnName="id",nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     private $updatedby;
 
     ////////////// sign up details //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $userName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank(
-     *     message = "The email value should not be blank."
-     * )
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     * )
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank(message: 'The email value should not be blank.')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private $email;
     ////////////// EOF sign up details //////////////
-
-
-//    ////////////// more user details //////////////
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $firstName;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $lastName;
-//
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $phone;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Institution")
-//     */
-//    private $institution;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="AdminTitleList")
-//     **/
-//    private $administrativeTitle;
-//    ////////////// EOF more user details //////////////
-
-
+    //    ////////////// more user details //////////////
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $firstName;
+    //
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $lastName;
+    //
+    //    /**
+    //     * @ORM\Column(type="string", nullable=true)
+    //     */
+    //    private $phone;
+    //
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="Institution")
+    //     */
+    //    private $institution;
+    //
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="AdminTitleList")
+    //     **/
+    //    private $administrativeTitle;
+    //    ////////////// EOF more user details //////////////
     ////////////// registration parameters //////////////
     /**
      * The salt to use for hashing.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $salt;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $hashPassword;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $registrationLinkID;
 
     /**
      * Requested, Activation Email Sent, Activated
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $registrationStatus;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $emailSentCounter;
 
     /**
      * Last Url, to use later when activate an account
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $lastUrl;
     ////////////// EOF registration parameters //////////////
-
-
     ////////////// tech parameters //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $ip;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $useragent;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $width;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $height;
     ////////////// EOF tech parameters //////////////
 
@@ -244,8 +203,8 @@ class SignUp {
 
     /**
      * @param \DateTime $updatedate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

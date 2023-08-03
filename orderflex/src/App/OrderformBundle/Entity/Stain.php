@@ -21,33 +21,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //(repositoryClass="App\OrderformBundle\Repository\StainRepository")
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_stain")
- */
+#[ORM\Table(name: 'scan_stain')]
+#[ORM\Entity]
 class Stain extends SlideArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="stain")
-     * @ORM\JoinColumn(name="slide", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Slide', inversedBy: 'stain')]
+    #[ORM\JoinColumn(name: 'slide', referencedColumnName: 'id')]
     protected $slide;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="StainList", cascade={"persist"})
-     * @ORM\JoinColumn(name="stainlist_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'StainList', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'stainlist_id', referencedColumnName: 'id', nullable: true)]
     protected $field;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $stainer;
     
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $date;
 
 

@@ -23,28 +23,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="crn_crnComplexPatients")
- */
+#[ORM\Table(name: 'crn_crnComplexPatients')]
+#[ORM\Entity]
 class CrnComplexPatients extends ListAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="CrnComplexPatients", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'CrnComplexPatients', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CrnComplexPatients", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CrnComplexPatients', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Patient", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\Patient', cascade: ['persist'])]
     private $patient;
 
 

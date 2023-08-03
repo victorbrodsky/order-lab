@@ -21,49 +21,35 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_book")
- */
+#[ORM\Table(name: 'user_book')]
+#[ORM\Entity]
 class Book extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="books")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'books')]
     private $users;
 
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $citation;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $isbn;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $link;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $publicationDate;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $comment;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AuthorshipRoles")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'AuthorshipRoles')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $authorshipRole;
 
 

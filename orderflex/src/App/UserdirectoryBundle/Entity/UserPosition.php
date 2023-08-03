@@ -28,36 +28,31 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_userPosition")
- */
+#[ORM\Table(name: 'user_userPosition')]
+#[ORM\Entity]
 class UserPosition {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="AdministrativeTitle", inversedBy="userPositions", cascade={"persist"})
-//     * @ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-//     */
-//    private $administrativeTitle;
-
-//    /**
-//     * //Position Type: Head, Manager, Primary Contact, Transcriptionist
-//     * @ORM\ManyToMany(targetEntity="PositionTypeList", inversedBy="userPositions")
-//     * @ORM\JoinTable(name="user_userPositions_positionTypes")
-//     **/
-//    private $positionTypes;
+    //     * @ORM\ManyToOne(targetEntity="AdministrativeTitle", inversedBy="userPositions", cascade={"persist"})
+    //     * @ORM\JoinColumn(name="administrativeTitle_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+    //     */
+    //    private $administrativeTitle;
+    //    /**
+    //     * //Position Type: Head, Manager, Primary Contact, Transcriptionist
+    //     * @ORM\ManyToMany(targetEntity="PositionTypeList", inversedBy="userPositions")
+    //     * @ORM\JoinTable(name="user_userPositions_positionTypes")
+    //     **/
+    //    private $positionTypes;
     /**
      * //Position Type: Head, Manager, Primary Contact, Transcriptionist
-     * @ORM\ManyToMany(targetEntity="PositionTypeList", inversedBy="userPositions")
-     * @ORM\JoinTable(name="user_userPositions_positionTypes")
      **/
+    #[ORM\JoinTable(name: 'user_userPositions_positionTypes')]
+    #[ORM\ManyToMany(targetEntity: 'PositionTypeList', inversedBy: 'userPositions')]
     private $positionTypes;
 
 

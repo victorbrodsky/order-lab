@@ -24,23 +24,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //"Time Away Approval Group Type" with 2 values: Faculty, Fellows
-
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_approvaltypelist")
- */
+#[ORM\Table(name: 'vacreq_approvaltypelist')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqApprovalTypeList extends ListAbstract {
 
-    /**
-     * @ORM\OneToMany(targetEntity="VacReqApprovalTypeList", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VacReqApprovalTypeList', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqApprovalTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'VacReqApprovalTypeList', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
     //Add a reference to the “Time Away Approval Group Type” for each approver group vacation site
@@ -48,35 +41,30 @@ class VacReqApprovalTypeList extends ListAbstract {
     //associated with vacation group (insitution): one VacReqApprovalTypeList can have many Institution
     //Institution n-----1 VacReqApprovalTypeList
     //when add/edit group, choose institution and select VacReqApprovalTypeList which will link to this institution
-
     //1) Institution has ManyToOne to VacReqApprovalTypeList: Institution->getVacReqApprovalTypeList
     // => vac days accrued per month, max vac days, allow carry over
     //Easy, but in this case Institution is UserDirectoryBundle will have a reference to VacReqBundle
-
     //2) VacReqApprovalTypeList has OneToMany or ManyToMany (unique) to Institution: institution => getApprovalType(institution)
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-//     */
-//    private $institution;
-
-//    //Add unique=true if institution allows to have only one approvaltype
-//    /**
-//     * TO REMOVE
-//     *
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-//     * @ORM\JoinTable(name="vacreq_approvaltypes_institutions",
-//     *      joinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $institutions;
-
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+    //     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+    //     */
+    //    private $institution;
+    //    //Add unique=true if institution allows to have only one approvaltype
+    //    /**
+    //     * TO REMOVE
+    //     *
+    //     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
+    //     * @ORM\JoinTable(name="vacreq_approvaltypes_institutions",
+    //     *      joinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+    //     *      )
+    //     **/
+    //    private $institutions;
     /**
      * Instead of creat relation to institution here, create relation to the group settings which has relation to institution
-     *
-     * @ORM\ManyToMany(targetEntity="VacReqSettings", mappedBy="approvalTypes")
      **/
+    #[ORM\ManyToMany(targetEntity: 'VacReqSettings', mappedBy: 'approvalTypes')]
     private $vacreqSettings;
 
 
@@ -84,49 +72,42 @@ class VacReqApprovalTypeList extends ListAbstract {
     /**
      * Moved from VacReqSiteParameter
      * Vacation days accrued per month (faculty = 2, fellows = 1.666666667)
-     *
-     * @ORM\Column(type="decimal", precision=15, scale=9, nullable=true)
      */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 9, nullable: true)]
     private $vacationAccruedDaysPerMonth;
 
     /**
      * Moved from VacReqSiteParameter
      * Maximum number vacation days per year (usually 12*2=24). (faculty, fellows)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $maxVacationDays;
 
     /**
      * Moved from VacReqSiteParameter
      * Maximum number of carry over vacation days per year (faculty, fellows)
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $maxCarryOverVacationDays;
 
     /**
      * Moved from VacReqSiteParameter
      * Note for vacation days (faculty, fellows)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noteForVacationDays;
 
     /**
      * Moved from VacReqSiteParameter
      * Note for carry over vacation days (faculty, fellows)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noteForCarryOverDays;
     ////////// EOF Moved from VacReqSiteParameter ///////////
-
     /**
      * Allow to request carry over of unused vacation days to the following year (faculty, fellows)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $allowCarryOver;
 
 

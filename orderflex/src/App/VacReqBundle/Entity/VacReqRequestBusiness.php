@@ -27,26 +27,18 @@ namespace App\VacReqBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="vacreq_business")
- */
+#[ORM\Table(name: 'vacreq_business')]
+#[ORM\Entity]
 class VacReqRequestBusiness extends VacReqRequestBase
 {
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $expenses;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $paidByOutsideOrganization;
 
 

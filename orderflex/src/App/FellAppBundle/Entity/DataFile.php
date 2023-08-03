@@ -21,51 +21,39 @@ use App\UserdirectoryBundle\Entity\Document;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="fellapp_dataFile")
- */
+#[ORM\Table(name: 'fellapp_dataFile')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataFile {
     
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
     
     
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $creationdate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
     /**
      * active, completed, failed
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\OneToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $document;
 
-    /**
-     * @ORM\OneToOne(targetEntity="FellowshipApplication")
-     * @ORM\JoinColumn(name="fellapp_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: 'FellowshipApplication')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id')]
     private $fellapp;
 
     
@@ -117,8 +105,8 @@ class DataFile {
 
     /**
      * @param \DateTime $updatedate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

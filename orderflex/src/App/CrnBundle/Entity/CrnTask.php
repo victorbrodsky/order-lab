@@ -22,87 +22,65 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="crn_crntask")
- */
+#[ORM\Table(name: 'crn_crntask')]
+#[ORM\Entity]
 class CrnTask
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CrnEntryMessage", inversedBy="crnTasks", cascade={"persist"})
-     * @ORM\JoinColumn(name="crnEntryMessage_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'CrnEntryMessage', inversedBy: 'crnTasks', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'crnEntryMessage_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $crnEntryMessage;
 
     /**
      * “Contact Referring Provider”, “Order a medication”, “Order blood products”, “Check lab results”
      * Tasks Types. The same as Call Log (Shared List)
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogTaskTypeList")
-     * @ORM\JoinColumn(name="crnTaskType_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\CalllogTaskTypeList')]
+    #[ORM\JoinColumn(name: 'crnTaskType_id', referencedColumnName: 'id', nullable: true)]
     private $crnTaskType;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     /**
      * “pending”, “completed”, “superseded”, “deleted”
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $systemStatus;
 
     /**
      * Checkbox (Checkbox hidden on new entry page): 0-Pending, 1-Completed
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $status;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $createdBy;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $updatedBy;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $statusUpdatedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $statusUpdatedBy;
 
 

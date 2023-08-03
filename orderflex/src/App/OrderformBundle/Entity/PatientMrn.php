@@ -32,40 +32,28 @@ use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 // *  uniqueConstraints={@ORM\UniqueConstraint(name="patient_unique", columns={"patient_id", "field", "keytype_id", "status"})}
 // * )
 // */
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_patientmrn",
- *  indexes={
- *      @ORM\Index( name="patient_field_idx", columns={"field"} ),
- *      @ORM\Index( name="patient_keytype_idx", columns={"keytype_id"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'scan_patientmrn')]
+#[ORM\Index(name: 'patient_field_idx', columns: ['field'])]
+#[ORM\Index(name: 'patient_keytype_idx', columns: ['keytype_id'])]
+#[ORM\Entity]
 class PatientMrn extends PatientArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="mrn", cascade={"persist"})
-     * @ORM\JoinColumn(name="patient_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'mrn', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'patient_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $patient;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $field;
 
     /**
      * original mrn # enetered by user
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $original;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MrnType", inversedBy="patientmrn", cascade={"persist"})
-     * @ORM\JoinColumn(name="keytype_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'MrnType', inversedBy: 'patientmrn', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'keytype_id', referencedColumnName: 'id', nullable: true)]
     protected $keytype;
 
     /**

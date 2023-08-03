@@ -21,91 +21,65 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\SlideRepository")
- * @ORM\Table(name="scan_slide")
- */
+#[ORM\Table(name: 'scan_slide')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\SlideRepository')]
 class Slide extends ObjectAbstract
 {
 
-    //*******************************// 
-    // first step fields 
     //*******************************//
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Block", inversedBy="slide")
-     * @ORM\JoinColumn(name="block", referencedColumnName="id")
-     */
+    // first step fields
+    //*******************************//
+    #[ORM\ManyToOne(targetEntity: 'Block', inversedBy: 'slide')]
+    #[ORM\JoinColumn(name: 'block', referencedColumnName: 'id')]
     protected $block;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Part", inversedBy="slide")
-     * @ORM\JoinColumn(name="part", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Part', inversedBy: 'slide')]
+    #[ORM\JoinColumn(name: 'part', referencedColumnName: 'id')]
     protected $part;
     
-    //*********************************************// 
-    // second part of the form (optional) 
-    //*********************************************//                
-    
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    //*********************************************//
+    // second part of the form (optional)
+    //*********************************************//
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $microscopicdescr;
 
     /**
      * @param \Doctrine\Common\Collections\Collection $property
-     * @ORM\OneToMany(targetEntity="RelevantScans", mappedBy="slide", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'RelevantScans', mappedBy: 'slide', cascade: ['persist'])]
     protected $relevantScans;
     
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $barcode;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $title;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SlideType", cascade={"persist"})
-     * @ORM\JoinColumn(name="slidetype", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'SlideType', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'slidetype', referencedColumnName: 'id', nullable: true)]
     protected $slidetype;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Imaging", mappedBy="slide", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Imaging', mappedBy: 'slide', cascade: ['persist'])]
     protected $scan;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Stain", mappedBy="slide", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Stain', mappedBy: 'slide', cascade: ['persist'])]
     protected $stain;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="slide")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'slide')]
     protected $message;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Educational", inversedBy="slides", cascade={"persist"})
-     * @ORM\JoinColumn(name="educational", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Educational', inversedBy: 'slides', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'educational', referencedColumnName: 'id', nullable: true)]
     protected $educational;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Research", inversedBy="slides", cascade={"persist"})
-     * @ORM\JoinColumn(name="research", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Research', inversedBy: 'slides', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'research', referencedColumnName: 'id', nullable: true)]
     protected $research;
 
     /**
      * Sequence in table form scan order
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $sequence;
 
 

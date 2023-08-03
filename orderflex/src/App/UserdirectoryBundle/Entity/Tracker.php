@@ -22,25 +22,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_tracker")
- */
+#[ORM\Table(name: 'user_tracker')]
+#[ORM\Entity]
 class Tracker {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="Spot", mappedBy="tracker", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Spot', mappedBy: 'tracker', cascade: ['persist'])]
     private $spots;
 
 

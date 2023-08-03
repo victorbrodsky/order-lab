@@ -26,97 +26,64 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_userInfo",
- * indexes={
- *      @ORM\Index( name="middleName_idx", columns={"middleName"} ),
- *      @ORM\Index( name="firstName_idx", columns={"firstName"} ),
- *      @ORM\Index( name="lastName_idx", columns={"lastName"} ),
- *      @ORM\Index( name="displayName_idx", columns={"displayName"} ),
- *      @ORM\Index( name="email_idx", columns={"email"} )
- *  }
- * )
- */
+#[ORM\Table(name: 'user_userInfo')]
+#[ORM\Index(name: 'middleName_idx', columns: ['middleName'])]
+#[ORM\Index(name: 'firstName_idx', columns: ['firstName'])]
+#[ORM\Index(name: 'lastName_idx', columns: ['lastName'])]
+#[ORM\Index(name: 'displayName_idx', columns: ['displayName'])]
+#[ORM\Index(name: 'email_idx', columns: ['email'])]
+#[ORM\Entity]
 class UserInfo extends BaseUserAttributes {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="infos")
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'infos')]
     private $user;
 
-    /**
-     * @ORM\Column(name="suffix", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'suffix', type: 'string', nullable: true)]
     private $suffix;
 
-    /**
-     * @ORM\Column(name="firstName", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'firstName', type: 'string', nullable: true)]
     private $firstName;
 
-    /**
-     * @ORM\Column(name="middleName", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'middleName', type: 'string', nullable: true)]
     private $middleName;
 
-    /**
-     * @ORM\Column(name="lastName", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'lastName', type: 'string', nullable: true)]
     private $lastName;
 
-    /**
-     * @ORM\Column(name="displayName", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'displayName', type: 'string', nullable: true)]
     private $displayName;
 
-    /**
-     * @ORM\Column(name="preferredPhone", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'preferredPhone', type: 'string', nullable: true)]
     private $preferredPhone;
 
-    /**
-     * @ORM\Column(name="preferredMobilePhone", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'preferredMobilePhone', type: 'string', nullable: true)]
     private $preferredMobilePhone;
 
-    /**
-     * @ORM\Column(name="mobilePhoneVerifyCode", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'mobilePhoneVerifyCode', type: 'string', nullable: true)]
     private $mobilePhoneVerifyCode;
 
     /**
      * mobilePhoneVerifyCode generation Date. Used for expiration date.
-     *
-     * @ORM\Column(name="mobilePhoneVerifyCodeDate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'mobilePhoneVerifyCodeDate', type: 'datetime', nullable: true)]
     private $mobilePhoneVerifyCodeDate;
 
     /**
      * Is the mobile phone number verified?
-     *
-     * @ORM\Column(name="preferredMobilePhoneVerified", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'preferredMobilePhoneVerified', type: 'boolean', nullable: true)]
     private $preferredMobilePhoneVerified;
 
-    /**
-     * @ORM\Column(name="email", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
     private $email;
 
-    /**
-     * @ORM\Column(name="emailCanonical", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'emailCanonical', type: 'string', nullable: true)]
     private $emailCanonical;
 
-    /**
-     * @ORM\Column(name="initials", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'initials', type: 'string', nullable: true)]
     private $initials;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $salutation;
 
 

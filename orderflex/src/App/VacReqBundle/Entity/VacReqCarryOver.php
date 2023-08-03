@@ -28,41 +28,36 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_carryOver")
- */
+#[ORM\Table(name: 'vacreq_carryOver')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqCarryOver
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="VacReqUserCarryOver", inversedBy="carryOvers", cascade={"persist"})
-     * @ORM\JoinColumn(name="userCarryOver_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'VacReqUserCarryOver', inversedBy: 'carryOvers', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'userCarryOver_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $userCarryOver;
 
 
     /**
      * Start academic year of the destination year range. For example, (2015-2016) $year=2015
      * Days carry over to the this (destination) academic year
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $year;
 
     /**
      * Carry over days to $year from previous year
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $days;
 
 

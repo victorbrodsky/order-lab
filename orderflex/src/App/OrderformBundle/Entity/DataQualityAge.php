@@ -20,38 +20,26 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_dataquality_age")
- */
+#[ORM\Table(name: 'scan_dataquality_age')]
+#[ORM\Entity]
 class DataQualityAge extends DataQuality
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Message")
-     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Message')]
+    #[ORM\JoinColumn(name: 'message_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $message;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter")
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter')]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $encounter;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected $encounterage;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $encounterdate;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $patientdob;
 
 

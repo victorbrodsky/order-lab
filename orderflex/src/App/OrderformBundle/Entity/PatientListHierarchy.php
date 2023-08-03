@@ -26,12 +26,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //This list has a link to the patient list (i.e. PathologyCallComplexPatients) via entityNamespace, entityName, entityId
-
 //      name="scan_patientListHierarchy",
 //*     indexes={
 //*         @ORM\Index( name="patientListHierarchy_name_idx", columns={"name"} ),
 // *    }
-
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -40,36 +38,31 @@ use Symfony\Component\Validator\Constraints as Assert;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="scan_patientListHierarchy"
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'scan_patientListHierarchy')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class PatientListHierarchy extends BaseCompositeNode {
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="PatientListHierarchy", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'PatientListHierarchy', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientListHierarchy", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'PatientListHierarchy', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PatientListHierarchy", mappedBy="original", cascade={"persist"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'PatientListHierarchy', mappedBy: 'original', cascade: ['persist'])]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="PatientListHierarchy", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
-     **/
+    #[ORM\ManyToOne(targetEntity: 'PatientListHierarchy', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
 
@@ -78,24 +71,18 @@ class PatientListHierarchy extends BaseCompositeNode {
      * Organizational Group Types - mapper between the level number and level title.
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      * Default types have a positive level numbers, all other types have negative level numbers.
-     *
-     * @ORM\ManyToOne(targetEntity="PatientListHierarchyGroupType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'PatientListHierarchyGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="patientLists", cascade={"persist"})
-     **/
+    #[ORM\ManyToMany(targetEntity: 'CalllogEntryMessage', mappedBy: 'patientLists', cascade: ['persist'])]
     private $calllogEntryMessages;
 
 //    /**
-//     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="patientLists", cascade={"persist"})
-//     **/
-//    private $crnEntryMessages;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Patient", cascade={"persist"})
-     */
+    //     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="patientLists", cascade={"persist"})
+    //     **/
+    //    private $crnEntryMessages;
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\Patient', cascade: ['persist'])]
     private $patient;
 
 

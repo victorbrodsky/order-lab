@@ -22,21 +22,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_blockOrder")
- */
+#[ORM\Table(name: 'scan_blockOrder')]
+#[ORM\Entity]
 class BlockOrder extends OrderBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="blockorder")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'blockorder')]
     protected $message;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EmbedderInstructionList", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'EmbedderInstructionList', cascade: ['persist'])]
     private $embedderInstruction;
 
 

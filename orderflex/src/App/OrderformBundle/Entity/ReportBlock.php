@@ -22,25 +22,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_reportBlock")
- */
+#[ORM\Table(name: 'scan_reportBlock')]
+#[ORM\Entity]
 class ReportBlock extends ReportBase {
 
-    /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="reportBlock")
-     **/
+    #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'reportBlock')]
     protected $message;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $embeddedDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $embeddedByUser;
 
 

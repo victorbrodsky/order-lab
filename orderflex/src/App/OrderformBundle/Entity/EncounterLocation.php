@@ -20,24 +20,18 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterLocation")
- */
+#[ORM\Table(name: 'scan_encounterLocation')]
+#[ORM\Entity]
 class EncounterLocation extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="location")
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'location')]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', nullable: true)]
     protected $encounter;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Location")
-     * @ORM\JoinColumn(name="location_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Location')]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id', nullable: true)]
     protected $field;
 
 

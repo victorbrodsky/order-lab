@@ -21,37 +21,30 @@ namespace App\DashboardBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="dashboard_siteparameter")
- */
+#[ORM\Table(name: 'dashboard_siteparameter')]
+#[ORM\Entity]
 class DashboardSiteParameter {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     
     /**
      * Default Dashboard Chart
-     *
-     * @ORM\ManyToMany(targetEntity="ChartList", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_siteparameter_chart",
-     *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'dashboard_siteparameter_chart')]
+    #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'chart_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'ChartList', cascade: ['persist'])]
     private $charts;
 
     /**
      * Default Dashboard Topic
-     * 
-     * @ORM\ManyToOne(targetEntity="TopicList")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'TopicList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $topic;
     
 

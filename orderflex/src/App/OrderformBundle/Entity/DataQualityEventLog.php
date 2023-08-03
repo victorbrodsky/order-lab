@@ -21,25 +21,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_dataquality_eventlog")
- */
+#[ORM\Table(name: 'scan_dataquality_eventlog')]
+#[ORM\Entity]
 class DataQualityEventLog
 {
 
 
     /**
      * @var integer
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DataQualityEvent", mappedBy="dqeventlog")
-     **/
+    #[ORM\OneToMany(targetEntity: 'DataQualityEvent', mappedBy: 'dqeventlog')]
     private $dqevents;
 
     public function __construct() {

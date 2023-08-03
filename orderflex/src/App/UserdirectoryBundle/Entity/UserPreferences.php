@@ -29,78 +29,63 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_preferences")
- */
+#[ORM\Table(name: 'user_preferences')]
+#[ORM\Entity]
 class UserPreferences {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="User", mappedBy="preferences")
-     */
+    #[ORM\OneToOne(targetEntity: 'User', mappedBy: 'preferences')]
     private $user;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $timezone;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="LanguageList", inversedBy="userpreferences")
-     * @ORM\JoinTable(name="user_userpreferences_languages")
-     **/
+    #[ORM\JoinTable(name: 'user_userpreferences_languages')]
+    #[ORM\ManyToMany(targetEntity: 'LanguageList', inversedBy: 'userpreferences')]
     private $languages;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocaleList")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LocaleList')]
     private $locale;
 
     /**
      * Exclude from Employee Directory search results
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $excludeFromSearch;
 
     /**
      * Hide this profile
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $hide;
 
     /**
      * Only show this profile to members of the following institution(s)
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="user_preferences_institutions",
-     *      joinColumns={@ORM\JoinColumn(name="preferences_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'user_preferences_institutions')]
+    #[ORM\JoinColumn(name: 'preferences_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $showToInstitutions;
 
     /**
      * Only show this profile to users with the following roles
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $showToRoles = array();
 
     /**
      * Do not send a notification email if listed as an "attending" in a Call Log Book Entry
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $noAttendingEmail;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LifeFormList")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'LifeFormList')]
     private $lifeForm;
 
 //    /**

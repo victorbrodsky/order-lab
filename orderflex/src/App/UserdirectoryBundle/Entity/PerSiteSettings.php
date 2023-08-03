@@ -25,102 +25,82 @@ use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 
 /**
  * Rename to "user_perSiteSettings"
- *
- * @ORM\Entity
- * @ORM\Table(
- *  name="scan_perSiteSettings",
- *  indexes={
- *      @ORM\Index( name="fosuser_idx", columns={"fosuser"} ),
- *  }
- * )
  */
+#[ORM\Table(name: 'scan_perSiteSettings')]
+#[ORM\Index(name: 'fosuser_idx', columns: ['fosuser'])]
+#[ORM\Entity]
 class PerSiteSettings extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="scan_perSiteSettings_institution",
-     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
+    #[ORM\JoinTable(name: 'scan_perSiteSettings_institution')]
+    #[ORM\JoinColumn(name: 'perSiteSettings_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $permittedInstitutionalPHIScope;
 
 
     /**
      * Service scope: service means one of the node of the institutional tree.
      * This scope allows to view only an existing order by url
-     *
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="scan_perSiteSettings_service",
-     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_perSiteSettings_service')]
+    #[ORM\JoinColumn(name: 'perSiteSettings_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'service_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $scanOrdersServicesScope;
 
     /**
      * This scope allows to view, cancel or amend an existing order by order url.
-     *
-     * @ORM\ManyToMany(targetEntity="Institution")
-     * @ORM\JoinTable(name="scan_chiefServices_service",
-     *      joinColumns={@ORM\JoinColumn(name="perSiteSettings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
      **/
+    #[ORM\JoinTable(name: 'scan_chiefServices_service')]
+    #[ORM\JoinColumn(name: 'perSiteSettings_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'service_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $chiefServices;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id')]
     private $defaultInstitution;
 
 
 
 //    /**
-//     * defaultInstitution (ScanOrders Institution Scope)
-//     *
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-//     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
-//     **/
-//    private $scanOrderInstitutionsScope;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Department")
-//     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
-//     **/
-//    private $defaultDepartment;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Division")
-//     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
-//     **/
-//    private $defaultDivision;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Service")
-//     * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
-//     **/
-//    private $defaultService;
-
-    /**
-     * @ORM\OneToOne(targetEntity="User", inversedBy="perSiteSettings")
-     * @ORM\JoinColumn(name="fosuser", referencedColumnName="id", onDelete="CASCADE")
-     */
+    //     * defaultInstitution (ScanOrders Institution Scope)
+    //     *
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+    //     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
+    //     **/
+    //    private $scanOrderInstitutionsScope;
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Department")
+    //     * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
+    //     **/
+    //    private $defaultDepartment;
+    //
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Division")
+    //     * @ORM\JoinColumn(name="division_id", referencedColumnName="id")
+    //     **/
+    //    private $defaultDivision;
+    //
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Service")
+    //     * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
+    //     **/
+    //    private $defaultService;
+    #[ORM\OneToOne(targetEntity: 'User', inversedBy: 'perSiteSettings')]
+    #[ORM\JoinColumn(name: 'fosuser', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $user;
 
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     protected $tooltip;
 
 
     /**
      * Organizational Group for new user's default values in Employee Directory
-     * @ORM\ManyToOne(targetEntity="Institution")
      */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $organizationalGroupDefault;
 
 

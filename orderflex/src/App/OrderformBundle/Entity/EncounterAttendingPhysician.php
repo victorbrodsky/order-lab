@@ -21,40 +21,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterAttendingPhysician")
- */
+#[ORM\Table(name: 'scan_encounterAttendingPhysician')]
+#[ORM\Entity]
 class EncounterAttendingPhysician extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="attendingPhysicians", cascade={"persist"})
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'attendingPhysicians', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $encounter;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="attendingPhysician", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'attendingPhysician', referencedColumnName: 'id')]
     protected $field;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="attendingPhysicianSpecialty", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'attendingPhysicianSpecialty', referencedColumnName: 'id')]
     private $attendingPhysicianSpecialty;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $attendingPhysicianPhone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $attendingPhysicianEmail;
 
 

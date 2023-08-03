@@ -29,57 +29,49 @@ use Doctrine\ORM\Mapping as ORM;
 //use App\UserdirectoryBundle\Comment\Entity\Thread as FosBaseThread;
 use App\UtilBundles\FOSCommentBundle\Entity\Thread as FosBaseThread;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_fosThread")
- * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
- */
+#[ORM\Table(name: 'user_fosThread')]
+#[ORM\Entity]
+#[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
 class FosThread extends FosBaseThread
 {
 
     /**
      * @var string $id
-     *
-     * @ORM\Id
-     * @ORM\Column(type="string")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string')]
     protected $id;
 
 
 //<field name="permalink" column="permalink" type="string" />
-//
-//<field name="isCommentable" column="is_commentable" type="boolean" />
-//
-//<field name="numComments" column="num_comments" type="integer" />
-//
-//<field name="lastCommentAt" column="last_comment_at" type="datetime" nullable="true" />
-
+    //
+    //<field name="isCommentable" column="is_commentable" type="boolean" />
+    //
+    //<field name="numComments" column="num_comments" type="integer" />
+    //
+    //<field name="lastCommentAt" column="last_comment_at" type="datetime" nullable="true" />
     /**
      * Url of the page where the thread lives.
-     *
-     * @ORM\Column(name="permalink", type="string")
      */
+    #[ORM\Column(name: 'permalink', type: 'string')]
     protected $permalink;
 
     /**
      * Tells if new comments can be added in this thread.
-     *
-     * @ORM\Column(name="is_commentable", type="boolean")
      */
+    #[ORM\Column(name: 'is_commentable', type: 'boolean')]
     protected $isCommentable = true;
 
     /**
      * Denormalized number of comments.
-     *
-     * @ORM\Column(name="num_comments", type="integer")
      */
+    #[ORM\Column(name: 'num_comments', type: 'integer')]
     protected $numComments = 0;
 
     /**
      * Denormalized date of the last comment.
-     *
-     * @ORM\Column(name="last_comment_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'last_comment_at', type: 'datetime', nullable: true)]
     protected $lastCommentAt = null;
 
 

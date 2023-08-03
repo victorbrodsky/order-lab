@@ -21,98 +21,69 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-/**
- * @ORM\Entity(repositoryClass="App\OrderformBundle\Repository\EncounterRepository")
- * @ORM\Table(name="scan_encounter")
- */
+#[ORM\Table(name: 'scan_encounter')]
+#[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\EncounterRepository')]
 class Encounter extends ObjectAbstract
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterName", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterName', mappedBy: 'encounter', cascade: ['persist'])]
     protected $name;
 
     /**
      * Encounter Number
-     * @ORM\OneToMany(targetEntity="EncounterNumber", mappedBy="encounter", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'EncounterNumber', mappedBy: 'encounter', cascade: ['persist'])]
     protected $number;
     
     /**
      * parent
-     * @ORM\ManyToOne(targetEntity="Patient", inversedBy="encounter")
-     * @ORM\JoinColumn(name="patient", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'Patient', inversedBy: 'encounter')]
+    #[ORM\JoinColumn(name: 'patient', referencedColumnName: 'id')]
     protected $patient; 
     
     /**
      * Encounter might have many Procedures (children)
-     * 
-     * @ORM\OneToMany(targetEntity="Procedure", mappedBy="encounter")
      */
+    #[ORM\OneToMany(targetEntity: 'Procedure', mappedBy: 'encounter')]
     protected $procedure;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="encounter")
-     **/
+    #[ORM\ManyToMany(targetEntity: 'Message', mappedBy: 'encounter')]
     protected $message;
 
 
     //Patient's info: age, name, sex, date, history
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterDate", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterDate', mappedBy: 'encounter', cascade: ['persist'])]
     protected $date;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatsuffix", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatsuffix', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patsuffix;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatlastname", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatlastname', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patlastname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatfirstname", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatfirstname', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patfirstname;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatmiddlename", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatmiddlename', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patmiddlename;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatsex", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatsex', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patsex;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPatage", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPatage', mappedBy: 'encounter', cascade: ['persist'])]
     protected $patage;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterPathistory", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterPathistory', mappedBy: 'encounter', cascade: ['persist'])]
     protected $pathistory;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterReferringProvider", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterReferringProvider', mappedBy: 'encounter', cascade: ['persist'])]
     protected $referringProviders;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterAttendingPhysician", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterAttendingPhysician', mappedBy: 'encounter', cascade: ['persist'])]
     protected $attendingPhysicians;
 
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterInfoType", mappedBy="encounter", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: 'EncounterInfoType', mappedBy: 'encounter', cascade: ['persist'])]
     protected $encounterInfoTypes;
 
     /**
@@ -124,29 +95,22 @@ class Encounter extends ObjectAbstract
     ///////////////// additional extra fields not shown on scan order /////////////////
     /**
      * Encounter location
-     * @ORM\OneToMany(targetEntity="EncounterLocation", mappedBy="encounter", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: 'EncounterLocation', mappedBy: 'encounter', cascade: ['persist'])]
     private $location;
 
 //    /**
-//     * Encounter order
-//     * @ORM\OneToMany(targetEntity="EncounterOrder", mappedBy="encounter", cascade={"persist"})
-//     */
-//    private $order;
-
-    /**
-     * @ORM\OneToMany(targetEntity="EncounterInpatientinfo", mappedBy="encounter", cascade={"persist"})
-     */
+    //     * Encounter order
+    //     * @ORM\OneToMany(targetEntity="EncounterOrder", mappedBy="encounter", cascade={"persist"})
+    //     */
+    //    private $order;
+    #[ORM\OneToMany(targetEntity: 'EncounterInpatientinfo', mappedBy: 'encounter', cascade: ['persist'])]
     private $inpatientinfo;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EncounterStatusList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'EncounterStatusList')]
     private $encounterStatus;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $version;
     ///////////////// EOF additional extra fields not shown on scan order /////////////////
 

@@ -28,34 +28,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_userCarryOver")
- */
+#[ORM\Table(name: 'vacreq_userCarryOver')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class VacReqUserCarryOver
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $user;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="VacReqCarryOver", mappedBy="userCarryOver", cascade={"persist","remove"})
-     * @ORM\OrderBy({"year" = "DESC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'VacReqCarryOver', mappedBy: 'userCarryOver', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['year' => 'DESC'])]
     private $carryOvers;
 
 

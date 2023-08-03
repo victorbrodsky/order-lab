@@ -21,113 +21,76 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_training")
- */
+#[ORM\Table(name: 'user_training')]
+#[ORM\Entity]
 class Training extends BaseUserAttributes
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="trainings")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'trainings')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private $user;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $startDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $completionDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CompletionReasonList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'CompletionReasonList')]
     private $completionReason;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TrainingDegreeList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'TrainingDegreeList')]
     private $degree;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $appendDegreeToName;
 
     /**
      * Contains children - FellowshipSubspecialty
-     * @ORM\ManyToOne(targetEntity="ResidencySpecialty")
      */
+    #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty')]
     private $residencySpecialty;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'ResidencyTrackList')]
     private $residencyTrack;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty")
-     */
+    #[ORM\ManyToOne(targetEntity: 'FellowshipSubspecialty')]
     private $fellowshipSubspecialty;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="MajorTrainingList")
-     * @ORM\JoinTable(name="user_trainings_majors")
-     **/
+    #[ORM\JoinTable(name: 'user_trainings_majors')]
+    #[ORM\ManyToMany(targetEntity: 'MajorTrainingList')]
     private $majors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="MinorTrainingList")
-     * @ORM\JoinTable(name="user_trainings_minors")
-     **/
+    #[ORM\JoinTable(name: 'user_trainings_minors')]
+    #[ORM\ManyToMany(targetEntity: 'MinorTrainingList')]
     private $minors;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="HonorTrainingList")
-     * @ORM\JoinTable(name="user_trainings_honors")
-     **/
+    #[ORM\JoinTable(name: 'user_trainings_honors')]
+    #[ORM\ManyToMany(targetEntity: 'HonorTrainingList')]
     private $honors;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FellowshipTitleList")
-     */
+    #[ORM\ManyToOne(targetEntity: 'FellowshipTitleList')]
     private $fellowshipTitle;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $appendFellowshipTitleToName;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
     /**
      * Graduate, Undergraduate, Medical, Residency, Post-Residency Fellowship, GME, Other
-     *
-     * @ORM\ManyToOne(targetEntity="TrainingTypeList")
      */
+    #[ORM\ManyToOne(targetEntity: 'TrainingTypeList')]
     private $trainingType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="JobTitleList", cascade={"persist","remove"})
-     */
+    #[ORM\ManyToOne(targetEntity: 'JobTitleList', cascade: ['persist', 'remove'])]
     private $jobTitle;
 
-    /**
-     * @ORM\OneToOne(targetEntity="GeoLocation", cascade={"persist"})
-     **/
+    #[ORM\OneToOne(targetEntity: 'GeoLocation', cascade: ['persist'])]
     private $geoLocation;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
 

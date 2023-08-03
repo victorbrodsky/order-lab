@@ -21,182 +21,136 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\UserRequestRepository")
- * @ORM\Table(name="user_accountrequest")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user_accountrequest')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\UserRequestRepository')]
+#[ORM\HasLifecycleCallbacks]
 class UserRequest
 {
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $cwid;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $username;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $hascwid;
 
     /**
      * Last Name
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $name;
 
     /**
      * First Name
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $firstName;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(
-     *     message = "The email value should not be blank."
-     * )
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     * )
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank(message: 'The email value should not be blank.')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private $email;
     
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $phone;
 
     ///////////////// mobilePhone /////////////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $mobilePhone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $mobilePhoneVerifyCode;
 
     /**
      * mobilePhoneVerifyCode generation Date. Used for expiration date.
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $mobilePhoneVerifyCodeDate;
 
     /**
      * Is the mobile phone number verified?
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $mobilePhoneVerified;
     ///////////////// EOF mobilePhone ///////////////////////
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $job;
 
     /**
      * request permittedInstitutionalPHIScope
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinTable(name="user_accountrequest_institution",
-     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     * )
      */
+    #[ORM\JoinTable(name: 'user_accountrequest_institution')]
+    #[ORM\JoinColumn(name: 'request_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'institution_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $requestedInstitutionalPHIScope;
 
     /**
      * requested Institution (ScanOrders Institution Scope)
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id')]
     private $requestedScanOrderInstitutionScope;
     
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $request;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $similaruser;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $primaryService;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $creationdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $actiondate;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referencename;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referenceemail;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referencephone;
 
     //TODO: change it to source-systems (SourceSystemList)
-//    /**
-//     * Systems for account requests: System for which the account is being requested
-//     * @ORM\ManyToOne(targetEntity="SystemAccountRequestType")
-//     **/
-//    private $systemAccountRequest;
+    //    /**
+    //     * Systems for account requests: System for which the account is being requested
+    //     * @ORM\ManyToOne(targetEntity="SystemAccountRequestType")
+    //     **/
+    //    private $systemAccountRequest;
     /**
      * Systems for account requests: System for which the account is being requested
-     * @ORM\ManyToOne(targetEntity="SourceSystemList")
      **/
+    #[ORM\ManyToOne(targetEntity: 'SourceSystemList')]
     private $systemAccountRequest;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $siteName;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $roles = array();
 
 
@@ -307,9 +261,7 @@ class UserRequest
         $this->status = $status;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreationdate()
     {
         $this->creationdate = new \DateTime();
@@ -520,8 +472,8 @@ class UserRequest
 
     /**
      * @param \DateTime $actiondate
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function setActiondate()
     {
         $this->actiondate = new \DateTime();

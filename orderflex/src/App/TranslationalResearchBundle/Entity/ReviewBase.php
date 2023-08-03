@@ -31,75 +31,63 @@ use Doctrine\ORM\Mapping as ORM;
 //PostgreSQL use $id (@ORM\GeneratedValue(strategy="AUTO")): @ORM\GeneratedValue(strategy="IDENTITY")
 //CREATE SEQUENCE data_sample_id_seq INCREMENT BY 1 MINVALUE 1 START 1;
 //Change id generation strategy to IDENTITY: to ALTER TABLE public.transres_finalreview ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
-
-/**
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 class ReviewBase
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="reviewer", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'reviewer', referencedColumnName: 'id')]
     protected $reviewer;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="reviewerDelegate", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'reviewerDelegate', referencedColumnName: 'id', nullable: true)]
     protected $reviewerDelegate;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(name="reviewerAdmin", referencedColumnName="id", nullable=true)
-//     */
-//    protected $reviewerAdmin;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
-//     */
-//    protected $reviewerPrimary;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="reviewedBy", referencedColumnName="id", nullable=true)
-     */
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+    //     * @ORM\JoinColumn(name="reviewerAdmin", referencedColumnName="id", nullable=true)
+    //     */
+    //    protected $reviewerAdmin;
+    //    /**
+    //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+    //     * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
+    //     */
+    //    protected $reviewerPrimary;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'reviewedBy', referencedColumnName: 'id', nullable: true)]
     protected $reviewedBy;
 
     /**
      * valid, invalid
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $status;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $createdate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updatedate;
 
     /**
      * approved, missinginfo, rejected, pending additional information from submitter, pending review
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $decision;
 
 //    /**
@@ -210,9 +198,7 @@ class ReviewBase
         return $this->updatedate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedate()
     {
         $this->updatedate = new \DateTime();

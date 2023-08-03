@@ -26,7 +26,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity()
  * @ORM\Table(name="user_commentTypeList")
  */
-
 /**
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
@@ -35,49 +34,42 @@ use Doctrine\Common\Collections\ArrayCollection;
  * and compositions uniformly.
  * Use Doctrine Extension Tree for tree manipulation.
  *
- * @Gedmo\Tree(type="nested")
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
- * @ORM\Table(
- *  name="user_commentTypeList",
- *  indexes={
- *      @ORM\Index( name="commentTypeList_name_idx", columns={"name"} ),
- *  }
- * )
+ * Gedmo\Tree(type="nested")
  */
+
+
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'user_commentTypeList')]
+#[ORM\Index(name: 'commentTypeList_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class CommentTypeList extends BaseCompositeNode
 {
 
-    /**
-     * @ORM\OneToMany(targetEntity="CommentTypeList", mappedBy="original")
-     **/
+    #[ORM\OneToMany(targetEntity: 'CommentTypeList', mappedBy: 'original')]
     protected $synonyms;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CommentTypeList", inversedBy="synonyms")
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'CommentTypeList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
     /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="CommentTypeList", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * Gedmo\TreeParent
      **/
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'CommentTypeList', inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="CommentTypeList", mappedBy="parent", cascade={"persist","remove"})
-     * @ORM\OrderBy({"lft" = "ASC"})
-     **/
+    #[ORM\OneToMany(targetEntity: 'CommentTypeList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
     /**
      * Organizational Group Types
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Comment Category, 2-Comment Name
      * For example, OrganizationalGroupType with level=1, set this level to 1.
-     *
-     * @ORM\ManyToOne(targetEntity="CommentGroupType", cascade={"persist"})
      */
+    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
 

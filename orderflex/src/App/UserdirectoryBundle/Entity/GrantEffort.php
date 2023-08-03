@@ -20,44 +20,35 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="user_grantEffort")
- */
+#[ORM\Table(name: 'user_grantEffort')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class GrantEffort
 {
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Grant", inversedBy="efforts")
-     * @ORM\JoinColumn(name="grant_id", referencedColumnName="id", onDelete="CASCADE")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'Grant', inversedBy: 'efforts')]
+    #[ORM\JoinColumn(name: 'grant_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $grant;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     **/
+    #[ORM\ManyToOne(targetEntity: 'User')]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
     private $author;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EffortList",cascade={"persist"})
-     **/
+    #[ORM\ManyToOne(targetEntity: 'EffortList', cascade: ['persist'])]
     protected $effort;
 
 
@@ -79,9 +70,7 @@ class GrantEffort
         return $this->author;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedate()
     {
         $this->createdate = new \DateTime();;

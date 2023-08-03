@@ -31,43 +31,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_instruction")
- */
+#[ORM\Table(name: 'scan_instruction')]
+#[ORM\Entity]
 class Instruction
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
-     * @Assert\NotBlank
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'creator_id', referencedColumnName: 'id')]
+    #[Assert\NotBlank]
     private $creator;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="createdate", type="datetime")
-     * @Assert\NotBlank
      */
+    #[ORM\Column(name: 'createdate', type: 'datetime')]
+    #[Assert\NotBlank]
     private $createdate;
 
     /**
      * @var array
-     * @ORM\Column(type="array", nullable=true)
      */
+    #[ORM\Column(type: 'array', nullable: true)]
     private $creatorRoles = array();
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $instruction;
 
 

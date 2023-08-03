@@ -22,316 +22,279 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transres_siteParameters", uniqueConstraints={@ORM\UniqueConstraint(name="siteParameters_unique", columns={"projectSpecialty_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'transres_siteParameters')]
+#[ORM\UniqueConstraint(name: 'siteParameters_unique', columns: ['projectSpecialty_id'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class TransResSiteParameters {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $creator;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'updateUser', referencedColumnName: 'id', nullable: true)]
     private $updateUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createDate;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updateDate;
 
     /**
      * Hematopathology or AP/CP
-     *
-     * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
-     * @ORM\JoinColumn(name="projectSpecialty_id", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\TranslationalResearchBundle\Entity\SpecialtyList', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'projectSpecialty_id', referencedColumnName: 'id', nullable: true)]
     private $projectSpecialty;
 
     /**
      * invoice header
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresFromHeader;
 
     /**
      * invoice footer
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresFooter;
 
     /**
      * Default Invoice Logos
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_transResSiteParameters_transresLogo",
-     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_transResSiteParameters_transresLogo')]
+    #[ORM\JoinColumn(name: 'transResSiteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'transresLogo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $transresLogos;
 
     /**
      * Email body for notification email when Invoice PDF is sent to PI
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresNotificationEmail;
 
     /**
      * Email subject for notification email when Invoice PDF is sent to PI
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresNotificationEmailSubject;
 
     ////////// Invoice reminder email ////////////
     /**
      * Translational Research Unpaid Invoice Reminder Schedule in Months 
      * over due in months (integer), reminder interval in months (integer), max reminder count (integer)
-     * 
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $invoiceReminderSchedule;
 
     /**
      * Translational Research Reminder Email Subject
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $invoiceReminderSubject;
 
     /**
      * Translational Research Unpaid Invoice Reminder Email Body
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $invoiceReminderBody;
 
     /**
      * Translational Research Reminder Email - Send From the Following Address
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $invoiceReminderEmail;
     ////////// EOF Invoice reminder email ////////////
-
     /**
      * Email body for notification email is being to send to the Request's PI when Request status is changed to "Completed and Notified"
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $requestCompletedNotifiedEmail;
 
     /**
      * Email subject for notification email is being to send to to the Request's PI when Request status is changed to "Completed and Notified"
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $requestCompletedNotifiedEmailSubject;
 
     /**
      * Invoice's invoiceSalesperson
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="invoiceSalesperson", referencedColumnName="id", nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    #[ORM\JoinColumn(name: 'invoiceSalesperson', referencedColumnName: 'id', nullable: true)]
     private $invoiceSalesperson;
 
 
     /**
      * Default Accession Type used in the System column in the Work Request handsontable
-     *
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\AccessionType")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\OrderformBundle\Entity\AccessionType')]
     private $accessionType;
 
 
     //Packing Slip
     /**
      * Default Packing Slip Logos
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_transResSiteParameters_transresPackingSlipLogo",
-     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="transresPackingSlipLogo_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_transResSiteParameters_transresPackingSlipLogo')]
+    #[ORM\JoinColumn(name: 'transResSiteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'transresPackingSlipLogo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $transresPackingSlipLogos;
 
     /**
      * Packing Slip
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipTitle;
 
     /**
      * Department of Pathology and Laboratory Medicine
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipHeadline1;
 
     /**
      * Translational Research Program
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipHeadline2;
 
     /**
      * Blue (HTML color value)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipHeadlineColor;
 
     /**
      * Red (HTML Color Value)
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipHighlightedColor;
 
     /**
      * Comment for Request
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipSubHeading1;
 
     /**
      * List of Deliverables
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipSubHeading2;
 
     /**
      * Please contact us for more information about this slip.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipFooter1;
 
     /**
      * Translational Research Program * 1300 York Ave., F512, New York, NY 10065 * Tel (212) 746-62255
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $transresPackingSlipFooter2;
 
     /**
      * Barcode size
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $barcodeSize;
 
     /**
      * Packing Slip font size
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $transresPackingSlipFontSize;
 
     //Project:
     /**
      * The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $specimenDetailsComment;
 
     /**
      * 'NYP/WCM' Pathologist(s) Involved
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $institutionName;
 
     /**
      * from email address: trp-admin@med.cornell.edu
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fromEmail;
 
     /**
      * Add trp@med.cornell.edu to site settings and use it for Cc for Work Request status change to "Completed" and "Completed and Notified"
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $notifyEmail;
 
     /**
      * Show TRP Message to Users
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showMessageToUsers;
 
     /**
      * TRP Message to Users
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $messageToUsers;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $humanTissueFormNote;
 
     //Disable/Enable new project
     /**
      * a) Enable/Disable the display of each button (project category) on the “New Project Request page: https://view.med.cornell.edu/translational-research/project/new
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableNewProjectOnSelector;
     /**
      * b) [Separately] Enable/Disable the display of each “New Project Request” link in the top Navbar
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableNewProjectOnNavbar;
     /**
      * c) [Separately] Enable/Disable access to each “New Project Request” page URL (this is for users who might bookmark this page and try to return to it)
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableNewProjectAccessPage;
     //ticket 295(28)
     /**
      * Show this project specialty in the Project Requests By Type top navigation bar menu (list the projects by specialty): [Yes/No]
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableProjectOnNavbar;
     /**
      * Show this project specialty in the Work Requests top navigation bar menu: [Yes/No]
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableProjectOnWorkReqNavbar;
     /**
      * Show this project specialty in the Reviewer Configuration top navigation bar menu: [Yes/No]
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableProjectOnConfig;
 
 
@@ -339,356 +302,275 @@ class TransResSiteParameters {
      * Translational Research Email Notification Asking To Contact With Concerns:
      * Please review the deliverables and comments (if any), and if you have any concerns,
      * contact the Translational Research group by emailing User Name (email)...
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $emailNoteConcern;
 
 
     ////////// Project reminder ////////////
     //4 delay fields for review + 2 delay fields for missinginfo + 2 subject, body for review + 2 subject, body for missinginfo
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_irb_review;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_admin_review;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_committee_review;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_final_review;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_irb_missinginfo;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReminderDelay_admin_missinginfo;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReminderSubject_review;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReminderBody_review;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReminderSubject_missinginfo;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReminderBody_missinginfo;
     ////////// EOF Project reminder email ////////////
-
-
     ////////////// Pending Work Requests reminder email //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $pendingRequestReminderDelay;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pendingRequestReminderSubject;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $pendingRequestReminderBody;
     ////////////// EOF Pending Work Requests reminder email //////////////
-
     ////////////// Completed Work Requests reminder email //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $completedRequestReminderDelay;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $completedRequestReminderSubject;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $completedRequestReminderBody;
     ////////////// EOF Completed Work Requests reminder email //////////////
-
     ////////////// Completed and Notified Work Requests without issued invoice reminder email //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $completedNoInvoiceRequestReminderDelay;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $completedNoInvoiceRequestReminderSubject;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $completedNoInvoiceRequestReminderBody;
     ////////////// EOF Completed Work Requests reminder email //////////////
-
     /**
      * showRemittance section
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $showRemittance;
 
     /**
      * Update parent Project Request’s Fund Number when New Work request’s number is submitted
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $updateProjectFundNumber;
 
     /**
      * Intake form
-     *
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_transResSiteParameters_transresIntakeForm",
-     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="transresIntakeForm_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
+    #[ORM\JoinTable(name: 'transres_transResSiteParameters_transresIntakeForm')]
+    #[ORM\JoinColumn(name: 'transResSiteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'transresIntakeForm_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $transresIntakeForms;
 
     ////////////// Budget Related Parameters /////////////////////
     /**
      * Over budget notification from: [default to trpadminMailingListEmail]: trp-admin@med.cornell.edu
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $overBudgetFromEmail;
 
     /**
      * Over budget notification subject:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $overBudgetSubject;
 
     /**
      * Over budget notification body
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $overBudgetBody;
 
     /**
      * Send over budget notifications: “yes/no” (default to “yes”)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $overBudgetSendEmail;
 
     //Approved Budget (6 fields)
     /**
      * Send ‘approved project budget’ update notifications: (yes/no, default to “yes)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $approvedBudgetSendEmail;
 
     /**
      * Approved budget amount update notification from: [default to trpadminMailingListEmail]: trp-admin@med.cornell.edu
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $approvedBudgetFromEmail;
 
     /**
      * Approved budget amount update notification email subject
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $approvedBudgetSubject;
 
     /**
      * Approved budget update notification email body
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $approvedBudgetBody;
 
     /**
      * Approved budget limit removal notification email subject
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $budgetLimitRemovalSubject;
     
     /**
      * Approved budget limit removal notification email body
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $budgetLimitRemovalBody;
 
     /**
      * Base the notification regarding exceeding the budget on whether the following value exceeds the project’s budget:
      * [Total (Charge and Subsidy) / Charge (without Subsidy)]
      * Set to “Charge (without Subsidy)” by default.
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $overBudgetCalculation;
     ////////////// EOF Budget Related Parameters /////////////////////
-
     /////////////////////// Project expirations ///////////////////////
     /**
      * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $projectExprDuration;
 
     /**
      * Default number of months in advance of the project request expiration date when the automatic notification requesting a
      * progress report should be sent (leave blank to never send this notification): [6] - default to 6
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $projectExprDurationEmail;
 
     /**
      * Default number of days after the project request expiration date when the project request status should be set to 'Closed'
      * (leave blank to never auto-close): [90] - default to 90
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $projectExprDurationChangeStatus;
 
     /**
      * Apply project request expiration notification rule to this project request type: [Yes/No] and default to “Yes” by default
      * We don't need this, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $projectExprApply;
 
     /**
      * Apply project request auto-closure after expiration rule to this project request type: [Yes/No] and default to “Yes” by default
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $projectExprApplyChangeStatus;
 
     //8 fields
     /**
      * 1) Automatically send a reminder email to submit project progress report for expiring projects: [Yes/No] (Default to yes)
      * Similar to "Apply project request expiration notification rule to this project request type"?
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $sendExpriringProjectEmail;
 
     /**
      * 2) Project Request Upcoming Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiringProjectEmailFrom;
 
     /**
      * 3) Project Request Upcoming Expiration Notification E-Mail Subject: “[TRP] Please submit a progress report for PROJECT-ID”
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiringProjectEmailSubject;
 
     /**
      * 4) Project Request Upcoming Expiration Notification E-Mail Body:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiringProjectEmailBody;
 
     /**
      * 5) Automatically send a reminder email to the [TRP] system administrator for expired projects: [Yes/No] (Default to yes)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $sendExpiredProjectEmail;
 
     /**
      * 6) Project Request Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiredProjectEmailFrom;
 
     /**
      * 7) Project Request Expiration Notification E-Mail Subject: “[TRP] Project PROJECT-ID has reached its expiration date”
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiredProjectEmailSubject;
 
     /**
      * 8) Project Request Expiration Notification E-Mail Body:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $expiredProjectEmailBody;
     /////////////////////// EOF Project expirations ///////////////////////
-
-
     //////////////////// Project Closure/Reactivation ////////////////////
     /**
      * Send project reactivation approval requests: (yes/no, default to “yes)
-     *
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $sendProjectReactivationRequest;
     /**
      * Project reactivation approval request from: [default to trpadminMailingListEmail]
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $projectReactivationFromEmail;
     /**
      * Project reactivation approval request email subject:” [Default to: Reactivation of a closed Project [ID] requested]
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReactivationSubject;
     /**
      * Project reactivation approval request email body:
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $projectReactivationBody;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
-
     /**
      * Recipient Fund Number, the same (the current one of 61211820) except MISI, which will have the value of 87000819
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $recipientFundNumber;
 
     //TODO: do we need parameter for 500031 and 700031 used in JV' GL Account?
@@ -788,9 +670,7 @@ class TransResSiteParameters {
         return $this->updateDate;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdateDate()
     {
         $this->updateDate = new \DateTime();

@@ -21,48 +21,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_encounterReferringProvider")
- */
+#[ORM\Table(name: 'scan_encounterReferringProvider')]
+#[ORM\Entity]
 class EncounterReferringProvider extends EncounterArrayFieldAbstract
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Encounter", inversedBy="referringProviders", cascade={"persist"})
-     * @ORM\JoinColumn(name="encounter_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Encounter', inversedBy: 'referringProviders', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'encounter_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     protected $encounter;
 
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="referringProvider", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserWrapper', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'referringProvider', referencedColumnName: 'id')]
     protected $field;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="referringProviderSpecialty", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'referringProviderSpecialty', referencedColumnName: 'id')]
     private $referringProviderSpecialty;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referringProviderPhone;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $referringProviderEmail;
 
     /**
      * Initial Communication: Inbound, Outbound
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="referringProviderCommunication", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'referringProviderCommunication', referencedColumnName: 'id')]
     private $referringProviderCommunication;
 
 
