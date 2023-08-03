@@ -21,6 +21,9 @@
 #                dir: '%kernel.project_dir%/src/Entity'
 #                prefix: 'App\Entity'
 #                alias: App
+
+#with doctrine/orm 3.0, annotations will no longer be supported
+
 doctrine:
     dbal:
         default_connection: default
@@ -131,7 +134,8 @@ doctrine:
 #                    AppTranslationalResearchBundle: ~
 #                    FOSCommentBundle: ~
                     gedmo_tree:
-                        type: annotation
+#                        type: annotation
+                        type: attribute
                         prefix: Gedmo\Tree\Entity
 #                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
