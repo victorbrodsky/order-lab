@@ -239,6 +239,8 @@ class DataBackupManagementController extends OrderAbstractController
     
     //NOT USED below. Old version of backup
     /**
+     * Manual backup/restore using a user's local folder
+     *
      * Resources:
      * https://blogs.msdn.microsoft.com/brian_swan/2010/07/01/restoring-a-sql-server-database-from-php/
      * https://channaly.wordpress.com/2012/01/31/backup-and-restoring-mssql-database-with-php/
@@ -273,7 +275,7 @@ class DataBackupManagementController extends OrderAbstractController
         $sitename = "employees";
 
         //get backup files
-        $backupFiles = $this->getBackupFiles($networkDrivePath);
+        $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_data_backup_management_orig
 
         return array(
             'sitename' => $sitename,

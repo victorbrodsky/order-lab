@@ -89,6 +89,16 @@
     </div>
     </p>
 
+
+    <p>
+        <div class="well">
+            <p>
+                <a href="{{ path('employees_data_backup_management_orig') }}">Manual backup/restore</a>
+            </p>
+        </div>
+    </p>
+
+
 {% endblock %}
 
 {% macro cronStatusCreateAuto( entity, label, backupJsonConfig, configFieldName, sitename ) %}
