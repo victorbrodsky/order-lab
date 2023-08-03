@@ -24,6 +24,7 @@ use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use App\UserdirectoryBundle\Entity\Institution;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -300,6 +301,11 @@ class DefaultController extends OrderAbstractController
 //        $modifiedDate = $fellappUtil->getUpdateDateBackupFellAppTemplate();
 //        echo "modifiedDate=$modifiedDate <br>";
         //exit("felBackupTemplateFileId=".$felBackupTemplateFileId);
+
+        $em = $this->getDoctrine()->getManager();
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        echo "$wcmc=$wcmc <br>";
+        exit('111');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
