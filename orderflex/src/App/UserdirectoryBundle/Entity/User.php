@@ -1779,7 +1779,6 @@ class User extends UserBase {
     //show user's FirstName LastName - userName (userNameType)
     public function getUserNameStr( $showStatus=false ): ?string
     {
-
         //Add (No longer works)
         //echo "showStatus=$showStatus <br>";
         $statusStr = "";
@@ -1788,6 +1787,7 @@ class User extends UserBase {
         }
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
+        //$primaryUseridKeytypeStr = " 222 ";
         $displayName = $this->getDisplayName();
 
         if( !$displayName ) {
@@ -1795,7 +1795,7 @@ class User extends UserBase {
         }
 
         if( $displayName && $primaryUseridKeytypeStr ) {
-            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr().$statusStr;
+            return $displayName . " - " . $primaryUseridKeytypeStr.$statusStr;
         }
 
         if( $primaryUseridKeytypeStr && !$displayName ){
@@ -1837,12 +1837,24 @@ class User extends UserBase {
         return $this->getPrimaryPublicUserId();
     }
 
-    public function getPrimaryUseridKeytypeStr(): ?string
+    public function getPrimaryUseridKeytypeStr() : ?string
     {
+        //Exception in twig: UsernameType was already present for the same ID (example dev user id=12: $this->getKeytype() -> this error)
+//        //exit("getKeytype=".$this->getKeytype());
+//        if( $this->getKeytype() ) {
+//            return "getKeytype".$this->getKeytype()->getName();
+//            return "getKeytype".$this->getKeytype();
+//        } else {
+//            return "no getKeytype";
+//        }
+//        return $this->getKeytype()."";
+//        return $this->getKeytype()."";
+//        return "333";
+//        return $this->getKeytype()."";
         if( $this->getKeytype() && $this->getKeytype()->getName() ) {
             return $this->getPrimaryPublicUserId()." (".$this->getKeytype()->getName().")";
         } else {
-            return $this->getPrimaryPublicUserId();
+            return $this->getPrimaryPublicUserId()."";
         }
     }
 

@@ -273,7 +273,7 @@ class ResappTest extends WebTestBase
         }
 
         //Test Show
-        echo "Show res applicant ID $resappId";
+        echo "resappId=$resappId";
         $crawler = $this->client->request('GET', '/residency-applications/show/'.$resappId);
 
 //        $this->assertGreaterThan(

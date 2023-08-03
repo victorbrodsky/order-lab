@@ -31,30 +31,35 @@
 
     {% set wellclass = "alert-default well well-sm" %}
 
+    {#cycle={{ cycle }}#}
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button"
+                        class="btn btn-default btn-sm"
+                        onClick="removeExistingObject(this,'{{ classname }}')"
+                ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
             <br>
         {% else %}
+            {# getPrimaryUseridKeytypeStr caused this error in twig: #}
+            {#An exception has been thrown during the rendering of a template #}
+            {#("While adding an entity of class Proxies\__CG__\App\UserdirectoryBundle\Entity\UsernameType with an ID hash of "1" to the identity map,#}
+            {#another object of class Proxies\__CG__\App\UserdirectoryBundle\Entity\UsernameType was already present for the same ID. This exception#}
+            {#is a safeguard against an internal inconsistency - IDs should uniquely map to#}
+            {#entity object instances.#}
+            {#Solution: don't show the whole interviewer (User) object, show interviewer.getUsernameOptimal or getDisplayName#}
             {% if forminterview.vars.value and forminterview.vars.value.id and forminterview.vars.value.interviewer %}
                 {#add link to invite this interviewer to rate#}
-                {#<a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">#}
-                    {#Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>#}
-                {#</a>#}
-                {#<br>#}
-                {#forminterview.vars.value.id={{ forminterview.vars.value.id }}<br>#}
-                {#forminterview.vars.value.interviewer={{ forminterview.vars.value.interviewer }}<br>#}
-                {#forminterview.vars.value.submitter={{ forminterview.vars.value.submitter }}<br>#}
                 {% set embedPdf = resapp_pdfutil.getEmbedPdfByInterview(forminterview.vars.value) %}
+                {% set interviwerName = forminterview.vars.value.interviewer.getDisplayName() %}
+                {#{% set interviwerName = forminterview.vars.value.interviewer.getUsernameOptimal() %}#}
                 <a
-                   general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
+                   general-data-confirm="Are you sure you want to invite {{ interviwerName }} to rate this applicant? {{ embedPdf }}"
                    href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
                 >
-                    Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
+                    Send an email to {{ interviwerName }} to rate this application.<br>
                 </a>
-
             {% endif %}
         {% endif %}
 
