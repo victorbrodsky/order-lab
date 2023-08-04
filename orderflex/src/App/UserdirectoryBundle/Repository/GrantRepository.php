@@ -48,23 +48,23 @@ class GrantRepository extends EntityRepository {
                 continue;
             }
 
-            echo "Process Grant: ".$grant."<br>";
-            echo "Grant name=".$grant->getName()."<br>";
-            if( $grant->getName() ) {
-                echo "Grant name exists<br>";
-            } else {
-                echo "No Grant name<br>";
-            }
+            //echo "Process Grant: ".$grant."<br>";
+            //echo "Grant name=".$grant->getName()."<br>";
+            //if( $grant->getName() ) {
+                //echo "Grant name exists<br>";
+            //} else {
+                //echo "No Grant name<br>";
+            //}
 
             //get grant from DB if exists
             $grantDb = $em->getRepository(Grant::class)->findOneByName($grant->getName());
 
-            echo "grantDb: ".$grantDb."<br>";
+            //echo "grantDb: ".$grantDb."<br>";
             //exit('1');
 
             if( $grantDb ) {
 
-                echo "found grant in DB by name=".$grant->getName().", id=".$grant->getId()."<br>";
+                //echo "found grant in DB by name=".$grant->getName().", id=".$grant->getId()."<br>";
 
                 //merge db and form entity
                 $grantDb->setEffortDummy($grant->getEffortDummy());
@@ -75,17 +75,17 @@ class GrantRepository extends EntityRepository {
 
                 $grantFinal = $grantDb;
 
-                echo "grant dummy: id=".$grant->getId().", pi=".$grant->getPiDummy().", comment=".$grant->getCommentDummy()."<br>";
+                //echo "grant dummy: id=".$grant->getId().", pi=".$grant->getPiDummy().", comment=".$grant->getCommentDummy()."<br>";
             } else {
-                echo "Not found grant in DB <br>";
+                //echo "Not found grant in DB <br>";
                 $grantFinal = $grant;
             }
 
-            echo "grantFinal: ".$grantFinal."<br>";
+            //echo "grantFinal: ".$grantFinal."<br>";
 
             //check if effort already exists
             if( $user->getId() ) {
-                echo "user ID exists=".$user->getId()."<br>";
+                //echo "user ID exists=".$user->getId()."<br>";
                 $grantEffortDb = $em->getRepository(GrantEffort::class)->findOneBy(
                     array(
                         'author'=>$user,
@@ -93,23 +93,23 @@ class GrantRepository extends EntityRepository {
                     )
                 );
             } else {
-                echo "No user ID <br>";
+                //echo "No user ID <br>";
                 $grantEffortDb = null;
             }
             
             if( $grantFinal->getEffortDummy() ) {
-                echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
+                //echo "grant effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
-                    echo "exist effort=".$grantEffortDb->getEffort()."<br>";
+                    //echo "exist effort=".$grantEffortDb->getEffort()."<br>";
                     $grantEffortDb->setAuthor($user);
                 } else {
-                    echo "does not exist effort <br>";
+                    //echo "does not exist effort <br>";
                     $grantFinal->setEffort($grantFinal->getEffortDummy(),$user);
                 }
 
             } else {
-                echo "no dummy effort=".$grantFinal->getEffortDummy()."<br>";
+                //echo "no dummy effort=".$grantFinal->getEffortDummy()."<br>";
 
                 if( $grantEffortDb ) {
                     $grantFinal->removeEffort($grantEffortDb);
@@ -147,7 +147,7 @@ class GrantRepository extends EntityRepository {
                     $em->remove($commentDb);
                 }
             }
-            echo "comments 2=".count($grantFinal->getComments())."<br>";
+            //echo "comments 2=".count($grantFinal->getComments())."<br>";
 
             //foreach( $grantFinal->getComments() as $comment ) {
             //    //echo $comment;
@@ -169,13 +169,13 @@ class GrantRepository extends EntityRepository {
                 }
             }
 
-            echo "after document processing: grant=".$grantFinal."<br>";
+            //echo "after document processing: grant=".$grantFinal."<br>";
 
         } //foreach grant
 
-        echo "###grants final count=".count($user->getGrants())."<br>";
+        //echo "###grants final count=".count($user->getGrants())."<br>";
         //echo "effort count=".count($user->getGrants()->first()->getEfforts())."<br>";
-        exit('process grant');
+        //exit('process grant');
 
         return $user;
     }

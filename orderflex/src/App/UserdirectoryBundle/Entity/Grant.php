@@ -441,13 +441,13 @@ class Grant extends ListAbstract
         $empty = true;
 
         if( $this->getName() ) {
-            echo "name not empty <br>";
+            //echo "name not empty <br>";
             $empty = false;
         }
 
         foreach( $this->getComments() as $comment ) {
             if( $comment->getComment() ) {
-                echo "comment not empty <br>";
+                //echo "comment not empty <br>";
                 $empty = false;
             }
         }
@@ -459,7 +459,7 @@ class Grant extends ListAbstract
             //    $empty = false;
             //}
             if( $attachmentContainer->isEmpty() === false ) {
-                echo "not empty attachmentContainer <br>";
+                //echo "not empty attachmentContainer <br>";
                 $empty = false;
             }
         }
