@@ -32,7 +32,7 @@ namespace App\DeidentifierBundle\Controller;
 
 
 use App\OrderformBundle\Entity\AccessionType;
-use App\UserdirectoryBundle\Entity\AdminComment;
+use App\TranslationalResearchBundle\Entity\Product;
 use App\UserdirectoryBundle\Entity\Grant;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\DeidentifierBundle\Form\DeidentifierSearchType;
@@ -62,17 +62,17 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $comment = new AdminComment($user);
-        $em->persist($comment);
-        echo "comment id=".$comment->getId()."<br>";
+        $product = new Product($user);
+        $em->persist($product);
+        echo "product id (IDENTITY)=".$product->getId()."<br>";
 
         $site = new SiteList($user);
         $em->persist($site);
-        echo "site id=".$site->getId()."<br>";
+        echo "site id (Auto)=".$site->getId()."<br>";
 
         $grant = new Grant($user);
         $em->persist($grant);
-        echo "grant id=".$grant->getId()."<br>";
+        echo "grant id (Auto)=".$grant->getId()."<br>";
 
 
 
