@@ -3183,6 +3183,11 @@ class UserController extends OrderAbstractController
             $pageTitle = $pageTitle . $addInfo;
         }
 
+        //Testing grant
+        foreach( $entity->getGrants() as $grant) {
+            echo "show Grant ID=".$grant->getId()."<br>";
+        }
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
