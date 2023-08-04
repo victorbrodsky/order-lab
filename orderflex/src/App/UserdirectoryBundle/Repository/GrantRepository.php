@@ -49,6 +49,12 @@ class GrantRepository extends EntityRepository {
             }
 
             echo "Process Grant: ".$grant."<br>";
+            echo "Grant name=".$grant->getName()."<br>";
+            if( $grant->getName() ) {
+                echo "Grant name exists<br>";
+            } else {
+                echo "No Grant name<br>";
+            }
 
             //get grant from DB if exists
             $grantDb = $em->getRepository(Grant::class)->findOneByName($grant->getName());
@@ -71,6 +77,7 @@ class GrantRepository extends EntityRepository {
 
                 echo "grant dummy: id=".$grant->getId().", pi=".$grant->getPiDummy().", comment=".$grant->getCommentDummy()."<br>";
             } else {
+                echo "Not found grant in DB <br>";
                 $grantFinal = $grant;
             }
 
@@ -78,6 +85,7 @@ class GrantRepository extends EntityRepository {
 
             //check if effort already exists
             if( $user->getId() ) {
+                echo "user ID exists=".$user->getId()."<br>";
                 $grantEffortDb = $em->getRepository(GrantEffort::class)->findOneBy(
                     array(
                         'author'=>$user,
@@ -85,6 +93,7 @@ class GrantRepository extends EntityRepository {
                     )
                 );
             } else {
+                echo "No user ID <br>";
                 $grantEffortDb = null;
             }
             
