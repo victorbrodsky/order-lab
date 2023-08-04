@@ -3570,12 +3570,14 @@ class UserController extends OrderAbstractController
 //            print("$k: <pre>"); print_r($d); print("</pre>");
 //        }
 
+        //Testing grant
         foreach( $entity->getGrants() as $grant) {
             echo "before handleRequest Grant ID=".$grant->getId()."<br>";
         }
 
         $form->handleRequest($request);
 
+        //Testing grants
         foreach( $entity->getGrants() as $grant) {
             echo "after handleRequest Grant ID=".$grant->getId()."<br>";
         }
