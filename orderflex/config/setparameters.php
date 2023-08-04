@@ -384,7 +384,7 @@ if( $conn ) {
 
             }//if $row
 
-            echo "connection_channel=[".$connection_channel."]\n"; //testing
+            //echo "connection_channel=[".$connection_channel."]\n"; //testing
             $container->setParameter('connection_channel', $connection_channel);
 
             $container->setParameter('mailer_host', $smtpServerAddress);

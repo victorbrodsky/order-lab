@@ -31,19 +31,14 @@ class Grant extends ListAbstract
     #[ORM\ManyToOne(targetEntity: 'Grant', inversedBy: 'synonyms', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
-
-
-
+    
     #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'grants')]
     private $user;
-
-
 
     #[ORM\ManyToOne(targetEntity: 'SourceOrganization')]
     #[ORM\JoinColumn(name: 'sourceOrganization_id', referencedColumnName: 'id', nullable: true)]
     private $sourceOrganization;
-
-
+    
     //Relevant Documents: [use the Dropzone upload box, allow 20 documents]
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
