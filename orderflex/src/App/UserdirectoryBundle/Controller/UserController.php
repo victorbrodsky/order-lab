@@ -1780,7 +1780,7 @@ class UserController extends OrderAbstractController
         $user->getPreferences()->addShowToInstitution($nyp);
 
         //set empty collections
-        $this->addEmptyCollections($user);
+        $this->addEmptyCollections($user); //newUserAction
 
         //clone user
         $subjectUser = null;
@@ -1923,7 +1923,7 @@ class UserController extends OrderAbstractController
         $user->getPreferences()->addShowToInstitution($nyp);
 
         //set empty collections
-        $this->addEmptyCollections($user);
+        $this->addEmptyCollections($user); //newSimpleUserAction
 
         //clone user
         $subjectUser = null;
@@ -3041,7 +3041,7 @@ class UserController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $this->addEmptyCollections($entity);
+        $this->addEmptyCollections($entity); //showUser
 
         $this->addHookFields($entity);
 
@@ -3149,7 +3149,7 @@ class UserController extends OrderAbstractController
             return false;
         }
 
-        $this->addEmptyCollections($entity);
+        $this->addEmptyCollections($entity); //editUser
 
         $this->addHookFields($entity);
 
@@ -3570,8 +3570,15 @@ class UserController extends OrderAbstractController
 //            print("$k: <pre>"); print_r($d); print("</pre>");
 //        }
 
+        foreach( $entity->getGrants() as $grant) {
+            echo "before handleRequest Grant ID=".$grant->getId()."<br>";
+        }
 
         $form->handleRequest($request);
+
+        foreach( $entity->getGrants() as $grant) {
+            echo "after handleRequest Grant ID=".$grant->getId()."<br>";
+        }
 
 
 //        if( $form->isValid() ) {
