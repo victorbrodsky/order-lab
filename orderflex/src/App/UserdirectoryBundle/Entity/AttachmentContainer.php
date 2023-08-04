@@ -87,7 +87,14 @@ class AttachmentContainer {
         $this->documentContainers->removeElement($item);
     }
 
-
+    public function isEmpty() {
+        foreach( $this->getDocumentContainers() as $documentContainer ) {
+            if( count($documentContainer->getDocuments()) > 0 ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public function __toString() {
         return "AttachmentContainer:"."documents=".count($this->getDocumentContainers())."<br>";

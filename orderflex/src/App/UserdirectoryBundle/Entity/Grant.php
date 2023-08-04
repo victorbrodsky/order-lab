@@ -454,8 +454,12 @@ class Grant extends ListAbstract
 
         $attachmentContainer = $this->getAttachmentContainer();
         if( $attachmentContainer ) {
-            if( count($attachmentContainer->getDocumentContainers()) > 0 ) {
-                echo "not empty getDocumentContainers count=".count($attachmentContainer->getDocumentContainers())."<br>";
+            //if( count($attachmentContainer->getDocumentContainers()) > 0 ) {
+            //    echo "not empty getDocumentContainers count=".count($attachmentContainer->getDocumentContainers())."<br>";
+            //    $empty = false;
+            //}
+            if( $attachmentContainer->isEmpty() === false ) {
+                echo "not empty attachmentContainer <br>";
                 $empty = false;
             }
         }
