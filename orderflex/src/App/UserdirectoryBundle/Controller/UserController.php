@@ -3149,17 +3149,7 @@ class UserController extends OrderAbstractController
             return false;
         }
 
-        //Testing grant
-        foreach( $entity->getGrants() as $grant) {
-            echo "show (before addEmptyCollections) Grant ID=".$grant->getId()."<br>";
-        }
-
         $this->addEmptyCollections($entity); //editUser
-
-        //Testing grant
-        foreach( $entity->getGrants() as $grant) {
-            echo "show (after addEmptyCollections) Grant ID=".$grant->getId()."<br>";
-        }
 
         $this->addHookFields($entity);
 
@@ -3174,11 +3164,6 @@ class UserController extends OrderAbstractController
             'container' => $this->container,
             'em' => $em
         );
-
-        //Testing grant
-        foreach( $entity->getGrants() as $grant) {
-            echo "show (before form) Grant ID=".$grant->getId()."<br>";
-        }
 
 //        $form = $this->createForm(new UserType($params), $entity, array(
 //            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
@@ -3196,11 +3181,6 @@ class UserController extends OrderAbstractController
         $addInfo = $entity->getFullStatusStr(false);
         if( $addInfo ) {
             $pageTitle = $pageTitle . $addInfo;
-        }
-
-        //Testing grant
-        foreach( $entity->getGrants() as $grant) {
-            echo "show Grant ID=".$grant->getId()."<br>";
         }
 
         return array(
@@ -3590,18 +3570,7 @@ class UserController extends OrderAbstractController
 //            print("$k: <pre>"); print_r($d); print("</pre>");
 //        }
 
-        //Testing grant
-        foreach( $entity->getGrants() as $grant) {
-            echo "before handleRequest Grant ID=".$grant->getId()."<br>";
-        }
-
         $form->handleRequest($request);
-
-        //Testing grants
-        foreach( $entity->getGrants() as $grant) {
-            echo "after handleRequest Grant ID=".$grant->getId()."<br>";
-        }
-
 
 //        if( $form->isValid() ) {
 //            echo "form is valid <br>";
@@ -4885,7 +4854,7 @@ class UserController extends OrderAbstractController
 
         $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($userid) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            echo "employees-nopermission<br>";
+            //echo "employees-nopermission<br>";
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
