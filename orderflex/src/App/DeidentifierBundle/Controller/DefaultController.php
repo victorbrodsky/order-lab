@@ -32,6 +32,8 @@ namespace App\DeidentifierBundle\Controller;
 
 
 use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\AdminComment;
+use App\UserdirectoryBundle\Entity\Grant;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\DeidentifierBundle\Form\DeidentifierSearchType;
 use App\OrderformBundle\Entity\Accession;
@@ -40,6 +42,7 @@ use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\UserdirectoryBundle\Entity\SiteList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -55,6 +58,20 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
+
+        $user = $this->getUser();
+
+        $site = new AdminComment($user);
+        echo "site id=".$site->getId()."<br>";
+
+        $site = new SiteList($user);
+        echo "site id=".$site->getId()."<br>";
+
+        $grant = new Grant($user);
+        echo "grant id=".$grant->getId()."<br>";
+
+        exit('111');
+
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
 
