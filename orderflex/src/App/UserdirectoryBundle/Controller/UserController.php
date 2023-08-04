@@ -3151,6 +3151,11 @@ class UserController extends OrderAbstractController
 
         $this->addEmptyCollections($entity); //editUser
 
+        //Testing grant
+        foreach( $entity->getGrants() as $grant) {
+            echo "show (after addEmptyCollections) Grant ID=".$grant->getId()."<br>";
+        }
+
         $this->addHookFields($entity);
 
         //Roles
