@@ -3165,6 +3165,11 @@ class UserController extends OrderAbstractController
             'em' => $em
         );
 
+        //Testing grant
+        foreach( $entity->getGrants() as $grant) {
+            echo "show (before form) Grant ID=".$grant->getId()."<br>";
+        }
+
 //        $form = $this->createForm(new UserType($params), $entity, array(
 //            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
 //            'method' => 'PUT',
