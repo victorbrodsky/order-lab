@@ -39,11 +39,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'user_institution')]
 #[ORM\Index(name: 'institution_name_idx', columns: ['name'])]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
-class Institution extends BaseCompositeNode {
-
-    /**
-     * Gedmo\TreeParent
-     **/
+class Institution extends BaseCompositeNode
+{
     #[Gedmo\TreeParent]
     #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
@@ -60,9 +57,7 @@ class Institution extends BaseCompositeNode {
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    /**
-     * Medical, Educational
-     **/
+    //Medical, Educational
     #[ORM\JoinTable(name: 'user_institutions_types')]
     #[ORM\ManyToMany(targetEntity: 'InstitutionType', inversedBy: 'institutions')]
     private $types;

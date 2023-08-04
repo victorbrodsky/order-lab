@@ -81,7 +81,7 @@ abstract class ArrayFieldAbstract {
     #[ORM\JoinColumn(name: 'dqeventlog', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $dqeventlog;
 
-    private $className;
+    protected $className;
 
     protected $changeFieldArr  = array();
 

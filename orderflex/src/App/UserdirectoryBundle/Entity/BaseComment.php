@@ -34,21 +34,21 @@ abstract class BaseComment extends BaseUserAttributes {
 
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $comment;
+    protected $comment;
 
     #[ORM\ManyToOne(targetEntity: 'CommentTypeList', cascade: ['persist'])]
-    private $commentType;
+    protected $commentType;
 
     /**
      * This field is required for orderby functionality
      **/
     #[ORM\Column(type: 'string', nullable: true)]
-    private $commentTypeStr;
+    protected $commentTypeStr;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="CommentSubTypeList", cascade={"persist"})
 //     **/
-//    private $commentSubType;
+//    protected $commentSubType;
 
 
 

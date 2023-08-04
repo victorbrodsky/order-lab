@@ -34,36 +34,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[ORM\MappedSuperclass]
-abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeInterface {  //extends ListAbstract
+abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeInterface {
     //children
     //parent
-    /**
-     * Gedmo\TreeLeft
-     */
+
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: 'integer')]
-    private $lft;
+    protected $lft;
 
-    /**
-     * Gedmo\TreeRight
-     */
     #[Gedmo\TreeRight]
     #[ORM\Column(type: 'integer')]
-    private $rgt;
+    protected $rgt;
 
-    /**
-     * Gedmo\TreeLevel
-     */
     #[Gedmo\TreeLevel]
     #[ORM\Column(type: 'integer')]
-    private $level;
+    protected $level;
 
-    /**
-     * Gedmo\TreeRoot
-     */
     #[Gedmo\TreeRoot]
     #[ORM\Column(name: 'root', type: 'integer', nullable: true)]
-    private $root;
+    protected $root;
 
     //May add additional properties of the tree node
 

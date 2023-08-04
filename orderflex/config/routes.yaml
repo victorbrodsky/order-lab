@@ -35,7 +35,8 @@ app_deidentifier:
 app_fellapp:
 #    resource: "@AppFellAppBundle/Controller/"
     resource: "../src/App/FellAppBundle/Controller/"
-    type:     annotation
+    #type:     annotation
+    type:     attribute
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
@@ -224,6 +225,10 @@ oneup_uploader:
 fos_js_routing:
 #    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
+
+#kernel:
+#    resource: App\Kernel
+#    type: attribute
 
 #fos_comment_api:
 #    type: annotation
