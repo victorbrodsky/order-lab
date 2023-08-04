@@ -59,16 +59,22 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
+        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $site = new AdminComment($user);
-        echo "site id=".$site->getId()."<br>";
+        $comment = new AdminComment($user);
+        $em->persist($comment);
+        echo "comment id=".$comment->getId()."<br>";
 
         $site = new SiteList($user);
+        $em->persist($site);
         echo "site id=".$site->getId()."<br>";
 
         $grant = new Grant($user);
+        $em->persist($grant);
         echo "grant id=".$grant->getId()."<br>";
+
+
 
         exit('111');
 
