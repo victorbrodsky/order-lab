@@ -4360,11 +4360,9 @@ class UserController extends OrderAbstractController
 
                         if( $title instanceof ResearchLab ) {
                             //remove dependents: remove comments and id from lab
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
                             $em->getRepository(ResearchLab::class)->removeDependents( $subjectUser, $title );
                         } elseif ( $title instanceof Grant ) {
                             //remove dependents: remove documents
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
                             $em->getRepository(Grant::class)->removeDependents( $subjectUser, $title );
                         } else {
                             if( method_exists($title,'removeUser') ) {

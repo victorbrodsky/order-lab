@@ -303,9 +303,9 @@ class DefaultController extends OrderAbstractController
 //        echo "modifiedDate=$modifiedDate <br>";
         //exit("felBackupTemplateFileId=".$felBackupTemplateFileId);
 
-        $em = $this->getDoctrine()->getManager();
-        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
-        echo "$wcmc=$wcmc <br>";
+        //$em = $this->getDoctrine()->getManager();
+        //$wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //echo "$wcmc=$wcmc <br>";
         //exit('111');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

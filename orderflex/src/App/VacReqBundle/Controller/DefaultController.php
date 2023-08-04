@@ -126,9 +126,9 @@ class DefaultController extends OrderAbstractController
         //$salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
         //exit('$salt='.$salt);
 
-        $em = $this->getDoctrine()->getManager();
-        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
-        echo "$wcmc=$wcmc <br>";
+        //$em = $this->getDoctrine()->getManager();
+        //$wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //echo "$wcmc=$wcmc <br>";
 
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
