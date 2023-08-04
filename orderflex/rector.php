@@ -6,6 +6,10 @@ use Rector\Symfony\Set\SensiolabsSetList;
 //use Rector\Nette\Set\NetteSetList;
 use Rector\Config\RectorConfig;
 
+//https://getrector.com/blog/how-to-upgrade-annotations-to-attributes
+// vendor/bin/rector process src/App/DeidentifierBundle/Entity/
+// vendor/bin/rector process src/App/DeidentifierBundle/Controller
+
 return function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
         //SymfonySetList::SYMFONY_62,

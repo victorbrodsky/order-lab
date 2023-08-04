@@ -59,24 +59,24 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        $product = new Product($user);
-        $em->persist($product);
-        echo "product id (IDENTITY)=".$product->getId()."<br>";
-
-        $site = new SiteList($user);
-        $em->persist($site);
-        echo "site id (Auto)=".$site->getId()."<br>";
-
-        $grant = new Grant($user);
-        $em->persist($grant);
-        echo "grant id (Auto)=".$grant->getId()."<br>";
-
-
-
-        exit('111');
+        //Testing IDENTITY comparing to AUTO
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->getUser();
+//
+//        $product = new Product($user);
+//        $em->persist($product);
+//        echo "product id (IDENTITY)=".$product->getId()."<br>";
+//
+//        $site = new SiteList($user);
+//        $em->persist($site);
+//        echo "site id (Auto)=".$site->getId()."<br>";
+//
+//        $grant = new Grant($user);
+//        //$em->getRepository(Grant::class)->testGrant();
+//        $em->persist($grant);
+//        echo "grant id (Auto)=".$grant->getId()."<br>";
+        
+        //exit('111');
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }

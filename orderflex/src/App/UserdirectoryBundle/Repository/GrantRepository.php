@@ -33,6 +33,13 @@ use Doctrine\ORM\EntityRepository;
 
 class GrantRepository extends EntityRepository {
 
+//    public function testGrant() {
+//        $em = $this->getEntityManager();
+//        //Testing getObjectManager. It's not working here. It should work in Doctrine\ORM\Event\LifecycleEventArgs
+//        //$em = $this->getObjectManager();
+//        $grantDb = $em->getRepository(Grant::class)->findOneByName('Grant1');
+//        echo "found grantDb=".$grantDb."<br>";
+//    }
 
     public function processGrant( $user ) {
 
