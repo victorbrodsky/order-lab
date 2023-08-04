@@ -44,9 +44,9 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new/create", name="deidentifier_access_request_new_plain", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
+    #[Route(path: '/access-requests/new/create', name: 'deidentifier_access_request_new_plain', methods: ['GET'])]
     public function accessRequestCreatePlainAction(Request $request)
     {
         //exit('accessRequestCreatePlainAction');
@@ -54,18 +54,18 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new", name="deidentifier_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
+    #[Route(path: '/access-requests/new', name: 'deidentifier_access_request_new', methods: ['GET'])]
     public function accessRequestCreateAction(Request $request)
     {
         return parent::accessRequestCreateAction($request);
     }
 
     /**
-     * @Route("/access-requests/new/pending", name="deidentifier_access_request_create", methods={"POST"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
+    #[Route(path: '/access-requests/new/pending', name: 'deidentifier_access_request_create', methods: ['POST'])]
     public function accessRequestAction(Request $request)
     {
         return parent::accessRequestAction($request);
@@ -74,81 +74,81 @@ class DeidentifierAccessRequestController extends AccessRequestController
     /**
      * Lists all Access Request.
      *
-     * @Route("/access-requests", name="deidentifier_accessrequest_list", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
+    #[Route(path: '/access-requests', name: 'deidentifier_accessrequest_list', methods: ['GET'])]
     public function accessRequestIndexAction(Request $request)
     {
         return parent::accessRequestIndexAction($request);
     }
 
     /**
-     * @Route("/access-requests/change-status/{id}/{status}", name="deidentifier_accessrequest_change", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
+    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'deidentifier_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
     }
 
     /**
-     * @Route("/access-requests/{id}", name="deidentifier_accessrequest_management", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
+    #[Route(path: '/access-requests/{id}', name: 'deidentifier_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function accessRequestManagementAction(Request $request, $id )
     {
         return parent::accessRequestManagementAction($request,$id);
     }
 
     /**
-     * @Route("/access-requests/submit/{id}", name="deidentifier_accessrequest_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
+    #[Route(path: '/access-requests/submit/{id}', name: 'deidentifier_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
         return parent::accessRequestManagementSubmitAction($request,$id);
     }
 
     /**
-     * @Route("/deny-access-request/{userId}", name="deidentifier_accessrequest_remove", methods={"GET"}, requirements={"userId" = "\d+"})
      * @Template()
      */
+    #[Route(path: '/deny-access-request/{userId}', name: 'deidentifier_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function accessRequestRemoveAction(Request $request, $userId )
     {
         return parent::accessRequestRemoveAction($request,$userId);
     }
 
     /**
-     * @Route("/authorized-users/", name="deidentifier_authorized_users", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
      */
+    #[Route(path: '/authorized-users/', name: 'deidentifier_authorized_users', methods: ['GET'])]
     public function authorizedUsersAction(Request $request )
     {
         return parent::authorizedUsersAction($request);
     }
 
     /**
-     * @Route("/authorization-user-manager/{id}", name="deidentifier_authorization_user_management", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
+    #[Route(path: '/authorization-user-manager/{id}', name: 'deidentifier_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function authorizationManagementAction( Request $request, $id )
     {
         return parent::authorizationManagementAction($request,$id);
     }
 
     /**
-     * @Route("/authorization-user-manager/submit/{id}", name="deidentifier_authorization_user_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
      */
+    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'deidentifier_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
         return parent::authorizationManagementSubmitAction($request,$id);
     }
 
     /**
-     * @Route("/revoke-access-authorization/{userId}", name="deidentifier_authorization_remove", methods={"GET"}, requirements={"userId" = "\d+"})
      * @Template()
      */
+    #[Route(path: '/revoke-access-authorization/{userId}', name: 'deidentifier_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);
@@ -156,9 +156,9 @@ class DeidentifierAccessRequestController extends AccessRequestController
 
 
     /**
-     * @Route("/add-authorized-user/", name="deidentifier_add_authorized_user", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
      */
+    #[Route(path: '/add-authorized-user/', name: 'deidentifier_add_authorized_user', methods: ['GET'])]
     public function addAuthorizedUserAction( Request $request )
     {
         return parent::addAuthorizedUserAction($request);

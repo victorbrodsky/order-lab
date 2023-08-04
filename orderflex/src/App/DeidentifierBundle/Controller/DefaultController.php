@@ -44,6 +44,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use App\UserdirectoryBundle\Entity\SiteList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+//use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,11 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends OrderAbstractController
 {
 
+//    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry) {
+//
+//    }
+
+    //[Template('AppUserdirectoryBundle/Default/about.html.twig')]
 
     /**
      * @Route("/about", name="deidentifier_about_page")
@@ -60,31 +66,35 @@ class DefaultController extends OrderAbstractController
     public function aboutAction( Request $request ) {
 
         //Testing IDENTITY comparing to AUTO
-//        $em = $this->getDoctrine()->getManager();
-//        $user = $this->getUser();
-//
-//        $product = new Product($user);
-//        $em->persist($product);
-//        echo "product id (IDENTITY)=".$product->getId()."<br>";
-//
-//        $site = new SiteList($user);
-//        $em->persist($site);
-//        echo "site id (Auto)=".$site->getId()."<br>";
-//
-//        $grant = new Grant($user);
-//        //$em->getRepository(Grant::class)->testGrant();
-//        $em->persist($grant);
-//        echo "grant id (Auto)=".$grant->getId()."<br>";
-        
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->managerRegistry->getManager();
+        $user = $this->getUser();
+
+        $product = new Product($user);
+        $em->persist($product);
+        echo "product id (IDENTITY)=".$product->getId()."<br>";
+
+        $site = new SiteList($user);
+        $em->persist($site);
+        echo "site id (Auto)=".$site->getId()."<br>";
+
+        $grant = new Grant($user);
+        //$em->getRepository(Grant::class)->testGrant();
+        $em->persist($grant);
+        echo "grant id (Auto)=".$grant->getId()."<br>";
+
+        //return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
+        //return $this->redirectToRoute('deidentifier-nopermission');
         //exit('111');
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
 
     /**
-     * @Route("/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}", name="deidentifier_navbar", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/navbar.html.twig")
      */
+    #[Route(path: '/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}', name: 'deidentifier_navbar', methods: ['GET'])]
+    //[Template("AppDeidentifierBundle/Default/navbar.html.twig")]
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
         if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
@@ -117,9 +127,10 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/", name="deidentifier_home", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/index.html.twig")
      */
+    #[Route(path: '/', name: 'deidentifier_home', methods: ['GET'])]
+    //[Template("AppDeidentifierBundle/Default/index.html.twig")]
     public function indexAction( Request $request ) {
 
         if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
@@ -192,29 +203,28 @@ class DefaultController extends OrderAbstractController
     }
 
 //    public function getAccessionTypesAction() {
-//        $em = $this->getDoctrine()->getManager();
-//        $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
-//
-//        $accessionTypeArr = array();
-//        foreach( $accessionTypes as $accessionType) {
-//            $accessionTypeObject = array('id'=>$accessionType->getId(),'text'=>$accessionType."");
-//            $accessionTypeArr[] = $accessionTypeObject;
-//        }
-//
-//        //return $accessionTypes;
-//
-//        $response = new Response();
-//        $response->setContent($accessionTypeArr);
-//        return $response;
-//    }
-
-
+    //        $em = $this->getDoctrine()->getManager();
+    //        $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+    //
+    //        $accessionTypeArr = array();
+    //        foreach( $accessionTypes as $accessionType) {
+    //            $accessionTypeObject = array('id'=>$accessionType->getId(),'text'=>$accessionType."");
+    //            $accessionTypeArr[] = $accessionTypeObject;
+    //        }
+    //
+    //        //return $accessionTypes;
+    //
+    //        $response = new Response();
+    //        $response->setContent($accessionTypeArr);
+    //        return $response;
+    //    }
     /**
      * Search for Accession Number
      *
-     * @Route("/re-identify/", name="deidentifier_search", methods={"GET"})
      * @Template("AppDeidentifierBundle/Search/search.html.twig")
      */
+    #[Route(path: '/re-identify/', name: 'deidentifier_search', methods: ['GET'])]
+    //[Template("AppDeidentifierBundle/Search/search.html.twig")]
     public function searchAction( Request $request ) {
 
 //        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_ENQUIRER') ){
@@ -315,9 +325,10 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * @Route("/generate/", name="deidentifier_generate", methods={"GET"})
      * @Template("AppDeidentifierBundle/Default/index.html.twig")
      */
+    #[Route(path: '/generate/', name: 'deidentifier_generate', methods: ['GET'])]
+    //[Template("AppDeidentifierBundle/Default/index.html.twig")]
     public function generateAction( Request $request ) {
 
 //        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){

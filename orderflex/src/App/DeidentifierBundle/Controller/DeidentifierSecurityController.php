@@ -36,17 +36,15 @@ class DeidentifierSecurityController extends SecurityController
 {
 
     /**
-     * @Route("/login", name="deidentifier_login")
      * @Template()
      */
+    #[Route(path: '/login', name: 'deidentifier_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="deidentifier_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'deidentifier_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
@@ -54,9 +52,9 @@ class DeidentifierSecurityController extends SecurityController
 
 
     /**
-     * @Route("/no-permission", name="deidentifier-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
+    #[Route(path: '/no-permission', name: 'deidentifier-nopermission', methods: ['GET'])]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -70,10 +68,10 @@ class DeidentifierSecurityController extends SecurityController
 
 
     /**
-     * @Route("/idle-log-out", name="deidentifier_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="deidentifier_idlelogout-saveorder")
      * @Template()
      */
+    #[Route(path: '/idle-log-out', name: 'deidentifier_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'deidentifier_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

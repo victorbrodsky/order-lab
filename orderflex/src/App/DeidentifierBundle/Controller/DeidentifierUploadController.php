@@ -35,18 +35,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DeidentifierUploadController extends UploadController {
 
-    /**
-     * @Route("/file-delete", name="deidentifier_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'deidentifier_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
 
     /**
      * $id - document id
-     *
-     * @Route("/file-download/{id}/{eventtype}", name="deidentifier_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'deidentifier_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('deidentifier.sitename'),$eventtype);
     }
@@ -54,9 +51,8 @@ class DeidentifierUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="deidentifier_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'deidentifier_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('deidentifier.sitename'),$eventtype,$viewType);
     }

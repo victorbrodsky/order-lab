@@ -29,18 +29,18 @@ class DeidentifierUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="deidentifier_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
      * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/{id}', name: 'deidentifier_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('deidentifier.sitename'));
     }
 
 
     /**
-     * @Route("/edit-user-profile/{id}", name="deidentifier_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
+    #[Route(path: '/edit-user-profile/{id}', name: 'deidentifier_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -58,9 +58,9 @@ class DeidentifierUserController extends UserController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="deidentifier_user_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
+    #[Route(path: '/edit-user-profile/{id}', name: 'deidentifier_user_update', methods: ['PUT'])]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');

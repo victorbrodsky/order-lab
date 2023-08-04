@@ -1683,3 +1683,11 @@ Rector:
 
 How to convert symfony gedmo annotation to PHP 8 Attributes
 https://stackoverflow.com/questions/75215518/how-to-convert-symfony-gedmo-annotation-to-php-8-attributes
+
+Attribute for Template:
+https://symfony.com/doc/current/templates.html#rendering-templates
+The #[Template()] attribute was introduced in Symfony 6.2.
+use Symfony\Bridge\Twig\Attribute\Template;
+#[Template('product/index.html.twig')]
+public function index(): array
+{ return [...] }

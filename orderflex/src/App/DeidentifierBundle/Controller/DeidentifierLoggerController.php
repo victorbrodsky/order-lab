@@ -35,18 +35,17 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class DeidentifierLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="deidentifier_logger", methods={"GET"})
      * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'deidentifier_logger', methods: ['GET'])]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
@@ -61,9 +60,9 @@ class DeidentifierLoggerController extends LoggerController
 
 
     /**
-     * @Route("/user/{id}/all", name="deidentifier_logger_user_all", methods={"GET"})
      * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/user/{id}/all', name: 'deidentifier_logger_user_all', methods: ['GET'])]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -94,9 +93,9 @@ class DeidentifierLoggerController extends LoggerController
     /**
      * Generation Log with eventTypes = "Generate Accession Deidentifier ID"
      *
-     * @Route("/generation-log/", name="deidentifier_generation_log", methods={"GET"})
      * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/generation-log/', name: 'deidentifier_generation_log', methods: ['GET'])]
     public function generationLogAction(Request $request)
     {
         if( false == $this->isGranted("create", "Accession") ){
@@ -159,9 +158,9 @@ class DeidentifierLoggerController extends LoggerController
     /**
      * Generation Log with eventTypes = "Generate Accession Deidentifier ID" and users = current user id
      *
-     * @Route("/event-log-per-user-per-event-type/", name="deidentifier_my_generation_log", methods={"GET"})
      * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-user-per-event-type/', name: 'deidentifier_my_generation_log', methods: ['GET'])]
     public function myGenerationLogAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_USER") ){

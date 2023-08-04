@@ -55,12 +55,21 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class OrderAbstractController extends AbstractController {
 
-    //AbstractController::getDoctrine()  is now deprecated.
-    //New alternative for getDoctrine() in Symfony 5.4 and up
+    protected $managerRegistry;
+    public function __construct(\Doctrine\Persistence\ManagerRegistry $managerRegistry) {
+        $this->managerRegistry = $managerRegistry;
+    }
     public function getDoctrine() : ManagerRegistry
     {
-        return $this->container->get('user_service_utility')->getDoctrine();
+        return $this->managerRegistry;
     }
+
+//    //AbstractController::getDoctrine()  is now deprecated.
+//    //New alternative for getDoctrine() in Symfony 5.4 and up
+//    public function getDoctrine() : ManagerRegistry
+//    {
+//        return $this->container->get('user_service_utility')->getDoctrine();
+//    }
 
     //Check for auto-injection deprecation notice
     //1) Create OrderAbstarctController extends OrderAbstractController

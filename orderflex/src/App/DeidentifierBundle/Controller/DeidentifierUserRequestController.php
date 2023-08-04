@@ -47,9 +47,9 @@ class DeidentifierUserRequestController extends UserRequestController
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="deidentifier_accountrequest_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
+    #[Route(path: '/account-requests/new', name: 'deidentifier_accountrequest_new', methods: ['GET'])]
     public function newAction()
     {
         return parent::newAction();
@@ -58,9 +58,9 @@ class DeidentifierUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="deidentifier_accountrequest_create", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
+    #[Route(path: '/account-requests/new', name: 'deidentifier_accountrequest_create', methods: ['POST'])]
     public function createAction(Request $request)
     {
         return parent::createAction($request);
@@ -70,9 +70,9 @@ class DeidentifierUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/account-requests", name="deidentifier_accountrequest", methods={"GET"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
+    #[Route(path: '/account-requests', name: 'deidentifier_accountrequest', methods: ['GET'])]
     public function indexAction( Request $request )
     {
         return parent::indexAction($request);
@@ -80,9 +80,9 @@ class DeidentifierUserRequestController extends UserRequestController
 
 
     /**
-     * @Route("/account-requests/{id}/{status}/status", name="deidentifier_accountrequest_status", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'deidentifier_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function statusAction($id, $status)
     {
         return parent::statusAction($id,$status);
@@ -91,9 +91,9 @@ class DeidentifierUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      *
-     * @Route("/account-requests-approve", name="deidentifier_accountrequest_approve", methods={"POST"})
      * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
+    #[Route(path: '/account-requests-approve', name: 'deidentifier_accountrequest_approve', methods: ['POST'])]
     public function approveUserAccountRequestAction(Request $request)
     {
         return parent::approveUserAccountRequestAction($request);

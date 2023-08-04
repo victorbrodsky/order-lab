@@ -30,18 +30,17 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class DeidentifierSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/", name="deidentifier_siteparameters", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'deidentifier_siteparameters', methods: ['GET'])]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -53,9 +52,9 @@ class DeidentifierSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      *
-     * @Route("/{id}/edit", name="deidentifier_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'deidentifier_siteparameters_edit', methods: ['GET'])]
     public function editAction(Request $request,$id)
     {
         return $this->editParameters($request,$id);
@@ -64,9 +63,9 @@ class DeidentifierSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      *
-     * @Route("/{id}", name="deidentifier_siteparameters_update", methods={"PUT"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'deidentifier_siteparameters_update', methods: ['PUT'])]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request, $id);

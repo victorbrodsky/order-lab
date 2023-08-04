@@ -5,6 +5,8 @@
 #    resource: ../src/App/*/Controller/
 #    type: annotation
 
+#annotation => attribute
+
 #main_common_home:
 #    path:      /
 #    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
@@ -29,6 +31,7 @@ app_dashboard:
 app_deidentifier:
     resource: "../src/App/DeidentifierBundle/Controller/"
     type:     annotation
+    #type:     attribute
     prefix:   /deidentifier
     schemes:  ['%connection_channel%']
 
