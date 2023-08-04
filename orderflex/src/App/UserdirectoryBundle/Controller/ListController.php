@@ -80,6 +80,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/", name="rooms-list", methods={"GET"})
      * @Route("/list/suites/", name="suites-list", methods={"GET"})
      * @Route("/list/floors/", name="floors-list", methods={"GET"})
+     * @Route("/list/grants/", name="grants-list", methods={"GET"})
      * @Route("/list/mailboxes/", name="mailboxes-list", methods={"GET"})
      * @Route("/list/percent-effort/", name="efforts-list", methods={"GET"})
      * @Route("/list/administrative-titles/", name="admintitles-list", methods={"GET"})
@@ -770,6 +771,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/", name="rooms_create", methods={"POST"})
      * @Route("/list/suites/", name="suites_create", methods={"POST"})
      * @Route("/list/floors/", name="floors_create", methods={"POST"})
+     * @Route("/list/grants/", name="grants_create", methods={"POST"})
      * @Route("/list/mailboxes/", name="mailboxes_create", methods={"POST"})
      * @Route("/list/percent-effort/", name="efforts_create", methods={"POST"})
      * @Route("/list/administrative-titles/", name="admintitles_create", methods={"POST"})
@@ -1132,6 +1134,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/new", name="rooms_new", methods={"GET"})
      * @Route("/list/suites/new", name="suites_new", methods={"GET"})
      * @Route("/list/floors/new", name="floors_new", methods={"GET"})
+     * @Route("/list/grants/new", name="grants_new", methods={"GET"})
      * @Route("/list/mailboxes/new", name="mailboxes_new", methods={"GET"})
      * @Route("/list/percent-effort/new", name="efforts_new", methods={"GET"})
      * @Route("/list/administrative-titles/new", name="admintitles_new", methods={"GET"})
@@ -1443,6 +1446,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/{id}", name="rooms_show", methods={"GET"})
      * @Route("/list/suites/{id}", name="suites_show", methods={"GET"})
      * @Route("/list/floors/{id}", name="floors_show", methods={"GET"})
+     * @Route("/list/grants/{id}", name="grants_show", methods={"GET"})
      * @Route("/list/mailboxes/{id}", name="mailboxes_show", methods={"GET"})
      * @Route("/list/percent-effort/{id}", name="efforts_show", methods={"GET"})
      * @Route("/list/administrative-titles/{id}", name="admintitles_show", methods={"GET"})
@@ -1746,6 +1750,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/{id}/edit", name="rooms_edit", methods={"GET"})
      * @Route("/list/suites/{id}/edit", name="suites_edit", methods={"GET"})
      * @Route("/list/floors/{id}/edit", name="floors_edit", methods={"GET"})
+     * @Route("/list/grants/{id}/edit", name="grants_edit", methods={"GET"})
      * @Route("/list/mailboxes/{id}/edit", name="mailboxes_edit", methods={"GET"})
      * @Route("/list/percent-effort/{id}/edit", name="efforts_edit", methods={"GET"})
      * @Route("/list/administrative-titles/{id}/edit", name="admintitles_edit", methods={"GET"})
@@ -2099,6 +2104,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/{id}", name="rooms_update", methods={"PUT"})
      * @Route("/list/suites/{id}", name="suites_update", methods={"PUT"})
      * @Route("/list/floors/{id}", name="floors_update", methods={"PUT"})
+     * @Route("/list/grants/{id}", name="grants_update", methods={"PUT"})
      * @Route("/list/mailboxes/{id}", name="mailboxes_update", methods={"PUT"})
      * @Route("/list/percent-effort/{id}", name="efforts_update", methods={"PUT"})
      * @Route("/list/administrative-titles/{id}", name="admintitles_update", methods={"PUT"})
@@ -2899,6 +2905,10 @@ class ListController extends OrderAbstractController
             case "floors":
                 $className = "FloorList";
                 $displayName = "Floors";
+                break;
+            case "grants":
+                $className = "Grant";
+                $displayName = "Grants";
                 break;
             case "mailboxes":
                 $className = "MailboxList";
@@ -3922,6 +3932,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/rooms/{id}", name="rooms_delete", methods={"DELETE"})
      * @Route("/list/suites/{id}", name="suites_delete", methods={"DELETE"})
      * @Route("/list/floors/{id}", name="floors_delete", methods={"DELETE"})
+     * @Route("/list/grants/{id}", name="grants_delete", methods={"DELETE"})
      * @Route("/list/mailboxes/{id}", name="mailboxes_delete", methods={"DELETE"})
      * @Route("/list/percent-effort/{id}", name="efforts_delete", methods={"DELETE"})
      * @Route("/list/administrative-titles/{id}", name="admintitles_delete", methods={"DELETE"})

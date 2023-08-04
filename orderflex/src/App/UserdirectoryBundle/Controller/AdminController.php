@@ -7825,6 +7825,7 @@ class AdminController extends OrderAbstractController
             "270" => array('AppTitleList','apptitles-list'),
             "280" => array('CompletionReasonList','completionreasons-list'),
             "290" => array('TrainingDegreeList','trainingdegrees-list'),
+            "295" => array('Grant','grants-list'),
 
             "300" => array('MajorTrainingList','trainingmajors-list'),
             "310" => array('MinorTrainingList','trainingminors-list'),
