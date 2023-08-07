@@ -278,6 +278,7 @@ class FellappTest extends WebTestBase
         if( count($fellapps) > 0 ) {
             $fellapp = end($fellapps);
             $fellappId = $fellapp->getId();
+            echo "ShowID=$fellappId";
         } else {
             echo "Skip testShowApplication; There are no fellowship applications found";
             return null;
