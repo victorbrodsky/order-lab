@@ -29,7 +29,7 @@ use App\UserdirectoryBundle\Form\BackupManagementType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;

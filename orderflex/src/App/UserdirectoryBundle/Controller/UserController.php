@@ -53,7 +53,7 @@ use App\UserdirectoryBundle\Form\UserSimpleType;
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;

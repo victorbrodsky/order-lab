@@ -25,7 +25,7 @@ use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\UserDatesFilterType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;

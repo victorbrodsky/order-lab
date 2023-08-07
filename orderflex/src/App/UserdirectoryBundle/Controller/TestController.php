@@ -14,7 +14,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 
 
 // 127.0.0.1/order/index_dev.php/directory/test/container/test/
