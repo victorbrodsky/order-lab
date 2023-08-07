@@ -180,6 +180,10 @@
             {% for training in form.trainings %}
 
             {#training.vars.value.trainingType.name={{ training.vars.value.trainingType.name }}<br>#}
+            {#{% if training.vars.value and training.vars.value.jobTitle %}#}
+                {#training.vars.value.jobTitle={{ training.vars.value }}#}
+                {#training.vars.value.jobTitle.getName()={{ training.vars.value.jobTitle.getName() }}#}
+            {#{% endif %}#}
 
             {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Other' %}
             <div class="well">
@@ -213,7 +217,12 @@
                             {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
                         {% else %}
                             {% if training.vars.value.jobTitle %}
-                                {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
+                                {#JobTitleList was already present for the same ID. This exception#}
+                                {#is a safeguard against an internal inconsistency - IDs should uniquely map to#}
+                                {#entity object instances#}
+                                {#{% set jobTitleStr = training.vars.value.jobTitle.getName() %}#}
+                                {% set jobTitleStr = training.vars.value %}
+                                {#{% set jobTitleStr = "" %}#}
                             {% else %}
                                 {% set jobTitleStr = "" %}
                             {% endif %}

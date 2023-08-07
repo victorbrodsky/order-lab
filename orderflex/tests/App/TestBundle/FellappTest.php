@@ -283,7 +283,7 @@ class FellappTest extends WebTestBase
             echo "Skip testShowApplication; There are no fellowship applications found";
             return null;
         }
-
+        
         //Test Show
         $crawler = $this->client->request('GET', '/fellowship-applications/show/'.$fellappId);
 
