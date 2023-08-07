@@ -649,7 +649,7 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = "pg_dump -U postgres $dbname > $backupfile";
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
-        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+        $sql = 'pg_dump --dbname=postgresql1://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
 
         echo "FULL sql=".$sql."<br>";
 
