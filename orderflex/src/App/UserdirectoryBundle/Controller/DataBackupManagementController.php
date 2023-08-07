@@ -630,14 +630,27 @@ class DataBackupManagementController extends OrderAbstractController
         echo "backupfile=".$backupfile."<br>";
 
         $dbname = $this->getParameter('database_name');
+        $uid = $this->getParameter('database_user');
+        $pwd = $this->getParameter('database_password');
+        $host = $this->getParameter('database_host');
+        $driver = $this->getParameter('database_driver');
         echo "dbname=".$dbname."<br>";
+        echo "uid=".$uid."<br>";
+        echo "pwd=".$pwd."<br>";
+        echo "host=".$host."<br>";
+
+        $host = '127.0.0.1';
 
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         //$sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
         //$sql = "BACKUP DATABASE ScanOrder TO DISK = 'C:\\db_backup_managtestbackup_07-08-2023-16-10-05.bak'";
         //$sql = "SELECT id FROM crn_crntask";
-        $sql = "pg_dump -U postgres $dbname > $backupfile";
+        //$sql = "pg_dump -U postgres $dbname > $backupfile";
+
+        //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
+        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+
         echo "FULL sql=".$sql."<br>";
 
 //        $sql = "
@@ -646,7 +659,8 @@ class DataBackupManagementController extends OrderAbstractController
 //          WHERE field LIKE '%Doe%'
 //        ";
 
-        $res = exec($sql);
+        $res = exec($sql,$output);
+        print_r($output);
 
         //$params['backupfile'] = $backupfile;
         //$query = $em->getConnection()->prepare($sql);
