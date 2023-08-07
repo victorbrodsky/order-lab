@@ -59,7 +59,7 @@ class OrderAbstractController extends AbstractController {
     public function __construct(ManagerRegistry $managerRegistry) {
         $this->managerRegistry = $managerRegistry;
     }
-    public function getDoctrine(): ManagerRegistry
+    public function getDoctrine() : Doctrine\Persistence\ManagerRegistry
     {
         return $this->managerRegistry;
     }
