@@ -56,10 +56,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class OrderAbstractController extends AbstractController {
 
     protected $managerRegistry;
-    public function __construct(\Doctrine\Persistence\ManagerRegistry $managerRegistry) {
+    public function __construct(ManagerRegistry $managerRegistry) {
         $this->managerRegistry = $managerRegistry;
     }
-    public function getDoctrine() : ManagerRegistry
+    public function getDoctrine(): ManagerRegistry
     {
         return $this->managerRegistry;
     }
