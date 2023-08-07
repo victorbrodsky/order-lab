@@ -39,8 +39,8 @@ use App\UserdirectoryBundle\Form\SimpleUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+
 //use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;

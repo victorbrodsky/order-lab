@@ -23,12 +23,12 @@ use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced names
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends OrderAbstractController

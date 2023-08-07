@@ -25,8 +25,8 @@ use App\UserdirectoryBundle\Entity\LocationPrivacyList; //process.py script: rep
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
 use App\UserdirectoryBundle\Form\ListFilterType;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Twig\Attribute\Template;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;

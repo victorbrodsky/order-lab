@@ -20,8 +20,8 @@ namespace App\OrderformBundle\Controller;
 
 use App\OrderformBundle\Security\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;

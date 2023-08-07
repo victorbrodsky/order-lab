@@ -14,8 +14,8 @@ use App\TranslationalResearchBundle\Entity\Product;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

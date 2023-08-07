@@ -31,8 +31,8 @@ use App\UserdirectoryBundle\Form\UserSimpleType;
 use App\UserdirectoryBundle\Util\ReCaptcha;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;

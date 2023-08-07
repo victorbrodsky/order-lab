@@ -24,8 +24,8 @@ use App\VacReqBundle\Entity\VacReqHolidayList; //process.py script: replaced nam
 use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use App\VacReqBundle\Form\VacReqHolidayFilterType;
 use App\VacReqBundle\Form\VacReqHolidayType;
 use App\VacReqBundle\Util\ICalendar;

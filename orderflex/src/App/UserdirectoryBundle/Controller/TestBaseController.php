@@ -13,7 +13,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Bridge\Twig\Attribute\Template;
 
 

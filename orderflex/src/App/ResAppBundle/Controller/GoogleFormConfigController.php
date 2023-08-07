@@ -20,11 +20,11 @@ namespace App\ResAppBundle\Controller;
 use App\ResAppBundle\Entity\GoogleFormConfig;
 use App\ResAppBundle\Form\GoogleFormConfigType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

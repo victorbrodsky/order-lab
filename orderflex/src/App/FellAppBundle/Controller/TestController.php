@@ -20,11 +20,11 @@ namespace App\FellAppBundle\Controller;
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 

@@ -40,8 +40,8 @@ use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use App\UserdirectoryBundle\Entity\SiteList;
 use Symfony\Bridge\Twig\Attribute\Template;
 //use Symfony\Bridge\Twig\Attribute\Template;

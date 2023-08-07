@@ -26,8 +26,6 @@ namespace App\CallLogBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Controller\UploadController;

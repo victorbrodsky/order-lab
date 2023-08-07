@@ -20,8 +20,8 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\WorkQueueList;
 use App\UserdirectoryBundle\Controller\ListController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;

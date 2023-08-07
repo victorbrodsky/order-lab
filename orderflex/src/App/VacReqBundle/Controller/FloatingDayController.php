@@ -28,8 +28,8 @@ use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestFloating;
 use App\VacReqBundle\Form\VacReqFilterType;

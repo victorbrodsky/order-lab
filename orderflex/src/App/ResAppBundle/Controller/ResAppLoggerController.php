@@ -25,8 +25,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use App\UserdirectoryBundle\Controller\LoggerController;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\Logger;

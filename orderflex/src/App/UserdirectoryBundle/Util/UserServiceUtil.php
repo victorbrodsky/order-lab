@@ -1066,13 +1066,7 @@ class UserServiceUtil {
 
                     <li>
                         <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://twig.sensiolabs.org/doc/advanced.html">Twig</a>
-                    </li>
+                    </li>                                
 
                     <br>
 

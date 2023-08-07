@@ -30,8 +30,8 @@ use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace 
 
 
 use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
