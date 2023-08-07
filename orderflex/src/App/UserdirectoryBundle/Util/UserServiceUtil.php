@@ -79,7 +79,12 @@ class UserServiceUtil {
     protected $container;
     protected $m3;
 
-    public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container, ManagerRegistry $doctrine ) {
+    public function __construct( 
+        EntityManagerInterface $em, 
+        Security $security, 
+        ContainerInterface $container, 
+        ManagerRegistry $doctrine 
+    ) {
         $this->em = $em;
         $this->doctrine = $doctrine;
         $this->security = $security;
