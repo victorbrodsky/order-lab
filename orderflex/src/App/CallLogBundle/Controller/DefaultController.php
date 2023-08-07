@@ -55,10 +55,8 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/about", name="calllog_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'calllog_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
 
@@ -76,21 +74,19 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * Alerts
-//     * @Route("/alerts/", name="calllog_alerts")
-//     * @Template("AppCallLogBundle/Default/under_construction.html.twig")
-//     */
-//    public function alertsAction(Request $request)
-//    {
-//        return;
-//    }
-
-
+    //     * Alerts
+    //     * @Route("/alerts/", name="calllog_alerts")
+    //     * @Template("AppCallLogBundle/Default/under_construction.html.twig")
+    //     */
+    //    public function alertsAction(Request $request)
+    //    {
+    //        return;
+    //    }
     /**
      * Resources
-     * @Route("/resources/", name="calllog_resources")
-     * @Template("AppCallLogBundle/CallLog/resources.html.twig")
      */
+    #[Route(path: '/resources/', name: 'calllog_resources')]
+    #[Template('AppCallLogBundle/CallLog/resources.html.twig')]
     public function resourcesAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_CALLLOG_USER') ) {
@@ -136,20 +132,18 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * Resources
-//     * @Route("/check-encounter-location/", name="calllog_check_encounter_location", methods={"POST"}, options={"expose"=true})
-//     */
-//    public function checkLocationAction(Request $request)
-//    {
-//        exit("Not used");
-//    }
-
-
+    //     * Resources
+    //     * @Route("/check-encounter-location/", name="calllog_check_encounter_location", methods={"POST"}, options={"expose"=true})
+    //     */
+    //    public function checkLocationAction(Request $request)
+    //    {
+    //        exit("Not used");
+    //    }
     /**
      * http://localhost/order/call-log-book/assign-calllog-users
      * This is one time run method to assign the calllog roles
-     * @Route("/assign-calllog-users", name="calllog_assign-calllog-users")
      */
+    #[Route(path: '/assign-calllog-users', name: 'calllog_assign-calllog-users')]
     public function assignUsersAction(Request $request)
     {
         exit("This is one time run method to assign the calllog roles");
@@ -298,8 +292,8 @@ class DefaultController extends OrderAbstractController
     /**
      * http://localhost/order/call-log-book/update-cache-values-now
      * method to populate/update all call log entry cache in XML format
-     * @Route("/update-cache-values-now/", name="calllog_update_cache_values_now")
      */
+    #[Route(path: '/update-cache-values-now/', name: 'calllog_update_cache_values_now')]
     public function populateEntryCacheAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -371,10 +365,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/update-cache-manually/{id}", name="calllog_update_cache_manually")
-     * @Template("AppCallLogBundle/CallLog/update-cache-manually.html.twig")
-     */
+    #[Route(path: '/update-cache-manually/{id}', name: 'calllog_update_cache_manually')]
+    #[Template('AppCallLogBundle/CallLog/update-cache-manually.html.twig')]
     public function updateCacheManuallyAction(Request $request, Message $message)
     {
         if( false === $this->isGranted('ROLE_CALLLOG_ADMIN') ) {
@@ -430,9 +422,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * 127.0.0.1/order/call-log-book/update-text-html
-     *
-     * @Route("/update-text-html", name="calllog_update_text_html")
      */
+    #[Route(path: '/update-text-html', name: 'calllog_update_text_html')]
     public function updateTextHtmlAction(Request $request)
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -664,97 +655,94 @@ class DefaultController extends OrderAbstractController
 //        exit("Processed $processedCounter text objects");
     }
 //    public function findExistingTextHtmlByName($formNode,$formValue,$historyDestinationFormNodeId,$impressionDestinationFormNodeId,$entityNamespace,$entityName,$entityId) {
-//
-//        //return false; //testing
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
-//        $dql = $repository->createQueryBuilder("list");;
-//        $dql->select('list');
-//        $dql->leftJoin("list.formNode", "formNode");
-//
-//        if( $formNode->getName() == 'History/Findings' ) {
-//            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
-//        }
-//        if( $formNode->getName() == 'Impression/Outcome' ) {
-//            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
-//        }
-//
-//        //$dql->andWhere("list.value = '$formValue'");
-//        $dql->andWhere("list.value IS NOT NULL");
-//
-//        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
-//
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//        $destinationTextObjects = $query->getResult();
-//        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
-//
-//        //exit("eof");
-//
-//        if( count($destinationTextObjects) > 0 ) {
-//            return $destinationTextObjects[0]->getValue();
-//        }
-//
-//        return false;
-//    }
-//    //$name - "History/Findings", "Impression/Outcome"
-//    public function getSourceFormNodeByName($name) {
-//        $em = $this->getDoctrine()->getManager();
-//        $formNodeUtil = $this->container->get('user_formnode_utility');
-//
-//        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
-//
-//        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
-//        $dql = $repository->createQueryBuilder("list");;
-//        $dql->select('list');
-//        $dql->leftJoin("list.objectType", "objectType");
-//        $dql->leftJoin("list.parent", "parent");
-//        $dql->leftJoin("parent.parent", "grandParent");
-//        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-//        $dql->andWhere("list.name = '".$name."'");
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//        $sourceTextObjects = $query->getResult();
-//        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
-//
-//        if( count($sourceTextObjects) == 1 ) {
-//            return $sourceTextObjects[0];
-//        }
-//
-//        return NULL;
-//    }
-//    //$name - "History/Findings HTML", "Impression/Outcome HTML"
-//    public function getDestinationFormNodeByName($name) {
-//        $em = $this->getDoctrine()->getManager();
-//        $formNodeUtil = $this->container->get('user_formnode_utility');
-//
-//        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
-//
-//        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
-//        $dql = $repository->createQueryBuilder("list");;
-//        $dql->select('list');
-//        $dql->leftJoin("list.objectType", "objectType");
-//        $dql->leftJoin("list.parent", "parent");
-//        $dql->leftJoin("parent.parent", "grandParent");
-//        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
-//        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
-//        $dql->andWhere("list.name = '".$name."'");
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//        $destinationTextObjects = $query->getResult();
-//
-//        if( count($destinationTextObjects) == 1 ) {
-//            return $destinationTextObjects[0];
-//        }
-//
-//        return NULL;
-//    }
-
-
+    //
+    //        //return false; //testing
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+    //        $dql = $repository->createQueryBuilder("list");;
+    //        $dql->select('list');
+    //        $dql->leftJoin("list.formNode", "formNode");
+    //
+    //        if( $formNode->getName() == 'History/Findings' ) {
+    //            $dql->where("formNode.id = " . $historyDestinationFormNodeId);
+    //        }
+    //        if( $formNode->getName() == 'Impression/Outcome' ) {
+    //            $dql->where("formNode.id = " . $impressionDestinationFormNodeId);
+    //        }
+    //
+    //        //$dql->andWhere("list.value = '$formValue'");
+    //        $dql->andWhere("list.value IS NOT NULL");
+    //
+    //        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
+    //
+    //        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+    //        $destinationTextObjects = $query->getResult();
+    //        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
+    //
+    //        //exit("eof");
+    //
+    //        if( count($destinationTextObjects) > 0 ) {
+    //            return $destinationTextObjects[0]->getValue();
+    //        }
+    //
+    //        return false;
+    //    }
+    //    //$name - "History/Findings", "Impression/Outcome"
+    //    public function getSourceFormNodeByName($name) {
+    //        $em = $this->getDoctrine()->getManager();
+    //        $formNodeUtil = $this->container->get('user_formnode_utility');
+    //
+    //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
+    //
+    //        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
+    //        $dql = $repository->createQueryBuilder("list");;
+    //        $dql->select('list');
+    //        $dql->leftJoin("list.objectType", "objectType");
+    //        $dql->leftJoin("list.parent", "parent");
+    //        $dql->leftJoin("parent.parent", "grandParent");
+    //        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+    //        $dql->andWhere("list.name = '".$name."'");
+    //        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+    //        $sourceTextObjects = $query->getResult();
+    //        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
+    //
+    //        if( count($sourceTextObjects) == 1 ) {
+    //            return $sourceTextObjects[0];
+    //        }
+    //
+    //        return NULL;
+    //    }
+    //    //$name - "History/Findings HTML", "Impression/Outcome HTML"
+    //    public function getDestinationFormNodeByName($name) {
+    //        $em = $this->getDoctrine()->getManager();
+    //        $formNodeUtil = $this->container->get('user_formnode_utility');
+    //
+    //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
+    //
+    //        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
+    //        $dql = $repository->createQueryBuilder("list");;
+    //        $dql->select('list');
+    //        $dql->leftJoin("list.objectType", "objectType");
+    //        $dql->leftJoin("list.parent", "parent");
+    //        $dql->leftJoin("parent.parent", "grandParent");
+    //        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
+    //        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
+    //        $dql->andWhere("list.name = '".$name."'");
+    //        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+    //        $destinationTextObjects = $query->getResult();
+    //
+    //        if( count($destinationTextObjects) == 1 ) {
+    //            return $destinationTextObjects[0];
+    //        }
+    //
+    //        return NULL;
+    //    }
     /**
      * 127.0.0.1/order/call-log-book/update-entry-tags
-     *
-     * @Route("/update-entry-tags", name="calllog_update_entry_tags")
      */
+    #[Route(path: '/update-entry-tags', name: 'calllog_update_entry_tags')]
     public function updateEntryTagAction(Request $request)
     {
         exit("Permitted only once");
@@ -805,9 +793,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * 127.0.0.1/order/call-log-book/update-patient-mrn
-     *
-     * @Route("/update-patient-mrn", name="calllog_update_patient_mrn")
      */
+    #[Route(path: '/update-patient-mrn', name: 'calllog_update_patient_mrn')]
     public function updatePatientMrnAction(Request $request)
     {
         exit("updatePatientMrnAction. Execute only once.");
@@ -1114,9 +1101,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Location entries need to be re-linked to the one original Location ID (find by name "New York Presbyterian Hospital")
      * 127.0.0.1/order/call-log-book/relink-duplicate-location
-     *
-     * @Route("/relink-duplicate-location", name="calllog_relink_duplicate_location")
      */
+    #[Route(path: '/relink-duplicate-location', name: 'calllog_relink_duplicate_location')]
     public function relinkLocationAction(Request $request)
     {
         exit("Permitted only once");
@@ -1204,9 +1190,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Location entries need to be re-linked to the one original Location ID (find by name "New York Presbyterian Hospital")
      * 127.0.0.1/order/call-log-book/relink-duplicate-location
-     *
-     * @Route("/update-default-location", name="calllog_update_default_location")
      */
+    #[Route(path: '/update-default-location', name: 'calllog_update_default_location')]
     public function updateDefaultLocationAction(Request $request)
     {
         exit("Permitted only once");

@@ -52,10 +52,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CallLogEditController extends CallEntryController
 {
 
-    /**
-     * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/delete/{messageOid}/{messageVersion}', name: 'calllog_delete', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion=NULL)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -87,10 +85,8 @@ class CallLogEditController extends CallEntryController
     }
 
 
-    /**
-     * @Route("/un-delete/{messageOid}/{messageVersion}", name="calllog_undelete", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/un-delete/{messageOid}/{messageVersion}', name: 'calllog_undelete', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -189,12 +185,12 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Get Call Log Entry Message Edit page
-     * @Route("/entry/edit/{messageOid}/{messageVersion}", name="calllog_callentry_edit", methods={"GET"})
-     * @Route("/entry/amend/{messageOid}/{messageVersion}", name="calllog_callentry_amend", methods={"GET"})
-     * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_edit_latest_encounter", methods={"GET"})
-     * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_amend_latest_encounter", methods={"GET"})
-     * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
      */
+    #[Route(path: '/entry/edit/{messageOid}/{messageVersion}', name: 'calllog_callentry_edit', methods: ['GET'])]
+    #[Route(path: '/entry/amend/{messageOid}/{messageVersion}', name: 'calllog_callentry_amend', methods: ['GET'])]
+    #[Route(path: '/entry/edit-latest-encounter/{messageOid}/{messageVersion}', name: 'calllog_callentry_edit_latest_encounter', methods: ['GET'])]
+    #[Route(path: '/entry/amend-latest-encounter/{messageOid}/{messageVersion}', name: 'calllog_callentry_amend_latest_encounter', methods: ['GET'])]
+    #[Template('AppCallLogBundle/CallLog/call-entry-edit.html.twig')]
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
@@ -483,9 +479,9 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Save/Update Call Log Entry
-     * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCallLogBundle/CallLog/call-entry-edit.html.twig")
      */
+    #[Route(path: '/entry/update/{messageId}/{cycle}', name: 'calllog_update_entry', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCallLogBundle/CallLog/call-entry-edit.html.twig')]
     public function updateEntryAction(Request $request, $messageId, $cycle)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -966,8 +962,8 @@ class CallLogEditController extends CallEntryController
 
     /**
      * Check if a new message/encounter version already exists for provided message/entry family.
-     * @Route("/entry/check-message-version", name="calllog-check-message-version", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/entry/check-message-version', name: 'calllog-check-message-version', methods: ['GET'], options: ['expose' => true])]
     public function checkMessageVersionAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CALLLOG_USER")) {

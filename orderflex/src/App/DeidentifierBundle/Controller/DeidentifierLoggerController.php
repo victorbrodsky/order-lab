@@ -42,10 +42,9 @@ class DeidentifierLoggerController extends LoggerController
 
     /**
      * Lists all Logger entities.
-     *
-     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     #[Route(path: '/', name: 'deidentifier_logger', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
@@ -59,10 +58,8 @@ class DeidentifierLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
-     */
     #[Route(path: '/user/{id}/all', name: 'deidentifier_logger_user_all', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -92,10 +89,9 @@ class DeidentifierLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "Generate Accession Deidentifier ID"
-     *
-     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     #[Route(path: '/generation-log/', name: 'deidentifier_generation_log', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Logger/index.html.twig')]
     public function generationLogAction(Request $request)
     {
         if( false == $this->isGranted("create", "Accession") ){
@@ -157,10 +153,9 @@ class DeidentifierLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "Generate Accession Deidentifier ID" and users = current user id
-     *
-     * @Template("AppDeidentifierBundle/Logger/index.html.twig")
      */
     #[Route(path: '/event-log-per-user-per-event-type/', name: 'deidentifier_my_generation_log', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Logger/index.html.twig')]
     public function myGenerationLogAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_USER") ){

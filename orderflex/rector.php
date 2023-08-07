@@ -12,6 +12,9 @@ use Rector\Config\RectorConfig;
 // vendor/bin/rector process src/App/DeidentifierBundle/Controller --dry-run
 
 return function (RectorConfig $rectorConfig): void {
+
+    //$rectorConfig->disableParallel();
+
     $rectorConfig->sets([
         //SymfonySetList::SYMFONY_62,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,

@@ -45,10 +45,9 @@ class FormNodeController extends OrderAbstractController {
 
     /**
      * Second part of the user view profile
-     *
-     * @Route("/formnode-fields/", name="employees_formnode_fields", methods={"GET","POST"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/FormNode/formnode_fields.html.twig")
      */
+    #[Route(path: '/formnode-fields/', name: 'employees_formnode_fields', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig')]
     public function getFormNodeFieldsAction( Request $request )
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -545,8 +544,8 @@ class FormNodeController extends OrderAbstractController {
 
     /**
      * Use: https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md
-     * @Route("/form-node-tree-test/", name="employees_form-node-tree-test", methods={"GET"})
      */
+    #[Route(path: '/form-node-tree-test/', name: 'employees_form-node-tree-test', methods: ['GET'])]
     public function formNodeTestAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

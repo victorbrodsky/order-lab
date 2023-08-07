@@ -43,29 +43,23 @@ class DeidentifierAccessRequestController extends AccessRequestController
         $this->roleEditor = 'ROLE_DEIDENTIFICATOR_ADMIN';
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-     */
     #[Route(path: '/access-requests/new/create', name: 'deidentifier_access_request_new_plain', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreatePlainAction(Request $request)
     {
         //exit('accessRequestCreatePlainAction');
         return parent::accessRequestCreatePlain($request);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-     */
     #[Route(path: '/access-requests/new', name: 'deidentifier_access_request_new', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreateAction(Request $request)
     {
         return parent::accessRequestCreateAction($request);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-     */
     #[Route(path: '/access-requests/new/pending', name: 'deidentifier_access_request_create', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestAction(Request $request)
     {
         return parent::accessRequestAction($request);
@@ -73,92 +67,73 @@ class DeidentifierAccessRequestController extends AccessRequestController
 
     /**
      * Lists all Access Request.
-     *
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
     #[Route(path: '/access-requests', name: 'deidentifier_accessrequest_list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     public function accessRequestIndexAction(Request $request)
     {
         return parent::accessRequestIndexAction($request);
     }
 
-    /**
-     * @Template()
-     */
     #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'deidentifier_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
     #[Route(path: '/access-requests/{id}', name: 'deidentifier_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementAction(Request $request, $id )
     {
         return parent::accessRequestManagementAction($request,$id);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
     #[Route(path: '/access-requests/submit/{id}', name: 'deidentifier_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
         return parent::accessRequestManagementSubmitAction($request,$id);
     }
 
-    /**
-     * @Template()
-     */
     #[Route(path: '/deny-access-request/{userId}', name: 'deidentifier_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Template]
     public function accessRequestRemoveAction(Request $request, $userId )
     {
         return parent::accessRequestRemoveAction($request,$userId);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
-     */
     #[Route(path: '/authorized-users/', name: 'deidentifier_authorized_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig')]
     public function authorizedUsersAction(Request $request )
     {
         return parent::authorizedUsersAction($request);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
     #[Route(path: '/authorization-user-manager/{id}', name: 'deidentifier_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementAction( Request $request, $id )
     {
         return parent::authorizationManagementAction($request,$id);
     }
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
     #[Route(path: '/authorization-user-manager/submit/{id}', name: 'deidentifier_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
         return parent::authorizationManagementSubmitAction($request,$id);
     }
 
-    /**
-     * @Template()
-     */
     #[Route(path: '/revoke-access-authorization/{userId}', name: 'deidentifier_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Template]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);
     }
 
 
-    /**
-     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
-     */
     #[Route(path: '/add-authorized-user/', name: 'deidentifier_add_authorized_user', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig')]
     public function addAuthorizedUserAction( Request $request )
     {
         return parent::addAuthorizedUserAction($request);

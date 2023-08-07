@@ -35,10 +35,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class DeidentifierSecurityController extends SecurityController
 {
 
-    /**
-     * @Template()
-     */
     #[Route(path: '/login', name: 'deidentifier_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -51,10 +49,8 @@ class DeidentifierSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
     #[Route(path: '/no-permission', name: 'deidentifier-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -67,11 +63,9 @@ class DeidentifierSecurityController extends SecurityController
 
 
 
-    /**
-     * @Template()
-     */
     #[Route(path: '/idle-log-out', name: 'deidentifier_idlelogout')]
     #[Route(path: '/idle-log-out/{flag}', name: 'deidentifier_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

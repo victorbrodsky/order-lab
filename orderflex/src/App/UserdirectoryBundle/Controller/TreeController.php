@@ -33,17 +33,14 @@ use App\OrderformBundle\Entity\Patient;
 use App\OrderformBundle\Entity\PatientMrn;
 
 
-/**
- * @Route("/tree-util")
- */
+#[Route(path: '/tree-util')]
 class TreeController extends OrderAbstractController {
 
 
     /**
      * Get tree structure by parent
-     *
-     * @Route("/common/composition-tree/", name="employees_get_composition_tree", methods={"GET","POST"}, options={"expose"=true})
      */
+    #[Route(path: '/common/composition-tree/', name: 'employees_get_composition_tree', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getTreeByParentAction(Request $request) {
        
         
@@ -401,9 +398,7 @@ class TreeController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/tree/action", name="employees_tree_edit_node", methods={"POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/tree/action', name: 'employees_tree_edit_node', methods: ['POST'], options: ['expose' => true])]
     public function setTreeAction(Request $request) {
 
         $opt = trim((string)$request->get('opt') );
@@ -599,9 +594,7 @@ class TreeController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/tree/create-root/", name="employees_tree_create_root", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/tree/create-root/', name: 'employees_tree_create_root', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function createTopLevelRoot(Request $request) {
 //        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-order-nopermission') );

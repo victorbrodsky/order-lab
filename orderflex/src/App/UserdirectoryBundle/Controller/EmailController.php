@@ -31,9 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EmailController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/send-queued-emails/", name="employees_send_spooled_emails", methods={"GET"})
-     */
+    #[Route(path: '/send-queued-emails/', name: 'employees_send_spooled_emails', methods: ['GET'])]
     public function sendSpooledEmailsAction(Request $request)
     {
 
@@ -65,10 +63,8 @@ class EmailController extends OrderAbstractController
         return $this->redirectToRoute('employees_home');
     }
     
-    /**
-     * @Route("/send-a-test-email/", name="employees_emailtest", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/Email/email-test.html.twig")
-     */
+    #[Route(path: '/send-a-test-email/', name: 'employees_emailtest', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/Email/email-test.html.twig')]
     public function emailTestAction(Request $request)
     {
 

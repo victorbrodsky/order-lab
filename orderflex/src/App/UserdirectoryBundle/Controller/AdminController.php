@@ -190,20 +190,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //Notes:
 //To turn off foreign key constraint globally: "SET GLOBAL FOREIGN_KEY_CHECKS=0;"
-
-/**
- * @Route("/admin")
- */
+#[Route(path: '/admin')]
 class AdminController extends OrderAbstractController
 {
 
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
-     *
-     * @Route("/first-time-login-generation-init/", name="first-time-login-generation-init")
-     * @Route("/first-time-login-generation-init/https", name="first-time-login-generation-init-https")
      */
+    #[Route(path: '/first-time-login-generation-init/', name: 'first-time-login-generation-init')]
+    #[Route(path: '/first-time-login-generation-init/https', name: 'first-time-login-generation-init-https')]
     public function firstTimeLoginGenerationAction(Request $request)
     {
         $logger = $this->container->get('logger');
@@ -322,9 +318,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
-    /**
-     * @Route("/update-system-source-code/", name="user_update_system_source_code")
-     */
+    #[Route(path: '/update-system-source-code/', name: 'user_update_system_source_code')]
     public function updateSourceCodeAction(Request $request) {
         if(
             false === $this->isGranted('ROLE_PLATFORM_ADMIN')
@@ -347,9 +341,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
-    /**
-     * @Route("/update-system-source-composer/", name="user_update_system_source_composer")
-     */
+    #[Route(path: '/update-system-source-composer/', name: 'user_update_system_source_composer')]
     public function updateComposerAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -369,9 +361,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_home'));
     }
 
-    /**
-     * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
-     */
+    #[Route(path: '/update-system-cache-assets/', name: 'user_update_system_cache_assets')]
     public function updateSystemAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -536,155 +526,153 @@ class AdminController extends OrderAbstractController
         echo $process->getOutput();
     }
 /////////////////////  NOT USED FOR DEPLOY ////////////////////////
-//    public function clearCache() {
-//        //echo exec('whoami') . "<br>";
-//
-//        $appPath = $this->getParameter('kernel.root_dir');
-//        echo "appPath=".$appPath."<br>";
-//
-//        $dirSep = DIRECTORY_SEPARATOR;
-//
-//        $cachePath = ''.$appPath. $dirSep .'cache';
-//
-//        if( is_dir($cachePath) ) {
-//            echo "dir! <br>";
-//        } else {
-//            echo "not dir! <br>";
-//            exit('not dir:'.$cachePath);
-//        }
-//
-//        echo exec("chmod -R 777 ".$cachePath)."<br>";
-//
-//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-//            echo 'This is a server using Windows!';
-//            //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
-//            echo exec("rmdir ".$cachePath." /S /Q")."<br>";
-//        } else {
-//            echo 'This is a server not using Windows! Assume Linux';
-//            echo exec("rm -r ".$cachePath)."<br>";
-//        }
-//
-//
-//    }
-//    public function getCachePath() {
-//        $appPath = $this->getParameter('kernel.root_dir');
-//        echo "appPath=".$appPath."<br>";
-//
-//        $dirSep = DIRECTORY_SEPARATOR;
-//
-//        $cachePath = ''.$appPath. $dirSep .'cache';
-//
-//        if( is_dir($cachePath) ) {
-//            echo "dir! <br>";
-//        } else {
-//            echo "not dir! <br>";
-//            exit('not dir:'.$cachePath);
-//        }
-//
-//        return $cachePath;
-//    }
-//    public function clearCacheByService() {
-//
-//        //$fs = new Filesystem();
-//        //$fs->remove($this->getParameter('kernel.cache_dir'));
-//        //return;
-//
-//        $command = $this->container->get('user_cache_clear');
-//        $input = new ArgvInput(array('--env=' . $this->getParameter('kernel.environment')));
-//        $output = new ConsoleOutput();
-//        $command->run($input, $output);
-//        //exit($output);
-//    }
-//    public function installAssets() {
-//        $dirSep = DIRECTORY_SEPARATOR;
-//
-//        $appPath = $this->getParameter('kernel.root_dir');
-//        echo "appPath=".$appPath."<br>";
-//
-//        if( 1 ) {
-//            //$webPath = getcwd();
-//            //echo "webPath=$webPath<br>";
-//
-//            $console = $appPath . $dirSep . 'console';
-//            if( file_exists($console) ) {
-//                echo "console exists! <br>";
-//            } else {
-//                echo "not console exists: $console <br>";
-//                exit('error');
-//            }
-//
-//            echo exec("php " . $console . " assets:install " );
-//            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
-//
-//            //echo exec("php " . $console . " assets:install");
-//            //echo exec("php " . $console . " assetic:dump");
-//
-//        } else {
-//
-//            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
-//
-//            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
-//            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
-//
-//            echo "path=".$path."<br>";
-//            if( file_exists($path) ) {
-//                echo "path exists! <br>";
-//            } else {
-//                echo "path not exists: $path <br>";
-//                exit('error');
-//            }
-//
-//            echo exec("chmod -R 777 " . $path) . "<br>";
-//            echo exec("bash " . $path) . "<br>";
-//        }
-//
-//        //exit('exit install assests');
-//    }
-//    public function installAssetsByService() {
-//        $command = $this->container->get('user_install_assets');
-//        $input = new ArgvInput(
-//            array(
-//                '--env=' . $this->getParameter('kernel.environment'),
-//                //'--symlink',
-//                //'--relative'
-//            )
-//        );
-//        $output = new ConsoleOutput();
-//        $command->run($input, $output);
-//        exit($output);
-//    }
-//    //Testing method
-//    public function cccAction()
-//    {
-//        $kernel = $this->container->get('kernel');
-//        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
-//        $application->setAutoExit(false);
-//        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
-//        $res = $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
-//        echo "res=".$res."<br>";
-//        return new Response();
-//    }
-//    //Testing method
-//    public function runCommand($command, $arguments = array())
-//    {
-//        $kernel = $this->container->get('kernel');
-//        $app = new Application($kernel);
-//
-//        $args = array_merge(array('command' => $command), $arguments);
-//
-//        $input = new ArrayInput($args);
-//        $output = new NullOutput();
-//
-//        return $app->doRun($input, $output);
-//    }
-/////////////////////  EOF NOT USED FOR DEPLOY ////////////////////////
-
+    //    public function clearCache() {
+    //        //echo exec('whoami') . "<br>";
+    //
+    //        $appPath = $this->getParameter('kernel.root_dir');
+    //        echo "appPath=".$appPath."<br>";
+    //
+    //        $dirSep = DIRECTORY_SEPARATOR;
+    //
+    //        $cachePath = ''.$appPath. $dirSep .'cache';
+    //
+    //        if( is_dir($cachePath) ) {
+    //            echo "dir! <br>";
+    //        } else {
+    //            echo "not dir! <br>";
+    //            exit('not dir:'.$cachePath);
+    //        }
+    //
+    //        echo exec("chmod -R 777 ".$cachePath)."<br>";
+    //
+    //        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    //            echo 'This is a server using Windows!';
+    //            //http://stackoverflow.com/questions/1965787/how-to-delete-files-subfolders-in-a-specific-directory-at-command-prompt-in-wind
+    //            echo exec("rmdir ".$cachePath." /S /Q")."<br>";
+    //        } else {
+    //            echo 'This is a server not using Windows! Assume Linux';
+    //            echo exec("rm -r ".$cachePath)."<br>";
+    //        }
+    //
+    //
+    //    }
+    //    public function getCachePath() {
+    //        $appPath = $this->getParameter('kernel.root_dir');
+    //        echo "appPath=".$appPath."<br>";
+    //
+    //        $dirSep = DIRECTORY_SEPARATOR;
+    //
+    //        $cachePath = ''.$appPath. $dirSep .'cache';
+    //
+    //        if( is_dir($cachePath) ) {
+    //            echo "dir! <br>";
+    //        } else {
+    //            echo "not dir! <br>";
+    //            exit('not dir:'.$cachePath);
+    //        }
+    //
+    //        return $cachePath;
+    //    }
+    //    public function clearCacheByService() {
+    //
+    //        //$fs = new Filesystem();
+    //        //$fs->remove($this->getParameter('kernel.cache_dir'));
+    //        //return;
+    //
+    //        $command = $this->container->get('user_cache_clear');
+    //        $input = new ArgvInput(array('--env=' . $this->getParameter('kernel.environment')));
+    //        $output = new ConsoleOutput();
+    //        $command->run($input, $output);
+    //        //exit($output);
+    //    }
+    //    public function installAssets() {
+    //        $dirSep = DIRECTORY_SEPARATOR;
+    //
+    //        $appPath = $this->getParameter('kernel.root_dir');
+    //        echo "appPath=".$appPath."<br>";
+    //
+    //        if( 1 ) {
+    //            //$webPath = getcwd();
+    //            //echo "webPath=$webPath<br>";
+    //
+    //            $console = $appPath . $dirSep . 'console';
+    //            if( file_exists($console) ) {
+    //                echo "console exists! <br>";
+    //            } else {
+    //                echo "not console exists: $console <br>";
+    //                exit('error');
+    //            }
+    //
+    //            echo exec("php " . $console . " assets:install " );
+    //            echo exec("php " . $console . " assetic:dump --env=prod --no-debug " );
+    //
+    //            //echo exec("php " . $console . " assets:install");
+    //            //echo exec("php " . $console . " assetic:dump");
+    //
+    //        } else {
+    //
+    //            //echo shell_exec("chmod -R 777 ".$webPath)."<br>";
+    //
+    //            //$path = ''.$appPath.'\\..\\'.'deploy_prod';
+    //            $path = ''.$appPath."$dirSep..$dirSep".'deploy_prod';
+    //
+    //            echo "path=".$path."<br>";
+    //            if( file_exists($path) ) {
+    //                echo "path exists! <br>";
+    //            } else {
+    //                echo "path not exists: $path <br>";
+    //                exit('error');
+    //            }
+    //
+    //            echo exec("chmod -R 777 " . $path) . "<br>";
+    //            echo exec("bash " . $path) . "<br>";
+    //        }
+    //
+    //        //exit('exit install assests');
+    //    }
+    //    public function installAssetsByService() {
+    //        $command = $this->container->get('user_install_assets');
+    //        $input = new ArgvInput(
+    //            array(
+    //                '--env=' . $this->getParameter('kernel.environment'),
+    //                //'--symlink',
+    //                //'--relative'
+    //            )
+    //        );
+    //        $output = new ConsoleOutput();
+    //        $command->run($input, $output);
+    //        exit($output);
+    //    }
+    //    //Testing method
+    //    public function cccAction()
+    //    {
+    //        $kernel = $this->container->get('kernel');
+    //        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+    //        $application->setAutoExit(false);
+    //        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
+    //        $res = $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
+    //        echo "res=".$res."<br>";
+    //        return new Response();
+    //    }
+    //    //Testing method
+    //    public function runCommand($command, $arguments = array())
+    //    {
+    //        $kernel = $this->container->get('kernel');
+    //        $app = new Application($kernel);
+    //
+    //        $args = array_merge(array('command' => $command), $arguments);
+    //
+    //        $input = new ArrayInput($args);
+    //        $output = new NullOutput();
+    //
+    //        return $app->doRun($input, $output);
+    //    }
+    /////////////////////  EOF NOT USED FOR DEPLOY ////////////////////////
     /**
      * Admin Page
-     *
-     * @Route("/lists/", name="user_admin_index", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
+    #[Route(path: '/lists/', name: 'user_admin_index', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/index.html.twig')]
     public function indexAction()
     {
 
@@ -707,10 +695,9 @@ class AdminController extends OrderAbstractController
 
     /**
      * Admin Page
-     *
-     * @Route("/hierarchies/", name="user_admin_hierarchy_index", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/hierarchy-index.html.twig")
      */
+    #[Route(path: '/hierarchies/', name: 'user_admin_hierarchy_index', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/hierarchy-index.html.twig')]
     public function indexHierarchyAction()
     {
 
@@ -747,10 +734,9 @@ class AdminController extends OrderAbstractController
 
     /**
      * Populate DB
-     *
-     * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
+    #[Route(path: '/populate-all-site-lists-with-default-values', name: 'user_generate_all_site', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/index.html.twig')]
     public function generateAllSiteAction(Request $request)
     {
         $logger = $this->container->get('logger');
@@ -785,10 +771,9 @@ class AdminController extends OrderAbstractController
 
     /**
      * Populate DB ( 3) Populate All Lists with Default Values (Part B) )
-     *
-     * @Route("/populate-all-lists-with-default-values", name="user_generate_all", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
+    #[Route(path: '/populate-all-lists-with-default-values', name: 'user_generate_all', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/index.html.twig')]
     public function generateAllAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1238,10 +1223,8 @@ class AdminController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/populate-residency-specialties-with-default-values", name="generate_residencyspecialties", methods={"GET"})
-     * @Template()
-     */
+    #[Route(path: '/populate-residency-specialties-with-default-values', name: 'generate_residencyspecialties', methods: ['GET'])]
+    #[Template]
     public function generateResidencySpecialtiesAction(Request $request)
     {
 
@@ -1268,10 +1251,8 @@ class AdminController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/populate-country-city-list-with-default-values", name="generate_country_city", methods={"GET"})
-     * @Template()
-     */
+    #[Route(path: '/populate-country-city-list-with-default-values', name: 'generate_country_city', methods: ['GET'])]
+    #[Template]
     public function generateProcedureAction(Request $request)
     {
 
@@ -7713,10 +7694,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    /**
-     *
-     * @Route("/populate-class-url/", name="user_populate_class_url", methods={"GET"})
-     */
+    #[Route(path: '/populate-class-url/', name: 'user_populate_class_url', methods: ['GET'])]
     public function populateClassUrlAction( Request $request=null ) {
         $this->populateClassUrl();
     }
@@ -7782,8 +7760,8 @@ class AdminController extends OrderAbstractController
 
     /**
      * populate Platform List Manager Root List: url="order/directory/admin/list-manager-populate/"
-     * @Route("/list/generate-empty-lists/{withcustom}", name="user_populate_platform_list_manager", methods={"GET"})
      */
+    #[Route(path: '/list/generate-empty-lists/{withcustom}', name: 'user_populate_platform_list_manager', methods: ['GET'])]
     public function generatePlatformListManagerList( Request $request=null, $withcustom=null ) {
 
         $username = $this->getUser();
@@ -8273,9 +8251,7 @@ class AdminController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/set-institution-employment-period/", name="user_institution_employment_period", methods={"GET"})
-     */
+    #[Route(path: '/set-institution-employment-period/', name: 'user_institution_employment_period', methods: ['GET'])]
     public function setInstitutionEmploymentPeriodAction()
     {
 
@@ -8321,8 +8297,8 @@ class AdminController extends OrderAbstractController
 
     /**
      * For all users in the live C.MED system EXCEPT FELLOWSHIP APPLICANTS, set "Pathology and Laboratory Medicine"
-     * @Route("/set-default-org-group/", name="user_set-default-org-group", methods={"GET"})
      */
+    #[Route(path: '/set-default-org-group/', name: 'user_set-default-org-group', methods: ['GET'])]
     public function setDefaultOrgGroupAction()
     {
 
@@ -8416,9 +8392,7 @@ class AdminController extends OrderAbstractController
         exit("<br><br>set-default-org-group; count=".$count);
     }
 
-    /**
-     * @Route("/convert-logger-site/", name="user_convert-logger-site", methods={"GET"})
-     */
+    #[Route(path: '/convert-logger-site/', name: 'user_convert-logger-site', methods: ['GET'])]
     public function convertLoggerSitenameToSiteObectAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -8473,9 +8447,8 @@ class AdminController extends OrderAbstractController
 
     /**
      * http://hosthame/order/directory/admin/sync-vacreq-roles/
-     *
-     * @Route("/sync-vacreq-roles/", name="user_vacreq_roles", methods={"GET"})
      */
+    #[Route(path: '/sync-vacreq-roles/', name: 'user_vacreq_roles', methods: ['GET'])]
     public function syncVacreqRolesAction()
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -8510,9 +8483,8 @@ class AdminController extends OrderAbstractController
 
     /**
      * http://hosthame/order/directory/admin/sync-db/
-     *
-     * @Route("/sync-db/", name="user_sync_db", methods={"GET"})
      */
+    #[Route(path: '/sync-db/', name: 'user_sync_db', methods: ['GET'])]
     public function syncEventTypeListDbAction()
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -8847,14 +8819,12 @@ class AdminController extends OrderAbstractController
 
     ////////////////// Employee Tree Util //////////////////////
     //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to user-formReady.js
-    /**
-     * @Route("/list/institutional-tree/", name="employees_tree_institutiontree_list", methods={"GET"})
-     * @Route("/list/comment-tree/", name="employees_tree_commenttree_list", methods={"GET"})
-     * @Route("/list/form-tree/", name="employees_tree_formnode_list", methods={"GET"})
-     * @Route("/list/message-categories-tree/", name="employees_tree_messagecategories_list", methods={"GET"})
-     * @Route("/list/charttypes-tree/", name="employees_tree_charttypes_list", methods={"GET"})
-     * @Route("/list/charttopics-tree/", name="employees_tree_charttopics_list", methods={"GET"})
-     */
+    #[Route(path: '/list/institutional-tree/', name: 'employees_tree_institutiontree_list', methods: ['GET'])]
+    #[Route(path: '/list/comment-tree/', name: 'employees_tree_commenttree_list', methods: ['GET'])]
+    #[Route(path: '/list/form-tree/', name: 'employees_tree_formnode_list', methods: ['GET'])]
+    #[Route(path: '/list/message-categories-tree/', name: 'employees_tree_messagecategories_list', methods: ['GET'])]
+    #[Route(path: '/list/charttypes-tree/', name: 'employees_tree_charttypes_list', methods: ['GET'])]
+    #[Route(path: '/list/charttopics-tree/', name: 'employees_tree_charttopics_list', methods: ['GET'])]
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -9171,9 +9141,7 @@ class AdminController extends OrderAbstractController
         return $res;
     }
 
-    /**
-     * @Route("/list/generate-form-node-tree/", name="employees_generate_form_node_tree", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-form-node-tree/', name: 'employees_generate_form_node_tree', methods: ['GET'])]
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9192,9 +9160,7 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
-    /**
-     * @Route("/list/generate-dermatopathology-form-node-tree/", name="employees_generate_dermatopathology_form_node_tree", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-dermatopathology-form-node-tree/', name: 'employees_generate_dermatopathology_form_node_tree', methods: ['GET'])]
     public function generateFormNodeDermatopathologyAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9213,9 +9179,7 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
-    /**
-     * @Route("/list/generate-test-form-node-tree/", name="employees_generate_test_form_node_tree", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-test-form-node-tree/', name: 'employees_generate_test_form_node_tree', methods: ['GET'])]
     public function generateTestFormNodeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9228,9 +9192,7 @@ class AdminController extends OrderAbstractController
         exit("Test Form Node Tree generated");
     }
 
-    /**
-     * @Route("/list/generate-cron-jobs/", name="user_populate_cron_jobs", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-cron-jobs/', name: 'user_populate_cron_jobs', methods: ['GET'])]
     public function generateCronJobsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9250,9 +9212,7 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
-    /**
-     * @Route("/list/generate-useradstatus-cron/", name="user_generate_useradstatus_cron", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-useradstatus-cron/', name: 'user_generate_useradstatus_cron', methods: ['GET'])]
     public function generateUserADStatusCronAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9271,9 +9231,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
     }
 
-    /**
-     * @Route("/list/generate-cron-jobs/status", name="user_populate_cron_status_jobs", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-cron-jobs/status', name: 'user_populate_cron_status_jobs', methods: ['GET'])]
     public function generateCronStatusJobAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9297,9 +9255,7 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
-    /**
-     * @Route("/list/generate-cron-jobs/statustest", name="user_populate_cron_status_test_jobs", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-cron-jobs/statustest', name: 'user_populate_cron_status_test_jobs', methods: ['GET'])]
     public function generateCronStatusTestJobAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9321,9 +9277,7 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
-    /**
-     * @Route("/list/generate-cron-jobs/externalurlmonitor", name="user_generate_cron_externalurlmonitor", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-cron-jobs/externalurlmonitor', name: 'user_generate_cron_externalurlmonitor', methods: ['GET'])]
     public function generateExternalUrlMonitorCronAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9343,9 +9297,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
-    /**
-     * @Route("/list/generate-cron-jobs/independentmonitor", name="user_generate_cron_independentmonitor", methods={"GET"})
-     */
+    #[Route(path: '/list/generate-cron-jobs/independentmonitor', name: 'user_generate_cron_independentmonitor', methods: ['GET'])]
     public function generateIndependentMonitorCronAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9365,9 +9317,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
-    /**
-     * @Route("/list/create-cron-job/{cronJobName}/{configFieldName}", name="user_create_cron_job", methods={"GET"})
-     */
+    #[Route(path: '/list/create-cron-job/{cronJobName}/{configFieldName}', name: 'user_create_cron_job', methods: ['GET'])]
     public function createCronJobAction(Request $request, $cronJobName, $configFieldName)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9387,9 +9337,7 @@ class AdminController extends OrderAbstractController
         //exit('111');
         return $this->redirect($this->generateUrl('employees_data_backup_management'));
     }
-    /**
-     * @Route("/list/remove-cron-job/{cronJobName}", name="user_remove_cron_job", methods={"GET"})
-     */
+    #[Route(path: '/list/remove-cron-job/{cronJobName}', name: 'user_remove_cron_job', methods: ['GET'])]
     public function removeCronJobAction(Request $request, $cronJobName)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9439,9 +9387,7 @@ class AdminController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl($redirectPath));
     }
-    /**
-     * @Route("/list/update-cron-job/{cronJobName}/{configFieldName}", name="user_update_cron_job", methods={"GET"})
-     */
+    #[Route(path: '/list/update-cron-job/{cronJobName}/{configFieldName}', name: 'user_update_cron_job', methods: ['GET'])]
     public function updateCronJobAction(Request $request, $cronJobName, $configFieldName)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -9481,9 +9427,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_data_backup_management'));
     }
 
-    /**
-     * @Route("/list/init-dashboard-charts", name="user_init_dashboard_charts", methods={"GET"})
-     */
+    #[Route(path: '/list/init-dashboard-charts', name: 'user_init_dashboard_charts', methods: ['GET'])]
     public function initDashboardChartsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -11850,19 +11794,15 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 //    public function assignWorkQueueToFee( $fee, $workQueue ) {
-//        if( !$fee ) {
-//            return NULL;
-//        }
-//        if( !$workQueue ) {
-//            return NULL;
-//        }
-//    }
-
-
+    //        if( !$fee ) {
+    //            return NULL;
+    //        }
+    //        if( !$workQueue ) {
+    //            return NULL;
+    //        }
+    //    }
     //add all MD users to "Pathology Result Signatories" (set the name of each list item to "FirstName LastName, MD" and set the "Object ID" to the corresponding user ID)
-    /**
-     * @Route("/list/add-mdusers-to-pathology-result-signatories/", name="employees_add-mdusers-to-pathology-result-signatories", methods={"GET"})
-     */
+    #[Route(path: '/list/add-mdusers-to-pathology-result-signatories/', name: 'employees_add-mdusers-to-pathology-result-signatories', methods: ['GET'])]
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -11949,9 +11889,8 @@ class AdminController extends OrderAbstractController
     }
     /**
      * Remove all "Pathology Fellowship Applicant" users from PathologyResultSignatoriesList
-     *
-     * @Route("/list/remove-fellapp-mdusers-to-pathology-result-signatories/", name="employees_remove-fellapp-mdusers-to-pathology-result-signatories", methods={"GET"})
      */
+    #[Route(path: '/list/remove-fellapp-mdusers-to-pathology-result-signatories/', name: 'employees_remove-fellapp-mdusers-to-pathology-result-signatories', methods: ['GET'])]
     public function removeFellappMDUsersToPathologyResultSignatoriesList(Request $request) {
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PathologyResultSignatoriesList'] by [PathologyResultSignatoriesList::class]
@@ -12009,8 +11948,8 @@ class AdminController extends OrderAbstractController
     /**
      * Generate metaphone key for th epatient last, first, middle names
      * run: http://localhost/order/directory/admin/generate-patient-metaphone-name/
-     * @Route("/generate-patient-metaphone-name/", name="user_generate-patient-metaphone-name")
      */
+    #[Route(path: '/generate-patient-metaphone-name/', name: 'user_generate-patient-metaphone-name')]
     public function generatePatientMetaphoneNameKeyAction() {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -12074,8 +12013,8 @@ class AdminController extends OrderAbstractController
     /**
      * Update roles
      * run: http://127.0.0.1/order/directory/admin/opcache-reset/
-     * @Route("/opcache-reset/", name="user_opcache-reset")
      */
+    #[Route(path: '/opcache-reset/', name: 'user_opcache-reset')]
     public function opcacheResetAction()
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -12089,8 +12028,8 @@ class AdminController extends OrderAbstractController
     /**
      * Update roles
      * run: http://127.0.0.1/order/directory/admin/update-user-roles/
-     * @Route("/update-user-roles/", name="user_update_user_roles")
      */
+    #[Route(path: '/update-user-roles/', name: 'user_update_user_roles')]
     public function updateUserRolesAction()
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -12208,8 +12147,8 @@ class AdminController extends OrderAbstractController
      * 9) Test ldap login
      *
      * run: http://127.0.0.1/order/directory/admin/update-user-postfix/
-     * @Route("/update-user-postfix/", name="user_update_user_postfix")
      */
+    #[Route(path: '/update-user-postfix/', name: 'user_update_user_postfix')]
     public function updateUserPostfixAction()
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {

@@ -40,12 +40,10 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use App\UserdirectoryBundle\Form\GenericListType;
 //use App\UserdirectoryBundle\Util\ErrorHelperUser as ErrorHelper;
-
-
 /**
  * Common list controller
- * @Route("/admin")
  */
+#[Route(path: '/admin')]
 class ListController extends OrderAbstractController
 {
 
@@ -57,256 +55,254 @@ class ListController extends OrderAbstractController
      * Lists all entities.
      *
      * //Platform List Manager Root List
-     * @Route("/list-manager/", name="platformlistmanager-list", methods={"GET"})
-     * @Route("/list/source-systems/", name="sourcesystems-list", methods={"GET"})
-     * @Route("/list/roles/", name="role-list", methods={"GET"})
-     * @Route("/list/institutions/", name="institutions-list", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/states/", name="states-list", methods={"GET"})
-     * @Route("/list/countries/", name="countries-list", methods={"GET"})
-     * @Route("/list/board-certifications/", name="boardcertifications-list", methods={"GET"})
-     * @Route("/list/employment-termination-reasons/", name="employmentterminations-list", methods={"GET"})
-     * @Route("/list/event-log-event-types/", name="loggereventtypes-list", methods={"GET"})
-     * @Route("/list/primary-public-user-id-types/", name="usernametypes-list", methods={"GET"})
-     * @Route("/list/identifier-types/", name="identifiers-list", methods={"GET"})
-     * @Route("/list/residency-tracks/", name="residencytracks-list", methods={"GET"})
-     * @Route("/list/fellowship-types/", name="fellowshiptypes-list", methods={"GET"})
-//     * @Route("/list/research-labs/", name="researchlabs-list", methods={"GET"})
-     * @Route("/list/location-types/", name="locationtypes-list", methods={"GET"})
-     * @Route("/list/equipment/", name="equipments-list", methods={"GET"})
-     * @Route("/list/equipment-types/", name="equipmenttypes-list", methods={"GET"})
-     * @Route("/list/location-privacy-types/", name="locationprivacy-list", methods={"GET"})
-     * @Route("/list/role-attributes/", name="roleattributes-list", methods={"GET"})
-     * @Route("/list/buidlings/", name="buildings-list", methods={"GET"})
-     * @Route("/list/rooms/", name="rooms-list", methods={"GET"})
-     * @Route("/list/suites/", name="suites-list", methods={"GET"})
-     * @Route("/list/floors/", name="floors-list", methods={"GET"})
-     * @Route("/list/grants/", name="grants-list", methods={"GET"})
-     * @Route("/list/mailboxes/", name="mailboxes-list", methods={"GET"})
-     * @Route("/list/percent-effort/", name="efforts-list", methods={"GET"})
-     * @Route("/list/administrative-titles/", name="admintitles-list", methods={"GET"})
-     * @Route("/list/academic-appointment-titles/", name="apptitles-list", methods={"GET"})
-     * @Route("/list/training-completion-reasons/", name="completionreasons-list", methods={"GET"})
-     * @Route("/list/training-degrees/", name="trainingdegrees-list", methods={"GET"})
-     * @Route("/list/training-majors/", name="trainingmajors-list", methods={"GET"})
-     * @Route("/list/training-minors/", name="trainingminors-list", methods={"GET"})
-     * @Route("/list/training-honors/", name="traininghonors-list", methods={"GET"})
-     * @Route("/list/fellowship-titles/", name="fellowshiptitles-list", methods={"GET"})
-     * @Route("/list/residency-specialties/", name="residencyspecialtys-list", methods={"GET"})
-     * @Route("/list/fellowship-subspecialties/", name="fellowshipsubspecialtys-list", methods={"GET"})
-     * @Route("/list/institution-types/", name="institutiontypes-list", methods={"GET"})
-     * @Route("/list/document-types/", name="documenttypes-list", methods={"GET"})
-     * @Route("/list/medical-titles/", name="medicaltitles-list", methods={"GET"})
-     * @Route("/list/medical-specialties/", name="medicalspecialties-list", methods={"GET"})
-     * @Route("/list/employment-types/", name="employmenttypes-list", methods={"GET"})
-     * @Route("/list/grant-source-organizations/", name="sourceorganizations-list", methods={"GET"})
-     * @Route("/list/languages/", name="languages-list", methods={"GET"})
-     * @Route("/list/locales/", name="locales-list", methods={"GET"})
-     * @Route("/list/ranks-of-importance/", name="importances-list", methods={"GET"})
-     * @Route("/list/authorship-roles/", name="authorshiproles-list", methods={"GET"})
-     * @Route("/list/lecture-venues/", name="organizations-list", methods={"GET"})
-     * @Route("/list/cities/", name="cities-list", methods={"GET"})
-     * @Route("/list/link-types/", name="linktypes-list", methods={"GET"})
-     * @Route("/list/sexes/", name="sexes-list", methods={"GET"})
-     * @Route("/list/position-types/", name="positiontypes-list", methods={"GET"})
-     * @Route("/list/organizational-group-types/", name="organizationalgrouptypes-list", methods={"GET"})
-     * @Route("/list/profile-comment-group-types/", name="commentgrouptypes-list", methods={"GET"})
-     * @Route("/list/comment-types/", name="commenttypes-list", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/user-wrappers/", name="userwrappers-list", methods={"GET"})
-     * @Route("/list/spot-purposes/", name="spotpurposes-list", methods={"GET"})
-     * @Route("/list/medical-license-statuses/", name="medicalstatuses-list", methods={"GET"})
-     * @Route("/list/certifying-board-organizations/", name="certifyingboardorganizations-list", methods={"GET"})
-     * @Route("/list/training-types/", name="trainingtypes-list", methods={"GET"})
-     * @Route("/list/job-titles/", name="joblists-list", methods={"GET"})
-     * @Route("/list/fellowship-application-statuses/", name="fellappstatuses-list", methods={"GET"})
-     * @Route("/list/fellowship-application-ranks/", name="fellappranks-list", methods={"GET"})
-     * @Route("/list/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency-list", methods={"GET"})
-//     * @Route("/list/collaborations/", name="collaborations-list", methods={"GET"})
-     * @Route("/list/collaboration-types/", name="collaborationtypes-list", methods={"GET"})
-     * @Route("/list/permissions/", name="permission-list", methods={"GET"})
-     * @Route("/list/permission-objects/", name="permissionobject-list", methods={"GET"})
-     * @Route("/list/permission-actions/", name="permissionaction-list", methods={"GET"})
-     * @Route("/list/sites/", name="sites-list", methods={"GET"})
-     * @Route("/list/event-object-types/", name="eventobjecttypes-list", methods={"GET"})
-     * @Route("/list/time-away-request-types/", name="vacreqrequesttypes-list", methods={"GET"})
-     * @Route("/list/time-away-request-floating-texts/", name="vacreqfloatingtexts-list", methods={"GET"})
-     * @Route("/list/time-away-request-floating-types/", name="vacreqfloatingtypes-list", methods={"GET"})
-     * @Route("/list/time-away-request-approval-types/", name="vacreqapprovaltypes-list", methods={"GET"})
-     * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list", methods={"GET"})
-     * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication-list", methods={"GET"})
-     * @Route("/list/object-types/", name="objecttypes-list", methods={"GET"})
-     * @Route("/list/form-nodes/", name="formnodes-list", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/", name="objecttypetexts-list", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions-list", methods={"GET"})
-     * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes-list", methods={"GET"})
-     * @Route("/list/object-type-strings/", name="objecttypestrings-list", methods={"GET"})
-     * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns-list", methods={"GET"})
-     * @Route("/list/blood-types/", name="bloodtypes-list", methods={"GET"})
-     * @Route("/list/additional-communications/", name="additionalcommunications-list", methods={"GET"})
-     * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults-list", methods={"GET"})
-     * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults-list", methods={"GET"})
-     * @Route("/list/transfusion-dat-results/", name="transfusiondatresults-list", methods={"GET"})
-     * @Route("/list/transfusion-hemolysis-check-results/", name="transfusionhemolysischeckresults-list", methods={"GET"})
-     * @Route("/list/object-type-datetimes/", name="objecttypedatetimes-list", methods={"GET"})
-     * @Route("/list/complex-platelet-summary-antibodies/", name="complexplateletsummaryantibodies-list", methods={"GET"})
-     * @Route("/list/cci-unit-platelet-count-default-values/", name="cciunitplateletcountdefaultvalues-list", methods={"GET"})
-     * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds-list", methods={"GET"})
-     * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings-list", methods={"GET"})
-     * @Route("/list/transfusion-product-status/", name="transfusionproductstatus-list", methods={"GET"})
-     * @Route("/list/week-days/", name="weekdays-list", methods={"GET"})
-     * @Route("/list/months/", name="months-list", methods={"GET"})
-     * @Route("/list/clerical-errors/", name="clericalerrors-list", methods={"GET"})
-     * @Route("/list/lab-result-names/", name="labresultnames-list", methods={"GET"})
-     * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures-list", methods={"GET"})
-     * @Route("/list/lab-result-flags/", name="labresultflags-list", methods={"GET"})
-     * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories-list", methods={"GET"})
-     * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs-list", methods={"GET"})
-     * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons-list", methods={"GET"})
-     * @Route("/list/life-forms/", name="lifeforms-list", methods={"GET"})
-     * @Route("/list/position-track-types/", name="positiontracktypes-list", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-orig/", name="transresprojectspecialties-list-orig", methods={"GET"})
-     * @Route("/list/translational-research-project-types/", name="transresprojecttypes-list", methods={"GET"})
-     * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list", methods={"GET"})
-     * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list", methods={"GET"})
-     * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes-list", methods={"GET"})
-     * @Route("/list/translational-work-queue-types/", name="workqueuetypes-list", methods={"GET"})
-     * @Route("/list/translational-orderable-status/", name="orderablestatus-list", methods={"GET"})
      *
-     * @Route("/list/antibodies/", name="antibodies-list", methods={"GET"})
-     * @Route("/list/custom000/", name="custom000-list", methods={"GET"})
-     * @Route("/list/custom001/", name="custom001-list", methods={"GET"})
-     * @Route("/list/custom002/", name="custom002-list", methods={"GET"})
-     * @Route("/list/custom003/", name="custom003-list", methods={"GET"})
-     * @Route("/list/custom004/", name="custom004-list", methods={"GET"})
-     * @Route("/list/custom005/", name="custom005-list", methods={"GET"})
-     * @Route("/list/custom006/", name="custom006-list", methods={"GET"})
-     * @Route("/list/custom007/", name="custom007-list", methods={"GET"})
-     * @Route("/list/custom008/", name="custom008-list", methods={"GET"})
-     * @Route("/list/custom009/", name="custom009-list", methods={"GET"})
-     * @Route("/list/custom010/", name="custom010-list", methods={"GET"})
-     * @Route("/list/custom011/", name="custom011-list", methods={"GET"})
-     * @Route("/list/custom012/", name="custom012-list", methods={"GET"})
-     * @Route("/list/custom013/", name="custom013-list", methods={"GET"})
-     * @Route("/list/custom014/", name="custom014-list", methods={"GET"})
-     * @Route("/list/custom015/", name="custom015-list", methods={"GET"})
-     * @Route("/list/custom016/", name="custom016-list", methods={"GET"})
-     * @Route("/list/custom017/", name="custom017-list", methods={"GET"})
-     * @Route("/list/custom018/", name="custom018-list", methods={"GET"})
-     * @Route("/list/custom019/", name="custom019-list", methods={"GET"})
-     * @Route("/list/custom020/", name="custom020-list", methods={"GET"})
-     * @Route("/list/custom021/", name="custom021-list", methods={"GET"})
-     * @Route("/list/custom022/", name="custom022-list", methods={"GET"})
-     * @Route("/list/custom023/", name="custom023-list", methods={"GET"})
-     * @Route("/list/custom024/", name="custom024-list", methods={"GET"})
-     * @Route("/list/custom025/", name="custom025-list", methods={"GET"})
-     * @Route("/list/custom026/", name="custom026-list", methods={"GET"})
-     * @Route("/list/custom027/", name="custom027-list", methods={"GET"})
-     * @Route("/list/custom028/", name="custom028-list", methods={"GET"})
-     * @Route("/list/custom029/", name="custom029-list", methods={"GET"})
-     * @Route("/list/custom030/", name="custom030-list", methods={"GET"})
-     * @Route("/list/custom031/", name="custom031-list", methods={"GET"})
-     * @Route("/list/custom032/", name="custom032-list", methods={"GET"})
-     * @Route("/list/custom033/", name="custom033-list", methods={"GET"})
-     * @Route("/list/custom034/", name="custom034-list", methods={"GET"})
-     * @Route("/list/custom035/", name="custom035-list", methods={"GET"})
-     * @Route("/list/custom036/", name="custom036-list", methods={"GET"})
-     * @Route("/list/custom037/", name="custom037-list", methods={"GET"})
-     * @Route("/list/custom038/", name="custom038-list", methods={"GET"})
-     * @Route("/list/custom039/", name="custom039-list", methods={"GET"})
-     * @Route("/list/custom040/", name="custom040-list", methods={"GET"})
-     * @Route("/list/custom041/", name="custom041-list", methods={"GET"})
-     * @Route("/list/custom042/", name="custom042-list", methods={"GET"})
-     * @Route("/list/custom043/", name="custom043-list", methods={"GET"})
-     * @Route("/list/custom044/", name="custom044-list", methods={"GET"})
-     * @Route("/list/custom045/", name="custom045-list", methods={"GET"})
-     * @Route("/list/custom046/", name="custom046-list", methods={"GET"})
-     * @Route("/list/custom047/", name="custom047-list", methods={"GET"})
-     * @Route("/list/custom048/", name="custom048-list", methods={"GET"})
-     * @Route("/list/custom049/", name="custom049-list", methods={"GET"})
-     * @Route("/list/custom050/", name="custom050-list", methods={"GET"})
-     * @Route("/list/custom051/", name="custom051-list", methods={"GET"})
-     * @Route("/list/custom052/", name="custom052-list", methods={"GET"})
-     * @Route("/list/custom053/", name="custom053-list", methods={"GET"})
-     * @Route("/list/custom054/", name="custom054-list", methods={"GET"})
-     * @Route("/list/custom055/", name="custom055-list", methods={"GET"})
-     * @Route("/list/custom056/", name="custom056-list", methods={"GET"})
-     * @Route("/list/custom057/", name="custom057-list", methods={"GET"})
-     * @Route("/list/custom058/", name="custom058-list", methods={"GET"})
-     * @Route("/list/custom059/", name="custom059-list", methods={"GET"})
-     * @Route("/list/custom060/", name="custom060-list", methods={"GET"})
-     * @Route("/list/custom061/", name="custom061-list", methods={"GET"})
-     * @Route("/list/custom062/", name="custom062-list", methods={"GET"})
-     * @Route("/list/custom063/", name="custom063-list", methods={"GET"})
-     * @Route("/list/custom064/", name="custom064-list", methods={"GET"})
-     * @Route("/list/custom065/", name="custom065-list", methods={"GET"})
-     * @Route("/list/custom066/", name="custom066-list", methods={"GET"})
-     * @Route("/list/custom067/", name="custom067-list", methods={"GET"})
-     * @Route("/list/custom068/", name="custom068-list", methods={"GET"})
-     * @Route("/list/custom069/", name="custom069-list", methods={"GET"})
-     * @Route("/list/custom070/", name="custom070-list", methods={"GET"})
-     * @Route("/list/custom071/", name="custom071-list", methods={"GET"})
-     * @Route("/list/custom072/", name="custom072-list", methods={"GET"})
-     * @Route("/list/custom073/", name="custom073-list", methods={"GET"})
-     * @Route("/list/custom074/", name="custom074-list", methods={"GET"})
-     * @Route("/list/custom075/", name="custom075-list", methods={"GET"})
-     * @Route("/list/custom076/", name="custom076-list", methods={"GET"})
-     * @Route("/list/custom077/", name="custom077-list", methods={"GET"})
-     * @Route("/list/custom078/", name="custom078-list", methods={"GET"})
-     * @Route("/list/custom079/", name="custom079-list", methods={"GET"})
-     * @Route("/list/custom080/", name="custom080-list", methods={"GET"})
-     * @Route("/list/custom081/", name="custom081-list", methods={"GET"})
-     * @Route("/list/custom082/", name="custom082-list", methods={"GET"})
-     * @Route("/list/custom083/", name="custom083-list", methods={"GET"})
-     * @Route("/list/custom084/", name="custom084-list", methods={"GET"})
-     * @Route("/list/custom085/", name="custom085-list", methods={"GET"})
-     * @Route("/list/custom086/", name="custom086-list", methods={"GET"})
-     * @Route("/list/custom087/", name="custom087-list", methods={"GET"})
-     * @Route("/list/custom088/", name="custom088-list", methods={"GET"})
-     * @Route("/list/custom089/", name="custom089-list", methods={"GET"})
-     * @Route("/list/custom090/", name="custom090-list", methods={"GET"})
-     * @Route("/list/custom091/", name="custom091-list", methods={"GET"})
-     * @Route("/list/custom092/", name="custom092-list", methods={"GET"})
-     * @Route("/list/custom093/", name="custom093-list", methods={"GET"})
-     * @Route("/list/custom094/", name="custom094-list", methods={"GET"})
-     * @Route("/list/custom095/", name="custom095-list", methods={"GET"})
-     * @Route("/list/custom096/", name="custom096-list", methods={"GET"})
-     * @Route("/list/custom097/", name="custom097-list", methods={"GET"})
-     * @Route("/list/custom098/", name="custom098-list", methods={"GET"})
-     * @Route("/list/custom099/", name="custom099-list", methods={"GET"})
-     * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list", methods={"GET"})
-     * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list", methods={"GET"})
      *
-     * @Route("/list/translational-collaboration-labs/", name="transrescolllabs-list", methods={"GET"})
-     * @Route("/list/translational-collaboration-divs/", name="transrescolldivs-list", methods={"GET"})
-     * @Route("/list/translational-irb-approval-status/", name="transresirbstatus-list", methods={"GET"})
-     * @Route("/list/translational-requester-group/", name="transresrequestergroup-list", methods={"GET"})
-     * @Route("/list/transrescomptypes/", name="transrescomptypes-list", methods={"GET"})
      *
-     * @Route("/list/visa-status/", name="visastatus-list", methods={"GET"})
-     * @Route("/list/resappstatuses/", name="resappstatuses-list", methods={"GET"})
-     * @Route("/list/resappranks/", name="resappranks-list", methods={"GET"})
-     * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency-list", methods={"GET"})
-     * @Route("/list/resappfitforprogram/", name="resappfitforprogram-list", methods={"GET"})
-     * @Route("/list/resappvisastatus/", name="resappvisastatus-list", methods={"GET"})
-     * @Route("/list/postsoph/", name="postsoph-list", methods={"GET"})
      *
-     * @Route("/list/resappapplyingresidencytrack/", name="resappapplyingresidencytrack-list", methods={"GET"})
-     * @Route("/list/resapplearnarealist/", name="resapplearnarealist-list", methods={"GET"})
-     * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist-list", methods={"GET"})
-     * @Route("/list/viewmodes/", name="viewmodes-list", methods={"GET"})
-     * @Route("/list/transrespricetypes/", name="transrespricetypes-list", methods={"GET"})
      *
-     * @Route("/list/charttypes/", name="charttypes-list", methods={"GET"})
-     * @Route("/list/charttopics/", name="charttopics-list", methods={"GET"})
-     * @Route("/list/chartfilters/", name="chartfilters-list", methods={"GET"})
-     * @Route("/list/charts/", name="charts-list", methods={"GET"})
-     * @Route("/list/chartdatasources/", name="chartdatasources-list", methods={"GET"})
-     * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies-list", methods={"GET"})
-     * @Route("/list/chartvisualizations/", name="chartvisualizations-list", methods={"GET"})
-     * @Route("/list/vacreqholidays/", name="vacreqholidays-list", methods={"GET"})
-     * @Route("/list/vacreqobservedholidays/", name="vacreqobservedholidays-list", methods={"GET"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
+    #[Route(path: '/list-manager/', name: 'platformlistmanager-list', methods: ['GET'])]
+    #[Route(path: '/list/source-systems/', name: 'sourcesystems-list', methods: ['GET'])]
+    #[Route(path: '/list/roles/', name: 'role-list', methods: ['GET'])]
+    #[Route(path: '/list/institutions/', name: 'institutions-list', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/states/', name: 'states-list', methods: ['GET'])]
+    #[Route(path: '/list/countries/', name: 'countries-list', methods: ['GET'])]
+    #[Route(path: '/list/board-certifications/', name: 'boardcertifications-list', methods: ['GET'])]
+    #[Route(path: '/list/employment-termination-reasons/', name: 'employmentterminations-list', methods: ['GET'])]
+    #[Route(path: '/list/event-log-event-types/', name: 'loggereventtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/primary-public-user-id-types/', name: 'usernametypes-list', methods: ['GET'])]
+    #[Route(path: '/list/identifier-types/', name: 'identifiers-list', methods: ['GET'])]
+    #[Route(path: '/list/residency-tracks/', name: 'residencytracks-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-types/', name: 'fellowshiptypes-list', methods: ['GET'])]
+    #[Route(path: '/list/location-types/', name: 'locationtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/equipment/', name: 'equipments-list', methods: ['GET'])]
+    #[Route(path: '/list/equipment-types/', name: 'equipmenttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/location-privacy-types/', name: 'locationprivacy-list', methods: ['GET'])]
+    #[Route(path: '/list/role-attributes/', name: 'roleattributes-list', methods: ['GET'])]
+    #[Route(path: '/list/buidlings/', name: 'buildings-list', methods: ['GET'])]
+    #[Route(path: '/list/rooms/', name: 'rooms-list', methods: ['GET'])]
+    #[Route(path: '/list/suites/', name: 'suites-list', methods: ['GET'])]
+    #[Route(path: '/list/floors/', name: 'floors-list', methods: ['GET'])]
+    #[Route(path: '/list/grants/', name: 'grants-list', methods: ['GET'])]
+    #[Route(path: '/list/mailboxes/', name: 'mailboxes-list', methods: ['GET'])]
+    #[Route(path: '/list/percent-effort/', name: 'efforts-list', methods: ['GET'])]
+    #[Route(path: '/list/administrative-titles/', name: 'admintitles-list', methods: ['GET'])]
+    #[Route(path: '/list/academic-appointment-titles/', name: 'apptitles-list', methods: ['GET'])]
+    #[Route(path: '/list/training-completion-reasons/', name: 'completionreasons-list', methods: ['GET'])]
+    #[Route(path: '/list/training-degrees/', name: 'trainingdegrees-list', methods: ['GET'])]
+    #[Route(path: '/list/training-majors/', name: 'trainingmajors-list', methods: ['GET'])]
+    #[Route(path: '/list/training-minors/', name: 'trainingminors-list', methods: ['GET'])]
+    #[Route(path: '/list/training-honors/', name: 'traininghonors-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-titles/', name: 'fellowshiptitles-list', methods: ['GET'])]
+    #[Route(path: '/list/residency-specialties/', name: 'residencyspecialtys-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-subspecialties/', name: 'fellowshipsubspecialtys-list', methods: ['GET'])]
+    #[Route(path: '/list/institution-types/', name: 'institutiontypes-list', methods: ['GET'])]
+    #[Route(path: '/list/document-types/', name: 'documenttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/medical-titles/', name: 'medicaltitles-list', methods: ['GET'])]
+    #[Route(path: '/list/medical-specialties/', name: 'medicalspecialties-list', methods: ['GET'])]
+    #[Route(path: '/list/employment-types/', name: 'employmenttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/grant-source-organizations/', name: 'sourceorganizations-list', methods: ['GET'])]
+    #[Route(path: '/list/languages/', name: 'languages-list', methods: ['GET'])]
+    #[Route(path: '/list/locales/', name: 'locales-list', methods: ['GET'])]
+    #[Route(path: '/list/ranks-of-importance/', name: 'importances-list', methods: ['GET'])]
+    #[Route(path: '/list/authorship-roles/', name: 'authorshiproles-list', methods: ['GET'])]
+    #[Route(path: '/list/lecture-venues/', name: 'organizations-list', methods: ['GET'])]
+    #[Route(path: '/list/cities/', name: 'cities-list', methods: ['GET'])]
+    #[Route(path: '/list/link-types/', name: 'linktypes-list', methods: ['GET'])]
+    #[Route(path: '/list/sexes/', name: 'sexes-list', methods: ['GET'])]
+    #[Route(path: '/list/position-types/', name: 'positiontypes-list', methods: ['GET'])]
+    #[Route(path: '/list/organizational-group-types/', name: 'organizationalgrouptypes-list', methods: ['GET'])]
+    #[Route(path: '/list/profile-comment-group-types/', name: 'commentgrouptypes-list', methods: ['GET'])]
+    #[Route(path: '/list/comment-types/', name: 'commenttypes-list', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/user-wrappers/', name: 'userwrappers-list', methods: ['GET'])]
+    #[Route(path: '/list/spot-purposes/', name: 'spotpurposes-list', methods: ['GET'])]
+    #[Route(path: '/list/medical-license-statuses/', name: 'medicalstatuses-list', methods: ['GET'])]
+    #[Route(path: '/list/certifying-board-organizations/', name: 'certifyingboardorganizations-list', methods: ['GET'])]
+    #[Route(path: '/list/training-types/', name: 'trainingtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/job-titles/', name: 'joblists-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-statuses/', name: 'fellappstatuses-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-ranks/', name: 'fellappranks-list', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/', name: 'fellapplanguageproficiency-list', methods: ['GET'])]
+    #[Route(path: '/list/collaboration-types/', name: 'collaborationtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/permissions/', name: 'permission-list', methods: ['GET'])]
+    #[Route(path: '/list/permission-objects/', name: 'permissionobject-list', methods: ['GET'])]
+    #[Route(path: '/list/permission-actions/', name: 'permissionaction-list', methods: ['GET'])]
+    #[Route(path: '/list/sites/', name: 'sites-list', methods: ['GET'])]
+    #[Route(path: '/list/event-object-types/', name: 'eventobjecttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-types/', name: 'vacreqrequesttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-texts/', name: 'vacreqfloatingtexts-list', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-types/', name: 'vacreqfloatingtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-approval-types/', name: 'vacreqapprovaltypes-list', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-specialties/', name: 'healthcareproviderspecialty-list', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/', name: 'healthcareprovidercommunication-list', methods: ['GET'])]
+    #[Route(path: '/list/object-types/', name: 'objecttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/form-nodes/', name: 'formnodes-list', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/', name: 'objecttypetexts-list', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/', name: 'bloodproducttransfusions-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-reaction-types/', name: 'transfusionreactiontypes-list', methods: ['GET'])]
+    #[Route(path: '/list/object-type-strings/', name: 'objecttypestrings-list', methods: ['GET'])]
+    #[Route(path: '/list/object-type-dropdowns/', name: 'objecttypedropdowns-list', methods: ['GET'])]
+    #[Route(path: '/list/blood-types/', name: 'bloodtypes-list', methods: ['GET'])]
+    #[Route(path: '/list/additional-communications/', name: 'additionalcommunications-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/', name: 'transfusionantibodyscreenresults-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/', name: 'transfusioncrossmatchresults-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-dat-results/', name: 'transfusiondatresults-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/', name: 'transfusionhemolysischeckresults-list', methods: ['GET'])]
+    #[Route(path: '/list/object-type-datetimes/', name: 'objecttypedatetimes-list', methods: ['GET'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/', name: 'complexplateletsummaryantibodies-list', methods: ['GET'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/', name: 'cciunitplateletcountdefaultvalues-list', methods: ['GET'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/', name: 'cciplatelettypetransfuseds-list', methods: ['GET'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/', name: 'platelettransfusionproductreceivings-list', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-product-status/', name: 'transfusionproductstatus-list', methods: ['GET'])]
+    #[Route(path: '/list/week-days/', name: 'weekdays-list', methods: ['GET'])]
+    #[Route(path: '/list/months/', name: 'months-list', methods: ['GET'])]
+    #[Route(path: '/list/clerical-errors/', name: 'clericalerrors-list', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-names/', name: 'labresultnames-list', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-units-measures/', name: 'labresultunitsmeasures-list', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-flags/', name: 'labresultflags-list', methods: ['GET'])]
+    #[Route(path: '/list/pathology-result-signatories/', name: 'pathologyresultsignatories-list', methods: ['GET'])]
+    #[Route(path: '/list/object-type-checkboxes/', name: 'objecttypecheckboxs-list', methods: ['GET'])]
+    #[Route(path: '/list/object-type-radio-buttons/', name: 'objecttyperadiobuttons-list', methods: ['GET'])]
+    #[Route(path: '/list/life-forms/', name: 'lifeforms-list', methods: ['GET'])]
+    #[Route(path: '/list/position-track-types/', name: 'positiontracktypes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-orig/', name: 'transresprojectspecialties-list-orig', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-types/', name: 'transresprojecttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-request-category-types/', name: 'transresrequestcategorytypes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-types/', name: 'transresirbapprovaltypes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-business-purposes/', name: 'transresbusinesspurposes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-work-queue-types/', name: 'workqueuetypes-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-orderable-status/', name: 'orderablestatus-list', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/', name: 'antibodies-list', methods: ['GET'])]
+    #[Route(path: '/list/custom000/', name: 'custom000-list', methods: ['GET'])]
+    #[Route(path: '/list/custom001/', name: 'custom001-list', methods: ['GET'])]
+    #[Route(path: '/list/custom002/', name: 'custom002-list', methods: ['GET'])]
+    #[Route(path: '/list/custom003/', name: 'custom003-list', methods: ['GET'])]
+    #[Route(path: '/list/custom004/', name: 'custom004-list', methods: ['GET'])]
+    #[Route(path: '/list/custom005/', name: 'custom005-list', methods: ['GET'])]
+    #[Route(path: '/list/custom006/', name: 'custom006-list', methods: ['GET'])]
+    #[Route(path: '/list/custom007/', name: 'custom007-list', methods: ['GET'])]
+    #[Route(path: '/list/custom008/', name: 'custom008-list', methods: ['GET'])]
+    #[Route(path: '/list/custom009/', name: 'custom009-list', methods: ['GET'])]
+    #[Route(path: '/list/custom010/', name: 'custom010-list', methods: ['GET'])]
+    #[Route(path: '/list/custom011/', name: 'custom011-list', methods: ['GET'])]
+    #[Route(path: '/list/custom012/', name: 'custom012-list', methods: ['GET'])]
+    #[Route(path: '/list/custom013/', name: 'custom013-list', methods: ['GET'])]
+    #[Route(path: '/list/custom014/', name: 'custom014-list', methods: ['GET'])]
+    #[Route(path: '/list/custom015/', name: 'custom015-list', methods: ['GET'])]
+    #[Route(path: '/list/custom016/', name: 'custom016-list', methods: ['GET'])]
+    #[Route(path: '/list/custom017/', name: 'custom017-list', methods: ['GET'])]
+    #[Route(path: '/list/custom018/', name: 'custom018-list', methods: ['GET'])]
+    #[Route(path: '/list/custom019/', name: 'custom019-list', methods: ['GET'])]
+    #[Route(path: '/list/custom020/', name: 'custom020-list', methods: ['GET'])]
+    #[Route(path: '/list/custom021/', name: 'custom021-list', methods: ['GET'])]
+    #[Route(path: '/list/custom022/', name: 'custom022-list', methods: ['GET'])]
+    #[Route(path: '/list/custom023/', name: 'custom023-list', methods: ['GET'])]
+    #[Route(path: '/list/custom024/', name: 'custom024-list', methods: ['GET'])]
+    #[Route(path: '/list/custom025/', name: 'custom025-list', methods: ['GET'])]
+    #[Route(path: '/list/custom026/', name: 'custom026-list', methods: ['GET'])]
+    #[Route(path: '/list/custom027/', name: 'custom027-list', methods: ['GET'])]
+    #[Route(path: '/list/custom028/', name: 'custom028-list', methods: ['GET'])]
+    #[Route(path: '/list/custom029/', name: 'custom029-list', methods: ['GET'])]
+    #[Route(path: '/list/custom030/', name: 'custom030-list', methods: ['GET'])]
+    #[Route(path: '/list/custom031/', name: 'custom031-list', methods: ['GET'])]
+    #[Route(path: '/list/custom032/', name: 'custom032-list', methods: ['GET'])]
+    #[Route(path: '/list/custom033/', name: 'custom033-list', methods: ['GET'])]
+    #[Route(path: '/list/custom034/', name: 'custom034-list', methods: ['GET'])]
+    #[Route(path: '/list/custom035/', name: 'custom035-list', methods: ['GET'])]
+    #[Route(path: '/list/custom036/', name: 'custom036-list', methods: ['GET'])]
+    #[Route(path: '/list/custom037/', name: 'custom037-list', methods: ['GET'])]
+    #[Route(path: '/list/custom038/', name: 'custom038-list', methods: ['GET'])]
+    #[Route(path: '/list/custom039/', name: 'custom039-list', methods: ['GET'])]
+    #[Route(path: '/list/custom040/', name: 'custom040-list', methods: ['GET'])]
+    #[Route(path: '/list/custom041/', name: 'custom041-list', methods: ['GET'])]
+    #[Route(path: '/list/custom042/', name: 'custom042-list', methods: ['GET'])]
+    #[Route(path: '/list/custom043/', name: 'custom043-list', methods: ['GET'])]
+    #[Route(path: '/list/custom044/', name: 'custom044-list', methods: ['GET'])]
+    #[Route(path: '/list/custom045/', name: 'custom045-list', methods: ['GET'])]
+    #[Route(path: '/list/custom046/', name: 'custom046-list', methods: ['GET'])]
+    #[Route(path: '/list/custom047/', name: 'custom047-list', methods: ['GET'])]
+    #[Route(path: '/list/custom048/', name: 'custom048-list', methods: ['GET'])]
+    #[Route(path: '/list/custom049/', name: 'custom049-list', methods: ['GET'])]
+    #[Route(path: '/list/custom050/', name: 'custom050-list', methods: ['GET'])]
+    #[Route(path: '/list/custom051/', name: 'custom051-list', methods: ['GET'])]
+    #[Route(path: '/list/custom052/', name: 'custom052-list', methods: ['GET'])]
+    #[Route(path: '/list/custom053/', name: 'custom053-list', methods: ['GET'])]
+    #[Route(path: '/list/custom054/', name: 'custom054-list', methods: ['GET'])]
+    #[Route(path: '/list/custom055/', name: 'custom055-list', methods: ['GET'])]
+    #[Route(path: '/list/custom056/', name: 'custom056-list', methods: ['GET'])]
+    #[Route(path: '/list/custom057/', name: 'custom057-list', methods: ['GET'])]
+    #[Route(path: '/list/custom058/', name: 'custom058-list', methods: ['GET'])]
+    #[Route(path: '/list/custom059/', name: 'custom059-list', methods: ['GET'])]
+    #[Route(path: '/list/custom060/', name: 'custom060-list', methods: ['GET'])]
+    #[Route(path: '/list/custom061/', name: 'custom061-list', methods: ['GET'])]
+    #[Route(path: '/list/custom062/', name: 'custom062-list', methods: ['GET'])]
+    #[Route(path: '/list/custom063/', name: 'custom063-list', methods: ['GET'])]
+    #[Route(path: '/list/custom064/', name: 'custom064-list', methods: ['GET'])]
+    #[Route(path: '/list/custom065/', name: 'custom065-list', methods: ['GET'])]
+    #[Route(path: '/list/custom066/', name: 'custom066-list', methods: ['GET'])]
+    #[Route(path: '/list/custom067/', name: 'custom067-list', methods: ['GET'])]
+    #[Route(path: '/list/custom068/', name: 'custom068-list', methods: ['GET'])]
+    #[Route(path: '/list/custom069/', name: 'custom069-list', methods: ['GET'])]
+    #[Route(path: '/list/custom070/', name: 'custom070-list', methods: ['GET'])]
+    #[Route(path: '/list/custom071/', name: 'custom071-list', methods: ['GET'])]
+    #[Route(path: '/list/custom072/', name: 'custom072-list', methods: ['GET'])]
+    #[Route(path: '/list/custom073/', name: 'custom073-list', methods: ['GET'])]
+    #[Route(path: '/list/custom074/', name: 'custom074-list', methods: ['GET'])]
+    #[Route(path: '/list/custom075/', name: 'custom075-list', methods: ['GET'])]
+    #[Route(path: '/list/custom076/', name: 'custom076-list', methods: ['GET'])]
+    #[Route(path: '/list/custom077/', name: 'custom077-list', methods: ['GET'])]
+    #[Route(path: '/list/custom078/', name: 'custom078-list', methods: ['GET'])]
+    #[Route(path: '/list/custom079/', name: 'custom079-list', methods: ['GET'])]
+    #[Route(path: '/list/custom080/', name: 'custom080-list', methods: ['GET'])]
+    #[Route(path: '/list/custom081/', name: 'custom081-list', methods: ['GET'])]
+    #[Route(path: '/list/custom082/', name: 'custom082-list', methods: ['GET'])]
+    #[Route(path: '/list/custom083/', name: 'custom083-list', methods: ['GET'])]
+    #[Route(path: '/list/custom084/', name: 'custom084-list', methods: ['GET'])]
+    #[Route(path: '/list/custom085/', name: 'custom085-list', methods: ['GET'])]
+    #[Route(path: '/list/custom086/', name: 'custom086-list', methods: ['GET'])]
+    #[Route(path: '/list/custom087/', name: 'custom087-list', methods: ['GET'])]
+    #[Route(path: '/list/custom088/', name: 'custom088-list', methods: ['GET'])]
+    #[Route(path: '/list/custom089/', name: 'custom089-list', methods: ['GET'])]
+    #[Route(path: '/list/custom090/', name: 'custom090-list', methods: ['GET'])]
+    #[Route(path: '/list/custom091/', name: 'custom091-list', methods: ['GET'])]
+    #[Route(path: '/list/custom092/', name: 'custom092-list', methods: ['GET'])]
+    #[Route(path: '/list/custom093/', name: 'custom093-list', methods: ['GET'])]
+    #[Route(path: '/list/custom094/', name: 'custom094-list', methods: ['GET'])]
+    #[Route(path: '/list/custom095/', name: 'custom095-list', methods: ['GET'])]
+    #[Route(path: '/list/custom096/', name: 'custom096-list', methods: ['GET'])]
+    #[Route(path: '/list/custom097/', name: 'custom097-list', methods: ['GET'])]
+    #[Route(path: '/list/custom098/', name: 'custom098-list', methods: ['GET'])]
+    #[Route(path: '/list/custom099/', name: 'custom099-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-tissue-processing-services/', name: 'transrestissueprocessingservices-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-other-requested-services/', name: 'transresotherrequestedservices-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-labs/', name: 'transrescolllabs-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-divs/', name: 'transrescolldivs-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-status/', name: 'transresirbstatus-list', methods: ['GET'])]
+    #[Route(path: '/list/translational-requester-group/', name: 'transresrequestergroup-list', methods: ['GET'])]
+    #[Route(path: '/list/transrescomptypes/', name: 'transrescomptypes-list', methods: ['GET'])]
+    #[Route(path: '/list/visa-status/', name: 'visastatus-list', methods: ['GET'])]
+    #[Route(path: '/list/resappstatuses/', name: 'resappstatuses-list', methods: ['GET'])]
+    #[Route(path: '/list/resappranks/', name: 'resappranks-list', methods: ['GET'])]
+    #[Route(path: '/list/resapplanguageproficiency/', name: 'resapplanguageproficiency-list', methods: ['GET'])]
+    #[Route(path: '/list/resappfitforprogram/', name: 'resappfitforprogram-list', methods: ['GET'])]
+    #[Route(path: '/list/resappvisastatus/', name: 'resappvisastatus-list', methods: ['GET'])]
+    #[Route(path: '/list/postsoph/', name: 'postsoph-list', methods: ['GET'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/', name: 'resappapplyingresidencytrack-list', methods: ['GET'])]
+    #[Route(path: '/list/resapplearnarealist/', name: 'resapplearnarealist-list', methods: ['GET'])]
+    #[Route(path: '/list/resappspecificindividuallist/', name: 'resappspecificindividuallist-list', methods: ['GET'])]
+    #[Route(path: '/list/viewmodes/', name: 'viewmodes-list', methods: ['GET'])]
+    #[Route(path: '/list/transrespricetypes/', name: 'transrespricetypes-list', methods: ['GET'])]
+    #[Route(path: '/list/charttypes/', name: 'charttypes-list', methods: ['GET'])]
+    #[Route(path: '/list/charttopics/', name: 'charttopics-list', methods: ['GET'])]
+    #[Route(path: '/list/chartfilters/', name: 'chartfilters-list', methods: ['GET'])]
+    #[Route(path: '/list/charts/', name: 'charts-list', methods: ['GET'])]
+    #[Route(path: '/list/chartdatasources/', name: 'chartdatasources-list', methods: ['GET'])]
+    #[Route(path: '/list/chartupdatefrequencies/', name: 'chartupdatefrequencies-list', methods: ['GET'])]
+    #[Route(path: '/list/chartvisualizations/', name: 'chartvisualizations-list', methods: ['GET'])]
+    #[Route(path: '/list/vacreqholidays/', name: 'vacreqholidays-list', methods: ['GET'])]
+    #[Route(path: '/list/vacreqobservedholidays/', name: 'vacreqobservedholidays-list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -710,10 +706,8 @@ class ListController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/download-list-excel", name="user_download_list_excel")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/download-list-excel', name: 'user_download_list_excel')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function downloadListExcelAction( Request $request ) {
         //$ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
@@ -748,257 +742,255 @@ class ListController extends OrderAbstractController
     /**
      * Creates a new entity.
      *
-     * @Route("/list/list-manager/", name="platformlistmanager_create", methods={"POST"})
-     * @Route("/list/source-systems/", name="sourcesystems_create", methods={"POST"})
-     * @Route("/list/roles/", name="role_create", methods={"POST"})
-     * @Route("/list/institutions/", name="institutions_create", methods={"POST"})
-     * @Route("/list/states/", name="states_create", methods={"POST"})
-     * @Route("/list/countries/", name="countries_create", methods={"POST"})
-     * @Route("/list/board-certifications/", name="boardcertifications_create", methods={"POST"})
-     * @Route("/list/employment-termination-reasons/", name="employmentterminations_create", methods={"POST"})
-     * @Route("/list/event-log-event-types/", name="loggereventtypes_create", methods={"POST"})
-     * @Route("/list/primary-public-user-id-types/", name="usernametypes_create", methods={"POST"})
-     * @Route("/list/identifier-types/", name="identifiers_create", methods={"POST"})
-     * @Route("/list/residency-tracks/", name="residencytracks_create", methods={"POST"})
-     * @Route("/list/fellowship-types/", name="fellowshiptypes_create", methods={"POST"})
-//     * @Route("/list/research-labs/", name="researchlabs_create", methods={"POST"})
-     * @Route("/list/location-types/", name="locationtypes_create", methods={"POST"})
-     * @Route("/list/equipment/", name="equipments_create", methods={"POST"})
-     * @Route("/list/equipment-types/", name="equipmenttypes_create", methods={"POST"})
-     * @Route("/list/location-privacy-types/", name="locationprivacy_create", methods={"POST"})
-     * @Route("/list/role-attributes/", name="roleattributes_create", methods={"POST"})
-     * @Route("/list/buidlings/", name="buildings_create", methods={"POST"})
-     * @Route("/list/rooms/", name="rooms_create", methods={"POST"})
-     * @Route("/list/suites/", name="suites_create", methods={"POST"})
-     * @Route("/list/floors/", name="floors_create", methods={"POST"})
-     * @Route("/list/grants/", name="grants_create", methods={"POST"})
-     * @Route("/list/mailboxes/", name="mailboxes_create", methods={"POST"})
-     * @Route("/list/percent-effort/", name="efforts_create", methods={"POST"})
-     * @Route("/list/administrative-titles/", name="admintitles_create", methods={"POST"})
-     * @Route("/list/academic-appointment-titles/", name="apptitles_create", methods={"POST"})
-     * @Route("/list/training-completion-reasons/", name="completionreasons_create", methods={"POST"})
-     * @Route("/list/training-degrees/", name="trainingdegrees_create", methods={"POST"})
-     * @Route("/list/training-majors/", name="trainingmajors_create", methods={"POST"})
-     * @Route("/list/training-minors/", name="trainingminors_create", methods={"POST"})
-     * @Route("/list/training-honors/", name="traininghonors_create", methods={"POST"})
-     * @Route("/list/fellowship-titles/", name="fellowshiptitles_create", methods={"POST"})
-     * @Route("/list/residency-specialties/", name="residencyspecialtys_create", methods={"POST"})
-     * @Route("/list/fellowship-subspecialties/", name="fellowshipsubspecialtys_create", methods={"POST"})
-     * @Route("/list/institution-types/", name="institutiontypes_create", methods={"POST"})
-     * @Route("/list/document-types/", name="documenttypes_create", methods={"POST"})
-     * @Route("/list/medical-titles/", name="medicaltitles_create", methods={"POST"})
-     * @Route("/list/medical-specialties/", name="medicalspecialties_create", methods={"POST"})
-     * @Route("/list/employment-types/", name="employmenttypes_create", methods={"POST"})
-     * @Route("/list/grant-source-organizations/", name="sourceorganizations_create", methods={"POST"})
-     * @Route("/list/languages/", name="languages_create", methods={"POST"})
-     * @Route("/list/locales/", name="locales_create", methods={"POST"})
-     * @Route("/list/ranks-of-importance/", name="importances_create", methods={"POST"})
-     * @Route("/list/authorship-roles/", name="authorshiproles_create", methods={"POST"})
-     * @Route("/list/lecture-venues/", name="organizations_create", methods={"POST"})
-     * @Route("/list/cities/", name="cities_create", methods={"POST"})
-     * @Route("/list/link-types/", name="linktypes_create", methods={"POST"})
-     * @Route("/list/sexes/", name="sexes_create", methods={"POST"})
-     * @Route("/list/position-types/", name="positiontypes_create", methods={"POST"})
-     * @Route("/list/organizational-group-types/", name="organizationalgrouptypes_create", methods={"POST"})
-     * @Route("/list/profile-comment-group-types/", name="commentgrouptypes_create", methods={"POST"})
-     * @Route("/list/comment-types/", name="commenttypes_createt", methods={"POST"})
-     * @Route("/list/user-wrappers/", name="userwrappers_create", methods={"POST"})
-     * @Route("/list/spot-purposes/", name="spotpurposes_create", methods={"POST"})
-     * @Route("/list/medical-license-statuses/", name="medicalstatuses_create", methods={"POST"})
-     * @Route("/list/certifying-board-organizations/", name="certifyingboardorganizations_create", methods={"POST"})
-     * @Route("/list/training-types/", name="trainingtypes_create", methods={"POST"})
-     * @Route("/list/job-titles/", name="joblists_create", methods={"POST"})
-     * @Route("/list/fellowship-application-statuses/", name="fellappstatuses_create", methods={"POST"})
-     * @Route("/list/fellowship-application-ranks/", name="fellappranks_create", methods={"POST"})
-     * @Route("/list/fellowship-application-language-proficiencies/", name="fellapplanguageproficiency_create", methods={"POST"})
-//     * @Route("/list/collaborations/", name="collaborations_create", methods={"POST"})
-     * @Route("/list/collaboration-types/", name="collaborationtypes_create", methods={"POST"})
-     * @Route("/list/permissions/", name="permission_create", methods={"POST"})
-     * @Route("/list/permission-objects/", name="permissionobject_create", methods={"POST"})
-     * @Route("/list/permission-actions/", name="permissionaction_create", methods={"POST"})
-     * @Route("/list/sites/", name="sites_create", methods={"POST"})
-     * @Route("/list/event-object-types/", name="eventobjecttypes_create", methods={"POST"})
-     * @Route("/list/time-away-request-types/", name="vacreqrequesttypes_create", methods={"POST"})
-     * @Route("/list/time-away-request-floating-texts/", name="vacreqfloatingtexts_create", methods={"POST"})
-     * @Route("/list/time-away-request-floating-types/", name="vacreqfloatingtypes_create", methods={"POST"})
-     * @Route("/list/time-away-request-approval-types/", name="vacreqapprovaltypes_create", methods={"POST"})
-     * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create", methods={"POST"})
-     * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication_create", methods={"POST"})
-     * @Route("/list/object-types/", name="objecttypes_create", methods={"POST"})
-     * @Route("/list/form-nodes/", name="formnodes_create", methods={"POST"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/", name="objecttypetexts_create", methods={"POST"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/", name="bloodproducttransfusions_create", methods={"POST"})
-     * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes_create", methods={"POST"})
-     * @Route("/list/object-type-strings/", name="objecttypestrings_create", methods={"POST"})
-     * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns_create", methods={"POST"})
-     * @Route("/list/blood-types/", name="bloodtypes_create", methods={"POST"})
-     * @Route("/list/additional-communications/", name="additionalcommunications_create", methods={"POST"})
-     * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults_create", methods={"POST"})
-     * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults_create", methods={"POST"})
-     * @Route("/list/transfusion-dat-results/", name="transfusiondatresults_create", methods={"POST"})
-     * @Route("/list/transfusion-hemolysis-check-results/", name="transfusionhemolysischeckresults_create", methods={"POST"})
-     * @Route("/list/object-type-datetimes/", name="objecttypedatetimes_create", methods={"POST"})
-     * @Route("/list/complex-platelet-summary-antibodies/", name="complexplateletsummaryantibodies_create", methods={"POST"})
-     * @Route("/list/cci-unit-platelet-count-default-values/", name="cciunitplateletcountdefaultvalues_create", methods={"POST"})
-     * @Route("/list/cci-platelet-type-transfused/", name="cciplatelettypetransfuseds_create", methods={"POST"})
-     * @Route("/list/platelet-transfusion-product-receiving/", name="platelettransfusionproductreceivings_create", methods={"POST"})
-     * @Route("/list/transfusion-product-status/", name="transfusionproductstatus_create", methods={"POST"})
-     * @Route("/list/week-days/", name="weekdays_create", methods={"POST"})
-     * @Route("/list/months/", name="months_create", methods={"POST"})
-     * @Route("/list/clerical-errors/", name="clericalerrors_create", methods={"POST"})
-     * @Route("/list/lab-result-names/", name="labresultnames_create", methods={"POST"})
-     * @Route("/list/lab-result-units-measures/", name="labresultunitsmeasures_create", methods={"POST"})
-     * @Route("/list/lab-result-flags/", name="labresultflags_create", methods={"POST"})
-     * @Route("/list/pathology-result-signatories/", name="pathologyresultsignatories_create", methods={"POST"})
-     * @Route("/list/object-type-checkboxes/", name="objecttypecheckboxs_create", methods={"POST"})
-     * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons_create", methods={"POST"})
-     * @Route("/list/life-forms/", name="lifeforms_create", methods={"POST"})
-     * @Route("/list/position-track-types/", name="positiontracktypes_create", methods={"POST"})
-     * @Route("/list/translational-research-project-specialties-orig/", name="transresprojectspecialties_create_orig", methods={"POST"})
-     * @Route("/list/translational-research-project-types/", name="transresprojecttypes_create", methods={"POST"})
-     * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create", methods={"POST"})
-     * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create", methods={"POST"})
-     * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes_create", methods={"POST"})
-     * @Route("/list/translational-work-queue-types/", name="workqueuetypes_create", methods={"POST"})
-     * @Route("/list/translational-orderable-status/", name="orderablestatus_create", methods={"POST"})
-     * 
-     * @Route("/list/antibodies/", name="antibodies_create", methods={"POST"})
-     * @Route("/list/custom000/", name="custom000_create", methods={"POST"})
-     * @Route("/list/custom001/", name="custom001_create", methods={"POST"})
-     * @Route("/list/custom002/", name="custom002_create", methods={"POST"})
-     * @Route("/list/custom003/", name="custom003_create", methods={"POST"})
-     * @Route("/list/custom004/", name="custom004_create", methods={"POST"})
-     * @Route("/list/custom005/", name="custom005_create", methods={"POST"})
-     * @Route("/list/custom006/", name="custom006_create", methods={"POST"})
-     * @Route("/list/custom007/", name="custom007_create", methods={"POST"})
-     * @Route("/list/custom008/", name="custom008_create", methods={"POST"})
-     * @Route("/list/custom009/", name="custom009_create", methods={"POST"})
-     * @Route("/list/custom010/", name="custom010_create", methods={"POST"})
-     * @Route("/list/custom011/", name="custom011_create", methods={"POST"})
-     * @Route("/list/custom012/", name="custom012_create", methods={"POST"})
-     * @Route("/list/custom013/", name="custom013_create", methods={"POST"})
-     * @Route("/list/custom014/", name="custom014_create", methods={"POST"})
-     * @Route("/list/custom015/", name="custom015_create", methods={"POST"})
-     * @Route("/list/custom016/", name="custom016_create", methods={"POST"})
-     * @Route("/list/custom017/", name="custom017_create", methods={"POST"})
-     * @Route("/list/custom018/", name="custom018_create", methods={"POST"})
-     * @Route("/list/custom019/", name="custom019_create", methods={"POST"})
-     * @Route("/list/custom020/", name="custom020_create", methods={"POST"})
-     * @Route("/list/custom021/", name="custom021_create", methods={"POST"})
-     * @Route("/list/custom022/", name="custom022_create", methods={"POST"})
-     * @Route("/list/custom023/", name="custom023_create", methods={"POST"})
-     * @Route("/list/custom024/", name="custom024_create", methods={"POST"})
-     * @Route("/list/custom025/", name="custom025_create", methods={"POST"})
-     * @Route("/list/custom026/", name="custom026_create", methods={"POST"})
-     * @Route("/list/custom027/", name="custom027_create", methods={"POST"})
-     * @Route("/list/custom028/", name="custom028_create", methods={"POST"})
-     * @Route("/list/custom029/", name="custom029_create", methods={"POST"})
-     * @Route("/list/custom030/", name="custom030_create", methods={"POST"})
-     * @Route("/list/custom031/", name="custom031_create", methods={"POST"})
-     * @Route("/list/custom032/", name="custom032_create", methods={"POST"})
-     * @Route("/list/custom033/", name="custom033_create", methods={"POST"})
-     * @Route("/list/custom034/", name="custom034_create", methods={"POST"})
-     * @Route("/list/custom035/", name="custom035_create", methods={"POST"})
-     * @Route("/list/custom036/", name="custom036_create", methods={"POST"})
-     * @Route("/list/custom037/", name="custom037_create", methods={"POST"})
-     * @Route("/list/custom038/", name="custom038_create", methods={"POST"})
-     * @Route("/list/custom039/", name="custom039_create", methods={"POST"})
-     * @Route("/list/custom040/", name="custom040_create", methods={"POST"})
-     * @Route("/list/custom041/", name="custom041_create", methods={"POST"})
-     * @Route("/list/custom042/", name="custom042_create", methods={"POST"})
-     * @Route("/list/custom043/", name="custom043_create", methods={"POST"})
-     * @Route("/list/custom044/", name="custom044_create", methods={"POST"})
-     * @Route("/list/custom045/", name="custom045_create", methods={"POST"})
-     * @Route("/list/custom046/", name="custom046_create", methods={"POST"})
-     * @Route("/list/custom047/", name="custom047_create", methods={"POST"})
-     * @Route("/list/custom048/", name="custom048_create", methods={"POST"})
-     * @Route("/list/custom049/", name="custom049_create", methods={"POST"})
-     * @Route("/list/custom050/", name="custom050_create", methods={"POST"})
-     * @Route("/list/custom051/", name="custom051_create", methods={"POST"})
-     * @Route("/list/custom052/", name="custom052_create", methods={"POST"})
-     * @Route("/list/custom053/", name="custom053_create", methods={"POST"})
-     * @Route("/list/custom054/", name="custom054_create", methods={"POST"})
-     * @Route("/list/custom055/", name="custom055_create", methods={"POST"})
-     * @Route("/list/custom056/", name="custom056_create", methods={"POST"})
-     * @Route("/list/custom057/", name="custom057_create", methods={"POST"})
-     * @Route("/list/custom058/", name="custom058_create", methods={"POST"})
-     * @Route("/list/custom059/", name="custom059_create", methods={"POST"})
-     * @Route("/list/custom060/", name="custom060_create", methods={"POST"})
-     * @Route("/list/custom061/", name="custom061_create", methods={"POST"})
-     * @Route("/list/custom062/", name="custom062_create", methods={"POST"})
-     * @Route("/list/custom063/", name="custom063_create", methods={"POST"})
-     * @Route("/list/custom064/", name="custom064_create", methods={"POST"})
-     * @Route("/list/custom065/", name="custom065_create", methods={"POST"})
-     * @Route("/list/custom066/", name="custom066_create", methods={"POST"})
-     * @Route("/list/custom067/", name="custom067_create", methods={"POST"})
-     * @Route("/list/custom068/", name="custom068_create", methods={"POST"})
-     * @Route("/list/custom069/", name="custom069_create", methods={"POST"})
-     * @Route("/list/custom070/", name="custom070_create", methods={"POST"})
-     * @Route("/list/custom071/", name="custom071_create", methods={"POST"})
-     * @Route("/list/custom072/", name="custom072_create", methods={"POST"})
-     * @Route("/list/custom073/", name="custom073_create", methods={"POST"})
-     * @Route("/list/custom074/", name="custom074_create", methods={"POST"})
-     * @Route("/list/custom075/", name="custom075_create", methods={"POST"})
-     * @Route("/list/custom076/", name="custom076_create", methods={"POST"})
-     * @Route("/list/custom077/", name="custom077_create", methods={"POST"})
-     * @Route("/list/custom078/", name="custom078_create", methods={"POST"})
-     * @Route("/list/custom079/", name="custom079_create", methods={"POST"})
-     * @Route("/list/custom080/", name="custom080_create", methods={"POST"})
-     * @Route("/list/custom081/", name="custom081_create", methods={"POST"})
-     * @Route("/list/custom082/", name="custom082_create", methods={"POST"})
-     * @Route("/list/custom083/", name="custom083_create", methods={"POST"})
-     * @Route("/list/custom084/", name="custom084_create", methods={"POST"})
-     * @Route("/list/custom085/", name="custom085_create", methods={"POST"})
-     * @Route("/list/custom086/", name="custom086_create", methods={"POST"})
-     * @Route("/list/custom087/", name="custom087_create", methods={"POST"})
-     * @Route("/list/custom088/", name="custom088_create", methods={"POST"})
-     * @Route("/list/custom089/", name="custom089_create", methods={"POST"})
-     * @Route("/list/custom090/", name="custom090_create", methods={"POST"})
-     * @Route("/list/custom091/", name="custom091_create", methods={"POST"})
-     * @Route("/list/custom092/", name="custom092_create", methods={"POST"})
-     * @Route("/list/custom093/", name="custom093_create", methods={"POST"})
-     * @Route("/list/custom094/", name="custom094_create", methods={"POST"})
-     * @Route("/list/custom095/", name="custom095_create", methods={"POST"})
-     * @Route("/list/custom096/", name="custom096_create", methods={"POST"})
-     * @Route("/list/custom097/", name="custom097_create", methods={"POST"})
-     * @Route("/list/custom098/", name="custom098_create", methods={"POST"})
-     * @Route("/list/custom099/", name="custom099_create", methods={"POST"})
-     * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create", methods={"POST"})
-     * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create", methods={"POST"})
-     *
-     * @Route("/list/translational-collaboration-labs/", name="transrescolllabs_create", methods={"POST"})
-     * @Route("/list/translational-collaboration-divs/", name="transrescolldivs_create", methods={"POST"})
-     * @Route("/list/translational-irb-approval-status/", name="transresirbstatus_create", methods={"POST"})
-     * @Route("/list/translational-requester-group/", name="transresrequestergroup_create", methods={"POST"})
-     * @Route("/list/transrescomptypes/", name="transrescomptypes_create", methods={"POST"})
-     *
-     * @Route("/list/visastatus/", name="visastatus_create", methods={"POST"})
-     * @Route("/list/resappstatuses/", name="resappstatuses_create", methods={"POST"})
-     * @Route("/list/resappranks/", name="resappranks_create", methods={"POST"})
-     * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency_create", methods={"POST"})
-     * @Route("/list/resappfitforprogram/", name="resappfitforprogram_create", methods={"POST"})
-     * @Route("/list/resappvisastatus/", name="resappvisastatus_create", methods={"POST"})
-     * @Route("/list/postsoph/", name="postsoph_create", methods={"POST"})
-     *
-     * @Route("/list/resappapplyingresidencytrack/", name="resappapplyingresidencytrack_create", methods={"POST"})
-     * @Route("/list/resapplearnarealist/", name="resapplearnarealist_create", methods={"POST"})
-     * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist_create", methods={"POST"})
-     * @Route("/list/viewmodes/", name="viewmodes_create", methods={"POST"})
-     * @Route("/list/transrespricetypes/", name="transrespricetypes_create", methods={"POST"})
-     *
-     * @Route("/list/charttypes/", name="charttypes_create", methods={"POST"})
-     * @Route("/list/charttopics/", name="charttopics_create", methods={"POST"})
-     * @Route("/list/chartfilters/", name="chartfilters_create", methods={"POST"})
-     * @Route("/list/charts/", name="charts_create", methods={"POST"})
-     * @Route("/list/chartdatasources/", name="chartdatasources_create", methods={"POST"})
-     * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies_create", methods={"POST"})
-     * @Route("/list/chartvisualizations/", name="chartvisualizations_create", methods={"POST"})
-     * @Route("/list/vacreqholidays/", name="vacreqholidays_create", methods={"POST"})
-     * @Route("/list/vacreqobservedholidays/", name="vacreqobservedholidays_create", methods={"POST"})
      *
      *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
+     *
+     *
+     *
+     *
+     *
      */
+    #[Route(path: '/list/list-manager/', name: 'platformlistmanager_create', methods: ['POST'])]
+    #[Route(path: '/list/source-systems/', name: 'sourcesystems_create', methods: ['POST'])]
+    #[Route(path: '/list/roles/', name: 'role_create', methods: ['POST'])]
+    #[Route(path: '/list/institutions/', name: 'institutions_create', methods: ['POST'])]
+    #[Route(path: '/list/states/', name: 'states_create', methods: ['POST'])]
+    #[Route(path: '/list/countries/', name: 'countries_create', methods: ['POST'])]
+    #[Route(path: '/list/board-certifications/', name: 'boardcertifications_create', methods: ['POST'])]
+    #[Route(path: '/list/employment-termination-reasons/', name: 'employmentterminations_create', methods: ['POST'])]
+    #[Route(path: '/list/event-log-event-types/', name: 'loggereventtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/primary-public-user-id-types/', name: 'usernametypes_create', methods: ['POST'])]
+    #[Route(path: '/list/identifier-types/', name: 'identifiers_create', methods: ['POST'])]
+    #[Route(path: '/list/residency-tracks/', name: 'residencytracks_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-types/', name: 'fellowshiptypes_create', methods: ['POST'])]
+    #[Route(path: '/list/location-types/', name: 'locationtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/equipment/', name: 'equipments_create', methods: ['POST'])]
+    #[Route(path: '/list/equipment-types/', name: 'equipmenttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/location-privacy-types/', name: 'locationprivacy_create', methods: ['POST'])]
+    #[Route(path: '/list/role-attributes/', name: 'roleattributes_create', methods: ['POST'])]
+    #[Route(path: '/list/buidlings/', name: 'buildings_create', methods: ['POST'])]
+    #[Route(path: '/list/rooms/', name: 'rooms_create', methods: ['POST'])]
+    #[Route(path: '/list/suites/', name: 'suites_create', methods: ['POST'])]
+    #[Route(path: '/list/floors/', name: 'floors_create', methods: ['POST'])]
+    #[Route(path: '/list/grants/', name: 'grants_create', methods: ['POST'])]
+    #[Route(path: '/list/mailboxes/', name: 'mailboxes_create', methods: ['POST'])]
+    #[Route(path: '/list/percent-effort/', name: 'efforts_create', methods: ['POST'])]
+    #[Route(path: '/list/administrative-titles/', name: 'admintitles_create', methods: ['POST'])]
+    #[Route(path: '/list/academic-appointment-titles/', name: 'apptitles_create', methods: ['POST'])]
+    #[Route(path: '/list/training-completion-reasons/', name: 'completionreasons_create', methods: ['POST'])]
+    #[Route(path: '/list/training-degrees/', name: 'trainingdegrees_create', methods: ['POST'])]
+    #[Route(path: '/list/training-majors/', name: 'trainingmajors_create', methods: ['POST'])]
+    #[Route(path: '/list/training-minors/', name: 'trainingminors_create', methods: ['POST'])]
+    #[Route(path: '/list/training-honors/', name: 'traininghonors_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-titles/', name: 'fellowshiptitles_create', methods: ['POST'])]
+    #[Route(path: '/list/residency-specialties/', name: 'residencyspecialtys_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-subspecialties/', name: 'fellowshipsubspecialtys_create', methods: ['POST'])]
+    #[Route(path: '/list/institution-types/', name: 'institutiontypes_create', methods: ['POST'])]
+    #[Route(path: '/list/document-types/', name: 'documenttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/medical-titles/', name: 'medicaltitles_create', methods: ['POST'])]
+    #[Route(path: '/list/medical-specialties/', name: 'medicalspecialties_create', methods: ['POST'])]
+    #[Route(path: '/list/employment-types/', name: 'employmenttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/grant-source-organizations/', name: 'sourceorganizations_create', methods: ['POST'])]
+    #[Route(path: '/list/languages/', name: 'languages_create', methods: ['POST'])]
+    #[Route(path: '/list/locales/', name: 'locales_create', methods: ['POST'])]
+    #[Route(path: '/list/ranks-of-importance/', name: 'importances_create', methods: ['POST'])]
+    #[Route(path: '/list/authorship-roles/', name: 'authorshiproles_create', methods: ['POST'])]
+    #[Route(path: '/list/lecture-venues/', name: 'organizations_create', methods: ['POST'])]
+    #[Route(path: '/list/cities/', name: 'cities_create', methods: ['POST'])]
+    #[Route(path: '/list/link-types/', name: 'linktypes_create', methods: ['POST'])]
+    #[Route(path: '/list/sexes/', name: 'sexes_create', methods: ['POST'])]
+    #[Route(path: '/list/position-types/', name: 'positiontypes_create', methods: ['POST'])]
+    #[Route(path: '/list/organizational-group-types/', name: 'organizationalgrouptypes_create', methods: ['POST'])]
+    #[Route(path: '/list/profile-comment-group-types/', name: 'commentgrouptypes_create', methods: ['POST'])]
+    #[Route(path: '/list/comment-types/', name: 'commenttypes_createt', methods: ['POST'])]
+    #[Route(path: '/list/user-wrappers/', name: 'userwrappers_create', methods: ['POST'])]
+    #[Route(path: '/list/spot-purposes/', name: 'spotpurposes_create', methods: ['POST'])]
+    #[Route(path: '/list/medical-license-statuses/', name: 'medicalstatuses_create', methods: ['POST'])]
+    #[Route(path: '/list/certifying-board-organizations/', name: 'certifyingboardorganizations_create', methods: ['POST'])]
+    #[Route(path: '/list/training-types/', name: 'trainingtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/job-titles/', name: 'joblists_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-application-statuses/', name: 'fellappstatuses_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-application-ranks/', name: 'fellappranks_create', methods: ['POST'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/', name: 'fellapplanguageproficiency_create', methods: ['POST'])]
+    #[Route(path: '/list/collaboration-types/', name: 'collaborationtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/permissions/', name: 'permission_create', methods: ['POST'])]
+    #[Route(path: '/list/permission-objects/', name: 'permissionobject_create', methods: ['POST'])]
+    #[Route(path: '/list/permission-actions/', name: 'permissionaction_create', methods: ['POST'])]
+    #[Route(path: '/list/sites/', name: 'sites_create', methods: ['POST'])]
+    #[Route(path: '/list/event-object-types/', name: 'eventobjecttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/time-away-request-types/', name: 'vacreqrequesttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/time-away-request-floating-texts/', name: 'vacreqfloatingtexts_create', methods: ['POST'])]
+    #[Route(path: '/list/time-away-request-floating-types/', name: 'vacreqfloatingtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/time-away-request-approval-types/', name: 'vacreqapprovaltypes_create', methods: ['POST'])]
+    #[Route(path: '/list/healthcare-provider-specialties/', name: 'healthcareproviderspecialty_create', methods: ['POST'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/', name: 'healthcareprovidercommunication_create', methods: ['POST'])]
+    #[Route(path: '/list/object-types/', name: 'objecttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/form-nodes/', name: 'formnodes_create', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/', name: 'objecttypetexts_create', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/', name: 'bloodproducttransfusions_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-reaction-types/', name: 'transfusionreactiontypes_create', methods: ['POST'])]
+    #[Route(path: '/list/object-type-strings/', name: 'objecttypestrings_create', methods: ['POST'])]
+    #[Route(path: '/list/object-type-dropdowns/', name: 'objecttypedropdowns_create', methods: ['POST'])]
+    #[Route(path: '/list/blood-types/', name: 'bloodtypes_create', methods: ['POST'])]
+    #[Route(path: '/list/additional-communications/', name: 'additionalcommunications_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/', name: 'transfusionantibodyscreenresults_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/', name: 'transfusioncrossmatchresults_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-dat-results/', name: 'transfusiondatresults_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/', name: 'transfusionhemolysischeckresults_create', methods: ['POST'])]
+    #[Route(path: '/list/object-type-datetimes/', name: 'objecttypedatetimes_create', methods: ['POST'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/', name: 'complexplateletsummaryantibodies_create', methods: ['POST'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/', name: 'cciunitplateletcountdefaultvalues_create', methods: ['POST'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/', name: 'cciplatelettypetransfuseds_create', methods: ['POST'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/', name: 'platelettransfusionproductreceivings_create', methods: ['POST'])]
+    #[Route(path: '/list/transfusion-product-status/', name: 'transfusionproductstatus_create', methods: ['POST'])]
+    #[Route(path: '/list/week-days/', name: 'weekdays_create', methods: ['POST'])]
+    #[Route(path: '/list/months/', name: 'months_create', methods: ['POST'])]
+    #[Route(path: '/list/clerical-errors/', name: 'clericalerrors_create', methods: ['POST'])]
+    #[Route(path: '/list/lab-result-names/', name: 'labresultnames_create', methods: ['POST'])]
+    #[Route(path: '/list/lab-result-units-measures/', name: 'labresultunitsmeasures_create', methods: ['POST'])]
+    #[Route(path: '/list/lab-result-flags/', name: 'labresultflags_create', methods: ['POST'])]
+    #[Route(path: '/list/pathology-result-signatories/', name: 'pathologyresultsignatories_create', methods: ['POST'])]
+    #[Route(path: '/list/object-type-checkboxes/', name: 'objecttypecheckboxs_create', methods: ['POST'])]
+    #[Route(path: '/list/object-type-radio-buttons/', name: 'objecttyperadiobuttons_create', methods: ['POST'])]
+    #[Route(path: '/list/life-forms/', name: 'lifeforms_create', methods: ['POST'])]
+    #[Route(path: '/list/position-track-types/', name: 'positiontracktypes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-research-project-specialties-orig/', name: 'transresprojectspecialties_create_orig', methods: ['POST'])]
+    #[Route(path: '/list/translational-research-project-types/', name: 'transresprojecttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-research-request-category-types/', name: 'transresrequestcategorytypes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-irb-approval-types/', name: 'transresirbapprovaltypes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-business-purposes/', name: 'transresbusinesspurposes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-work-queue-types/', name: 'workqueuetypes_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-orderable-status/', name: 'orderablestatus_create', methods: ['POST'])]
+    #[Route(path: '/list/antibodies/', name: 'antibodies_create', methods: ['POST'])]
+    #[Route(path: '/list/custom000/', name: 'custom000_create', methods: ['POST'])]
+    #[Route(path: '/list/custom001/', name: 'custom001_create', methods: ['POST'])]
+    #[Route(path: '/list/custom002/', name: 'custom002_create', methods: ['POST'])]
+    #[Route(path: '/list/custom003/', name: 'custom003_create', methods: ['POST'])]
+    #[Route(path: '/list/custom004/', name: 'custom004_create', methods: ['POST'])]
+    #[Route(path: '/list/custom005/', name: 'custom005_create', methods: ['POST'])]
+    #[Route(path: '/list/custom006/', name: 'custom006_create', methods: ['POST'])]
+    #[Route(path: '/list/custom007/', name: 'custom007_create', methods: ['POST'])]
+    #[Route(path: '/list/custom008/', name: 'custom008_create', methods: ['POST'])]
+    #[Route(path: '/list/custom009/', name: 'custom009_create', methods: ['POST'])]
+    #[Route(path: '/list/custom010/', name: 'custom010_create', methods: ['POST'])]
+    #[Route(path: '/list/custom011/', name: 'custom011_create', methods: ['POST'])]
+    #[Route(path: '/list/custom012/', name: 'custom012_create', methods: ['POST'])]
+    #[Route(path: '/list/custom013/', name: 'custom013_create', methods: ['POST'])]
+    #[Route(path: '/list/custom014/', name: 'custom014_create', methods: ['POST'])]
+    #[Route(path: '/list/custom015/', name: 'custom015_create', methods: ['POST'])]
+    #[Route(path: '/list/custom016/', name: 'custom016_create', methods: ['POST'])]
+    #[Route(path: '/list/custom017/', name: 'custom017_create', methods: ['POST'])]
+    #[Route(path: '/list/custom018/', name: 'custom018_create', methods: ['POST'])]
+    #[Route(path: '/list/custom019/', name: 'custom019_create', methods: ['POST'])]
+    #[Route(path: '/list/custom020/', name: 'custom020_create', methods: ['POST'])]
+    #[Route(path: '/list/custom021/', name: 'custom021_create', methods: ['POST'])]
+    #[Route(path: '/list/custom022/', name: 'custom022_create', methods: ['POST'])]
+    #[Route(path: '/list/custom023/', name: 'custom023_create', methods: ['POST'])]
+    #[Route(path: '/list/custom024/', name: 'custom024_create', methods: ['POST'])]
+    #[Route(path: '/list/custom025/', name: 'custom025_create', methods: ['POST'])]
+    #[Route(path: '/list/custom026/', name: 'custom026_create', methods: ['POST'])]
+    #[Route(path: '/list/custom027/', name: 'custom027_create', methods: ['POST'])]
+    #[Route(path: '/list/custom028/', name: 'custom028_create', methods: ['POST'])]
+    #[Route(path: '/list/custom029/', name: 'custom029_create', methods: ['POST'])]
+    #[Route(path: '/list/custom030/', name: 'custom030_create', methods: ['POST'])]
+    #[Route(path: '/list/custom031/', name: 'custom031_create', methods: ['POST'])]
+    #[Route(path: '/list/custom032/', name: 'custom032_create', methods: ['POST'])]
+    #[Route(path: '/list/custom033/', name: 'custom033_create', methods: ['POST'])]
+    #[Route(path: '/list/custom034/', name: 'custom034_create', methods: ['POST'])]
+    #[Route(path: '/list/custom035/', name: 'custom035_create', methods: ['POST'])]
+    #[Route(path: '/list/custom036/', name: 'custom036_create', methods: ['POST'])]
+    #[Route(path: '/list/custom037/', name: 'custom037_create', methods: ['POST'])]
+    #[Route(path: '/list/custom038/', name: 'custom038_create', methods: ['POST'])]
+    #[Route(path: '/list/custom039/', name: 'custom039_create', methods: ['POST'])]
+    #[Route(path: '/list/custom040/', name: 'custom040_create', methods: ['POST'])]
+    #[Route(path: '/list/custom041/', name: 'custom041_create', methods: ['POST'])]
+    #[Route(path: '/list/custom042/', name: 'custom042_create', methods: ['POST'])]
+    #[Route(path: '/list/custom043/', name: 'custom043_create', methods: ['POST'])]
+    #[Route(path: '/list/custom044/', name: 'custom044_create', methods: ['POST'])]
+    #[Route(path: '/list/custom045/', name: 'custom045_create', methods: ['POST'])]
+    #[Route(path: '/list/custom046/', name: 'custom046_create', methods: ['POST'])]
+    #[Route(path: '/list/custom047/', name: 'custom047_create', methods: ['POST'])]
+    #[Route(path: '/list/custom048/', name: 'custom048_create', methods: ['POST'])]
+    #[Route(path: '/list/custom049/', name: 'custom049_create', methods: ['POST'])]
+    #[Route(path: '/list/custom050/', name: 'custom050_create', methods: ['POST'])]
+    #[Route(path: '/list/custom051/', name: 'custom051_create', methods: ['POST'])]
+    #[Route(path: '/list/custom052/', name: 'custom052_create', methods: ['POST'])]
+    #[Route(path: '/list/custom053/', name: 'custom053_create', methods: ['POST'])]
+    #[Route(path: '/list/custom054/', name: 'custom054_create', methods: ['POST'])]
+    #[Route(path: '/list/custom055/', name: 'custom055_create', methods: ['POST'])]
+    #[Route(path: '/list/custom056/', name: 'custom056_create', methods: ['POST'])]
+    #[Route(path: '/list/custom057/', name: 'custom057_create', methods: ['POST'])]
+    #[Route(path: '/list/custom058/', name: 'custom058_create', methods: ['POST'])]
+    #[Route(path: '/list/custom059/', name: 'custom059_create', methods: ['POST'])]
+    #[Route(path: '/list/custom060/', name: 'custom060_create', methods: ['POST'])]
+    #[Route(path: '/list/custom061/', name: 'custom061_create', methods: ['POST'])]
+    #[Route(path: '/list/custom062/', name: 'custom062_create', methods: ['POST'])]
+    #[Route(path: '/list/custom063/', name: 'custom063_create', methods: ['POST'])]
+    #[Route(path: '/list/custom064/', name: 'custom064_create', methods: ['POST'])]
+    #[Route(path: '/list/custom065/', name: 'custom065_create', methods: ['POST'])]
+    #[Route(path: '/list/custom066/', name: 'custom066_create', methods: ['POST'])]
+    #[Route(path: '/list/custom067/', name: 'custom067_create', methods: ['POST'])]
+    #[Route(path: '/list/custom068/', name: 'custom068_create', methods: ['POST'])]
+    #[Route(path: '/list/custom069/', name: 'custom069_create', methods: ['POST'])]
+    #[Route(path: '/list/custom070/', name: 'custom070_create', methods: ['POST'])]
+    #[Route(path: '/list/custom071/', name: 'custom071_create', methods: ['POST'])]
+    #[Route(path: '/list/custom072/', name: 'custom072_create', methods: ['POST'])]
+    #[Route(path: '/list/custom073/', name: 'custom073_create', methods: ['POST'])]
+    #[Route(path: '/list/custom074/', name: 'custom074_create', methods: ['POST'])]
+    #[Route(path: '/list/custom075/', name: 'custom075_create', methods: ['POST'])]
+    #[Route(path: '/list/custom076/', name: 'custom076_create', methods: ['POST'])]
+    #[Route(path: '/list/custom077/', name: 'custom077_create', methods: ['POST'])]
+    #[Route(path: '/list/custom078/', name: 'custom078_create', methods: ['POST'])]
+    #[Route(path: '/list/custom079/', name: 'custom079_create', methods: ['POST'])]
+    #[Route(path: '/list/custom080/', name: 'custom080_create', methods: ['POST'])]
+    #[Route(path: '/list/custom081/', name: 'custom081_create', methods: ['POST'])]
+    #[Route(path: '/list/custom082/', name: 'custom082_create', methods: ['POST'])]
+    #[Route(path: '/list/custom083/', name: 'custom083_create', methods: ['POST'])]
+    #[Route(path: '/list/custom084/', name: 'custom084_create', methods: ['POST'])]
+    #[Route(path: '/list/custom085/', name: 'custom085_create', methods: ['POST'])]
+    #[Route(path: '/list/custom086/', name: 'custom086_create', methods: ['POST'])]
+    #[Route(path: '/list/custom087/', name: 'custom087_create', methods: ['POST'])]
+    #[Route(path: '/list/custom088/', name: 'custom088_create', methods: ['POST'])]
+    #[Route(path: '/list/custom089/', name: 'custom089_create', methods: ['POST'])]
+    #[Route(path: '/list/custom090/', name: 'custom090_create', methods: ['POST'])]
+    #[Route(path: '/list/custom091/', name: 'custom091_create', methods: ['POST'])]
+    #[Route(path: '/list/custom092/', name: 'custom092_create', methods: ['POST'])]
+    #[Route(path: '/list/custom093/', name: 'custom093_create', methods: ['POST'])]
+    #[Route(path: '/list/custom094/', name: 'custom094_create', methods: ['POST'])]
+    #[Route(path: '/list/custom095/', name: 'custom095_create', methods: ['POST'])]
+    #[Route(path: '/list/custom096/', name: 'custom096_create', methods: ['POST'])]
+    #[Route(path: '/list/custom097/', name: 'custom097_create', methods: ['POST'])]
+    #[Route(path: '/list/custom098/', name: 'custom098_create', methods: ['POST'])]
+    #[Route(path: '/list/custom099/', name: 'custom099_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-tissue-processing-services/', name: 'transrestissueprocessingservices_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-other-requested-services/', name: 'transresotherrequestedservices_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-collaboration-labs/', name: 'transrescolllabs_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-collaboration-divs/', name: 'transrescolldivs_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-irb-approval-status/', name: 'transresirbstatus_create', methods: ['POST'])]
+    #[Route(path: '/list/translational-requester-group/', name: 'transresrequestergroup_create', methods: ['POST'])]
+    #[Route(path: '/list/transrescomptypes/', name: 'transrescomptypes_create', methods: ['POST'])]
+    #[Route(path: '/list/visastatus/', name: 'visastatus_create', methods: ['POST'])]
+    #[Route(path: '/list/resappstatuses/', name: 'resappstatuses_create', methods: ['POST'])]
+    #[Route(path: '/list/resappranks/', name: 'resappranks_create', methods: ['POST'])]
+    #[Route(path: '/list/resapplanguageproficiency/', name: 'resapplanguageproficiency_create', methods: ['POST'])]
+    #[Route(path: '/list/resappfitforprogram/', name: 'resappfitforprogram_create', methods: ['POST'])]
+    #[Route(path: '/list/resappvisastatus/', name: 'resappvisastatus_create', methods: ['POST'])]
+    #[Route(path: '/list/postsoph/', name: 'postsoph_create', methods: ['POST'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/', name: 'resappapplyingresidencytrack_create', methods: ['POST'])]
+    #[Route(path: '/list/resapplearnarealist/', name: 'resapplearnarealist_create', methods: ['POST'])]
+    #[Route(path: '/list/resappspecificindividuallist/', name: 'resappspecificindividuallist_create', methods: ['POST'])]
+    #[Route(path: '/list/viewmodes/', name: 'viewmodes_create', methods: ['POST'])]
+    #[Route(path: '/list/transrespricetypes/', name: 'transrespricetypes_create', methods: ['POST'])]
+    #[Route(path: '/list/charttypes/', name: 'charttypes_create', methods: ['POST'])]
+    #[Route(path: '/list/charttopics/', name: 'charttopics_create', methods: ['POST'])]
+    #[Route(path: '/list/chartfilters/', name: 'chartfilters_create', methods: ['POST'])]
+    #[Route(path: '/list/charts/', name: 'charts_create', methods: ['POST'])]
+    #[Route(path: '/list/chartdatasources/', name: 'chartdatasources_create', methods: ['POST'])]
+    #[Route(path: '/list/chartupdatefrequencies/', name: 'chartupdatefrequencies_create', methods: ['POST'])]
+    #[Route(path: '/list/chartvisualizations/', name: 'chartvisualizations_create', methods: ['POST'])]
+    #[Route(path: '/list/vacreqholidays/', name: 'vacreqholidays_create', methods: ['POST'])]
+    #[Route(path: '/list/vacreqobservedholidays/', name: 'vacreqobservedholidays_create', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -1111,257 +1103,255 @@ class ListController extends OrderAbstractController
     /**
      * Displays a form to create a new entity.
      *
-     * @Route("/list/list-manager/new", name="platformlistmanager_new")
-     * @Route("/list/source-systems/new", name="sourcesystems_new", methods={"GET"})
-     * @Route("/list/roles/new", name="role_new", methods={"GET"})
-     * @Route("/list/institutions/new", name="institutions_new", methods={"GET"})
-     * @Route("/list/states/new", name="states_new", methods={"GET"})
-     * @Route("/list/countries/new", name="countries_new", methods={"GET"})
-     * @Route("/list/board-certifications/new", name="boardcertifications_new", methods={"GET"})
-     * @Route("/list/employment-termination-reasons/new", name="employmentterminations_new", methods={"GET"})
-     * @Route("/list/event-log-event-types/new", name="loggereventtypes_new", methods={"GET"})
-     * @Route("/list/primary-public-user-id-types/new", name="usernametypes_new", methods={"GET"})
-     * @Route("/list/identifier-types/new", name="identifiers_new", methods={"GET"})
-     * @Route("/list/residency-tracks/new", name="residencytracks_new", methods={"GET"})
-     * @Route("/list/fellowship-types/new", name="fellowshiptypes_new", methods={"GET"})
-//     * @Route("/list/research-labs/new", name="researchlabs_new", methods={"GET"})
-     * @Route("/list/location-types/new", name="locationtypes_new", methods={"GET"})
-     * @Route("/list/equipment/new", name="equipments_new", methods={"GET"})
-     * @Route("/list/equipment-types/new", name="equipmenttypes_new", methods={"GET"})
-     * @Route("/list/location-privacy-types/new", name="locationprivacy_new", methods={"GET"})
-     * @Route("/list/role-attributes/new", name="roleattributes_new", methods={"GET"})
-     * @Route("/list/buidlings/new", name="buildings_new", methods={"GET"})
-     * @Route("/list/rooms/new", name="rooms_new", methods={"GET"})
-     * @Route("/list/suites/new", name="suites_new", methods={"GET"})
-     * @Route("/list/floors/new", name="floors_new", methods={"GET"})
-     * @Route("/list/grants/new", name="grants_new", methods={"GET"})
-     * @Route("/list/mailboxes/new", name="mailboxes_new", methods={"GET"})
-     * @Route("/list/percent-effort/new", name="efforts_new", methods={"GET"})
-     * @Route("/list/administrative-titles/new", name="admintitles_new", methods={"GET"})
-     * @Route("/list/academic-appointment-titles/new", name="apptitles_new", methods={"GET"})
-     * @Route("/list/training-completion-reasons/new", name="completionreasons_new", methods={"GET"})
-     * @Route("/list/training-degrees/new", name="trainingdegrees_new", methods={"GET"})
-     * @Route("/list/training-majors/new", name="trainingmajors_new", methods={"GET"})
-     * @Route("/list/training-minors/new", name="trainingminors_new", methods={"GET"})
-     * @Route("/list/training-honors/new", name="traininghonors_new", methods={"GET"})
-     * @Route("/list/fellowship-titles/new", name="fellowshiptitles_new", methods={"GET"})
-     * @Route("/list/residency-specialties/new", name="residencyspecialtys_new", methods={"GET"})
-     * @Route("/list/fellowship-subspecialties/new", name="fellowshipsubspecialtys_new", methods={"GET"})
-     * @Route("/list/institution-types/new", name="institutiontypes_new", methods={"GET"})
-     * @Route("/list/document-types/new", name="documenttypes_new", methods={"GET"})
-     * @Route("/list/medical-titles/new", name="medicaltitles_new", methods={"GET"})
-     * @Route("/list/medical-specialties/new", name="medicalspecialties_new", methods={"GET"})
-     * @Route("/list/employment-types/new", name="employmenttypes_new", methods={"GET"})
-     * @Route("/list/grant-source-organizations/new", name="sourceorganizations_new", methods={"GET"})
-     * @Route("/list/languages/new", name="languages_new", methods={"GET"})
-     * @Route("/list/locales/new", name="locales_new", methods={"GET"})
-     * @Route("/list/ranks-of-importance/new", name="importances_new", methods={"GET"})
-     * @Route("/list/authorship-roles/new", name="authorshiproles_new", methods={"GET"})
-     * @Route("/list/lecture-venues/new", name="organizations_new", methods={"GET"})
-     * @Route("/list/cities/new", name="cities_new", methods={"GET"})
-     * @Route("/list/link-types/new", name="linktypes_new", methods={"GET"})
-     * @Route("/list/sexes/new", name="sexes_new", methods={"GET"})
-     * @Route("/list/position-types/new", name="positiontypes_new", methods={"GET"})
-     * @Route("/list/organizational-group-types/new", name="organizationalgrouptypes_new", methods={"GET"})
-     * @Route("/list/profile-comment-group-types/new", name="commentgrouptypes_new", methods={"GET"})
-     * @Route("/list/comment-types/new", name="commenttypes_new", methods={"GET"})
-     * @Route("/list/user-wrappers/new", name="userwrappers_new", methods={"GET"})
-     * @Route("/list/spot-purposes/new", name="spotpurposes_new", methods={"GET"})
-     * @Route("/list/medical-license-statuses/new", name="medicalstatuses_new", methods={"GET"})
-     * @Route("/list/certifying-board-organizations/new", name="certifyingboardorganizations_new", methods={"GET"})
-     * @Route("/list/training-types/new", name="trainingtypes_new", methods={"GET"})
-     * @Route("/list/job-titles/new", name="joblists_new", methods={"GET"})
-     * @Route("/list/fellowship-application-statuses/new", name="fellappstatuses_new", methods={"GET"})
-     * @Route("/list/fellowship-application-ranks/new", name="fellappranks_new", methods={"GET"})
-     * @Route("/list/fellowship-application-language-proficiencies/new", name="fellapplanguageproficiency_new", methods={"GET"})
-//     * @Route("/list/collaborations/new", name="collaborations_new", methods={"GET"})
-     * @Route("/list/collaboration-types/new", name="collaborationtypes_new", methods={"GET"})
-     * @Route("/list/permissions/new", name="permission_new", methods={"GET"})
-     * @Route("/list/permission-objects/new", name="permissionobject_new", methods={"GET"})
-     * @Route("/list/permission-actions/new", name="permissionaction_new", methods={"GET"})
-     * @Route("/list/sites/new", name="sites_new", methods={"GET"})
-     * @Route("/list/event-object-types/new", name="eventobjecttypes_new", methods={"GET"})
-     * @Route("/list/time-away-request-types/new", name="vacreqrequesttypes_new", methods={"GET"})
-     * @Route("/list/time-away-request-floating-texts/new", name="vacreqfloatingtexts_new", methods={"GET"})
-     * @Route("/list/time-away-request-floating-types/new", name="vacreqfloatingtypes_new", methods={"GET"})
-     * @Route("/list/time-away-request-approval-types/new", name="vacreqapprovaltypes_new", methods={"GET"})
-     * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new", methods={"GET"})
-     * @Route("/list/healthcare-provider-initial-communications/new", name="healthcareprovidercommunication_new", methods={"GET"})
-     * @Route("/list/object-types/new", name="objecttypes_new", methods={"GET"})
-     * @Route("/list/form-nodes/new", name="formnodes_new", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/new", name="objecttypetexts_new", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/new", name="bloodproducttransfusions_new", methods={"GET"})
-     * @Route("/list/transfusion-reaction-types/new", name="transfusionreactiontypes_new", methods={"GET"})
-     * @Route("/list/object-type-strings/new", name="objecttypestrings_new", methods={"GET"})
-     * @Route("/list/object-type-dropdowns/new", name="objecttypedropdowns_new", methods={"GET"})
-     * @Route("/list/blood-types/new", name="bloodtypes_new", methods={"GET"})
-     * @Route("/list/additional-communications/new", name="additionalcommunications_new", methods={"GET"})
-     * @Route("/list/transfusion-antibody-screen-results/new", name="transfusionantibodyscreenresults_new", methods={"GET"})
-     * @Route("/list/transfusion-crossmatch-results/new", name="transfusioncrossmatchresults_new", methods={"GET"})
-     * @Route("/list/transfusion-dat-results/new", name="transfusiondatresults_new", methods={"GET"})
-     * @Route("/list/transfusion-hemolysis-check-results/new", name="transfusionhemolysischeckresults_new", methods={"GET"})
-     * @Route("/list/object-type-datetimes/new", name="objecttypedatetimes_new", methods={"GET"})
-     * @Route("/list/complex-platelet-summary-antibodies/new", name="complexplateletsummaryantibodies_new", methods={"GET"})
-     * @Route("/list/cci-unit-platelet-count-default-values/new", name="cciunitplateletcountdefaultvalues_new", methods={"GET"})
-     * @Route("/list/cci-platelet-type-transfused/new", name="cciplatelettypetransfuseds_new", methods={"GET"})
-     * @Route("/list/platelet-transfusion-product-receiving/new", name="platelettransfusionproductreceivings_new", methods={"GET"})
-     * @Route("/list/transfusion-product-status/new", name="transfusionproductstatus_new", methods={"GET"})
-     * @Route("/list/week-days/new", name="weekdays_new", methods={"GET"})
-     * @Route("/list/months/new", name="months_new", methods={"GET"})
-     * @Route("/list/clerical-errors/new", name="clericalerrors_new", methods={"GET"})
-     * @Route("/list/lab-result-names/new", name="labresultnames_new", methods={"GET"})
-     * @Route("/list/lab-result-units-measures/new", name="labresultunitsmeasures_new", methods={"GET"})
-     * @Route("/list/lab-result-flags/new", name="labresultflags_new", methods={"GET"})
-     * @Route("/list/pathology-result-signatories/new", name="pathologyresultsignatories_new", methods={"GET"})
-     * @Route("/list/object-type-checkboxes/new", name="objecttypecheckboxs_new", methods={"GET"})
-     * @Route("/list/object-type-radio-buttons/new", name="objecttyperadiobuttons_new", methods={"GET"})
-     * @Route("/list/life-forms/new", name="lifeforms_new", methods={"GET"})
-     * @Route("/list/position-track-types/new", name="positiontracktypes_new", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-orig/new", name="transresprojectspecialties_new_orig", methods={"GET"})
-     * @Route("/list/translational-research-project-types/new", name="transresprojecttypes_new", methods={"GET"})
-     * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new", methods={"GET"})
-     * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new", methods={"GET"})
-     * @Route("/list/translational-business-purposes/new", name="transresbusinesspurposes_new", methods={"GET"})
-     * @Route("/list/translational-work-queue-types/new", name="workqueuetypes_new", methods={"GET"})
-     * @Route("/list/antibodies/new", name="antibodies_new", methods={"GET"}, methods={"GET"})
-     * @Route("/list/translational-orderable-status/new", name="orderablestatus_new", methods={"GET"})
-     *
-     * @Route("/list/custom000/new", name="custom000_new", methods={"GET"})
-     * @Route("/list/custom001/new", name="custom001_new", methods={"GET"})
-     * @Route("/list/custom002/new", name="custom002_new", methods={"GET"})
-     * @Route("/list/custom003/new", name="custom003_new", methods={"GET"})
-     * @Route("/list/custom004/new", name="custom004_new", methods={"GET"})
-     * @Route("/list/custom005/new", name="custom005_new", methods={"GET"})
-     * @Route("/list/custom006/new", name="custom006_new", methods={"GET"})
-     * @Route("/list/custom007/new", name="custom007_new", methods={"GET"})
-     * @Route("/list/custom008/new", name="custom008_new", methods={"GET"})
-     * @Route("/list/custom009/new", name="custom009_new", methods={"GET"})
-     * @Route("/list/custom010/new", name="custom010_new", methods={"GET"})
-     * @Route("/list/custom011/new", name="custom011_new", methods={"GET"})
-     * @Route("/list/custom012/new", name="custom012_new", methods={"GET"})
-     * @Route("/list/custom013/new", name="custom013_new", methods={"GET"})
-     * @Route("/list/custom014/new", name="custom014_new", methods={"GET"})
-     * @Route("/list/custom015/new", name="custom015_new", methods={"GET"})
-     * @Route("/list/custom016/new", name="custom016_new", methods={"GET"})
-     * @Route("/list/custom017/new", name="custom017_new", methods={"GET"})
-     * @Route("/list/custom018/new", name="custom018_new", methods={"GET"})
-     * @Route("/list/custom019/new", name="custom019_new", methods={"GET"})
-     * @Route("/list/custom020/new", name="custom020_new", methods={"GET"})
-     * @Route("/list/custom021/new", name="custom021_new", methods={"GET"})
-     * @Route("/list/custom022/new", name="custom022_new", methods={"GET"})
-     * @Route("/list/custom023/new", name="custom023_new", methods={"GET"})
-     * @Route("/list/custom024/new", name="custom024_new", methods={"GET"})
-     * @Route("/list/custom025/new", name="custom025_new", methods={"GET"})
-     * @Route("/list/custom026/new", name="custom026_new", methods={"GET"})
-     * @Route("/list/custom027/new", name="custom027_new", methods={"GET"})
-     * @Route("/list/custom028/new", name="custom028_new", methods={"GET"})
-     * @Route("/list/custom029/new", name="custom029_new", methods={"GET"})
-     * @Route("/list/custom030/new", name="custom030_new", methods={"GET"})
-     * @Route("/list/custom031/new", name="custom031_new", methods={"GET"})
-     * @Route("/list/custom032/new", name="custom032_new", methods={"GET"})
-     * @Route("/list/custom033/new", name="custom033_new", methods={"GET"})
-     * @Route("/list/custom034/new", name="custom034_new", methods={"GET"})
-     * @Route("/list/custom035/new", name="custom035_new", methods={"GET"})
-     * @Route("/list/custom036/new", name="custom036_new", methods={"GET"})
-     * @Route("/list/custom037/new", name="custom037_new", methods={"GET"})
-     * @Route("/list/custom038/new", name="custom038_new", methods={"GET"})
-     * @Route("/list/custom039/new", name="custom039_new", methods={"GET"})
-     * @Route("/list/custom040/new", name="custom040_new", methods={"GET"})
-     * @Route("/list/custom041/new", name="custom041_new", methods={"GET"})
-     * @Route("/list/custom042/new", name="custom042_new", methods={"GET"})
-     * @Route("/list/custom043/new", name="custom043_new", methods={"GET"})
-     * @Route("/list/custom044/new", name="custom044_new", methods={"GET"})
-     * @Route("/list/custom045/new", name="custom045_new", methods={"GET"})
-     * @Route("/list/custom046/new", name="custom046_new", methods={"GET"})
-     * @Route("/list/custom047/new", name="custom047_new", methods={"GET"})
-     * @Route("/list/custom048/new", name="custom048_new", methods={"GET"})
-     * @Route("/list/custom049/new", name="custom049_new", methods={"GET"})
-     * @Route("/list/custom050/new", name="custom050_new", methods={"GET"})
-     * @Route("/list/custom051/new", name="custom051_new", methods={"GET"})
-     * @Route("/list/custom052/new", name="custom052_new", methods={"GET"})
-     * @Route("/list/custom053/new", name="custom053_new", methods={"GET"})
-     * @Route("/list/custom054/new", name="custom054_new", methods={"GET"})
-     * @Route("/list/custom055/new", name="custom055_new", methods={"GET"})
-     * @Route("/list/custom056/new", name="custom056_new", methods={"GET"})
-     * @Route("/list/custom057/new", name="custom057_new", methods={"GET"})
-     * @Route("/list/custom058/new", name="custom058_new", methods={"GET"})
-     * @Route("/list/custom059/new", name="custom059_new", methods={"GET"})
-     * @Route("/list/custom060/new", name="custom060_new", methods={"GET"})
-     * @Route("/list/custom061/new", name="custom061_new", methods={"GET"})
-     * @Route("/list/custom062/new", name="custom062_new", methods={"GET"})
-     * @Route("/list/custom063/new", name="custom063_new", methods={"GET"})
-     * @Route("/list/custom064/new", name="custom064_new", methods={"GET"})
-     * @Route("/list/custom065/new", name="custom065_new", methods={"GET"})
-     * @Route("/list/custom066/new", name="custom066_new", methods={"GET"})
-     * @Route("/list/custom067/new", name="custom067_new", methods={"GET"})
-     * @Route("/list/custom068/new", name="custom068_new", methods={"GET"})
-     * @Route("/list/custom069/new", name="custom069_new", methods={"GET"})
-     * @Route("/list/custom070/new", name="custom070_new", methods={"GET"})
-     * @Route("/list/custom071/new", name="custom071_new", methods={"GET"})
-     * @Route("/list/custom072/new", name="custom072_new", methods={"GET"})
-     * @Route("/list/custom073/new", name="custom073_new", methods={"GET"})
-     * @Route("/list/custom074/new", name="custom074_new", methods={"GET"})
-     * @Route("/list/custom075/new", name="custom075_new", methods={"GET"})
-     * @Route("/list/custom076/new", name="custom076_new", methods={"GET"})
-     * @Route("/list/custom077/new", name="custom077_new", methods={"GET"})
-     * @Route("/list/custom078/new", name="custom078_new", methods={"GET"})
-     * @Route("/list/custom079/new", name="custom079_new", methods={"GET"})
-     * @Route("/list/custom080/new", name="custom080_new", methods={"GET"})
-     * @Route("/list/custom081/new", name="custom081_new", methods={"GET"})
-     * @Route("/list/custom082/new", name="custom082_new", methods={"GET"})
-     * @Route("/list/custom083/new", name="custom083_new", methods={"GET"})
-     * @Route("/list/custom084/new", name="custom084_new", methods={"GET"})
-     * @Route("/list/custom085/new", name="custom085_new", methods={"GET"})
-     * @Route("/list/custom086/new", name="custom086_new", methods={"GET"})
-     * @Route("/list/custom087/new", name="custom087_new", methods={"GET"})
-     * @Route("/list/custom088/new", name="custom088_new", methods={"GET"})
-     * @Route("/list/custom089/new", name="custom089_new", methods={"GET"})
-     * @Route("/list/custom090/new", name="custom090_new", methods={"GET"})
-     * @Route("/list/custom091/new", name="custom091_new", methods={"GET"})
-     * @Route("/list/custom092/new", name="custom092_new", methods={"GET"})
-     * @Route("/list/custom093/new", name="custom093_new", methods={"GET"})
-     * @Route("/list/custom094/new", name="custom094_new", methods={"GET"})
-     * @Route("/list/custom095/new", name="custom095_new", methods={"GET"})
-     * @Route("/list/custom096/new", name="custom096_new", methods={"GET"})
-     * @Route("/list/custom097/new", name="custom097_new", methods={"GET"})
-     * @Route("/list/custom098/new", name="custom098_new", methods={"GET"})
-     * @Route("/list/custom099/new", name="custom099_new", methods={"GET"})
-     * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new", methods={"GET"})
-     * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new", methods={"GET"})
-     *
-     * @Route("/list/translational-collaboration-labs/new", name="transrescolllabs_new", methods={"GET"})
-     * @Route("/list/translational-collaboration-divs/new", name="transrescolldivs_new", methods={"GET"})
-     * @Route("/list/translational-irb-approval-status/new", name="transresirbstatus_new", methods={"GET"})
-     * @Route("/list/translational-requester-group/new", name="transresrequestergroup_new", methods={"GET"})
-     * @Route("/list/transrescomptypes/new", name="transrescomptypes_new", methods={"GET"})
-     *
-     * @Route("/list/visastatus/new", name="visastatus_new", methods={"GET"})
-     * @Route("/list/resappstatuses/new", name="resappstatuses_new", methods={"GET"})
-     * @Route("/list/resappranks/new", name="resappranks_new", methods={"GET"})
-     * @Route("/list/resapplanguageproficiency/new", name="resapplanguageproficiency_new", methods={"GET"})
-     * @Route("/list/resappfitforprogram/new", name="resappfitforprogram_new", methods={"GET"})
-     * @Route("/list/resappvisastatus/new", name="resappvisastatus_new", methods={"GET"})
-     * @Route("/list/postsoph/new", name="postsoph_new", methods={"GET"})
-     *
-     * @Route("/list/resappapplyingresidencytrack/new", name="resappapplyingresidencytrack_new", methods={"GET"})
-     * @Route("/list/resapplearnarealist/new", name="resapplearnarealist_new", methods={"GET"})
-     * @Route("/list/resappspecificindividuallist/new", name="resappspecificindividuallist_new", methods={"GET"})
-     * @Route("/list/viewmodes/new", name="viewmodes_new", methods={"GET"})
-     * @Route("/list/transrespricetypes/new", name="transrespricetypes_new", methods={"GET"})
-     *
-     * @Route("/list/charttypes/new", name="charttypes_new", methods={"GET"})
-     * @Route("/list/charttopics/new", name="charttopics_new", methods={"GET"})
-     * @Route("/list/chartfilters/new", name="chartfilters_new", methods={"GET"})
-     * @Route("/list/charts/new", name="charts_new", methods={"GET"})
-     * @Route("/list/chartdatasources/new", name="chartdatasources_new", methods={"GET"})
-     * @Route("/list/chartupdatefrequencies/new", name="chartupdatefrequencies_new", methods={"GET"})
-     * @Route("/list/chartvisualizations/new", name="chartvisualizations_new", methods={"GET"})
-     * @Route("/list/vacreqholidays/new", name="vacreqholidays_new", methods={"GET"})
-     * @Route("/list/vacreqobservedholidays/new", name="vacreqobservedholidays_new", methods={"GET"})
      *
      *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
+     *
+     *
+     *
+     *
+     *
      */
+    #[Route(path: '/list/list-manager/new', name: 'platformlistmanager_new')]
+    #[Route(path: '/list/source-systems/new', name: 'sourcesystems_new', methods: ['GET'])]
+    #[Route(path: '/list/roles/new', name: 'role_new', methods: ['GET'])]
+    #[Route(path: '/list/institutions/new', name: 'institutions_new', methods: ['GET'])]
+    #[Route(path: '/list/states/new', name: 'states_new', methods: ['GET'])]
+    #[Route(path: '/list/countries/new', name: 'countries_new', methods: ['GET'])]
+    #[Route(path: '/list/board-certifications/new', name: 'boardcertifications_new', methods: ['GET'])]
+    #[Route(path: '/list/employment-termination-reasons/new', name: 'employmentterminations_new', methods: ['GET'])]
+    #[Route(path: '/list/event-log-event-types/new', name: 'loggereventtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/primary-public-user-id-types/new', name: 'usernametypes_new', methods: ['GET'])]
+    #[Route(path: '/list/identifier-types/new', name: 'identifiers_new', methods: ['GET'])]
+    #[Route(path: '/list/residency-tracks/new', name: 'residencytracks_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-types/new', name: 'fellowshiptypes_new', methods: ['GET'])]
+    #[Route(path: '/list/location-types/new', name: 'locationtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/equipment/new', name: 'equipments_new', methods: ['GET'])]
+    #[Route(path: '/list/equipment-types/new', name: 'equipmenttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/location-privacy-types/new', name: 'locationprivacy_new', methods: ['GET'])]
+    #[Route(path: '/list/role-attributes/new', name: 'roleattributes_new', methods: ['GET'])]
+    #[Route(path: '/list/buidlings/new', name: 'buildings_new', methods: ['GET'])]
+    #[Route(path: '/list/rooms/new', name: 'rooms_new', methods: ['GET'])]
+    #[Route(path: '/list/suites/new', name: 'suites_new', methods: ['GET'])]
+    #[Route(path: '/list/floors/new', name: 'floors_new', methods: ['GET'])]
+    #[Route(path: '/list/grants/new', name: 'grants_new', methods: ['GET'])]
+    #[Route(path: '/list/mailboxes/new', name: 'mailboxes_new', methods: ['GET'])]
+    #[Route(path: '/list/percent-effort/new', name: 'efforts_new', methods: ['GET'])]
+    #[Route(path: '/list/administrative-titles/new', name: 'admintitles_new', methods: ['GET'])]
+    #[Route(path: '/list/academic-appointment-titles/new', name: 'apptitles_new', methods: ['GET'])]
+    #[Route(path: '/list/training-completion-reasons/new', name: 'completionreasons_new', methods: ['GET'])]
+    #[Route(path: '/list/training-degrees/new', name: 'trainingdegrees_new', methods: ['GET'])]
+    #[Route(path: '/list/training-majors/new', name: 'trainingmajors_new', methods: ['GET'])]
+    #[Route(path: '/list/training-minors/new', name: 'trainingminors_new', methods: ['GET'])]
+    #[Route(path: '/list/training-honors/new', name: 'traininghonors_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-titles/new', name: 'fellowshiptitles_new', methods: ['GET'])]
+    #[Route(path: '/list/residency-specialties/new', name: 'residencyspecialtys_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-subspecialties/new', name: 'fellowshipsubspecialtys_new', methods: ['GET'])]
+    #[Route(path: '/list/institution-types/new', name: 'institutiontypes_new', methods: ['GET'])]
+    #[Route(path: '/list/document-types/new', name: 'documenttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/medical-titles/new', name: 'medicaltitles_new', methods: ['GET'])]
+    #[Route(path: '/list/medical-specialties/new', name: 'medicalspecialties_new', methods: ['GET'])]
+    #[Route(path: '/list/employment-types/new', name: 'employmenttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/grant-source-organizations/new', name: 'sourceorganizations_new', methods: ['GET'])]
+    #[Route(path: '/list/languages/new', name: 'languages_new', methods: ['GET'])]
+    #[Route(path: '/list/locales/new', name: 'locales_new', methods: ['GET'])]
+    #[Route(path: '/list/ranks-of-importance/new', name: 'importances_new', methods: ['GET'])]
+    #[Route(path: '/list/authorship-roles/new', name: 'authorshiproles_new', methods: ['GET'])]
+    #[Route(path: '/list/lecture-venues/new', name: 'organizations_new', methods: ['GET'])]
+    #[Route(path: '/list/cities/new', name: 'cities_new', methods: ['GET'])]
+    #[Route(path: '/list/link-types/new', name: 'linktypes_new', methods: ['GET'])]
+    #[Route(path: '/list/sexes/new', name: 'sexes_new', methods: ['GET'])]
+    #[Route(path: '/list/position-types/new', name: 'positiontypes_new', methods: ['GET'])]
+    #[Route(path: '/list/organizational-group-types/new', name: 'organizationalgrouptypes_new', methods: ['GET'])]
+    #[Route(path: '/list/profile-comment-group-types/new', name: 'commentgrouptypes_new', methods: ['GET'])]
+    #[Route(path: '/list/comment-types/new', name: 'commenttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/user-wrappers/new', name: 'userwrappers_new', methods: ['GET'])]
+    #[Route(path: '/list/spot-purposes/new', name: 'spotpurposes_new', methods: ['GET'])]
+    #[Route(path: '/list/medical-license-statuses/new', name: 'medicalstatuses_new', methods: ['GET'])]
+    #[Route(path: '/list/certifying-board-organizations/new', name: 'certifyingboardorganizations_new', methods: ['GET'])]
+    #[Route(path: '/list/training-types/new', name: 'trainingtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/job-titles/new', name: 'joblists_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-statuses/new', name: 'fellappstatuses_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-ranks/new', name: 'fellappranks_new', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/new', name: 'fellapplanguageproficiency_new', methods: ['GET'])]
+    #[Route(path: '/list/collaboration-types/new', name: 'collaborationtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/permissions/new', name: 'permission_new', methods: ['GET'])]
+    #[Route(path: '/list/permission-objects/new', name: 'permissionobject_new', methods: ['GET'])]
+    #[Route(path: '/list/permission-actions/new', name: 'permissionaction_new', methods: ['GET'])]
+    #[Route(path: '/list/sites/new', name: 'sites_new', methods: ['GET'])]
+    #[Route(path: '/list/event-object-types/new', name: 'eventobjecttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-types/new', name: 'vacreqrequesttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-texts/new', name: 'vacreqfloatingtexts_new', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-types/new', name: 'vacreqfloatingtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-approval-types/new', name: 'vacreqapprovaltypes_new', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-specialties/new', name: 'healthcareproviderspecialty_new', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/new', name: 'healthcareprovidercommunication_new', methods: ['GET'])]
+    #[Route(path: '/list/object-types/new', name: 'objecttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/form-nodes/new', name: 'formnodes_new', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/new', name: 'objecttypetexts_new', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/new', name: 'bloodproducttransfusions_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-reaction-types/new', name: 'transfusionreactiontypes_new', methods: ['GET'])]
+    #[Route(path: '/list/object-type-strings/new', name: 'objecttypestrings_new', methods: ['GET'])]
+    #[Route(path: '/list/object-type-dropdowns/new', name: 'objecttypedropdowns_new', methods: ['GET'])]
+    #[Route(path: '/list/blood-types/new', name: 'bloodtypes_new', methods: ['GET'])]
+    #[Route(path: '/list/additional-communications/new', name: 'additionalcommunications_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/new', name: 'transfusionantibodyscreenresults_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/new', name: 'transfusioncrossmatchresults_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-dat-results/new', name: 'transfusiondatresults_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/new', name: 'transfusionhemolysischeckresults_new', methods: ['GET'])]
+    #[Route(path: '/list/object-type-datetimes/new', name: 'objecttypedatetimes_new', methods: ['GET'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/new', name: 'complexplateletsummaryantibodies_new', methods: ['GET'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/new', name: 'cciunitplateletcountdefaultvalues_new', methods: ['GET'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/new', name: 'cciplatelettypetransfuseds_new', methods: ['GET'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/new', name: 'platelettransfusionproductreceivings_new', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-product-status/new', name: 'transfusionproductstatus_new', methods: ['GET'])]
+    #[Route(path: '/list/week-days/new', name: 'weekdays_new', methods: ['GET'])]
+    #[Route(path: '/list/months/new', name: 'months_new', methods: ['GET'])]
+    #[Route(path: '/list/clerical-errors/new', name: 'clericalerrors_new', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-names/new', name: 'labresultnames_new', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-units-measures/new', name: 'labresultunitsmeasures_new', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-flags/new', name: 'labresultflags_new', methods: ['GET'])]
+    #[Route(path: '/list/pathology-result-signatories/new', name: 'pathologyresultsignatories_new', methods: ['GET'])]
+    #[Route(path: '/list/object-type-checkboxes/new', name: 'objecttypecheckboxs_new', methods: ['GET'])]
+    #[Route(path: '/list/object-type-radio-buttons/new', name: 'objecttyperadiobuttons_new', methods: ['GET'])]
+    #[Route(path: '/list/life-forms/new', name: 'lifeforms_new', methods: ['GET'])]
+    #[Route(path: '/list/position-track-types/new', name: 'positiontracktypes_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-orig/new', name: 'transresprojectspecialties_new_orig', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-types/new', name: 'transresprojecttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-request-category-types/new', name: 'transresrequestcategorytypes_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-types/new', name: 'transresirbapprovaltypes_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-business-purposes/new', name: 'transresbusinesspurposes_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-work-queue-types/new', name: 'workqueuetypes_new', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/new', name: 'antibodies_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-orderable-status/new', name: 'orderablestatus_new', methods: ['GET'])]
+    #[Route(path: '/list/custom000/new', name: 'custom000_new', methods: ['GET'])]
+    #[Route(path: '/list/custom001/new', name: 'custom001_new', methods: ['GET'])]
+    #[Route(path: '/list/custom002/new', name: 'custom002_new', methods: ['GET'])]
+    #[Route(path: '/list/custom003/new', name: 'custom003_new', methods: ['GET'])]
+    #[Route(path: '/list/custom004/new', name: 'custom004_new', methods: ['GET'])]
+    #[Route(path: '/list/custom005/new', name: 'custom005_new', methods: ['GET'])]
+    #[Route(path: '/list/custom006/new', name: 'custom006_new', methods: ['GET'])]
+    #[Route(path: '/list/custom007/new', name: 'custom007_new', methods: ['GET'])]
+    #[Route(path: '/list/custom008/new', name: 'custom008_new', methods: ['GET'])]
+    #[Route(path: '/list/custom009/new', name: 'custom009_new', methods: ['GET'])]
+    #[Route(path: '/list/custom010/new', name: 'custom010_new', methods: ['GET'])]
+    #[Route(path: '/list/custom011/new', name: 'custom011_new', methods: ['GET'])]
+    #[Route(path: '/list/custom012/new', name: 'custom012_new', methods: ['GET'])]
+    #[Route(path: '/list/custom013/new', name: 'custom013_new', methods: ['GET'])]
+    #[Route(path: '/list/custom014/new', name: 'custom014_new', methods: ['GET'])]
+    #[Route(path: '/list/custom015/new', name: 'custom015_new', methods: ['GET'])]
+    #[Route(path: '/list/custom016/new', name: 'custom016_new', methods: ['GET'])]
+    #[Route(path: '/list/custom017/new', name: 'custom017_new', methods: ['GET'])]
+    #[Route(path: '/list/custom018/new', name: 'custom018_new', methods: ['GET'])]
+    #[Route(path: '/list/custom019/new', name: 'custom019_new', methods: ['GET'])]
+    #[Route(path: '/list/custom020/new', name: 'custom020_new', methods: ['GET'])]
+    #[Route(path: '/list/custom021/new', name: 'custom021_new', methods: ['GET'])]
+    #[Route(path: '/list/custom022/new', name: 'custom022_new', methods: ['GET'])]
+    #[Route(path: '/list/custom023/new', name: 'custom023_new', methods: ['GET'])]
+    #[Route(path: '/list/custom024/new', name: 'custom024_new', methods: ['GET'])]
+    #[Route(path: '/list/custom025/new', name: 'custom025_new', methods: ['GET'])]
+    #[Route(path: '/list/custom026/new', name: 'custom026_new', methods: ['GET'])]
+    #[Route(path: '/list/custom027/new', name: 'custom027_new', methods: ['GET'])]
+    #[Route(path: '/list/custom028/new', name: 'custom028_new', methods: ['GET'])]
+    #[Route(path: '/list/custom029/new', name: 'custom029_new', methods: ['GET'])]
+    #[Route(path: '/list/custom030/new', name: 'custom030_new', methods: ['GET'])]
+    #[Route(path: '/list/custom031/new', name: 'custom031_new', methods: ['GET'])]
+    #[Route(path: '/list/custom032/new', name: 'custom032_new', methods: ['GET'])]
+    #[Route(path: '/list/custom033/new', name: 'custom033_new', methods: ['GET'])]
+    #[Route(path: '/list/custom034/new', name: 'custom034_new', methods: ['GET'])]
+    #[Route(path: '/list/custom035/new', name: 'custom035_new', methods: ['GET'])]
+    #[Route(path: '/list/custom036/new', name: 'custom036_new', methods: ['GET'])]
+    #[Route(path: '/list/custom037/new', name: 'custom037_new', methods: ['GET'])]
+    #[Route(path: '/list/custom038/new', name: 'custom038_new', methods: ['GET'])]
+    #[Route(path: '/list/custom039/new', name: 'custom039_new', methods: ['GET'])]
+    #[Route(path: '/list/custom040/new', name: 'custom040_new', methods: ['GET'])]
+    #[Route(path: '/list/custom041/new', name: 'custom041_new', methods: ['GET'])]
+    #[Route(path: '/list/custom042/new', name: 'custom042_new', methods: ['GET'])]
+    #[Route(path: '/list/custom043/new', name: 'custom043_new', methods: ['GET'])]
+    #[Route(path: '/list/custom044/new', name: 'custom044_new', methods: ['GET'])]
+    #[Route(path: '/list/custom045/new', name: 'custom045_new', methods: ['GET'])]
+    #[Route(path: '/list/custom046/new', name: 'custom046_new', methods: ['GET'])]
+    #[Route(path: '/list/custom047/new', name: 'custom047_new', methods: ['GET'])]
+    #[Route(path: '/list/custom048/new', name: 'custom048_new', methods: ['GET'])]
+    #[Route(path: '/list/custom049/new', name: 'custom049_new', methods: ['GET'])]
+    #[Route(path: '/list/custom050/new', name: 'custom050_new', methods: ['GET'])]
+    #[Route(path: '/list/custom051/new', name: 'custom051_new', methods: ['GET'])]
+    #[Route(path: '/list/custom052/new', name: 'custom052_new', methods: ['GET'])]
+    #[Route(path: '/list/custom053/new', name: 'custom053_new', methods: ['GET'])]
+    #[Route(path: '/list/custom054/new', name: 'custom054_new', methods: ['GET'])]
+    #[Route(path: '/list/custom055/new', name: 'custom055_new', methods: ['GET'])]
+    #[Route(path: '/list/custom056/new', name: 'custom056_new', methods: ['GET'])]
+    #[Route(path: '/list/custom057/new', name: 'custom057_new', methods: ['GET'])]
+    #[Route(path: '/list/custom058/new', name: 'custom058_new', methods: ['GET'])]
+    #[Route(path: '/list/custom059/new', name: 'custom059_new', methods: ['GET'])]
+    #[Route(path: '/list/custom060/new', name: 'custom060_new', methods: ['GET'])]
+    #[Route(path: '/list/custom061/new', name: 'custom061_new', methods: ['GET'])]
+    #[Route(path: '/list/custom062/new', name: 'custom062_new', methods: ['GET'])]
+    #[Route(path: '/list/custom063/new', name: 'custom063_new', methods: ['GET'])]
+    #[Route(path: '/list/custom064/new', name: 'custom064_new', methods: ['GET'])]
+    #[Route(path: '/list/custom065/new', name: 'custom065_new', methods: ['GET'])]
+    #[Route(path: '/list/custom066/new', name: 'custom066_new', methods: ['GET'])]
+    #[Route(path: '/list/custom067/new', name: 'custom067_new', methods: ['GET'])]
+    #[Route(path: '/list/custom068/new', name: 'custom068_new', methods: ['GET'])]
+    #[Route(path: '/list/custom069/new', name: 'custom069_new', methods: ['GET'])]
+    #[Route(path: '/list/custom070/new', name: 'custom070_new', methods: ['GET'])]
+    #[Route(path: '/list/custom071/new', name: 'custom071_new', methods: ['GET'])]
+    #[Route(path: '/list/custom072/new', name: 'custom072_new', methods: ['GET'])]
+    #[Route(path: '/list/custom073/new', name: 'custom073_new', methods: ['GET'])]
+    #[Route(path: '/list/custom074/new', name: 'custom074_new', methods: ['GET'])]
+    #[Route(path: '/list/custom075/new', name: 'custom075_new', methods: ['GET'])]
+    #[Route(path: '/list/custom076/new', name: 'custom076_new', methods: ['GET'])]
+    #[Route(path: '/list/custom077/new', name: 'custom077_new', methods: ['GET'])]
+    #[Route(path: '/list/custom078/new', name: 'custom078_new', methods: ['GET'])]
+    #[Route(path: '/list/custom079/new', name: 'custom079_new', methods: ['GET'])]
+    #[Route(path: '/list/custom080/new', name: 'custom080_new', methods: ['GET'])]
+    #[Route(path: '/list/custom081/new', name: 'custom081_new', methods: ['GET'])]
+    #[Route(path: '/list/custom082/new', name: 'custom082_new', methods: ['GET'])]
+    #[Route(path: '/list/custom083/new', name: 'custom083_new', methods: ['GET'])]
+    #[Route(path: '/list/custom084/new', name: 'custom084_new', methods: ['GET'])]
+    #[Route(path: '/list/custom085/new', name: 'custom085_new', methods: ['GET'])]
+    #[Route(path: '/list/custom086/new', name: 'custom086_new', methods: ['GET'])]
+    #[Route(path: '/list/custom087/new', name: 'custom087_new', methods: ['GET'])]
+    #[Route(path: '/list/custom088/new', name: 'custom088_new', methods: ['GET'])]
+    #[Route(path: '/list/custom089/new', name: 'custom089_new', methods: ['GET'])]
+    #[Route(path: '/list/custom090/new', name: 'custom090_new', methods: ['GET'])]
+    #[Route(path: '/list/custom091/new', name: 'custom091_new', methods: ['GET'])]
+    #[Route(path: '/list/custom092/new', name: 'custom092_new', methods: ['GET'])]
+    #[Route(path: '/list/custom093/new', name: 'custom093_new', methods: ['GET'])]
+    #[Route(path: '/list/custom094/new', name: 'custom094_new', methods: ['GET'])]
+    #[Route(path: '/list/custom095/new', name: 'custom095_new', methods: ['GET'])]
+    #[Route(path: '/list/custom096/new', name: 'custom096_new', methods: ['GET'])]
+    #[Route(path: '/list/custom097/new', name: 'custom097_new', methods: ['GET'])]
+    #[Route(path: '/list/custom098/new', name: 'custom098_new', methods: ['GET'])]
+    #[Route(path: '/list/custom099/new', name: 'custom099_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-tissue-processing-services/new', name: 'transrestissueprocessingservices_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-other-requested-services/new', name: 'transresotherrequestedservices_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-labs/new', name: 'transrescolllabs_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-divs/new', name: 'transrescolldivs_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-status/new', name: 'transresirbstatus_new', methods: ['GET'])]
+    #[Route(path: '/list/translational-requester-group/new', name: 'transresrequestergroup_new', methods: ['GET'])]
+    #[Route(path: '/list/transrescomptypes/new', name: 'transrescomptypes_new', methods: ['GET'])]
+    #[Route(path: '/list/visastatus/new', name: 'visastatus_new', methods: ['GET'])]
+    #[Route(path: '/list/resappstatuses/new', name: 'resappstatuses_new', methods: ['GET'])]
+    #[Route(path: '/list/resappranks/new', name: 'resappranks_new', methods: ['GET'])]
+    #[Route(path: '/list/resapplanguageproficiency/new', name: 'resapplanguageproficiency_new', methods: ['GET'])]
+    #[Route(path: '/list/resappfitforprogram/new', name: 'resappfitforprogram_new', methods: ['GET'])]
+    #[Route(path: '/list/resappvisastatus/new', name: 'resappvisastatus_new', methods: ['GET'])]
+    #[Route(path: '/list/postsoph/new', name: 'postsoph_new', methods: ['GET'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/new', name: 'resappapplyingresidencytrack_new', methods: ['GET'])]
+    #[Route(path: '/list/resapplearnarealist/new', name: 'resapplearnarealist_new', methods: ['GET'])]
+    #[Route(path: '/list/resappspecificindividuallist/new', name: 'resappspecificindividuallist_new', methods: ['GET'])]
+    #[Route(path: '/list/viewmodes/new', name: 'viewmodes_new', methods: ['GET'])]
+    #[Route(path: '/list/transrespricetypes/new', name: 'transrespricetypes_new', methods: ['GET'])]
+    #[Route(path: '/list/charttypes/new', name: 'charttypes_new', methods: ['GET'])]
+    #[Route(path: '/list/charttopics/new', name: 'charttopics_new', methods: ['GET'])]
+    #[Route(path: '/list/chartfilters/new', name: 'chartfilters_new', methods: ['GET'])]
+    #[Route(path: '/list/charts/new', name: 'charts_new', methods: ['GET'])]
+    #[Route(path: '/list/chartdatasources/new', name: 'chartdatasources_new', methods: ['GET'])]
+    #[Route(path: '/list/chartupdatefrequencies/new', name: 'chartupdatefrequencies_new', methods: ['GET'])]
+    #[Route(path: '/list/chartvisualizations/new', name: 'chartvisualizations_new', methods: ['GET'])]
+    #[Route(path: '/list/vacreqholidays/new', name: 'vacreqholidays_new', methods: ['GET'])]
+    #[Route(path: '/list/vacreqobservedholidays/new', name: 'vacreqobservedholidays_new', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -1423,256 +1413,254 @@ class ListController extends OrderAbstractController
     /**
      * Finds and displays a entity.
      *
-     * @Route("/list-manager/{id}", name="platformlistmanager_show", methods={"GET"})
-     * @Route("/list/source-systems/{id}", name="sourcesystems_show", methods={"GET"})
-     * @Route("/list/roles/{id}", name="role_show", methods={"GET"})
-     * @Route("/list/institutions/{id}", name="institutions_show", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/states/{id}", name="states_show", methods={"GET"})
-     * @Route("/list/countries/{id}", name="countries_show", methods={"GET"})
-     * @Route("/list/board-certifications/{id}", name="boardcertifications_show", methods={"GET"})
-     * @Route("/list/employment-termination-reasons/{id}", name="employmentterminations_show", methods={"GET"})
-     * @Route("/list/event-log-event-types/{id}", name="loggereventtypes_show", methods={"GET"})
-     * @Route("/list/primary-public-user-id-types/{id}", name="usernametypes_show", methods={"GET"})
-     * @Route("/list/identifier-types/{id}", name="identifiers_show", methods={"GET"})
-     * @Route("/list/residency-tracks/{id}", name="residencytracks_show", methods={"GET"})
-     * @Route("/list/fellowship-types/{id}", name="fellowshiptypes_show", methods={"GET"})
-//     * @Route("/list/research-labs/{id}", name="researchlabs_show", methods={"GET"})
-     * @Route("/list/location-types/{id}", name="locationtypes_show", methods={"GET"})
-     * @Route("/list/equipment/{id}", name="equipments_show", methods={"GET"})
-     * @Route("/list/equipment-types/{id}", name="equipmenttypes_show", methods={"GET"})
-     * @Route("/list/location-privacy-types/{id}", name="locationprivacy_show", methods={"GET"})
-     * @Route("/list/role-attributes/{id}", name="roleattributes_show", methods={"GET"})
-     * @Route("/list/buidlings/{id}", name="buildings_show", methods={"GET"})
-     * @Route("/list/rooms/{id}", name="rooms_show", methods={"GET"})
-     * @Route("/list/suites/{id}", name="suites_show", methods={"GET"})
-     * @Route("/list/floors/{id}", name="floors_show", methods={"GET"})
-     * @Route("/list/grants/{id}", name="grants_show", methods={"GET"})
-     * @Route("/list/mailboxes/{id}", name="mailboxes_show", methods={"GET"})
-     * @Route("/list/percent-effort/{id}", name="efforts_show", methods={"GET"})
-     * @Route("/list/administrative-titles/{id}", name="admintitles_show", methods={"GET"})
-     * @Route("/list/academic-appointment-titles/{id}", name="apptitles_show", methods={"GET"})
-     * @Route("/list/training-completion-reasons/{id}", name="completionreasons_show", methods={"GET"})
-     * @Route("/list/training-degrees/{id}", name="trainingdegrees_show", methods={"GET"})
-     * @Route("/list/training-majors/{id}", name="trainingmajors_show", methods={"GET"})
-     * @Route("/list/training-minors/{id}", name="trainingminors_show", methods={"GET"})
-     * @Route("/list/training-honors/{id}", name="traininghonors_show", methods={"GET"})
-     * @Route("/list/fellowship-titles/{id}", name="fellowshiptitles_show", methods={"GET"})
-     * @Route("/list/residency-specialties/{id}", name="residencyspecialtys_show", methods={"GET"})
-     * @Route("/list/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_show", methods={"GET"})
-     * @Route("/list/institution-types/{id}", name="institutiontypes_show", methods={"GET"})
-     * @Route("/list/document-types/{id}", name="documenttypes_show", methods={"GET"})
-     * @Route("/list/medical-titles/{id}", name="medicaltitles_show", methods={"GET"})
-     * @Route("/list/medical-specialties/{id}", name="medicalspecialties_show", methods={"GET"})
-     * @Route("/list/employment-types/{id}", name="employmenttypes_show", methods={"GET"})
-     * @Route("/list/grant-source-organizations/{id}", name="sourceorganizations_show", methods={"GET"})
-     * @Route("/list/languages/{id}", name="languages_show", methods={"GET"})
-     * @Route("/list/locales/{id}", name="locales_show", methods={"GET"})
-     * @Route("/list/ranks-of-importance/{id}", name="importances_show", methods={"GET"})
-     * @Route("/list/authorship-roles/{id}", name="authorshiproles_show", methods={"GET"})
-     * @Route("/list/lecture-venues/{id}", name="organizations_show", methods={"GET"})
-     * @Route("/list/cities/{id}", name="cities_show", methods={"GET"})
-     * @Route("/list/link-types/{id}", name="linktypes_show", methods={"GET"})
-     * @Route("/list/sexes/{id}", name="sexes_show", methods={"GET"})
-     * @Route("/list/position-types/{id}", name="positiontypes_show", methods={"GET"})
-     * @Route("/list/organizational-group-types/{id}", name="organizationalgrouptypes_show", methods={"GET"})
-     * @Route("/list/profile-comment-group-types/{id}", name="commentgrouptypes_show", methods={"GET"})
-     * @Route("/list/comment-types/{id}", name="commenttypes_show", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/user-wrappers/{id}", name="userwrappers_show", methods={"GET"})
-     * @Route("/list/spot-purposes/{id}", name="spotpurposes_show", methods={"GET"})
-     * @Route("/list/medical-license-statuses/{id}", name="medicalstatuses_show", methods={"GET"})
-     * @Route("/list/certifying-board-organizations/{id}", name="certifyingboardorganizations_show", methods={"GET"})
-     * @Route("/list/training-types/{id}", name="trainingtypes_show", methods={"GET"})
-     * @Route("/list/job-titles/{id}", name="joblists_show", methods={"GET"})
-     * @Route("/list/fellowship-application-statuses/{id}", name="fellappstatuses_show", methods={"GET"})
-     * @Route("/list/fellowship-application-ranks/{id}", name="fellappranks_show", methods={"GET"})
-     * @Route("/list/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_show", methods={"GET"})
-//     * @Route("/list/collaborations/{id}", name="collaborations_show", methods={"GET"})
-     * @Route("/list/collaboration-types/{id}", name="collaborationtypes_show", methods={"GET"})
-     * @Route("/list/permissions/{id}", name="permission_show", methods={"GET"})
-     * @Route("/list/permission-objects/{id}", name="permissionobject_show", methods={"GET"})
-     * @Route("/list/permission-actions/{id}", name="permissionaction_show", methods={"GET"})
-     * @Route("/list/sites/{id}", name="sites_show", methods={"GET"})
-     * @Route("/list/event-object-types/{id}", name="eventobjecttypes_show", methods={"GET"})
-     * @Route("/list/time-away-request-types/{id}", name="vacreqrequesttypes_show", methods={"GET"})
-     * @Route("/list/time-away-request-floating-texts/{id}", name="vacreqfloatingtexts_show", methods={"GET"})
-     * @Route("/list/time-away-request-floating-types/{id}", name="vacreqfloatingtypes_show", methods={"GET"})
-     * @Route("/list/time-away-request-approval-types/{id}", name="vacreqapprovaltypes_show", methods={"GET"})
-     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show", methods={"GET"})
-     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_show", methods={"GET"})
-     * @Route("/list/object-types/{id}", name="objecttypes_show", methods={"GET"})
-     * @Route("/list/form-nodes/{id}", name="formnodes_show", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_show", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_show", methods={"GET"})
-     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_show", methods={"GET"})
-     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_show", methods={"GET"})
-     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_show", methods={"GET"})
-     * @Route("/list/blood-types/{id}", name="bloodtypes_show", methods={"GET"})
-     * @Route("/list/additional-communications/{id}", name="additionalcommunications_show", methods={"GET"})
-     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_show", methods={"GET"})
-     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_show", methods={"GET"})
-     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_show", methods={"GET"})
-     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_show", methods={"GET"})
-     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_show", methods={"GET"})
-     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_show", methods={"GET"})
-     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_show", methods={"GET"})
-     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_show", methods={"GET"})
-     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_show", methods={"GET"})
-     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_show", methods={"GET"})
-     * @Route("/list/week-days/{id}", name="weekdays_show", methods={"GET"})
-     * @Route("/list/months/{id}", name="months_show", methods={"GET"})
-     * @Route("/list/clerical-errors/{id}", name="clericalerrors_show", methods={"GET"})
-     * @Route("/list/lab-result-names/{id}", name="labresultnames_show", methods={"GET"})
-     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_show", methods={"GET"})
-     * @Route("/list/lab-result-flags/{id}", name="labresultflags_show", methods={"GET"})
-     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_show", methods={"GET"})
-     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_show", methods={"GET"})
-     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_show", methods={"GET"})
-     * @Route("/list/life-forms/{id}", name="lifeforms_show", methods={"GET"})
-     * @Route("/list/position-track-types/{id}", name="positiontracktypes_show", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties_orig/{id}", name="transresprojectspecialties_show_orig", methods={"GET"})
-     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_show", methods={"GET"})
-     * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show", methods={"GET"})
-     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show", methods={"GET"})
-     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_show", methods={"GET"})
-     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_show", methods={"GET"})
-     * @Route("/list/translational-orderable-status/{id}", name="orderablestatus_show", methods={"GET"})
      *
-     * @Route("/list/antibodies/{id}", name="antibodies_show", methods={"GET"})
-     * @Route("/list/custom000/{id}", name="custom000_show", methods={"GET"})
-     * @Route("/list/custom001/{id}", name="custom001_show", methods={"GET"})
-     * @Route("/list/custom002/{id}", name="custom002_show", methods={"GET"})
-     * @Route("/list/custom003/{id}", name="custom003_show", methods={"GET"})
-     * @Route("/list/custom004/{id}", name="custom004_show", methods={"GET"})
-     * @Route("/list/custom005/{id}", name="custom005_show", methods={"GET"})
-     * @Route("/list/custom006/{id}", name="custom006_show", methods={"GET"})
-     * @Route("/list/custom007/{id}", name="custom007_show", methods={"GET"})
-     * @Route("/list/custom008/{id}", name="custom008_show", methods={"GET"})
-     * @Route("/list/custom009/{id}", name="custom009_show", methods={"GET"})
-     * @Route("/list/custom010/{id}", name="custom010_show", methods={"GET"})
-     * @Route("/list/custom011/{id}", name="custom011_show", methods={"GET"})
-     * @Route("/list/custom012/{id}", name="custom012_show", methods={"GET"})
-     * @Route("/list/custom013/{id}", name="custom013_show", methods={"GET"})
-     * @Route("/list/custom014/{id}", name="custom014_show", methods={"GET"})
-     * @Route("/list/custom015/{id}", name="custom015_show", methods={"GET"})
-     * @Route("/list/custom016/{id}", name="custom016_show", methods={"GET"})
-     * @Route("/list/custom017/{id}", name="custom017_show", methods={"GET"})
-     * @Route("/list/custom018/{id}", name="custom018_show", methods={"GET"})
-     * @Route("/list/custom019/{id}", name="custom019_show", methods={"GET"})
-     * @Route("/list/custom020/{id}", name="custom020_show", methods={"GET"})
-     * @Route("/list/custom021/{id}", name="custom021_show", methods={"GET"})
-     * @Route("/list/custom022/{id}", name="custom022_show", methods={"GET"})
-     * @Route("/list/custom023/{id}", name="custom023_show", methods={"GET"})
-     * @Route("/list/custom024/{id}", name="custom024_show", methods={"GET"})
-     * @Route("/list/custom025/{id}", name="custom025_show", methods={"GET"})
-     * @Route("/list/custom026/{id}", name="custom026_show", methods={"GET"})
-     * @Route("/list/custom027/{id}", name="custom027_show", methods={"GET"})
-     * @Route("/list/custom028/{id}", name="custom028_show", methods={"GET"})
-     * @Route("/list/custom029/{id}", name="custom029_show", methods={"GET"})
-     * @Route("/list/custom030/{id}", name="custom030_show", methods={"GET"})
-     * @Route("/list/custom031/{id}", name="custom031_show", methods={"GET"})
-     * @Route("/list/custom032/{id}", name="custom032_show", methods={"GET"})
-     * @Route("/list/custom033/{id}", name="custom033_show", methods={"GET"})
-     * @Route("/list/custom034/{id}", name="custom034_show", methods={"GET"})
-     * @Route("/list/custom035/{id}", name="custom035_show", methods={"GET"})
-     * @Route("/list/custom036/{id}", name="custom036_show", methods={"GET"})
-     * @Route("/list/custom037/{id}", name="custom037_show", methods={"GET"})
-     * @Route("/list/custom038/{id}", name="custom038_show", methods={"GET"})
-     * @Route("/list/custom039/{id}", name="custom039_show", methods={"GET"})
-     * @Route("/list/custom040/{id}", name="custom040_show", methods={"GET"})
-     * @Route("/list/custom041/{id}", name="custom041_show", methods={"GET"})
-     * @Route("/list/custom042/{id}", name="custom042_show", methods={"GET"})
-     * @Route("/list/custom043/{id}", name="custom043_show", methods={"GET"})
-     * @Route("/list/custom044/{id}", name="custom044_show", methods={"GET"})
-     * @Route("/list/custom045/{id}", name="custom045_show", methods={"GET"})
-     * @Route("/list/custom046/{id}", name="custom046_show", methods={"GET"})
-     * @Route("/list/custom047/{id}", name="custom047_show", methods={"GET"})
-     * @Route("/list/custom048/{id}", name="custom048_show", methods={"GET"})
-     * @Route("/list/custom049/{id}", name="custom049_show", methods={"GET"})
-     * @Route("/list/custom050/{id}", name="custom050_show", methods={"GET"})
-     * @Route("/list/custom051/{id}", name="custom051_show", methods={"GET"})
-     * @Route("/list/custom052/{id}", name="custom052_show", methods={"GET"})
-     * @Route("/list/custom053/{id}", name="custom053_show", methods={"GET"})
-     * @Route("/list/custom054/{id}", name="custom054_show", methods={"GET"})
-     * @Route("/list/custom055/{id}", name="custom055_show", methods={"GET"})
-     * @Route("/list/custom056/{id}", name="custom056_show", methods={"GET"})
-     * @Route("/list/custom057/{id}", name="custom057_show", methods={"GET"})
-     * @Route("/list/custom058/{id}", name="custom058_show", methods={"GET"})
-     * @Route("/list/custom059/{id}", name="custom059_show", methods={"GET"})
-     * @Route("/list/custom060/{id}", name="custom060_show", methods={"GET"})
-     * @Route("/list/custom061/{id}", name="custom061_show", methods={"GET"})
-     * @Route("/list/custom062/{id}", name="custom062_show", methods={"GET"})
-     * @Route("/list/custom063/{id}", name="custom063_show", methods={"GET"})
-     * @Route("/list/custom064/{id}", name="custom064_show", methods={"GET"})
-     * @Route("/list/custom065/{id}", name="custom065_show", methods={"GET"})
-     * @Route("/list/custom066/{id}", name="custom066_show", methods={"GET"})
-     * @Route("/list/custom067/{id}", name="custom067_show", methods={"GET"})
-     * @Route("/list/custom068/{id}", name="custom068_show", methods={"GET"})
-     * @Route("/list/custom069/{id}", name="custom069_show", methods={"GET"})
-     * @Route("/list/custom070/{id}", name="custom070_show", methods={"GET"})
-     * @Route("/list/custom071/{id}", name="custom071_show", methods={"GET"})
-     * @Route("/list/custom072/{id}", name="custom072_show", methods={"GET"})
-     * @Route("/list/custom073/{id}", name="custom073_show", methods={"GET"})
-     * @Route("/list/custom074/{id}", name="custom074_show", methods={"GET"})
-     * @Route("/list/custom075/{id}", name="custom075_show", methods={"GET"})
-     * @Route("/list/custom076/{id}", name="custom076_show", methods={"GET"})
-     * @Route("/list/custom077/{id}", name="custom077_show", methods={"GET"})
-     * @Route("/list/custom078/{id}", name="custom078_show", methods={"GET"})
-     * @Route("/list/custom079/{id}", name="custom079_show", methods={"GET"})
-     * @Route("/list/custom080/{id}", name="custom080_show", methods={"GET"})
-     * @Route("/list/custom081/{id}", name="custom081_show", methods={"GET"})
-     * @Route("/list/custom082/{id}", name="custom082_show", methods={"GET"})
-     * @Route("/list/custom083/{id}", name="custom083_show", methods={"GET"})
-     * @Route("/list/custom084/{id}", name="custom084_show", methods={"GET"})
-     * @Route("/list/custom085/{id}", name="custom085_show", methods={"GET"})
-     * @Route("/list/custom086/{id}", name="custom086_show", methods={"GET"})
-     * @Route("/list/custom087/{id}", name="custom087_show", methods={"GET"})
-     * @Route("/list/custom088/{id}", name="custom088_show", methods={"GET"})
-     * @Route("/list/custom089/{id}", name="custom089_show", methods={"GET"})
-     * @Route("/list/custom090/{id}", name="custom090_show", methods={"GET"})
-     * @Route("/list/custom091/{id}", name="custom091_show", methods={"GET"})
-     * @Route("/list/custom092/{id}", name="custom092_show", methods={"GET"})
-     * @Route("/list/custom093/{id}", name="custom093_show", methods={"GET"})
-     * @Route("/list/custom094/{id}", name="custom094_show", methods={"GET"})
-     * @Route("/list/custom095/{id}", name="custom095_show", methods={"GET"})
-     * @Route("/list/custom096/{id}", name="custom096_show", methods={"GET"})
-     * @Route("/list/custom097/{id}", name="custom097_show", methods={"GET"})
-     * @Route("/list/custom098/{id}", name="custom098_show", methods={"GET"})
-     * @Route("/list/custom099/{id}", name="custom099_show", methods={"GET"})
-     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show", methods={"GET"})
-     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show", methods={"GET"})
      *
-     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_show", methods={"GET"})
-     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_show", methods={"GET"})
-     * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_show", methods={"GET"})
-     * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_show", methods={"GET"})
-     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_show", methods={"GET"})
      *
-     * @Route("/list/visastatus/{id}", name="visastatus_show", methods={"GET"})
-     * @Route("/list/resappstatuses/{id}", name="resappstatuses_show", methods={"GET"})
-     * @Route("/list/resappranks/{id}", name="resappranks_show", methods={"GET"})
-     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_show", methods={"GET"})
-     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_show", methods={"GET"})
-     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_show", methods={"GET"})
-     * @Route("/list/postsoph/{id}", name="postsoph_show", methods={"GET"})
      *
-     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_show", methods={"GET"})
-     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_show", methods={"GET"})
-     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_show", methods={"GET"})
-     * @Route("/list/viewmodes/{id}", name="viewmodes_show", methods={"GET"})
-     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_show", methods={"GET"})
      *
-     * @Route("/list/charttypes/{id}", name="charttypes_show", methods={"GET"})
-     * @Route("/list/charttopics/{id}", name="charttopics_show", methods={"GET"})
-     * @Route("/list/chartfilters/{id}", name="chartfilters_show", methods={"GET"})
-     * @Route("/list/charts/{id}", name="charts_show", methods={"GET"})
-     * @Route("/list/chartdatasources/{id}", name="chartdatasources_show", methods={"GET"})
-     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_show", methods={"GET"})
-     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_show", methods={"GET"})
-     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_show", methods={"GET"})
-     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_show", methods={"GET"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
+    #[Route(path: '/list-manager/{id}', name: 'platformlistmanager_show', methods: ['GET'])]
+    #[Route(path: '/list/source-systems/{id}', name: 'sourcesystems_show', methods: ['GET'])]
+    #[Route(path: '/list/roles/{id}', name: 'role_show', methods: ['GET'])]
+    #[Route(path: '/list/institutions/{id}', name: 'institutions_show', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/states/{id}', name: 'states_show', methods: ['GET'])]
+    #[Route(path: '/list/countries/{id}', name: 'countries_show', methods: ['GET'])]
+    #[Route(path: '/list/board-certifications/{id}', name: 'boardcertifications_show', methods: ['GET'])]
+    #[Route(path: '/list/employment-termination-reasons/{id}', name: 'employmentterminations_show', methods: ['GET'])]
+    #[Route(path: '/list/event-log-event-types/{id}', name: 'loggereventtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/primary-public-user-id-types/{id}', name: 'usernametypes_show', methods: ['GET'])]
+    #[Route(path: '/list/identifier-types/{id}', name: 'identifiers_show', methods: ['GET'])]
+    #[Route(path: '/list/residency-tracks/{id}', name: 'residencytracks_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-types/{id}', name: 'fellowshiptypes_show', methods: ['GET'])]
+    #[Route(path: '/list/location-types/{id}', name: 'locationtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/equipment/{id}', name: 'equipments_show', methods: ['GET'])]
+    #[Route(path: '/list/equipment-types/{id}', name: 'equipmenttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/location-privacy-types/{id}', name: 'locationprivacy_show', methods: ['GET'])]
+    #[Route(path: '/list/role-attributes/{id}', name: 'roleattributes_show', methods: ['GET'])]
+    #[Route(path: '/list/buidlings/{id}', name: 'buildings_show', methods: ['GET'])]
+    #[Route(path: '/list/rooms/{id}', name: 'rooms_show', methods: ['GET'])]
+    #[Route(path: '/list/suites/{id}', name: 'suites_show', methods: ['GET'])]
+    #[Route(path: '/list/floors/{id}', name: 'floors_show', methods: ['GET'])]
+    #[Route(path: '/list/grants/{id}', name: 'grants_show', methods: ['GET'])]
+    #[Route(path: '/list/mailboxes/{id}', name: 'mailboxes_show', methods: ['GET'])]
+    #[Route(path: '/list/percent-effort/{id}', name: 'efforts_show', methods: ['GET'])]
+    #[Route(path: '/list/administrative-titles/{id}', name: 'admintitles_show', methods: ['GET'])]
+    #[Route(path: '/list/academic-appointment-titles/{id}', name: 'apptitles_show', methods: ['GET'])]
+    #[Route(path: '/list/training-completion-reasons/{id}', name: 'completionreasons_show', methods: ['GET'])]
+    #[Route(path: '/list/training-degrees/{id}', name: 'trainingdegrees_show', methods: ['GET'])]
+    #[Route(path: '/list/training-majors/{id}', name: 'trainingmajors_show', methods: ['GET'])]
+    #[Route(path: '/list/training-minors/{id}', name: 'trainingminors_show', methods: ['GET'])]
+    #[Route(path: '/list/training-honors/{id}', name: 'traininghonors_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-titles/{id}', name: 'fellowshiptitles_show', methods: ['GET'])]
+    #[Route(path: '/list/residency-specialties/{id}', name: 'residencyspecialtys_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-subspecialties/{id}', name: 'fellowshipsubspecialtys_show', methods: ['GET'])]
+    #[Route(path: '/list/institution-types/{id}', name: 'institutiontypes_show', methods: ['GET'])]
+    #[Route(path: '/list/document-types/{id}', name: 'documenttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/medical-titles/{id}', name: 'medicaltitles_show', methods: ['GET'])]
+    #[Route(path: '/list/medical-specialties/{id}', name: 'medicalspecialties_show', methods: ['GET'])]
+    #[Route(path: '/list/employment-types/{id}', name: 'employmenttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/grant-source-organizations/{id}', name: 'sourceorganizations_show', methods: ['GET'])]
+    #[Route(path: '/list/languages/{id}', name: 'languages_show', methods: ['GET'])]
+    #[Route(path: '/list/locales/{id}', name: 'locales_show', methods: ['GET'])]
+    #[Route(path: '/list/ranks-of-importance/{id}', name: 'importances_show', methods: ['GET'])]
+    #[Route(path: '/list/authorship-roles/{id}', name: 'authorshiproles_show', methods: ['GET'])]
+    #[Route(path: '/list/lecture-venues/{id}', name: 'organizations_show', methods: ['GET'])]
+    #[Route(path: '/list/cities/{id}', name: 'cities_show', methods: ['GET'])]
+    #[Route(path: '/list/link-types/{id}', name: 'linktypes_show', methods: ['GET'])]
+    #[Route(path: '/list/sexes/{id}', name: 'sexes_show', methods: ['GET'])]
+    #[Route(path: '/list/position-types/{id}', name: 'positiontypes_show', methods: ['GET'])]
+    #[Route(path: '/list/organizational-group-types/{id}', name: 'organizationalgrouptypes_show', methods: ['GET'])]
+    #[Route(path: '/list/profile-comment-group-types/{id}', name: 'commentgrouptypes_show', methods: ['GET'])]
+    #[Route(path: '/list/comment-types/{id}', name: 'commenttypes_show', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/user-wrappers/{id}', name: 'userwrappers_show', methods: ['GET'])]
+    #[Route(path: '/list/spot-purposes/{id}', name: 'spotpurposes_show', methods: ['GET'])]
+    #[Route(path: '/list/medical-license-statuses/{id}', name: 'medicalstatuses_show', methods: ['GET'])]
+    #[Route(path: '/list/certifying-board-organizations/{id}', name: 'certifyingboardorganizations_show', methods: ['GET'])]
+    #[Route(path: '/list/training-types/{id}', name: 'trainingtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/job-titles/{id}', name: 'joblists_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-statuses/{id}', name: 'fellappstatuses_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-ranks/{id}', name: 'fellappranks_show', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/{id}', name: 'fellapplanguageproficiency_show', methods: ['GET'])]
+    #[Route(path: '/list/collaboration-types/{id}', name: 'collaborationtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/permissions/{id}', name: 'permission_show', methods: ['GET'])]
+    #[Route(path: '/list/permission-objects/{id}', name: 'permissionobject_show', methods: ['GET'])]
+    #[Route(path: '/list/permission-actions/{id}', name: 'permissionaction_show', methods: ['GET'])]
+    #[Route(path: '/list/sites/{id}', name: 'sites_show', methods: ['GET'])]
+    #[Route(path: '/list/event-object-types/{id}', name: 'eventobjecttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-types/{id}', name: 'vacreqrequesttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-texts/{id}', name: 'vacreqfloatingtexts_show', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-types/{id}', name: 'vacreqfloatingtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-approval-types/{id}', name: 'vacreqapprovaltypes_show', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-specialties/{id}', name: 'healthcareproviderspecialty_show', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/{id}', name: 'healthcareprovidercommunication_show', methods: ['GET'])]
+    #[Route(path: '/list/object-types/{id}', name: 'objecttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/form-nodes/{id}', name: 'formnodes_show', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/{id}', name: 'objecttypetexts_show', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/{id}', name: 'bloodproducttransfusions_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-reaction-types/{id}', name: 'transfusionreactiontypes_show', methods: ['GET'])]
+    #[Route(path: '/list/object-type-strings/{id}', name: 'objecttypestrings_show', methods: ['GET'])]
+    #[Route(path: '/list/object-type-dropdowns/{id}', name: 'objecttypedropdowns_show', methods: ['GET'])]
+    #[Route(path: '/list/blood-types/{id}', name: 'bloodtypes_show', methods: ['GET'])]
+    #[Route(path: '/list/additional-communications/{id}', name: 'additionalcommunications_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/{id}', name: 'transfusionantibodyscreenresults_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/{id}', name: 'transfusioncrossmatchresults_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-dat-results/{id}', name: 'transfusiondatresults_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/{id}', name: 'transfusionhemolysischeckresults_show', methods: ['GET'])]
+    #[Route(path: '/list/object-type-datetimes/{id}', name: 'objecttypedatetimes_show', methods: ['GET'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/{id}', name: 'complexplateletsummaryantibodies_show', methods: ['GET'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/{id}', name: 'cciunitplateletcountdefaultvalues_show', methods: ['GET'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/{id}', name: 'cciplatelettypetransfuseds_show', methods: ['GET'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/{id}', name: 'platelettransfusionproductreceivings_show', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-product-status/{id}', name: 'transfusionproductstatus_show', methods: ['GET'])]
+    #[Route(path: '/list/week-days/{id}', name: 'weekdays_show', methods: ['GET'])]
+    #[Route(path: '/list/months/{id}', name: 'months_show', methods: ['GET'])]
+    #[Route(path: '/list/clerical-errors/{id}', name: 'clericalerrors_show', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-names/{id}', name: 'labresultnames_show', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-units-measures/{id}', name: 'labresultunitsmeasures_show', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-flags/{id}', name: 'labresultflags_show', methods: ['GET'])]
+    #[Route(path: '/list/pathology-result-signatories/{id}', name: 'pathologyresultsignatories_show', methods: ['GET'])]
+    #[Route(path: '/list/object-type-checkboxes/{id}', name: 'objecttypecheckboxs_show', methods: ['GET'])]
+    #[Route(path: '/list/object-type-radio-buttons/{id}', name: 'objecttyperadiobuttons_show', methods: ['GET'])]
+    #[Route(path: '/list/life-forms/{id}', name: 'lifeforms_show', methods: ['GET'])]
+    #[Route(path: '/list/position-track-types/{id}', name: 'positiontracktypes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties_orig/{id}', name: 'transresprojectspecialties_show_orig', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-types/{id}', name: 'transresprojecttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-request-category-types/{id}', name: 'transresrequestcategorytypes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-types/{id}', name: 'transresirbapprovaltypes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-business-purposes/{id}', name: 'transresbusinesspurposes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-work-queue-types/{id}', name: 'workqueuetypes_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-orderable-status/{id}', name: 'orderablestatus_show', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/{id}', name: 'antibodies_show', methods: ['GET'])]
+    #[Route(path: '/list/custom000/{id}', name: 'custom000_show', methods: ['GET'])]
+    #[Route(path: '/list/custom001/{id}', name: 'custom001_show', methods: ['GET'])]
+    #[Route(path: '/list/custom002/{id}', name: 'custom002_show', methods: ['GET'])]
+    #[Route(path: '/list/custom003/{id}', name: 'custom003_show', methods: ['GET'])]
+    #[Route(path: '/list/custom004/{id}', name: 'custom004_show', methods: ['GET'])]
+    #[Route(path: '/list/custom005/{id}', name: 'custom005_show', methods: ['GET'])]
+    #[Route(path: '/list/custom006/{id}', name: 'custom006_show', methods: ['GET'])]
+    #[Route(path: '/list/custom007/{id}', name: 'custom007_show', methods: ['GET'])]
+    #[Route(path: '/list/custom008/{id}', name: 'custom008_show', methods: ['GET'])]
+    #[Route(path: '/list/custom009/{id}', name: 'custom009_show', methods: ['GET'])]
+    #[Route(path: '/list/custom010/{id}', name: 'custom010_show', methods: ['GET'])]
+    #[Route(path: '/list/custom011/{id}', name: 'custom011_show', methods: ['GET'])]
+    #[Route(path: '/list/custom012/{id}', name: 'custom012_show', methods: ['GET'])]
+    #[Route(path: '/list/custom013/{id}', name: 'custom013_show', methods: ['GET'])]
+    #[Route(path: '/list/custom014/{id}', name: 'custom014_show', methods: ['GET'])]
+    #[Route(path: '/list/custom015/{id}', name: 'custom015_show', methods: ['GET'])]
+    #[Route(path: '/list/custom016/{id}', name: 'custom016_show', methods: ['GET'])]
+    #[Route(path: '/list/custom017/{id}', name: 'custom017_show', methods: ['GET'])]
+    #[Route(path: '/list/custom018/{id}', name: 'custom018_show', methods: ['GET'])]
+    #[Route(path: '/list/custom019/{id}', name: 'custom019_show', methods: ['GET'])]
+    #[Route(path: '/list/custom020/{id}', name: 'custom020_show', methods: ['GET'])]
+    #[Route(path: '/list/custom021/{id}', name: 'custom021_show', methods: ['GET'])]
+    #[Route(path: '/list/custom022/{id}', name: 'custom022_show', methods: ['GET'])]
+    #[Route(path: '/list/custom023/{id}', name: 'custom023_show', methods: ['GET'])]
+    #[Route(path: '/list/custom024/{id}', name: 'custom024_show', methods: ['GET'])]
+    #[Route(path: '/list/custom025/{id}', name: 'custom025_show', methods: ['GET'])]
+    #[Route(path: '/list/custom026/{id}', name: 'custom026_show', methods: ['GET'])]
+    #[Route(path: '/list/custom027/{id}', name: 'custom027_show', methods: ['GET'])]
+    #[Route(path: '/list/custom028/{id}', name: 'custom028_show', methods: ['GET'])]
+    #[Route(path: '/list/custom029/{id}', name: 'custom029_show', methods: ['GET'])]
+    #[Route(path: '/list/custom030/{id}', name: 'custom030_show', methods: ['GET'])]
+    #[Route(path: '/list/custom031/{id}', name: 'custom031_show', methods: ['GET'])]
+    #[Route(path: '/list/custom032/{id}', name: 'custom032_show', methods: ['GET'])]
+    #[Route(path: '/list/custom033/{id}', name: 'custom033_show', methods: ['GET'])]
+    #[Route(path: '/list/custom034/{id}', name: 'custom034_show', methods: ['GET'])]
+    #[Route(path: '/list/custom035/{id}', name: 'custom035_show', methods: ['GET'])]
+    #[Route(path: '/list/custom036/{id}', name: 'custom036_show', methods: ['GET'])]
+    #[Route(path: '/list/custom037/{id}', name: 'custom037_show', methods: ['GET'])]
+    #[Route(path: '/list/custom038/{id}', name: 'custom038_show', methods: ['GET'])]
+    #[Route(path: '/list/custom039/{id}', name: 'custom039_show', methods: ['GET'])]
+    #[Route(path: '/list/custom040/{id}', name: 'custom040_show', methods: ['GET'])]
+    #[Route(path: '/list/custom041/{id}', name: 'custom041_show', methods: ['GET'])]
+    #[Route(path: '/list/custom042/{id}', name: 'custom042_show', methods: ['GET'])]
+    #[Route(path: '/list/custom043/{id}', name: 'custom043_show', methods: ['GET'])]
+    #[Route(path: '/list/custom044/{id}', name: 'custom044_show', methods: ['GET'])]
+    #[Route(path: '/list/custom045/{id}', name: 'custom045_show', methods: ['GET'])]
+    #[Route(path: '/list/custom046/{id}', name: 'custom046_show', methods: ['GET'])]
+    #[Route(path: '/list/custom047/{id}', name: 'custom047_show', methods: ['GET'])]
+    #[Route(path: '/list/custom048/{id}', name: 'custom048_show', methods: ['GET'])]
+    #[Route(path: '/list/custom049/{id}', name: 'custom049_show', methods: ['GET'])]
+    #[Route(path: '/list/custom050/{id}', name: 'custom050_show', methods: ['GET'])]
+    #[Route(path: '/list/custom051/{id}', name: 'custom051_show', methods: ['GET'])]
+    #[Route(path: '/list/custom052/{id}', name: 'custom052_show', methods: ['GET'])]
+    #[Route(path: '/list/custom053/{id}', name: 'custom053_show', methods: ['GET'])]
+    #[Route(path: '/list/custom054/{id}', name: 'custom054_show', methods: ['GET'])]
+    #[Route(path: '/list/custom055/{id}', name: 'custom055_show', methods: ['GET'])]
+    #[Route(path: '/list/custom056/{id}', name: 'custom056_show', methods: ['GET'])]
+    #[Route(path: '/list/custom057/{id}', name: 'custom057_show', methods: ['GET'])]
+    #[Route(path: '/list/custom058/{id}', name: 'custom058_show', methods: ['GET'])]
+    #[Route(path: '/list/custom059/{id}', name: 'custom059_show', methods: ['GET'])]
+    #[Route(path: '/list/custom060/{id}', name: 'custom060_show', methods: ['GET'])]
+    #[Route(path: '/list/custom061/{id}', name: 'custom061_show', methods: ['GET'])]
+    #[Route(path: '/list/custom062/{id}', name: 'custom062_show', methods: ['GET'])]
+    #[Route(path: '/list/custom063/{id}', name: 'custom063_show', methods: ['GET'])]
+    #[Route(path: '/list/custom064/{id}', name: 'custom064_show', methods: ['GET'])]
+    #[Route(path: '/list/custom065/{id}', name: 'custom065_show', methods: ['GET'])]
+    #[Route(path: '/list/custom066/{id}', name: 'custom066_show', methods: ['GET'])]
+    #[Route(path: '/list/custom067/{id}', name: 'custom067_show', methods: ['GET'])]
+    #[Route(path: '/list/custom068/{id}', name: 'custom068_show', methods: ['GET'])]
+    #[Route(path: '/list/custom069/{id}', name: 'custom069_show', methods: ['GET'])]
+    #[Route(path: '/list/custom070/{id}', name: 'custom070_show', methods: ['GET'])]
+    #[Route(path: '/list/custom071/{id}', name: 'custom071_show', methods: ['GET'])]
+    #[Route(path: '/list/custom072/{id}', name: 'custom072_show', methods: ['GET'])]
+    #[Route(path: '/list/custom073/{id}', name: 'custom073_show', methods: ['GET'])]
+    #[Route(path: '/list/custom074/{id}', name: 'custom074_show', methods: ['GET'])]
+    #[Route(path: '/list/custom075/{id}', name: 'custom075_show', methods: ['GET'])]
+    #[Route(path: '/list/custom076/{id}', name: 'custom076_show', methods: ['GET'])]
+    #[Route(path: '/list/custom077/{id}', name: 'custom077_show', methods: ['GET'])]
+    #[Route(path: '/list/custom078/{id}', name: 'custom078_show', methods: ['GET'])]
+    #[Route(path: '/list/custom079/{id}', name: 'custom079_show', methods: ['GET'])]
+    #[Route(path: '/list/custom080/{id}', name: 'custom080_show', methods: ['GET'])]
+    #[Route(path: '/list/custom081/{id}', name: 'custom081_show', methods: ['GET'])]
+    #[Route(path: '/list/custom082/{id}', name: 'custom082_show', methods: ['GET'])]
+    #[Route(path: '/list/custom083/{id}', name: 'custom083_show', methods: ['GET'])]
+    #[Route(path: '/list/custom084/{id}', name: 'custom084_show', methods: ['GET'])]
+    #[Route(path: '/list/custom085/{id}', name: 'custom085_show', methods: ['GET'])]
+    #[Route(path: '/list/custom086/{id}', name: 'custom086_show', methods: ['GET'])]
+    #[Route(path: '/list/custom087/{id}', name: 'custom087_show', methods: ['GET'])]
+    #[Route(path: '/list/custom088/{id}', name: 'custom088_show', methods: ['GET'])]
+    #[Route(path: '/list/custom089/{id}', name: 'custom089_show', methods: ['GET'])]
+    #[Route(path: '/list/custom090/{id}', name: 'custom090_show', methods: ['GET'])]
+    #[Route(path: '/list/custom091/{id}', name: 'custom091_show', methods: ['GET'])]
+    #[Route(path: '/list/custom092/{id}', name: 'custom092_show', methods: ['GET'])]
+    #[Route(path: '/list/custom093/{id}', name: 'custom093_show', methods: ['GET'])]
+    #[Route(path: '/list/custom094/{id}', name: 'custom094_show', methods: ['GET'])]
+    #[Route(path: '/list/custom095/{id}', name: 'custom095_show', methods: ['GET'])]
+    #[Route(path: '/list/custom096/{id}', name: 'custom096_show', methods: ['GET'])]
+    #[Route(path: '/list/custom097/{id}', name: 'custom097_show', methods: ['GET'])]
+    #[Route(path: '/list/custom098/{id}', name: 'custom098_show', methods: ['GET'])]
+    #[Route(path: '/list/custom099/{id}', name: 'custom099_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-tissue-processing-services/{id}', name: 'transrestissueprocessingservices_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-other-requested-services/{id}', name: 'transresotherrequestedservices_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-labs/{id}', name: 'transrescolllabs_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-divs/{id}', name: 'transrescolldivs_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-status/{id}', name: 'transresirbstatus_show', methods: ['GET'])]
+    #[Route(path: '/list/translational-requester-group/{id}', name: 'transresrequestergroup_show', methods: ['GET'])]
+    #[Route(path: '/list/transrescomptypes/{id}', name: 'transrescomptypes_show', methods: ['GET'])]
+    #[Route(path: '/list/visastatus/{id}', name: 'visastatus_show', methods: ['GET'])]
+    #[Route(path: '/list/resappstatuses/{id}', name: 'resappstatuses_show', methods: ['GET'])]
+    #[Route(path: '/list/resappranks/{id}', name: 'resappranks_show', methods: ['GET'])]
+    #[Route(path: '/list/resapplanguageproficiency/{id}', name: 'resapplanguageproficiency_show', methods: ['GET'])]
+    #[Route(path: '/list/resappfitforprogram/{id}', name: 'resappfitforprogram_show', methods: ['GET'])]
+    #[Route(path: '/list/resappvisastatus/{id}', name: 'resappvisastatus_show', methods: ['GET'])]
+    #[Route(path: '/list/postsoph/{id}', name: 'postsoph_show', methods: ['GET'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/{id}', name: 'resappapplyingresidencytrack_show', methods: ['GET'])]
+    #[Route(path: '/list/resapplearnarealist/{id}', name: 'resapplearnarealist_show', methods: ['GET'])]
+    #[Route(path: '/list/resappspecificindividuallist/{id}', name: 'resappspecificindividuallist_show', methods: ['GET'])]
+    #[Route(path: '/list/viewmodes/{id}', name: 'viewmodes_show', methods: ['GET'])]
+    #[Route(path: '/list/transrespricetypes/{id}', name: 'transrespricetypes_show', methods: ['GET'])]
+    #[Route(path: '/list/charttypes/{id}', name: 'charttypes_show', methods: ['GET'])]
+    #[Route(path: '/list/charttopics/{id}', name: 'charttopics_show', methods: ['GET'])]
+    #[Route(path: '/list/chartfilters/{id}', name: 'chartfilters_show', methods: ['GET'])]
+    #[Route(path: '/list/charts/{id}', name: 'charts_show', methods: ['GET'])]
+    #[Route(path: '/list/chartdatasources/{id}', name: 'chartdatasources_show', methods: ['GET'])]
+    #[Route(path: '/list/chartupdatefrequencies/{id}', name: 'chartupdatefrequencies_show', methods: ['GET'])]
+    #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_show', methods: ['GET'])]
+    #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_show', methods: ['GET'])]
+    #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_show', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
 
@@ -1727,256 +1715,254 @@ class ListController extends OrderAbstractController
     /**
      * Displays a form to edit an existing entity.
      *
-     * @Route("/list-manager/{id}/edit", name="platformlistmanager_edit", methods={"GET"})
-     * @Route("/list/source-systems/{id}/edit", name="sourcesystems_edit", methods={"GET"})
-     * @Route("/list/roles/{id}/edit", name="role_edit", methods={"GET"})
-     * @Route("/list/institutions/{id}/edit", name="institutions_edit", methods={"GET"})
-     * @Route("/list/states/{id}/edit", name="states_edit", methods={"GET"})
-     * @Route("/list/countries/{id}/edit", name="countries_edit", methods={"GET"})
-     * @Route("/list/board-certifications/{id}/edit", name="boardcertifications_edit", methods={"GET"})
-     * @Route("/list/employment-termination-reasons/{id}/edit", name="employmentterminations_edit", methods={"GET"})
-     * @Route("/list/event-log-event-types/{id}/edit", name="loggereventtypes_edit", methods={"GET"})
-     * @Route("/list/primary-public-user-id-types/{id}/edit", name="usernametypes_edit", methods={"GET"})
-     * @Route("/list/identifier-types/{id}/edit", name="identifiers_edit", methods={"GET"})
-     * @Route("/list/residency-tracks/{id}/edit", name="residencytracks_edit", methods={"GET"})
-     * @Route("/list/fellowship-types/{id}/edit", name="fellowshiptypes_edit", methods={"GET"})
-//     * @Route("/list/research-labs/{id}/edit", name="researchlabs_edit", methods={"GET"})
-     * @Route("/list/location-types/{id}/edit", name="locationtypes_edit", methods={"GET"})
-     * @Route("/list/equipment/{id}/edit", name="equipments_edit", methods={"GET"})
-     * @Route("/list/equipment-types/{id}/edit", name="equipmenttypes_edit", methods={"GET"})
-     * @Route("/list/location-privacy-types/{id}/edit", name="locationprivacy_edit", methods={"GET"})
-     * @Route("/list/role-attributes/{id}/edit", name="roleattributes_edit", methods={"GET"})
-     * @Route("/list/buidlings/{id}/edit", name="buildings_edit", methods={"GET"})
-     * @Route("/list/rooms/{id}/edit", name="rooms_edit", methods={"GET"})
-     * @Route("/list/suites/{id}/edit", name="suites_edit", methods={"GET"})
-     * @Route("/list/floors/{id}/edit", name="floors_edit", methods={"GET"})
-     * @Route("/list/grants/{id}/edit", name="grants_edit", methods={"GET"})
-     * @Route("/list/mailboxes/{id}/edit", name="mailboxes_edit", methods={"GET"})
-     * @Route("/list/percent-effort/{id}/edit", name="efforts_edit", methods={"GET"})
-     * @Route("/list/administrative-titles/{id}/edit", name="admintitles_edit", methods={"GET"})
-     * @Route("/list/academic-appointment-titles/{id}/edit", name="apptitles_edit", methods={"GET"})
-     * @Route("/list/training-completion-reasons/{id}/edit", name="completionreasons_edit", methods={"GET"})
-     * @Route("/list/training-degrees/{id}/edit", name="trainingdegrees_edit", methods={"GET"})
-     * @Route("/list/training-majors/{id}/edit", name="trainingmajors_edit", methods={"GET"})
-     * @Route("/list/training-minors/{id}/edit", name="trainingminors_edit", methods={"GET"})
-     * @Route("/list/training-honors/{id}/edit", name="traininghonors_edit", methods={"GET"})
-     * @Route("/list/fellowship-titles/{id}/edit", name="fellowshiptitles_edit", methods={"GET"})
-     * @Route("/list/residency-specialties/{id}/edit", name="residencyspecialtys_edit", methods={"GET"})
-     * @Route("/list/fellowship-subspecialties/{id}/edit", name="fellowshipsubspecialtys_edit", methods={"GET"})
-     * @Route("/list/institution-types/{id}/edit", name="institutiontypes_edit", methods={"GET"})
-     * @Route("/list/document-types/{id}/edit", name="documenttypes_edit", methods={"GET"})
-     * @Route("/list/medical-titles/{id}/edit", name="medicaltitles_edit", methods={"GET"})
-     * @Route("/list/medical-specialties/{id}/edit", name="medicalspecialties_edit", methods={"GET"})
-     * @Route("/list/employment-types/{id}/edit", name="employmenttypes_edit", methods={"GET"})
-     * @Route("/list/grant-source-organizations/{id}/edit", name="sourceorganizations_edit", methods={"GET"})
-     * @Route("/list/languages/{id}/edit", name="languages_edit", methods={"GET"})
-     * @Route("/list/locales/{id}/edit", name="locales_edit", methods={"GET"})
-     * @Route("/list/ranks-of-importance/{id}/edit", name="importances_edit", methods={"GET"})
-     * @Route("/list/authorship-roles/{id}/edit", name="authorshiproles_edit", methods={"GET"})
-     * @Route("/list/lecture-venues/{id}/edit", name="organizations_edit", methods={"GET"})
-     * @Route("/list/cities/{id}/edit", name="cities_edit", methods={"GET"})
-     * @Route("/list/link-types/{id}/edit", name="linktypes_edit", methods={"GET"})
-     * @Route("/list/sexes/{id}/edit", name="sexes_edit", methods={"GET"})
-     * @Route("/list/position-types/{id}/edit", name="positiontypes_edit", methods={"GET"})
-     * @Route("/list/organizational-group-types/{id}/edit", name="organizationalgrouptypes_edit", methods={"GET"})
-     * @Route("/list/profile-comment-group-types/{id}/edit", name="commentgrouptypes_edit", methods={"GET"})
-     * @Route("/list/comment-types/{id}/edit", name="commenttypes_edit", methods={"GET"})
-     * @Route("/list/user-wrappers/{id}/edit", name="userwrappers_edit", methods={"GET"})
-     * @Route("/list/spot-purposes/{id}/edit", name="spotpurposes_edit", methods={"GET"})
-     * @Route("/list/medical-license-statuses/{id}/edit", name="medicalstatuses_edit", methods={"GET"})
-     * @Route("/list/certifying-board-organizations/{id}/edit", name="certifyingboardorganizations_edit", methods={"GET"})
-     * @Route("/list/training-types/{id}/edit", name="trainingtypes_edit", methods={"GET"})
-     * @Route("/list/job-titles/{id}/edit", name="joblists_edit", methods={"GET"})
-     * @Route("/list/fellowship-application-statuses/{id}/edit", name="fellappstatuses_edit", methods={"GET"})
-     * @Route("/list/fellowship-application-ranks/{id}/edit", name="fellappranks_edit", methods={"GET"})
-     * @Route("/list/fellowship-application-language-proficiencies/{id}/edit", name="fellapplanguageproficiency_edit", methods={"GET"})
-//     * @Route("/list/collaborations/{id}/edit", name="collaborations_edit", methods={"GET"})
-     * @Route("/list/collaboration-types/{id}/edit", name="collaborationtypes_edit", methods={"GET"})
-     * @Route("/list/permissions/{id}/edit", name="permission_edit", methods={"GET"})
-     * @Route("/list/permission-objects/{id}/edit", name="permissionobject_edit", methods={"GET"})
-     * @Route("/list/permission-actions/{id}/edit", name="permissionaction_edit", methods={"GET"})
-     * @Route("/list/sites/{id}/edit", name="sites_edit", methods={"GET"})
-     * @Route("/list/event-object-types/{id}/edit", name="eventobjecttypes_edit", methods={"GET"})
-     * @Route("/list/time-away-request-types/{id}/edit", name="vacreqrequesttypes_edit", methods={"GET"})
-     * @Route("/list/time-away-request-floating-texts/{id}/edit", name="vacreqfloatingtexts_edit", methods={"GET"})
-     * @Route("/list/time-away-request-floating-types/{id}/edit", name="vacreqfloatingtypes_edit", methods={"GET"})
-     * @Route("/list/time-away-request-approval-types/{id}/edit", name="vacreqapprovaltypes_edit", methods={"GET"})
-     * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit", methods={"GET"})
-     * @Route("/list/healthcare-provider-initial-communications/{id}/edit", name="healthcareprovidercommunication_edit", methods={"GET"})
-     * @Route("/list/object-types/{id}/edit", name="objecttypes_edit", methods={"GET"})
-     * @Route("/list/form-nodes/{id}/edit", name="formnodes_edit", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/{id}/edit", name="objecttypetexts_edit", methods={"GET"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/{id}/edit", name="bloodproducttransfusions_edit", methods={"GET"})
-     * @Route("/list/transfusion-reaction-types/{id}/edit", name="transfusionreactiontypes_edit", methods={"GET"})
-     * @Route("/list/object-type-strings/{id}/edit", name="objecttypestrings_edit", methods={"GET"})
-     * @Route("/list/object-type-dropdowns/{id}/edit", name="objecttypedropdowns_edit", methods={"GET"})
-     * @Route("/list/blood-types/{id}/edit", name="bloodtypes_edit", methods={"GET"})
-     * @Route("/list/additional-communications/{id}/edit", name="additionalcommunications_edit", methods={"GET"})
-     * @Route("/list/transfusion-antibody-screen-results/{id}/edit", name="transfusionantibodyscreenresults_edit", methods={"GET"})
-     * @Route("/list/transfusion-crossmatch-results/{id}/edit", name="transfusioncrossmatchresults_edit", methods={"GET"})
-     * @Route("/list/transfusion-dat-results/{id}/edit", name="transfusiondatresults_edit", methods={"GET"})
-     * @Route("/list/transfusion-hemolysis-check-results/{id}/edit", name="transfusionhemolysischeckresults_edit", methods={"GET"})
-     * @Route("/list/object-type-datetimes/{id}/edit", name="objecttypedatetimes_edit", methods={"GET"})
-     * @Route("/list/complex-platelet-summary-antibodies/{id}/edit", name="complexplateletsummaryantibodies_edit", methods={"GET"})
-     * @Route("/list/cci-unit-platelet-count-default-values/{id}/edit", name="cciunitplateletcountdefaultvalues_edit", methods={"GET"})
-     * @Route("/list/cci-platelet-type-transfused/{id}/edit", name="cciplatelettypetransfuseds_edit", methods={"GET"})
-     * @Route("/list/platelet-transfusion-product-receiving/{id}/edit", name="platelettransfusionproductreceivings_edit", methods={"GET"})
-     * @Route("/list/transfusion-product-status/{id}/edit", name="transfusionproductstatus_edit", methods={"GET"})
-     * @Route("/list/week-days/{id}/edit", name="weekdays_edit", methods={"GET"})
-     * @Route("/list/months/{id}/edit", name="months_edit", methods={"GET"})
-     * @Route("/list/clerical-errors/{id}/edit", name="clericalerrors_edit", methods={"GET"})
-     * @Route("/list/lab-result-names/{id}/edit", name="labresultnames_edit", methods={"GET"})
-     * @Route("/list/lab-result-units-measures/{id}/edit", name="labresultunitsmeasures_edit", methods={"GET"})
-     * @Route("/list/lab-result-flags/{id}/edit", name="labresultflags_edit", methods={"GET"})
-     * @Route("/list/pathology-result-signatories/{id}/edit", name="pathologyresultsignatories_edit", methods={"GET"})
-     * @Route("/list/object-type-checkboxes/{id}/edit", name="objecttypecheckboxs_edit", methods={"GET"})
-     * @Route("/list/object-type-radio-buttons/{id}/edit", name="objecttyperadiobuttons_edit", methods={"GET"})
-     * @Route("/list/life-forms/{id}/edit", name="lifeforms_edit", methods={"GET"})
-     * @Route("/list/position-track-types/{id}/edit", name="positiontracktypes_edit", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-orig/{id}/edit", name="transresprojectspecialties_edit-orig", methods={"GET"})
-     * @Route("/list/translational-research-project-types/{id}/edit", name="transresprojecttypes_edit", methods={"GET"})
-     * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit", methods={"GET"})
-     * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit", methods={"GET"})
-     * @Route("/list/translational-business-purposes/{id}/edit", name="transresbusinesspurposes_edit", methods={"GET"})
-     * @Route("/list/translational-work-queue-types/{id}/edit", name="workqueuetypes_edit", methods={"GET"})
-     * @Route("/list/translational-orderable-status/{id}/edit", name="orderablestatus_edit", methods={"GET"})
      *
-     * @Route("/list/antibodies/{id}/edit", name="antibodies_edit", methods={"GET"})
-     * @Route("/list/custom000/{id}/edit", name="custom000_edit", methods={"GET"})
-     * @Route("/list/custom001/{id}/edit", name="custom001_edit", methods={"GET"})
-     * @Route("/list/custom002/{id}/edit", name="custom002_edit", methods={"GET"})
-     * @Route("/list/custom003/{id}/edit", name="custom003_edit", methods={"GET"})
-     * @Route("/list/custom004/{id}/edit", name="custom004_edit", methods={"GET"})
-     * @Route("/list/custom005/{id}/edit", name="custom005_edit", methods={"GET"})
-     * @Route("/list/custom006/{id}/edit", name="custom006_edit", methods={"GET"})
-     * @Route("/list/custom007/{id}/edit", name="custom007_edit", methods={"GET"})
-     * @Route("/list/custom008/{id}/edit", name="custom008_edit", methods={"GET"})
-     * @Route("/list/custom009/{id}/edit", name="custom009_edit", methods={"GET"})
-     * @Route("/list/custom010/{id}/edit", name="custom010_edit", methods={"GET"})
-     * @Route("/list/custom011/{id}/edit", name="custom011_edit", methods={"GET"})
-     * @Route("/list/custom012/{id}/edit", name="custom012_edit", methods={"GET"})
-     * @Route("/list/custom013/{id}/edit", name="custom013_edit", methods={"GET"})
-     * @Route("/list/custom014/{id}/edit", name="custom014_edit", methods={"GET"})
-     * @Route("/list/custom015/{id}/edit", name="custom015_edit", methods={"GET"})
-     * @Route("/list/custom016/{id}/edit", name="custom016_edit", methods={"GET"})
-     * @Route("/list/custom017/{id}/edit", name="custom017_edit", methods={"GET"})
-     * @Route("/list/custom018/{id}/edit", name="custom018_edit", methods={"GET"})
-     * @Route("/list/custom019/{id}/edit", name="custom019_edit", methods={"GET"})
-     * @Route("/list/custom020/{id}/edit", name="custom020_edit", methods={"GET"})
-     * @Route("/list/custom021/{id}/edit", name="custom021_edit", methods={"GET"})
-     * @Route("/list/custom022/{id}/edit", name="custom022_edit", methods={"GET"})
-     * @Route("/list/custom023/{id}/edit", name="custom023_edit", methods={"GET"})
-     * @Route("/list/custom024/{id}/edit", name="custom024_edit", methods={"GET"})
-     * @Route("/list/custom025/{id}/edit", name="custom025_edit", methods={"GET"})
-     * @Route("/list/custom026/{id}/edit", name="custom026_edit", methods={"GET"})
-     * @Route("/list/custom027/{id}/edit", name="custom027_edit", methods={"GET"})
-     * @Route("/list/custom028/{id}/edit", name="custom028_edit", methods={"GET"})
-     * @Route("/list/custom029/{id}/edit", name="custom029_edit", methods={"GET"})
-     * @Route("/list/custom030/{id}/edit", name="custom030_edit", methods={"GET"})
-     * @Route("/list/custom031/{id}/edit", name="custom031_edit", methods={"GET"})
-     * @Route("/list/custom032/{id}/edit", name="custom032_edit", methods={"GET"})
-     * @Route("/list/custom033/{id}/edit", name="custom033_edit", methods={"GET"})
-     * @Route("/list/custom034/{id}/edit", name="custom034_edit", methods={"GET"})
-     * @Route("/list/custom035/{id}/edit", name="custom035_edit", methods={"GET"})
-     * @Route("/list/custom036/{id}/edit", name="custom036_edit", methods={"GET"})
-     * @Route("/list/custom037/{id}/edit", name="custom037_edit", methods={"GET"})
-     * @Route("/list/custom038/{id}/edit", name="custom038_edit", methods={"GET"})
-     * @Route("/list/custom039/{id}/edit", name="custom039_edit", methods={"GET"})
-     * @Route("/list/custom040/{id}/edit", name="custom040_edit", methods={"GET"})
-     * @Route("/list/custom041/{id}/edit", name="custom041_edit", methods={"GET"})
-     * @Route("/list/custom042/{id}/edit", name="custom042_edit", methods={"GET"})
-     * @Route("/list/custom043/{id}/edit", name="custom043_edit", methods={"GET"})
-     * @Route("/list/custom044/{id}/edit", name="custom044_edit", methods={"GET"})
-     * @Route("/list/custom045/{id}/edit", name="custom045_edit", methods={"GET"})
-     * @Route("/list/custom046/{id}/edit", name="custom046_edit", methods={"GET"})
-     * @Route("/list/custom047/{id}/edit", name="custom047_edit", methods={"GET"})
-     * @Route("/list/custom048/{id}/edit", name="custom048_edit", methods={"GET"})
-     * @Route("/list/custom049/{id}/edit", name="custom049_edit", methods={"GET"})
-     * @Route("/list/custom050/{id}/edit", name="custom050_edit", methods={"GET"})
-     * @Route("/list/custom051/{id}/edit", name="custom051_edit", methods={"GET"})
-     * @Route("/list/custom052/{id}/edit", name="custom052_edit", methods={"GET"})
-     * @Route("/list/custom053/{id}/edit", name="custom053_edit", methods={"GET"})
-     * @Route("/list/custom054/{id}/edit", name="custom054_edit", methods={"GET"})
-     * @Route("/list/custom055/{id}/edit", name="custom055_edit", methods={"GET"})
-     * @Route("/list/custom056/{id}/edit", name="custom056_edit", methods={"GET"})
-     * @Route("/list/custom057/{id}/edit", name="custom057_edit", methods={"GET"})
-     * @Route("/list/custom058/{id}/edit", name="custom058_edit", methods={"GET"})
-     * @Route("/list/custom059/{id}/edit", name="custom059_edit", methods={"GET"})
-     * @Route("/list/custom060/{id}/edit", name="custom060_edit", methods={"GET"})
-     * @Route("/list/custom061/{id}/edit", name="custom061_edit", methods={"GET"})
-     * @Route("/list/custom062/{id}/edit", name="custom062_edit", methods={"GET"})
-     * @Route("/list/custom063/{id}/edit", name="custom063_edit", methods={"GET"})
-     * @Route("/list/custom064/{id}/edit", name="custom064_edit", methods={"GET"})
-     * @Route("/list/custom065/{id}/edit", name="custom065_edit", methods={"GET"})
-     * @Route("/list/custom066/{id}/edit", name="custom066_edit", methods={"GET"})
-     * @Route("/list/custom067/{id}/edit", name="custom067_edit", methods={"GET"})
-     * @Route("/list/custom068/{id}/edit", name="custom068_edit", methods={"GET"})
-     * @Route("/list/custom069/{id}/edit", name="custom069_edit", methods={"GET"})
-     * @Route("/list/custom070/{id}/edit", name="custom070_edit", methods={"GET"})
-     * @Route("/list/custom071/{id}/edit", name="custom071_edit", methods={"GET"})
-     * @Route("/list/custom072/{id}/edit", name="custom072_edit", methods={"GET"})
-     * @Route("/list/custom073/{id}/edit", name="custom073_edit", methods={"GET"})
-     * @Route("/list/custom074/{id}/edit", name="custom074_edit", methods={"GET"})
-     * @Route("/list/custom075/{id}/edit", name="custom075_edit", methods={"GET"})
-     * @Route("/list/custom076/{id}/edit", name="custom076_edit", methods={"GET"})
-     * @Route("/list/custom077/{id}/edit", name="custom077_edit", methods={"GET"})
-     * @Route("/list/custom078/{id}/edit", name="custom078_edit", methods={"GET"})
-     * @Route("/list/custom079/{id}/edit", name="custom079_edit", methods={"GET"})
-     * @Route("/list/custom080/{id}/edit", name="custom080_edit", methods={"GET"})
-     * @Route("/list/custom081/{id}/edit", name="custom081_edit", methods={"GET"})
-     * @Route("/list/custom082/{id}/edit", name="custom082_edit", methods={"GET"})
-     * @Route("/list/custom083/{id}/edit", name="custom083_edit", methods={"GET"})
-     * @Route("/list/custom084/{id}/edit", name="custom084_edit", methods={"GET"})
-     * @Route("/list/custom085/{id}/edit", name="custom085_edit", methods={"GET"})
-     * @Route("/list/custom086/{id}/edit", name="custom086_edit", methods={"GET"})
-     * @Route("/list/custom087/{id}/edit", name="custom087_edit", methods={"GET"})
-     * @Route("/list/custom088/{id}/edit", name="custom088_edit", methods={"GET"})
-     * @Route("/list/custom089/{id}/edit", name="custom089_edit", methods={"GET"})
-     * @Route("/list/custom090/{id}/edit", name="custom090_edit", methods={"GET"})
-     * @Route("/list/custom091/{id}/edit", name="custom091_edit", methods={"GET"})
-     * @Route("/list/custom092/{id}/edit", name="custom092_edit", methods={"GET"})
-     * @Route("/list/custom093/{id}/edit", name="custom093_edit", methods={"GET"})
-     * @Route("/list/custom094/{id}/edit", name="custom094_edit", methods={"GET"})
-     * @Route("/list/custom095/{id}/edit", name="custom095_edit", methods={"GET"})
-     * @Route("/list/custom096/{id}/edit", name="custom096_edit", methods={"GET"})
-     * @Route("/list/custom097/{id}/edit", name="custom097_edit", methods={"GET"})
-     * @Route("/list/custom098/{id}/edit", name="custom098_edit", methods={"GET"})
-     * @Route("/list/custom099/{id}/edit", name="custom099_edit", methods={"GET"})
-     * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit", methods={"GET"})
-     * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit", methods={"GET"})
      *
-     * @Route("/list/translational-collaboration-labs/{id}/edit", name="transrescolllabs_edit", methods={"GET"})
-     * @Route("/list/translational-collaboration-divs/{id}/edit", name="transrescolldivs_edit", methods={"GET"})
-     * @Route("/list/translational-irb-approval-status/{id}/edit", name="transresirbstatus_edit", methods={"GET"})
-     * @Route("/list/translational-requester-group/{id}/edit", name="transresrequestergroup_edit", methods={"GET"})
-     * @Route("/list/transrescomptypes/{id}/edit", name="transrescomptypes_edit", methods={"GET"})
      *
-     * @Route("/list/visastatus/{id}/edit", name="visastatus_edit", methods={"GET"})
-     * @Route("/list/resappstatuses/{id}/edit", name="resappstatuses_edit", methods={"GET"})
-     * @Route("/list/resappranks/{id}/edit", name="resappranks_edit", methods={"GET"})
-     * @Route("/list/resapplanguageproficiency/{id}/edit", name="resapplanguageproficiency_edit", methods={"GET"})
-     * @Route("/list/resappfitforprogram/{id}/edit", name="resappfitforprogram_edit", methods={"GET"})
-     * @Route("/list/resappvisastatus/{id}/edit", name="resappvisastatus_edit", methods={"GET"})
-     * @Route("/list/postsoph/{id}/edit", name="postsoph_edit", methods={"GET"})
      *
-     * @Route("/list/resappapplyingresidencytrack/{id}/edit", name="resappapplyingresidencytrack_edit", methods={"GET"})
-     * @Route("/list/resapplearnarealist/{id}/edit", name="resapplearnarealist_edit", methods={"GET"})
-     * @Route("/list/resappspecificindividuallist/{id}/edit", name="resappspecificindividuallist_edit", methods={"GET"})
-     * @Route("/list/viewmodes/{id}/edit", name="viewmodes_edit", methods={"GET"})
-     * @Route("/list/transrespricetypes/{id}/edit", name="transrespricetypes_edit", methods={"GET"})
      *
-     * @Route("/list/charttypes/{id}/edit", name="charttypes_edit", methods={"GET"})
-     * @Route("/list/charttopics/{id}/edit", name="charttopics_edit", methods={"GET"})
-     * @Route("/list/chartfilters/{id}/edit", name="chartfilters_edit", methods={"GET"})
-     * @Route("/list/charts/{id}/edit", name="charts_edit", methods={"GET"})
-     * @Route("/list/chartdatasources/{id}/edit", name="chartdatasources_edit", methods={"GET"})
-     * @Route("/list/chartupdatefrequencies/{id}/edit", name="chartupdatefrequencies_edit", methods={"GET"})
-     * @Route("/list/chartvisualizations/{id}/edit", name="chartvisualizations_edit", methods={"GET"})
-     * @Route("/list/vacreqholidays/{id}/edit", name="vacreqholidays_edit", methods={"GET"})
-     * @Route("/list/vacreqobservedholidays/{id}/edit", name="vacreqobservedholidays_edit", methods={"GET"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
+    #[Route(path: '/list-manager/{id}/edit', name: 'platformlistmanager_edit', methods: ['GET'])]
+    #[Route(path: '/list/source-systems/{id}/edit', name: 'sourcesystems_edit', methods: ['GET'])]
+    #[Route(path: '/list/roles/{id}/edit', name: 'role_edit', methods: ['GET'])]
+    #[Route(path: '/list/institutions/{id}/edit', name: 'institutions_edit', methods: ['GET'])]
+    #[Route(path: '/list/states/{id}/edit', name: 'states_edit', methods: ['GET'])]
+    #[Route(path: '/list/countries/{id}/edit', name: 'countries_edit', methods: ['GET'])]
+    #[Route(path: '/list/board-certifications/{id}/edit', name: 'boardcertifications_edit', methods: ['GET'])]
+    #[Route(path: '/list/employment-termination-reasons/{id}/edit', name: 'employmentterminations_edit', methods: ['GET'])]
+    #[Route(path: '/list/event-log-event-types/{id}/edit', name: 'loggereventtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/primary-public-user-id-types/{id}/edit', name: 'usernametypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/identifier-types/{id}/edit', name: 'identifiers_edit', methods: ['GET'])]
+    #[Route(path: '/list/residency-tracks/{id}/edit', name: 'residencytracks_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-types/{id}/edit', name: 'fellowshiptypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/location-types/{id}/edit', name: 'locationtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/equipment/{id}/edit', name: 'equipments_edit', methods: ['GET'])]
+    #[Route(path: '/list/equipment-types/{id}/edit', name: 'equipmenttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/location-privacy-types/{id}/edit', name: 'locationprivacy_edit', methods: ['GET'])]
+    #[Route(path: '/list/role-attributes/{id}/edit', name: 'roleattributes_edit', methods: ['GET'])]
+    #[Route(path: '/list/buidlings/{id}/edit', name: 'buildings_edit', methods: ['GET'])]
+    #[Route(path: '/list/rooms/{id}/edit', name: 'rooms_edit', methods: ['GET'])]
+    #[Route(path: '/list/suites/{id}/edit', name: 'suites_edit', methods: ['GET'])]
+    #[Route(path: '/list/floors/{id}/edit', name: 'floors_edit', methods: ['GET'])]
+    #[Route(path: '/list/grants/{id}/edit', name: 'grants_edit', methods: ['GET'])]
+    #[Route(path: '/list/mailboxes/{id}/edit', name: 'mailboxes_edit', methods: ['GET'])]
+    #[Route(path: '/list/percent-effort/{id}/edit', name: 'efforts_edit', methods: ['GET'])]
+    #[Route(path: '/list/administrative-titles/{id}/edit', name: 'admintitles_edit', methods: ['GET'])]
+    #[Route(path: '/list/academic-appointment-titles/{id}/edit', name: 'apptitles_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-completion-reasons/{id}/edit', name: 'completionreasons_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-degrees/{id}/edit', name: 'trainingdegrees_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-majors/{id}/edit', name: 'trainingmajors_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-minors/{id}/edit', name: 'trainingminors_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-honors/{id}/edit', name: 'traininghonors_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-titles/{id}/edit', name: 'fellowshiptitles_edit', methods: ['GET'])]
+    #[Route(path: '/list/residency-specialties/{id}/edit', name: 'residencyspecialtys_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-subspecialties/{id}/edit', name: 'fellowshipsubspecialtys_edit', methods: ['GET'])]
+    #[Route(path: '/list/institution-types/{id}/edit', name: 'institutiontypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/document-types/{id}/edit', name: 'documenttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/medical-titles/{id}/edit', name: 'medicaltitles_edit', methods: ['GET'])]
+    #[Route(path: '/list/medical-specialties/{id}/edit', name: 'medicalspecialties_edit', methods: ['GET'])]
+    #[Route(path: '/list/employment-types/{id}/edit', name: 'employmenttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/grant-source-organizations/{id}/edit', name: 'sourceorganizations_edit', methods: ['GET'])]
+    #[Route(path: '/list/languages/{id}/edit', name: 'languages_edit', methods: ['GET'])]
+    #[Route(path: '/list/locales/{id}/edit', name: 'locales_edit', methods: ['GET'])]
+    #[Route(path: '/list/ranks-of-importance/{id}/edit', name: 'importances_edit', methods: ['GET'])]
+    #[Route(path: '/list/authorship-roles/{id}/edit', name: 'authorshiproles_edit', methods: ['GET'])]
+    #[Route(path: '/list/lecture-venues/{id}/edit', name: 'organizations_edit', methods: ['GET'])]
+    #[Route(path: '/list/cities/{id}/edit', name: 'cities_edit', methods: ['GET'])]
+    #[Route(path: '/list/link-types/{id}/edit', name: 'linktypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/sexes/{id}/edit', name: 'sexes_edit', methods: ['GET'])]
+    #[Route(path: '/list/position-types/{id}/edit', name: 'positiontypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/organizational-group-types/{id}/edit', name: 'organizationalgrouptypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/profile-comment-group-types/{id}/edit', name: 'commentgrouptypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/comment-types/{id}/edit', name: 'commenttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/user-wrappers/{id}/edit', name: 'userwrappers_edit', methods: ['GET'])]
+    #[Route(path: '/list/spot-purposes/{id}/edit', name: 'spotpurposes_edit', methods: ['GET'])]
+    #[Route(path: '/list/medical-license-statuses/{id}/edit', name: 'medicalstatuses_edit', methods: ['GET'])]
+    #[Route(path: '/list/certifying-board-organizations/{id}/edit', name: 'certifyingboardorganizations_edit', methods: ['GET'])]
+    #[Route(path: '/list/training-types/{id}/edit', name: 'trainingtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/job-titles/{id}/edit', name: 'joblists_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-statuses/{id}/edit', name: 'fellappstatuses_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-ranks/{id}/edit', name: 'fellappranks_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/{id}/edit', name: 'fellapplanguageproficiency_edit', methods: ['GET'])]
+    #[Route(path: '/list/collaboration-types/{id}/edit', name: 'collaborationtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/permissions/{id}/edit', name: 'permission_edit', methods: ['GET'])]
+    #[Route(path: '/list/permission-objects/{id}/edit', name: 'permissionobject_edit', methods: ['GET'])]
+    #[Route(path: '/list/permission-actions/{id}/edit', name: 'permissionaction_edit', methods: ['GET'])]
+    #[Route(path: '/list/sites/{id}/edit', name: 'sites_edit', methods: ['GET'])]
+    #[Route(path: '/list/event-object-types/{id}/edit', name: 'eventobjecttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-types/{id}/edit', name: 'vacreqrequesttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-texts/{id}/edit', name: 'vacreqfloatingtexts_edit', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-floating-types/{id}/edit', name: 'vacreqfloatingtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/time-away-request-approval-types/{id}/edit', name: 'vacreqapprovaltypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-specialties/{id}/edit', name: 'healthcareproviderspecialty_edit', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/{id}/edit', name: 'healthcareprovidercommunication_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-types/{id}/edit', name: 'objecttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/form-nodes/{id}/edit', name: 'formnodes_edit', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/{id}/edit', name: 'objecttypetexts_edit', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/{id}/edit', name: 'bloodproducttransfusions_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-reaction-types/{id}/edit', name: 'transfusionreactiontypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-type-strings/{id}/edit', name: 'objecttypestrings_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-type-dropdowns/{id}/edit', name: 'objecttypedropdowns_edit', methods: ['GET'])]
+    #[Route(path: '/list/blood-types/{id}/edit', name: 'bloodtypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/additional-communications/{id}/edit', name: 'additionalcommunications_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/{id}/edit', name: 'transfusionantibodyscreenresults_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/{id}/edit', name: 'transfusioncrossmatchresults_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-dat-results/{id}/edit', name: 'transfusiondatresults_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/{id}/edit', name: 'transfusionhemolysischeckresults_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-type-datetimes/{id}/edit', name: 'objecttypedatetimes_edit', methods: ['GET'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/{id}/edit', name: 'complexplateletsummaryantibodies_edit', methods: ['GET'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/{id}/edit', name: 'cciunitplateletcountdefaultvalues_edit', methods: ['GET'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/{id}/edit', name: 'cciplatelettypetransfuseds_edit', methods: ['GET'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/{id}/edit', name: 'platelettransfusionproductreceivings_edit', methods: ['GET'])]
+    #[Route(path: '/list/transfusion-product-status/{id}/edit', name: 'transfusionproductstatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/week-days/{id}/edit', name: 'weekdays_edit', methods: ['GET'])]
+    #[Route(path: '/list/months/{id}/edit', name: 'months_edit', methods: ['GET'])]
+    #[Route(path: '/list/clerical-errors/{id}/edit', name: 'clericalerrors_edit', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-names/{id}/edit', name: 'labresultnames_edit', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-units-measures/{id}/edit', name: 'labresultunitsmeasures_edit', methods: ['GET'])]
+    #[Route(path: '/list/lab-result-flags/{id}/edit', name: 'labresultflags_edit', methods: ['GET'])]
+    #[Route(path: '/list/pathology-result-signatories/{id}/edit', name: 'pathologyresultsignatories_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-type-checkboxes/{id}/edit', name: 'objecttypecheckboxs_edit', methods: ['GET'])]
+    #[Route(path: '/list/object-type-radio-buttons/{id}/edit', name: 'objecttyperadiobuttons_edit', methods: ['GET'])]
+    #[Route(path: '/list/life-forms/{id}/edit', name: 'lifeforms_edit', methods: ['GET'])]
+    #[Route(path: '/list/position-track-types/{id}/edit', name: 'positiontracktypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-orig/{id}/edit', name: 'transresprojectspecialties_edit-orig', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-types/{id}/edit', name: 'transresprojecttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-request-category-types/{id}/edit', name: 'transresrequestcategorytypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-types/{id}/edit', name: 'transresirbapprovaltypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-business-purposes/{id}/edit', name: 'transresbusinesspurposes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-work-queue-types/{id}/edit', name: 'workqueuetypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-orderable-status/{id}/edit', name: 'orderablestatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/{id}/edit', name: 'antibodies_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom000/{id}/edit', name: 'custom000_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom001/{id}/edit', name: 'custom001_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom002/{id}/edit', name: 'custom002_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom003/{id}/edit', name: 'custom003_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom004/{id}/edit', name: 'custom004_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom005/{id}/edit', name: 'custom005_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom006/{id}/edit', name: 'custom006_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom007/{id}/edit', name: 'custom007_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom008/{id}/edit', name: 'custom008_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom009/{id}/edit', name: 'custom009_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom010/{id}/edit', name: 'custom010_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom011/{id}/edit', name: 'custom011_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom012/{id}/edit', name: 'custom012_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom013/{id}/edit', name: 'custom013_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom014/{id}/edit', name: 'custom014_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom015/{id}/edit', name: 'custom015_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom016/{id}/edit', name: 'custom016_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom017/{id}/edit', name: 'custom017_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom018/{id}/edit', name: 'custom018_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom019/{id}/edit', name: 'custom019_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom020/{id}/edit', name: 'custom020_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom021/{id}/edit', name: 'custom021_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom022/{id}/edit', name: 'custom022_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom023/{id}/edit', name: 'custom023_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom024/{id}/edit', name: 'custom024_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom025/{id}/edit', name: 'custom025_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom026/{id}/edit', name: 'custom026_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom027/{id}/edit', name: 'custom027_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom028/{id}/edit', name: 'custom028_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom029/{id}/edit', name: 'custom029_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom030/{id}/edit', name: 'custom030_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom031/{id}/edit', name: 'custom031_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom032/{id}/edit', name: 'custom032_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom033/{id}/edit', name: 'custom033_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom034/{id}/edit', name: 'custom034_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom035/{id}/edit', name: 'custom035_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom036/{id}/edit', name: 'custom036_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom037/{id}/edit', name: 'custom037_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom038/{id}/edit', name: 'custom038_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom039/{id}/edit', name: 'custom039_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom040/{id}/edit', name: 'custom040_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom041/{id}/edit', name: 'custom041_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom042/{id}/edit', name: 'custom042_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom043/{id}/edit', name: 'custom043_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom044/{id}/edit', name: 'custom044_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom045/{id}/edit', name: 'custom045_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom046/{id}/edit', name: 'custom046_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom047/{id}/edit', name: 'custom047_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom048/{id}/edit', name: 'custom048_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom049/{id}/edit', name: 'custom049_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom050/{id}/edit', name: 'custom050_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom051/{id}/edit', name: 'custom051_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom052/{id}/edit', name: 'custom052_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom053/{id}/edit', name: 'custom053_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom054/{id}/edit', name: 'custom054_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom055/{id}/edit', name: 'custom055_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom056/{id}/edit', name: 'custom056_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom057/{id}/edit', name: 'custom057_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom058/{id}/edit', name: 'custom058_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom059/{id}/edit', name: 'custom059_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom060/{id}/edit', name: 'custom060_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom061/{id}/edit', name: 'custom061_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom062/{id}/edit', name: 'custom062_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom063/{id}/edit', name: 'custom063_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom064/{id}/edit', name: 'custom064_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom065/{id}/edit', name: 'custom065_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom066/{id}/edit', name: 'custom066_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom067/{id}/edit', name: 'custom067_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom068/{id}/edit', name: 'custom068_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom069/{id}/edit', name: 'custom069_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom070/{id}/edit', name: 'custom070_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom071/{id}/edit', name: 'custom071_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom072/{id}/edit', name: 'custom072_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom073/{id}/edit', name: 'custom073_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom074/{id}/edit', name: 'custom074_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom075/{id}/edit', name: 'custom075_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom076/{id}/edit', name: 'custom076_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom077/{id}/edit', name: 'custom077_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom078/{id}/edit', name: 'custom078_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom079/{id}/edit', name: 'custom079_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom080/{id}/edit', name: 'custom080_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom081/{id}/edit', name: 'custom081_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom082/{id}/edit', name: 'custom082_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom083/{id}/edit', name: 'custom083_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom084/{id}/edit', name: 'custom084_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom085/{id}/edit', name: 'custom085_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom086/{id}/edit', name: 'custom086_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom087/{id}/edit', name: 'custom087_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom088/{id}/edit', name: 'custom088_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom089/{id}/edit', name: 'custom089_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom090/{id}/edit', name: 'custom090_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom091/{id}/edit', name: 'custom091_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom092/{id}/edit', name: 'custom092_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom093/{id}/edit', name: 'custom093_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom094/{id}/edit', name: 'custom094_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom095/{id}/edit', name: 'custom095_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom096/{id}/edit', name: 'custom096_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom097/{id}/edit', name: 'custom097_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom098/{id}/edit', name: 'custom098_edit', methods: ['GET'])]
+    #[Route(path: '/list/custom099/{id}/edit', name: 'custom099_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-tissue-processing-services/{id}/edit', name: 'transrestissueprocessingservices_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-other-requested-services/{id}/edit', name: 'transresotherrequestedservices_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-labs/{id}/edit', name: 'transrescolllabs_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-collaboration-divs/{id}/edit', name: 'transrescolldivs_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-irb-approval-status/{id}/edit', name: 'transresirbstatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/translational-requester-group/{id}/edit', name: 'transresrequestergroup_edit', methods: ['GET'])]
+    #[Route(path: '/list/transrescomptypes/{id}/edit', name: 'transrescomptypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/visastatus/{id}/edit', name: 'visastatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappstatuses/{id}/edit', name: 'resappstatuses_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappranks/{id}/edit', name: 'resappranks_edit', methods: ['GET'])]
+    #[Route(path: '/list/resapplanguageproficiency/{id}/edit', name: 'resapplanguageproficiency_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappfitforprogram/{id}/edit', name: 'resappfitforprogram_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappvisastatus/{id}/edit', name: 'resappvisastatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/postsoph/{id}/edit', name: 'postsoph_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/{id}/edit', name: 'resappapplyingresidencytrack_edit', methods: ['GET'])]
+    #[Route(path: '/list/resapplearnarealist/{id}/edit', name: 'resapplearnarealist_edit', methods: ['GET'])]
+    #[Route(path: '/list/resappspecificindividuallist/{id}/edit', name: 'resappspecificindividuallist_edit', methods: ['GET'])]
+    #[Route(path: '/list/viewmodes/{id}/edit', name: 'viewmodes_edit', methods: ['GET'])]
+    #[Route(path: '/list/transrespricetypes/{id}/edit', name: 'transrespricetypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/charttypes/{id}/edit', name: 'charttypes_edit', methods: ['GET'])]
+    #[Route(path: '/list/charttopics/{id}/edit', name: 'charttopics_edit', methods: ['GET'])]
+    #[Route(path: '/list/chartfilters/{id}/edit', name: 'chartfilters_edit', methods: ['GET'])]
+    #[Route(path: '/list/charts/{id}/edit', name: 'charts_edit', methods: ['GET'])]
+    #[Route(path: '/list/chartdatasources/{id}/edit', name: 'chartdatasources_edit', methods: ['GET'])]
+    #[Route(path: '/list/chartupdatefrequencies/{id}/edit', name: 'chartupdatefrequencies_edit', methods: ['GET'])]
+    #[Route(path: '/list/chartvisualizations/{id}/edit', name: 'chartvisualizations_edit', methods: ['GET'])]
+    #[Route(path: '/list/vacreqholidays/{id}/edit', name: 'vacreqholidays_edit', methods: ['GET'])]
+    #[Route(path: '/list/vacreqobservedholidays/{id}/edit', name: 'vacreqobservedholidays_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -2081,256 +2067,254 @@ class ListController extends OrderAbstractController
      * Edits an existing entity.
      *
      *
-     * @Route("/list-manager/{id}", name="platformlistmanager_update", methods={"PUT"})
-     * @Route("/list/source-systems/{id}", name="sourcesystems_update", methods={"PUT"})
-     * @Route("/list/roles/{id}", name="role_update", methods={"PUT"})
-     * @Route("/list/institutions/{id}", name="institutions_update", methods={"PUT"})
-     * @Route("/list/states/{id}", name="states_update", methods={"PUT"})
-     * @Route("/list/countries/{id}", name="countries_update", methods={"PUT"})
-     * @Route("/list/board-certifications/{id}", name="boardcertifications_update", methods={"PUT"})
-     * @Route("/list/employment-termination-reasons/{id}", name="employmentterminations_update", methods={"PUT"})
-     * @Route("/list/event-log-event-types/{id}", name="loggereventtypes_update", methods={"PUT"})
-     * @Route("/list/primary-public-user-id-types/{id}", name="usernametypes_update", methods={"PUT"})
-     * @Route("/list/identifier-types/{id}", name="identifiers_update", methods={"PUT"})
-     * @Route("/list/residency-tracks/{id}", name="residencytracks_update", methods={"PUT"})
-     * @Route("/list/fellowship-types/{id}", name="fellowshiptypes_update", methods={"PUT"})
-//     * @Route("/list/research-labs/{id}", name="researchlabs_update", methods={"PUT"})
-     * @Route("/list/location-types/{id}", name="locationtypes_update", methods={"PUT"})
-     * @Route("/list/equipment/{id}", name="equipments_update", methods={"PUT"})
-     * @Route("/list/equipment-types/{id}", name="equipmenttypes_update", methods={"PUT"})
-     * @Route("/list/location-privacy-types/{id}", name="locationprivacy_update", methods={"PUT"})
-     * @Route("/list/role-attributes/{id}", name="roleattributes_update", methods={"PUT"})
-     * @Route("/list/buidlings/{id}", name="buildings_update", methods={"PUT"})
-     * @Route("/list/rooms/{id}", name="rooms_update", methods={"PUT"})
-     * @Route("/list/suites/{id}", name="suites_update", methods={"PUT"})
-     * @Route("/list/floors/{id}", name="floors_update", methods={"PUT"})
-     * @Route("/list/grants/{id}", name="grants_update", methods={"PUT"})
-     * @Route("/list/mailboxes/{id}", name="mailboxes_update", methods={"PUT"})
-     * @Route("/list/percent-effort/{id}", name="efforts_update", methods={"PUT"})
-     * @Route("/list/administrative-titles/{id}", name="admintitles_update", methods={"PUT"})
-     * @Route("/list/academic-appointment-titles/{id}", name="apptitles_update", methods={"PUT"})
-     * @Route("/list/training-completion-reasons/{id}", name="completionreasons_update", methods={"PUT"})
-     * @Route("/list/training-degrees/{id}", name="trainingdegrees_update", methods={"PUT"})
-     * @Route("/list/training-majors/{id}", name="trainingmajors_update", methods={"PUT"})
-     * @Route("/list/training-minors/{id}", name="trainingminors_update", methods={"PUT"})
-     * @Route("/list/training-honors/{id}", name="traininghonors_update", methods={"PUT"})
-     * @Route("/list/fellowship-titles/{id}", name="fellowshiptitles_update", methods={"PUT"})
-     * @Route("/list/residency-specialties/{id}", name="residencyspecialtys_update", methods={"PUT"})
-     * @Route("/list/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_update", methods={"PUT"})
-     * @Route("/list/institution-types/{id}", name="institutiontypes_update", methods={"PUT"})
-     * @Route("/list/document-types/{id}", name="documenttypes_update", methods={"PUT"})
-     * @Route("/list/medical-titles/{id}", name="medicaltitles_update", methods={"PUT"})
-     * @Route("/list/medical-specialties/{id}", name="medicalspecialties_update", methods={"PUT"})
-     * @Route("/list/employment-types/{id}", name="employmenttypes_update", methods={"PUT"})
-     * @Route("/list/grant-source-organizations/{id}", name="sourceorganizations_update", methods={"PUT"})
-     * @Route("/list/languages/{id}", name="languages_update", methods={"PUT"})
-     * @Route("/list/locales/{id}", name="locales_update", methods={"PUT"})
-     * @Route("/list/ranks-of-importance/{id}", name="importances_update", methods={"PUT"})
-     * @Route("/list/authorship-roles/{id}", name="authorshiproles_update", methods={"PUT"})
-     * @Route("/list/lecture-venues/{id}", name="organizations_update", methods={"PUT"})
-     * @Route("/list/cities/{id}", name="cities_update", methods={"PUT"})
-     * @Route("/list/link-types/{id}", name="linktypes_update", methods={"PUT"})
-     * @Route("/list/sexes/{id}", name="sexes_update", methods={"PUT"})
-     * @Route("/list/position-types/{id}", name="positiontypes_update", methods={"PUT"})
-     * @Route("/list/organizational-group-types/{id}", name="organizationalgrouptypes_update", methods={"PUT"})
-     * @Route("/list/profile-comment-group-types/{id}", name="commentgrouptypes_update", methods={"PUT"})
-     * @Route("/list/comment-types/{id}", name="commenttypes_update", methods={"PUT"})
-     * @Route("/list/user-wrappers/{id}", name="userwrappers_update", methods={"PUT"})
-     * @Route("/list/spot-purposes/{id}", name="spotpurposes_update", methods={"PUT"})
-     * @Route("/list/medical-license-statuses/{id}", name="medicalstatuses_update", methods={"PUT"})
-     * @Route("/list/certifying-board-organizations/{id}", name="certifyingboardorganizations_update", methods={"PUT"})
-     * @Route("/list/training-types/{id}", name="trainingtypes_update", methods={"PUT"})
-     * @Route("/list/job-titles/{id}", name="joblists_update", methods={"PUT"})
-     * @Route("/list/fellowship-application-statuses/{id}", name="fellappstatuses_update", methods={"PUT"})
-     * @Route("/list/fellowship-application-ranks/{id}", name="fellappranks_update", methods={"PUT"})
-     * @Route("/list/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_update", methods={"PUT"})
-//     * @Route("/list/collaborations/{id}", name="collaborations_update", methods={"PUT"})
-     * @Route("/list/collaboration-types/{id}", name="collaborationtypes_update", methods={"PUT"})
-     * @Route("/list/permissions/{id}", name="permission_update", methods={"PUT"})
-     * @Route("/list/permission-objects/{id}", name="permissionobject_update", methods={"PUT"})
-     * @Route("/list/permission-actions/{id}", name="permissionaction_update", methods={"PUT"})
-     * @Route("/list/sites/{id}", name="sites_update", methods={"PUT"})
-     * @Route("/list/event-object-types/{id}", name="eventobjecttypes_update", methods={"PUT"})
-     * @Route("/list/time-away-request-types/{id}", name="vacreqrequesttypes_update", methods={"PUT"})
-     * @Route("/list/time-away-request-floating-texts/{id}", name="vacreqfloatingtexts_update", methods={"PUT"})
-     * @Route("/list/time-away-request-floating-types/{id}", name="vacreqfloatingtypes_update", methods={"PUT"})
-     * @Route("/list/time-away-request-approval-types/{id}", name="vacreqapprovaltypes_update", methods={"PUT"})
-     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update", methods={"PUT"})
-     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_update", methods={"PUT"})
-     * @Route("/list/object-types/{id}", name="objecttypes_update", methods={"PUT"})
-     * @Route("/list/form-nodes/{id}", name="formnodes_update", methods={"PUT"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_update", methods={"PUT"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_update", methods={"PUT"})
-     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_update", methods={"PUT"})
-     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_update", methods={"PUT"})
-     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_update", methods={"PUT"})
-     * @Route("/list/blood-types/{id}", name="bloodtypes_update", methods={"PUT"})
-     * @Route("/list/additional-communications/{id}", name="additionalcommunications_update", methods={"PUT"})
-     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_update", methods={"PUT"})
-     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_update", methods={"PUT"})
-     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_update", methods={"PUT"})
-     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_update", methods={"PUT"})
-     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_update", methods={"PUT"})
-     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_update", methods={"PUT"})
-     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_update", methods={"PUT"})
-     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_update", methods={"PUT"})
-     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_update", methods={"PUT"})
-     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_update", methods={"PUT"})
-     * @Route("/list/week-days/{id}", name="weekdays_update", methods={"PUT"})
-     * @Route("/list/months/{id}", name="months_update", methods={"PUT"})
-     * @Route("/list/clerical-errors/{id}", name="clericalerrors_update", methods={"PUT"})
-     * @Route("/list/lab-result-names/{id}", name="labresultnames_update", methods={"PUT"})
-     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_update", methods={"PUT"})
-     * @Route("/list/lab-result-flags/{id}", name="labresultflags_update", methods={"PUT"})
-     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_update", methods={"PUT"})
-     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_update", methods={"PUT"})
-     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_update", methods={"PUT"})
-     * @Route("/list/life-forms/{id}", name="lifeforms_update", methods={"PUT"})
-     * @Route("/list/position-track-types/{id}", name="positiontracktypes_update", methods={"PUT"})
-     * @Route("/list/translational-research-project-specialties-orig/{id}", name="transresprojectspecialties_update_orig", methods={"PUT"})
-     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_update", methods={"PUT"})
-     * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update", methods={"PUT"})
-     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update", methods={"PUT"})
-     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_update", methods={"PUT"})
-     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_update", methods={"PUT"})
-     * @Route("/list/translational-orderable-status/{id}", name="orderablestatus_update", methods={"PUT"})
      *
-     * @Route("/list/antibodies/{id}", name="antibodies_update", methods={"PUT"})
-     * @Route("/list/custom000/{id}", name="custom000_update", methods={"PUT"})
-     * @Route("/list/custom001/{id}", name="custom001_update", methods={"PUT"})
-     * @Route("/list/custom002/{id}", name="custom002_update", methods={"PUT"})
-     * @Route("/list/custom003/{id}", name="custom003_update", methods={"PUT"})
-     * @Route("/list/custom004/{id}", name="custom004_update", methods={"PUT"})
-     * @Route("/list/custom005/{id}", name="custom005_update", methods={"PUT"})
-     * @Route("/list/custom006/{id}", name="custom006_update", methods={"PUT"})
-     * @Route("/list/custom007/{id}", name="custom007_update", methods={"PUT"})
-     * @Route("/list/custom008/{id}", name="custom008_update", methods={"PUT"})
-     * @Route("/list/custom009/{id}", name="custom009_update", methods={"PUT"})
-     * @Route("/list/custom010/{id}", name="custom010_update", methods={"PUT"})
-     * @Route("/list/custom011/{id}", name="custom011_update", methods={"PUT"})
-     * @Route("/list/custom012/{id}", name="custom012_update", methods={"PUT"})
-     * @Route("/list/custom013/{id}", name="custom013_update", methods={"PUT"})
-     * @Route("/list/custom014/{id}", name="custom014_update", methods={"PUT"})
-     * @Route("/list/custom015/{id}", name="custom015_update", methods={"PUT"})
-     * @Route("/list/custom016/{id}", name="custom016_update", methods={"PUT"})
-     * @Route("/list/custom017/{id}", name="custom017_update", methods={"PUT"})
-     * @Route("/list/custom018/{id}", name="custom018_update", methods={"PUT"})
-     * @Route("/list/custom019/{id}", name="custom019_update", methods={"PUT"})
-     * @Route("/list/custom020/{id}", name="custom020_update", methods={"PUT"})
-     * @Route("/list/custom021/{id}", name="custom021_update", methods={"PUT"})
-     * @Route("/list/custom022/{id}", name="custom022_update", methods={"PUT"})
-     * @Route("/list/custom023/{id}", name="custom023_update", methods={"PUT"})
-     * @Route("/list/custom024/{id}", name="custom024_update", methods={"PUT"})
-     * @Route("/list/custom025/{id}", name="custom025_update", methods={"PUT"})
-     * @Route("/list/custom026/{id}", name="custom026_update", methods={"PUT"})
-     * @Route("/list/custom027/{id}", name="custom027_update", methods={"PUT"})
-     * @Route("/list/custom028/{id}", name="custom028_update", methods={"PUT"})
-     * @Route("/list/custom029/{id}", name="custom029_update", methods={"PUT"})
-     * @Route("/list/custom030/{id}", name="custom030_update", methods={"PUT"})
-     * @Route("/list/custom031/{id}", name="custom031_update", methods={"PUT"})
-     * @Route("/list/custom032/{id}", name="custom032_update", methods={"PUT"})
-     * @Route("/list/custom033/{id}", name="custom033_update", methods={"PUT"})
-     * @Route("/list/custom034/{id}", name="custom034_update", methods={"PUT"})
-     * @Route("/list/custom035/{id}", name="custom035_update", methods={"PUT"})
-     * @Route("/list/custom036/{id}", name="custom036_update", methods={"PUT"})
-     * @Route("/list/custom037/{id}", name="custom037_update", methods={"PUT"})
-     * @Route("/list/custom038/{id}", name="custom038_update", methods={"PUT"})
-     * @Route("/list/custom039/{id}", name="custom039_update", methods={"PUT"})
-     * @Route("/list/custom040/{id}", name="custom040_update", methods={"PUT"})
-     * @Route("/list/custom041/{id}", name="custom041_update", methods={"PUT"})
-     * @Route("/list/custom042/{id}", name="custom042_update", methods={"PUT"})
-     * @Route("/list/custom043/{id}", name="custom043_update", methods={"PUT"})
-     * @Route("/list/custom044/{id}", name="custom044_update", methods={"PUT"})
-     * @Route("/list/custom045/{id}", name="custom045_update", methods={"PUT"})
-     * @Route("/list/custom046/{id}", name="custom046_update", methods={"PUT"})
-     * @Route("/list/custom047/{id}", name="custom047_update", methods={"PUT"})
-     * @Route("/list/custom048/{id}", name="custom048_update", methods={"PUT"})
-     * @Route("/list/custom049/{id}", name="custom049_update", methods={"PUT"})
-     * @Route("/list/custom050/{id}", name="custom050_update", methods={"PUT"})
-     * @Route("/list/custom051/{id}", name="custom051_update", methods={"PUT"})
-     * @Route("/list/custom052/{id}", name="custom052_update", methods={"PUT"})
-     * @Route("/list/custom053/{id}", name="custom053_update", methods={"PUT"})
-     * @Route("/list/custom054/{id}", name="custom054_update", methods={"PUT"})
-     * @Route("/list/custom055/{id}", name="custom055_update", methods={"PUT"})
-     * @Route("/list/custom056/{id}", name="custom056_update", methods={"PUT"})
-     * @Route("/list/custom057/{id}", name="custom057_update", methods={"PUT"})
-     * @Route("/list/custom058/{id}", name="custom058_update", methods={"PUT"})
-     * @Route("/list/custom059/{id}", name="custom059_update", methods={"PUT"})
-     * @Route("/list/custom060/{id}", name="custom060_update", methods={"PUT"})
-     * @Route("/list/custom061/{id}", name="custom061_update", methods={"PUT"})
-     * @Route("/list/custom062/{id}", name="custom062_update", methods={"PUT"})
-     * @Route("/list/custom063/{id}", name="custom063_update", methods={"PUT"})
-     * @Route("/list/custom064/{id}", name="custom064_update", methods={"PUT"})
-     * @Route("/list/custom065/{id}", name="custom065_update", methods={"PUT"})
-     * @Route("/list/custom066/{id}", name="custom066_update", methods={"PUT"})
-     * @Route("/list/custom067/{id}", name="custom067_update", methods={"PUT"})
-     * @Route("/list/custom068/{id}", name="custom068_update", methods={"PUT"})
-     * @Route("/list/custom069/{id}", name="custom069_update", methods={"PUT"})
-     * @Route("/list/custom070/{id}", name="custom070_update", methods={"PUT"})
-     * @Route("/list/custom071/{id}", name="custom071_update", methods={"PUT"})
-     * @Route("/list/custom072/{id}", name="custom072_update", methods={"PUT"})
-     * @Route("/list/custom073/{id}", name="custom073_update", methods={"PUT"})
-     * @Route("/list/custom074/{id}", name="custom074_update", methods={"PUT"})
-     * @Route("/list/custom075/{id}", name="custom075_update", methods={"PUT"})
-     * @Route("/list/custom076/{id}", name="custom076_update", methods={"PUT"})
-     * @Route("/list/custom077/{id}", name="custom077_update", methods={"PUT"})
-     * @Route("/list/custom078/{id}", name="custom078_update", methods={"PUT"})
-     * @Route("/list/custom079/{id}", name="custom079_update", methods={"PUT"})
-     * @Route("/list/custom080/{id}", name="custom080_update", methods={"PUT"})
-     * @Route("/list/custom081/{id}", name="custom081_update", methods={"PUT"})
-     * @Route("/list/custom082/{id}", name="custom082_update", methods={"PUT"})
-     * @Route("/list/custom083/{id}", name="custom083_update", methods={"PUT"})
-     * @Route("/list/custom084/{id}", name="custom084_update", methods={"PUT"})
-     * @Route("/list/custom085/{id}", name="custom085_update", methods={"PUT"})
-     * @Route("/list/custom086/{id}", name="custom086_update", methods={"PUT"})
-     * @Route("/list/custom087/{id}", name="custom087_update", methods={"PUT"})
-     * @Route("/list/custom088/{id}", name="custom088_update", methods={"PUT"})
-     * @Route("/list/custom089/{id}", name="custom089_update", methods={"PUT"})
-     * @Route("/list/custom090/{id}", name="custom090_update", methods={"PUT"})
-     * @Route("/list/custom091/{id}", name="custom091_update", methods={"PUT"})
-     * @Route("/list/custom092/{id}", name="custom092_update", methods={"PUT"})
-     * @Route("/list/custom093/{id}", name="custom093_update", methods={"PUT"})
-     * @Route("/list/custom094/{id}", name="custom094_update", methods={"PUT"})
-     * @Route("/list/custom095/{id}", name="custom095_update", methods={"PUT"})
-     * @Route("/list/custom096/{id}", name="custom096_update", methods={"PUT"})
-     * @Route("/list/custom097/{id}", name="custom097_update", methods={"PUT"})
-     * @Route("/list/custom098/{id}", name="custom098_update", methods={"PUT"})
-     * @Route("/list/custom099/{id}", name="custom099_update", methods={"PUT"})
-     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update", methods={"PUT"})
-     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update", methods={"PUT"})
      *
-     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_update", methods={"PUT"})
-     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_update", methods={"PUT"})
-     * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_update", methods={"PUT"})
-     * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_update", methods={"PUT"})
-     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_update", methods={"PUT"})
      *
-     * @Route("/list/visastatus/{id}", name="visastatus_update", methods={"PUT"})
-     * @Route("/list/resappstatuses/{id}", name="resappstatuses_update", methods={"PUT"})
-     * @Route("/list/resappranks/{id}", name="resappranks_update", methods={"PUT"})
-     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_update", methods={"PUT"})
-     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_update", methods={"PUT"})
-     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_update", methods={"PUT"})
-     * @Route("/list/postsoph/{id}", name="postsoph_update", methods={"PUT"})
      *
-     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_update", methods={"PUT"})
-     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_update", methods={"PUT"})
-     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_update", methods={"PUT"})
-     * @Route("/list/viewmodes/{id}", name="viewmodes_update", methods={"PUT"})
-     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_update", methods={"PUT"})
      *
-     * @Route("/list/charttypes/{id}", name="charttypes_update", methods={"PUT"})
-     * @Route("/list/charttopics/{id}", name="charttopics_update", methods={"PUT"})
-     * @Route("/list/chartfilters/{id}", name="chartfilters_update", methods={"PUT"})
-     * @Route("/list/charts/{id}", name="charts_update", methods={"PUT"})
-     * @Route("/list/chartdatasources/{id}", name="chartdatasources_update", methods={"PUT"})
-     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_update", methods={"PUT"})
-     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_update", methods={"PUT"})
-     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_update", methods={"PUT"})
-     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_update", methods={"PUT"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
+    #[Route(path: '/list-manager/{id}', name: 'platformlistmanager_update', methods: ['PUT'])]
+    #[Route(path: '/list/source-systems/{id}', name: 'sourcesystems_update', methods: ['PUT'])]
+    #[Route(path: '/list/roles/{id}', name: 'role_update', methods: ['PUT'])]
+    #[Route(path: '/list/institutions/{id}', name: 'institutions_update', methods: ['PUT'])]
+    #[Route(path: '/list/states/{id}', name: 'states_update', methods: ['PUT'])]
+    #[Route(path: '/list/countries/{id}', name: 'countries_update', methods: ['PUT'])]
+    #[Route(path: '/list/board-certifications/{id}', name: 'boardcertifications_update', methods: ['PUT'])]
+    #[Route(path: '/list/employment-termination-reasons/{id}', name: 'employmentterminations_update', methods: ['PUT'])]
+    #[Route(path: '/list/event-log-event-types/{id}', name: 'loggereventtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/primary-public-user-id-types/{id}', name: 'usernametypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/identifier-types/{id}', name: 'identifiers_update', methods: ['PUT'])]
+    #[Route(path: '/list/residency-tracks/{id}', name: 'residencytracks_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-types/{id}', name: 'fellowshiptypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/location-types/{id}', name: 'locationtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/equipment/{id}', name: 'equipments_update', methods: ['PUT'])]
+    #[Route(path: '/list/equipment-types/{id}', name: 'equipmenttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/location-privacy-types/{id}', name: 'locationprivacy_update', methods: ['PUT'])]
+    #[Route(path: '/list/role-attributes/{id}', name: 'roleattributes_update', methods: ['PUT'])]
+    #[Route(path: '/list/buidlings/{id}', name: 'buildings_update', methods: ['PUT'])]
+    #[Route(path: '/list/rooms/{id}', name: 'rooms_update', methods: ['PUT'])]
+    #[Route(path: '/list/suites/{id}', name: 'suites_update', methods: ['PUT'])]
+    #[Route(path: '/list/floors/{id}', name: 'floors_update', methods: ['PUT'])]
+    #[Route(path: '/list/grants/{id}', name: 'grants_update', methods: ['PUT'])]
+    #[Route(path: '/list/mailboxes/{id}', name: 'mailboxes_update', methods: ['PUT'])]
+    #[Route(path: '/list/percent-effort/{id}', name: 'efforts_update', methods: ['PUT'])]
+    #[Route(path: '/list/administrative-titles/{id}', name: 'admintitles_update', methods: ['PUT'])]
+    #[Route(path: '/list/academic-appointment-titles/{id}', name: 'apptitles_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-completion-reasons/{id}', name: 'completionreasons_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-degrees/{id}', name: 'trainingdegrees_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-majors/{id}', name: 'trainingmajors_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-minors/{id}', name: 'trainingminors_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-honors/{id}', name: 'traininghonors_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-titles/{id}', name: 'fellowshiptitles_update', methods: ['PUT'])]
+    #[Route(path: '/list/residency-specialties/{id}', name: 'residencyspecialtys_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-subspecialties/{id}', name: 'fellowshipsubspecialtys_update', methods: ['PUT'])]
+    #[Route(path: '/list/institution-types/{id}', name: 'institutiontypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/document-types/{id}', name: 'documenttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/medical-titles/{id}', name: 'medicaltitles_update', methods: ['PUT'])]
+    #[Route(path: '/list/medical-specialties/{id}', name: 'medicalspecialties_update', methods: ['PUT'])]
+    #[Route(path: '/list/employment-types/{id}', name: 'employmenttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/grant-source-organizations/{id}', name: 'sourceorganizations_update', methods: ['PUT'])]
+    #[Route(path: '/list/languages/{id}', name: 'languages_update', methods: ['PUT'])]
+    #[Route(path: '/list/locales/{id}', name: 'locales_update', methods: ['PUT'])]
+    #[Route(path: '/list/ranks-of-importance/{id}', name: 'importances_update', methods: ['PUT'])]
+    #[Route(path: '/list/authorship-roles/{id}', name: 'authorshiproles_update', methods: ['PUT'])]
+    #[Route(path: '/list/lecture-venues/{id}', name: 'organizations_update', methods: ['PUT'])]
+    #[Route(path: '/list/cities/{id}', name: 'cities_update', methods: ['PUT'])]
+    #[Route(path: '/list/link-types/{id}', name: 'linktypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/sexes/{id}', name: 'sexes_update', methods: ['PUT'])]
+    #[Route(path: '/list/position-types/{id}', name: 'positiontypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/organizational-group-types/{id}', name: 'organizationalgrouptypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/profile-comment-group-types/{id}', name: 'commentgrouptypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/comment-types/{id}', name: 'commenttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/user-wrappers/{id}', name: 'userwrappers_update', methods: ['PUT'])]
+    #[Route(path: '/list/spot-purposes/{id}', name: 'spotpurposes_update', methods: ['PUT'])]
+    #[Route(path: '/list/medical-license-statuses/{id}', name: 'medicalstatuses_update', methods: ['PUT'])]
+    #[Route(path: '/list/certifying-board-organizations/{id}', name: 'certifyingboardorganizations_update', methods: ['PUT'])]
+    #[Route(path: '/list/training-types/{id}', name: 'trainingtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/job-titles/{id}', name: 'joblists_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-application-statuses/{id}', name: 'fellappstatuses_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-application-ranks/{id}', name: 'fellappranks_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/{id}', name: 'fellapplanguageproficiency_update', methods: ['PUT'])]
+    #[Route(path: '/list/collaboration-types/{id}', name: 'collaborationtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/permissions/{id}', name: 'permission_update', methods: ['PUT'])]
+    #[Route(path: '/list/permission-objects/{id}', name: 'permissionobject_update', methods: ['PUT'])]
+    #[Route(path: '/list/permission-actions/{id}', name: 'permissionaction_update', methods: ['PUT'])]
+    #[Route(path: '/list/sites/{id}', name: 'sites_update', methods: ['PUT'])]
+    #[Route(path: '/list/event-object-types/{id}', name: 'eventobjecttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/time-away-request-types/{id}', name: 'vacreqrequesttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/time-away-request-floating-texts/{id}', name: 'vacreqfloatingtexts_update', methods: ['PUT'])]
+    #[Route(path: '/list/time-away-request-floating-types/{id}', name: 'vacreqfloatingtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/time-away-request-approval-types/{id}', name: 'vacreqapprovaltypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/healthcare-provider-specialties/{id}', name: 'healthcareproviderspecialty_update', methods: ['PUT'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/{id}', name: 'healthcareprovidercommunication_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-types/{id}', name: 'objecttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/form-nodes/{id}', name: 'formnodes_update', methods: ['PUT'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/{id}', name: 'objecttypetexts_update', methods: ['PUT'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/{id}', name: 'bloodproducttransfusions_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-reaction-types/{id}', name: 'transfusionreactiontypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-type-strings/{id}', name: 'objecttypestrings_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-type-dropdowns/{id}', name: 'objecttypedropdowns_update', methods: ['PUT'])]
+    #[Route(path: '/list/blood-types/{id}', name: 'bloodtypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/additional-communications/{id}', name: 'additionalcommunications_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/{id}', name: 'transfusionantibodyscreenresults_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/{id}', name: 'transfusioncrossmatchresults_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-dat-results/{id}', name: 'transfusiondatresults_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/{id}', name: 'transfusionhemolysischeckresults_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-type-datetimes/{id}', name: 'objecttypedatetimes_update', methods: ['PUT'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/{id}', name: 'complexplateletsummaryantibodies_update', methods: ['PUT'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/{id}', name: 'cciunitplateletcountdefaultvalues_update', methods: ['PUT'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/{id}', name: 'cciplatelettypetransfuseds_update', methods: ['PUT'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/{id}', name: 'platelettransfusionproductreceivings_update', methods: ['PUT'])]
+    #[Route(path: '/list/transfusion-product-status/{id}', name: 'transfusionproductstatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/week-days/{id}', name: 'weekdays_update', methods: ['PUT'])]
+    #[Route(path: '/list/months/{id}', name: 'months_update', methods: ['PUT'])]
+    #[Route(path: '/list/clerical-errors/{id}', name: 'clericalerrors_update', methods: ['PUT'])]
+    #[Route(path: '/list/lab-result-names/{id}', name: 'labresultnames_update', methods: ['PUT'])]
+    #[Route(path: '/list/lab-result-units-measures/{id}', name: 'labresultunitsmeasures_update', methods: ['PUT'])]
+    #[Route(path: '/list/lab-result-flags/{id}', name: 'labresultflags_update', methods: ['PUT'])]
+    #[Route(path: '/list/pathology-result-signatories/{id}', name: 'pathologyresultsignatories_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-type-checkboxes/{id}', name: 'objecttypecheckboxs_update', methods: ['PUT'])]
+    #[Route(path: '/list/object-type-radio-buttons/{id}', name: 'objecttyperadiobuttons_update', methods: ['PUT'])]
+    #[Route(path: '/list/life-forms/{id}', name: 'lifeforms_update', methods: ['PUT'])]
+    #[Route(path: '/list/position-track-types/{id}', name: 'positiontracktypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-research-project-specialties-orig/{id}', name: 'transresprojectspecialties_update_orig', methods: ['PUT'])]
+    #[Route(path: '/list/translational-research-project-types/{id}', name: 'transresprojecttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-research-request-category-types/{id}', name: 'transresrequestcategorytypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-irb-approval-types/{id}', name: 'transresirbapprovaltypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-business-purposes/{id}', name: 'transresbusinesspurposes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-work-queue-types/{id}', name: 'workqueuetypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-orderable-status/{id}', name: 'orderablestatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/antibodies/{id}', name: 'antibodies_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom000/{id}', name: 'custom000_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom001/{id}', name: 'custom001_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom002/{id}', name: 'custom002_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom003/{id}', name: 'custom003_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom004/{id}', name: 'custom004_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom005/{id}', name: 'custom005_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom006/{id}', name: 'custom006_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom007/{id}', name: 'custom007_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom008/{id}', name: 'custom008_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom009/{id}', name: 'custom009_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom010/{id}', name: 'custom010_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom011/{id}', name: 'custom011_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom012/{id}', name: 'custom012_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom013/{id}', name: 'custom013_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom014/{id}', name: 'custom014_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom015/{id}', name: 'custom015_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom016/{id}', name: 'custom016_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom017/{id}', name: 'custom017_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom018/{id}', name: 'custom018_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom019/{id}', name: 'custom019_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom020/{id}', name: 'custom020_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom021/{id}', name: 'custom021_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom022/{id}', name: 'custom022_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom023/{id}', name: 'custom023_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom024/{id}', name: 'custom024_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom025/{id}', name: 'custom025_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom026/{id}', name: 'custom026_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom027/{id}', name: 'custom027_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom028/{id}', name: 'custom028_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom029/{id}', name: 'custom029_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom030/{id}', name: 'custom030_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom031/{id}', name: 'custom031_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom032/{id}', name: 'custom032_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom033/{id}', name: 'custom033_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom034/{id}', name: 'custom034_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom035/{id}', name: 'custom035_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom036/{id}', name: 'custom036_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom037/{id}', name: 'custom037_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom038/{id}', name: 'custom038_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom039/{id}', name: 'custom039_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom040/{id}', name: 'custom040_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom041/{id}', name: 'custom041_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom042/{id}', name: 'custom042_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom043/{id}', name: 'custom043_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom044/{id}', name: 'custom044_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom045/{id}', name: 'custom045_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom046/{id}', name: 'custom046_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom047/{id}', name: 'custom047_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom048/{id}', name: 'custom048_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom049/{id}', name: 'custom049_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom050/{id}', name: 'custom050_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom051/{id}', name: 'custom051_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom052/{id}', name: 'custom052_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom053/{id}', name: 'custom053_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom054/{id}', name: 'custom054_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom055/{id}', name: 'custom055_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom056/{id}', name: 'custom056_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom057/{id}', name: 'custom057_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom058/{id}', name: 'custom058_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom059/{id}', name: 'custom059_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom060/{id}', name: 'custom060_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom061/{id}', name: 'custom061_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom062/{id}', name: 'custom062_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom063/{id}', name: 'custom063_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom064/{id}', name: 'custom064_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom065/{id}', name: 'custom065_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom066/{id}', name: 'custom066_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom067/{id}', name: 'custom067_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom068/{id}', name: 'custom068_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom069/{id}', name: 'custom069_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom070/{id}', name: 'custom070_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom071/{id}', name: 'custom071_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom072/{id}', name: 'custom072_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom073/{id}', name: 'custom073_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom074/{id}', name: 'custom074_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom075/{id}', name: 'custom075_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom076/{id}', name: 'custom076_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom077/{id}', name: 'custom077_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom078/{id}', name: 'custom078_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom079/{id}', name: 'custom079_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom080/{id}', name: 'custom080_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom081/{id}', name: 'custom081_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom082/{id}', name: 'custom082_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom083/{id}', name: 'custom083_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom084/{id}', name: 'custom084_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom085/{id}', name: 'custom085_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom086/{id}', name: 'custom086_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom087/{id}', name: 'custom087_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom088/{id}', name: 'custom088_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom089/{id}', name: 'custom089_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom090/{id}', name: 'custom090_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom091/{id}', name: 'custom091_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom092/{id}', name: 'custom092_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom093/{id}', name: 'custom093_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom094/{id}', name: 'custom094_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom095/{id}', name: 'custom095_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom096/{id}', name: 'custom096_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom097/{id}', name: 'custom097_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom098/{id}', name: 'custom098_update', methods: ['PUT'])]
+    #[Route(path: '/list/custom099/{id}', name: 'custom099_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-tissue-processing-services/{id}', name: 'transrestissueprocessingservices_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-other-requested-services/{id}', name: 'transresotherrequestedservices_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-collaboration-labs/{id}', name: 'transrescolllabs_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-collaboration-divs/{id}', name: 'transrescolldivs_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-irb-approval-status/{id}', name: 'transresirbstatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/translational-requester-group/{id}', name: 'transresrequestergroup_update', methods: ['PUT'])]
+    #[Route(path: '/list/transrescomptypes/{id}', name: 'transrescomptypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/visastatus/{id}', name: 'visastatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappstatuses/{id}', name: 'resappstatuses_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappranks/{id}', name: 'resappranks_update', methods: ['PUT'])]
+    #[Route(path: '/list/resapplanguageproficiency/{id}', name: 'resapplanguageproficiency_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappfitforprogram/{id}', name: 'resappfitforprogram_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappvisastatus/{id}', name: 'resappvisastatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/postsoph/{id}', name: 'postsoph_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/{id}', name: 'resappapplyingresidencytrack_update', methods: ['PUT'])]
+    #[Route(path: '/list/resapplearnarealist/{id}', name: 'resapplearnarealist_update', methods: ['PUT'])]
+    #[Route(path: '/list/resappspecificindividuallist/{id}', name: 'resappspecificindividuallist_update', methods: ['PUT'])]
+    #[Route(path: '/list/viewmodes/{id}', name: 'viewmodes_update', methods: ['PUT'])]
+    #[Route(path: '/list/transrespricetypes/{id}', name: 'transrespricetypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/charttypes/{id}', name: 'charttypes_update', methods: ['PUT'])]
+    #[Route(path: '/list/charttopics/{id}', name: 'charttopics_update', methods: ['PUT'])]
+    #[Route(path: '/list/chartfilters/{id}', name: 'chartfilters_update', methods: ['PUT'])]
+    #[Route(path: '/list/charts/{id}', name: 'charts_update', methods: ['PUT'])]
+    #[Route(path: '/list/chartdatasources/{id}', name: 'chartdatasources_update', methods: ['PUT'])]
+    #[Route(path: '/list/chartupdatefrequencies/{id}', name: 'chartupdatefrequencies_update', methods: ['PUT'])]
+    #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_update', methods: ['PUT'])]
+    #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_update', methods: ['PUT'])]
+    #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -3909,256 +3893,254 @@ class ListController extends OrderAbstractController
     /**
      * Deletes a entity.
      *
-     * @Route("/list-manager/{id}", name="platformlistmanager_delete", methods={"DELETE"})
-     * @Route("/list/source-systems/{id}", name="sourcesystems_delete", methods={"DELETE"})
-     * @Route("/list/roles/{id}", name="role_delete", methods={"DELETE"})
-     * @Route("/list/institutions/{id}", name="institutions_delete", methods={"DELETE"})
-     * @Route("/list/states/{id}", name="states_delete", methods={"DELETE"})
-     * @Route("/list/countries/{id}", name="countries_delete", methods={"DELETE"})
-     * @Route("/list/board-certifications/{id}", name="boardcertifications_delete", methods={"DELETE"})
-     * @Route("/list/employment-termination-reasons/{id}", name="employmentterminations_delete", methods={"DELETE"})
-     * @Route("/list/event-log-event-types/{id}", name="loggereventtypes_delete", methods={"DELETE"})
-     * @Route("/list/primary-public-user-id-types/{id}", name="usernametypes_delete", methods={"DELETE"})
-     * @Route("/list/identifier-types/{id}", name="identifiers_delete", methods={"DELETE"})
-     * @Route("/list/residency-tracks/{id}", name="residencytracks_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-types/{id}", name="fellowshiptypes_delete", methods={"DELETE"})
-//     * @Route("/list/research-labs/{id}", name="researchlabs_delete", methods={"DELETE"})
-     * @Route("/list/location-types/{id}", name="locationtypes_delete", methods={"DELETE"})
-     * @Route("/list/equipment/{id}", name="equipments_delete", methods={"DELETE"})
-     * @Route("/list/equipment-types/{id}", name="equipmenttypes_delete", methods={"DELETE"})
-     * @Route("/list/location-privacy-types/{id}", name="locationprivacy_delete", methods={"DELETE"})
-     * @Route("/list/role-attributes/{id}", name="roleattributes_delete", methods={"DELETE"})
-     * @Route("/list/buidlings/{id}", name="buildings_delete", methods={"DELETE"})
-     * @Route("/list/rooms/{id}", name="rooms_delete", methods={"DELETE"})
-     * @Route("/list/suites/{id}", name="suites_delete", methods={"DELETE"})
-     * @Route("/list/floors/{id}", name="floors_delete", methods={"DELETE"})
-     * @Route("/list/grants/{id}", name="grants_delete", methods={"DELETE"})
-     * @Route("/list/mailboxes/{id}", name="mailboxes_delete", methods={"DELETE"})
-     * @Route("/list/percent-effort/{id}", name="efforts_delete", methods={"DELETE"})
-     * @Route("/list/administrative-titles/{id}", name="admintitles_delete", methods={"DELETE"})
-     * @Route("/list/academic-appointment-titles/{id}", name="apptitles_delete", methods={"DELETE"})
-     * @Route("/list/training-completion-reasons/{id}", name="completionreasons_delete", methods={"DELETE"})
-     * @Route("/list/training-degrees/{id}", name="trainingdegrees_delete", methods={"DELETE"})
-     * @Route("/list/training-majors/{id}", name="trainingmajors_delete", methods={"DELETE"})
-     * @Route("/list/training-minors/{id}", name="trainingminors_delete", methods={"DELETE"})
-     * @Route("/list/training-honors/{id}", name="traininghonors_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-titles/{id}", name="fellowshiptitles_delete", methods={"DELETE"})
-     * @Route("/list/residency-specialties/{id}", name="residencyspecialtys_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-subspecialties/{id}", name="fellowshipsubspecialtys_delete", methods={"DELETE"})
-     * @Route("/list/institution-types/{id}", name="institutiontypes_delete", methods={"DELETE"})
-     * @Route("/list/document-types/{id}", name="documenttypes_delete", methods={"DELETE"})
-     * @Route("/list/medical-titles/{id}", name="medicaltitles_delete", methods={"DELETE"})
-     * @Route("/list/medical-specialties/{id}", name="medicalspecialties_delete", methods={"DELETE"})
-     * @Route("/list/employment-types/{id}", name="employmenttypes_delete", methods={"DELETE"})
-     * @Route("/list/grant-source-organizations/{id}", name="sourceorganizations_delete", methods={"DELETE"})
-     * @Route("/list/languages/{id}", name="languages_delete", methods={"DELETE"})
-     * @Route("/list/locales/{id}", name="locales_delete", methods={"DELETE"})
-     * @Route("/list/ranks-of-importance/{id}", name="importances_delete", methods={"DELETE"})
-     * @Route("/list/authorship-roles/{id}", name="authorshiproles_delete", methods={"DELETE"})
-     * @Route("/list/lecture-venues/{id}", name="organizations_delete", methods={"DELETE"})
-     * @Route("/list/cities/{id}", name="cities_delete", methods={"DELETE"})
-     * @Route("/list/link-types/{id}", name="linktypes_delete", methods={"DELETE"})
-     * @Route("/list/sexes/{id}", name="sexes_delete", methods={"DELETE"})
-     * @Route("/list/position-types/{id}", name="positiontypes_delete", methods={"DELETE"})
-     * @Route("/list/organizational-group-types/{id}", name="organizationalgrouptypes_delete", methods={"DELETE"})
-     * @Route("/list/profile-comment-group-types/{id}", name="commentgrouptypes_delete", methods={"DELETE"})
-     * @Route("/list/comment-types/{id}", name="commenttypes_delete", methods={"DELETE"})
-     * @Route("/list/user-wrappers/{id}", name="userwrappers_delete", methods={"DELETE"})
-     * @Route("/list/spot-purposes/{id}", name="spotpurposes_delete", methods={"DELETE"})
-     * @Route("/list/medical-license-statuses/{id}", name="medicalstatuses_delete", methods={"DELETE"})
-     * @Route("/list/certifying-board-organizations/{id}", name="certifyingboardorganizations_delete", methods={"DELETE"})
-     * @Route("/list/training-types/{id}", name="trainingtypes_delete", methods={"DELETE"})
-     * @Route("/list/job-titles/{id}", name="joblists_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-application-statuses/{id}", name="fellappstatuses_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-application-ranks/{id}", name="fellappranks_delete", methods={"DELETE"})
-     * @Route("/list/fellowship-application-language-proficiencies/{id}", name="fellapplanguageproficiency_delete", methods={"DELETE"})
-//     * @Route("/list/collaborations/{id}", name="collaborations_delete", methods={"DELETE"})
-     * @Route("/list/collaboration-types/{id}", name="collaborationtypes_delete", methods={"DELETE"})
-     * @Route("/list/permissions/{id}", name="permission_delete", methods={"DELETE"})
-     * @Route("/list/permission-objects/{id}", name="permissionobject_delete", methods={"DELETE"})
-     * @Route("/list/permission-actions/{id}", name="permissionaction_delete", methods={"DELETE"})
-     * @Route("/list/sites/{id}", name="sites_delete", methods={"DELETE"})
-     * @Route("/list/event-object-types/{id}", name="eventobjecttypes_delete", methods={"DELETE"})
-     * @Route("/list/time-away-request-types/{id}", name="vacreqrequesttypes_delete", methods={"DELETE"})
-     * @Route("/list/time-away-request-floating-texts/{id}", name="vacreqfloatingtexts_delete", methods={"DELETE"})
-     * @Route("/list/time-away-request-floating-types/{id}", name="vacreqfloatingtypes_delete", methods={"DELETE"})
-     * @Route("/list/time-away-request-approval-types/{id}", name="vacreqapprovaltypes_delete", methods={"GET"})
-     * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete", methods={"DELETE"})
-     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_delete", methods={"DELETE"})
-     * @Route("/list/object-types/{id}", name="objecttypes_delete", methods={"DELETE"})
-     * @Route("/list/form-nodes/{id}", name="formnodes_delete", methods={"DELETE"}, options={"expose"=true})
-     * @Route("/list/object-type-texts/{id}", name="objecttypetexts_delete", methods={"DELETE"}, options={"expose"=true})
-     * @Route("/list/blood-product-transfusions/{id}", name="bloodproducttransfusions_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-reaction-types/{id}", name="transfusionreactiontypes_delete", methods={"DELETE"})
-     * @Route("/list/object-type-strings/{id}", name="objecttypestrings_delete", methods={"DELETE"})
-     * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_delete", methods={"DELETE"})
-     * @Route("/list/blood-types/{id}", name="bloodtypes_delete", methods={"DELETE"})
-     * @Route("/list/additional-communications/{id}", name="additionalcommunications_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-hemolysis-check-results/{id}", name="transfusionhemolysischeckresults_delete", methods={"DELETE"})
-     * @Route("/list/object-type-datetimes/{id}", name="objecttypedatetimes_delete", methods={"DELETE"})
-     * @Route("/list/complex-platelet-summary-antibodies/{id}", name="complexplateletsummaryantibodies_delete", methods={"DELETE"})
-     * @Route("/list/cci-unit-platelet-count-default-values/{id}", name="cciunitplateletcountdefaultvalues_delete", methods={"DELETE"})
-     * @Route("/list/cci-platelet-type-transfused/{id}", name="cciplatelettypetransfuseds_delete", methods={"DELETE"})
-     * @Route("/list/platelet-transfusion-product-receiving/{id}", name="platelettransfusionproductreceivings_delete", methods={"DELETE"})
-     * @Route("/list/transfusion-product-status/{id}", name="transfusionproductstatus_delete", methods={"DELETE"})
-     * @Route("/list/week-days/{id}", name="weekdays_delete", methods={"DELETE"})
-     * @Route("/list/months/{id}", name="months_delete", methods={"DELETE"})
-     * @Route("/list/clerical-errors/{id}", name="clericalerrors_delete", methods={"DELETE"})
-     * @Route("/list/lab-result-names/{id}", name="labresultnames_delete", methods={"DELETE"})
-     * @Route("/list/lab-result-units-measures/{id}", name="labresultunitsmeasures_delete", methods={"DELETE"})
-     * @Route("/list/lab-result-flags/{id}", name="labresultflags_delete", methods={"DELETE"})
-     * @Route("/list/pathology-result-signatories/{id}", name="pathologyresultsignatories_delete", methods={"DELETE"})
-     * @Route("/list/object-type-checkboxes/{id}", name="objecttypecheckboxs_delete", methods={"DELETE"})
-     * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_delete", methods={"DELETE"})
-     * @Route("/list/life-forms/{id}", name="lifeforms_delete", methods={"DELETE"})
-     * @Route("/list/position-track-types/{id}", name="positiontracktypes_delete", methods={"DELETE"})
-     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_delete", methods={"DELETE"})
-     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_delete", methods={"DELETE"})
-     * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete", methods={"DELETE"})
-     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete", methods={"DELETE"})
-     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_delete", methods={"DELETE"})
-     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_delete", methods={"DELETE"})
-     * @Route("/list/translational-orderable-status/{id}", name="orderablestatus_delete", methods={"DELETE"})
      *
      *
-     * @Route("/list/antibodies/{id}", name="antibodies_delete", methods={"DELETE"})
-     * @Route("/list/custom000/{id}", name="custom000_delete", methods={"DELETE"})
-     * @Route("/list/custom001/{id}", name="custom001_delete", methods={"DELETE"})
-     * @Route("/list/custom002/{id}", name="custom002_delete", methods={"DELETE"})
-     * @Route("/list/custom003/{id}", name="custom003_delete", methods={"DELETE"})
-     * @Route("/list/custom004/{id}", name="custom004_delete", methods={"DELETE"})
-     * @Route("/list/custom005/{id}", name="custom005_delete", methods={"DELETE"})
-     * @Route("/list/custom006/{id}", name="custom006_delete", methods={"DELETE"})
-     * @Route("/list/custom007/{id}", name="custom007_delete", methods={"DELETE"})
-     * @Route("/list/custom008/{id}", name="custom008_delete", methods={"DELETE"})
-     * @Route("/list/custom009/{id}", name="custom009_delete", methods={"DELETE"})
-     * @Route("/list/custom010/{id}", name="custom010_delete", methods={"DELETE"})
-     * @Route("/list/custom011/{id}", name="custom011_delete", methods={"DELETE"})
-     * @Route("/list/custom012/{id}", name="custom012_delete", methods={"DELETE"})
-     * @Route("/list/custom013/{id}", name="custom013_delete", methods={"DELETE"})
-     * @Route("/list/custom014/{id}", name="custom014_delete", methods={"DELETE"})
-     * @Route("/list/custom015/{id}", name="custom015_delete", methods={"DELETE"})
-     * @Route("/list/custom016/{id}", name="custom016_delete", methods={"DELETE"})
-     * @Route("/list/custom017/{id}", name="custom017_delete", methods={"DELETE"})
-     * @Route("/list/custom018/{id}", name="custom018_delete", methods={"DELETE"})
-     * @Route("/list/custom019/{id}", name="custom019_delete", methods={"DELETE"})
-     * @Route("/list/custom020/{id}", name="custom020_delete", methods={"DELETE"})
-     * @Route("/list/custom021/{id}", name="custom021_delete", methods={"DELETE"})
-     * @Route("/list/custom022/{id}", name="custom022_delete", methods={"DELETE"})
-     * @Route("/list/custom023/{id}", name="custom023_delete", methods={"DELETE"})
-     * @Route("/list/custom024/{id}", name="custom024_delete", methods={"DELETE"})
-     * @Route("/list/custom025/{id}", name="custom025_delete", methods={"DELETE"})
-     * @Route("/list/custom026/{id}", name="custom026_delete", methods={"DELETE"})
-     * @Route("/list/custom027/{id}", name="custom027_delete", methods={"DELETE"})
-     * @Route("/list/custom028/{id}", name="custom028_delete", methods={"DELETE"})
-     * @Route("/list/custom029/{id}", name="custom029_delete", methods={"DELETE"})
-     * @Route("/list/custom030/{id}", name="custom030_delete", methods={"DELETE"})
-     * @Route("/list/custom031/{id}", name="custom031_delete", methods={"DELETE"})
-     * @Route("/list/custom032/{id}", name="custom032_delete", methods={"DELETE"})
-     * @Route("/list/custom033/{id}", name="custom033_delete", methods={"DELETE"})
-     * @Route("/list/custom034/{id}", name="custom034_delete", methods={"DELETE"})
-     * @Route("/list/custom035/{id}", name="custom035_delete", methods={"DELETE"})
-     * @Route("/list/custom036/{id}", name="custom036_delete", methods={"DELETE"})
-     * @Route("/list/custom037/{id}", name="custom037_delete", methods={"DELETE"})
-     * @Route("/list/custom038/{id}", name="custom038_delete", methods={"DELETE"})
-     * @Route("/list/custom039/{id}", name="custom039_delete", methods={"DELETE"})
-     * @Route("/list/custom040/{id}", name="custom040_delete", methods={"DELETE"})
-     * @Route("/list/custom041/{id}", name="custom041_delete", methods={"DELETE"})
-     * @Route("/list/custom042/{id}", name="custom042_delete", methods={"DELETE"})
-     * @Route("/list/custom043/{id}", name="custom043_delete", methods={"DELETE"})
-     * @Route("/list/custom044/{id}", name="custom044_delete", methods={"DELETE"})
-     * @Route("/list/custom045/{id}", name="custom045_delete", methods={"DELETE"})
-     * @Route("/list/custom046/{id}", name="custom046_delete", methods={"DELETE"})
-     * @Route("/list/custom047/{id}", name="custom047_delete", methods={"DELETE"})
-     * @Route("/list/custom048/{id}", name="custom048_delete", methods={"DELETE"})
-     * @Route("/list/custom049/{id}", name="custom049_delete", methods={"DELETE"})
-     * @Route("/list/custom050/{id}", name="custom050_delete", methods={"DELETE"})
-     * @Route("/list/custom051/{id}", name="custom051_delete", methods={"DELETE"})
-     * @Route("/list/custom052/{id}", name="custom052_delete", methods={"DELETE"})
-     * @Route("/list/custom053/{id}", name="custom053_delete", methods={"DELETE"})
-     * @Route("/list/custom054/{id}", name="custom054_delete", methods={"DELETE"})
-     * @Route("/list/custom055/{id}", name="custom055_delete", methods={"DELETE"})
-     * @Route("/list/custom056/{id}", name="custom056_delete", methods={"DELETE"})
-     * @Route("/list/custom057/{id}", name="custom057_delete", methods={"DELETE"})
-     * @Route("/list/custom058/{id}", name="custom058_delete", methods={"DELETE"})
-     * @Route("/list/custom059/{id}", name="custom059_delete", methods={"DELETE"})
-     * @Route("/list/custom060/{id}", name="custom060_delete", methods={"DELETE"})
-     * @Route("/list/custom061/{id}", name="custom061_delete", methods={"DELETE"})
-     * @Route("/list/custom062/{id}", name="custom062_delete", methods={"DELETE"})
-     * @Route("/list/custom063/{id}", name="custom063_delete", methods={"DELETE"})
-     * @Route("/list/custom064/{id}", name="custom064_delete", methods={"DELETE"})
-     * @Route("/list/custom065/{id}", name="custom065_delete", methods={"DELETE"})
-     * @Route("/list/custom066/{id}", name="custom066_delete", methods={"DELETE"})
-     * @Route("/list/custom067/{id}", name="custom067_delete", methods={"DELETE"})
-     * @Route("/list/custom068/{id}", name="custom068_delete", methods={"DELETE"})
-     * @Route("/list/custom069/{id}", name="custom069_delete", methods={"DELETE"})
-     * @Route("/list/custom070/{id}", name="custom070_delete", methods={"DELETE"})
-     * @Route("/list/custom071/{id}", name="custom071_delete", methods={"DELETE"})
-     * @Route("/list/custom072/{id}", name="custom072_delete", methods={"DELETE"})
-     * @Route("/list/custom073/{id}", name="custom073_delete", methods={"DELETE"})
-     * @Route("/list/custom074/{id}", name="custom074_delete", methods={"DELETE"})
-     * @Route("/list/custom075/{id}", name="custom075_delete", methods={"DELETE"})
-     * @Route("/list/custom076/{id}", name="custom076_delete", methods={"DELETE"})
-     * @Route("/list/custom077/{id}", name="custom077_delete", methods={"DELETE"})
-     * @Route("/list/custom078/{id}", name="custom078_delete", methods={"DELETE"})
-     * @Route("/list/custom079/{id}", name="custom079_delete", methods={"DELETE"})
-     * @Route("/list/custom080/{id}", name="custom080_delete", methods={"DELETE"})
-     * @Route("/list/custom081/{id}", name="custom081_delete", methods={"DELETE"})
-     * @Route("/list/custom082/{id}", name="custom082_delete", methods={"DELETE"})
-     * @Route("/list/custom083/{id}", name="custom083_delete", methods={"DELETE"})
-     * @Route("/list/custom084/{id}", name="custom084_delete", methods={"DELETE"})
-     * @Route("/list/custom085/{id}", name="custom085_delete", methods={"DELETE"})
-     * @Route("/list/custom086/{id}", name="custom086_delete", methods={"DELETE"})
-     * @Route("/list/custom087/{id}", name="custom087_delete", methods={"DELETE"})
-     * @Route("/list/custom088/{id}", name="custom088_delete", methods={"DELETE"})
-     * @Route("/list/custom089/{id}", name="custom089_delete", methods={"DELETE"})
-     * @Route("/list/custom090/{id}", name="custom090_delete", methods={"DELETE"})
-     * @Route("/list/custom091/{id}", name="custom091_delete", methods={"DELETE"})
-     * @Route("/list/custom092/{id}", name="custom092_delete", methods={"DELETE"})
-     * @Route("/list/custom093/{id}", name="custom093_delete", methods={"DELETE"})
-     * @Route("/list/custom094/{id}", name="custom094_delete", methods={"DELETE"})
-     * @Route("/list/custom095/{id}", name="custom095_delete", methods={"DELETE"})
-     * @Route("/list/custom096/{id}", name="custom096_delete", methods={"DELETE"})
-     * @Route("/list/custom097/{id}", name="custom097_delete", methods={"DELETE"})
-     * @Route("/list/custom098/{id}", name="custom098_delete", methods={"DELETE"})
-     * @Route("/list/custom099/{id}", name="custom099_delete", methods={"DELETE"})
-     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete", methods={"DELETE"})
-     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete", methods={"DELETE"})
      *
-     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_delete", methods={"DELETE"})
-     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_delete", methods={"DELETE"})
-     * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_delete", methods={"DELETE"})
-     * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_delete", methods={"DELETE"})
-     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_delete", methods={"DELETE"})
      *
-     * @Route("/list/visastatus/{id}", name="visastatus_delete", methods={"DELETE"})
-     * @Route("/list/resappstatuses/{id}", name="resappstatuses_delete", methods={"DELETE"})
-     * @Route("/list/resappranks/{id}", name="resappranks_delete", methods={"DELETE"})
-     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_delete", methods={"DELETE"})
-     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_delete", methods={"DELETE"})
-     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_delete", methods={"DELETE"})
-     * @Route("/list/postsoph/{id}", name="postsoph_delete", methods={"DELETE"})
      *
-     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_delete", methods={"DELETE"})
-     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_delete", methods={"DELETE"})
-     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_delete", methods={"DELETE"})
-     * @Route("/list/viewmodes/{id}", name="viewmodes_delete", methods={"DELETE"})
-     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_delete", methods={"DELETE"})
      *
-     * @Route("/list/charttypes/{id}", name="charttypes_delete", methods={"DELETE"})
-     * @Route("/list/charttopics/{id}", name="charttopics_delete", methods={"DELETE"})
-     * @Route("/list/chartfilters/{id}", name="chartfilters_delete", methods={"DELETE"})
-     * @Route("/list/charts/{id}", name="charts_delete", methods={"DELETE"})
-     * @Route("/list/chartdatasources/{id}", name="chartdatasources_delete", methods={"DELETE"})
-     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_delete", methods={"DELETE"})
-     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_delete", methods={"DELETE"})
-     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_delete", methods={"DELETE"})
-     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_delete", methods={"DELETE"})
      *
      */
+    #[Route(path: '/list-manager/{id}', name: 'platformlistmanager_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/source-systems/{id}', name: 'sourcesystems_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/roles/{id}', name: 'role_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/institutions/{id}', name: 'institutions_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/states/{id}', name: 'states_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/countries/{id}', name: 'countries_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/board-certifications/{id}', name: 'boardcertifications_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/employment-termination-reasons/{id}', name: 'employmentterminations_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/event-log-event-types/{id}', name: 'loggereventtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/primary-public-user-id-types/{id}', name: 'usernametypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/identifier-types/{id}', name: 'identifiers_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/residency-tracks/{id}', name: 'residencytracks_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-types/{id}', name: 'fellowshiptypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/location-types/{id}', name: 'locationtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/equipment/{id}', name: 'equipments_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/equipment-types/{id}', name: 'equipmenttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/location-privacy-types/{id}', name: 'locationprivacy_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/role-attributes/{id}', name: 'roleattributes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/buidlings/{id}', name: 'buildings_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/rooms/{id}', name: 'rooms_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/suites/{id}', name: 'suites_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/floors/{id}', name: 'floors_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/grants/{id}', name: 'grants_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/mailboxes/{id}', name: 'mailboxes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/percent-effort/{id}', name: 'efforts_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/administrative-titles/{id}', name: 'admintitles_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/academic-appointment-titles/{id}', name: 'apptitles_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-completion-reasons/{id}', name: 'completionreasons_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-degrees/{id}', name: 'trainingdegrees_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-majors/{id}', name: 'trainingmajors_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-minors/{id}', name: 'trainingminors_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-honors/{id}', name: 'traininghonors_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-titles/{id}', name: 'fellowshiptitles_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/residency-specialties/{id}', name: 'residencyspecialtys_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-subspecialties/{id}', name: 'fellowshipsubspecialtys_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/institution-types/{id}', name: 'institutiontypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/document-types/{id}', name: 'documenttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/medical-titles/{id}', name: 'medicaltitles_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/medical-specialties/{id}', name: 'medicalspecialties_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/employment-types/{id}', name: 'employmenttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/grant-source-organizations/{id}', name: 'sourceorganizations_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/languages/{id}', name: 'languages_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/locales/{id}', name: 'locales_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/ranks-of-importance/{id}', name: 'importances_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/authorship-roles/{id}', name: 'authorshiproles_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/lecture-venues/{id}', name: 'organizations_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/cities/{id}', name: 'cities_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/link-types/{id}', name: 'linktypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/sexes/{id}', name: 'sexes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/position-types/{id}', name: 'positiontypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/organizational-group-types/{id}', name: 'organizationalgrouptypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/profile-comment-group-types/{id}', name: 'commentgrouptypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/comment-types/{id}', name: 'commenttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/user-wrappers/{id}', name: 'userwrappers_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/spot-purposes/{id}', name: 'spotpurposes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/medical-license-statuses/{id}', name: 'medicalstatuses_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/certifying-board-organizations/{id}', name: 'certifyingboardorganizations_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/training-types/{id}', name: 'trainingtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/job-titles/{id}', name: 'joblists_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-application-statuses/{id}', name: 'fellappstatuses_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-application-ranks/{id}', name: 'fellappranks_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellowship-application-language-proficiencies/{id}', name: 'fellapplanguageproficiency_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/collaboration-types/{id}', name: 'collaborationtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/permissions/{id}', name: 'permission_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/permission-objects/{id}', name: 'permissionobject_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/permission-actions/{id}', name: 'permissionaction_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/sites/{id}', name: 'sites_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/event-object-types/{id}', name: 'eventobjecttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/time-away-request-types/{id}', name: 'vacreqrequesttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/time-away-request-floating-texts/{id}', name: 'vacreqfloatingtexts_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/time-away-request-floating-types/{id}', name: 'vacreqfloatingtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/time-away-request-approval-types/{id}', name: 'vacreqapprovaltypes_delete', methods: ['GET'])]
+    #[Route(path: '/list/healthcare-provider-specialties/{id}', name: 'healthcareproviderspecialty_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/healthcare-provider-initial-communications/{id}', name: 'healthcareprovidercommunication_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-types/{id}', name: 'objecttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/form-nodes/{id}', name: 'formnodes_delete', methods: ['DELETE'], options: ['expose' => true])]
+    #[Route(path: '/list/object-type-texts/{id}', name: 'objecttypetexts_delete', methods: ['DELETE'], options: ['expose' => true])]
+    #[Route(path: '/list/blood-product-transfusions/{id}', name: 'bloodproducttransfusions_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-reaction-types/{id}', name: 'transfusionreactiontypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-type-strings/{id}', name: 'objecttypestrings_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-type-dropdowns/{id}', name: 'objecttypedropdowns_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/blood-types/{id}', name: 'bloodtypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/additional-communications/{id}', name: 'additionalcommunications_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-antibody-screen-results/{id}', name: 'transfusionantibodyscreenresults_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-crossmatch-results/{id}', name: 'transfusioncrossmatchresults_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-dat-results/{id}', name: 'transfusiondatresults_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-hemolysis-check-results/{id}', name: 'transfusionhemolysischeckresults_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-type-datetimes/{id}', name: 'objecttypedatetimes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/complex-platelet-summary-antibodies/{id}', name: 'complexplateletsummaryantibodies_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/cci-unit-platelet-count-default-values/{id}', name: 'cciunitplateletcountdefaultvalues_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/cci-platelet-type-transfused/{id}', name: 'cciplatelettypetransfuseds_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/platelet-transfusion-product-receiving/{id}', name: 'platelettransfusionproductreceivings_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transfusion-product-status/{id}', name: 'transfusionproductstatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/week-days/{id}', name: 'weekdays_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/months/{id}', name: 'months_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/clerical-errors/{id}', name: 'clericalerrors_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/lab-result-names/{id}', name: 'labresultnames_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/lab-result-units-measures/{id}', name: 'labresultunitsmeasures_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/lab-result-flags/{id}', name: 'labresultflags_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/pathology-result-signatories/{id}', name: 'pathologyresultsignatories_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-type-checkboxes/{id}', name: 'objecttypecheckboxs_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/object-type-radio-buttons/{id}', name: 'objecttyperadiobuttons_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/life-forms/{id}', name: 'lifeforms_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/position-track-types/{id}', name: 'positiontracktypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-research-project-specialties/{id}', name: 'transresprojectspecialties_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-research-project-types/{id}', name: 'transresprojecttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-research-request-category-types/{id}', name: 'transresrequestcategorytypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-irb-approval-types/{id}', name: 'transresirbapprovaltypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-business-purposes/{id}', name: 'transresbusinesspurposes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-work-queue-types/{id}', name: 'workqueuetypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-orderable-status/{id}', name: 'orderablestatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/antibodies/{id}', name: 'antibodies_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom000/{id}', name: 'custom000_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom001/{id}', name: 'custom001_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom002/{id}', name: 'custom002_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom003/{id}', name: 'custom003_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom004/{id}', name: 'custom004_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom005/{id}', name: 'custom005_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom006/{id}', name: 'custom006_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom007/{id}', name: 'custom007_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom008/{id}', name: 'custom008_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom009/{id}', name: 'custom009_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom010/{id}', name: 'custom010_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom011/{id}', name: 'custom011_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom012/{id}', name: 'custom012_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom013/{id}', name: 'custom013_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom014/{id}', name: 'custom014_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom015/{id}', name: 'custom015_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom016/{id}', name: 'custom016_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom017/{id}', name: 'custom017_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom018/{id}', name: 'custom018_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom019/{id}', name: 'custom019_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom020/{id}', name: 'custom020_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom021/{id}', name: 'custom021_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom022/{id}', name: 'custom022_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom023/{id}', name: 'custom023_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom024/{id}', name: 'custom024_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom025/{id}', name: 'custom025_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom026/{id}', name: 'custom026_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom027/{id}', name: 'custom027_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom028/{id}', name: 'custom028_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom029/{id}', name: 'custom029_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom030/{id}', name: 'custom030_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom031/{id}', name: 'custom031_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom032/{id}', name: 'custom032_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom033/{id}', name: 'custom033_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom034/{id}', name: 'custom034_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom035/{id}', name: 'custom035_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom036/{id}', name: 'custom036_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom037/{id}', name: 'custom037_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom038/{id}', name: 'custom038_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom039/{id}', name: 'custom039_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom040/{id}', name: 'custom040_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom041/{id}', name: 'custom041_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom042/{id}', name: 'custom042_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom043/{id}', name: 'custom043_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom044/{id}', name: 'custom044_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom045/{id}', name: 'custom045_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom046/{id}', name: 'custom046_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom047/{id}', name: 'custom047_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom048/{id}', name: 'custom048_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom049/{id}', name: 'custom049_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom050/{id}', name: 'custom050_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom051/{id}', name: 'custom051_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom052/{id}', name: 'custom052_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom053/{id}', name: 'custom053_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom054/{id}', name: 'custom054_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom055/{id}', name: 'custom055_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom056/{id}', name: 'custom056_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom057/{id}', name: 'custom057_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom058/{id}', name: 'custom058_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom059/{id}', name: 'custom059_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom060/{id}', name: 'custom060_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom061/{id}', name: 'custom061_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom062/{id}', name: 'custom062_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom063/{id}', name: 'custom063_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom064/{id}', name: 'custom064_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom065/{id}', name: 'custom065_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom066/{id}', name: 'custom066_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom067/{id}', name: 'custom067_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom068/{id}', name: 'custom068_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom069/{id}', name: 'custom069_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom070/{id}', name: 'custom070_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom071/{id}', name: 'custom071_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom072/{id}', name: 'custom072_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom073/{id}', name: 'custom073_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom074/{id}', name: 'custom074_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom075/{id}', name: 'custom075_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom076/{id}', name: 'custom076_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom077/{id}', name: 'custom077_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom078/{id}', name: 'custom078_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom079/{id}', name: 'custom079_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom080/{id}', name: 'custom080_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom081/{id}', name: 'custom081_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom082/{id}', name: 'custom082_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom083/{id}', name: 'custom083_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom084/{id}', name: 'custom084_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom085/{id}', name: 'custom085_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom086/{id}', name: 'custom086_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom087/{id}', name: 'custom087_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom088/{id}', name: 'custom088_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom089/{id}', name: 'custom089_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom090/{id}', name: 'custom090_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom091/{id}', name: 'custom091_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom092/{id}', name: 'custom092_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom093/{id}', name: 'custom093_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom094/{id}', name: 'custom094_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom095/{id}', name: 'custom095_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom096/{id}', name: 'custom096_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom097/{id}', name: 'custom097_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom098/{id}', name: 'custom098_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/custom099/{id}', name: 'custom099_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-tissue-processing-services/{id}', name: 'transrestissueprocessingservices_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-other-requested-services/{id}', name: 'transresotherrequestedservices_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-collaboration-labs/{id}', name: 'transrescolllabs_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-collaboration-divs/{id}', name: 'transrescolldivs_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-irb-approval-status/{id}', name: 'transresirbstatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/translational-requester-group/{id}', name: 'transresrequestergroup_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transrescomptypes/{id}', name: 'transrescomptypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/visastatus/{id}', name: 'visastatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappstatuses/{id}', name: 'resappstatuses_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappranks/{id}', name: 'resappranks_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resapplanguageproficiency/{id}', name: 'resapplanguageproficiency_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappfitforprogram/{id}', name: 'resappfitforprogram_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappvisastatus/{id}', name: 'resappvisastatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/postsoph/{id}', name: 'postsoph_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappapplyingresidencytrack/{id}', name: 'resappapplyingresidencytrack_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resapplearnarealist/{id}', name: 'resapplearnarealist_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/resappspecificindividuallist/{id}', name: 'resappspecificindividuallist_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/viewmodes/{id}', name: 'viewmodes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transrespricetypes/{id}', name: 'transrespricetypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/charttypes/{id}', name: 'charttypes_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/charttopics/{id}', name: 'charttopics_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/chartfilters/{id}', name: 'chartfilters_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/charts/{id}', name: 'charts_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/chartdatasources/{id}', name: 'chartdatasources_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/chartupdatefrequencies/{id}', name: 'chartupdatefrequencies_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -4212,17 +4194,14 @@ class ListController extends OrderAbstractController
         ;
     }
     /////////////////// DELETE IS NOT USED /////////////////////////
-
-
-
     /**
      * Platform List Manager Root List
      * /order/list-manager/list?id=70 => show Roles list (assuming that listName=Roles == listId=70)
      *
-     * @Route("/list-manager/id/{listId}", name="platform_list_manager", methods={"GET"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig")
      */
+    #[Route(path: '/list-manager/id/{listId}', name: 'platform_list_manager', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig')]
     public function platformListManagerAction(Request $request, $listId)
     {
 
@@ -4262,10 +4241,9 @@ class ListController extends OrderAbstractController
     /**
      * Platform Element Manager Root Element
      * /order/directory/admin/list/sites/1 it goes to /order/directory/admin/list-manager/id/10/1 use role_show
-     *
-     * @Route("/list-manager/id/{linkToListId}/{entityId}", name="platform_list_manager_element", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig")
      */
+    #[Route(path: '/list-manager/id/{linkToListId}/{entityId}', name: 'platform_list_manager_element', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/platform_list_manager.html.twig')]
     public function platformElementManagerRootElementAction( Request $request, $linkToListId, $entityId ) {
 
         $em = $this->getDoctrine()->getManager();
@@ -4302,9 +4280,7 @@ class ListController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/change-list-element-type/{type}/{entityId}/{pathbase}/{postpath}", name="platform_list_manager_element_change_type", methods={"GET"})
-     */
+    #[Route(path: '/change-list-element-type/{type}/{entityId}/{pathbase}/{postpath}', name: 'platform_list_manager_element_change_type', methods: ['GET'])]
     public function changeTypeAction( Request $request, $type, $entityId, $pathbase, $postpath=null ) {
 
         $additionalSitename = null;

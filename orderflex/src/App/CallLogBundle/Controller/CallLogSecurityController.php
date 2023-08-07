@@ -35,19 +35,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class CallLogSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="calllog_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'calllog_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('calllog: loginAction');
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="calllog_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'calllog_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //exit('calllog: setAjaxLoginVisit');
@@ -55,10 +51,8 @@ class CallLogSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/no-permission", name="calllog-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'calllog-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -70,11 +64,9 @@ class CallLogSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/idle-log-out", name="calllog_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="calllog_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'calllog_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'calllog_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('calllog: idlelogoutAction');

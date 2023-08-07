@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class CallLogSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="calllog_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'calllog_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -61,10 +59,9 @@ class CallLogSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="calllog_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'calllog_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request, $id)
     {
         //exit("calllog editAction id=".$id);
@@ -73,10 +70,9 @@ class CallLogSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="calllog_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'calllog_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request,$id,'ROLE_CALLLOG_PATHOLOGY_ATTENDING');
@@ -85,10 +81,9 @@ class CallLogSiteParametersController extends SiteParametersController
 
     /**
      * Resources page
-     *
-     * @Route("/edit-resources/show", name="calllog_siteparameters_resources_edit", methods={"GET"})
-     * @Template("AppCallLogBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/edit-resources/show', name: 'calllog_siteparameters_resources_edit', methods: ['GET'])]
+    #[Template('AppCallLogBundle/SiteParameters/edit.html.twig')]
     public function editResourcesAction( Request $request )
     {
         if( false === $this->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
@@ -111,10 +106,9 @@ class CallLogSiteParametersController extends SiteParametersController
 
     /**
      * CalllogSiteParameter
-     *
-     * @Route("/specific-site-parameters/edit-page/", name="calllog_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
-     * @Template("AppCallLogBundle/SiteParameter/edit.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'calllog_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppCallLogBundle/SiteParameter/edit.html.twig')]
     public function calllogSiteParameterEditAction( Request $request ) {
 
         //exit('calllogSiteParameterEditAction');
@@ -151,10 +145,9 @@ class CallLogSiteParametersController extends SiteParametersController
 
     /**
      * CalllogSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppCallLogBundle/SiteParameter/edit-content.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'calllog_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppCallLogBundle/SiteParameter/edit-content.html.twig')]
     public function calllogSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {

@@ -36,10 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CronManagementController extends OrderAbstractController
 {
-    /**
-     * @Route("/general-cron-jobs", name="employees_general_cron_jobs", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/CronJobs/general_cron_jobs.html.twig")
-     */
+    #[Route(path: '/general-cron-jobs', name: 'employees_general_cron_jobs', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/CronJobs/general_cron_jobs.html.twig')]
     public function generalCronJobsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -68,10 +66,8 @@ class CronManagementController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/health-monitor", name="employees_health_monitor", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/CronJobs/health_monitor.html.twig")
-     */
+    #[Route(path: '/health-monitor', name: 'employees_health_monitor', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/CronJobs/health_monitor.html.twig')]
     public function healthMonitorCronJobsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

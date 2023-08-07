@@ -118,27 +118,26 @@ class CallEntryController extends OrderAbstractController
 {
 
 //    protected $calllogUtil;
-//    protected $userServiceUtil;
-////    protected $paginator;
-//    public function __construct( CallLogUtil $calllogUtil, UserServiceUtil $userServiceUtil ) {
-//        $this->calllogUtil = $calllogUtil;
-//        $this->userServiceUtil = $userServiceUtil;
-////        $this->paginator = $paginator;
-//    }
-
+    //    protected $userServiceUtil;
+    ////    protected $paginator;
+    //    public function __construct( CallLogUtil $calllogUtil, UserServiceUtil $userServiceUtil ) {
+    //        $this->calllogUtil = $calllogUtil;
+    //        $this->userServiceUtil = $userServiceUtil;
+    ////        $this->paginator = $paginator;
+    //    }
     /**
      * Case List Page
-     * @Route("/", name="calllog_home", methods={"GET"})
      *
      * Search by navbar
-     * @Route("/navbarsearch/", name="calllog_home_navbarsearch", methods={"GET"})
      *
      * Alerts: filtered case list
-     * @Route("/alerts/", name="calllog_alerts", methods={"GET"})
      *
-     * @Template("AppCallLogBundle/CallLog/home.html.twig")
      */
-//    public function homeAction(Request $request, PaginatorInterface $paginator, CallLogUtil $calllogUtil)
+    //    public function homeAction(Request $request, PaginatorInterface $paginator, CallLogUtil $calllogUtil)
+    #[Route(path: '/', name: 'calllog_home', methods: ['GET'])]
+    #[Route(path: '/navbarsearch/', name: 'calllog_home_navbarsearch', methods: ['GET'])]
+    #[Route(path: '/alerts/', name: 'calllog_alerts', methods: ['GET'])]
+    #[Template('AppCallLogBundle/CallLog/home.html.twig')]
     public function homeAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -1280,11 +1279,10 @@ class CallEntryController extends OrderAbstractController
      * <li><a href="{{ path(calllog_sitename~'_tasks_todo') }}">To Do</a></li>
      * <li><a href="{{ path(calllog_sitename~'_tasks_i_added') }}">Tasks I Added</a></li>
      * <li><a href="{{ path(calllog_sitename~'_tasks_i_updated') }}">Tasks I Updated</a></li>
-     *
-     * @Route("/tasks/to-do", name="calllog_tasks_todo")
-     * @Route("/tasks/i-added", name="calllog_tasks_i_added")
-     * @Route("/tasks/i-updated", name="calllog_tasks_i_updated")
      */
+    #[Route(path: '/tasks/to-do', name: 'calllog_tasks_todo')]
+    #[Route(path: '/tasks/i-added', name: 'calllog_tasks_i_added')]
+    #[Route(path: '/tasks/i-updated', name: 'calllog_tasks_i_updated')]
     public function listTasksAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CALLLOG_USER")) {
@@ -1327,10 +1325,9 @@ class CallEntryController extends OrderAbstractController
     /**
      * Call Entry New Page
      * http://localhost/order/call-log-book/entry/new?mrn-type=4&mrn=3
-     *
-     * @Route("/entry/new", name="calllog_callentry")
-     * @Template("AppCallLogBundle/CallLog/call-entry.html.twig")
      */
+    #[Route(path: '/entry/new', name: 'calllog_callentry')]
+    #[Template('AppCallLogBundle/CallLog/call-entry.html.twig')]
     public function callEntryAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -1624,9 +1621,9 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Save Call Log Entry
-     * @Route("/entry/save", name="calllog_save_entry", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCallLogBundle/CallLog/call-entry.html.twig")
      */
+    #[Route(path: '/entry/save', name: 'calllog_save_entry', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCallLogBundle/CallLog/call-entry.html.twig')]
     public function saveEntryAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -2421,9 +2418,9 @@ class CallEntryController extends OrderAbstractController
     /**
      * NOT USED (search is displayed in the home page)
      * Search Call Entry
-     * @Route("/callentry/search", name="calllog_search_callentry", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/callentry/search', name: 'calllog_search_callentry', methods: ['GET'])]
+    #[Template]
     public function searchCallEntryAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
@@ -2475,9 +2472,9 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Search Patient
-     * @Route("/patient/search", name="calllog_search_patient", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/patient/search', name: 'calllog_search_patient', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
@@ -2714,9 +2711,9 @@ class CallEntryController extends OrderAbstractController
 
     /**
      * Create a new Patient
-     * @Route("/patient/create", name="calllog_create_patient", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/patient/create', name: 'calllog_create_patient', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function createPatientAction(Request $request)
     {
 
@@ -3198,32 +3195,31 @@ class CallEntryController extends OrderAbstractController
 
 
 //    public function getCurrentUserInstitution($user)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $securityUtil = $this->container->get('user_security_utility');
-//
-//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-//        $institution = $userSiteSettings->getDefaultInstitution();
-//        //echo "1 inst=".$institution."<br>";
-//        if (!$institution) {
-//            $institutions = $securityUtil->getUserPermittedInstitutions($user);
-//            //echo "count inst=".count($institutions)."<br>";
-//            if (count($institutions) > 0) {
-//                $institution = $institutions[0];
-//            }
-//        //echo "2 inst=".$institution."<br>";
-//        }
-//        if (!$institution) {
-//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-//        }
-//
-//        return $institution;
-//    }
-
+    //    {
+    //        $em = $this->getDoctrine()->getManager();
+    //        $securityUtil = $this->container->get('user_security_utility');
+    //
+    //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+    //        $institution = $userSiteSettings->getDefaultInstitution();
+    //        //echo "1 inst=".$institution."<br>";
+    //        if (!$institution) {
+    //            $institutions = $securityUtil->getUserPermittedInstitutions($user);
+    //            //echo "count inst=".count($institutions)."<br>";
+    //            if (count($institutions) > 0) {
+    //                $institution = $institutions[0];
+    //            }
+    //        //echo "2 inst=".$institution."<br>";
+    //        }
+    //        if (!$institution) {
+    //            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+    //        }
+    //
+    //        return $institution;
+    //    }
     /**
      * Get Patient Titles according to a new encounter date specified by nowStr
-     * @Route("/patient/title/", name="calllog_get_patient_title", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/patient/title/', name: 'calllog_get_patient_title', methods: ['GET'], options: ['expose' => true])]
     public function getPatientTitleAction(Request $request) {
 
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
@@ -3268,10 +3264,10 @@ class CallEntryController extends OrderAbstractController
     /**
      * Get Call Log Entry Message
      * TODO: make messageVersion can be null and find by messageOid only by the most recent version
-     * @Route("/entry/view/{messageOid}/{messageVersion}", name="calllog_callentry_view", methods={"GET"})
-     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="calllog_callentry_view_latest_encounter", methods={"GET"})
-     * @Template("AppCallLogBundle/CallLog/call-entry-view.html.twig")
      */
+    #[Route(path: '/entry/view/{messageOid}/{messageVersion}', name: 'calllog_callentry_view', methods: ['GET'])]
+    #[Route(path: '/entry/view-latest-encounter/{messageOid}/{messageVersion}', name: 'calllog_callentry_view_latest_encounter', methods: ['GET'])]
+    #[Template('AppCallLogBundle/CallLog/call-entry-view.html.twig')]
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
@@ -3578,10 +3574,8 @@ class CallEntryController extends OrderAbstractController
         }
     }
 
-    /**
-     * @Route("/single-export-csv/{messageOid}/{messageVersion}", name="calllog_single_export_csv")
-     * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
-     */
+    #[Route(path: '/single-export-csv/{messageOid}/{messageVersion}', name: 'calllog_single_export_csv')]
+    #[Template('AppCallLogBundle/Export/call-entry-export-csv.html.twig')]
     public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=null)
     {
         if (false == $this->isGranted("ROLE_CALLLOG_ADMIN")) {
@@ -3634,11 +3628,9 @@ class CallEntryController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/export_csv/", name="calllog_export_csv")
-     * @Route("/export_csv/all/", name="calllog_export_csv_all")
-     * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
-     */
+    #[Route(path: '/export_csv/', name: 'calllog_export_csv')]
+    #[Route(path: '/export_csv/all/', name: 'calllog_export_csv_all')]
+    #[Template('AppCallLogBundle/Export/call-entry-export-csv.html.twig')]
     public function exportCsvAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){

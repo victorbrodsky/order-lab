@@ -43,10 +43,8 @@ class SectionUserController extends UserController
 {
 
 
-    /**
-     * @Route("/my-team-ajax/", name="employees_my_team", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/SectionUser/my-team.html.twig")
-     */
+    #[Route(path: '/my-team-ajax/', name: 'employees_my_team', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/SectionUser/my-team.html.twig')]
     public function myTeamAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -88,10 +86,8 @@ class SectionUserController extends UserController
 
 
 
-    /**
-     * @Route("/user-wrapper-ajax", name="employees_user_wrapper_ajax", methods={"GET","POST"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/SectionUser/user-wrapper.html.twig")
-     */
+    #[Route(path: '/user-wrapper-ajax', name: 'employees_user_wrapper_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/SectionUser/user-wrapper.html.twig')]
     public function userWrapperAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {

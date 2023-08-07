@@ -43,40 +43,38 @@ class SecurityController extends OrderAbstractController
 {
 
 //    /**
-//     * @Route("/login_check", name="employees_login_check", methods={"POST"})
-//     * @Template("AppUserdirectoryBundle/Security/login.html.twig")
-//     */
-//    public function loginCheckAction( Request $request )
-//    {
-//
-//        $username = $request->get('_username');
-//        $password = $request->get('_password');
-//
-//        echo "username=".$username.", password=".$password."<br>";
-//
-//        //exit("my login check!");
-//    }
-
-//    /**
-//     * @Route("/login_check", name="dummy_login_check")
-//     * @Route("/directory/login_check", name="employees_dummy_login_check")
-//     * @Route("/call-log-book/login_check", name="calllog_dummy_login_check")
-//     */
-//    public function loginCheckAction( Request $request )
-//    {
-//        //Reroute to home page
-//        //exit("Reroute to home page");
-//        return $this->redirect( $this->generateUrl('main_common_home') );
-//    }
-
+    //     * @Route("/login_check", name="employees_login_check", methods={"POST"})
+    //     * @Template("AppUserdirectoryBundle/Security/login.html.twig")
+    //     */
+    //    public function loginCheckAction( Request $request )
+    //    {
+    //
+    //        $username = $request->get('_username');
+    //        $password = $request->get('_password');
+    //
+    //        echo "username=".$username.", password=".$password."<br>";
+    //
+    //        //exit("my login check!");
+    //    }
+    //    /**
+    //     * @Route("/login_check", name="dummy_login_check")
+    //     * @Route("/directory/login_check", name="employees_dummy_login_check")
+    //     * @Route("/call-log-book/login_check", name="calllog_dummy_login_check")
+    //     */
+    //    public function loginCheckAction( Request $request )
+    //    {
+    //        //Reroute to home page
+    //        //exit("Reroute to home page");
+    //        return $this->redirect( $this->generateUrl('main_common_home') );
+    //    }
     /**
      * //Method("GET")
      *
-     * @Route("/directory/login", name="directory_login")
-     * @Route("/login", name="employees_login")
      *
-     * @Template()
      */
+    #[Route(path: '/directory/login', name: 'directory_login')]
+    #[Route(path: '/login', name: 'employees_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('user: loginAction');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -272,69 +270,65 @@ class SecurityController extends OrderAbstractController
     }
 
 //    public function getMessageToUsers() {
-//        return null;
-//    }
-
-
-//    /**
-//     * NOT USED
-//     * 127.0.0.1/order/index_dev.php/directory/logout
-//     *
-//     * @Route("/logout", name="employees_logout")
-//     * @Template()
-//     */
-//    public function logoutAction( Request $request )
-//    {
-//        //exit('idlelogoutAction');
-//        $routename = $request->get('_route');
-//
-//        //default
-//        $sitename = $this->getParameter('employees.sitename');
-//
-//        if( $routename == "employees_idlelogout" ) {
-//            $sitename = $this->getParameter('employees.sitename');
-//        }
-//        if( $routename == "fellapp_idlelogout" ) {
-//            $sitename = $this->getParameter('fellapp.sitename');
-//        }
-//        if( $routename == "resapp_idlelogout" ) {
-//            $sitename = $this->getParameter('resapp.sitename');
-//        }
-//        if( $routename == "deidentifier_idlelogout" ) {
-//            $sitename = $this->getParameter('deidentifier.sitename');
-//        }
-//        if( $routename == "scan_idlelogout" ) {
-//            $sitename = $this->getParameter('scan.sitename');
-//        }
-//        if( $routename == "vacreq_idlelogout" ) {
-//            $sitename = $this->getParameter('vacreq.sitename');
-//        }
-//        if( $routename == "calllog_idlelogout" ) {
-//            $sitename = $this->getParameter('calllog.sitename');
-//        }
-//        if( $routename == "crn_idlelogout" ) {
-//            $sitename = $this->getParameter('crn.sitename');
-//        }
-//        if( $routename == "translationalresearch_idlelogout" ) {
-//            $sitename = $this->getParameter('translationalresearch.sitename');
-//        }
-//        if( $routename == "dashboard_idlelogout" ) {
-//            $sitename = $this->getParameter('dashboard.sitename');
-//        }
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        return $userSecUtil->userLogout( $request, $sitename );
-//    }
-
-
+    //        return null;
+    //    }
+    //    /**
+    //     * NOT USED
+    //     * 127.0.0.1/order/index_dev.php/directory/logout
+    //     *
+    //     * @Route("/logout", name="employees_logout")
+    //     * @Template()
+    //     */
+    //    public function logoutAction( Request $request )
+    //    {
+    //        //exit('idlelogoutAction');
+    //        $routename = $request->get('_route');
+    //
+    //        //default
+    //        $sitename = $this->getParameter('employees.sitename');
+    //
+    //        if( $routename == "employees_idlelogout" ) {
+    //            $sitename = $this->getParameter('employees.sitename');
+    //        }
+    //        if( $routename == "fellapp_idlelogout" ) {
+    //            $sitename = $this->getParameter('fellapp.sitename');
+    //        }
+    //        if( $routename == "resapp_idlelogout" ) {
+    //            $sitename = $this->getParameter('resapp.sitename');
+    //        }
+    //        if( $routename == "deidentifier_idlelogout" ) {
+    //            $sitename = $this->getParameter('deidentifier.sitename');
+    //        }
+    //        if( $routename == "scan_idlelogout" ) {
+    //            $sitename = $this->getParameter('scan.sitename');
+    //        }
+    //        if( $routename == "vacreq_idlelogout" ) {
+    //            $sitename = $this->getParameter('vacreq.sitename');
+    //        }
+    //        if( $routename == "calllog_idlelogout" ) {
+    //            $sitename = $this->getParameter('calllog.sitename');
+    //        }
+    //        if( $routename == "crn_idlelogout" ) {
+    //            $sitename = $this->getParameter('crn.sitename');
+    //        }
+    //        if( $routename == "translationalresearch_idlelogout" ) {
+    //            $sitename = $this->getParameter('translationalresearch.sitename');
+    //        }
+    //        if( $routename == "dashboard_idlelogout" ) {
+    //            $sitename = $this->getParameter('dashboard.sitename');
+    //        }
+    //
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        return $userSecUtil->userLogout( $request, $sitename );
+    //    }
     /**
      * 127.0.0.1/order/index_dev.php/directory/idle-log-out
-     * 
-     * @Route("/idle-log-out", name="employees_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="employees_idlelogout-saveorder")
      *
-     * @Template()
+     *
      */
+    #[Route(path: '/idle-log-out', name: 'employees_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'employees_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('idlelogoutAction');
@@ -386,9 +380,8 @@ class SecurityController extends OrderAbstractController
 
     /**
      * sessionKeepAliveUrl for user-idleTimeouts.js
-     *
-     * @Route("/common/setserveractive/{url}", name="setserveractive", methods={"GET","POST"}, options={"expose"=true})
      */
+    #[Route(path: '/common/setserveractive/{url}', name: 'setserveractive', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function setServerActiveAction( Request $request, $url=null )
     {
         //echo "keep Alive Action! <br>";
@@ -411,9 +404,7 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/common/getmaxidletime", name="getmaxidletime", methods={"GET"})
-     */
+    #[Route(path: '/common/getmaxidletime', name: 'getmaxidletime', methods: ['GET'])]
     public function getmaxidletimeAction( Request $request )
     {
 
@@ -443,10 +434,8 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/no-permission", name="employees-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'employees-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -459,9 +448,8 @@ class SecurityController extends OrderAbstractController
 
     /**
      * Use for ajax authentication on web page (i.e. CallLog "Finalize and Sign")
-     *
-     * @Route("/authenticate-user/", name="employees_authenticate_user", methods={"GET","POST"}, options={"expose"=true})
      */
+    #[Route(path: '/authenticate-user/', name: 'employees_authenticate_user', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function authenticateUserAction( Request $request )
     {
 
@@ -506,10 +494,8 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/currently-logged-in-users/", name="employees_currently_logged_in_users", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/loggedin_users.html.twig")
-     */
+    #[Route(path: '/currently-logged-in-users/', name: 'employees_currently_logged_in_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/loggedin_users.html.twig')]
     public function currentlyLoggedInUsersAction( Request $request )
     {
 
@@ -531,9 +517,8 @@ class SecurityController extends OrderAbstractController
 
     /**
      * //potentially might be used by login page
-     *
-     * @Route("/setloginvisit/", name="employees_setloginvisit", methods={"GET"})
      */
+    #[Route(path: '/setloginvisit/', name: 'employees_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
@@ -609,16 +594,13 @@ class SecurityController extends OrderAbstractController
 
 
     //////////////// Idle Time Out - Common Functions (NOT USED ANYMORE) ////////////////////
-
-
     /**
      * //NOT USED
      *
      * Check the server every 30 min (maxIdleTime) if the server timeout is ok ($lapse > $maxIdleTime).
      * If not, the server returns NOTOK flag and js open a dialog modal to continue.
-     *
-     * @Route("/common/keepalive", name="keepalive", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/common/keepalive', name: 'keepalive', methods: ['GET'], options: ['expose' => true])]
     public function keepAliveAction( Request $request )
     {
         //echo "keep Alive Action! <br>";
@@ -690,9 +672,8 @@ class SecurityController extends OrderAbstractController
     
     /**
      * //NOT USED
-     *
-     * @Route("/common/setserveractive_ORIG", name="setserveractive_ORIG", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/common/setserveractive_ORIG', name: 'setserveractive_ORIG', methods: ['GET'], options: ['expose' => true])]
     public function setServerActiveAction_ORIG( Request $request )
     {
         //echo "keep Alive Action! <br>";

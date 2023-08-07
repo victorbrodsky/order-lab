@@ -37,11 +37,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UserDatesController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/employment-dates/view", name="employees_user_dates_show", options={"expose"=true})
-     * @Route("/employment-dates/edit", name="employees_user_dates_edit", options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/UserDates/user_dates.html.twig")
-     */
+    #[Route(path: '/employment-dates/view', name: 'employees_user_dates_show', options: ['expose' => true])]
+    #[Route(path: '/employment-dates/edit', name: 'employees_user_dates_edit', options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/UserDates/user_dates.html.twig')]
     public function userDatesAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -84,9 +82,7 @@ class UserDatesController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/users/api", name="employees_users_api", options={"expose"=true})
-     */
+    #[Route(path: '/users/api', name: 'employees_users_api', options: ['expose' => true])]
     public function getUsersApiAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -475,9 +471,7 @@ class UserDatesController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/update-users-dates/", name="employees_update_users_date", options={"expose"=true})
-     */
+    #[Route(path: '/update-users-dates/', name: 'employees_update_users_date', options: ['expose' => true])]
     public function updateUsersDateAction( Request $request ) {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

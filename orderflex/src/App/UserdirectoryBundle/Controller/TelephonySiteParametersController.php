@@ -30,16 +30,13 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * TelephonySiteParameters controller.
- *
- * @Route("/telephony-settings")
  */
+#[Route(path: '/telephony-settings')]
 class TelephonySiteParametersController extends OrderAbstractController //SiteParametersController
 {
 
-    /**
-     * @Route("/show-content/", name="employees_telephonysiteparameters_show", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form-content.html.twig")
-     */
+    #[Route(path: '/show-content/', name: 'employees_telephonysiteparameters_show', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/TelephonySiteParameters/telephony-form-content.html.twig')]
     public function telephonySiteParameterPreviewAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -61,10 +58,8 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
         );
     }
 
-    /**
-     * @Route("/show/", name="employees_telephonysiteparameters_show", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig")
-     */
+    #[Route(path: '/show/', name: 'employees_telephonysiteparameters_show', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig')]
     public function telephonySiteParameterShowAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -86,10 +81,8 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
         );
     }
 
-    /**
-     * @Route("/edit/", name="employees_telephonysiteparameters_edit", methods={"GET", "POST"})
-     * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig")
-     */
+    #[Route(path: '/edit/', name: 'employees_telephonysiteparameters_edit', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig')]
     public function telephonySiteParameterEditAction( Request $request ) {
 
         //exit('telephonySiteParameterEditAction');

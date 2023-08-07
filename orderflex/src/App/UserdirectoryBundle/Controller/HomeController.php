@@ -95,9 +95,7 @@ class HomeController extends OrderAbstractController {
 //        );
     }
 
-    /**
-     * @Route("/maintanencemode", name="main_maintenance")
-     */
+    #[Route(path: '/maintanencemode', name: 'main_maintenance')]
     public function maintanenceModeAction() {
 
         //exit('maint controller');
@@ -122,9 +120,7 @@ class HomeController extends OrderAbstractController {
         );
     }
 
-    /**
-     * @Route("/under-construction", name="under_construction")
-     */
+    #[Route(path: '/under-construction', name: 'under_construction')]
     public function underConstructionAction() {
         return $this->render('AppUserdirectoryBundle/Default/under_construction.html.twig');
     }
@@ -132,21 +128,19 @@ class HomeController extends OrderAbstractController {
 
  
 //    /**
-//     * @Route("/admin/list-manager/", name="platformlistmanager-list")
-//     */
-//    public function listManagerAction() {
-//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            //exit('no access');
-//            return $this->redirect( $this->generateUrl('employees-nopermission') );
-//        }
-//        return $this->getList($request);
-//    }
-
-
+    //     * @Route("/admin/list-manager/", name="platformlistmanager-list")
+    //     */
+    //    public function listManagerAction() {
+    //        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+    //            //exit('no access');
+    //            return $this->redirect( $this->generateUrl('employees-nopermission') );
+    //        }
+    //        return $this->getList($request);
+    //    }
     /**
      * Not used: use http://localhost/order/directory/admin/first-time-login-generation-init/ for the first time user generation login
-     * @Route("/first-time-user-generation-init/", name="first-time-user-generation-init")
      */
+    #[Route(path: '/first-time-user-generation-init/', name: 'first-time-user-generation-init')]
     public function firstTimeUserGenerationAction() {
         exit("not used");
 //        return $this->render('AppUserdirectoryBundle/Default/under_construction.html.twig');

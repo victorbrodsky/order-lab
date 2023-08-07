@@ -58,9 +58,9 @@ class CalllogAccessionController extends OrderAbstractController {
 
     /**
      * Accession List
-     * @Route("/accession-list/{listid}/{listname}", name="calllog_accession_list")
-     * @Template("AppCallLogBundle/AccessionList/accession-list.html.twig")
      */
+    #[Route(path: '/accession-list/{listid}/{listname}', name: 'calllog_accession_list')]
+    #[Template('AppCallLogBundle/AccessionList/accession-list.html.twig')]
     public function complexAccessionListAction(Request $request, $listid, $listname)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
@@ -163,10 +163,9 @@ class CalllogAccessionController extends OrderAbstractController {
 
     /**
      * Listing accessions whose notes have been updated in the last 96 hours (4 days)
-     *
-     * @Route("/recent-accessions", name="calllog_recent_accessions")
-     * @Template("AppCallLogBundle/AccessionList/recent-accessions.html.twig")
      */
+    #[Route(path: '/recent-accessions', name: 'calllog_recent_accessions')]
+    #[Template('AppCallLogBundle/AccessionList/recent-accessions.html.twig')]
     public function recentAccessionsAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
@@ -276,9 +275,9 @@ class CalllogAccessionController extends OrderAbstractController {
 
     /**
      * Search Accession
-     * @Route("/accession/search", name="calllog_search_accession", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/accession/search', name: 'calllog_search_accession', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
@@ -313,9 +312,7 @@ class CalllogAccessionController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="calllog_remove_accession_from_list")
-     */
+    #[Route(path: '/accession/remove-accession-from-list/{accessionId}/{accessionListId}', name: 'calllog_remove_accession_from_list')]
     public function removeAccessionFromListAction(Request $request, $accessionId, $accessionListId) {
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
@@ -372,12 +369,9 @@ class CalllogAccessionController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list")
-     * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list_ajax", options={"expose"=true})
-     *
-     * @Template("AppCallLogBundle/AccessionList/accession-list.html.twig")
-     */
+    #[Route(path: '/accession/add-accession-to-list/{accessionListId}/{accessionId}', name: 'calllog_add_accession_to_list')]
+    #[Route(path: '/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}', name: 'calllog_add_accession_to_list_ajax', options: ['expose' => true])]
+    #[Template('AppCallLogBundle/AccessionList/accession-list.html.twig')]
     public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );

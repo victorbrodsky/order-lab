@@ -59,10 +59,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Lists all UserRequest entities.
-     *
-     * @Route("/account-requests", name="employees_accountrequest", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
+    #[Route(path: '/account-requests', name: 'employees_accountrequest', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
         if (false === $this->isGranted($this->roleEditor)) {
@@ -129,10 +128,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Creates a new UserRequest entity.
-     *
-     * @Route("/account-requests/new", name="employees_accountrequest_create", methods={"POST"})
-     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
+    #[Route(path: '/account-requests/new', name: 'employees_accountrequest_create', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
         //exit("createAction");
@@ -217,10 +215,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Displays a form to create a new UserRequest entity.
-     *
-     * @Route("/account-requests/new", name="employees_accountrequest_new", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/UserRequest/account_request.html.twig")
      */
+    #[Route(path: '/account-requests/new', name: 'employees_accountrequest_new', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction()
     {
         $entity = new UserRequest();
@@ -252,10 +249,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Finds and displays a UserRequest entity.
-     *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_show", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
      */
+    #[Route(path: '/account-requests/{id}', name: 'employees_accountrequest_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function showAction($id)
     {
         if (false === $this->isGranted($this->roleEditor)) {
@@ -283,10 +279,8 @@ class UserRequestController extends OrderAbstractController
 
     
     
-    /**
-     * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
-     */
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'employees_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
         
@@ -312,10 +306,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Update (Approve) a new UserRequest entity.
-     *
-     * @Route("/account-requests-approve", name="employees_accountrequest_approve", methods={"POST"})
-     * @Template("AppUserdirectoryBundle/UserRequest/index.html.twig")
      */
+    #[Route(path: '/account-requests-approve', name: 'employees_accountrequest_approve', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {
 
@@ -496,60 +489,48 @@ class UserRequestController extends OrderAbstractController
         return $params;
     }
 //    public function getParams_Old() {
-//
-//        $params = array();
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //departments
-//        $department = $em->getRepository('AppUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
-//        $departments = new ArrayCollection();
-//        $departments->add($department);
-//
-//        //echo "dep=".$department->getName()."<br>";
-//
-//        //divisions
-//        $divisions = $department->getDivisions();
-//
-//        //services
-//        $services = new ArrayCollection();
-//        foreach( $divisions as $division ) {
-//
-//            foreach( $division->getServices() as $service ) {
-//                $services->add($service);
-//            }
-//
-//        }
-//        //$services = $em->getRepository('AppUserdirectoryBundle:Service')->findByDepartment($department);
-//
-//        //foreach( $departments as $dep ) {
-//        //    echo "dep=".$dep->getName()."<br>";
-//        //}
-//        //exit('exit');
-//
-//        $params['departments'] = $departments;
-//        $params['services'] = $services;
-//
-//        return $params;
-//    }
-
-
-
-
-
-
-
-
-
-
+    //
+    //        $params = array();
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        //departments
+    //        $department = $em->getRepository('AppUserdirectoryBundle:Department')->findOneByName('Pathology and Laboratory Medicine');
+    //        $departments = new ArrayCollection();
+    //        $departments->add($department);
+    //
+    //        //echo "dep=".$department->getName()."<br>";
+    //
+    //        //divisions
+    //        $divisions = $department->getDivisions();
+    //
+    //        //services
+    //        $services = new ArrayCollection();
+    //        foreach( $divisions as $division ) {
+    //
+    //            foreach( $division->getServices() as $service ) {
+    //                $services->add($service);
+    //            }
+    //
+    //        }
+    //        //$services = $em->getRepository('AppUserdirectoryBundle:Service')->findByDepartment($department);
+    //
+    //        //foreach( $departments as $dep ) {
+    //        //    echo "dep=".$dep->getName()."<br>";
+    //        //}
+    //        //exit('exit');
+    //
+    //        $params['departments'] = $departments;
+    //        $params['services'] = $services;
+    //
+    //        return $params;
+    //    }
     ///// NOT USED: edit, delete account request ///////
-
     /**
      * Displays a form to edit an existing UserRequest entity.
-     *
-     * @Route("/account-requests/{id}/edit", name="employees_accountrequest_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
      */
+    #[Route(path: '/account-requests/{id}/edit', name: 'employees_accountrequest_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function editAction($id)
     {
         if (false === $this->isGranted($this->roleEditor)) {
@@ -581,10 +562,9 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Edits an existing UserRequest entity.
-     *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_update", methods={"PUT"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/UserRequest/edit.html.twig")
      */
+    #[Route(path: '/account-requests/{id}', name: 'employees_accountrequest_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/UserRequest/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
 
@@ -628,9 +608,8 @@ class UserRequestController extends OrderAbstractController
     }
     /**
      * Deletes a UserRequest entity.
-     *
-     * @Route("/account-requests/{id}", name="employees_accountrequest_delete", methods={"DELETE"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/account-requests/{id}', name: 'employees_accountrequest_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     public function deleteAction(Request $request, $id)
     {
 

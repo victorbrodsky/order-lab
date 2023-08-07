@@ -54,15 +54,11 @@ class DefaultController extends OrderAbstractController
 {
 
 //    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry) {
-//
-//    }
-
+    //
+    //    }
     //[Template('AppUserdirectoryBundle/Default/about.html.twig')]
-
-    /**
-     * @Route("/about", name="deidentifier_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'deidentifier_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //Testing IDENTITY comparing to AUTO
@@ -90,10 +86,8 @@ class DefaultController extends OrderAbstractController
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
 
-    /**
-     * @Template("AppDeidentifierBundle/Default/navbar.html.twig")
-     */
     #[Route(path: '/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}', name: 'deidentifier_navbar', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Default/navbar.html.twig')]
     //[Template("AppDeidentifierBundle/Default/navbar.html.twig")]
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
@@ -126,10 +120,8 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Template("AppDeidentifierBundle/Default/index.html.twig")
-     */
     #[Route(path: '/', name: 'deidentifier_home', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Default/index.html.twig')]
     //[Template("AppDeidentifierBundle/Default/index.html.twig")]
     public function indexAction( Request $request ) {
 
@@ -220,10 +212,9 @@ class DefaultController extends OrderAbstractController
     //    }
     /**
      * Search for Accession Number
-     *
-     * @Template("AppDeidentifierBundle/Search/search.html.twig")
      */
     #[Route(path: '/re-identify/', name: 'deidentifier_search', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Search/search.html.twig')]
     //[Template("AppDeidentifierBundle/Search/search.html.twig")]
     public function searchAction( Request $request ) {
 
@@ -324,10 +315,8 @@ class DefaultController extends OrderAbstractController
 
 
 
-    /**
-     * @Template("AppDeidentifierBundle/Default/index.html.twig")
-     */
     #[Route(path: '/generate/', name: 'deidentifier_generate', methods: ['GET'])]
+    #[Template('AppDeidentifierBundle/Default/index.html.twig')]
     //[Template("AppDeidentifierBundle/Default/index.html.twig")]
     public function generateAction( Request $request ) {
 

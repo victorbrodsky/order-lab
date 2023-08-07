@@ -74,10 +74,9 @@ class CallEntrySamePatientController extends CallEntryController
 
     /**
      * Call Entry New Page Same Patient
-     *
-     * @Route("/entry/same-patient/new", name="calllog_callentry_same_patient")
-     * @Template("AppCallLogBundle/CallLog/call-entry-same-patient.html.twig")
      */
+    #[Route(path: '/entry/same-patient/new', name: 'calllog_callentry_same_patient')]
+    #[Template('AppCallLogBundle/CallLog/call-entry-same-patient.html.twig')]
     public function callEntrySamePatientAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
@@ -318,9 +317,9 @@ class CallEntrySamePatientController extends CallEntryController
 
     /**
      * Save Call Log Entry Same Patient
-     * @Route("/entry/same-patient/save", name="calllog_save_entry_same_patient", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCallLogBundle/CallLog/call-entry-same-patient.html.twig")
      */
+    #[Route(path: '/entry/same-patient/save', name: 'calllog_save_entry_same_patient', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCallLogBundle/CallLog/call-entry-same-patient.html.twig')]
     public function saveEntrySamePatientAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){

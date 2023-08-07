@@ -55,11 +55,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/user-thanks-for-downloading/{id}/{sitename}", name="employees_thankfordownloading", methods={"GET"})
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     */
+    #[Route(path: '/user-thanks-for-downloading/{id}/{sitename}', name: 'employees_thankfordownloading', methods: ['GET'])]
+    #[Route(path: '/thanks-for-downloading/{id}/{sitename}', name: 'common_thankfordownloading', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
             'fileid' => $id,
@@ -68,10 +66,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/show-system-log", name="employees_show_system_log", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
-     */
+    #[Route(path: '/show-system-log', name: 'employees_show_system_log', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/show-system-log.html.twig')]
     public function showSystemLogAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -129,10 +125,8 @@ class DefaultController extends OrderAbstractController
         return array();
     }
 
-    /**
-     * @Route("/show-system-test-error-log", name="employees_show_system_test_error_log", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/show-system-log.html.twig")
-     */
+    #[Route(path: '/show-system-test-error-log', name: 'employees_show_system_test_error_log', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/show-system-log.html.twig')]
     public function showSystemTestLogAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -163,10 +157,8 @@ class DefaultController extends OrderAbstractController
         return array();
     }
 
-    /**
-     * @Route("/run-all-test", name="employees_run_test_all", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/show-run-test.html.twig")
-     */
+    #[Route(path: '/run-all-test', name: 'employees_run_test_all', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/show-run-test.html.twig')]
     public function runAllTestAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -243,10 +235,8 @@ class DefaultController extends OrderAbstractController
         //return array('testCmd' => $testCmd);
         exit();
     }
-    /**
-     * @Route("/run-test", name="employees_run_test", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/show-run-test.html.twig")
-     */
+    #[Route(path: '/run-test', name: 'employees_run_test', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/show-run-test.html.twig')]
     public function runTestAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -290,9 +280,8 @@ class DefaultController extends OrderAbstractController
     }
     /**
      * http://127.0.0.1/order/directory/run-test-ajax?testFile=UserTest.php
-     *
-     * @Route("/run-test-ajax", name="employees_run_test_ajax", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/run-test-ajax', name: 'employees_run_test_ajax', methods: ['GET'], options: ['expose' => true])]
     public function runTestAjaxAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -389,9 +378,7 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/dev-mode", name="employees_dev_mode", methods={"GET"})
-     */
+    #[Route(path: '/dev-mode', name: 'employees_dev_mode', methods: ['GET'])]
     public function runDevModeAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -415,71 +402,66 @@ class DefaultController extends OrderAbstractController
     }
 
 //    /**
-//     * @Route("/", name="employees_home")
-//     * @Template("AppUserdirectoryBundle/Default/home.html.twig")
-//     */
-//    public function indexAction()
-//    {
-//
-//        if(
-//            false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('login') );
-//        }
-//
-//        //$form = $this->createForm(new SearchType(),null);
-//
-//        //$form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
-//        //$search = $form->get('search')->getData();
-//
-//        //check for active access requests
-//        $accessreqs = $this->getActiveAccessReq();
-//
-//
-//        return array(
-//            'accessreqs' => count($accessreqs)
-//            //'form' => $form->createView(),
-//        );
-//    }
-//
-//    //check for active access requests
-//    public function getActiveAccessReq() {
-//        if( !$this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
-//            return null;
-//        }
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
-//        return $accessreqs;
-//    }
-
-
-//    /**
-//     * @Route("/admin", name="employees_admin")
-//     * @Template("AppUserdirectoryBundle/Default/index.html.twig")
-//     */
-//    public function adminAction()
-//    {
-//        $name = "This is an Employee Directory Admin Page!!!";
-//        return array('name' => $name);
-//    }
-//
-//
-//    /**
-//     * @Route("/hello/{name}", name="employees_hello")
-//     * @Template()
-//     */
-//    public function helloAction($name)
-//    {
-//        return array('name' => $name);
-//    }
-
-
+    //     * @Route("/", name="employees_home")
+    //     * @Template("AppUserdirectoryBundle/Default/home.html.twig")
+    //     */
+    //    public function indexAction()
+    //    {
+    //
+    //        if(
+    //            false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+    //            false == $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+    //        ){
+    //            return $this->redirect( $this->generateUrl('login') );
+    //        }
+    //
+    //        //$form = $this->createForm(new SearchType(),null);
+    //
+    //        //$form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+    //        //$search = $form->get('search')->getData();
+    //
+    //        //check for active access requests
+    //        $accessreqs = $this->getActiveAccessReq();
+    //
+    //
+    //        return array(
+    //            'accessreqs' => count($accessreqs)
+    //            //'form' => $form->createView(),
+    //        );
+    //    }
+    //
+    //    //check for active access requests
+    //    public function getActiveAccessReq() {
+    //        if( !$this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+    //            return null;
+    //        }
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
+    //        return $accessreqs;
+    //    }
+    //    /**
+    //     * @Route("/admin", name="employees_admin")
+    //     * @Template("AppUserdirectoryBundle/Default/index.html.twig")
+    //     */
+    //    public function adminAction()
+    //    {
+    //        $name = "This is an Employee Directory Admin Page!!!";
+    //        return array('name' => $name);
+    //    }
+    //
+    //
+    //    /**
+    //     * @Route("/hello/{name}", name="employees_hello")
+    //     * @Template()
+    //     */
+    //    public function helloAction($name)
+    //    {
+    //        return array('name' => $name);
+    //    }
     /**
      * https://collage.med.cornell.edu/order/directory/fix-author-generated-users/
-     *
-     * @Route("/fix-author-generated-users/", name="employees_fix-author-generated-users")
      */
+    #[Route(path: '/fix-author-generated-users/', name: 'employees_fix-author-generated-users')]
     public function fixAuthorGeneratedUsersAction()
     {
         exit("Not allowed. This is one time run script to fix added by for already generated users.");
@@ -556,9 +538,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * https://collage.med.cornell.edu/order/directory/fix-author-generated-users/
-     *
-     * @Route("/some-testing/", name="employees_some_testing")
      */
+    #[Route(path: '/some-testing/', name: 'employees_some_testing')]
     public function someTestingAction() {
 
         exit("disabled");
@@ -676,9 +657,7 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/login-testing/{username}/{password}/", name="employees_login_testing")
-     */
+    #[Route(path: '/login-testing/{username}/{password}/', name: 'employees_login_testing')]
     public function loginTestingAction( Request $request, $username, $password ) {
 
         exit("disabled");
@@ -890,9 +869,7 @@ class DefaultController extends OrderAbstractController
 
     }
 
-    /**
-     * @Route("/email-testing/", name="employees_email_testing")
-     */
+    #[Route(path: '/email-testing/', name: 'employees_email_testing')]
     public function emailTestingAction() {
         exit('disabled');
 //        $inputEmails = "e1,e2";
@@ -955,9 +932,7 @@ class DefaultController extends OrderAbstractController
 
     }
 
-    /**
-     * @Route("/email-testing-plain")
-     */
+    #[Route(path: '/email-testing-plain')]
     public function sendEmail(MailerInterface $mailer): Response
     {
         //dump($mailer);
@@ -985,9 +960,7 @@ class DefaultController extends OrderAbstractController
 
 
     //testing getCronJobFullNameLinux
-    /**
-     * @Route("/some-other-testing")
-     */
+    #[Route(path: '/some-other-testing')]
     public function someTestAction(MailerInterface $mailer): Response
     {
         //dump($mailer);
@@ -1006,9 +979,7 @@ class DefaultController extends OrderAbstractController
         exit('res='.$res);
     }
 
-    /**
-     * @Route("/get-ad-users")
-     */
+    #[Route(path: '/get-ad-users')]
     public function getADUsersAction()
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -1056,9 +1027,7 @@ class DefaultController extends OrderAbstractController
         exit('111');
     }
 
-    /**
-     * @Route("/check-ad-users")
-     */
+    #[Route(path: '/check-ad-users')]
     public function checkUsersADAction()
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -1074,9 +1043,7 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/users-show-to-inst")
-     */
+    #[Route(path: '/users-show-to-inst')]
     public function showUsersWithShowToInstitutionAction()
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -1115,9 +1082,7 @@ class DefaultController extends OrderAbstractController
 
         exit('111');
     }
-    /**
-     * @Route("/show-users-without-phi")
-     */
+    #[Route(path: '/show-users-without-phi')]
     public function showUSersNoPhiScopeAction()
     {
         exit('not allowed');

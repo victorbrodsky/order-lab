@@ -79,10 +79,9 @@ class AccessRequestController extends OrderAbstractController
 
     /**
      * This url "/access-requests/new/create" is set in security.yml as access_denied_url parameter
-     *
-     * @Route("/access-requests/new/create", name="employees_access_request_new_plain", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
+    #[Route(path: '/access-requests/new/create', name: 'employees_access_request_new_plain', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreatePlainAction(Request $request)
     {
         return $this->accessRequestCreatePlain($request);
@@ -228,10 +227,9 @@ class AccessRequestController extends OrderAbstractController
 
     /**
      * Used to reqdirect from LoginSuccessHandler if a user has role roleBanned or roleUnapproved
-     *
-     * @Route("/access-requests/new", name="employees_access_request_new", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
+    #[Route(path: '/access-requests/new', name: 'employees_access_request_new', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreateAction(Request $request)
     {
 
@@ -460,30 +458,28 @@ class AccessRequestController extends OrderAbstractController
     
 
 //    /**
-//     * when the user clicks "Yes" in answer to "would you like to request access to this site?",
-//     * show a page with the following fields
-//     * (all are from http://c.med.cornell.edu/order/scan/account-requests/new except
-//     * the name of the field "Reason for account request" is changed to "Reason for access request)
-//     *
-//     * @Route("/access-requests/details/new", name="employees_access_request_details_new", methods={"GET"})
-//     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-//     */
-//    public function accessRequestDetailsAction()
-//    {
-//        $user = $this->getUser();
-//        $id = $user->getId();
-//        $sitename = $this->siteName;
-//
-//        return $this->accessRequestCreate($id,$sitename);
-//
-//    }
-
-     /**
-      * Submit Access Request. On click button: Yes, please!
-      *
-      * @Route("/access-requests/new/pending", name="employees_access_request_create", methods={"POST"})
-      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-      */
+    //     * when the user clicks "Yes" in answer to "would you like to request access to this site?",
+    //     * show a page with the following fields
+    //     * (all are from http://c.med.cornell.edu/order/scan/account-requests/new except
+    //     * the name of the field "Reason for account request" is changed to "Reason for access request)
+    //     *
+    //     * @Route("/access-requests/details/new", name="employees_access_request_details_new", methods={"GET"})
+    //     * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
+    //     */
+    //    public function accessRequestDetailsAction()
+    //    {
+    //        $user = $this->getUser();
+    //        $id = $user->getId();
+    //        $sitename = $this->siteName;
+    //
+    //        return $this->accessRequestCreate($id,$sitename);
+    //
+    //    }
+    /**
+     * Submit Access Request. On click button: Yes, please!
+     */
+    #[Route(path: '/access-requests/new/pending', name: 'employees_access_request_create', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestAction(Request $request)
     {
         $user = $this->getUser();
@@ -714,40 +710,37 @@ class AccessRequestController extends OrderAbstractController
     }
 
 //    public function updateUserMobilePhoneByAccessRequest($user,$accReq) {
-//        $userInfo = $user->getUserInfo();
-//        $accessRequestMobilePhone = $accReq->getMobilePhone();
-//        if( $accessRequestMobilePhone != $userInfo->getPreferredMobilePhone() ) {
-//            $userInfo->setPreferredMobilePhone($accessRequestMobilePhone);
-//        }
-//        $accessRequestMobilePhoneVerifyCode = $accReq->getMobilePhoneVerifyCode();
-//        if( $accessRequestMobilePhoneVerifyCode != $userInfo->getMobilePhoneVerifyCode() ) {
-//            $userInfo->setMobilePhoneVerifyCode($accessRequestMobilePhoneVerifyCode);
-//        }
-//        $accessRequestMobilePhoneVerifyCodeDate = $accReq->getMobilePhoneVerifyCodeDate();
-//        if( $accessRequestMobilePhoneVerifyCodeDate != $userInfo->getMobilePhoneVerifyCodeDate() ) {
-//            $userInfo->setMobilePhoneVerifyCodeDate($accessRequestMobilePhoneVerifyCodeDate);
-//        }
-//        $accessRequestPreferredMobilePhoneVerified = $accReq->getPreferredMobilePhoneVerified();
-//        if( $accessRequestPreferredMobilePhoneVerified != $userInfo->getPreferredMobilePhoneVerified() ) {
-//            $userInfo->setPreferredMobilePhoneVerified($accessRequestPreferredMobilePhoneVerified);
-//        }
-//    }
-
-//    public function reLoginUser($sitename) {
-//        echo "relogin sitename=".$sitename."<br>";
-//        $this->addFlash(
-//            'warning',
-//            "You must re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
-//        );
-//        return $this->redirect( $this->generateUrl('main_common_home') );
-//    }
-
+    //        $userInfo = $user->getUserInfo();
+    //        $accessRequestMobilePhone = $accReq->getMobilePhone();
+    //        if( $accessRequestMobilePhone != $userInfo->getPreferredMobilePhone() ) {
+    //            $userInfo->setPreferredMobilePhone($accessRequestMobilePhone);
+    //        }
+    //        $accessRequestMobilePhoneVerifyCode = $accReq->getMobilePhoneVerifyCode();
+    //        if( $accessRequestMobilePhoneVerifyCode != $userInfo->getMobilePhoneVerifyCode() ) {
+    //            $userInfo->setMobilePhoneVerifyCode($accessRequestMobilePhoneVerifyCode);
+    //        }
+    //        $accessRequestMobilePhoneVerifyCodeDate = $accReq->getMobilePhoneVerifyCodeDate();
+    //        if( $accessRequestMobilePhoneVerifyCodeDate != $userInfo->getMobilePhoneVerifyCodeDate() ) {
+    //            $userInfo->setMobilePhoneVerifyCodeDate($accessRequestMobilePhoneVerifyCodeDate);
+    //        }
+    //        $accessRequestPreferredMobilePhoneVerified = $accReq->getPreferredMobilePhoneVerified();
+    //        if( $accessRequestPreferredMobilePhoneVerified != $userInfo->getPreferredMobilePhoneVerified() ) {
+    //            $userInfo->setPreferredMobilePhoneVerified($accessRequestPreferredMobilePhoneVerified);
+    //        }
+    //    }
+    //    public function reLoginUser($sitename) {
+    //        echo "relogin sitename=".$sitename."<br>";
+    //        $this->addFlash(
+    //            'warning',
+    //            "You must re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+    //        );
+    //        return $this->redirect( $this->generateUrl('main_common_home') );
+    //    }
     /**
      * No, thanks.
-     *
-     * @Route("/no-thanks-access-requests/{sitename}", name="employees_no_thanks_accessrequest", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/no-thanks-access-requests/{sitename}', name: 'employees_no_thanks_accessrequest', methods: ['GET'])]
+    #[Template]
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
         $session = $request->getSession();
@@ -762,10 +755,9 @@ class AccessRequestController extends OrderAbstractController
 
     /**
      * Lists all Access Request.
-     *
-     * @Route("/access-requests", name="employees_accessrequest_list", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig")
      */
+    #[Route(path: '/access-requests', name: 'employees_accessrequest_list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     public function accessRequestIndexAction(Request $request)
     {
         if( false === $this->isGranted($this->roleEditor) ) {
@@ -836,10 +828,8 @@ class AccessRequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/access-requests/change-status/{id}/{status}", name="employees_accessrequest_change", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
-     */
+    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'employees_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
 
@@ -1021,10 +1011,8 @@ class AccessRequestController extends OrderAbstractController
 
 
     //access request management page with the process to force the admin to select the "PHI Scope" Institution(s) and "Role(s)"
-    /**
-     * @Route("/access-requests/{id}", name="employees_accessrequest_management", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
+    #[Route(path: '/access-requests/{id}', name: 'employees_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementAction( Request $request, $id )
     {
 
@@ -1092,10 +1080,8 @@ class AccessRequestController extends OrderAbstractController
         return $userViewArr;
     }
 
-    /**
-     * @Route("/access-requests/submit/{id}", name="employees_accessrequest_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
+    #[Route(path: '/access-requests/submit/{id}', name: 'employees_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementSubmitAction( Request $request, $id )
     {
 
@@ -1209,10 +1195,8 @@ class AccessRequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/deny-access-request/{userId}", name="employees_accessrequest_remove", methods={"GET"}, requirements={"userId" = "\d+"})
-     * @Template()
-     */
+    #[Route(path: '/deny-access-request/{userId}', name: 'employees_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Template]
     public function accessRequestRemoveAction(Request $request,$userId)
     {
 
@@ -1225,10 +1209,8 @@ class AccessRequestController extends OrderAbstractController
         return $this->redirect($this->generateUrl($this->siteName.'_accessrequest_list'));
     }
 
-    /**
-     * @Route("/revoke-access-authorization/{userId}", name="employees_authorization_remove", methods={"GET"}, requirements={"userId" = "\d+"})
-     * @Template()
-     */
+    #[Route(path: '/revoke-access-authorization/{userId}', name: 'employees_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Template]
     public function authorizationRemoveAction(Request $request, $userId)
     {
 
@@ -1275,10 +1257,8 @@ class AccessRequestController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/authorization-user-manager/{id}", name="employees_authorization_user_management", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
+    #[Route(path: '/authorization-user-manager/{id}', name: 'employees_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementAction( Request $request, $id )
     {
 
@@ -1331,10 +1311,8 @@ class AccessRequestController extends OrderAbstractController
         return $userViewArr;
     }
 
-    /**
-     * @Route("/authorization-user-manager/submit/{id}", name="employees_authorization_user_management_submit", methods={"POST"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig")
-     */
+    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'employees_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
 
@@ -1407,10 +1385,8 @@ class AccessRequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/authorized-users/", name="employees_authorized_users", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig")
-     */
+    #[Route(path: '/authorized-users/', name: 'employees_authorized_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig')]
     public function authorizedUsersAction( Request $request )
     {
 
@@ -1519,10 +1495,8 @@ class AccessRequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/add-authorized-user/", name="employees_add_authorized_user", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
-     */
+    #[Route(path: '/add-authorized-user/', name: 'employees_add_authorized_user', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig')]
     public function addAuthorizedUserAction( Request $request )
     {
 
@@ -1647,27 +1621,23 @@ class AccessRequestController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit", methods={"POST"})
-//     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
-//     */
-//    public function addAuthorizedUserSubmitAction( Request $request )
-//    {
-//
-//        if (false === $this->isGranted($this->roleEditor)) {
-//            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
-//        }
-//
-//        //echo "sitename=".$this->siteName."<br>";
-//
-//        exit("submit a new autorized user");
-//
-//    }
-
-
-    /**
-     * @Route("/generated-users/", name="employees_generated_users", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/generated_users.html.twig")
-     */
+    //     * @Route("/add-authorized-user/submit/", name="employees_add_authorized_user_submit", methods={"POST"})
+    //     * @Template("AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig")
+    //     */
+    //    public function addAuthorizedUserSubmitAction( Request $request )
+    //    {
+    //
+    //        if (false === $this->isGranted($this->roleEditor)) {
+    //            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+    //        }
+    //
+    //        //echo "sitename=".$this->siteName."<br>";
+    //
+    //        exit("submit a new autorized user");
+    //
+    //    }
+    #[Route(path: '/generated-users/', name: 'employees_generated_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/generated_users.html.twig')]
     public function generatedUsersAction(Request $request)
     {
 //        if (false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
@@ -1732,10 +1702,8 @@ class AccessRequestController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/generated-user/{id}", name="employees_generated_user_management", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig")
-     */
+    #[Route(path: '/generated-user/{id}', name: 'employees_generated_user_management', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig')]
     public function generatedUserManagementAction(Request $request, User $user)
     {
         if (false === $this->isGranted($this->roleEditor)) {
@@ -1891,9 +1859,7 @@ class AccessRequestController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/generated-user/approve/{id}", name="employees_generated_user_approve", methods={"GET","POST"})
-     */
+    #[Route(path: '/generated-user/approve/{id}', name: 'employees_generated_user_approve', methods: ['GET', 'POST'])]
     public function generatedUserApproveAction(Request $request, User $user)
     {
         if (false === $this->isGranted($this->roleEditor)) {

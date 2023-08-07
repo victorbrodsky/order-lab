@@ -53,10 +53,8 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultControllerTest extends OrderAbstractController
 {
     
-    /**
-     * @Route("/about-test", name="deidentifier_about_test_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about-test', name: 'deidentifier_about_test_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //Testing IDENTITY comparing to AUTO

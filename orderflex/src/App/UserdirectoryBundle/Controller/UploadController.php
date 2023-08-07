@@ -44,9 +44,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class UploadController extends OrderAbstractController {
 
     //Method("DELETE") causes problem: no permission
-    /**
-     * @Route("/file-delete", name="employees_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'employees_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         //exit('deleteFileAction employees exit');
         return $this->deleteFileMethod($request);
@@ -217,9 +215,7 @@ class UploadController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/file-download/{id}/{eventtype}", name="employees_file_download", methods={"GET"}, requirements={"id" = "\d+"})
-     */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'employees_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request, $id, $eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('employees.sitename'),$eventtype);
     }
@@ -294,9 +290,7 @@ class UploadController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="employees_file_view", methods={"GET"}, requirements={"id" = "\d+"})
-     */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'employees_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction( Request $request, $id, $eventtype=null, $viewType=null ) {
         return $this->viewFileMethod($request,$id,$this->getParameter('employees.sitename'),$eventtype,$viewType);
     }
@@ -468,10 +462,9 @@ class UploadController extends OrderAbstractController {
 
     /**
      * Upload "Import Users" excel file for processing
-     *
-     * @Route("/import-users/spreadsheet ", name="employees_import_users_excel", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/Admin/import-users.html.twig")
      */
+    #[Route(path: '/import-users/spreadsheet ', name: 'employees_import_users_excel', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/Admin/import-users.html.twig')]
     public function importExcelUsersFileAction( Request $request )
     {
 
@@ -527,9 +520,7 @@ class UploadController extends OrderAbstractController {
         );
     }
 
-    /**
-     * @Route("/import-users/template/", name="employees_import_users_template_excel", methods={"GET"})
-     */
+    #[Route(path: '/import-users/template/', name: 'employees_import_users_template_excel', methods: ['GET'])]
     public function importExcelUsersTemplateFileAction() {
 
         $rootDir = $this->container->get('kernel')->getRootDir();

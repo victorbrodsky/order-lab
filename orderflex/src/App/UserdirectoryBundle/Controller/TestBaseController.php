@@ -18,16 +18,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
 // 127.0.0.1/order/index_dev.php/directory/test/container/testbase/
-/**
- * @Route("/test")
- */
+#[Route(path: '/test')]
 class TestBaseController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/container/testbase/", name="user_testbase_container")
-     * @Template("AppUserdirectoryBundle/Testing/testing.html.twig")
-     */
+    #[Route(path: '/container/testbase/', name: 'user_testbase_container')]
+    #[Template('AppUserdirectoryBundle/Testing/testing.html.twig')]
     public function testbaseContainerAction() {
     //public function testContainerAction( CallLogUtil $calllogUtil ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

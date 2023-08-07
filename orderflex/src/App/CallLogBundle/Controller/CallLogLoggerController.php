@@ -37,18 +37,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class CallLogLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="calllog_logger", methods={"GET"})
-     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'calllog_logger', methods: ['GET'])]
+    #[Template('AppCallLogBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CALLLOG_ADMIN") ){
@@ -62,10 +60,8 @@ class CallLogLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="calllog_logger_user_all", methods={"GET"})
-     * @Template("AppCallLogBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'calllog_logger_user_all', methods: ['GET'])]
+    #[Template('AppCallLogBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -90,23 +86,20 @@ class CallLogLoggerController extends LoggerController
 
 
 //    /**
-//     * Generation Log with eventTypes = "Generate Vacation Request"
-//     *
-//     * @Route("/generation-log/", name="calllog_generation_log", methods={"GET"})
-//     * @Template("AppCallLogBundle/Logger/index.html.twig")
-//     */
-//    public function generationLogAction(Request $request)
-//    {
-//
-//    }
-
-
+    //     * Generation Log with eventTypes = "Generate Vacation Request"
+    //     *
+    //     * @Route("/generation-log/", name="calllog_generation_log", methods={"GET"})
+    //     * @Template("AppCallLogBundle/Logger/index.html.twig")
+    //     */
+    //    public function generationLogAction(Request $request)
+    //    {
+    //
+    //    }
     /**
      * Generation Log with eventTypes = "New Call Log Book Entry Submitted" and users = current user id
-     *
-     * @Route("/event-log-per-user-per-event-type/", name="calllog_my_generation_log", methods={"GET"})
-     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-user-per-event-type/', name: 'calllog_my_generation_log', methods: ['GET'])]
+    #[Template('AppCallLogBundle/Logger/index.html.twig')]
     public function myGenerationLogAction(Request $request) {
         if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -342,10 +335,9 @@ class CallLogLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "New Call Log Book Entry Submitted" and users = current user id
-     *
-     * @Route("/event-log-per-object/", name="calllog_event-log-per-object_log", methods={"GET"})
-     * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-object/', name: 'calllog_event-log-per-object_log', methods: ['GET'])]
+    #[Template('AppCallLogBundle/Logger/index.html.twig')]
     public function calllogEventLogPerObjectAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CALLLOG_USER")) {

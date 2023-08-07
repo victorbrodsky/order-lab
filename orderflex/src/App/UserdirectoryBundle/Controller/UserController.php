@@ -103,17 +103,15 @@ class UserController extends OrderAbstractController
 {
 
 //    public static function getSubscribedServices()
-//    {
-//        return parent::getSubscribedServices();
-//    }
-
+    //    {
+    //        return parent::getSubscribedServices();
+    //    }
     /**
      * Template("AppUserdirectoryBundle/Default/about.html.twig")
      *
-     *
-     * @Route("/about", name="employees_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
+    #[Route(path: '/about', name: 'employees_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //$userServiceUtil = $this->container->get('user_service_utility');
@@ -244,54 +242,49 @@ class UserController extends OrderAbstractController
     }
 
 //    //temp to test comment
-//    public function setHolderDocumentsDql($dql,$commentclass) {
-//
-//        switch( $commentclass ) {
-//            case "AppFellAppBundle:FellowshipApplication":
-//                $str = "comment.coverLetters";
-//                break;
-//            case "AppUserdirectoryBundle:Examination":
-//                $str = "comment.scores";
-//                break;
-////            case "AppTranslationalResearchBundle:TransResSiteParameters":
-////                $str = "comment.transresLogo";
-////                break;
-//            default:
-//                $str = "comment.documents";
-//        }
-//
-//        //echo "dql str=".$str."<br>";
-//
-//        $dql->innerJoin($str, "documents");
-//    }
-
-
-//    /**
-//     * The same boss
-//     *
-//     * @Route("/users-by-ids", name="employees_users-by-ids")
-//     */
-//    public function getUsersListAction(Request $request, $idsArr) {
-//
-//        //user search
-//        $params = array('time'=>'current_only','objectname'=>'usersbyids','objectid'=>$idsArr,'excludeCurrentUser'=>true);
-//        $res = $this->indexUser($request,$params);
-//        $pagination = $res['entities'];
-//
-//        return $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
-//            array(
-//                'entities' => $pagination,
-//                'sitename' => $this->getParameter('employees.sitename')
-//            )
-//        );
-//    }
-
-
+    //    public function setHolderDocumentsDql($dql,$commentclass) {
+    //
+    //        switch( $commentclass ) {
+    //            case "AppFellAppBundle:FellowshipApplication":
+    //                $str = "comment.coverLetters";
+    //                break;
+    //            case "AppUserdirectoryBundle:Examination":
+    //                $str = "comment.scores";
+    //                break;
+    ////            case "AppTranslationalResearchBundle:TransResSiteParameters":
+    ////                $str = "comment.transresLogo";
+    ////                break;
+    //            default:
+    //                $str = "comment.documents";
+    //        }
+    //
+    //        //echo "dql str=".$str."<br>";
+    //
+    //        $dql->innerJoin($str, "documents");
+    //    }
+    //    /**
+    //     * The same boss
+    //     *
+    //     * @Route("/users-by-ids", name="employees_users-by-ids")
+    //     */
+    //    public function getUsersListAction(Request $request, $idsArr) {
+    //
+    //        //user search
+    //        $params = array('time'=>'current_only','objectname'=>'usersbyids','objectid'=>$idsArr,'excludeCurrentUser'=>true);
+    //        $res = $this->indexUser($request,$params);
+    //        $pagination = $res['entities'];
+    //
+    //        return $this->render('AppUserdirectoryBundle/Admin/users-content.html.twig',
+    //            array(
+    //                'entities' => $pagination,
+    //                'sitename' => $this->getParameter('employees.sitename')
+    //            )
+    //        );
+    //    }
     /**
      * The same services
-     *
-     * @Route("/my-objects", name="employees_my_objects")
      */
+    #[Route(path: '/my-objects', name: 'employees_my_objects')]
     public function myObjectsAction(Request $request) {        
         
         $tablename = $request->get('tablename');
@@ -342,10 +335,9 @@ class UserController extends OrderAbstractController
 
     /**
      * In the "List Current" menu, add the top choice called "Common Locations". CLicking it should list all "orphan" locations that are not attached to any users.
-     *
-     * @Route("/common-locations", name="employees_list_common_locations")
-     * @Template("AppUserdirectoryBundle/Location/common-locations.html.twig")
      */
+    #[Route(path: '/common-locations', name: 'employees_list_common_locations')]
+    #[Template('AppUserdirectoryBundle/Location/common-locations.html.twig')]
     public function listCommonLocationsAction(Request $request) {
 
         $filter = trim((string)$request->get('filter') );
@@ -363,9 +355,8 @@ class UserController extends OrderAbstractController
 
     /**
      * Search for the users with the same object. For example, the same institution, service, room, academic title, appointment title
-     *
-     * @Route("/search-users", name="employees_search_same_object")
      */
+    #[Route(path: '/search-users', name: 'employees_search_same_object')]
     public function searchSameObjectAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -441,10 +432,9 @@ class UserController extends OrderAbstractController
 
     /**
      * Show home page
-     *
-     * @Route("/", name="employees_home")
-     * @Template("AppUserdirectoryBundle/Default/home.html.twig")
      */
+    #[Route(path: '/', name: 'employees_home')]
+    #[Template('AppUserdirectoryBundle/Default/home.html.twig')]
     public function indexAction( Request $request ) {
         //exit("employees_home");
 
@@ -556,11 +546,9 @@ class UserController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/users", name="employees_listusers", methods={"GET"})
-     * @Route("/users/previous", name="employees_listusers_previous", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
-     */
+    #[Route(path: '/users', name: 'employees_listusers', methods: ['GET'])]
+    #[Route(path: '/users/previous', name: 'employees_listusers_previous', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/users.html.twig')]
     public function indexUserAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -1608,128 +1596,121 @@ class UserController extends OrderAbstractController
     }
 
 //    public function pendingAdminReviewAction()
-//    {
-//
-//        //testing
-//        //$response = new Response();
-//        //$response->setContent(null);
-//        //return $response;
-//
-//        $pending = null;
-//
-//        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-//            $response = new Response();
-//            $response->setContent($pending);
-//            return $response;
-//        }
-//
-//        $limitFlag = false;
-//
-//        //$filter=null, $time='all', $limitFlag=true, $search=null, $userid=null
-////        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
-////        $res = $this->indexUser($request,$params);
-////        $pendingOld = count($res['entities']);
-////        echo "pendingOld=".$pendingOld."<br>";
-//
-//
-//        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-//        $criteriastr = "(".
-//            "administrativeTitles.status = ".$pendingStatus.
-//            " OR appointmentTitles.status = ".$pendingStatus.
-//            " OR medicalTitles.status = ".$pendingStatus.
-//            //" OR locations.status = ".$pendingStatus.
-//            ")";
-//
-//        //current_only
-//        $curdate = date("Y-m-d", time());
-//        $criteriastr .= " AND (";
-//        $criteriastr .= "employmentStatus.id IS NULL";
-//        $criteriastr .= " OR ";
-//        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
-//        $criteriastr .= ")";
-//
-//        //filter out system user
-//        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
-//
-//        //filter out Pathology Fellowship Applicants
-//        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
-//
-//        if( $criteriastr ) {
-//            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
-//        }
-//
-//        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $repository = $this->getDoctrine()->getRepository(User::class);
-//        $dql = $repository->createQueryBuilder('user');
-//
-//        $dql->select('COUNT(DISTINCT user.id)');
-//        //$dql->select('user');
-//
-//        //$dql->select('COUNT(user.id)');
-//
-//        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
-//        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
-//        $dql->leftJoin("user.medicalTitles", "medicalTitles");
-//        $dql->leftJoin("user.locations", "locations");
-//        $dql->leftJoin("user.employmentStatus", "employmentStatus");
-//        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-//        //$dql->orderBy('user.id');
-//
-//
-////        $qb = $em->createQueryBuilder();
-////        $qb->select($qb->expr()->countDistinct('user.id'));
-////        $qb->from('AppUserdirectoryBundle:User','user');
-////        $qb->where($totalcriteriastr);
-////        //$qb->groupBy('user');
-////        $qb->leftJoin("user.administrativeTitles", "administrativeTitles");
-////        $qb->leftJoin("user.appointmentTitles", "appointmentTitles");
-////        $qb->leftJoin("user.medicalTitles", "medicalTitles");
-////        $qb->leftJoin("user.locations", "locations");
-////        $qb->leftJoin("user.employmentStatus", "employmentStatus");
-////        $qb->leftJoin("employmentStatus.employmentType", "employmentType");
-////        $count = $qb->getQuery()->getSingleScalarResult();
-////        echo "count=".$count."<br>";
-//        //print_r($count);
-//
-//        //echo "totalcriteriastr=".$totalcriteriastr."<br>";
-//
-//        $dql->where($totalcriteriastr);
-//        $query = $em->createQuery($dql);
-//
-//        //$pending = 0;
-//        //$pending = $query->getSingleScalarResult();
-//        //$pending = $query->getOneOrNullResult();
-//        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
-//
-//        //$pendings = $query->getResult();
-//        //$pending = count($pendings);
-//
-//        //dump($pending);
-//        //exit('111');
-//
-//        $pending = 0;
-//        return $pending;
-//
-//        //echo "pending=".$pending."<br>";
-//
-//        $response = new Response();
-//        $response->setContent($pending);
-//
-//        return $response;
-//    }
-
-
-
-
-
+    //    {
+    //
+    //        //testing
+    //        //$response = new Response();
+    //        //$response->setContent(null);
+    //        //return $response;
+    //
+    //        $pending = null;
+    //
+    //        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+    //            $response = new Response();
+    //            $response->setContent($pending);
+    //            return $response;
+    //        }
+    //
+    //        $limitFlag = false;
+    //
+    //        //$filter=null, $time='all', $limitFlag=true, $search=null, $userid=null
+    ////        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
+    ////        $res = $this->indexUser($request,$params);
+    ////        $pendingOld = count($res['entities']);
+    ////        echo "pendingOld=".$pendingOld."<br>";
+    //
+    //
+    //        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+    //        $criteriastr = "(".
+    //            "administrativeTitles.status = ".$pendingStatus.
+    //            " OR appointmentTitles.status = ".$pendingStatus.
+    //            " OR medicalTitles.status = ".$pendingStatus.
+    //            //" OR locations.status = ".$pendingStatus.
+    //            ")";
+    //
+    //        //current_only
+    //        $curdate = date("Y-m-d", time());
+    //        $criteriastr .= " AND (";
+    //        $criteriastr .= "employmentStatus.id IS NULL";
+    //        $criteriastr .= " OR ";
+    //        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+    //        $criteriastr .= ")";
+    //
+    //        //filter out system user
+    //        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+    //
+    //        //filter out Pathology Fellowship Applicants
+    //        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+    //
+    //        if( $criteriastr ) {
+    //            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+    //        }
+    //
+    //        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $repository = $this->getDoctrine()->getRepository(User::class);
+    //        $dql = $repository->createQueryBuilder('user');
+    //
+    //        $dql->select('COUNT(DISTINCT user.id)');
+    //        //$dql->select('user');
+    //
+    //        //$dql->select('COUNT(user.id)');
+    //
+    //        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+    //        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+    //        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+    //        $dql->leftJoin("user.locations", "locations");
+    //        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+    //        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+    //        //$dql->orderBy('user.id');
+    //
+    //
+    ////        $qb = $em->createQueryBuilder();
+    ////        $qb->select($qb->expr()->countDistinct('user.id'));
+    ////        $qb->from('AppUserdirectoryBundle:User','user');
+    ////        $qb->where($totalcriteriastr);
+    ////        //$qb->groupBy('user');
+    ////        $qb->leftJoin("user.administrativeTitles", "administrativeTitles");
+    ////        $qb->leftJoin("user.appointmentTitles", "appointmentTitles");
+    ////        $qb->leftJoin("user.medicalTitles", "medicalTitles");
+    ////        $qb->leftJoin("user.locations", "locations");
+    ////        $qb->leftJoin("user.employmentStatus", "employmentStatus");
+    ////        $qb->leftJoin("employmentStatus.employmentType", "employmentType");
+    ////        $count = $qb->getQuery()->getSingleScalarResult();
+    ////        echo "count=".$count."<br>";
+    //        //print_r($count);
+    //
+    //        //echo "totalcriteriastr=".$totalcriteriastr."<br>";
+    //
+    //        $dql->where($totalcriteriastr);
+    //        $query = $em->createQuery($dql);
+    //
+    //        //$pending = 0;
+    //        //$pending = $query->getSingleScalarResult();
+    //        //$pending = $query->getOneOrNullResult();
+    //        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+    //
+    //        //$pendings = $query->getResult();
+    //        //$pending = count($pendings);
+    //
+    //        //dump($pending);
+    //        //exit('111');
+    //
+    //        $pending = 0;
+    //        return $pending;
+    //
+    //        //echo "pending=".$pending."<br>";
+    //
+    //        $response = new Response();
+    //        $response->setContent($pending);
+    //
+    //        return $response;
+    //    }
     ////////////////////// Create New User //////////////////////
-    /**
-     * @Route("/user/new", name="employees_new_user", methods={"GET"})
-     * @Route("/user/new/clone/{id}", name="employees_new_user_clone", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/user/new', name: 'employees_new_user', methods: ['GET'])]
+    #[Route(path: '/user/new/clone/{id}', name: 'employees_new_user_clone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function newUserAction(Request $request,$id=null)
     {
 
@@ -1855,10 +1836,9 @@ class UserController extends OrderAbstractController
 
     /**
      * url: http://localhost/order/directory/user/new/simple-ajax-form/
-     *
-     * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", methods={"GET"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/new_simple_user.html.twig")
      */
+    #[Route(path: '/user/new/simple-ajax-form/', name: 'employees_new_simple_user', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/new_simple_user.html.twig')]
     public function newSimpleUserAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -1991,9 +1971,8 @@ class UserController extends OrderAbstractController
     }
     /**
      * Test: http://127.0.0.1/order/directory/get-map-email-usernametype-ajax
-     *
-     * @Route("/get-map-email-usernametype-ajax/", name="employees_get_map_email_usernametype", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/get-map-email-usernametype-ajax/', name: 'employees_get_map_email_usernametype', methods: ['GET'], options: ['expose' => true])]
     public function getMapEmailUsernameTypeAction(Request $request)
     {
         if (false === $this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -2024,9 +2003,8 @@ class UserController extends OrderAbstractController
     }
     /**
      * Test: http://127.0.0.1/order/directory/search-user-ldap-ajax/?searchvalue=oli2002&type=primaryPublicUserId
-     *
-     * @Route("/search-user-ldap-ajax/", name="employees_search_user_ldap_ajax", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/search-user-ldap-ajax/', name: 'employees_search_user_ldap_ajax', methods: ['GET'], options: ['expose' => true])]
     public function searchUserLdapAjaxAction(Request $request)
     {
         if (false === $this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -2136,9 +2114,8 @@ class UserController extends OrderAbstractController
     }
     /**
      * {"GET", "POST"}
-     *
-     * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", methods={"POST"}, options={"expose"=true})
      */
+    #[Route(path: '/add-new-user-ajax/', name: 'employees_add_new_user_ajax', methods: ['POST'], options: ['expose' => true])]
     public function addNewUserAjaxAction(Request $request)
     {
         if (false === $this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -2560,10 +2537,8 @@ class UserController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/user/new", name="employees_create_user", methods={"POST"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/user/new', name: 'employees_create_user', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function createUserAction( Request $request )
     {
         return $this->createUser($request);
@@ -2733,17 +2708,15 @@ class UserController extends OrderAbstractController
     }
 
 //    protected function getEngine()
-//    {
-//        return $this->getParameter('fos_user.template.engine');
-//    }
+    //    {
+    //        return $this->getParameter('fos_user.template.engine');
+    //    }
     ////////////////////// EOF Create New User //////////////////////
-
-
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="employees_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/{id}', name: 'employees_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id )
     {
 //        $user = $this->getUser();
@@ -2850,10 +2823,9 @@ class UserController extends OrderAbstractController
     
     /**
      * This is testing custom hydration: not effective for a single entity
-     * 
-     * @Route("/user/optimized/customh/{id}", name="employees_showuser_optimized_customh", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/optimized/customh/{id}', name: 'employees_showuser_optimized_customh', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedCustomhAction(Request $request, $id)
     {
         //$secUtil = $this->container->get('user_security_utility');
@@ -2934,10 +2906,9 @@ class UserController extends OrderAbstractController
 
     /**
      * Second part of the user view profile
-     * 
-     * @Route("/user/only/{id}", name="employees_showuser_only", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user_only.html.twig")
      */
+    #[Route(path: '/user/only/{id}', name: 'employees_showuser_only', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user_only.html.twig')]
     public function showOnlyUserAction(Request $request, $id)
     {
         //$secUtil = $this->container->get('user_security_utility');
@@ -2957,9 +2928,8 @@ class UserController extends OrderAbstractController
 
     /**
      * Second part of the user view profile
-     *
-     * @Route("/user/only-ajax/", name="employees_showuser_only_ajax", methods={"GET","POST"}, options={"expose"=true})
      */
+    #[Route(path: '/user/only-ajax/', name: 'employees_showuser_only_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function showOnlyAjaxUserAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -2981,11 +2951,10 @@ class UserController extends OrderAbstractController
 
     /**
      * route "employees_showuser_object" is the old user profile view (slow)
-     * 
-     * @Route("/user/show/{id}", name="employees_showuser_notstrict", methods={"GET"})
-     * @Route("/user/object/{id}", name="employees_showuser_object", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
+    #[Route(path: '/user/show/{id}', name: 'employees_showuser_notstrict', methods: ['GET'])]
+    #[Route(path: '/user/object/{id}', name: 'employees_showuser_object', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function showUserAction(Request $request, $id)
     {
         //$secUtil = $this->container->get('user_security_utility');
@@ -3096,10 +3065,8 @@ class UserController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="employees_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'employees_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -3345,10 +3312,9 @@ class UserController extends OrderAbstractController
 
     /**
      * //Method("PUT")
-     *
-     * @Route("/update-user-profile/{id}", name="employees_user_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
      */
+    #[Route(path: '/update-user-profile/{id}', name: 'employees_user_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -4416,10 +4382,9 @@ class UserController extends OrderAbstractController
 
     /**
      * Generate users from excel
-     *
-     * @Route("/user/generate", name="generate_users", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
      */
+    #[Route(path: '/user/generate', name: 'generate_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Admin/users.html.twig')]
     public function generateUsersAction()
     {
 
@@ -4475,10 +4440,8 @@ class UserController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/lockunlock/change/{id}/{status}", name="employees_lockunlock_change", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
-     */
+    #[Route(path: '/lockunlock/change/{id}/{status}', name: 'employees_lockunlock_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if (false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
@@ -4830,10 +4793,8 @@ class UserController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/user/save-avatar", name="employees_save_avatar", methods={"POST"})
-     * @Template("AppUserdirectoryBundle/Admin/users.html.twig")
-     */
+    #[Route(path: '/user/save-avatar', name: 'employees_save_avatar', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/Admin/users.html.twig')]
     public function saveAvatarAction(Request $request)
     {
 
@@ -4926,10 +4887,8 @@ class UserController extends OrderAbstractController
         //return $this->redirect($this->generateUrl('employees_showuser', array('id' => $id)));
     }
 
-    /**
-     * @Route("/user/impersonate/{id}", name="employees_user_impersonate", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
-     */
+    #[Route(path: '/user/impersonate/{id}', name: 'employees_user_impersonate', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function impersonateUserAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -4962,10 +4921,8 @@ class UserController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/user/employment-terminate/{id}", name="employees_user_employment_terminate", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
-     */
+    #[Route(path: '/user/employment-terminate/{id}', name: 'employees_user_employment_terminate', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function employmentTerminateAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -5066,9 +5023,7 @@ class UserController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/download/printable-lab-directory", name="employees_userlist_download_spreadsheet")
-     */
+    #[Route(path: '/download/printable-lab-directory', name: 'employees_userlist_download_spreadsheet')]
     public function downloadAction( Request $request )
     {
 
@@ -5299,10 +5254,8 @@ class UserController extends OrderAbstractController
         }
     }
 
-    /**
-     * @Route("/label/user/preview/{id}", name="employees_user_label_preview", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
-     */
+    #[Route(path: '/label/user/preview/{id}', name: 'employees_user_label_preview', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/Labels/label_user_preview.html.twig')]
     public function averySingleUserPrintAction(Request $request, $id) {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -5380,10 +5333,8 @@ class UserController extends OrderAbstractController
             'title' => "User Label Print Management and Preview"
         );
     }
-    /**
-     * @Route("/label/users/preview/", name="employees_users_label_preview", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/Labels/label_user_preview.html.twig")
-     */
+    #[Route(path: '/label/users/preview/', name: 'employees_users_label_preview', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/Labels/label_user_preview.html.twig')]
     public function averyMultipleUsersPrintAction(Request $request) {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

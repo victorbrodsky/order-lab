@@ -30,8 +30,8 @@ app_dashboard:
 
 app_deidentifier:
     resource: "../src/App/DeidentifierBundle/Controller/"
-    type:     annotation
-    #type:     attribute
+    #type:     annotation
+    type:     attribute
     prefix:   /deidentifier
     schemes:  ['%connection_channel%']
 
@@ -66,7 +66,7 @@ legacy_vacreq:
 
 app_calllog:
     resource: "../src/App/CallLogBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /call-log-book
     schemes:  ['%connection_channel%']
 
@@ -96,7 +96,7 @@ app_utilbundles_foscomment:
 
 app_userdirectory:
     resource: "../src/App/UserdirectoryBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /directory
     schemes:  ['%connection_channel%']
 

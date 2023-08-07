@@ -52,15 +52,12 @@ class DataQualityController extends CallEntryController
 {
 
 //    protected $calllogUtil;
-//    public function __construct( CallLogUtil $calllogUtil ) {
-//        $this->calllogUtil = $calllogUtil;
-//        //$this->userServiceUtil = $this->container->get('user_service_utility');//user_service_utility;
-//    }
-
-    /**
-     * @Route("/merge-patient-records", name="calllog_merge_patient_records", options={"expose"=true})
-     * @Template("AppCallLogBundle/DataQuality/merge-records.html.twig")
-     */
+    //    public function __construct( CallLogUtil $calllogUtil ) {
+    //        $this->calllogUtil = $calllogUtil;
+    //        //$this->userServiceUtil = $this->container->get('user_service_utility');//user_service_utility;
+    //    }
+    #[Route(path: '/merge-patient-records', name: 'calllog_merge_patient_records', options: ['expose' => true])]
+    #[Template('AppCallLogBundle/DataQuality/merge-records.html.twig')]
     public function mergePatientAction(Request $request)
     {
 
@@ -110,9 +107,7 @@ class DataQualityController extends CallEntryController
         );
     }
 
-    /**
-     * @Route("/merge-patient-records-ajax", name="calllog_merge_patient_records_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/merge-patient-records-ajax', name: 'calllog_merge_patient_records_ajax', options: ['expose' => true])]
     public function mergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
@@ -344,12 +339,9 @@ class DataQualityController extends CallEntryController
 
 
 
-    /**
-     * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records", options={"expose"=true})
-     * @Route("/specify-primary-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
-     *
-     * @Template("AppCallLogBundle/DataQuality/un-merge-records.html.twig")
-     */
+    #[Route(path: '/un-merge-patient-records', name: 'calllog_unmerge_patient_records', options: ['expose' => true])]
+    #[Route(path: '/specify-primary-patient-record', name: 'calllog_set_master_patient_record', options: ['expose' => true])]
+    #[Template('AppCallLogBundle/DataQuality/un-merge-records.html.twig')]
     public function unmergePatientAction(Request $request)
     //public function unmergePatientAction(Request $request, UserSecurityUtil $securityUtil)
     {
@@ -408,9 +400,7 @@ class DataQualityController extends CallEntryController
 
 
 
-    /**
-     * @Route("/specify-primary-patient-record-ajax", name="calllog_set_master_patient_record_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/specify-primary-patient-record-ajax', name: 'calllog_set_master_patient_record_ajax', options: ['expose' => true])]
     public function setMasterPatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
@@ -453,9 +443,7 @@ class DataQualityController extends CallEntryController
         return $response;
     }
 
-    /**
-     * @Route("/unmerge-patient-records-ajax", name="calllog_unmerge_patient_records_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/unmerge-patient-records-ajax', name: 'calllog_unmerge_patient_records_ajax', options: ['expose' => true])]
     public function unmergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
@@ -551,10 +539,9 @@ class DataQualityController extends CallEntryController
      * TODO: http://localhost/order/call-log-book/find-and-edit-patient-record?mrntype=13&mrn=NOMRNPROVIDED-0000000000010
      * Form to find patient and select. When patient is found and select clicked, patient/{id}/edit page is opened with patient edit form.
      * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
-     *
-     * @Route("/find-and-edit-patient-record", name="calllog_find_and_edit_patient_record", options={"expose"=true})
-     * @Template("AppCallLogBundle/DataQuality/edit-patient-record.html.twig")
      */
+    #[Route(path: '/find-and-edit-patient-record', name: 'calllog_find_and_edit_patient_record', options: ['expose' => true])]
+    #[Template('AppCallLogBundle/DataQuality/edit-patient-record.html.twig')]
     public function findAndEditPatientAction(Request $request) {
 
         $user = $this->getUser();
@@ -602,8 +589,8 @@ class DataQualityController extends CallEntryController
 
     /**
      * TODO: Under construction. Not Used
-     * @Route("/edit-patient-record-ajax", name="calllog_edit_patient_record_ajax", options={"expose"=true})
      */
+    #[Route(path: '/edit-patient-record-ajax', name: 'calllog_edit_patient_record_ajax', options: ['expose' => true])]
     public function editPatientAjaxAction(Request $request)
     {
 
@@ -639,10 +626,8 @@ class DataQualityController extends CallEntryController
         return $response;
     }
 
-    /**
-     * @Route("/merge-patient-records-todel", name="calllog_merge_patient_records_todel", options={"expose"=true})
-     * @Template("AppCallLogBundle/DataQuality/merge-records.html.twig")
-     */
+    #[Route(path: '/merge-patient-records-todel', name: 'calllog_merge_patient_records_todel', options: ['expose' => true])]
+    #[Template('AppCallLogBundle/DataQuality/merge-records.html.twig')]
     public function addNewPatientToListAction_TODEL(Request $request)
     {
 
@@ -751,9 +736,7 @@ class DataQualityController extends CallEntryController
     }
 
 
-    /**
-     * @Route("/calllog_update_task/{taskId}/{status}", name="calllog_update_task", options={"expose"=true})
-     */
+    #[Route(path: '/calllog_update_task/{taskId}/{status}', name: 'calllog_update_task', options: ['expose' => true])]
     public function updateTaskAction(Request $request, $taskId, $status)
     {
 

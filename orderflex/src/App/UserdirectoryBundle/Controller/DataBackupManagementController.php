@@ -38,9 +38,9 @@ class DataBackupManagementController extends OrderAbstractController
 {
     /**
      * Backup management page with JSON configuration
-     * @Route("/data-backup-management", name="employees_data_backup_management", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
      */
+    #[Route(path: '/data-backup-management', name: 'employees_data_backup_management', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function dataBackupManagementShowAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -71,9 +71,9 @@ class DataBackupManagementController extends OrderAbstractController
      * NOT USED
      *
      * Backup management page with JSON configuration
-     * @Route("/data-backup-management/edit", name="employees_data_backup_management_edit", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
      */
+    #[Route(path: '/data-backup-management/edit', name: 'employees_data_backup_management_edit', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function dataBackupManagementUpdateAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -186,9 +186,8 @@ class DataBackupManagementController extends OrderAbstractController
     //NOT USED below. Old version of backup
     /**
      * NOT USED
-     *
-     * @Route("/list/generate-cron-jobs/dbbackup", name="user_generate_cron_dbbackup", methods={"GET"})
      */
+    #[Route(path: '/list/generate-cron-jobs/dbbackup', name: 'user_generate_cron_dbbackup', methods: ['GET'])]
     public function generateDbBackupCronAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -210,9 +209,8 @@ class DataBackupManagementController extends OrderAbstractController
 
     /**
      * NOT USED
-     * 
-     * @Route("/list/generate-cron-jobs/filesbackup", name="user_generate_cron_filesbackup", methods={"GET"})
      */
+    #[Route(path: '/list/generate-cron-jobs/filesbackup', name: 'user_generate_cron_filesbackup', methods: ['GET'])]
     public function generateFilesBackupCronAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -250,10 +248,9 @@ class DataBackupManagementController extends OrderAbstractController
      * Table specific backup/restore:
      * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
      * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
-     *
-     * @Route("/data-backup-management-orig/", name="employees_data_backup_management_orig", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management_orig.html.twig")
      */
+    #[Route(path: '/data-backup-management-orig/', name: 'employees_data_backup_management_orig', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management_orig.html.twig')]
     public function dataBackupManagementAction_ORIG(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -289,10 +286,9 @@ class DataBackupManagementController extends OrderAbstractController
 
     /**
      * //@Template("AppUserdirectoryBundle/DataBackup/create_backup.html.twig")
-     *
-     * @Route("/create-backup/", name="employees_create_backup", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
      */
+    #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function createBackupAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -348,10 +344,8 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/restore-backup/{backupFilePath}", name="employees_restore_backup", methods={"GET"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
-     */
+    #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function restoreBackupAction( Request $request, $backupFilePath ) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {

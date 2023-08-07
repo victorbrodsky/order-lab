@@ -22,9 +22,8 @@ class TelephonyController extends OrderAbstractController {
 
     /**
      * Get verification form
-     *
-     * @Route("/verify-mobile-phone/{siteName}/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
      */
+    #[Route(path: '/verify-mobile-phone/{siteName}/{phoneNumber}', name: 'employees_verify_mobile_phone', methods: ['GET'])]
     public function verifyMobilePhoneAction(Request $request, $siteName, $phoneNumber=null )
     {
         //$em = $this->getDoctrine()->getManager();
@@ -84,9 +83,8 @@ class TelephonyController extends OrderAbstractController {
 
     /**
      * Visiting this page should not require a log
-     *
-     * @Route("/verify-mobile-code/{verificationCode}", name="employees_verify_mobile_code", methods={"GET"})
      */
+    #[Route(path: '/verify-mobile-code/{verificationCode}', name: 'employees_verify_mobile_code', methods: ['GET'])]
     public function verifyMobileCodeAction(Request $request, $verificationCode=null) {
 
         $em = $this->getDoctrine()->getManager();
@@ -225,49 +223,48 @@ class TelephonyController extends OrderAbstractController {
     }
 
 //    /**
-//     * Get verification form
-//     *
-//     * @Route("/verify-mobile-phone-modal/{phoneNumber}", name="employees_verify_mobile_phone_modal", methods={"GET"})
-//     */
-//    public function verifyMobileModalAction(Request $request, $phoneNumber)
-//    {
-//
-//        $user = $this->getUser();
-//
-//        //$text = random_int(100000, 999999);
-//        //echo "text=$text <br>";
-//
-//        //It's better to check if current user has a $phoneNumber
-//        $preferredMobilePhone = $user->getPreferredMobilePhone();
-//
-//        if( $preferredMobilePhone != $phoneNumber ) {
-//            return $this->redirect($this->generateUrl('employees-nopermission'));
-//        }
-//
-//        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
-//
-//        if( $userInfo ) {
-//            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
-//        }
-//
-//        if( !$mobilePhoneVerified ) {
-//            $mobilePhoneVerified = false;
-//        }
-//
-//        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig', array(
-//            'sitename' => $this->siteName,
-//            'title' => "Mobile Phone Verification",
-//            //'form' => $form->createView(),
-//            'phoneNumber' => $phoneNumber,
-//            'mobilePhoneVerified' => $mobilePhoneVerified
-//        ));
-//    }
-
+    //     * Get verification form
+    //     *
+    //     * @Route("/verify-mobile-phone-modal/{phoneNumber}", name="employees_verify_mobile_phone_modal", methods={"GET"})
+    //     */
+    //    public function verifyMobileModalAction(Request $request, $phoneNumber)
+    //    {
+    //
+    //        $user = $this->getUser();
+    //
+    //        //$text = random_int(100000, 999999);
+    //        //echo "text=$text <br>";
+    //
+    //        //It's better to check if current user has a $phoneNumber
+    //        $preferredMobilePhone = $user->getPreferredMobilePhone();
+    //
+    //        if( $preferredMobilePhone != $phoneNumber ) {
+    //            return $this->redirect($this->generateUrl('employees-nopermission'));
+    //        }
+    //
+    //        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+    //
+    //        if( $userInfo ) {
+    //            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+    //        }
+    //
+    //        if( !$mobilePhoneVerified ) {
+    //            $mobilePhoneVerified = false;
+    //        }
+    //
+    //        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig', array(
+    //            'sitename' => $this->siteName,
+    //            'title' => "Mobile Phone Verification",
+    //            //'form' => $form->createView(),
+    //            'phoneNumber' => $phoneNumber,
+    //            'mobilePhoneVerified' => $mobilePhoneVerified
+    //        ));
+    //    }
     /**
-     * @Route("/verify/code", name="employees_verify_code")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[Route(path: '/verify/code', name: 'employees_verify_code')]
     public function verifyCodeAction(Request $request) {
 
         //testing
@@ -389,19 +386,17 @@ class TelephonyController extends OrderAbstractController {
     }
 
 //    public function createTelephonyVerifyForm() {
-//        $params = array();
-//
-//        $form = $this->createForm(TelephonyVerifyMobilePhoneType::class, null, array('form_custom_value'=>$params));
-//
-//        return $form;
-//    }
-
+    //        $params = array();
+    //
+    //        $form = $this->createForm(TelephonyVerifyMobilePhoneType::class, null, array('form_custom_value'=>$params));
+    //
+    //        return $form;
+    //    }
     //Route("/verify-mobile-phone-ajax/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
     /**
      * https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
-     *
-     * @Route("/verify-mobile-phone-ajax", name="employees_verify_mobile_phone_ajax", methods={"POST"}, options={"expose"=true})
      */
+    #[Route(path: '/verify-mobile-phone-ajax', name: 'employees_verify_mobile_phone_ajax', methods: ['POST'], options: ['expose' => true])]
     public function verifyMobileAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -495,10 +490,10 @@ class TelephonyController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/verify-code-ajax", name="employees_verify_code_ajax", methods={"POST"}, options={"expose"=true})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[Route(path: '/verify-code-ajax', name: 'employees_verify_code_ajax', methods: ['POST'], options: ['expose' => true])]
     public function verifyCodeAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -593,9 +588,8 @@ class TelephonyController extends OrderAbstractController {
 
     /**
      * Get verification form for Account/Access Request
-     *
-     * @Route("/verify-mobile-phone/account-request/{sitename}/{objectName}/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
      */
+    #[Route(path: '/verify-mobile-phone/account-request/{sitename}/{objectName}/{id}', name: 'employees_verify_mobile_phone_account_request', methods: ['GET'])]
     public function verifyAccountRequestMobilePhoneAction(Request $request, $sitename, $objectName, $id) {
 
         $em = $this->getDoctrine()->getManager();
@@ -627,9 +621,8 @@ class TelephonyController extends OrderAbstractController {
     }
     /**
      * https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
-     *
-     * @Route("/verify-mobile-phone-account-request-ajax", name="employees_verify_mobile_phone_account_request_ajax", methods={"POST"}, options={"expose"=true})
      */
+    #[Route(path: '/verify-mobile-phone-account-request-ajax', name: 'employees_verify_mobile_phone_account_request_ajax', methods: ['POST'], options: ['expose' => true])]
     public function verifyAccountRequestMobileAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -696,10 +689,10 @@ class TelephonyController extends OrderAbstractController {
         return $response;
     }
     /**
-     * @Route("/verify-code-account-request-ajax", name="employees_verify_code_account_request_ajax", methods={"POST"}, options={"expose"=true})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[Route(path: '/verify-code-account-request-ajax', name: 'employees_verify_code_account_request_ajax', methods: ['POST'], options: ['expose' => true])]
     public function verifyAccountRequestCodeAjaxAction(Request $request)
     {
         $userServiceUtil = $this->container->get('user_service_utility');

@@ -49,14 +49,11 @@ class ComplexListController extends OrderAbstractController
 {
 
 
-    /**
-     * @Route("/list/locations/", name="employees_locations_pathaction_list", methods={"GET"})
-     * @Route("/list/buildings/", name="employees_buildings_pathaction_list", methods={"GET"})
-     * @Route("/list/research-labs/", name="employees_researchlabs_pathaction_list", methods={"GET"})
-     * @Route("/list/grants/", name="employees_grants_pathaction_list", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ComplexList/index.html.twig")
-     */
+    #[Route(path: '/list/locations/', name: 'employees_locations_pathaction_list', methods: ['GET'])]
+    #[Route(path: '/list/buildings/', name: 'employees_buildings_pathaction_list', methods: ['GET'])]
+    #[Route(path: '/list/research-labs/', name: 'employees_researchlabs_pathaction_list', methods: ['GET'])]
+    #[Route(path: '/list/grants/', name: 'employees_grants_pathaction_list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ComplexList/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -198,22 +195,15 @@ class ComplexListController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/location/show/{id}", name="employees_locations_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/location/edit/{id}", name="employees_locations_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     *
-     * @Route("/buildings/show/{id}", name="employees_buildings_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/admin/buildings/edit/{id}", name="employees_buildings_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     *
-     * @Route("/research-labs/show/{id}", name="employees_researchlabs_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/admin/research-labs/edit/{id}", name="employees_researchlabs_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     *
-     * @Route("/grants/show/{id}", name="employees_grants_pathaction_show_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/admin/grants/edit/{id}", name="employees_grants_pathaction_edit_standalone", methods={"GET"}, requirements={"id" = "\d+"})
-     *
-     *
-     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
-     */
+    #[Route(path: '/location/show/{id}', name: 'employees_locations_pathaction_show_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/location/edit/{id}', name: 'employees_locations_pathaction_edit_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/buildings/show/{id}', name: 'employees_buildings_pathaction_show_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/buildings/edit/{id}', name: 'employees_buildings_pathaction_edit_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/research-labs/show/{id}', name: 'employees_researchlabs_pathaction_show_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/research-labs/edit/{id}', name: 'employees_researchlabs_pathaction_edit_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/grants/show/{id}', name: 'employees_grants_pathaction_show_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/grants/edit/{id}', name: 'employees_grants_pathaction_edit_standalone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/ComplexList/new.html.twig')]
     public function showListAction(Request $request, $id)
     {
 
@@ -267,14 +257,11 @@ class ComplexListController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/location/new", name="employees_locations_pathaction_new_standalone", methods={"GET"})
-     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_standalone", methods={"GET"})
-     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_standalone", methods={"GET"})
-     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_standalone", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
-     */
+    #[Route(path: '/location/new', name: 'employees_locations_pathaction_new_standalone', methods: ['GET'])]
+    #[Route(path: '/admin/buildings/new', name: 'employees_buildings_pathaction_new_standalone', methods: ['GET'])]
+    #[Route(path: '/admin/research-labs/new', name: 'employees_researchlabs_pathaction_new_standalone', methods: ['GET'])]
+    #[Route(path: '/admin/grants/new', name: 'employees_grants_pathaction_new_standalone', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ComplexList/new.html.twig')]
     public function newListAction(Request $request)
     {
 
@@ -314,14 +301,11 @@ class ComplexListController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/location/new", name="employees_locations_pathaction_new_post_standalone", methods={"POST"})
-     * @Route("/admin/buildings/new", name="employees_buildings_pathaction_new_post_standalone", methods={"POST"})
-     * @Route("/admin/research-labs/new", name="employees_researchlabs_pathaction_new_post_standalone", methods={"POST"})
-     * @Route("/admin/grants/new", name="employees_grants_pathaction_new_post_standalone", methods={"POST"})
-     *
-     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
-     */
+    #[Route(path: '/location/new', name: 'employees_locations_pathaction_new_post_standalone', methods: ['POST'])]
+    #[Route(path: '/admin/buildings/new', name: 'employees_buildings_pathaction_new_post_standalone', methods: ['POST'])]
+    #[Route(path: '/admin/research-labs/new', name: 'employees_researchlabs_pathaction_new_post_standalone', methods: ['POST'])]
+    #[Route(path: '/admin/grants/new', name: 'employees_grants_pathaction_new_post_standalone', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/ComplexList/new.html.twig')]
     public function createListAction( Request $request ) //TokenStorageInterface $secTokenStorage
     {
 
@@ -435,14 +419,11 @@ class ComplexListController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/location/update/{id}", name="employees_locations_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
-     * @Route("/admin/buildings/update/{id}", name="employees_buildings_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
-     * @Route("/admin/research-labs/update/{id}", name="employees_researchlabs_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
-     * @Route("/admin/grants/update/{id}", name="employees_grants_pathaction_edit_put_standalone", methods={"PUT"},requirements={"id" = "\d+"})
-     *
-     * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
-     */
+    #[Route(path: '/location/update/{id}', name: 'employees_locations_pathaction_edit_put_standalone', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/buildings/update/{id}', name: 'employees_buildings_pathaction_edit_put_standalone', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/research-labs/update/{id}', name: 'employees_researchlabs_pathaction_edit_put_standalone', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/admin/grants/update/{id}', name: 'employees_grants_pathaction_edit_put_standalone', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/ComplexList/new.html.twig')]
     public function updateListAction( Request $request, $id )
     {
 

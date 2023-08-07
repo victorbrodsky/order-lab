@@ -63,9 +63,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * Lists all signUp entities.
-     *
-     * @Route("/signup-list", name="employees_signup_index", methods={"GET"})
      */
+    #[Route(path: '/signup-list', name: 'employees_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -84,9 +83,8 @@ class SignUpController extends OrderAbstractController
     /**
      * http://localhost/order/directory/sign-up
      * Creates a new signUp entity.
-     *
-     * @Route("/sign-up", name="employees_signup_new", methods={"GET","POST"})
      */
+    #[Route(path: '/sign-up', name: 'employees_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
 
@@ -422,9 +420,7 @@ class SignUpController extends OrderAbstractController
         return false;
     }
 
-    /**
-     * @Route("/activate-account/{registrationLinkID}", name="employees_activate_account", methods={"GET", "POST"})
-     */
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'employees_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         //exit('1');
@@ -723,9 +719,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * Finds and displays a signUp entity.
-     *
-     * @Route("/signup-show/{id}", name="employees_signup_show", methods={"GET"})
      */
+    #[Route(path: '/signup-show/{id}', name: 'employees_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         $deleteForm = $this->createDeleteForm($signUp);
@@ -747,9 +742,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing signUp entity.
-     *
-     * @Route("/signup-edit/{id}", name="employees_signup_edit", methods={"GET", "POST"})
      */
+    #[Route(path: '/signup-edit/{id}', name: 'employees_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         $deleteForm = $this->createDeleteForm($signUp);
@@ -776,9 +770,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * Deletes a signUp entity.
-     *
-     * @Route("/signup-delete/{id}", name="employees_signup_delete", methods={"DELETE"})
      */
+    #[Route(path: '/signup-delete/{id}', name: 'employees_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         $form = $this->createDeleteForm($signUp);
@@ -968,9 +961,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * http://localhost/order/directory/forgot-password
-     *
-     * @Route("/forgot-password", name="employees_forgot_password", methods={"GET", "POST"})
      */
+    #[Route(path: '/forgot-password', name: 'employees_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         //exit('Not Implemented Yet');
@@ -1194,9 +1186,8 @@ class SignUpController extends OrderAbstractController
 
     /**
      * http://localhost/order/directory/reset-password/d902aea8d5bdc7141
-     *
-     * @Route("/reset-password/{resetPasswordLinkID}", name="employees_reset_password", methods={"GET", "POST"})
      */
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'employees_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         //exit("reset password by resetPasswordLinkID=".$resetPasswordLinkID);
