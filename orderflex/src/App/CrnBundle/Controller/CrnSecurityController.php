@@ -35,19 +35,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class CrnSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="crn_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'crn_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('crn: loginAction');
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="crn_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'crn_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //exit('crn: setAjaxLoginVisit');
@@ -55,10 +51,8 @@ class CrnSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/no-permission", name="crn-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'crn-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -70,11 +64,9 @@ class CrnSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/idle-log-out", name="crn_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="crn_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'crn_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'crn_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('crn: idlelogoutAction');

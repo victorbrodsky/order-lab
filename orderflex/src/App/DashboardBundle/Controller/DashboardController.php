@@ -29,14 +29,12 @@ class DashboardController extends OrderAbstractController
 
     //filter[projectSpecialty][] - not working, filter[projectSpecialty] - working
     //private $emptyProjectSpecialtyFilter = null; //"All" => 0 "AP/CP" => 2
-
     /**
      * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      * Dashboard home page .../dashboards/
-     *
-     * @Route("/", name="dashboard_home")
-     * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
      */
+    #[Route(path: '/', name: 'dashboard_home')]
+    #[Template('AppDashboardBundle/React/dashboard-choices.html.twig')]
     public function dashboardChoicesAction( Request $request )
     {
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -235,10 +233,9 @@ class DashboardController extends OrderAbstractController
 
     /**
      * Public Dashboards: https://bitbucket.org/victorbrodsky/trp/issues/261/public-dashboards
-     *
-     * @Route("/public", name="dashboard_public")
-     * @Template("AppDashboardBundle/React/dashboard-public.html.twig")
      */
+    #[Route(path: '/public', name: 'dashboard_public')]
+    #[Template('AppDashboardBundle/React/dashboard-public.html.twig')]
     public function dashboardPublicChoicesAction( Request $request )
     {
         //B- checks if the user is logged in and forwards to the usual URL
@@ -363,10 +360,9 @@ class DashboardController extends OrderAbstractController
 
     /**
      * single dashboard chart. id - chart ID
-     *
-     * @Route("/chart/{id}", name="dashboard_single_chart_id")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
+    #[Route(path: '/chart/{id}', name: 'dashboard_single_chart_id')]
+    #[Template('AppDashboardBundle/Dashboard/dashboard.html.twig')]
     public function singleChartAction( Request $request, $id ) {
 
         //return array('sitename'=>$this->getParameter('dashboard.sitename'));
@@ -382,9 +378,8 @@ class DashboardController extends OrderAbstractController
     }
     /**
      * From transres
-     *
-     * @Route("/single-chart/", name="dashboard_single_chart", options={"expose"=true})
      */
+    #[Route(path: '/single-chart/', name: 'dashboard_single_chart', options: ['expose' => true])]
     public function singleOrigChartAction( Request $request )
     {
 
@@ -421,10 +416,9 @@ class DashboardController extends OrderAbstractController
     /**
      * single dashboard topic. id - topic ID
      * load the selected charts without any additional user interaction
-     *
-     * @Route("/topic/{id}", name="dashboard_single_topic_id")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
+    #[Route(path: '/topic/{id}', name: 'dashboard_single_topic_id')]
+    #[Template('AppDashboardBundle/Dashboard/dashboard.html.twig')]
     public function singleTopicByIdAction( Request $request, $id ) {
 
 //        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -501,10 +495,9 @@ class DashboardController extends OrderAbstractController
 
     /**
      * Search by Dashboard topic
-     *
-     * @Route("/search-topic/", name="dashboard_search_topic", methods={"GET"})
-     * @Template("AppDashboardBundle/Search/search.html.twig")
      */
+    #[Route(path: '/search-topic/', name: 'dashboard_search_topic', methods: ['GET'])]
+    #[Template('AppDashboardBundle/Search/search.html.twig')]
     public function searchDashboardTopicAction( Request $request ) {
 
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -543,10 +536,9 @@ class DashboardController extends OrderAbstractController
     /**
      * charts belonging to a single organizational group. id - organizational group associated with the displayed charts
      * load the selected charts without any additional user interaction
-     *
-     * @Route("/service/{id}", name="dashboard_single_service")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
+    #[Route(path: '/service/{id}', name: 'dashboard_single_service')]
+    #[Template('AppDashboardBundle/Dashboard/dashboard.html.twig')]
     public function singleServiceAction( Request $request, $id ) {
 
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -618,10 +610,9 @@ class DashboardController extends OrderAbstractController
 
     /**
      * charts belonging to a single type. id - chart type ID
-     *
-     * @Route("/chart-type/{id}", name="dashboard_single_type")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
+    #[Route(path: '/chart-type/{id}', name: 'dashboard_single_type')]
+    #[Template('AppDashboardBundle/Dashboard/dashboard.html.twig')]
     public function singleTypeAction( Request $request, $id ) {
 
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -692,10 +683,9 @@ class DashboardController extends OrderAbstractController
 
     /**
      * charts belonging to a single favorite. id - user ID
-     *
-     * @Route("/favorites/{id}", name="dashboard_single_favorite")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
+    #[Route(path: '/favorites/{id}', name: 'dashboard_single_favorite')]
+    #[Template('AppDashboardBundle/Dashboard/dashboard.html.twig')]
     public function singleFavoritesAction( Request $request, $id ) {
 
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
@@ -827,9 +817,7 @@ class DashboardController extends OrderAbstractController
         return false;
     }
 
-    /**
-     * @Route("/dashboard-toggle-favorite", name="dashboard_toggle_favorite", methods={"POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/dashboard-toggle-favorite', name: 'dashboard_toggle_favorite', methods: ['POST'], options: ['expose' => true])]
     public function dashboardToggleFavoriteAction( Request $request )
     {
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {

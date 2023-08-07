@@ -14,17 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Irbreview controller.
- *
- * @Route("review")
  */
+#[Route(path: 'review')]
 class ReviewBaseController extends OrderAbstractController
 {
     /**
      * Lists all irbReview entities.
-     *
-     * @Route("/{stateStr}", name="translationalresearch_review_index", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Review/index.html.twig")
      */
+    #[Route(path: '/{stateStr}', name: 'translationalresearch_review_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Review/index.html.twig')]
     public function indexAction(Request $request, $stateStr)
     {
         $em = $this->getDoctrine()->getManager();
@@ -39,10 +37,9 @@ class ReviewBaseController extends OrderAbstractController
 
     /**
      * Creates a new irbReview entity.
-     *
-     * @Route("/new", name="translationalresearch_review_new", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Review/new.html.twig")
      */
+    #[Route(path: '/new', name: 'translationalresearch_review_new', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Review/new.html.twig')]
     public function newAction(Request $request)
     {
         $irbReview = new Irbreview();
@@ -65,10 +62,9 @@ class ReviewBaseController extends OrderAbstractController
 
     /**
      * Finds and displays a Review entity.
-     *
-     * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
      */
+    #[Route(path: '/{stateStr}/{reviewId}/show', name: 'translationalresearch_review_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Review/edit.html.twig')]
     public function showAction(Request $request, $stateStr, $reviewId)
     {
 
@@ -105,10 +101,9 @@ class ReviewBaseController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing irbReview entity.
-     *
-     * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Review/edit.html.twig")
      */
+    #[Route(path: '/{stateStr}/{reviewId}/submit', name: 'translationalresearch_review_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Review/edit.html.twig')]
     public function editAction(Request $request, $stateStr, $reviewId)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {

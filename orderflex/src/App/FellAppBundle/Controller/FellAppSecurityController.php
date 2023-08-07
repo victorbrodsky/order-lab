@@ -35,28 +35,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class FellAppSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="fellapp_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'fellapp_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="fellapp_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'fellapp_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
 
-    /**
-     * @Route("/no-permission", name="fellapp-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'fellapp-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         //$message = null;
@@ -70,11 +64,9 @@ class FellAppSecurityController extends SecurityController
 
 
 
-    /**
-     * @Route("/idle-log-out", name="fellapp_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="fellapp_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'fellapp_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'fellapp_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

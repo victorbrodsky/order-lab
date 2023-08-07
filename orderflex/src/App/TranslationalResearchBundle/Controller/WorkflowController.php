@@ -40,10 +40,9 @@ class WorkflowController extends OrderAbstractController
 
     /**
      * Dump Workflows
-     *
-     * @Route("/workflow/{type}", name="translationalresearch_workflow_show")
-     * @Template("AppTranslationalResearchBundle/Workflow/workflow.html.twig")
      */
+    #[Route(path: '/workflow/{type}', name: 'translationalresearch_workflow_show')]
+    #[Template('AppTranslationalResearchBundle/Workflow/workflow.html.twig')]
     public function dumpWorkflowAction(Request $request, $type)
     {
 //        $definitionBuilder = new DefinitionBuilder();
@@ -170,9 +169,8 @@ class WorkflowController extends OrderAbstractController
     /**
      * NOT USED - this is a particulra case for testing
      * https://symfony.com/doc/current/workflow/usage.html
-     *
-     * @Route("/to-irb-review/{id}", name="translationalresearch_to_irb_review", methods={"GET"})
      */
+    #[Route(path: '/to-irb-review/{id}', name: 'translationalresearch_to_irb_review', methods: ['GET'])]
     public function toIrbReviewAction( Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
@@ -229,9 +227,8 @@ class WorkflowController extends OrderAbstractController
     /**
      * NOT USED
      * https://symfony.com/doc/current/workflow/usage.html
-     *
-     * @Route("/project-transition-state/{transitionName}/{to}/{id}", name="translationalresearch_transition_state_action", methods={"GET"})
      */
+    #[Route(path: '/project-transition-state/{transitionName}/{to}/{id}', name: 'translationalresearch_transition_state_action', methods: ['GET'])]
     public function transitionStateAction( $transitionName, $to, Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
@@ -284,9 +281,8 @@ class WorkflowController extends OrderAbstractController
     /**
      * Change state of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
-     *
-     * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action", methods={"GET"})
      */
+    #[Route(path: '/project-transition/{transitionName}/{id}', name: 'translationalresearch_transition_action', methods: ['GET'])]
     public function transitionAction( $transitionName, Project $project )
     {
         exit("NOT USED PATH: translationalresearch_transition_action");
@@ -301,9 +297,8 @@ class WorkflowController extends OrderAbstractController
     /**
      * Change state of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
-     *
-     * @Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review", methods={"GET"})
      */
+    #[Route(path: '/project-review-transition/{transitionName}/{id}/{reviewId}', name: 'translationalresearch_transition_action_by_review', methods: ['GET'])]
     public function transitionReviewAction( $transitionName, Project $project, $reviewId )
     {
         $transresUtil = $this->container->get('transres_util');
@@ -341,9 +336,8 @@ class WorkflowController extends OrderAbstractController
     /**
      * Change state of the request (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
-     *
-     * @Route("/request-review-transition/{transitionName}/{id}/{statMachineType}", name="translationalresearch_request_transition_action_by_review", methods={"GET"})
      */
+    #[Route(path: '/request-review-transition/{transitionName}/{id}/{statMachineType}', name: 'translationalresearch_request_transition_action_by_review', methods: ['GET'])]
     public function transitionRequestReviewAction( $transitionName, TransResRequest $transresRequest, $statMachineType )
     {
         $transresUtil = $this->container->get('transres_util');

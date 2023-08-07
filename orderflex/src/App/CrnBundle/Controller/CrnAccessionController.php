@@ -57,9 +57,9 @@ class CrnAccessionController extends OrderAbstractController {
 
     /**
      * Accession List
-     * @Route("/accession-list/{listid}/{listname}", name="crn_accession_list")
-     * @Template("AppCrnBundle/AccessionList/accession-list.html.twig")
      */
+    #[Route(path: '/accession-list/{listid}/{listname}', name: 'crn_accession_list')]
+    #[Template('AppCrnBundle/AccessionList/accession-list.html.twig')]
     public function complexAccessionListAction(Request $request, $listid, $listname)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -161,10 +161,9 @@ class CrnAccessionController extends OrderAbstractController {
 
     /**
      * Listing accessions whose notes have been updated in the last 96 hours (4 days)
-     *
-     * @Route("/recent-accessions", name="crn_recent_accessions")
-     * @Template("AppCrnBundle/AccessionList/recent-accessions.html.twig")
      */
+    #[Route(path: '/recent-accessions', name: 'crn_recent_accessions')]
+    #[Template('AppCrnBundle/AccessionList/recent-accessions.html.twig')]
     public function recentAccessionsAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -273,9 +272,9 @@ class CrnAccessionController extends OrderAbstractController {
 
     /**
      * Search Accession
-     * @Route("/accession/search", name="crn_search_accession", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/accession/search', name: 'crn_search_accession', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CRN_USER')) {
@@ -310,9 +309,7 @@ class CrnAccessionController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="crn_remove_accession_from_list")
-     */
+    #[Route(path: '/accession/remove-accession-from-list/{accessionId}/{accessionListId}', name: 'crn_remove_accession_from_list')]
     public function removeAccessionFromListAction(Request $request, $accessionId, $accessionListId) {
         if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
@@ -368,12 +365,9 @@ class CrnAccessionController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="crn_add_accession_to_list")
-     * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="crn_add_accession_to_list_ajax", options={"expose"=true})
-     *
-     * @Template("AppCrnBundle/AccessionList/accession-list.html.twig")
-     */
+    #[Route(path: '/accession/add-accession-to-list/{accessionListId}/{accessionId}', name: 'crn_add_accession_to_list')]
+    #[Route(path: '/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}', name: 'crn_add_accession_to_list_ajax', options: ['expose' => true])]
+    #[Template('AppCrnBundle/AccessionList/accession-list.html.twig')]
     public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );

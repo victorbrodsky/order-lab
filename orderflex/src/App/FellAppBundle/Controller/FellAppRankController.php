@@ -46,10 +46,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FellAppRankController extends OrderAbstractController {
 
-    /**
-     * @Route("/rank/edit/{fellappid}", name="fellapp_rank_edit", methods={"GET"})
-     * @Template("AppFellAppBundle/Rank/rank_modal.html.twig")
-     */
+    #[Route(path: '/rank/edit/{fellappid}', name: 'fellapp_rank_edit', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $fellappid) {
 
         if( false == $this->isGranted("read","FellowshipApplication") ){
@@ -85,9 +83,7 @@ class FellAppRankController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/rank/update-ajax/{fellappid}", name="fellapp_rank_update", methods={"PUT"})
-     */
+    #[Route(path: '/rank/update-ajax/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'])]
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
         if( false == $this->isGranted("read","FellowshipApplication") ){
@@ -153,9 +149,8 @@ class FellAppRankController extends OrderAbstractController {
 
     /**
      * NOT USED
-     *
-     * @Route("/rank/update/{fellappid}", name="fellapp_rank_update", methods={"PUT"})
      */
+    #[Route(path: '/rank/update/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'])]
     public function rankUpdateAction(Request $request, $fellappid) {
 
         if( false == $this->isGranted("read","FellowshipApplication") ){

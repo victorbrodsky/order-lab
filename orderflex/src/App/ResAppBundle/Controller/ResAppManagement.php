@@ -57,10 +57,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class ResAppManagement extends OrderAbstractController {
 
-    /**
-     * @Route("/residency-types-settings", name="resapp_residencytype_settings", methods={"GET"})
-     * @Template("AppResAppBundle/Management/management.html.twig")
-     */
+    #[Route(path: '/residency-types-settings', name: 'resapp_residencytype_settings', methods: ['GET'])]
+    #[Template('AppResAppBundle/Management/management.html.twig')]
     public function restypeSettingsAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
@@ -102,10 +100,8 @@ class ResAppManagement extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/add-residency-application-type", name="resapp_residency_application_type_add", methods={"GET","POST"})
-     * @Template("AppResAppBundle/Management/new-residency-application-type.html.twig")
-     */
+    #[Route(path: '/add-residency-application-type', name: 'resapp_residency_application_type_add', methods: ['GET', 'POST'])]
+    #[Template('AppResAppBundle/Management/new-residency-application-type.html.twig')]
     public function addResidencyApplicationTypeAction(Request $request, Security $security )
     {
         exit('Not supported');
@@ -264,9 +260,8 @@ class ResAppManagement extends OrderAbstractController {
     /**
      * It should ONLY remove/strip all of THIS GROUP's roles from all users.
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
-     *
-     * @Route("/residency-application-type-remove/{resaptypeid}", name="resapp_residency_application_type_remove", methods={"GET","POST"})
      */
+    #[Route(path: '/residency-application-type-remove/{resaptypeid}', name: 'resapp_residency_application_type_remove', methods: ['GET', 'POST'])]
     public function removeResidencyApplicationTypeAction(Request $request, Security $security, $resaptypeid )
     {
 
@@ -327,10 +322,8 @@ class ResAppManagement extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/residency-type/show/{id}", name="resapp_residencytype_setting_show", methods={"GET"})
-     * @Template("AppResAppBundle/Management/new.html.twig")
-     */
+    #[Route(path: '/residency-type/show/{id}', name: 'resapp_residencytype_setting_show', methods: ['GET'])]
+    #[Template('AppResAppBundle/Management/new.html.twig')]
     public function showAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
@@ -366,10 +359,8 @@ class ResAppManagement extends OrderAbstractController {
         );
     }
 
-    /**
-     * @Route("/residency-type/edit/{id}", name="resapp_residencytype_setting_edit", methods={"GET","POST"})
-     * @Template("AppResAppBundle/Management/new.html.twig")
-     */
+    #[Route(path: '/residency-type/edit/{id}', name: 'resapp_residencytype_setting_edit', methods: ['GET', 'POST'])]
+    #[Template('AppResAppBundle/Management/new.html.twig')]
     public function editAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
@@ -754,9 +745,7 @@ class ResAppManagement extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/update-inst-user-role", name="resapp_update_inst_user_role", methods={"GET"})
-     */
+    #[Route(path: '/update-inst-user-role', name: 'resapp_update_inst_user_role', methods: ['GET'])]
     public function updateUserInstRoleAction(Request $request, Security $security)
     {
 

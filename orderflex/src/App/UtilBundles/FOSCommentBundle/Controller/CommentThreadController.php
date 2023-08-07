@@ -37,10 +37,8 @@ class CommentThreadController extends OrderAbstractController
     const VIEW_FLAT = 'flat';
     const VIEW_TREE = 'tree';
 
-    /**
-     * @Route("/project/thread-comments/show/{id}/{newcomment}", name="user_project_thread_comments_show", methods={"GET"})
-     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
-     */
+    #[Route(path: '/project/thread-comments/show/{id}/{newcomment}', name: 'user_project_thread_comments_show', methods: ['GET'])]
+    #[Template('bundles/FOSCommentBundle/thread-comments.html.twig')]
     public function threadCommentsShowAction(Request $request, $id, $newcomment=true)
     {
         //echo "comments id=".$id."<br>";
@@ -89,10 +87,9 @@ class CommentThreadController extends OrderAbstractController
 
     /**
      * Create new comment by ajax
-     *
-     * @Route("/thread/new/comment", name="user_thread_new_comment_ajax", options={"expose"=true}, methods={"POST","PUT"})
-     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
      */
+    #[Route(path: '/thread/new/comment', name: 'user_thread_new_comment_ajax', options: ['expose' => true], methods: ['POST', 'PUT'])]
+    #[Template('bundles/FOSCommentBundle/thread-comments.html.twig')]
     public function newThreadCommentsAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();

@@ -29,19 +29,17 @@ class TranslationalResearchUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="translationalresearch_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/{id}', name: 'translationalresearch_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         //exit("sitename=".$this->getParameter('translationalresearch.sitename')); //result:translationalresearch
         return $this->showUserOptimized($request, $id, $this->getParameter('translationalresearch.sitename'));
     }
 
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'translationalresearch_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -58,10 +56,8 @@ class TranslationalResearchUserController extends UserController
         return $editUser;
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="translationalresearch_user_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'translationalresearch_user_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -72,9 +68,7 @@ class TranslationalResearchUserController extends UserController
         return $this->updateUser( $request, $id, $this->getParameter('translationalresearch.sitename') );
     }
 
-    /**
-     * @Route("/add-new-user-ajax/", name="translationalresearch_add_new_user_ajax", methods={"POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/add-new-user-ajax/', name: 'translationalresearch_add_new_user_ajax', methods: ['POST'], options: ['expose' => true])]
     public function addNewUserAjaxAction(Request $request)
     {
         if (false === $this->isGranted('ROLE_TRANSRES_USER')) {

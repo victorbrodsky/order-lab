@@ -31,11 +31,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class GoogleFormConfigController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/form-status-and-appearance/edit", name="resapp_google_form_config_edit", methods={"GET", "PUT"})
-     * @Route("/form-status-and-appearance/show", name="resapp_google_form_config_show", methods={"GET", "PUT"})
-     * @Template("AppResAppBundle/GoogleFormConfig/google-form-config.html.twig")
-     */
+    #[Route(path: '/form-status-and-appearance/edit', name: 'resapp_google_form_config_edit', methods: ['GET', 'PUT'])]
+    #[Route(path: '/form-status-and-appearance/show', name: 'resapp_google_form_config_show', methods: ['GET', 'PUT'])]
+    #[Template('AppResAppBundle/GoogleFormConfig/google-form-config.html.twig')]
     public function GoogleFormConfigAction(Request $request) {
 
         if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {
@@ -157,9 +155,7 @@ class GoogleFormConfigController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/google-form-config-update-drive", name="resapp_google_form_config_update_drive", methods={"GET"})
-     */
+    #[Route(path: '/google-form-config-update-drive', name: 'resapp_google_form_config_update_drive', methods: ['GET'])]
     public function GoogleFormConfigUpdateDriveAction(Request $request) {
 
         if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {

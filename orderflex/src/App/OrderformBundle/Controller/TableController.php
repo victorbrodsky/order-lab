@@ -131,12 +131,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TableController extends OrderAbstractController {
 
-    /**
-     * @Route("/scan-order/multi-slide-table-view/{id}/amend", name="table_amend", requirements={"id" = "\d+"})
-     * @Route("/scan-order/multi-slide-table-view/{id}/show", name="table_show", requirements={"id" = "\d+"})
-     * @Route("/scan-order/multi-slide-table-view/{id}/edit", name="table_edit", requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/MultiScanOrder/newtable.html.twig")
-     */
+    #[Route(path: '/scan-order/multi-slide-table-view/{id}/amend', name: 'table_amend', requirements: ['id' => '\d+'])]
+    #[Route(path: '/scan-order/multi-slide-table-view/{id}/show', name: 'table_show', requirements: ['id' => '\d+'])]
+    #[Route(path: '/scan-order/multi-slide-table-view/{id}/edit', name: 'table_edit', requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/MultiScanOrder/newtable.html.twig')]
     public function multiTableShowAction( Request $request, $id ) {
 
         if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
@@ -503,10 +501,8 @@ class TableController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/scan-order/multi-slide-table-view/new", name="table_create")
-     * @Template("AppOrderformBundle/MultiScanOrder/newtable.html.twig")
-     */
+    #[Route(path: '/scan-order/multi-slide-table-view/new', name: 'table_create')]
+    #[Template('AppOrderformBundle/MultiScanOrder/newtable.html.twig')]
     public function multiTableCreationAction()
     {
 
@@ -650,10 +646,9 @@ class TableController extends OrderAbstractController {
 
     /**
      * Creates a new Table Message.
-
-     * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit", methods={"POST"})
-     * @Template("AppOrderformBundle/MultiScanOrder/newtable.html.twig")
      */
+    #[Route(path: '/scan-order/multi-slide-table-view/submit', name: 'table_create_submit', methods: ['POST'])]
+    #[Template('AppOrderformBundle/MultiScanOrder/newtable.html.twig')]
     public function multyCreateAction(Request $request, ScanEmailUtil $scanEmailUtil)
     {
 

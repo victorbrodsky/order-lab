@@ -34,10 +34,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DataReviewController extends OrderAbstractController {
       
 
-    /**
-     * @Route("/scan-order/{id}/data-review", name="scan-order-data-review-full", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/DataReview/index-order.html.twig")
-     */
+    #[Route(path: '/scan-order/{id}/data-review', name: 'scan-order-data-review-full', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/DataReview/index-order.html.twig')]
     public function getDataReviewAction($id) {
 
         $em = $this->getDoctrine()->getManager();

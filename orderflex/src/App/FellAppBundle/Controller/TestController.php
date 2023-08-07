@@ -35,19 +35,15 @@ use Symfony\Component\Routing\Annotation\Route;
 //http://127.0.0.1/order/index_dev.php/fellowship-applications/test/google-file
 //http://127.0.0.1/order/index_dev.php/fellowship-applications/test/verify-import
 //http://127.0.0.1/order/index_dev.php/fellowship-applications/test/populate-fellapp
-
-/**
- * @Route("/test")
- */
+#[Route(path: '/test')]
 class TestController extends OrderAbstractController
 {
 
     /**
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/google-drive
-     *
-     * @Route("/google-drive", name="fellapp_test_google-drive")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
+    #[Route(path: '/google-drive', name: 'fellapp_test_google-drive')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function googleDriveAction( Request $request ) {
 
         /////////// testing ///////////
@@ -119,10 +115,9 @@ class TestController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/test-google
-     *
-     * @Route("/test-google", name="fellapp_test_test_google")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
+    #[Route(path: '/test-google', name: 'fellapp_test_test_google')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function testGoogleAction( Request $request ) {
 
         //exit("not allowed");
@@ -184,9 +179,8 @@ class TestController extends OrderAbstractController
      * NOT USED
      *
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/google-file
-     *
-     * @Route("/google-file", name="fellapp_test_google-file")
      */
+    #[Route(path: '/google-file', name: 'fellapp_test_google-file')]
     public function googleFileAction( Request $request ) {
 
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
@@ -249,9 +243,8 @@ class TestController extends OrderAbstractController
      * Test if one reference has more than one ref letters. Not significant test
      *
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/test-latest-reference-letter/17 //2810
-     *
-     * @Route("/test-latest-reference-letter/{id}", name="fellapp_test_test-latest-reference-letter")
      */
+    #[Route(path: '/test-latest-reference-letter/{id}', name: 'fellapp_test_test-latest-reference-letter')]
     public function testLatestReferenceLetterAction( Request $request, Reference $reference ) {
 
         //exit("not allowed");
@@ -281,9 +274,8 @@ class TestController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/verify-import
-     *
-     * @Route("/verify-import", name="fellapp_test_verify-import")
      */
+    #[Route(path: '/verify-import', name: 'fellapp_test_verify-import')]
     public function testVerifyImportAction( Request $request ) {
 
         //exit("not allowed");
@@ -309,9 +301,8 @@ class TestController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/populate-fellapp
-     *
-     * @Route("/populate-fellapp", name="fellapp_test_populate-fellapp")
      */
+    #[Route(path: '/populate-fellapp', name: 'fellapp_test_populate-fellapp')]
     public function testPopulateFellAppAction( Request $request ) {
 
         //exit("not allowed");

@@ -28,10 +28,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Lists defaultReviewer states: irb_review, committee_review, final_review
-     *
-     * @Route("/default-reviewers/{specialtyStr}", name="translationalresearch_default-reviewer_index", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/index.html.twig")
      */
+    #[Route(path: '/default-reviewers/{specialtyStr}', name: 'translationalresearch_default-reviewer_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/index.html.twig')]
     public function indexAction(Request $request, $specialtyStr)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -69,10 +68,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Lists all defaultReviewer entities for a particular state.
-     *
-     * @Route("/default-reviewers/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/state-default-reviewer-index.html.twig")
      */
+    #[Route(path: '/default-reviewers/stage/{stateStr}/{specialtyStr}', name: 'translationalresearch_state-default-reviewer_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/state-default-reviewer-index.html.twig')]
     public function stateDefaultReviewerIndexAction(Request $request, $stateStr, $specialtyStr)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -136,10 +134,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Creates a new defaultReviewer entity.
-     *
-     * @Route("/default-reviewers/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      */
+    #[Route(path: '/default-reviewers/new/{stateStr}/{specialtyStr}', name: 'translationalresearch_default-reviewer_new', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/new.html.twig')]
     public function newAction(Request $request, $stateStr, $specialtyStr)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -197,10 +194,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Finds and displays a defaultReviewer entity.
-     *
-     * @Route("/default-reviewers/show/{id}", name="translationalresearch_default-reviewer_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      */
+    #[Route(path: '/default-reviewers/show/{id}', name: 'translationalresearch_default-reviewer_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/new.html.twig')]
     public function showAction(DefaultReviewer $defaultReviewer)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -229,10 +225,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing defaultReviewer entity.
-     *
-     * @Route("/default-reviewers/edit/{id}", name="translationalresearch_default-reviewer_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/new.html.twig")
      */
+    #[Route(path: '/default-reviewers/edit/{id}', name: 'translationalresearch_default-reviewer_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/new.html.twig')]
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -295,9 +290,8 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Deletes a defaultReviewer entity.
-     *
-     * @Route("/default-reviewers/delete/{id}", name="translationalresearch_default-reviewer_delete", methods={"DELETE"})
      */
+    #[Route(path: '/default-reviewers/delete/{id}', name: 'translationalresearch_default-reviewer_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, DefaultReviewer $defaultReviewer)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
@@ -399,10 +393,9 @@ class DefaultReviewerController extends OrderAbstractController
 
     /**
      * Substitute user
-     *
-     * @Route("/substitute-user/", name="translationalresearch_substitute_user", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/DefaultReviewer/substitute-user.html.twig")
      */
+    #[Route(path: '/substitute-user/', name: 'translationalresearch_substitute_user', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/DefaultReviewer/substitute-user.html.twig')]
     public function substituteUserAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {

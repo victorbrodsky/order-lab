@@ -36,18 +36,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TransResUploadController extends UploadController {
 
-    /**
-     * @Route("/file-delete", name="translationalresearch_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'translationalresearch_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
 
     /**
      * $id - document id
-     *
-     * @Route("/file-download/{id}/{eventtype}", name="translationalresearch_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'translationalresearch_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('translationalresearch.sitename'),$eventtype);
     }
@@ -55,9 +52,8 @@ class TransResUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="translationalresearch_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'translationalresearch_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         //exit("viewType=".$viewType);
         return $this->viewFileMethod($request,$id,$this->getParameter('translationalresearch.sitename'),$eventtype,$viewType);

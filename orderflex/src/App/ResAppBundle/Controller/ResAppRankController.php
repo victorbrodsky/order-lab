@@ -46,10 +46,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResAppRankController extends OrderAbstractController {
 
-    /**
-     * @Route("/rank/edit/{resappid}", name="resapp_rank_edit", methods={"GET"})
-     * @Template("AppResAppBundle/Rank/rank_modal.html.twig")
-     */
+    #[Route(path: '/rank/edit/{resappid}', name: 'resapp_rank_edit', methods: ['GET'])]
+    #[Template('AppResAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $resappid) {
 
         if( false == $this->isGranted("read","ResidencyApplication") ){
@@ -85,9 +83,7 @@ class ResAppRankController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/rank/update-ajax/{resappid}", name="resapp_rank_update", methods={"PUT"})
-     */
+    #[Route(path: '/rank/update-ajax/{resappid}', name: 'resapp_rank_update', methods: ['PUT'])]
     public function rankUpdateAjaxAction(Request $request, $resappid) {
 
         if( false == $this->isGranted("read","ResidencyApplication") ){
@@ -153,9 +149,8 @@ class ResAppRankController extends OrderAbstractController {
 
     /**
      * NOT USED
-     *
-     * @Route("/rank/update/{resappid}", name="resapp_rank_update", methods={"PUT"})
      */
+    #[Route(path: '/rank/update/{resappid}', name: 'resapp_rank_update', methods: ['PUT'])]
     public function rankUpdateAction(Request $request, $resappid) {
 
         if( false == $this->isGranted("read","ResidencyApplication") ){

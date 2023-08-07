@@ -73,13 +73,13 @@ class ResAppController extends OrderAbstractController {
      * Show home page
      * send-rejection-emails are replaced by group-emails
      *
-     * @Route("/", name="resapp_home")
-     * @Route("/my-interviewees/", name="resapp_myinterviewees")
-     * @Route("/group-emails", name="resapp_send_rejection_emails")
-     * @Route("/accepted-residents", name="resapp_accepted_residents")
      *
-     * @Template("AppResAppBundle/Default/home.html.twig")
      */
+    #[Route(path: '/', name: 'resapp_home')]
+    #[Route(path: '/my-interviewees/', name: 'resapp_myinterviewees')]
+    #[Route(path: '/group-emails', name: 'resapp_send_rejection_emails')]
+    #[Route(path: '/accepted-residents', name: 'resapp_accepted_residents')]
+    #[Template('AppResAppBundle/Default/home.html.twig')]
     public function indexAction(Request $request) {
         //echo "resapp home <br>";
 
@@ -746,25 +746,19 @@ class ResAppController extends OrderAbstractController {
     }
 
 //    //check for active access requests
-//    public function getActiveAccessReq() {
-//        if( !$this->isGranted('ROLE_RESAPP_ADMIN') ) {
-//            return null;
-//        }
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('resapp.sitename'),AccessRequest::STATUS_ACTIVE);
-//        return $accessreqs;
-//    }
-
-
-
-
+    //    public function getActiveAccessReq() {
+    //        if( !$this->isGranted('ROLE_RESAPP_ADMIN') ) {
+    //            return null;
+    //        }
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('resapp.sitename'),AccessRequest::STATUS_ACTIVE);
+    //        return $accessreqs;
+    //    }
     //@Route("/edit/{id}", name="resapp_edit")
     //@Route("/edit-with-default-interviewers/{id}", name="resapp_edit_default_interviewers")
-    /**
-     * @Route("/show/{id}", name="resapp_show")
-     * @Route("/download/{id}", name="resapp_download")
-     * @Template("AppResAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/show/{id}', name: 'resapp_show')]
+    #[Route(path: '/download/{id}', name: 'resapp_download')]
+    #[Template('AppResAppBundle/Form/new.html.twig')]
     public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
@@ -871,11 +865,8 @@ class ResAppController extends OrderAbstractController {
         return $this->render('AppResAppBundle/Form/new.html.twig', $args);
     }
 
-    /**
-     * @Route("/new/", name="resapp_new", methods={"GET"})
-     *
-     * @Template("AppResAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/new/', name: 'resapp_new', methods: ['GET'])]
+    #[Template('AppResAppBundle/Form/new.html.twig')]
     public function newAction(Request $request) {
 
         //coordinator and director can create
@@ -1105,223 +1096,221 @@ class ResAppController extends OrderAbstractController {
 
 
 //    /**
-//     * -NOT-USED
-//     * @Route("/update-NOT-USED/{id}", name="resapp_update-NOT-USED", methods={"PUT"})
-//     * @Template("AppResAppBundle/Form/new.html.twig")
-//     */
-//    public function updateNotUsedAction(Request $request, $id) {
-//
-////        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
-////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-////        }
-////        if( false == $this->isGranted("update","ResidencyApplication") ){
-////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-////        }
-//
-//        //echo "update <br>";
-//        //exit('update');
-//
-//        //ini_set('memory_limit', '3072M'); //3072M
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $user = $this->getUser();
-//
-//        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
-//        }
-//
-//        //user who has the same res type can view or edit
-//        $resappUtil = $this->container->get('resapp_util');
-//        if( $resappUtil->hasResappPermission($user,$entity) == false ) {
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-//
-//        if( false == $this->isGranted("update",$entity) ){
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-//
-//        // Create an ArrayCollection of the current interviews
-//        $originalInterviews = new ArrayCollection();
-//        foreach( $entity->getInterviews() as $interview) {
-//            $originalInterviews->add($interview);
-//        }
-//
-//        $originalReports = new ArrayCollection();
-//        foreach( $entity->getReports() as $report ) {
-//            $originalReports->add($report);
-//        }
-//
-//        $cycle = 'edit';
-//        $user = $this->getUser();
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'em' => $this->getDoctrine()->getManager(),
-//            'user' => $entity->getUser(),
-//            'cloneuser' => null,
-//            'roles' => $user->getRoles(),
-//            'container' => $this->container,
-//            'cycle_type' => "update"
-//        );
-//        $form = $this->createForm( ResidencyApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
-//        //$routeName = $request->get('_route');
-//        //$args = $this->getShowParameters($routeName,null,$entity);
-//        //$form = $args['form_pure'];
-//
-//        $form->handleRequest($request);
-//
-//        if( !$form->isSubmitted() ) {
-//            echo "form is not submitted<br>";
-//            $form->submit($request);
-//        }
-//
-//
-////        if ($form->isDisabled()) {
-////            echo "form is disabled<br>";
-////            exit();
-////        }
-////        if (count($form->getErrors(true)) > 0) {
-////            echo "form has errors<br>";
-////        }
-////        echo "errors:<br>";
-////        $string = (string) $form->getErrors(true);
-////        echo "string errors=".$string."<br>";
-////        echo "getErrors count=".count($form->getErrors())."<br>";
-//        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-////        print_r($form->getErrors());
-////        echo "<br>string errors:<br>";
-////        print_r($form->getErrorsAsString());
-////        echo "<br>";
-////        exit();
-//
-//        if(0) {
-//            $errorHelper = new ErrorHelper();
-//            $errors = $errorHelper->getErrorMessages($form);
-//            echo "<br>form errors:<br>";
-//            print_r($errors);
-//
-//            //echo "<br><br>getErrors:<br>";
-//            //var_dump($form->getErrors());die;
-//        }
-//
-//
-//
-//        $force = false;
-//        //$force = true;
-//        if( $form->isValid() || $force ) {
-//
-//            //exit('form valid');
-//
-//            /////////////// Process Removed Collections ///////////////
-//            $removedCollections = array();
-//
-//            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
-//            if( $removedInfo ) {
-//                $removedCollections[] = $removedInfo;
-//            }
-//            /////////////// EOF Process Removed Collections ///////////////
-//
-//            $this->calculateScore($entity);
-//
-//            $this->processDocuments($entity);
-//
-//            $this->assignResAppAccessRoles($entity);
-//
-//            //set update author application
-//            $em = $this->getDoctrine()->getManager();
-//            $userUtil = new UserUtil();
-//            $secTokenStorage = $this->container->get('security.token_storage');
-//            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
-//
-//
-//            /////////////// Add event log on edit (edit or add collection) ///////////////
-//            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-//            $changedInfoArr = $this->setEventLogChanges($entity);
-//
-//            //report (Complete Application PDF) diff
-//            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
-//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-//            //exit('report');
-//
-//            //set Edit event log for removed collection and changed fields or added collection
-//            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
-//                $event = "Residency Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
-//                $event = $event . implode("<br>", $changedInfoArr);
-//                $event = $event . "<br>" . implode("<br>", $removedCollections);
-//                $event = $event . $reportsDiffInfoStr;
-//                //echo "Diff event=".$event."<br>";
-//                //$userSecUtil = $this->container->get('user_security_utility');
-//                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
-//            }
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            //don't regenerate report if it was added.
-//            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
-//            //echo "report count=".count($entity->getReports())."<br>";
-//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-//            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
-//                $resappRepGen = $this->container->get('resapp_reportgenerator');
-//                $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
-//                $this->addFlash(
-//                    'notice',
-//                    'A new Complete Residency Application PDF will be generated.'
-//                );
-//                //echo "Regenerate!!!! <br>";
-//            } else {
-//                //echo "NO Regenerate!!!! <br>";
-//            }
-//            //exit('report regen');
-//
-//            //set logger for update
-//            //$logger = $this->container->get('logger');
-//            //$logger->notice("update: timezone=".date_default_timezone_get());
-//            //$userSecUtil = $this->container->get('user_security_utility');
-//            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-//            $event = "Residency Application with ID " . $id . " has been updated by " . $user;
-//            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
-//            //exit('event='.$event);
-//
-//            return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
-//        } else {
-//            echo "getErrors count=".count($form->getErrors(true))."<br>";
-//            $string = (string) $form->getErrors(true);
-//            //echo "Error:<br>$string<br><br><pre>";
-//            //print_r($form->getErrors());
-//            //echo "</pre>";
-//
-//            $msg = 'Residency Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
-//            //$userSecUtil = $this->container->get('user_security_utility');
-//            //$userSecUtil->sendEmailToSystemEmail("Residency Form has an error (ID# ".$entity->getId().")", $msg);
-//            exit($msg."<br>Notification email has been sent to the system administrator.");
-//            //throw new \Exception($msg);
-//        }
-//
-//        //echo 'form invalid <br>';
-//        //exit('form invalid');
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $entity,
-//            'pathbase' => 'resapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->getParameter('resapp.sitename')
-//        );
-//    }
+    //     * -NOT-USED
+    //     * @Route("/update-NOT-USED/{id}", name="resapp_update-NOT-USED", methods={"PUT"})
+    //     * @Template("AppResAppBundle/Form/new.html.twig")
+    //     */
+    //    public function updateNotUsedAction(Request $request, $id) {
+    //
+    ////        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
+    ////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+    ////        }
+    ////        if( false == $this->isGranted("update","ResidencyApplication") ){
+    ////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+    ////        }
+    //
+    //        //echo "update <br>";
+    //        //exit('update');
+    //
+    //        //ini_set('memory_limit', '3072M'); //3072M
+    //
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        $user = $this->getUser();
+    //
+    //        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+    //
+    //        if( !$entity ) {
+    //            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
+    //        }
+    //
+    //        //user who has the same res type can view or edit
+    //        $resappUtil = $this->container->get('resapp_util');
+    //        if( $resappUtil->hasResappPermission($user,$entity) == false ) {
+    //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+    //        }
+    //
+    //        if( false == $this->isGranted("update",$entity) ){
+    //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+    //        }
+    //
+    //        // Create an ArrayCollection of the current interviews
+    //        $originalInterviews = new ArrayCollection();
+    //        foreach( $entity->getInterviews() as $interview) {
+    //            $originalInterviews->add($interview);
+    //        }
+    //
+    //        $originalReports = new ArrayCollection();
+    //        foreach( $entity->getReports() as $report ) {
+    //            $originalReports->add($report);
+    //        }
+    //
+    //        $cycle = 'edit';
+    //        $user = $this->getUser();
+    //
+    //        $params = array(
+    //            'cycle' => $cycle,
+    //            'em' => $this->getDoctrine()->getManager(),
+    //            'user' => $entity->getUser(),
+    //            'cloneuser' => null,
+    //            'roles' => $user->getRoles(),
+    //            'container' => $this->container,
+    //            'cycle_type' => "update"
+    //        );
+    //        $form = $this->createForm( ResidencyApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
+    //        //$routeName = $request->get('_route');
+    //        //$args = $this->getShowParameters($routeName,null,$entity);
+    //        //$form = $args['form_pure'];
+    //
+    //        $form->handleRequest($request);
+    //
+    //        if( !$form->isSubmitted() ) {
+    //            echo "form is not submitted<br>";
+    //            $form->submit($request);
+    //        }
+    //
+    //
+    ////        if ($form->isDisabled()) {
+    ////            echo "form is disabled<br>";
+    ////            exit();
+    ////        }
+    ////        if (count($form->getErrors(true)) > 0) {
+    ////            echo "form has errors<br>";
+    ////        }
+    ////        echo "errors:<br>";
+    ////        $string = (string) $form->getErrors(true);
+    ////        echo "string errors=".$string."<br>";
+    ////        echo "getErrors count=".count($form->getErrors())."<br>";
+    //        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+    ////        print_r($form->getErrors());
+    ////        echo "<br>string errors:<br>";
+    ////        print_r($form->getErrorsAsString());
+    ////        echo "<br>";
+    ////        exit();
+    //
+    //        if(0) {
+    //            $errorHelper = new ErrorHelper();
+    //            $errors = $errorHelper->getErrorMessages($form);
+    //            echo "<br>form errors:<br>";
+    //            print_r($errors);
+    //
+    //            //echo "<br><br>getErrors:<br>";
+    //            //var_dump($form->getErrors());die;
+    //        }
+    //
+    //
+    //
+    //        $force = false;
+    //        //$force = true;
+    //        if( $form->isValid() || $force ) {
+    //
+    //            //exit('form valid');
+    //
+    //            /////////////// Process Removed Collections ///////////////
+    //            $removedCollections = array();
+    //
+    //            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+    //            if( $removedInfo ) {
+    //                $removedCollections[] = $removedInfo;
+    //            }
+    //            /////////////// EOF Process Removed Collections ///////////////
+    //
+    //            $this->calculateScore($entity);
+    //
+    //            $this->processDocuments($entity);
+    //
+    //            $this->assignResAppAccessRoles($entity);
+    //
+    //            //set update author application
+    //            $em = $this->getDoctrine()->getManager();
+    //            $userUtil = new UserUtil();
+    //            $secTokenStorage = $this->container->get('security.token_storage');
+    //            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+    //
+    //
+    //            /////////////// Add event log on edit (edit or add collection) ///////////////
+    //            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+    //            $changedInfoArr = $this->setEventLogChanges($entity);
+    //
+    //            //report (Complete Application PDF) diff
+    //            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
+    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+    //            //exit('report');
+    //
+    //            //set Edit event log for removed collection and changed fields or added collection
+    //            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
+    //                $event = "Residency Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+    //                $event = $event . implode("<br>", $changedInfoArr);
+    //                $event = $event . "<br>" . implode("<br>", $removedCollections);
+    //                $event = $event . $reportsDiffInfoStr;
+    //                //echo "Diff event=".$event."<br>";
+    //                //$userSecUtil = $this->container->get('user_security_utility');
+    //                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
+    //            }
+    //
+    //            $em = $this->getDoctrine()->getManager();
+    //            $em->persist($entity);
+    //            $em->flush();
+    //
+    //            //don't regenerate report if it was added.
+    //            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
+    //            //echo "report count=".count($entity->getReports())."<br>";
+    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+    //            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
+    //                $resappRepGen = $this->container->get('resapp_reportgenerator');
+    //                $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
+    //                $this->addFlash(
+    //                    'notice',
+    //                    'A new Complete Residency Application PDF will be generated.'
+    //                );
+    //                //echo "Regenerate!!!! <br>";
+    //            } else {
+    //                //echo "NO Regenerate!!!! <br>";
+    //            }
+    //            //exit('report regen');
+    //
+    //            //set logger for update
+    //            //$logger = $this->container->get('logger');
+    //            //$logger->notice("update: timezone=".date_default_timezone_get());
+    //            //$userSecUtil = $this->container->get('user_security_utility');
+    //            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+    //            $event = "Residency Application with ID " . $id . " has been updated by " . $user;
+    //            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
+    //            //exit('event='.$event);
+    //
+    //            return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
+    //        } else {
+    //            echo "getErrors count=".count($form->getErrors(true))."<br>";
+    //            $string = (string) $form->getErrors(true);
+    //            //echo "Error:<br>$string<br><br><pre>";
+    //            //print_r($form->getErrors());
+    //            //echo "</pre>";
+    //
+    //            $msg = 'Residency Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
+    //            //$userSecUtil = $this->container->get('user_security_utility');
+    //            //$userSecUtil->sendEmailToSystemEmail("Residency Form has an error (ID# ".$entity->getId().")", $msg);
+    //            exit($msg."<br>Notification email has been sent to the system administrator.");
+    //            //throw new \Exception($msg);
+    //        }
+    //
+    //        //echo 'form invalid <br>';
+    //        //exit('form invalid');
+    //
+    //        return array(
+    //            'form' => $form->createView(),
+    //            'entity' => $entity,
+    //            'pathbase' => 'resapp',
+    //            'cycle' => $cycle,
+    //            'sitename' => $this->getParameter('resapp.sitename')
+    //        );
+    //    }
     //EOF -NOT-USED
-
     /**
      * Separate edit/update controller action to insure csrf token is valid
      * Displays a form to edit an existing resapp entity.
-     *
-     * @Route("/edit/{id}", name="resapp_edit", methods={"GET","POST"})
-     * @Route("/edit-with-default-interviewers/{id}", name="resapp_edit_default_interviewers", methods={"GET","POST"})
-     * @Template("AppResAppBundle/Form/edit.html.twig")
      */
+    #[Route(path: '/edit/{id}', name: 'resapp_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/edit-with-default-interviewers/{id}', name: 'resapp_edit_default_interviewers', methods: ['GET', 'POST'])]
+    #[Template('AppResAppBundle/Form/edit.html.twig')]
     public function editAction(Request $request, ResidencyApplication $entity)
     {
         if( !$entity ) {
@@ -1702,10 +1691,8 @@ class ResAppController extends OrderAbstractController {
         return "New";
     }
 
-    /**
-     * @Route("/applicant/new", name="resapp_create_applicant", methods={"POST"})
-     * @Template("AppResAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/applicant/new', name: 'resapp_create_applicant', methods: ['POST'])]
+    #[Template('AppResAppBundle/Form/new.html.twig')]
     public function createApplicantAction( Request $request )
     {
         //exit("create form");
@@ -2019,10 +2006,8 @@ class ResAppController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/change-status/{id}/{status}", name="resapp_status", methods={"GET"})
-     * @Route("/status/{id}/{status}", name="resapp_status_email", methods={"GET"})
-     */
+    #[Route(path: '/change-status/{id}/{status}', name: 'resapp_status', methods: ['GET'])]
+    #[Route(path: '/status/{id}/{status}', name: 'resapp_status_email', methods: ['GET'])]
     public function statusAction( Request $request, $id, $status ) {
 
         //$logger = $this->container->get('logger');
@@ -2180,9 +2165,7 @@ class ResAppController extends OrderAbstractController {
         return $event;
     }
 
-    /**
-     * @Route("/move-year/{id}/{year}", name="resapp_application_move_year", methods={"GET"})
-     */
+    #[Route(path: '/move-year/{id}/{year}', name: 'resapp_application_move_year', methods: ['GET'])]
     public function moveYearAction( Request $request, $id, $year ) {
 
         $em = $this->getDoctrine()->getManager();
@@ -2267,33 +2250,30 @@ class ResAppController extends OrderAbstractController {
     }
 
 //    /**
-//     * @Route("/status-sync/", name="resapp_sincstatus", methods={"GET"})
-//     */
-//    public function syncStatusAction( Request $request ) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $applications = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
-//
-//        foreach( $applications as $application ) {
-//            $status = $application->getApplicationStatus();
-//            $statusObj = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName($status);
-//            if( !$statusObj ) {
-//                throw new EntityNotFoundException('Unable to find ResAppStatus by name='.$status);
-//            }
-//            $application->setAppStatus($statusObj);
-//            //$application->setApplicationStatus(NULL);
-//        }
-//
-//        $em->flush();
-//
-//        return $this->redirect( $this->generateUrl('resapp_home') );
-//    }
-
-    /**
-     * @Route("/application-evaluation/show/{id}", name="resapp_application_show", methods={"GET"})
-     * @Route("/application-evaluation/{id}", name="resapp_application_edit", methods={"GET"})
-     * @Template("AppResAppBundle/Interview/interview_selector.html.twig")
-     */
+    //     * @Route("/status-sync/", name="resapp_sincstatus", methods={"GET"})
+    //     */
+    //    public function syncStatusAction( Request $request ) {
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $applications = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+    //
+    //        foreach( $applications as $application ) {
+    //            $status = $application->getApplicationStatus();
+    //            $statusObj = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName($status);
+    //            if( !$statusObj ) {
+    //                throw new EntityNotFoundException('Unable to find ResAppStatus by name='.$status);
+    //            }
+    //            $application->setAppStatus($statusObj);
+    //            //$application->setApplicationStatus(NULL);
+    //        }
+    //
+    //        $em->flush();
+    //
+    //        return $this->redirect( $this->generateUrl('resapp_home') );
+    //    }
+    #[Route(path: '/application-evaluation/show/{id}', name: 'resapp_application_show', methods: ['GET'])]
+    #[Route(path: '/application-evaluation/{id}', name: 'resapp_application_edit', methods: ['GET'])]
+    #[Template('AppResAppBundle/Interview/interview_selector.html.twig')]
     public function applicationAction( Request $request, ResidencyApplication $resapp )
     {
 
@@ -2356,11 +2336,9 @@ class ResAppController extends OrderAbstractController {
         return $this->redirect($this->generateUrl('resapp-nopermission'));
     }
 
-    /**
-     * @Route("/interview-evaluation/show/{id}", name="resapp_interview_show", methods={"GET"})
-     * @Route("/interview-evaluation/{id}", name="resapp_interview_edit", methods={"GET"})
-     * @Template("AppResAppBundle/Interview/new.html.twig")
-     */
+    #[Route(path: '/interview-evaluation/show/{id}', name: 'resapp_interview_show', methods: ['GET'])]
+    #[Route(path: '/interview-evaluation/{id}', name: 'resapp_interview_edit', methods: ['GET'])]
+    #[Template('AppResAppBundle/Interview/new.html.twig')]
     public function interviewAction( Request $request, $id ) {
 
         //echo "status <br>";
@@ -2459,10 +2437,8 @@ class ResAppController extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/interview/update/{id}", name="resapp_interview_update", methods={"POST"})
-     * @Template("AppResAppBundle/Interview/new.html.twig")
-     */
+    #[Route(path: '/interview/update/{id}', name: 'resapp_interview_update', methods: ['POST'])]
+    #[Template('AppResAppBundle/Interview/new.html.twig')]
     public function interviewUpdateAction( Request $request, $id ) {
 
         //echo "status <br>";
@@ -2590,54 +2566,45 @@ class ResAppController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/interview/new/{resappid}/{interviewid}", name="resapp_interview_new", methods={"GET"})
-//     * @Route("/interview/new/{resappid}/{interviewid}", name="resapp_interview_new", methods={"GET"})
-//     * @Template("AppResAppBundle/Interview/new.html.twig")
-//     */
-//    public function createInterviewAction( Request $request ) {
-//
-//        //echo "status <br>";
-//
-//        if( false == $this->isGranted('ROLE_RESAPP_INTERVIEWER') ){
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $interview = $this->getDoctrine()->getRepository('AppResAppBundle:Interview')->find($id);
-//
-//        if( !$interview ) {
-//            throw $this->createNotFoundException('Unable to find Residency Application Interview by id='.$id);
-//        }
-//
-//        $cycle = "new";
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'sc' => $this->container->get('security.context'),
-//            'em' => $this->getDoctrine()->getManager(),
-//        );
-//        $form = $this->createForm( new InterviewType($params), $interview );
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $interview,
-//            'pathbase' => 'resapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->getParameter('resapp.sitename')
-//        );
-//
-//    }
-
-
-
-
-
-
-
-    /**
-     * @Route("/remove/{id}", name="resapp_remove")
-     */
+    //     * @Route("/interview/new/{resappid}/{interviewid}", name="resapp_interview_new", methods={"GET"})
+    //     * @Route("/interview/new/{resappid}/{interviewid}", name="resapp_interview_new", methods={"GET"})
+    //     * @Template("AppResAppBundle/Interview/new.html.twig")
+    //     */
+    //    public function createInterviewAction( Request $request ) {
+    //
+    //        //echo "status <br>";
+    //
+    //        if( false == $this->isGranted('ROLE_RESAPP_INTERVIEWER') ){
+    //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+    //        }
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        $interview = $this->getDoctrine()->getRepository('AppResAppBundle:Interview')->find($id);
+    //
+    //        if( !$interview ) {
+    //            throw $this->createNotFoundException('Unable to find Residency Application Interview by id='.$id);
+    //        }
+    //
+    //        $cycle = "new";
+    //
+    //        $params = array(
+    //            'cycle' => $cycle,
+    //            'sc' => $this->container->get('security.context'),
+    //            'em' => $this->getDoctrine()->getManager(),
+    //        );
+    //        $form = $this->createForm( new InterviewType($params), $interview );
+    //
+    //        return array(
+    //            'form' => $form->createView(),
+    //            'entity' => $interview,
+    //            'pathbase' => 'resapp',
+    //            'cycle' => $cycle,
+    //            'sitename' => $this->getParameter('resapp.sitename')
+    //        );
+    //
+    //    }
+    #[Route(path: '/remove/{id}', name: 'resapp_remove')]
     public function removeAction($id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -2655,9 +2622,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Manually import and populate applicants from Google
-     *
-     * @Route("/populate-import", name="resapp_import_populate")
      */
+    #[Route(path: '/populate-import', name: 'resapp_import_populate')]
     public function importAndPopulateAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -2717,9 +2683,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Manually import and populate recommendation letters from Google
-     *
-     * @Route("/populate-import-letters", name="resapp_import_populate_letters")
      */
+    #[Route(path: '/populate-import-letters', name: 'resapp_import_populate_letters')]
     public function importAndPopulateLettersAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -2740,9 +2705,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Show home page
-     *
-     * @Route("/populate", name="resapp_populate")
      */
+    #[Route(path: '/populate', name: 'resapp_populate')]
     public function populateSpreadsheetAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -2771,9 +2735,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Import spreadsheet to C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\resapp\Spreadsheets
-     *
-     * @Route("/import", name="resapp_import")
      */
+    #[Route(path: '/import', name: 'resapp_import')]
     public function importAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -2855,45 +2818,42 @@ class ResAppController extends OrderAbstractController {
 
 
 //    /**
-//     * NOT USED NOW
-//     * update report by js
-//     *
-//     * @Route("/update-report/", name="resapp_update_report", methods={"POST"}, options={"expose"=true})
-//     */
-//    public function updateReportAction(Request $request) {
-//
-//        $id = $request->get('id');
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
-//        }
-//
-//        echo "reports = " . count($entity->getReports()) . "<br>";
-//        exit();
-//
-//        //update report if report does not exists
-//        if( count($entity->getReports()) == 0 ) {
-//            $resappRepGen = $this->container->get('resapp_reportgenerator');
-//            $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
-//        }
-//
-//        $response = new Response();
-//        $response->setContent('Sent to queue');
-//        return $response;
-//    }
-
-
+    //     * NOT USED NOW
+    //     * update report by js
+    //     *
+    //     * @Route("/update-report/", name="resapp_update_report", methods={"POST"}, options={"expose"=true})
+    //     */
+    //    public function updateReportAction(Request $request) {
+    //
+    //        $id = $request->get('id');
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+    //
+    //        if( !$entity ) {
+    //            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
+    //        }
+    //
+    //        echo "reports = " . count($entity->getReports()) . "<br>";
+    //        exit();
+    //
+    //        //update report if report does not exists
+    //        if( count($entity->getReports()) == 0 ) {
+    //            $resappRepGen = $this->container->get('resapp_reportgenerator');
+    //            $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
+    //        }
+    //
+    //        $response = new Response();
+    //        $response->setContent('Sent to queue');
+    //        return $response;
+    //    }
     /**
      * Download application using
      * https://github.com/KnpLabs/KnpSnappyBundle
      * https://github.com/devandclick/EnseparHtml2pdfBundle
-     *
-     * @Route("/download-pdf/{id}", name="resapp_download_pdf", methods={"GET"})
-     * @Route("/view-pdf/{id}", name="resapp_view_pdf", methods={"GET"})
      */
+    #[Route(path: '/download-pdf/{id}', name: 'resapp_download_pdf', methods: ['GET'])]
+    #[Route(path: '/view-pdf/{id}', name: 'resapp_view_pdf', methods: ['GET'])]
     public function downloadReportAction(Request $request, $id) {
 
 //        if( false == $this->isGranted('ROLE_RESAPP_USER') ){
@@ -2969,8 +2929,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Download itinerary
-     * @Route("/download-itinerary-pdf/{id}", name="resapp_download_itinerary_pdf", methods={"GET"})
      */
+    #[Route(path: '/download-itinerary-pdf/{id}', name: 'resapp_download_itinerary_pdf', methods: ['GET'])]
     public function downloadItineraryAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
@@ -2993,10 +2953,10 @@ class ResAppController extends OrderAbstractController {
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/regenerate-all-complete-application-pdfs/2021
      *
-     * @Route("/regenerate-all-complete-application-pdfs/{year}", name="resapp_regenerate_reports")
      *
-     * @Template("AppResAppBundle/Form/new.html.twig")
      */
+    #[Route(path: '/regenerate-all-complete-application-pdfs/{year}', name: 'resapp_regenerate_reports')]
+    #[Template('AppResAppBundle/Form/new.html.twig')]
     public function regenerateAllReportsAction(Request $request, $year) {
 
         exit("This method is disabled for security reason.");
@@ -3042,9 +3002,8 @@ class ResAppController extends OrderAbstractController {
     }
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/clear-all-queue-processes
-     *
-     * @Route("/clear-all-queue-processes", name="resapp_clear_all_queue_processes")
      */
+    #[Route(path: '/clear-all-queue-processes', name: 'resapp_clear_all_queue_processes')]
     public function clearAllQueueProcessesAction(Request $request) {
 
         //exit("This method is disabled for security reason.");
@@ -3069,11 +3028,8 @@ class ResAppController extends OrderAbstractController {
     }
     
 
-    /**
-     * @Route("/reset-queue-and-run/", name="resapp_reset_queue_run")
-     *
-     * @Template("AppResAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/reset-queue-and-run/', name: 'resapp_reset_queue_run')]
+    #[Template('AppResAppBundle/Form/new.html.twig')]
     public function resetQueueRunAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -3123,9 +3079,7 @@ class ResAppController extends OrderAbstractController {
 
 
     
-    /**
-     * @Route("/download-applicants-list-excel/{currentYear}/{resappTypeId}/{resappIds}", name="resapp_download_applicants_list_excel")
-     */
+    #[Route(path: '/download-applicants-list-excel/{currentYear}/{resappTypeId}/{resappIds}', name: 'resapp_download_applicants_list_excel')]
     public function downloadApplicantListExcelAction(Request $request, $currentYear, $resappTypeId, $resappIds) {
 
 //        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
@@ -3193,10 +3147,8 @@ class ResAppController extends OrderAbstractController {
         exit();      
     }
 
-    /**
-     * @Route("/send-rejection-emails-action/", name="resapp_send_rejection_emails_action", methods={"POST"}, options={"expose"=true})
-     * @Template("AppResAppBundle/Form/send-notification-emails.html.twig")
-     */
+    #[Route(path: '/send-rejection-emails-action/', name: 'resapp_send_rejection_emails_action', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppResAppBundle/Form/send-notification-emails.html.twig')]
     public function sendRejectionEmailsAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
@@ -3356,9 +3308,8 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Show home page
-     *
-     * @Route("/test", name="resapp_test", methods={"GET"})
      */
+    #[Route(path: '/test', name: 'resapp_test', methods: ['GET'])]
     public function testAction() {
 
         exit('tests');

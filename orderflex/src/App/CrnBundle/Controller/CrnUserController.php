@@ -29,18 +29,16 @@ class CrnUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="crn_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/{id}', name: 'crn_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('crn.sitename'));
     }
 
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="crn_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'crn_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -57,10 +55,8 @@ class CrnUserController extends UserController
         return $editUser;
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="crn_user_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'crn_user_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');

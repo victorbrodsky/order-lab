@@ -35,10 +35,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class VacReqSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="vacreq_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'vacreq_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('vacreq: loginAction');
         return parent::loginAction($request,$authenticationUtils);
@@ -46,21 +44,17 @@ class VacReqSecurityController extends SecurityController
 
 
 //    /**
-//     * @Route("/logout", name="vacreq_logout")
-//     * @Template()
-//     */
-//    public function logoutAction( Request $request ) {
-//        exit('vacreq: logoutAction');
-//        return parent::logoutAction($request);
-//        //$this->container->get('security.token_storage')->setToken(null);
-//        //$this->tokenStorage->setToken(null);
-//        //return $this->redirect($this->generateUrl($sitename.'_login'));
-//    }
-
-    /**
-     * @Route("/setloginvisit/", name="vacreq_setloginvisit", methods={"GET"})
-     *
-     */
+    //     * @Route("/logout", name="vacreq_logout")
+    //     * @Template()
+    //     */
+    //    public function logoutAction( Request $request ) {
+    //        exit('vacreq: logoutAction');
+    //        return parent::logoutAction($request);
+    //        //$this->container->get('security.token_storage')->setToken(null);
+    //        //$this->tokenStorage->setToken(null);
+    //        //return $this->redirect($this->generateUrl($sitename.'_login'));
+    //    }
+    #[Route(path: '/setloginvisit/', name: 'vacreq_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //exit('vacreq: setAjaxLoginVisit');
@@ -68,10 +62,8 @@ class VacReqSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/no-permission", name="vacreq-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'vacreq-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -83,11 +75,9 @@ class VacReqSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/idle-log-out", name="vacreq_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="vacreq_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'vacreq_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'vacreq_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('vacreq: idlelogoutAction');

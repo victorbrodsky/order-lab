@@ -55,10 +55,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Creates a new Request Slide Return with just slide names such as Accession Number
-     *
-     * @Route("/slide-return-request/new", name="slide-return-request-table", methods={"GET"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/create-table.html.twig")
      */
+    #[Route(path: '/slide-return-request/new', name: 'slide-return-request-table', methods: ['GET'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/create-table.html.twig')]
     public function newRequestSlideReturnTableAction(Request $request)
     {
 
@@ -90,10 +89,8 @@ class SlideReturnRequestController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/slide-return-request/submit", name="slide-return-request-table-submit", methods={"POST"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/create-table.html.twig")
-     */
+    #[Route(path: '/slide-return-request/submit', name: 'slide-return-request-table-submit', methods: ['POST'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/create-table.html.twig')]
     public function submitRequestSlideReturnTableAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -205,10 +202,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Lists all Slides for this order with oid=$id.
-     *
-     * @Route("/slide-return-request/{id}", name="slide-return-request", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/create.html.twig")
      */
+    #[Route(path: '/slide-return-request/{id}', name: 'slide-return-request', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/create.html.twig')]
     public function indexAction( $id ) {
 
         //check if the user has permission to view this order
@@ -231,10 +227,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Creates a new SlideReturnRequest. id - order oid
-     *
-     * @Route("/slide-return-request/{id}", name="slide-return-request_create", methods={"POST"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/create.html.twig")
      */
+    #[Route(path: '/slide-return-request/{id}', name: 'slide-return-request_create', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/create.html.twig')]
     public function createSlideReturnRequestAction(Request $request, $id)
     {
 
@@ -383,10 +378,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Lists all Slides requested for return for Admin.
-     *
-     * @Route("/incoming-slide-return-requests", name="incoming-slide-return-requests", methods={"GET"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
+    #[Route(path: '/incoming-slide-return-requests', name: 'incoming-slide-return-requests', methods: ['GET'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/index.html.twig')]
     public function allRequestedSlidesAction( Request $request ) {
 
         $filterForm = $this->createForm(FilterSlideReturnRequestType::class);
@@ -505,10 +499,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Lists user's Slides requested for return.
-     *
-     * @Route("/my-slide-return-requests", name="my-slide-return-requests", methods={"GET"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
+    #[Route(path: '/my-slide-return-requests', name: 'my-slide-return-requests', methods: ['GET'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/index.html.twig')]
     public function userRequestedSlidesAction( Request $request ) {
 
         $filterForm = $this->createForm(FilterSlideReturnRequestType::class);
@@ -591,9 +584,9 @@ class SlideReturnRequestController extends OrderAbstractController
 
     /**
      * Change status
-     * @Route("/slide-return-request/{id}/{status}/status", name="sliderequest_status", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
      */
+    #[Route(path: '/slide-return-request/{id}/{status}/status', name: 'sliderequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/SlideReturnRequest/index.html.twig')]
     public function statusAction( Request $request, $id, $status )
     {
 
@@ -674,67 +667,63 @@ class SlideReturnRequestController extends OrderAbstractController
 
 
 //    /**
-//     * Add comment
-//     * @Route("/slide-return-request/status-changed-comment/create", methods={"POST"}, name="sliderequest_status_comment")
-//     */
-//    public function statusWithCommentAction( Request $request ) {
-//
-//        $text_value = $request->request->get('text');
-//        $id = $request->request->get('id');
-//
-//        //echo "id=".$id.", text_value=".$text_value."<br>";
-//
-//        $res = 1;
-//
-//        if( $text_value == "" ) {
-//            $res = 'Comment was not provided';
-//        } else {
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
-//
-//            if( !$slideReturnRequest ) {
-//                throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
-//            }
-//
-//            $user = $this->getUser();
-//            $slideReturnRequest->addComment($text_value, $user);
-//
-//            //echo "ok";
-//            $em->persist($slideReturnRequest);
-//            $em->flush();
-//
-//
-//            //record history
-//            $user = $this->getUser();
-//            $message = $slideReturnRequest->getMessage();
-//            $slides = $slideReturnRequest->getSlide();
-//            $history = new History();
-//            $history->setEventtype('Slide Return Request Comment Added');
-//            $history->setMessage($message);
-//            $history->setCurrentid($message->getOid());
-//            $history->setCurrentstatus($message->getStatus());
-//            $history->setProvider($user);
-//            $history->setRoles($user->getRoles());
-//            $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
-//            $history->setNote($notemsg);
-//            $em->persist($history);
-//            $em->flush();
-//
-//        }
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($res));
-//        return $response;
-//
-//    }
-
-
+    //     * Add comment
+    //     * @Route("/slide-return-request/status-changed-comment/create", methods={"POST"}, name="sliderequest_status_comment")
+    //     */
+    //    public function statusWithCommentAction( Request $request ) {
+    //
+    //        $text_value = $request->request->get('text');
+    //        $id = $request->request->get('id');
+    //
+    //        //echo "id=".$id.", text_value=".$text_value."<br>";
+    //
+    //        $res = 1;
+    //
+    //        if( $text_value == "" ) {
+    //            $res = 'Comment was not provided';
+    //        } else {
+    //
+    //            $em = $this->getDoctrine()->getManager();
+    //            $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
+    //
+    //            if( !$slideReturnRequest ) {
+    //                throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
+    //            }
+    //
+    //            $user = $this->getUser();
+    //            $slideReturnRequest->addComment($text_value, $user);
+    //
+    //            //echo "ok";
+    //            $em->persist($slideReturnRequest);
+    //            $em->flush();
+    //
+    //
+    //            //record history
+    //            $user = $this->getUser();
+    //            $message = $slideReturnRequest->getMessage();
+    //            $slides = $slideReturnRequest->getSlide();
+    //            $history = new History();
+    //            $history->setEventtype('Slide Return Request Comment Added');
+    //            $history->setMessage($message);
+    //            $history->setCurrentid($message->getOid());
+    //            $history->setCurrentstatus($message->getStatus());
+    //            $history->setProvider($user);
+    //            $history->setRoles($user->getRoles());
+    //            $notemsg = 'Comment added to Slide Return Request '.$id.' for '.count($slides) . ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
+    //            $history->setNote($notemsg);
+    //            $em->persist($history);
+    //            $em->flush();
+    //
+    //        }
+    //
+    //        $response = new Response();
+    //        $response->headers->set('Content-Type', 'application/json');
+    //        $response->setContent(json_encode($res));
+    //        return $response;
+    //
+    //    }
     //@Template("AppOrderformBundle/SlideReturnRequest/index.html.twig")
-    /**
-     * @Route("/slide-return-request/comment/create", name="slide-return-request-comment-create", methods={"POST"})
-     */
+    #[Route(path: '/slide-return-request/comment/create', name: 'slide-return-request-comment-create', methods: ['POST'])]
     public function createSlideReturnRequestCommentAction(Request $request)
     {
 

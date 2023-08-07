@@ -52,10 +52,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CrnEditController extends CrnEntryController
 {
 
-    /**
-     * @Route("/delete/{messageOid}/{messageVersion}", name="crn_delete", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/delete/{messageOid}/{messageVersion}', name: 'crn_delete', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -87,10 +85,8 @@ class CrnEditController extends CrnEntryController
     }
 
 
-    /**
-     * @Route("/un-delete/{messageOid}/{messageVersion}", name="crn_undelete", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/un-delete/{messageOid}/{messageVersion}', name: 'crn_undelete', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -189,12 +185,12 @@ class CrnEditController extends CrnEntryController
 
     /**
      * Get Critical Result Notification Entry Message Edit page
-     * @Route("/entry/edit/{messageOid}/{messageVersion}", name="crn_crnentry_edit", methods={"GET"})
-     * @Route("/entry/amend/{messageOid}/{messageVersion}", name="crn_crnentry_amend", methods={"GET"})
-     * @Route("/entry/edit-latest-encounter/{messageOid}/{messageVersion}", name="crn_crnentry_edit_latest_encounter", methods={"GET"})
-     * @Route("/entry/amend-latest-encounter/{messageOid}/{messageVersion}", name="crn_crnentry_amend_latest_encounter", methods={"GET"})
-     * @Template("AppCrnBundle/Crn/crn-entry-edit.html.twig")
      */
+    #[Route(path: '/entry/edit/{messageOid}/{messageVersion}', name: 'crn_crnentry_edit', methods: ['GET'])]
+    #[Route(path: '/entry/amend/{messageOid}/{messageVersion}', name: 'crn_crnentry_amend', methods: ['GET'])]
+    #[Route(path: '/entry/edit-latest-encounter/{messageOid}/{messageVersion}', name: 'crn_crnentry_edit_latest_encounter', methods: ['GET'])]
+    #[Route(path: '/entry/amend-latest-encounter/{messageOid}/{messageVersion}', name: 'crn_crnentry_amend_latest_encounter', methods: ['GET'])]
+    #[Template('AppCrnBundle/Crn/crn-entry-edit.html.twig')]
     public function getCrnEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
@@ -474,9 +470,9 @@ class CrnEditController extends CrnEntryController
 
     /**
      * Save/Update Critical Result Notification Entry
-     * @Route("/entry/update/{messageId}/{cycle}", name="crn_update_entry", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCrnBundle/Crn/crn-entry-edit.html.twig")
      */
+    #[Route(path: '/entry/update/{messageId}/{cycle}', name: 'crn_update_entry', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCrnBundle/Crn/crn-entry-edit.html.twig')]
     public function updateEntryAction(Request $request, $messageId, $cycle)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -957,8 +953,8 @@ class CrnEditController extends CrnEntryController
 
     /**
      * Check if a new message/encounter version already exists for provided message/entry family.
-     * @Route("/entry/check-message-version", name="crn-check-message-version", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/entry/check-message-version', name: 'crn-check-message-version', methods: ['GET'], options: ['expose' => true])]
     public function checkMessageVersionAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CRN_USER")) {

@@ -41,10 +41,8 @@ use Yasumi\Yasumi;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/about", name="vacreq_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'vacreq_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //testing
@@ -134,28 +132,25 @@ class DefaultController extends OrderAbstractController
     }
 
 //    /**
-//     * @Route("/", name="vacreq_home")
-//     * @Template("AppVacReqBundle/Request/index.html.twig", methods={"GET"})
-//     */
-//    public function indexAction()
-//    {
-//        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $vacReqRequests = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
-//
-//        return array(
-//            'vacReqRequests' => $vacReqRequests
-//        );
-//    }
-
-    /**
-     * @Route("/help", name="vacreq_help_page")
-     * @Template("AppVacReqBundle/Default/help.html.twig")
-     */
+    //     * @Route("/", name="vacreq_home")
+    //     * @Template("AppVacReqBundle/Request/index.html.twig", methods={"GET"})
+    //     */
+    //    public function indexAction()
+    //    {
+    //        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
+    //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+    //        }
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        $vacReqRequests = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
+    //
+    //        return array(
+    //            'vacReqRequests' => $vacReqRequests
+    //        );
+    //    }
+    #[Route(path: '/help', name: 'vacreq_help_page')]
+    #[Template('AppVacReqBundle/Default/help.html.twig')]
     public function helpAction( Request $request ) {
 
         $title = "Help";
@@ -325,9 +320,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
-     *
-     * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet", methods={"POST"})
      */
+    #[Route(path: '/download-spreadsheet/', name: 'vacreq_download_spreadsheet', methods: ['POST'])]
     public function downloadExcelAction( Request $request ) {
         if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -366,9 +360,7 @@ class DefaultController extends OrderAbstractController
         exit();
     }
 
-    /**
-     * @Route("/download-summary-report-spreadsheet/", name="vacreq_download_summary_report_spreadsheet", methods={"GET","POST"})
-     */
+    #[Route(path: '/download-summary-report-spreadsheet/', name: 'vacreq_download_summary_report_spreadsheet', methods: ['GET', 'POST'])]
     public function downloadSummaryReportExcelAction( Request $request ) {
         if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -403,9 +395,7 @@ class DefaultController extends OrderAbstractController
         exit();
     }
 
-    /**
-     * @Route("/download-summary-report-multiple-years-spreadsheet/{userId}", name="vacreq_download_summary_report_multiple_years_spreadsheet", methods={"GET"})
-     */
+    #[Route(path: '/download-summary-report-multiple-years-spreadsheet/{userId}', name: 'vacreq_download_summary_report_multiple_years_spreadsheet', methods: ['GET'])]
     public function downloadSummaryMultiYearSpreadsheetAction(Request $request, $userId )
     {
 
@@ -462,9 +452,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/multiple-carry-over-requests
-     *
-     * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")
      */
+    #[Route(path: '/multiple-carry-over-requests', name: 'vacreq_multiple_carry_over_requests')]
     public function multipleCarryOverRequestsAction( Request $request ) {
         if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -575,9 +564,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/diff-carry-over-days
-     *
-     * @Route("/diff-carry-over-days", name="vacreq_diff_carry_over_days")
      */
+    #[Route(path: '/diff-carry-over-days', name: 'vacreq_diff_carry_over_days')]
     public function diffCarryOverDaysAction( Request $request )
     {
         if (false == $this->isGranted('ROLE_VACREQ_USER')) {
@@ -654,9 +642,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/cancel-old-pending-time-away-requests
-     *
-     * @Route("/cancel-old-pending-time-away-requests", name="vacreq_cancel-old-pending-vacreq")
      */
+    #[Route(path: '/cancel-old-pending-time-away-requests', name: 'vacreq_cancel-old-pending-vacreq')]
     public function cancelOldPendingVacationRequestsAction( Request $request )
     {
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -760,9 +747,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/cancel-old-pending-carryover-requests
-     *
-     * @Route("/cancel-old-pending-carryover-requests", name="vacreq_cancel-old-pending-carryover-requests")
      */
+    #[Route(path: '/cancel-old-pending-carryover-requests', name: 'vacreq_cancel-old-pending-carryover-requests')]
     public function cancelOldPendingCarryoverRequestsAction( Request $request )
     {
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -834,9 +820,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/add-default-approval-group-type
-     *
-     * @Route("/add-default-approval-group-type", name="vacreq_add_default_approval_group_type")
      */
+    #[Route(path: '/add-default-approval-group-type', name: 'vacreq_add_default_approval_group_type')]
     public function addDefaultApprovalGroupTypeAction( Request $request )
     {
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -874,42 +859,39 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * http://127.0.0.1/order/index_dev.php/time-away-request/holiday-calendar
-//     *
-//     * @Route("/holiday-calendar", name="vacreq_holiday_calendar")
-//     */
-//    public function holidayCalendarAction( Request $request )
-//    {
-//        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-//
-//        //exit('holidayCalendarAction Not allowed.');
-//
-//        $country = 'USA';
-//        $year = (int) date('Y');
-//        $year = 2025;
-//
-//        // Use the factory to create a new holiday provider instance
-//        //$holidays = Yasumi::create($country, $year);
-//        //dump($holidays);
-//
-//        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
-//        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
-//        //dump($holidays);
-//
-//        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2022,2043);
-//        dump($holidays);
-//
-//        exit('EOF holidayCalendarAction');
-//    }
-
-
+    //     * http://127.0.0.1/order/index_dev.php/time-away-request/holiday-calendar
+    //     *
+    //     * @Route("/holiday-calendar", name="vacreq_holiday_calendar")
+    //     */
+    //    public function holidayCalendarAction( Request $request )
+    //    {
+    //        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+    //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+    //        }
+    //
+    //        //exit('holidayCalendarAction Not allowed.');
+    //
+    //        $country = 'USA';
+    //        $year = (int) date('Y');
+    //        $year = 2025;
+    //
+    //        // Use the factory to create a new holiday provider instance
+    //        //$holidays = Yasumi::create($country, $year);
+    //        //dump($holidays);
+    //
+    //        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+    //        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
+    //        //dump($holidays);
+    //
+    //        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2022,2043);
+    //        dump($holidays);
+    //
+    //        exit('EOF holidayCalendarAction');
+    //    }
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/remove-all-observed-holidays
-     *
-     * @Route("/remove-all-observed-holidays", name="vacreq_remove-all-observed-holidays")
      */
+    #[Route(path: '/remove-all-observed-holidays', name: 'vacreq_remove-all-observed-holidays')]
     public function removeAllObservedHolidaysAction( Request $request )
     {
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

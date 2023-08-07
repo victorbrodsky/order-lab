@@ -65,10 +65,9 @@ class ResAppBulkUploadController extends OrderAbstractController
 
     /**
      * Upload Multiple Applications via CSV
-     *
-     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET","POST"})
-     * @Template("AppResAppBundle/Upload/upload-csv-applications.html.twig")
      */
+    #[Route(path: '/upload/', name: 'resapp_upload_multiple_applications', methods: ['GET', 'POST'])]
+    #[Template('AppResAppBundle/Upload/upload-csv-applications.html.twig')]
     public function uploadCsvMultipleApplicationsAction(Request $request)
     {
         //exit('test uploadCsvMultipleApplicationsAction');
@@ -1536,10 +1535,9 @@ class ResAppBulkUploadController extends OrderAbstractController
 
     /**
      * Used for Testing Only: Upload Multiple Applications via PDF
-     *
-     * @Route("/upload-pdf/", name="resapp_upload_pdf_multiple_applications", methods={"GET"})
-     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
      */
+    #[Route(path: '/upload-pdf/', name: 'resapp_upload_pdf_multiple_applications', methods: ['GET'])]
+    #[Template('AppResAppBundle/Upload/upload-applications.html.twig')]
     public function uploadPdfMultipleApplicationsAction(Request $request)
     {
 
@@ -1681,10 +1679,9 @@ class ResAppBulkUploadController extends OrderAbstractController
 
     /**
      * Used for Testing Only: Upload Multiple Applications
-     *
-     * @Route("/pdf-parser-test/", name="resapp_pdf_parser_test", methods={"GET"})
-     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
      */
+    #[Route(path: '/pdf-parser-test/', name: 'resapp_pdf_parser_test', methods: ['GET'])]
+    #[Template('AppResAppBundle/Upload/upload-applications.html.twig')]
     public function pdfParserTestAction(Request $request)
     {
         exit("not allowed. one time run method.");

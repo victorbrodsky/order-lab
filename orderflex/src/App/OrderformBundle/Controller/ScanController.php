@@ -41,18 +41,16 @@ use App\OrderformBundle\Helper\FormHelper;
 
 /**
  * Scan controller.
- *
- * @Route("/scan")
  */
+#[Route(path: '/scan')]
 class ScanController extends OrderAbstractController
 {
 
     /**
      * Lists all Scan entities.
-     *
-     * @Route("/", name="scan", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/', name: 'scan', methods: ['GET'])]
+    #[Template]
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -66,10 +64,9 @@ class ScanController extends OrderAbstractController
     }
     /**
      * Creates a new Scan entity.
-     *
-     * @Route("/", name="scan_create", methods={"POST"})
-     * @Template("AppOrderformBundle/Imaging/new_orig.html.twig")
      */
+    #[Route(path: '/', name: 'scan_create', methods: ['POST'])]
+    #[Template('AppOrderformBundle/Imaging/new_orig.html.twig')]
     public function createAction(Request $request)
     {
         $entity  = new Imaging();
@@ -123,10 +120,9 @@ class ScanController extends OrderAbstractController
 
     /**
      * Displays a form to create a new Scan entity.
-     *
-     * @Route("/new", name="scan_new", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/new', name: 'scan_new', methods: ['GET'])]
+    #[Template]
     public function newAction()
     {
         $helper = new FormHelper();
@@ -147,10 +143,9 @@ class ScanController extends OrderAbstractController
 
     /**
      * Finds and displays a Scan entity.
-     *
-     * @Route("/{id}", name="scan_show", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/{id}', name: 'scan_show', methods: ['GET'])]
+    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -172,10 +167,9 @@ class ScanController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing Imaging entity.
-     *
-     * @Route("/{id}/edit", name="scan_edit", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/{id}/edit', name: 'scan_edit', methods: ['GET'])]
+    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -199,10 +193,9 @@ class ScanController extends OrderAbstractController
 
     /**
      * Edits an existing Imaging entity.
-     *
-     * @Route("/{id}", name="scan_update", methods={"PUT"})
-     * @Template("AppOrderformBundle/Imaging/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'scan_update', methods: ['PUT'])]
+    #[Template('AppOrderformBundle/Imaging/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -233,9 +226,8 @@ class ScanController extends OrderAbstractController
     }
     /**
      * Deletes a Imaging entity.
-     *
-     * @Route("/{id}", name="scan_delete", methods={"DELETE"})
      */
+    #[Route(path: '/{id}', name: 'scan_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);

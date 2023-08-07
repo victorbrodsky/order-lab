@@ -29,9 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FellAppUtilController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/get-notification-email-infos/", name="fellapp_get_notification_email_infos", methods={"GET"}, options={"expose"=true})
-     */
+    #[Route(path: '/get-notification-email-infos/', name: 'fellapp_get_notification_email_infos', methods: ['GET'], options: ['expose' => true])]
     public function GetNotificationEmailInfosAction(Request $request) {
 
         if(

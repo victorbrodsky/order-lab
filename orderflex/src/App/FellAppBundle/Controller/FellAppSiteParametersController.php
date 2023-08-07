@@ -37,18 +37,16 @@ use Symfony\Component\Process\Process;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class FellAppSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/site-settings/", name="fellapp_sitesettings_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/site-index.html.twig")
      */
+    #[Route(path: '/site-settings/', name: 'fellapp_sitesettings_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/site-index.html.twig')]
     public function indexSiteSettingsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -59,10 +57,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="fellapp_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'fellapp_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -73,10 +70,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="fellapp_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'fellapp_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         return $this->editParameters($request,$id);
@@ -84,10 +80,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="fellapp_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'fellapp_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request, $id);
@@ -96,10 +91,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * FellAppSiteParameter
-     *
-     * @Route("/specific-site-parameters/edit-page/", name="fellapp_siteparameters_edit_specific_site_parameters", methods={"GET","POST"})
-     * @Template("AppFellAppBundle/SiteParameter/edit.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'fellapp_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/SiteParameter/edit.html.twig')]
     public function fellappSiteParameterEditAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -151,10 +145,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * Google integration
-     *
-     * @Route("/google-integration", name="fellapp_google_integration", methods={"GET"})
-     * @Template("AppFellAppBundle/SiteParameter/google-integration.html.twig")
      */
+    #[Route(path: '/google-integration', name: 'fellapp_google_integration', methods: ['GET'])]
+    #[Template('AppFellAppBundle/SiteParameter/google-integration.html.twig')]
     public function fellappIntegrationShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -182,10 +175,8 @@ class FellAppSiteParametersController extends SiteParametersController
         );
     }
 
-    /**
-     * @Route("/install-gas/", name="fellapp_install_gas", methods={"GET","POST"})
-     * @Template("AppFellAppBundle/SiteParameter/install-gas.html.twig")
-     */
+    #[Route(path: '/install-gas/', name: 'fellapp_install_gas', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/SiteParameter/install-gas.html.twig')]
     public function runInstallGasAction(Request $request)
     {
 
@@ -355,10 +346,9 @@ class FellAppSiteParametersController extends SiteParametersController
 
     /**
      * FellAppSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppFellAppBundle/SiteParameter/show.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'fellapp_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppFellAppBundle/SiteParameter/show.html.twig')]
     public function fellappSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {

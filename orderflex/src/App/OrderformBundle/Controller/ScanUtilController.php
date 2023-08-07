@@ -49,17 +49,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\OrderformBundle\Helper\FormHelper;
 
 //TODO: optimise by removing foreach loops
-
 /**
  * Message controller.
- *
- * @Route("/util")
  */
+#[Route(path: '/util')]
 class ScanUtilController extends UtilController {
 
-    /**
-     * @Route("/common/generic/{name}", name="scan_get_generic_select2", methods={"GET"})
-     */
+    #[Route(path: '/common/generic/{name}', name: 'scan_get_generic_select2', methods: ['GET'])]
     public function getGenericAction( Request $request, $name ) {
 
         return $this->getGenericList($request,$name);
@@ -101,10 +97,7 @@ class ScanUtilController extends UtilController {
 
 
 ////////////////// we can convert almost all functions below to use getGenericAction method by using js getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,'','scan');
-
-    /**
-     * @Route("/stain", name="get-stain", methods={"GET"})
-     */
+    #[Route(path: '/stain', name: 'get-stain', methods: ['GET'])]
     public function getStainsAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -150,8 +143,8 @@ class ScanUtilController extends UtilController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/procedure", name="get-procedure", methods={"GET"})
      */
+    #[Route(path: '/procedure', name: 'get-procedure', methods: ['GET'])]
     public function getProcedureAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -189,9 +182,7 @@ class ScanUtilController extends UtilController {
         return $response;
     }
     
-    /**
-     * @Route("/organ", name="get-organ", methods={"GET"})
-     */
+    #[Route(path: '/organ', name: 'get-organ', methods: ['GET'])]
     public function getOrgansAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -228,8 +219,8 @@ class ScanUtilController extends UtilController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/scanregion", name="get-scanregion", methods={"GET"})
      */
+    #[Route(path: '/scanregion', name: 'get-scanregion', methods: ['GET'])]
     public function getScanRegionAction(Request $request) {
 
 //        $em = $this->getDoctrine()->getManager();
@@ -345,8 +336,8 @@ class ScanUtilController extends UtilController {
     
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/delivery", name="get-orderdelivery", methods={"GET"})
      */
+    #[Route(path: '/delivery', name: 'get-orderdelivery', methods: ['GET'])]
     public function getOrderDeliveryAction(Request $request) {
 
         $arr = array();
@@ -440,9 +431,7 @@ class ScanUtilController extends UtilController {
     }
 
 
-    /**
-     * @Route("/partname", name="get-partname", methods={"GET"})
-     */
+    #[Route(path: '/partname', name: 'get-partname', methods: ['GET'])]
     public function getPartnameAction(Request $request) {
 
         $formHelper = new FormHelper();
@@ -477,9 +466,7 @@ class ScanUtilController extends UtilController {
         return $response;
     }
 
-    /**
-     * @Route("/blockname", name="get-blockname", methods={"GET"})
-     */
+    #[Route(path: '/blockname', name: 'get-blockname', methods: ['GET'])]
     public function getBlocknameAction(Request $request) {
 
         $formHelper = new FormHelper();
@@ -514,9 +501,7 @@ class ScanUtilController extends UtilController {
         return $response;
     }
 
-    /**
-     * @Route("/accessiontype", name="get-accessiontype", methods={"GET"})
-     */
+    #[Route(path: '/accessiontype', name: 'get-accessiontype', methods: ['GET'])]
     public function getAccessionTypeAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -558,9 +543,7 @@ class ScanUtilController extends UtilController {
         return $response;
     }
 
-    /**
-     * @Route("/mrntype", name="get-mrntype", methods={"GET"})
-     */
+    #[Route(path: '/mrntype', name: 'get-mrntype', methods: ['GET'])]
     public function getMrnTypeAction(Request $request) {
 
         $simple = false;
@@ -619,9 +602,7 @@ class ScanUtilController extends UtilController {
     }
 
 
-    /**
-     * @Route("/slidetype", name="get-slidetype", methods={"GET"})
-     */
+    #[Route(path: '/slidetype', name: 'get-slidetype', methods: ['GET'])]
     public function getSlideTypesAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -645,10 +626,8 @@ class ScanUtilController extends UtilController {
 
 
 
-    /**
-     * @Route("/optionalusereducational", name="get-optionalusereducational", methods={"GET"})
-     * @Route("/optionaluserresearch", name="get-optionaluserresearch", methods={"GET"})
-     */
+    #[Route(path: '/optionalusereducational', name: 'get-optionalusereducational', methods: ['GET'])]
+    #[Route(path: '/optionaluserresearch', name: 'get-optionaluserresearch', methods: ['GET'])]
     public function getOptionalUserAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -733,9 +712,7 @@ class ScanUtilController extends UtilController {
 
 
 
-    /**
-     * @Route("/account", name="get-account", methods={"GET"})
-     */
+    #[Route(path: '/account', name: 'get-account', methods: ['GET'])]
     public function getAccountAction(Request $request) {
 
         $whereServicesList = "";
@@ -767,9 +744,7 @@ class ScanUtilController extends UtilController {
     }
 
 
-    /**
-     * @Route("/urgency", name="get-urgency", methods={"GET"})
-     */
+    #[Route(path: '/urgency', name: 'get-urgency', methods: ['GET'])]
     public function getUrgencyAction(Request $request) {
 
 
@@ -803,9 +778,7 @@ class ScanUtilController extends UtilController {
         return $response;
     }
 
-    /**
-     * @Route("/returnlocation", name="scan_get_returnlocation", methods={"GET"})
-     */
+    #[Route(path: '/returnlocation', name: 'scan_get_returnlocation', methods: ['GET'])]
     public function getReturnLocationAction(Request $request) {
 
         $providerid = trim((string)$request->get('providerid') );
@@ -897,175 +870,172 @@ class ScanUtilController extends UtilController {
 
 
 //    /**
-//     * TODO: optimize this function. Error: Out of memory: https://c.med.cornell.edu/order/scan/util/common/encounterReferringProvider?cycle=new&sitename=call-log-book
-//     *
-//     * Get all users and user wrappers combined
-//     * @Route("/common/proxyuser", name="scan_get_proxyuser", methods={"GET"})
-//     */
-//    public function getProxyusersAction(Request $request) {
-//
-//        //exit('proxyuser');
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $loggedUser = $this->getUser();
-//        $securityUtil = $this->container->get('user_security_utility');
-//        $cycle = $request->query->get('cycle');
-//
-//        $output = array();
-//
-//        ///////////// 1) get all real users /////////////
-//        if(0) {
-//            $query = $em->createQueryBuilder()
-//                ->from('AppUserdirectoryBundle:User', 'list')
-//                ->select("list")
-//                //->groupBy('list.id')
-//                ->leftJoin("list.infos", "infos")
-//                ->leftJoin("list.employmentStatus", "employmentStatus")
-//                ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-//                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
-//                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
-//                ->orderBy("infos.displayName", "ASC");
-//
-//            $users = $query->getQuery()->getResult();
-//            //echo "users count=".count($users)."<br>";
-//
-//            foreach ($users as $user) {
-//                $element = array('id' => $user."", 'text' => $user . "");
-//                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
-//                //$element = array('id' => $user->getId(), 'text' => $user . "");
-//                //if( !$this->in_complex_array($user."",$output,'text') ) {
-//                    $output[] = $element;
-//                //}
-//            }
-//        }
-//        if(1) {
-//            //Optimising (lighter) version without loop.
-//            // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
-//            $query = $em->createQueryBuilder()
-//                ->from('AppUserdirectoryBundle:User', 'list')
-//                ->select("infos.displayName as id, infos.displayName as text")
-//                //->groupBy('list.id')
-//                ->leftJoin("list.infos", "infos")
-//                ->leftJoin("list.employmentStatus", "employmentStatus")
-//                ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-//                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
-//                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
-//                ->andWhere("infos.displayName IS NOT NULL")
-//                ->orderBy("infos.displayName", "ASC")
-//            ;
-//
-//            $output = $query->getQuery()->getResult();
-//            //echo "users count=".count($output)."<br>";
-//        }
-//        ///////////// EOF 1) get all real users /////////////
-//
-//
-//        $sourceSystem = $securityUtil->getDefaultSourceSystemByRequest($request);
-//
-//        ///////////// 2) default user wrappers for this source ///////////////
-//        ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
-//        if(1) {
-//            $query = $em->createQueryBuilder()
-//                ->from('AppUserdirectoryBundle:UserWrapper', 'list')
-//                ->select("list")
-//                ->leftJoin("list.user", "user")
-//                ->leftJoin("user.infos", "infos")
-//                ->leftJoin("list.creator", "creator")
-//                ->leftJoin("list.userWrapperSource", "userWrapperSource")
-//                ->orderBy("infos.displayName", "ASC");
-//
-//            //default OR user-added user wrappers created by logged in user
-//            //$query->andWhere("list.type=:default");
-//            //echo "cycle=".$cycle."<br>";
-//            if( $cycle != "show" && $cycle != "edit" && $cycle != "amend" ) {
-//                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
-//                    array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                        'loggedUser' => $loggedUser->getId()
-//                    )
-//                );
-//            }
-//
-//            if( $sourceSystem ) {
-//                //echo "sourceSystem: id=".$sourceSystem->getId()."; ".$sourceSystem."<br>";
-//                $query->andWhere("userWrapperSource.id IS NULL OR userWrapperSource.id=" . $sourceSystem->getId());
-//            }
-//
-//            //echo "query=".$query." <br><br>";
-//            //exit();
-//
-//            $userWrappers = $query->getQuery()->getResult();
-//            foreach ($userWrappers as $userWrapper) {
-////                if( $userWrapper->getUser() ) {
-////                    $thisId = $userWrapper->getUser()->getUSername();
-////                } else {
-////                    $thisId = $userWrapper->getId();
-////                }
-//                $thisId = $userWrapper->getId();
-//                $element = array(
-//                    'id' => $thisId,
-//                    'text' => $userWrapper . ""
-//                    //'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
-//                );
-//
-////                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
-////                    $output[] = $element;
-////                } else {
-////                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
-////                        $output[] = $element;
-////                    }
-////                }
-//
-//                if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
-//                    $output[] = $element;
-//                }
-//
-//            }
-//
-//            //print_r($output);
-//            //exit('1');
-//        }
-//        ///////////// EOF 2) 3) user wrappers for this source ///////////////
-//
-//
-//        ///////////// 2) get all wrapper users /////////////
-////        $query = $em->createQueryBuilder()
-////            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
-////            ->select("list")
-////            ->leftJoin("list.user", "user")
-////            ->leftJoin("user.infos", "infos")
-////            //->leftJoin("user.employmentStatus", "employmentStatus")
-////            //->leftJoin("employmentStatus.employmentType", "employmentType")
-////            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-////            //->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
-////            //->select("list.id as id, infos.displayName as text")
-////            ->orderBy("infos.displayName","ASC");
-////        $userWrappers = $query->getQuery()->getResult();
-////        foreach( $userWrappers as $userWrapper ) {
-////            $element = array(
-////                'id'        => $userWrapper->getId(),
-////                'text'      => $userWrapper.""
-////            );
-////            if( !$this->in_complex_array($userWrapper."",$output) ) {
-////                $output[] = $element;
-////            }
-////        }
-//        ///////////// EOF get all wrapper users /////////////
-//
-//        //$output = array_merge($users,$output);
-//
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($output));
-//        return $response;
-//    }
-
-    /**
-     * @Route("/common/proxyuser", name="scan_get_proxyuser", methods={"GET"})
-     */
+    //     * TODO: optimize this function. Error: Out of memory: https://c.med.cornell.edu/order/scan/util/common/encounterReferringProvider?cycle=new&sitename=call-log-book
+    //     *
+    //     * Get all users and user wrappers combined
+    //     * @Route("/common/proxyuser", name="scan_get_proxyuser", methods={"GET"})
+    //     */
+    //    public function getProxyusersAction(Request $request) {
+    //
+    //        //exit('proxyuser');
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $loggedUser = $this->getUser();
+    //        $securityUtil = $this->container->get('user_security_utility');
+    //        $cycle = $request->query->get('cycle');
+    //
+    //        $output = array();
+    //
+    //        ///////////// 1) get all real users /////////////
+    //        if(0) {
+    //            $query = $em->createQueryBuilder()
+    //                ->from('AppUserdirectoryBundle:User', 'list')
+    //                ->select("list")
+    //                //->groupBy('list.id')
+    //                ->leftJoin("list.infos", "infos")
+    //                ->leftJoin("list.employmentStatus", "employmentStatus")
+    //                ->leftJoin("employmentStatus.employmentType", "employmentType")
+    //                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+    //                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
+    //                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+    //                ->orderBy("infos.displayName", "ASC");
+    //
+    //            $users = $query->getQuery()->getResult();
+    //            //echo "users count=".count($users)."<br>";
+    //
+    //            foreach ($users as $user) {
+    //                $element = array('id' => $user."", 'text' => $user . "");
+    //                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
+    //                //$element = array('id' => $user->getId(), 'text' => $user . "");
+    //                //if( !$this->in_complex_array($user."",$output,'text') ) {
+    //                    $output[] = $element;
+    //                //}
+    //            }
+    //        }
+    //        if(1) {
+    //            //Optimising (lighter) version without loop.
+    //            // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
+    //            $query = $em->createQueryBuilder()
+    //                ->from('AppUserdirectoryBundle:User', 'list')
+    //                ->select("infos.displayName as id, infos.displayName as text")
+    //                //->groupBy('list.id')
+    //                ->leftJoin("list.infos", "infos")
+    //                ->leftJoin("list.employmentStatus", "employmentStatus")
+    //                ->leftJoin("employmentStatus.employmentType", "employmentType")
+    //                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+    //                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
+    //                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+    //                ->andWhere("infos.displayName IS NOT NULL")
+    //                ->orderBy("infos.displayName", "ASC")
+    //            ;
+    //
+    //            $output = $query->getQuery()->getResult();
+    //            //echo "users count=".count($output)."<br>";
+    //        }
+    //        ///////////// EOF 1) get all real users /////////////
+    //
+    //
+    //        $sourceSystem = $securityUtil->getDefaultSourceSystemByRequest($request);
+    //
+    //        ///////////// 2) default user wrappers for this source ///////////////
+    //        ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
+    //        if(1) {
+    //            $query = $em->createQueryBuilder()
+    //                ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+    //                ->select("list")
+    //                ->leftJoin("list.user", "user")
+    //                ->leftJoin("user.infos", "infos")
+    //                ->leftJoin("list.creator", "creator")
+    //                ->leftJoin("list.userWrapperSource", "userWrapperSource")
+    //                ->orderBy("infos.displayName", "ASC");
+    //
+    //            //default OR user-added user wrappers created by logged in user
+    //            //$query->andWhere("list.type=:default");
+    //            //echo "cycle=".$cycle."<br>";
+    //            if( $cycle != "show" && $cycle != "edit" && $cycle != "amend" ) {
+    //                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
+    //                    array(
+    //                        'typedef' => 'default',
+    //                        'typeadd' => 'user-added',
+    //                        'loggedUser' => $loggedUser->getId()
+    //                    )
+    //                );
+    //            }
+    //
+    //            if( $sourceSystem ) {
+    //                //echo "sourceSystem: id=".$sourceSystem->getId()."; ".$sourceSystem."<br>";
+    //                $query->andWhere("userWrapperSource.id IS NULL OR userWrapperSource.id=" . $sourceSystem->getId());
+    //            }
+    //
+    //            //echo "query=".$query." <br><br>";
+    //            //exit();
+    //
+    //            $userWrappers = $query->getQuery()->getResult();
+    //            foreach ($userWrappers as $userWrapper) {
+    ////                if( $userWrapper->getUser() ) {
+    ////                    $thisId = $userWrapper->getUser()->getUSername();
+    ////                } else {
+    ////                    $thisId = $userWrapper->getId();
+    ////                }
+    //                $thisId = $userWrapper->getId();
+    //                $element = array(
+    //                    'id' => $thisId,
+    //                    'text' => $userWrapper . ""
+    //                    //'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
+    //                );
+    //
+    ////                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
+    ////                    $output[] = $element;
+    ////                } else {
+    ////                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+    ////                        $output[] = $element;
+    ////                    }
+    ////                }
+    //
+    //                if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+    //                    $output[] = $element;
+    //                }
+    //
+    //            }
+    //
+    //            //print_r($output);
+    //            //exit('1');
+    //        }
+    //        ///////////// EOF 2) 3) user wrappers for this source ///////////////
+    //
+    //
+    //        ///////////// 2) get all wrapper users /////////////
+    ////        $query = $em->createQueryBuilder()
+    ////            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+    ////            ->select("list")
+    ////            ->leftJoin("list.user", "user")
+    ////            ->leftJoin("user.infos", "infos")
+    ////            //->leftJoin("user.employmentStatus", "employmentStatus")
+    ////            //->leftJoin("employmentStatus.employmentType", "employmentType")
+    ////            //->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+    ////            //->andWhere("user.testingAccount = 0 OR user.testingAccount IS NULL")
+    ////            //->select("list.id as id, infos.displayName as text")
+    ////            ->orderBy("infos.displayName","ASC");
+    ////        $userWrappers = $query->getQuery()->getResult();
+    ////        foreach( $userWrappers as $userWrapper ) {
+    ////            $element = array(
+    ////                'id'        => $userWrapper->getId(),
+    ////                'text'      => $userWrapper.""
+    ////            );
+    ////            if( !$this->in_complex_array($userWrapper."",$output) ) {
+    ////                $output[] = $element;
+    ////            }
+    ////        }
+    //        ///////////// EOF get all wrapper users /////////////
+    //
+    //        //$output = array_merge($users,$output);
+    //
+    //        $response = new Response();
+    //        $response->headers->set('Content-Type', 'application/json');
+    //        $response->setContent(json_encode($output));
+    //        return $response;
+    //    }
+    #[Route(path: '/common/proxyuser', name: 'scan_get_proxyuser', methods: ['GET'])]
     public function getProxyusersAction(Request $request) {
         //return $this->getProxyusersAction($request);
         return $this->getUserWrappersAction($request);
@@ -1073,8 +1043,8 @@ class ScanUtilController extends UtilController {
 
     /**
      * Get all users and user wrappers combined
-     * @Route("/common/encounterReferringProvider", name="scan_get_encounterReferringProvider", methods={"GET"})
      */
+    #[Route(path: '/common/encounterReferringProvider', name: 'scan_get_encounterReferringProvider', methods: ['GET'])]
     public function getEncounterReferringProvidersAction(Request $request) {
         //echo "get encounterReferringProvider<br>";
         //return $this->getProxyusersAction($request);
@@ -1083,17 +1053,15 @@ class ScanUtilController extends UtilController {
 
     /**
      * Get all users and user wrappers combined
-     * @Route("/common/encounterAttendingPhysician", name="scan_get_encounterAttendingPhysician", methods={"GET"})
      */
+    #[Route(path: '/common/encounterAttendingPhysician', name: 'scan_get_encounterAttendingPhysician', methods: ['GET'])]
     public function getEncounterAttendingPhysiciansAction(Request $request) {
         //echo "get encounterReferringProvider<br>";
         //return $this->getProxyusersAction($request);
         return $this->getUserWrappersAction($request);
     }
 
-    /**
-     * @Route("/common/get-encounter-referring-provider/", name="scan_get_encounterreferringprovider", methods={"GET"}, options={"expose"=true})
-     */
+    #[Route(path: '/common/get-encounter-referring-provider/', name: 'scan_get_encounterreferringprovider', methods: ['GET'], options: ['expose' => true])]
     public function getEncounterReferringProviderByNameAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();

@@ -118,24 +118,23 @@ class CrnEntryController extends OrderAbstractController
 {
 
 //    protected $crnUtil;
-//    protected $userServiceUtil;
-////    protected $paginator;
-//    public function __construct( CrnUtil $crnUtil, UserServiceUtil $userServiceUtil ) {
-//        $this->crnUtil = $crnUtil;
-//        $this->userServiceUtil = $userServiceUtil;
-////        $this->paginator = $paginator;
-//    }
-
+    //    protected $userServiceUtil;
+    ////    protected $paginator;
+    //    public function __construct( CrnUtil $crnUtil, UserServiceUtil $userServiceUtil ) {
+    //        $this->crnUtil = $crnUtil;
+    //        $this->userServiceUtil = $userServiceUtil;
+    ////        $this->paginator = $paginator;
+    //    }
     /**
      * Case List Page
-     * @Route("/", name="crn_home", methods={"GET"})
      *
      * Alerts: filtered case list
-     * @Route("/alerts/", name="crn_alerts", methods={"GET"})
      *
-     * @Template("AppCrnBundle/Crn/home.html.twig")
      */
-//    public function homeAction(Request $request, PaginatorInterface $paginator, CrnUtil $crnUtil)
+    //    public function homeAction(Request $request, PaginatorInterface $paginator, CrnUtil $crnUtil)
+    #[Route(path: '/', name: 'crn_home', methods: ['GET'])]
+    #[Route(path: '/alerts/', name: 'crn_alerts', methods: ['GET'])]
+    #[Template('AppCrnBundle/Crn/home.html.twig')]
     public function homeAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -1214,11 +1213,10 @@ class CrnEntryController extends OrderAbstractController
      * <li><a href="{{ path(crn_sitename~'_tasks_todo') }}">To Do</a></li>
      * <li><a href="{{ path(crn_sitename~'_tasks_i_added') }}">Tasks I Added</a></li>
      * <li><a href="{{ path(crn_sitename~'_tasks_i_updated') }}">Tasks I Updated</a></li>
-     *
-     * @Route("/tasks/to-do", name="crn_tasks_todo")
-     * @Route("/tasks/i-added", name="crn_tasks_i_added")
-     * @Route("/tasks/i-updated", name="crn_tasks_i_updated")
      */
+    #[Route(path: '/tasks/to-do', name: 'crn_tasks_todo')]
+    #[Route(path: '/tasks/i-added', name: 'crn_tasks_i_added')]
+    #[Route(path: '/tasks/i-updated', name: 'crn_tasks_i_updated')]
     public function listTasksAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CRN_USER")) {
@@ -1261,10 +1259,9 @@ class CrnEntryController extends OrderAbstractController
     /**
      * Crn Entry New Page
      * http://localhost/order/crn-book/entry/new?mrn-type=4&mrn=3
-     *
-     * @Route("/entry/new", name="crn_crnentry")
-     * @Template("AppCrnBundle/Crn/crn-entry.html.twig")
      */
+    #[Route(path: '/entry/new', name: 'crn_crnentry')]
+    #[Template('AppCrnBundle/Crn/crn-entry.html.twig')]
     public function crnEntryAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -1554,9 +1551,9 @@ class CrnEntryController extends OrderAbstractController
 
     /**
      * Save Critical Result Notification Entry
-     * @Route("/entry/save", name="crn_save_entry", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCrnBundle/Crn/crn-entry.html.twig")
      */
+    #[Route(path: '/entry/save', name: 'crn_save_entry', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCrnBundle/Crn/crn-entry.html.twig')]
     public function saveEntryAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -2332,9 +2329,9 @@ class CrnEntryController extends OrderAbstractController
     /**
      * NOT USED (search is displayed in the home page)
      * Search Crn Entry
-     * @Route("/crnentry/search", name="crn_search_crnentry", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/crnentry/search', name: 'crn_search_crnentry', methods: ['GET'])]
+    #[Template]
     public function searchCrnEntryAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -2386,9 +2383,9 @@ class CrnEntryController extends OrderAbstractController
 
     /**
      * Search Patient
-     * @Route("/patient/search", name="crn_search_patient", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/patient/search', name: 'crn_search_patient', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CRN_USER')) {
@@ -2625,9 +2622,9 @@ class CrnEntryController extends OrderAbstractController
 
     /**
      * Create a new Patient
-     * @Route("/patient/create", name="crn_create_patient", methods={"GET"}, options={"expose"=true})
-     * @Template()
      */
+    #[Route(path: '/patient/create', name: 'crn_create_patient', methods: ['GET'], options: ['expose' => true])]
+    #[Template]
     public function createPatientAction(Request $request)
     {
 
@@ -3109,32 +3106,31 @@ class CrnEntryController extends OrderAbstractController
 
 
 //    public function getCurrentUserInstitution($user)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $securityUtil = $this->container->get('user_security_utility');
-//
-//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-//        $institution = $userSiteSettings->getDefaultInstitution();
-//        //echo "1 inst=".$institution."<br>";
-//        if (!$institution) {
-//            $institutions = $securityUtil->getUserPermittedInstitutions($user);
-//            //echo "count inst=".count($institutions)."<br>";
-//            if (count($institutions) > 0) {
-//                $institution = $institutions[0];
-//            }
-//        //echo "2 inst=".$institution."<br>";
-//        }
-//        if (!$institution) {
-//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-//        }
-//
-//        return $institution;
-//    }
-
+    //    {
+    //        $em = $this->getDoctrine()->getManager();
+    //        $securityUtil = $this->container->get('user_security_utility');
+    //
+    //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+    //        $institution = $userSiteSettings->getDefaultInstitution();
+    //        //echo "1 inst=".$institution."<br>";
+    //        if (!$institution) {
+    //            $institutions = $securityUtil->getUserPermittedInstitutions($user);
+    //            //echo "count inst=".count($institutions)."<br>";
+    //            if (count($institutions) > 0) {
+    //                $institution = $institutions[0];
+    //            }
+    //        //echo "2 inst=".$institution."<br>";
+    //        }
+    //        if (!$institution) {
+    //            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+    //        }
+    //
+    //        return $institution;
+    //    }
     /**
      * Get Patient Titles according to a new encounter date specified by nowStr
-     * @Route("/patient/title/", name="crn_get_patient_title", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/patient/title/', name: 'crn_get_patient_title', methods: ['GET'], options: ['expose' => true])]
     public function getPatientTitleAction(Request $request) {
 
         if (false == $this->isGranted('ROLE_CRN_USER')) {
@@ -3179,10 +3175,10 @@ class CrnEntryController extends OrderAbstractController
     /**
      * Get Critical Result Notification Entry Message
      * TODO: make messageVersion can be null and find by messageOid only by the most recent version
-     * @Route("/entry/view/{messageOid}/{messageVersion}", name="crn_crnentry_view", methods={"GET"})
-     * @Route("/entry/view-latest-encounter/{messageOid}/{messageVersion}", name="crn_crnentry_view_latest_encounter", methods={"GET"})
-     * @Template("AppCrnBundle/Crn/crn-entry-view.html.twig")
      */
+    #[Route(path: '/entry/view/{messageOid}/{messageVersion}', name: 'crn_crnentry_view', methods: ['GET'])]
+    #[Route(path: '/entry/view-latest-encounter/{messageOid}/{messageVersion}', name: 'crn_crnentry_view_latest_encounter', methods: ['GET'])]
+    #[Template('AppCrnBundle/Crn/crn-entry-view.html.twig')]
     public function getCrnEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
@@ -3470,10 +3466,8 @@ class CrnEntryController extends OrderAbstractController
         }
     }
 
-    /**
-     * @Route("/single-export-csv/{messageOid}/{messageVersion}", name="crn_single_export_csv")
-     * @Template("AppCrnBundle/Export/crn-entry-export-csv.html.twig")
-     */
+    #[Route(path: '/single-export-csv/{messageOid}/{messageVersion}', name: 'crn_single_export_csv')]
+    #[Template('AppCrnBundle/Export/crn-entry-export-csv.html.twig')]
     public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=null)
     {
         if (false == $this->isGranted("ROLE_CRN_ADMIN")) {
@@ -3526,11 +3520,9 @@ class CrnEntryController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/export_csv/", name="crn_export_csv")
-     * @Route("/export_csv/all/", name="crn_export_csv_all")
-     * @Template("AppCrnBundle/Export/crn-entry-export-csv.html.twig")
-     */
+    #[Route(path: '/export_csv/', name: 'crn_export_csv')]
+    #[Route(path: '/export_csv/all/', name: 'crn_export_csv_all')]
+    #[Template('AppCrnBundle/Export/crn-entry-export-csv.html.twig')]
     public function exportCsvAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){

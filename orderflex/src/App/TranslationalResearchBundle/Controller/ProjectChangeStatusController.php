@@ -37,9 +37,8 @@ class ProjectChangeStatusController extends OrderAbstractController
 
     /**
      * Cancel project
-     *
-     * @Route("/cancel-project/{id}", name="translationalresearch_project_cancel", methods={"GET"})
      */
+    #[Route(path: '/cancel-project/{id}', name: 'translationalresearch_project_cancel', methods: ['GET'])]
     public function cancelAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -89,9 +88,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         return $this->redirectToRoute('translationalresearch_project_index');
     }
 
-    /**
-     * @Route("/close-reactivation-project-ajax/", name="translationalresearch_close_reactivation_project_ajax", methods={"POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/close-reactivation-project-ajax/', name: 'translationalresearch_close_reactivation_project_ajax', methods: ['POST'], options: ['expose' => true])]
     public function closeReactivationProjectAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -157,10 +154,9 @@ class ProjectChangeStatusController extends OrderAbstractController
     
     /**
      * Close project
-     *
-     * @Route("/close-project/{id}", name="translationalresearch_project_close", methods={"GET"})
-     * @Route("/close-project-without-notifications/{id}", name="translationalresearch_project_close_without_notifications", methods={"GET"})
      */
+    #[Route(path: '/close-project/{id}', name: 'translationalresearch_project_close', methods: ['GET'])]
+    #[Route(path: '/close-project-without-notifications/{id}', name: 'translationalresearch_project_close_without_notifications', methods: ['GET'])]
     public function closeAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -422,9 +418,8 @@ class ProjectChangeStatusController extends OrderAbstractController
 
     /**
      * Approve project
-     *
-     * @Route("/approve-project/{id}", name="translationalresearch_project_approve", methods={"GET"})
      */
+    #[Route(path: '/approve-project/{id}', name: 'translationalresearch_project_approve', methods: ['GET'])]
     public function approveAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -527,9 +522,7 @@ class ProjectChangeStatusController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/deny-project-reactivation/{id}", name="translationalresearch_project_reactivation_deny", methods={"GET"})
-     */
+    #[Route(path: '/deny-project-reactivation/{id}', name: 'translationalresearch_project_reactivation_deny', methods: ['GET'])]
     public function denyReactivationProjectAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -627,9 +620,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         return $this->redirectToRoute('translationalresearch_project_change_status_confirmation', array('id' => $project->getId()));
     }
 
-    /**
-     * @Route("/approve-project-reactivation/{id}", name="translationalresearch_project_reactivation_approve", methods={"GET"})
-     */
+    #[Route(path: '/approve-project-reactivation/{id}', name: 'translationalresearch_project_reactivation_approve', methods: ['GET'])]
     public function approveReactivationProjectAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -724,10 +715,9 @@ class ProjectChangeStatusController extends OrderAbstractController
 
     /**
      * Show project state change confirmation page with an option to change the state
-     *
-     * @Route("/project-state-confirmation/{id}", name="translationalresearch_project_change_status_confirmation", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/project-state-confirmation.html.twig")
      */
+    #[Route(path: '/project-state-confirmation/{id}', name: 'translationalresearch_project_change_status_confirmation', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/project-state-confirmation.html.twig')]
     public function projectStateConfirmationAction(Request $request, Project $project)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
@@ -793,9 +783,8 @@ class ProjectChangeStatusController extends OrderAbstractController
     /////////////////// DELETE PROJECT /////////////////////
     /**
      * Deletes a project entity.
-     *
-     * @Route("/project-delete/{id}", name="translationalresearch_project_delete", methods={"DELETE"})
      */
+    #[Route(path: '/project-delete/{id}', name: 'translationalresearch_project_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -814,9 +803,8 @@ class ProjectChangeStatusController extends OrderAbstractController
     }
     /**
      * Deletes a project entity.
-     *
-     * @Route("/project-delete-get/{id}", name="translationalresearch_project_delete_get", methods={"GET"})
      */
+    #[Route(path: '/project-delete-get/{id}', name: 'translationalresearch_project_delete_get', methods: ['GET'])]
     public function deleteProjectAction(Request $request, Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -849,9 +837,8 @@ class ProjectChangeStatusController extends OrderAbstractController
     }
     /**
      * Deletes a project entity.
-     *
-     * @Route("/delete-multiple-projects/", name="translationalresearch_projects_multiple_delete", methods={"GET"})
      */
+    #[Route(path: '/delete-multiple-projects/', name: 'translationalresearch_projects_multiple_delete', methods: ['GET'])]
     public function deleteMultipleProjectsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -931,10 +918,9 @@ class ProjectChangeStatusController extends OrderAbstractController
 
     /**
      * NOT USED
-     * 
-     * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/set-state.html.twig")
      */
+    #[Route(path: '/project/set-state/{id}', name: 'translationalresearch_project_set_state', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/set-state.html.twig')]
     public function setStateAction(Request $request, Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

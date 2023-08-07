@@ -35,9 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FellAppUploadController extends UploadController {
 
-    /**
-     * @Route("/file-delete", name="fellapp_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'fellapp_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             //exit('no fellapp permission');
@@ -49,9 +47,8 @@ class FellAppUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-download/{id}/{eventtype}", name="fellapp_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'fellapp_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_USER') ){
@@ -72,9 +69,8 @@ class FellAppUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="fellapp_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'fellapp_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_USER') ){

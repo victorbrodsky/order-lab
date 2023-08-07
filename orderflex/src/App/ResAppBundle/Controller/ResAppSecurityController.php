@@ -35,28 +35,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class ResAppSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="resapp_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'resapp_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="resapp_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'resapp_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
 
-    /**
-     * @Route("/no-permission", name="resapp-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'resapp-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         //$message = null;
@@ -70,11 +64,9 @@ class ResAppSecurityController extends SecurityController
 
 
 
-    /**
-     * @Route("/idle-log-out", name="resapp_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="resapp_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'resapp_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'resapp_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

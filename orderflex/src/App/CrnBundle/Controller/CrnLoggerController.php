@@ -37,18 +37,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class CrnLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="crn_logger", methods={"GET"})
-     * @Template("AppCrnBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'crn_logger', methods: ['GET'])]
+    #[Template('AppCrnBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_ADMIN") ){
@@ -62,10 +60,8 @@ class CrnLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="crn_logger_user_all", methods={"GET"})
-     * @Template("AppCrnBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'crn_logger_user_all', methods: ['GET'])]
+    #[Template('AppCrnBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -90,23 +86,20 @@ class CrnLoggerController extends LoggerController
 
 
 //    /**
-//     * Generation Log with eventTypes = "Generate Vacation Request"
-//     *
-//     * @Route("/generation-log/", name="crn_generation_log", methods={"GET"})
-//     * @Template("AppCrnBundle/Logger/index.html.twig")
-//     */
-//    public function generationLogAction(Request $request)
-//    {
-//
-//    }
-
-
+    //     * Generation Log with eventTypes = "Generate Vacation Request"
+    //     *
+    //     * @Route("/generation-log/", name="crn_generation_log", methods={"GET"})
+    //     * @Template("AppCrnBundle/Logger/index.html.twig")
+    //     */
+    //    public function generationLogAction(Request $request)
+    //    {
+    //
+    //    }
     /**
      * Generation Log with eventTypes = "New Critical Result Notification Entry Submitted" and users = current user id
-     *
-     * @Route("/event-log-per-user-per-event-type/", name="crn_my_generation_log", methods={"GET"})
-     * @Template("AppCrnBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-user-per-event-type/', name: 'crn_my_generation_log', methods: ['GET'])]
+    #[Template('AppCrnBundle/Logger/index.html.twig')]
     public function myGenerationLogAction(Request $request) {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
@@ -327,10 +320,9 @@ class CrnLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "New Critical Result Notification Entry Submitted" and users = current user id
-     *
-     * @Route("/event-log-per-object/", name="crn_event-log-per-object_log", methods={"GET"})
-     * @Template("AppCrnBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-object/', name: 'crn_event-log-per-object_log', methods: ['GET'])]
+    #[Template('AppCrnBundle/Logger/index.html.twig')]
     public function crnEventLogPerObjectAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CRN_USER")) {

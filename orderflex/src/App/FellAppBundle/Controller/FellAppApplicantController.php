@@ -50,10 +50,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/interview-modal/{id}", name="fellapp_interview_modal", methods={"GET"})
-     * @Template("AppFellAppBundle/Interview/modal.html.twig")
-     */
+    #[Route(path: '/interview-modal/{id}', name: 'fellapp_interview_modal', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Interview/modal.html.twig')]
     public function interviewModalAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_USER') ) {
@@ -87,9 +85,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/interview-score-rank/{id}", name="fellapp_interviewe_score_rank", methods={"GET"})
-     */
+    #[Route(path: '/interview-score-rank/{id}', name: 'fellapp_interviewe_score_rank', methods: ['GET'])]
     public function intervieweScoreRankAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_USER') ) {
@@ -202,9 +198,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/invite-interviewers-to-rate/{id}", name="fellapp_inviteinterviewerstorate", methods={"GET"})
-     */
+    #[Route(path: '/invite-interviewers-to-rate/{id}', name: 'fellapp_inviteinterviewerstorate', methods: ['GET'])]
     public function inviteInterviewersToRateAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -250,9 +244,7 @@ class FellAppApplicantController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/invite-interviewer-to-rate/{interviewId}", name="fellapp_invite_single_interviewer_to_rate", methods={"GET"})
-     */
+    #[Route(path: '/invite-interviewer-to-rate/{interviewId}', name: 'fellapp_invite_single_interviewer_to_rate', methods: ['GET'])]
     public function inviteSingleInterviewerToRateAction(Request $request, $interviewId) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -484,9 +476,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/invite-observers-to-view/{id}", name="fellapp_inviteobservers", methods={"GET"})
-     */
+    #[Route(path: '/invite-observers-to-view/{id}', name: 'fellapp_inviteobservers', methods: ['GET'])]
     public function inviteObserversToRateAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -581,9 +571,7 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_pdf", methods={"GET"})
-     */
+    #[Route(path: '/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_pdf', methods: ['GET'])]
     public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
@@ -677,9 +665,7 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_interview_applicants_list_doc", methods={"GET"})
-     */
+    #[Route(path: '/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_doc', methods: ['GET'])]
     public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
@@ -745,10 +731,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/interview-applicants-list/{fellappIds}", name="fellapp_interview_applicants_list", methods={"GET"})
-     * @Template("AppFellAppBundle/Interview/applicants-interview-info.html.twig")
-     */
+    #[Route(path: '/interview-applicants-list/{fellappIds}', name: 'fellapp_interview_applicants_list', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Interview/applicants-interview-info.html.twig')]
     public function showInterviewApplicantsListAction(Request $request, $fellappIds) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&

@@ -31,18 +31,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class VacReqLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="vacreq_logger", methods={"GET"})
-     * @Template("AppVacReqBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'vacreq_logger', methods: ['GET'])]
+    #[Template('AppVacReqBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_VACREQ_ADMIN") ){
@@ -56,10 +54,8 @@ class VacReqLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="vacreq_logger_user_all", methods={"GET"})
-     * @Template("AppVacReqBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'vacreq_logger_user_all', methods: ['GET'])]
+    #[Template('AppVacReqBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');

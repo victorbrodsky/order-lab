@@ -52,15 +52,12 @@ class DataQualityController extends CrnEntryController
 {
 
 //    protected $crnUtil;
-//    public function __construct( CrnUtil $crnUtil ) {
-//        $this->crnUtil = $crnUtil;
-//        //$this->userServiceUtil = $this->container->get('user_service_utility');//user_service_utility;
-//    }
-
-    /**
-     * @Route("/merge-patient-records", name="crn_merge_patient_records", options={"expose"=true})
-     * @Template("AppCrnBundle/DataQuality/merge-records.html.twig")
-     */
+    //    public function __construct( CrnUtil $crnUtil ) {
+    //        $this->crnUtil = $crnUtil;
+    //        //$this->userServiceUtil = $this->container->get('user_service_utility');//user_service_utility;
+    //    }
+    #[Route(path: '/merge-patient-records', name: 'crn_merge_patient_records', options: ['expose' => true])]
+    #[Template('AppCrnBundle/DataQuality/merge-records.html.twig')]
     public function mergePatientAction(Request $request)
     {
 
@@ -110,9 +107,7 @@ class DataQualityController extends CrnEntryController
         );
     }
 
-    /**
-     * @Route("/merge-patient-records-ajax", name="crn_merge_patient_records_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/merge-patient-records-ajax', name: 'crn_merge_patient_records_ajax', options: ['expose' => true])]
     public function mergePatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
@@ -344,12 +339,9 @@ class DataQualityController extends CrnEntryController
 
 
 
-    /**
-     * @Route("/un-merge-patient-records", name="crn_unmerge_patient_records", options={"expose"=true})
-     * @Route("/specify-primary-patient-record", name="crn_set_master_patient_record", options={"expose"=true})
-     *
-     * @Template("AppCrnBundle/DataQuality/un-merge-records.html.twig")
-     */
+    #[Route(path: '/un-merge-patient-records', name: 'crn_unmerge_patient_records', options: ['expose' => true])]
+    #[Route(path: '/specify-primary-patient-record', name: 'crn_set_master_patient_record', options: ['expose' => true])]
+    #[Template('AppCrnBundle/DataQuality/un-merge-records.html.twig')]
     public function unmergePatientAction(Request $request)
     //public function unmergePatientAction(Request $request, UserSecurityUtil $securityUtil)
     {
@@ -408,9 +400,7 @@ class DataQualityController extends CrnEntryController
 
 
 
-    /**
-     * @Route("/specify-primary-patient-record-ajax", name="crn_set_master_patient_record_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/specify-primary-patient-record-ajax', name: 'crn_set_master_patient_record_ajax', options: ['expose' => true])]
     public function setMasterPatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
@@ -453,9 +443,7 @@ class DataQualityController extends CrnEntryController
         return $response;
     }
 
-    /**
-     * @Route("/unmerge-patient-records-ajax", name="crn_unmerge_patient_records_ajax", options={"expose"=true})
-     */
+    #[Route(path: '/unmerge-patient-records-ajax', name: 'crn_unmerge_patient_records_ajax', options: ['expose' => true])]
     public function unmergePatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
@@ -551,10 +539,9 @@ class DataQualityController extends CrnEntryController
      * TODO: http://localhost/order/crn/find-and-edit-patient-record?mrntype=13&mrn=NOMRNPROVIDED-0000000000010
      * Form to find patient and select. When patient is found and select clicked, patient/{id}/edit page is opened with patient edit form.
      * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
-     *
-     * @Route("/find-and-edit-patient-record", name="crn_find_and_edit_patient_record", options={"expose"=true})
-     * @Template("AppCrnBundle/DataQuality/edit-patient-record.html.twig")
      */
+    #[Route(path: '/find-and-edit-patient-record', name: 'crn_find_and_edit_patient_record', options: ['expose' => true])]
+    #[Template('AppCrnBundle/DataQuality/edit-patient-record.html.twig')]
     public function findAndEditPatientAction(Request $request) {
 
         $user = $this->getUser();
@@ -602,8 +589,8 @@ class DataQualityController extends CrnEntryController
 
     /**
      * TODO: Under construction. Not Used
-     * @Route("/edit-patient-record-ajax", name="crn_edit_patient_record_ajax", options={"expose"=true})
      */
+    #[Route(path: '/edit-patient-record-ajax', name: 'crn_edit_patient_record_ajax', options: ['expose' => true])]
     public function editPatientAjaxAction(Request $request)
     {
 
@@ -639,10 +626,8 @@ class DataQualityController extends CrnEntryController
         return $response;
     }
 
-    /**
-     * @Route("/merge-patient-records-todel", name="crn_merge_patient_records_todel", options={"expose"=true})
-     * @Template("AppCrnBundle/DataQuality/merge-records.html.twig")
-     */
+    #[Route(path: '/merge-patient-records-todel', name: 'crn_merge_patient_records_todel', options: ['expose' => true])]
+    #[Template('AppCrnBundle/DataQuality/merge-records.html.twig')]
     public function addNewPatientToListAction_TODEL(Request $request)
     {
 
@@ -751,9 +736,7 @@ class DataQualityController extends CrnEntryController
     }
 
 
-    /**
-     * @Route("/crn_update_task/{taskId}/{status}", name="crn_update_task", options={"expose"=true})
-     */
+    #[Route(path: '/crn_update_task/{taskId}/{status}', name: 'crn_update_task', options: ['expose' => true])]
     public function updateTaskAction(Request $request, $taskId, $status)
     {
 

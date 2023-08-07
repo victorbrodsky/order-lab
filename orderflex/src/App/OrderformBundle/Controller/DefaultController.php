@@ -28,10 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="scan_thankfordownloading", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     */
+    #[Route(path: '/thanks-for-downloading/{id}/{sitename}', name: 'scan_thankfordownloading', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
             'fileid' => $id,

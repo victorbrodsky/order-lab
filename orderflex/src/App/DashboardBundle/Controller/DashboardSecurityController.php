@@ -31,28 +31,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class DashboardSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="dashboard_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'dashboard_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="dashboard_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'dashboard_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
 
-    /**
-     * @Route("/no-permission", name="dashboard-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'dashboard-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -65,11 +59,9 @@ class DashboardSecurityController extends SecurityController
 
 
 
-    /**
-     * @Route("/idle-log-out", name="dashboard_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="dashboard_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'dashboard_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'dashboard_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

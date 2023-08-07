@@ -33,9 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReferenceController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/invite-references-submit-letters/{id}", name="fellapp_invite_references_submit_letters", methods={"GET"})
-     */
+    #[Route(path: '/invite-references-submit-letters/{id}', name: 'fellapp_invite_references_submit_letters', methods: ['GET'])]
     public function InviteReferencesToSubmitLettersAction(Request $request, FellowshipApplication $fellapp) {
 
         if(
@@ -112,9 +110,7 @@ class ReferenceController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/invite-reference-submit-letter/{id}/{referenceid}", name="fellapp_invite_reference_submit_letter", methods={"GET"})
-     */
+    #[Route(path: '/invite-reference-submit-letter/{id}/{referenceid}', name: 'fellapp_invite_reference_submit_letter', methods: ['GET'])]
     public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, $referenceid) {
 
         if(
@@ -153,9 +149,7 @@ class ReferenceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellapp->getId())));
     }
 
-    /**
-     * @Route("/reference-letter-received/{id}", name="fellapp_reference_letter_received", methods={"GET"})
-     */
+    #[Route(path: '/reference-letter-received/{id}', name: 'fellapp_reference_letter_received', methods: ['GET'])]
     public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
 
         if(

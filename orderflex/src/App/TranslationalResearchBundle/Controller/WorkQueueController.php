@@ -67,12 +67,12 @@ class WorkQueueController extends OrderAbstractController
      *
      * //Route("/orderables/{workqueue}", name="translationalresearch_work_queue_index_filter", methods={"GET"})
      *
-     * @Route("/orderables/queue/{workqueue}", name="translationalresearch_work_queue_index", methods={"GET"})
-     * @Route("/orderables/", name="translationalresearch_work_queue_index_filter", methods={"GET"})
      *
-     * @Route("/orderables/", name="translationalresearch_work_queue_index_filter", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/WorkQueue/index.html.twig")
      */
+    #[Route(path: '/orderables/queue/{workqueue}', name: 'translationalresearch_work_queue_index', methods: ['GET'])]
+    #[Route(path: '/orderables/', name: 'translationalresearch_work_queue_index_filter', methods: ['GET'])]
+    #[Route(path: '/orderables/', name: 'translationalresearch_work_queue_index_filter', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/WorkQueue/index.html.twig')]
     public function myRequestsAction(Request $request, $workqueue=NULL) {
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -728,10 +728,8 @@ class WorkQueueController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/orderable/show/{id}", name="translationalresearch_product_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/WorkQueue/new.html.twig")
-     */
+    #[Route(path: '/orderable/show/{id}', name: 'translationalresearch_product_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/WorkQueue/new.html.twig')]
     public function showAction(Request $request, Product $product)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -770,9 +768,7 @@ class WorkQueueController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/update-product-orderable-status/{id}", name="translationalresearch_product_update_orderablestatus", methods={"GET"})
-     */
+    #[Route(path: '/update-product-orderable-status/{id}', name: 'translationalresearch_product_update_orderablestatus', methods: ['GET'])]
     public function updateOrderableStatusAction(Request $request, Product $product)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');

@@ -31,9 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ResAppUtilController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/get-notification-email-infos/", name="resapp_get_notification_email_infos", methods={"GET"}, options={"expose"=true})
-     */
+    #[Route(path: '/get-notification-email-infos/', name: 'resapp_get_notification_email_infos', methods: ['GET'], options: ['expose' => true])]
     public function GetNotificationEmailInfosAction(Request $request) {
 
         if(
@@ -85,9 +83,7 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/ethnicities", name="resapp_get_ethnicities", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/ethnicities', name: 'resapp_get_ethnicities', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getEthnicitiesAction(Request $request) {
 
         $resappUtil = $this->container->get('resapp_util');
@@ -99,9 +95,7 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/resapps-current-year", name="resapp_get_resapps_current_year", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/resapps-current-year', name: 'resapp_get_resapps_current_year', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getResApplicationsForThisYearAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -123,9 +117,7 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/resapps-academic-start-end-dates", name="resapp_get_academic_start_end_dates", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/resapps-academic-start-end-dates', name: 'resapp_get_academic_start_end_dates', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getResAppStartEndDatesAction(Request $request) {
 
         $resappUtil = $this->container->get('resapp_util');
@@ -146,9 +138,7 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/resapp-check-duplicate", name="resapp_check_duplicate", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/resapp-check-duplicate', name: 'resapp_check_duplicate', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function checkDuplicateAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();

@@ -41,17 +41,15 @@ use App\OrderformBundle\Entity\Patient;
 
 /**
  * Message controller.
- *
- * @Route("/message")
  */
+#[Route(path: '/message')]
 class MessageController extends OrderAbstractController {
 
     /**
      * Lists all Message entities.
-     *
-     * @Route("/", name="message", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/', name: 'message', methods: ['GET'])]
+    #[Template]
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
         
@@ -74,10 +72,9 @@ class MessageController extends OrderAbstractController {
 
     /**
      * Finds and displays a Message entity.
-     *
-     * @Route("/{id}", name="scan_message_show", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/{id}', name: 'scan_message_show', methods: ['GET'])]
+    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -120,10 +117,9 @@ class MessageController extends OrderAbstractController {
     
     /**
      * Creates a new Message entity.
-     *
-     * @Route("/", name="message_create", methods={"POST"})
-     * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
+    #[Route(path: '/', name: 'message_create', methods: ['POST'])]
+    #[Template('AppOrderformBundle/Message/new_orig.html.twig')]
     public function createAction(Request $request)
     {       
         $entity  = new Message();
@@ -168,10 +164,9 @@ class MessageController extends OrderAbstractController {
 
     /**
      * Displays a form to create a new Message entity.
-     *
-     * @Route("/new", name="message_new", methods={"GET"})
-     * @Template("AppOrderformBundle/Message/new_orig.html.twig")
      */
+    #[Route(path: '/new', name: 'message_new', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Message/new_orig.html.twig')]
     public function newAction()
     {         
         $entity = new Message();
@@ -194,10 +189,9 @@ class MessageController extends OrderAbstractController {
 
     /**
      * Displays a form to edit an existing Message entity.
-     *
-     * @Route("/{id}/edit", name="message_edit", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/{id}/edit', name: 'message_edit', methods: ['GET'])]
+    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -221,10 +215,9 @@ class MessageController extends OrderAbstractController {
 
     /**
      * Edits an existing Message entity.
-     *
-     * @Route("/{id}", name="message_update", methods={"PUT"})
-     * @Template("AppOrderformBundle/Message/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'message_update', methods: ['PUT'])]
+    #[Template('AppOrderformBundle/Message/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -255,9 +248,8 @@ class MessageController extends OrderAbstractController {
     }
     /**
      * Deletes a Message entity.
-     *
-     * @Route("/{id}", name="message_delete", methods={"DELETE"})
      */
+    #[Route(path: '/{id}', name: 'message_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);

@@ -39,20 +39,16 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class ScanSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="scan_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'scan_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/idle-log-out", name="scan_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="scan_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'scan_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'scan_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);
@@ -63,9 +59,7 @@ class ScanSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="scan_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'scan_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
@@ -86,10 +80,8 @@ class ScanSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/scan-order/no-permission", name="scan-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/scan-order/no-permission', name: 'scan-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -102,35 +94,28 @@ class ScanSecurityController extends SecurityController
 
    
 //    /**
-//     * @Route("/login_check", name="login_check", methods={"POST"})
-//     * @Template("AppOrderformBundle/ScanOrder/new_orig.html.twig")
-//     */
-//    public function loginCheckAction( Request $request )
-//    {
-//        //exit("my login check!");
-//    }
-
-
-//    /**
-//     * @Route("/logout", name="logout")
-//     * @Template()
-//     */
-//    public function logoutAction()
-//    {
-//        //echo "logout Action! <br>";
-//        //exit();
-//
-//        $this->container->get('security.context')->setToken(null);
-//        $this->container->get('request')->getSession()->invalidate();
-//        return $this->redirect($this->generateUrl('login'));
-//    }
-
-
-
-    /**
-     * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor", methods={"GET"})
-     * @Template("AppOrderformBundle/Security/load-roles-from-pacsvendor.html.twig")
-     */
+    //     * @Route("/login_check", name="login_check", methods={"POST"})
+    //     * @Template("AppOrderformBundle/ScanOrder/new_orig.html.twig")
+    //     */
+    //    public function loginCheckAction( Request $request )
+    //    {
+    //        //exit("my login check!");
+    //    }
+    //    /**
+    //     * @Route("/logout", name="logout")
+    //     * @Template()
+    //     */
+    //    public function logoutAction()
+    //    {
+    //        //echo "logout Action! <br>";
+    //        //exit();
+    //
+    //        $this->container->get('security.context')->setToken(null);
+    //        $this->container->get('request')->getSession()->invalidate();
+    //        return $this->redirect($this->generateUrl('login'));
+    //    }
+    #[Route(path: '/admin/load-roles-from-pacsvendor', name: 'load-roles-from-pacsvendor', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Security/load-roles-from-pacsvendor.html.twig')]
     public function loadRolesFromPacsvendorAction()
     {
 

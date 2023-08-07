@@ -45,11 +45,9 @@ use App\UserdirectoryBundle\Controller\UserController;
 class ScanUserController extends UserController
 {
 
-    /**
-     * @Route("/users", name="scan_listusers", methods={"GET"})
-     * @Route("/users/previous", name="scan_listusers_previous", methods={"GET"})
-     * @Template("AppOrderformBundle/Admin/users.html.twig")
-     */
+    #[Route(path: '/users', name: 'scan_listusers', methods: ['GET'])]
+    #[Route(path: '/users/previous', name: 'scan_listusers_previous', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Admin/users.html.twig')]
     public function indexUserAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -72,10 +70,8 @@ class ScanUserController extends UserController
     }
 
 
-    /**
-     * @Route("/user/{id}", name="scan_showuser", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/user/{id}', name: 'scan_showuser', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/Profile/edit_user.html.twig')]
     public function showUserAction(Request $request, $id)
     {
         //$secUtil = $this->container->get('user_security_utility');
@@ -105,10 +101,8 @@ class ScanUserController extends UserController
         return $userViewArr;
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="scan_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'scan_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -138,10 +132,8 @@ class ScanUserController extends UserController
         return $userViewArr;
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="scan_user_update", methods={"PUT"})
-     * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'scan_user_update', methods: ['PUT'])]
+    #[Template('AppOrderformBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -281,10 +273,8 @@ class ScanUserController extends UserController
     }
 
 
-    /**
-     * @Route("/lockunlock/change/{id}/{status}", name="scan_lockunlock_change", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
-     */
+    #[Route(path: '/lockunlock/change/{id}/{status}', name: 'scan_lockunlock_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -310,11 +300,8 @@ class ScanUserController extends UserController
 
 
 ////////////////////////// Below Controller methods for scan site-settings only. Currently not used. ///////////////////////////////////////
-
-    /**
-     * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
-     */
+    #[Route(path: '/site-settings/show/user/{id}', name: 'scan_order_settings_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/Admin/site-settings.html.twig')]
     public function showScanSettingsAction($id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -325,10 +312,8 @@ class ScanUserController extends UserController
         return $this->getScanSettings($id,'show');
     }
 
-    /**
-     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
-     */
+    #[Route(path: '/site-settings/edit/user/{id}', name: 'scan_order_settings_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/Admin/site-settings.html.twig')]
     public function editScanSettingsAction($id)
     {
         if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -399,10 +384,8 @@ class ScanUserController extends UserController
         return $res;
     }
 
-    /**
-     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_update", methods={"PUT"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
-     */
+    #[Route(path: '/site-settings/edit/user/{id}', name: 'scan_order_settings_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/Admin/site-settings.html.twig')]
     public function updateScanSettingsAction(Request $request, $id)
     {
 

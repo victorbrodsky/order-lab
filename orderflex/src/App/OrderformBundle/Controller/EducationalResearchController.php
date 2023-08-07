@@ -42,10 +42,9 @@ class EducationalResearchController extends OrderAbstractController {
 
     /**
      * Displays a form to edit an existing entity.
-     *
-     * @Route("/educational/{id}/edit", name="educational_edit", methods={"GET"})
-     * @Route("/research/{id}/edit", name="research_edit", methods={"GET"})
      */
+    #[Route(path: '/educational/{id}/edit', name: 'educational_edit', methods: ['GET'])]
+    #[Route(path: '/research/{id}/edit', name: 'research_edit', methods: ['GET'])]
     public function editAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -80,10 +79,9 @@ class EducationalResearchController extends OrderAbstractController {
 
     /**
      * Edits an existing entity.
-     *
-     * @Route("/educational/{id}/edit", name="educational_update", methods={"PUT"})
-     * @Route("/research/{id}/edit", name="research_update", methods={"PUT"})
      */
+    #[Route(path: '/educational/{id}/edit', name: 'educational_update', methods: ['PUT'])]
+    #[Route(path: '/research/{id}/edit', name: 'research_update', methods: ['PUT'])]
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();

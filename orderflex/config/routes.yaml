@@ -24,7 +24,7 @@ main_under_construction:
 #    resource: "@AppDeidentifierBundle/Controller/"
 app_dashboard:
     resource: "../src/App/DashboardBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /dashboards
     schemes:  ['%connection_channel%']
 
@@ -38,20 +38,19 @@ app_deidentifier:
 app_fellapp:
 #    resource: "@AppFellAppBundle/Controller/"
     resource: "../src/App/FellAppBundle/Controller/"
-    #type:     annotation
     type:     attribute
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
 app_resapp:
     resource: "../src/App/ResAppBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /residency-applications
     schemes:  ['%connection_channel%']
 
 app_vacreq:
     resource: "../src/App/VacReqBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix: /time-away-request
     schemes:  ['%connection_channel%']
 legacy_vacreq:
@@ -72,25 +71,25 @@ app_calllog:
 
 app_crn:
     resource: "../src/App/CrnBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /critical-result-notifications
     schemes:  ['%connection_channel%']
 
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /scan
     schemes:  ['%connection_channel%']
 
 app_translationalresearch:
     resource: "../src/App/TranslationalResearchBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /translational-research
     schemes:  ['%connection_channel%']
 
 app_utilbundles_foscomment:
     resource: "../src/App/UtilBundles/FOSCommentBundle/Controller/"
-    type:     annotation
+    type:     attribute
     prefix:   /utilbundles-foscomment
     schemes:  ['%connection_channel%']
 

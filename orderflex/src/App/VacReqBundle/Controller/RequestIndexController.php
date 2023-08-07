@@ -42,10 +42,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RequestIndexController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/my-requests/", name="vacreq_myrequests", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Request/index.html.twig")
-     */
+    #[Route(path: '/my-requests/', name: 'vacreq_myrequests', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/Request/index.html.twig')]
     public function myRequestsAction(Request $request)
     {
 
@@ -89,10 +87,8 @@ class RequestIndexController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/incoming-requests/", name="vacreq_incomingrequests", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Request/index.html.twig")
-     */
+    #[Route(path: '/incoming-requests/', name: 'vacreq_incomingrequests', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/Request/index.html.twig')]
     public function incomingRequestsAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_VACREQ_APPROVER') && false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') ) {

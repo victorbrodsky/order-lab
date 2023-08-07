@@ -46,19 +46,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Request FormNode controller.
- *
- * @Route("formnode")
  */
+#[Route(path: 'formnode')]
 class RequestFormNodeController extends OrderAbstractController
 {
 
     /**
      * Creates a new request entity with formnode.
-     *
-     * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new", methods={"GET", "POST"})
-     * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode", methods={"GET", "POST"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/new.html.twig")
      */
+    #[Route(path: '/project/{id}/request/new/', name: 'translationalresearch_request_formnode_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/request/new/', name: 'translationalresearch_new_standalone_request_formnode', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/new.html.twig')]
     public function newFormNodeAction(Request $request, Project $project=null)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_REQUESTER')) {
@@ -183,10 +181,9 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Get TransResRequest Edit page
-     *
-     * @Route("/work-request/edit/{id}", name="translationalresearch_request_formnode_edit", methods={"GET", "POST"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/edit.html.twig")
      */
+    #[Route(path: '/work-request/edit/{id}', name: 'translationalresearch_request_formnode_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/edit.html.twig')]
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
 
@@ -322,10 +319,9 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Finds and displays a request entity.
-     *
-     * @Route("/work-request/show/{id}", name="translationalresearch_request_formnode_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/show.html.twig")
      */
+    #[Route(path: '/work-request/show/{id}', name: 'translationalresearch_request_formnode_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/show.html.twig')]
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -378,10 +374,9 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Finds and displays all project's requests
-     *
-     * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/index.html.twig")
      */
+    #[Route(path: '/project/{id}/requests', name: 'translationalresearch_request_formnode_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/index.html.twig')]
     public function indexAction(Request $request, Project $project)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -511,11 +506,10 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Finds and displays all my requests
-     *
-     * @Route("/my-requests", name="translationalresearch_my_requests_formnode", methods={"GET"})
-     * @Route("/all-requests", name="translationalresearch_all_requests_formnode", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/all-requests.html.twig")
      */
+    #[Route(path: '/my-requests', name: 'translationalresearch_my_requests_formnode', methods: ['GET'])]
+    #[Route(path: '/all-requests', name: 'translationalresearch_all_requests_formnode', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/all-requests.html.twig')]
     public function myRequestsAction(Request $request)
     {
         if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
@@ -758,9 +752,7 @@ class RequestFormNodeController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request_formnode", methods={"GET"})
-     */
+    #[Route(path: '/request/generate-form-node-tree/', name: 'translationalresearch_generate_form_node_tree_request_formnode', methods: ['GET'])]
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -778,10 +770,9 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Finds and displays a progress review form for this request entity.
-     *
-     * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
      */
+    #[Route(path: '/request/progress/review/{id}', name: 'translationalresearch_request_formnode_review_progress_state', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/review.html.twig')]
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -815,10 +806,9 @@ class RequestFormNodeController extends OrderAbstractController
 
     /**
      * Finds and displays a billing review form for this request entity.
-     *
-     * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/RequestFormnode/review.html.twig")
      */
+    #[Route(path: '/request/billing/review/{id}', name: 'translationalresearch_request_formnode_review_billing_state', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/RequestFormnode/review.html.twig')]
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -852,9 +842,7 @@ class RequestFormNodeController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/request/update-irb-exp-date/", name="translationalresearch_formnode_update_irb_exp_date", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/request/update-irb-exp-date/', name: 'translationalresearch_formnode_update_irb_exp_date', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {

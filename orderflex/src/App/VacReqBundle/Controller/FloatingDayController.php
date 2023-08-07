@@ -46,10 +46,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class FloatingDayController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/incoming-requests/floating-day", name="vacreq_floatingrequests", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/FloatingDay/index.html.twig")
-     */
+    #[Route(path: '/incoming-requests/floating-day', name: 'vacreq_floatingrequests', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/FloatingDay/index.html.twig')]
     public function incomingFloatingRequestsAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_VACREQ_APPROVER') && false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
@@ -92,10 +90,8 @@ class FloatingDayController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/my-requests/floating-day", name="vacreq_myfloatingrequests", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/FloatingDay/index.html.twig")
-     */
+    #[Route(path: '/my-requests/floating-day', name: 'vacreq_myfloatingrequests', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/FloatingDay/index.html.twig')]
     public function myFloatingRequestsAction(Request $request)
     {
 //        if( false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
@@ -730,10 +726,8 @@ class FloatingDayController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/floating-day", name="vacreq_floating_day", methods={"GET","POST"})
-     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
-     */
+    #[Route(path: '/floating-day', name: 'vacreq_floating_day', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/FloatingDay/floating-day.html.twig')]
     public function FloatingDayAction(Request $request) {
         if(
             false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
@@ -871,11 +865,8 @@ class FloatingDayController extends OrderAbstractController
         );
     }
 
-    /**
-     * @Route("/show/floating/{id}", name="vacreq_floating_show", methods={"GET"})
-     *
-     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
-     */
+    #[Route(path: '/show/floating/{id}', name: 'vacreq_floating_show', methods: ['GET'])]
+    #[Template('AppVacReqBundle/FloatingDay/floating-day.html.twig')]
     public function showAction(Request $request, $id)
     {
         if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
@@ -921,11 +912,11 @@ class FloatingDayController extends OrderAbstractController
     /**
      * Edit: Displays a form to edit an existing VacReqRequest entity.
      *
-     * @Route("/edit/floating/{id}", name="vacreq_floating_edit", methods={"GET", "POST"})
-     * @Route("/review/floating/{id}", name="vacreq_floating_review", methods={"GET", "POST"})
      *
-     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
      */
+    #[Route(path: '/edit/floating/{id}', name: 'vacreq_floating_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/review/floating/{id}', name: 'vacreq_floating_review', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/FloatingDay/floating-day.html.twig')]
     public function editAction(Request $request, $id) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
@@ -1124,10 +1115,10 @@ class FloatingDayController extends OrderAbstractController
 
     /**
      * approved, rejected, pending, canceled
-     * @Route("/status/floating/{id}/{status}", name="vacreq_floating_status_change", methods={"GET"})
-     * @Route("/estatus/floating/{id}/{status}", name="vacreq_floating_status_email_change", methods={"GET"})
-     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
      */
+    #[Route(path: '/status/floating/{id}/{status}', name: 'vacreq_floating_status_change', methods: ['GET'])]
+    #[Route(path: '/estatus/floating/{id}/{status}', name: 'vacreq_floating_status_email_change', methods: ['GET'])]
+    #[Template('AppVacReqBundle/FloatingDay/floating-day.html.twig')]
     public function statusAction(Request $request, $id, $status) {
 
         //if( false == $this->isGranted('ROLE_VACREQ_APPROVER') ) {
@@ -1248,9 +1239,7 @@ class FloatingDayController extends OrderAbstractController
         return $this->redirectToRoute('vacreq_floatingrequests');
     }
 
-    /**
-     * @Route("/status-ajax/floating", name="vacreq_floating_status_ajax_change", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/status-ajax/floating', name: 'vacreq_floating_status_ajax_change', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function statusAjaxAction( Request $request ) {
 
         $resArr = array(
@@ -1434,8 +1423,8 @@ class FloatingDayController extends OrderAbstractController
 
     /**
      * submitter can submit a "cancellation-request" for an entire, already approved request
-     * @Route("/status-cancellation-request/floating/{id}", name="vacreq_floating_status_cancellation_request", methods={"GET"})
      */
+    #[Route(path: '/status-cancellation-request/floating/{id}', name: 'vacreq_floating_status_cancellation_request', methods: ['GET'])]
     public function statusCancellationRequestAction(Request $request, $id) {
 
         //exit("statusCancellationRequestAction ID ".$id); //testing action
@@ -1485,9 +1474,7 @@ class FloatingDayController extends OrderAbstractController
         return $this->redirectToRoute("vacreq_myfloatingrequests");
     }
 
-    /**
-     * @Route("/status-cancellation-request-ajax/floating", name="vacreq_floating_status_cancellation_request_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/status-cancellation-request-ajax/floating', name: 'vacreq_floating_status_cancellation_request_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function statusCancellationRequestAjaxAction( Request $request ) {
 
         $resArr = array(
@@ -1668,10 +1655,9 @@ class FloatingDayController extends OrderAbstractController
      * The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
      * cancellation-request => cancellation-request-approved => canceled
      * cancellation-request => cancellation-request-rejected => approved
-     *
-     * @Route("/cancellation-request/status/floating/{id}/{status}", name="vacreq_floating_status_cancellation_request_change", methods={"GET"})
-     * @Route("/cancellation-request/estatus/floating/{id}/{status}", name="vacreq_floating_status_cancellation_request_email_change", methods={"GET"})
      */
+    #[Route(path: '/cancellation-request/status/floating/{id}/{status}', name: 'vacreq_floating_status_cancellation_request_change', methods: ['GET'])]
+    #[Route(path: '/cancellation-request/estatus/floating/{id}/{status}', name: 'vacreq_floating_status_cancellation_request_email_change', methods: ['GET'])]
     public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
@@ -1752,9 +1738,7 @@ class FloatingDayController extends OrderAbstractController
         return $this->redirectToRoute('vacreq_floatingrequests');
     }
 
-    /**
-     * @Route("/send-reminder-email/floating/{id}", name="vacreq_floating_send_reminder_email", methods={"GET"})
-     */
+    #[Route(path: '/send-reminder-email/floating/{id}', name: 'vacreq_floating_send_reminder_email', methods: ['GET'])]
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1806,9 +1790,7 @@ class FloatingDayController extends OrderAbstractController
         return $this->redirectToRoute("vacreq_floatingrequests");
     }
 
-    /**
-     * @Route("/check-existed-floating-ajax", name="vacreq_check_existed_floating_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/check-existed-floating-ajax', name: 'vacreq_check_existed_floating_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function checkExistedFloatingDayAjaxAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_VACREQ_USER') ) {

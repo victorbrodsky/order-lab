@@ -48,67 +48,65 @@ class HistoryController extends OrderAbstractController
 {
 
 //    /**
-//     * Lists all History entities.
-//     *
-//     * @Route("/scan-order/progress-and-comments/", name="history", methods={"GET"})
-//     * @Template()
-//     */
-//    public function indexAction()
-//    {
-//
-//        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-//            return $this->redirect( $this->generateUrl('scan-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //$entities = $em->getRepository('AppOrderformBundle:History')->findAll();
-//        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
-//        $dql =  $repository->createQueryBuilder("hist");
-//        $dql->innerJoin("hist.message", "message");
-//
-//        /////////// institution ///////////
-//        $instStr = "";
-//        $user = $this->getUser();
-//        foreach( $user->getInstitutions() as $inst ) {
-//            if( $instStr != "" ) {
-//                $instStr = $instStr . " OR ";
-//            }
-//            $instStr = $instStr . 'message.institution='.$inst->getId();
-//        }
-//        if( $instStr == "" ) {
-//            $instStr = "1=0";
-//        }
-//        //echo "instStr=".$instStr."<br>";
-//        $dql->where($instStr);
-//        /////////// EOF institution ///////////
-//
-//        //echo "dql=".$dql;
-//        $query = $em->createQuery($dql);
-//        $entities = $query->getResult();
-//
-//        if( count($entities) > 0 ) {
-//            $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
-//            $rolesArr = array();
-//            foreach( $roles as $role ) {
-//                $rolesArr[$role->getName()] = $role->getAlias();
-//            }
-//        } else {
-//            $rolesArr = '';
-//        }
-//
-//        return array(
-//            'entities' => $entities,
-//            'roles' => $rolesArr,
-//        );
-//    }
-
+    //     * Lists all History entities.
+    //     *
+    //     * @Route("/scan-order/progress-and-comments/", name="history", methods={"GET"})
+    //     * @Template()
+    //     */
+    //    public function indexAction()
+    //    {
+    //
+    //        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+    //            return $this->redirect( $this->generateUrl('scan-nopermission') );
+    //        }
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        //$entities = $em->getRepository('AppOrderformBundle:History')->findAll();
+    //        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
+    //        $dql =  $repository->createQueryBuilder("hist");
+    //        $dql->innerJoin("hist.message", "message");
+    //
+    //        /////////// institution ///////////
+    //        $instStr = "";
+    //        $user = $this->getUser();
+    //        foreach( $user->getInstitutions() as $inst ) {
+    //            if( $instStr != "" ) {
+    //                $instStr = $instStr . " OR ";
+    //            }
+    //            $instStr = $instStr . 'message.institution='.$inst->getId();
+    //        }
+    //        if( $instStr == "" ) {
+    //            $instStr = "1=0";
+    //        }
+    //        //echo "instStr=".$instStr."<br>";
+    //        $dql->where($instStr);
+    //        /////////// EOF institution ///////////
+    //
+    //        //echo "dql=".$dql;
+    //        $query = $em->createQuery($dql);
+    //        $entities = $query->getResult();
+    //
+    //        if( count($entities) > 0 ) {
+    //            $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+    //            $rolesArr = array();
+    //            foreach( $roles as $role ) {
+    //                $rolesArr[$role->getName()] = $role->getAlias();
+    //            }
+    //        } else {
+    //            $rolesArr = '';
+    //        }
+    //
+    //        return array(
+    //            'entities' => $entities,
+    //            'roles' => $rolesArr,
+    //        );
+    //    }
     /**
      * Creates a new History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/new", name="history_create", methods={"POST"})
-     * @Template("AppOrderformBundle/History/new.html.twig")
      */
+    #[Route(path: '/scan-order/progress-and-comments/new', name: 'history_create', methods: ['POST'])]
+    #[Template('AppOrderformBundle/History/new.html.twig')]
     public function createAction(Request $request)
     {
         $entity = new History();
@@ -150,10 +148,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Displays a form to create a new History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/new", name="history_new", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/scan-order/progress-and-comments/new', name: 'history_new', methods: ['GET'])]
+    #[Template]
     public function newAction()
     {
         $entity = new History();
@@ -167,10 +164,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Finds and displays a History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_show", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
      */
+    #[Route(path: '/scan-order/progress-and-comments/{id}', name: 'history_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -198,10 +194,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/{id}/edit", name="history_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template()
      */
+    #[Route(path: '/scan-order/progress-and-comments/{id}/edit', name: 'history_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -249,10 +244,9 @@ class HistoryController extends OrderAbstractController
     }
     /**
      * Edits an existing History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_update", methods={"PUT"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/History/edit.html.twig")
      */
+    #[Route(path: '/scan-order/progress-and-comments/{id}', name: 'history_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/History/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -288,9 +282,8 @@ class HistoryController extends OrderAbstractController
     }
     /**
      * Deletes a History entity.
-     *
-     * @Route("/scan-order/progress-and-comments/{id}", name="history_delete", methods={"DELETE"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/scan-order/progress-and-comments/{id}', name: 'history_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
@@ -335,10 +328,9 @@ class HistoryController extends OrderAbstractController
     //History of Message
     /**
      * Finds and displays a History entity for Message.
-     *
-     * @Route("/scan-order/{id}/progress-and-comments", name="history_message_show", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/History/index.html.twig")
      */
+    #[Route(path: '/scan-order/{id}/progress-and-comments', name: 'history_message_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/History/index.html.twig')]
     public function showHistoryMessageAction($id)
     {
 
@@ -502,10 +494,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Finds and displays a History entity for Message.
-     *
-     * @Route("/scan-order/progress-and-comments/create", name="history_message_new", methods={"POST"})
-     * @Template("AppOrderformBundle/History/index.html.twig")
      */
+    #[Route(path: '/scan-order/progress-and-comments/create', name: 'history_message_new', methods: ['POST'])]
+    #[Template('AppOrderformBundle/History/index.html.twig')]
     public function createHistoryMessageAction(Request $request)
     {
 
@@ -555,10 +546,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Finds and displays a History entity for Message.
-     *
-     * @Route("/scan-order/progress-and-comments/notviewedcomments", name="history_not_viewed_comments", methods={"GET"})
-     * @Template("AppOrderformBundle/History/index.html.twig")
      */
+    #[Route(path: '/scan-order/progress-and-comments/notviewedcomments', name: 'history_not_viewed_comments', methods: ['GET'])]
+    #[Template('AppOrderformBundle/History/index.html.twig')]
     public function notViewedCommentsAction()
     {
         $comments = 0;
@@ -580,10 +570,9 @@ class HistoryController extends OrderAbstractController
 
     /**
      * Finds and displays a History entity for Message.
-     *
-     * @Route("/scan-order/progress-and-comments/notviewedadmincomments", name="history_not_viewed_admincomments", methods={"GET"})
-     * @Template("AppOrderformBundle/History/index.html.twig")
      */
+    #[Route(path: '/scan-order/progress-and-comments/notviewedadmincomments', name: 'history_not_viewed_admincomments', methods: ['GET'])]
+    #[Template('AppOrderformBundle/History/index.html.twig')]
     public function notViewedAdminCommentsAction()
     {
         $comments = 0;

@@ -81,10 +81,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Finds and displays a Patient entity.
-     *
-     * @Route("/patient/info/{id}", name="crn_patient_show", methods={"GET"}, options={"expose"=true})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/patient/info/{id}', name: 'crn_patient_show', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function showAction( Request $request, $id )
     {
 
@@ -110,10 +109,9 @@ class CrnPatientController extends PatientController {
     /**
      * Displays a form to view an existing Patient entity by mrn.
      * Test 'show-tree-depth': http://localhost/order/crn-book/patient/view-patient-record?mrn=testmrn-1&mrntype=16&show-tree-depth=2
-     *
-     * @Route("/patient/view-patient-record", name="crn_patient_view_by_mrn", methods={"GET"}, options={"expose"=true})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/patient/view-patient-record', name: 'crn_patient_view_by_mrn', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function viewPatientByMrnAction( Request $request )
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -195,10 +193,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Displays a form to edit an existing Patient entity by id.
-     *
-     * @Route("/patient/{id}/edit", name="crn_patient_edit", methods={"GET"}, options={"expose"=true})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/patient/{id}/edit', name: 'crn_patient_edit', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function editAction( Request $request, $id )
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -227,10 +224,9 @@ class CrnPatientController extends PatientController {
      * Displays a form to edit an existing Patient entity by mrn.
      *
      * ////Route("/patient/edit-by-mrn/{mrn}/{mrntype}", name="crn_patient_edit_by_mrn", options={"expose"=true})
-     *
-     * @Route("/patient/edit-patient-record", name="crn_patient_edit_by_mrn", methods={"GET"}, options={"expose"=true})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/patient/edit-patient-record', name: 'crn_patient_edit_by_mrn', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function editPatientByMrnAction( Request $request )
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -322,10 +318,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Edits an existing Patient entity.
-     *
-     * @Route("/patient/{id}/edit", name="crn_patient_update", methods={"POST"}, options={"expose"=true})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/patient/{id}/edit', name: 'crn_patient_update', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function updateAction( Request $request, $id )
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -345,10 +340,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Displays a form to edit patient info only (not encounters)
-     *
-     * @Route("/patient-demographics/{id}", name="crn_single_patient_view", methods={"GET"})
-     * @Template("AppCrnBundle/DataQuality/single-patient-edit.html.twig")
      */
+    #[Route(path: '/patient-demographics/{id}', name: 'crn_single_patient_view', methods: ['GET'])]
+    #[Template('AppCrnBundle/DataQuality/single-patient-edit.html.twig')]
     public function patientSingleViewAction(Request $request, Patient $patient)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -374,10 +368,9 @@ class CrnPatientController extends PatientController {
     }
     /**
      * Displays a form to edit patient info only (not encounters)
-     *
-     * @Route("/patient-demographics/edit/{id}", name="crn_single_patient_edit", methods={"GET","POST"})
-     * @Template("AppCrnBundle/DataQuality/single-patient-edit.html.twig")
      */
+    #[Route(path: '/patient-demographics/edit/{id}', name: 'crn_single_patient_edit', methods: ['GET', 'POST'])]
+    #[Template('AppCrnBundle/DataQuality/single-patient-edit.html.twig')]
     public function patientSingleEditAction(Request $request, Patient $patient)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -809,9 +802,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Complex Patient List
-     * @Route("/patient-list/{listid}/{listname}", name="crn_complex_patient_list")
-     * @Template("AppCrnBundle/PatientList/complex-patient-list.html.twig")
      */
+    #[Route(path: '/patient-list/{listid}/{listname}', name: 'crn_complex_patient_list')]
+    #[Template('AppCrnBundle/PatientList/complex-patient-list.html.twig')]
     public function complexPatientListAction(Request $request, $listid, $listname)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -909,10 +902,9 @@ class CrnPatientController extends PatientController {
 
     /**
      * Listing patients whose notes have been updated in the last 96 hours (4 days)
-     *
-     * @Route("/recent-patients", name="crn_recent_patients")
-     * @Template("AppCrnBundle/PatientList/recent-patients.html.twig")
      */
+    #[Route(path: '/recent-patients', name: 'crn_recent_patients')]
+    #[Template('AppCrnBundle/PatientList/recent-patients.html.twig')]
     public function recentPatientsAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -1000,9 +992,7 @@ class CrnPatientController extends PatientController {
     }
 
 
-    /**
-     * @Route("/patient/remove-patient-from-list/{patientId}/{patientListId}", name="crn_remove_patient_from_list")
-     */
+    #[Route(path: '/patient/remove-patient-from-list/{patientId}/{patientListId}', name: 'crn_remove_patient_from_list')]
     public function removePatientFromListAction(Request $request, $patientId, $patientListId) {
         if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
@@ -1058,12 +1048,9 @@ class CrnPatientController extends PatientController {
 
 
 
-    /**
-     * @Route("/patient/add-patient-to-list/{patientListId}/{patientId}", name="crn_add_patient_to_list")
-     * @Route("/patient/add-patient-to-list-ajax/{patientListId}/{patientId}", name="crn_add_patient_to_list_ajax", options={"expose"=true})
-     *
-     * @Template("AppCrnBundle/PatientList/complex-patient-list.html.twig")
-     */
+    #[Route(path: '/patient/add-patient-to-list/{patientListId}/{patientId}', name: 'crn_add_patient_to_list')]
+    #[Route(path: '/patient/add-patient-to-list-ajax/{patientListId}/{patientId}', name: 'crn_add_patient_to_list_ajax', options: ['expose' => true])]
+    #[Template('AppCrnBundle/PatientList/complex-patient-list.html.twig')]
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
@@ -1120,9 +1107,7 @@ class CrnPatientController extends PatientController {
 
 
     //crn-list-previous-entries
-    /**
-     * @Route("/patient/list-previous-entries/", name="crn-list-previous-entries", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/patient/list-previous-entries/', name: 'crn-list-previous-entries', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function listPatientPreviousEntriesAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -1391,34 +1376,31 @@ class CrnPatientController extends PatientController {
         exit('testing');
     }
 //    //NOT USED
-//    public function testSelectMessagesWithMaxVersion_OLD($patientid) {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $query = $em->createQuery('
-//            SELECT message, message.version AS HIDDEN
-//            FROM AppOrderformBundle:Message message
-//            INNER JOIN message.patient patient'.
-//            ' LEFT OUTER JOIN AppOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
-//            ' WHERE patient.id = :patient
-//            ORDER BY message.oid ASC'
-//        )->setParameter('patient', $patientid);
-//
-//        echo "query=".$query->getSql()."<br>";
-//
-//        $messages = $query->getResult();
-//
-//        echo "messages count=".count($messages)."<br>";
-//
-//        foreach( $messages as $message ) {
-//            echo "Message=".$message->getMessageOidVersion()."<br>";
-//        }
-//
-//        exit("testing");
-//    }
-
-    /**
-     * @Route("/patient/list-previous-tasks/", name="crn-list-previous-tasks", methods={"GET","POST"}, options={"expose"=true})
-     */
+    //    public function testSelectMessagesWithMaxVersion_OLD($patientid) {
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        $query = $em->createQuery('
+    //            SELECT message, message.version AS HIDDEN
+    //            FROM AppOrderformBundle:Message message
+    //            INNER JOIN message.patient patient'.
+    //            ' LEFT OUTER JOIN AppOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
+    //            ' WHERE patient.id = :patient
+    //            ORDER BY message.oid ASC'
+    //        )->setParameter('patient', $patientid);
+    //
+    //        echo "query=".$query->getSql()."<br>";
+    //
+    //        $messages = $query->getResult();
+    //
+    //        echo "messages count=".count($messages)."<br>";
+    //
+    //        foreach( $messages as $message ) {
+    //            echo "Message=".$message->getMessageOidVersion()."<br>";
+    //        }
+    //
+    //        exit("testing");
+    //    }
+    #[Route(path: '/patient/list-previous-tasks/', name: 'crn-list-previous-tasks', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function listPatientPreviousTasksAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USER') ) {
@@ -1659,9 +1641,8 @@ class CrnPatientController extends PatientController {
 
     /**
      * Get previous encounters for a given patient. Use previous entries (listPatientPreviousEntriesAction) html result?
-     *
-     * @Route("/patient/get-previous-encounters", name="crn-get-previous-encounters", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/patient/get-previous-encounters', name: 'crn-get-previous-encounters', methods: ['GET'], options: ['expose' => true])]
     public function getPreviousEncountersAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CRN_USER")) {
@@ -1699,9 +1680,8 @@ class CrnPatientController extends PatientController {
 
     /**
      * Get previous encounter info by id
-     *
-     * @Route("/patient/get-encounter-by-id", name="crn-get-encounter-by-id", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/patient/get-encounter-by-id', name: 'crn-get-encounter-by-id', methods: ['GET'], options: ['expose' => true])]
     public function getEncounterByIdAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_CRN_USER")) {

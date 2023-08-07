@@ -33,9 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResAppUploadController extends UploadController {
 
-    /**
-     * @Route("/file-delete", name="resapp_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'resapp_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             //exit('no resapp permission');
@@ -47,9 +45,8 @@ class ResAppUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-download/{id}/{eventtype}", name="resapp_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'resapp_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
         if( false == $this->isGranted('ROLE_RESAPP_USER') ){
@@ -70,9 +67,8 @@ class ResAppUploadController extends UploadController {
 
     /**
      * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="resapp_file_view", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'resapp_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
 
         if( false == $this->isGranted('ROLE_RESAPP_USER') ){

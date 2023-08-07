@@ -29,11 +29,8 @@ class ResAppListController extends ListController
     protected $sitename = "resapp";
     protected $postPath = "_resapp";
 
-    /**
-     * @Route("/list/visa-status/", name="visastatus-list_resapp", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
-     */
+    #[Route(path: '/list/visa-status/', name: 'visastatus-list_resapp', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexVisaStatusesAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -43,11 +40,8 @@ class ResAppListController extends ListController
         return $this->getList($request);
     }
 
-    /**
-     * @Route("/list/visa-status/", name="visastatus_create_resapp", methods={"POST"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
-     */
+    #[Route(path: '/list/visa-status/', name: 'visastatus_create_resapp', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -57,11 +51,8 @@ class ResAppListController extends ListController
         return $this->createList($request);
     }
 
-    /**
-     * @Route("/list/visa-status/new", name="visastatus_new_resapp", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
-     */
+    #[Route(path: '/list/visa-status/new', name: 'visastatus_new_resapp', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -71,11 +62,8 @@ class ResAppListController extends ListController
         return $this->newList($request);
     }
 
-    /**
-     * @Route("/list/visa-status/{id}", name="visastatus_show_resapp", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
-     */
+    #[Route(path: '/list/visa-status/{id}', name: 'visastatus_show_resapp', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
 
@@ -86,11 +74,8 @@ class ResAppListController extends ListController
         return $this->showList($request,$id,true);
     }
 
-    /**
-     * @Route("/list/visa-status/{id}/edit", name="visastatus_edit_resapp", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
-     */
+    #[Route(path: '/list/visa-status/{id}/edit', name: 'visastatus_edit_resapp', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -100,11 +85,8 @@ class ResAppListController extends ListController
         return $this->editList($request,$id);
     }
 
-    /**
-     * @Route("/list/visa-status/{id}", name="visastatus_update_resapp", methods={"PUT"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
-     */
+    #[Route(path: '/list/visa-status/{id}', name: 'visastatus_update_resapp', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ) {

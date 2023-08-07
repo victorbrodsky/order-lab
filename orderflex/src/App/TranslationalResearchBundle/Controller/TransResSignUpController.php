@@ -29,9 +29,8 @@ class TransResSignUpController extends SignUpController
 
     /**
      * Lists all signUp entities.
-     *
-     * @Route("/signup-list", name="translationalresearch_signup_index", methods={"GET"})
      */
+    #[Route(path: '/signup-list', name: 'translationalresearch_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         return parent::indexAction();
@@ -40,17 +39,14 @@ class TransResSignUpController extends SignUpController
     /**
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
-     *
-     * @Route("/sign-up", name="translationalresearch_signup_new", methods={"GET","POST"})
      */
+    #[Route(path: '/sign-up', name: 'translationalresearch_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
         return parent::newSignUpAction($request);
     }
 
-    /**
-     * @Route("/activate-account/{registrationLinkID}", name="translationalresearch_activate_account", methods={"GET","POST"})
-     */
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'translationalresearch_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
@@ -58,9 +54,8 @@ class TransResSignUpController extends SignUpController
 
     /**
      * Finds and displays a signUp entity.
-     *
-     * @Route("/signup-show/{id}", name="translationalresearch_signup_show", methods={"GET"})
      */
+    #[Route(path: '/signup-show/{id}', name: 'translationalresearch_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         return parent::indexAction($signUp);
@@ -68,9 +63,8 @@ class TransResSignUpController extends SignUpController
 
     /**
      * Displays a form to edit an existing signUp entity.
-     *
-     * @Route("/signup-edit/{id}", name="translationalresearch_signup_edit", methods={"GET","POST"})
      */
+    #[Route(path: '/signup-edit/{id}', name: 'translationalresearch_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         return parent::editAction($request,$signUp);
@@ -78,17 +72,14 @@ class TransResSignUpController extends SignUpController
 
     /**
      * Deletes a signUp entity.
-     *
-     * @Route("/signup-delete/{id}", name="translationalresearch_signup_delete", methods={"DELETE"})
      */
+    #[Route(path: '/signup-delete/{id}', name: 'translationalresearch_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         return parent::deleteAction($request,$signUp);
     }
 
-    /**
-     * @Route("/forgot-password", name="translationalresearch_forgot_password", methods={"GET","POST"})
-     */
+    #[Route(path: '/forgot-password', name: 'translationalresearch_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
@@ -96,9 +87,8 @@ class TransResSignUpController extends SignUpController
 
     /**
      * http://localhost/order/directory/reset-password
-     *
-     * @Route("/reset-password/{resetPasswordLinkID}", name="translationalresearch_reset_password", methods={"GET","POST"})
      */
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'translationalresearch_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         return parent::resetPasswordAction($request,$resetPasswordLinkID);

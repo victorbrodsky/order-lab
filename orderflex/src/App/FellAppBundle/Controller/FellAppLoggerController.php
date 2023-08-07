@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Form\LoggerType;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class FellAppLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="fellapp_logger", methods={"GET"})
-     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'fellapp_logger', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if(
@@ -72,10 +70,9 @@ class FellAppLoggerController extends LoggerController
 
     /**
      * Filter by Object Type "FellowshipApplication" and Object ID
-     *
-     * @Route("/application-log/{id}", name="fellapp_application_log", methods={"GET"})
-     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/application-log/{id}', name: 'fellapp_application_log', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Logger/index.html.twig')]
     public function applicationLogAction(Request $request,$id) {
 
         if(
@@ -118,10 +115,9 @@ class FellAppLoggerController extends LoggerController
 
     /**
      * Filter by Object Type "FellowshipApplication" and Object ID
-     *
-     * @Route("/event-log-per-object/", name="fellapp_event-log-per-object_log", methods={"GET"})
-     * @Template("AppFellAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-object/', name: 'fellapp_event-log-per-object_log', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Logger/index.html.twig')]
     public function applicationPerObjectLogAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();

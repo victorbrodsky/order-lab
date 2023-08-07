@@ -50,10 +50,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/interview-modal/{id}", name="resapp_interview_modal", methods={"GET"})
-     * @Template("AppResAppBundle/Interview/modal.html.twig")
-     */
+    #[Route(path: '/interview-modal/{id}', name: 'resapp_interview_modal', methods: ['GET'])]
+    #[Template('AppResAppBundle/Interview/modal.html.twig')]
     public function interviewModalAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_USER') ) {
@@ -87,9 +85,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/interview-score-rank/{id}", name="resapp_interviewe_score_rank", methods={"GET"})
-     */
+    #[Route(path: '/interview-score-rank/{id}', name: 'resapp_interviewe_score_rank', methods: ['GET'])]
     public function intervieweScoreRankAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_USER') ) {
@@ -219,9 +215,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/invite-interviewers-to-rate/{id}", name="resapp_inviteinterviewerstorate", methods={"GET"})
-     */
+    #[Route(path: '/invite-interviewers-to-rate/{id}', name: 'resapp_inviteinterviewerstorate', methods: ['GET'])]
     public function inviteInterviewersToRateAction(Request $request, $id) {
 
         if(
@@ -280,9 +274,7 @@ class ResAppApplicantController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/invite-interviewer-to-rate/{interviewId}", name="resapp_invite_single_interviewer_to_rate", methods={"GET"})
-     */
+    #[Route(path: '/invite-interviewer-to-rate/{interviewId}', name: 'resapp_invite_single_interviewer_to_rate', methods: ['GET'])]
     public function inviteSingleInterviewerToRateAction(Request $request, $interviewId) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
@@ -531,9 +523,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/invite-observers-to-view/{id}", name="resapp_inviteobservers", methods={"GET"})
-     */
+    #[Route(path: '/invite-observers-to-view/{id}', name: 'resapp_inviteobservers', methods: ['GET'])]
     public function inviteObserversToRateAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
@@ -636,9 +626,7 @@ class ResAppApplicantController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/download-interview-applicants-list-pdf/{currentYear}/{resappTypeId}/{resappIds}", name="resapp_download_interview_applicants_list_pdf", methods={"GET"})
-     */
+    #[Route(path: '/download-interview-applicants-list-pdf/{currentYear}/{resappTypeId}/{resappIds}', name: 'resapp_download_interview_applicants_list_pdf', methods: ['GET'])]
     public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $resappTypeId, $resappIds) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
@@ -737,9 +725,7 @@ class ResAppApplicantController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/download-interview-applicants-list-doc/{currentYear}/{resappTypeId}/{resappIds}", name="resapp_download_interview_applicants_list_doc", methods={"GET"})
-     */
+    #[Route(path: '/download-interview-applicants-list-doc/{currentYear}/{resappTypeId}/{resappIds}', name: 'resapp_download_interview_applicants_list_doc', methods: ['GET'])]
     public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $resappTypeId, $resappIds) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
@@ -805,10 +791,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/interview-applicants-list/{resappIds}", name="resapp_interview_applicants_list", methods={"GET"})
-     * @Template("AppResAppBundle/Interview/applicants-interview-info.html.twig")
-     */
+    #[Route(path: '/interview-applicants-list/{resappIds}', name: 'resapp_interview_applicants_list', methods: ['GET'])]
+    #[Template('AppResAppBundle/Interview/applicants-interview-info.html.twig')]
     public function showInterviewApplicantsListAction(Request $request, $resappIds) {
 
         if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&

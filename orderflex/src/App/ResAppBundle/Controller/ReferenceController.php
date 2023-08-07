@@ -35,9 +35,8 @@ class ReferenceController extends OrderAbstractController
 
     /**
      * NOT USED: There are no reference letters to submit. This functionality has been derived from fellowship system.
-     *
-     * @Route("/invite-references-submit-letters/{id}", name="resapp_invite_references_submit_letters", methods={"GET"})
      */
+    #[Route(path: '/invite-references-submit-letters/{id}', name: 'resapp_invite_references_submit_letters', methods: ['GET'])]
     public function InviteReferencesToSubmitLettersAction(Request $request, ResidencyApplication $resapp) {
 
         if(
@@ -107,9 +106,7 @@ class ReferenceController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/invite-reference-submit-letter/{id}/{referenceid}", name="resapp_invite_reference_submit_letter", methods={"GET"})
-     */
+    #[Route(path: '/invite-reference-submit-letter/{id}/{referenceid}', name: 'resapp_invite_reference_submit_letter', methods: ['GET'])]
     public function InviteReferenceToSubmitLetterAction(Request $request, ResidencyApplication $resapp, $referenceid) {
 
         if(
@@ -148,9 +145,7 @@ class ReferenceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('resapp_show',array('id' => $resapp->getId())));
     }
 
-    /**
-     * @Route("/reference-letter-received/{id}", name="resapp_reference_letter_received", methods={"GET"})
-     */
+    #[Route(path: '/reference-letter-received/{id}', name: 'resapp_reference_letter_received', methods: ['GET'])]
     public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
 
         if(

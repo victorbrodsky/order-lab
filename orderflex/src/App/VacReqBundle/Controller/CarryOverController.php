@@ -49,71 +49,66 @@ class CarryOverController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review", methods={"GET", "POST"})
-//     * @Template("AppVacReqBundle/CarryOver/carryoverrequest.html.twig")
-//     */
-//    public function carryOverRequestReviewAction(Request $request, $id)
-//    {
-//
-//        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        //$vacreqUtil = $this->container->get('vacreq_util');
-//        exit('not implemented');
-//
-//        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-//
-//        $userCarryOver = $em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
-//
-//        if( !$userCarryOver ) {
-//            $userCarryOver = new VacReqUserCarryOver($subjectUser);
-//        }
-//
-//        //add next year, current year, [Current -1], [Current -2]
-//        $this->addCarryOverByYears($userCarryOver);
-//
-//        $cycle = 'edit';
-//
-//        $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
-//
-//        $form->handleRequest($request);
-//
-//        if( $form->isSubmitted() && $form->isValid() ) {
-//
-//            $em->persist($userCarryOver);
-//            $em->flush();
-//
-//            //Event Log
-////            $eventType = "Business/Vacation Request Created";
-//            $event = "Carry Over Days for ".$subjectUser." has been updated";
-////            $userSecUtil = $this->container->get('user_security_utility');
-////            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
-//
-//            //Flash
-//            $this->addFlash(
-//                'notice',
-//                $event
-//            );
-//
-//            return $this->redirectToRoute('vacreq_mygroup');
-//        }
-//
-//        return array(
-//            'subjectUser' => $subjectUser,
-//            'form' => $form->createView(),
-//            'cycle' => $cycle,
-//        );
-//
-//    }
-
-
-
-    /**
-     * @Route("/carry-over-vacation-days/{userId}", name="vacreq_carryover", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Group/carryover.html.twig")
-     */
+    //     * @Route("/carry-over-request/review/{id}", name="vacreq_carryoverrequest_review", methods={"GET", "POST"})
+    //     * @Template("AppVacReqBundle/CarryOver/carryoverrequest.html.twig")
+    //     */
+    //    public function carryOverRequestReviewAction(Request $request, $id)
+    //    {
+    //
+    //        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+    //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+    //        }
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        //$vacreqUtil = $this->container->get('vacreq_util');
+    //        exit('not implemented');
+    //
+    //        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+    //
+    //        $userCarryOver = $em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+    //
+    //        if( !$userCarryOver ) {
+    //            $userCarryOver = new VacReqUserCarryOver($subjectUser);
+    //        }
+    //
+    //        //add next year, current year, [Current -1], [Current -2]
+    //        $this->addCarryOverByYears($userCarryOver);
+    //
+    //        $cycle = 'edit';
+    //
+    //        $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
+    //
+    //        $form->handleRequest($request);
+    //
+    //        if( $form->isSubmitted() && $form->isValid() ) {
+    //
+    //            $em->persist($userCarryOver);
+    //            $em->flush();
+    //
+    //            //Event Log
+    ////            $eventType = "Business/Vacation Request Created";
+    //            $event = "Carry Over Days for ".$subjectUser." has been updated";
+    ////            $userSecUtil = $this->container->get('user_security_utility');
+    ////            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+    //
+    //            //Flash
+    //            $this->addFlash(
+    //                'notice',
+    //                $event
+    //            );
+    //
+    //            return $this->redirectToRoute('vacreq_mygroup');
+    //        }
+    //
+    //        return array(
+    //            'subjectUser' => $subjectUser,
+    //            'form' => $form->createView(),
+    //            'cycle' => $cycle,
+    //        );
+    //
+    //    }
+    #[Route(path: '/carry-over-vacation-days/{userId}', name: 'vacreq_carryover', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/Group/carryover.html.twig')]
     public function carryOverAction(Request $request, $userId)
     {
 
@@ -260,10 +255,10 @@ class CarryOverController extends OrderAbstractController
 
     /**
      * approved, rejected, pending, canceled
-     * @Route("/carry-over-vacation-days/status/{id}/{requestName}/{status}", name="vacreq_status_change_carryover", methods={"GET"})
-     * @Route("/carry-over-vacation-days/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change_carryover", methods={"GET"})
-     * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
+    #[Route(path: '/carry-over-vacation-days/status/{id}/{requestName}/{status}', name: 'vacreq_status_change_carryover', methods: ['GET'])]
+    #[Route(path: '/carry-over-vacation-days/estatus/{id}/{requestName}/{status}', name: 'vacreq_status_email_change_carryover', methods: ['GET'])]
+    #[Template('AppVacReqBundle/Request/edit.html.twig')]
     public function statusAction(Request $request, $id, $requestName, $status) {
 
         $logger = $this->container->get('logger');

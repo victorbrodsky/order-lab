@@ -36,48 +36,36 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ScanUploadController extends UploadController {
 
-    /**
-     * @Route("/file-delete", name="scan_file_delete", methods={"GET", "POST", "DELETE"})
-     */
+    #[Route(path: '/file-delete', name: 'scan_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
 
-    /**
-     * @Route("/file-download/{id}/{eventtype}", name="scan_file_download", methods={"GET"}, requirements={"id" = "\d+"})
-     */
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'scan_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request, $id, $eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype);
     }
 
     /**
      * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", methods={"GET"}, name="scan_file_view", requirements={"id" = "\d+"})
      */
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', methods: ['GET'], name: 'scan_file_view', requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype,$viewType);
     }
 
 
     //pacsvendor API for authenticated user: http://c.med.cornell.edu/imageserver/@73956?GETPATH => \\collage\images\2015-05-14\73956.svs
-
     //pacsvendor communicate to DB by using "soap call" http://www.pacsvendor.com/webservices/
     //$res = $client->__soapCall(	'GetRecordImages',		//SOAP Method Name
     //                              $ParamsArray); 			//Parameters
-
     //images are stores in a single svs file.
     //cTable.php GetImages function Show the list of record images
-
     //There are two ways to show slide image:
     //1) using 'pacsvendor Image Scope' with generated 'sis' file
     //2) using 'Web Scope': http://192.168.37.128/imageserver/@@Y4XGX_n725b-quq6RExmLlOJHFwi8MvoiWTyPOMAcSE6lO1I16q5fg==/@23/view.apml
     //Note: for the (2) way, pacsvendor authentication is required providing token Y4XGX_n725b-quq6RExmLlOJHFwi8MvoiWTyPOMAcSE6lO1I16q5fg==
-
-
-    /**
-     * @Route("/image-viewer/{system}/{type}/{tablename}/{imageid}", name="scan_image_viewer", methods={"GET"}, requirements={"imageid" = "\d+"})
-     */
+    #[Route(path: '/image-viewer/{system}/{type}/{tablename}/{imageid}', name: 'scan_image_viewer', methods: ['GET'], requirements: ['imageid' => '\d+'])]
     public function imageFileAction($system,$type,$tablename,$imageid) {
 
         //1) get image url info by imageid

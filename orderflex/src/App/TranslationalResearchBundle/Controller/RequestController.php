@@ -81,11 +81,10 @@ class RequestController extends OrderAbstractController
 
     /**
      * Creates a new request entity with formnode.
-     *
-     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"}, options={"expose"=true})
-     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request", methods={"GET","POST"}, options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      */
+    #[Route(path: '/project/{id}/work-request/new/', name: 'translationalresearch_request_new', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Route(path: '/work-request/new/', name: 'translationalresearch_new_standalone_request', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Request/new.html.twig')]
     public function newFormNodeAction(Request $request, Project $project=null)
     {
         //exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
@@ -389,10 +388,9 @@ class RequestController extends OrderAbstractController
 
     /**
      * Get TransResRequest Edit page
-     *
-     * @Route("/work-request/edit/{id}", name="translationalresearch_request_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      */
+    #[Route(path: '/work-request/edit/{id}', name: 'translationalresearch_request_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Request/new.html.twig')]
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
         //exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
@@ -1007,11 +1005,10 @@ class RequestController extends OrderAbstractController
 
     /**
      * Displays the list of requests for the given project.
-     *
-     * @Route("/work-request/show/{id}", name="translationalresearch_request_show", methods={"GET"})
-     * @Route("/work-request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      */
+    #[Route(path: '/work-request/show/{id}', name: 'translationalresearch_request_show', methods: ['GET'])]
+    #[Route(path: '/work-request/show-with-packingslip/{id}', name: 'translationalresearch_request_show_with_packingslip', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/new.html.twig')]
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -1097,10 +1094,9 @@ class RequestController extends OrderAbstractController
 
     /**
      * Finds and displays all requests for the given project
-     *
-     * @Route("/project/{id}/requests", name="translationalresearch_request_index", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
      */
+    #[Route(path: '/project/{id}/requests', name: 'translationalresearch_request_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/index.html.twig')]
     public function indexAction(Request $request, Project $project)
     {
 //        if(
@@ -1141,10 +1137,9 @@ class RequestController extends OrderAbstractController
     //TRY composer: config: "optimize-autoloader": true
     /**
      * Finds and displays the filtered requests lists
-     *
-     * @Route("/work-requests/list/", name="translationalresearch_request_index_filter", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/index.html.twig")
      */
+    #[Route(path: '/work-requests/list/', name: 'translationalresearch_request_index_filter', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/index.html.twig')]
     public function myRequestsAction(Request $request)
     {
 
@@ -2485,48 +2480,45 @@ class RequestController extends OrderAbstractController
         return $formArray;
     }
 //    public function testingReturn($request,$stopwatch=null) {
-//        //TESTING
-//        $em = $this->getDoctrine()->getManager();
-//        $title = "Work Requests";
-//        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
-//        $dql =  $repository->createQueryBuilder("transresRequest");
-//        $dql->select('transresRequest');
-//        $dql->where("transresRequest.id=2");
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//        $paginationParams = array(
-//            'defaultSortFieldName' => 'transresRequest.id',
-//            'defaultSortDirection' => 'DESC',
-//            'wrap-queries' => true
-//        );
-//        $paginator  = $this->container->get('knp_paginator');
-//        $transresRequests = $paginator->paginate(
-//            $query,
-//            $request->query->get('page', 1),   /*page number*/
-//            10,                                         /*limit per page*/
-//            $paginationParams
-//        );
-//        $event = $stopwatch->stop('myRequestsAction');
-//        echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
-//        echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
-//        return array(
-//            'filterDisable' => true, //testing
-//            'transresRequests' => $transresRequests,
-//            //'allTransresRequests' => $allTransresRequests,
-//            //'project' => null,
-//            //'filterform' => $filterform->createView(),
-//            'title' => $title,
-//            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
-//            //'advancedFilter' => $advancedFilter,
-//            'project' => null,
-//            'hideaction' => true,
-//            'hiderows' => true,
-//
-//        );
-//    }
-
-    /**
-     * @Route("/download-spreadsheet/", name="translationalresearch_download_request_spreadsheet", methods={"POST"})
-     */
+    //        //TESTING
+    //        $em = $this->getDoctrine()->getManager();
+    //        $title = "Work Requests";
+    //        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+    //        $dql =  $repository->createQueryBuilder("transresRequest");
+    //        $dql->select('transresRequest');
+    //        $dql->where("transresRequest.id=2");
+    //        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+    //        $paginationParams = array(
+    //            'defaultSortFieldName' => 'transresRequest.id',
+    //            'defaultSortDirection' => 'DESC',
+    //            'wrap-queries' => true
+    //        );
+    //        $paginator  = $this->container->get('knp_paginator');
+    //        $transresRequests = $paginator->paginate(
+    //            $query,
+    //            $request->query->get('page', 1),   /*page number*/
+    //            10,                                         /*limit per page*/
+    //            $paginationParams
+    //        );
+    //        $event = $stopwatch->stop('myRequestsAction');
+    //        echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
+    //        echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
+    //        return array(
+    //            'filterDisable' => true, //testing
+    //            'transresRequests' => $transresRequests,
+    //            //'allTransresRequests' => $allTransresRequests,
+    //            //'project' => null,
+    //            //'filterform' => $filterform->createView(),
+    //            'title' => $title,
+    //            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
+    //            //'advancedFilter' => $advancedFilter,
+    //            'project' => null,
+    //            'hideaction' => true,
+    //            'hiderows' => true,
+    //
+    //        );
+    //    }
+    #[Route(path: '/download-spreadsheet/', name: 'translationalresearch_download_request_spreadsheet', methods: ['POST'])]
     public function downloadRequestsCsvAction( Request $request ) {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -2553,9 +2545,7 @@ class RequestController extends OrderAbstractController
         exit();
     }
 
-    /**
-     * @Route("/download-requester-emails/", name="translationalresearch_download_requester_emails", methods={"POST"})
-     */
+    #[Route(path: '/download-requester-emails/', name: 'translationalresearch_download_requester_emails', methods: ['POST'])]
     public function downloadRequesterEmailsCsvAction( Request $request ) {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -2780,9 +2770,7 @@ class RequestController extends OrderAbstractController
 
 
 
-    /**
-     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request", methods={"GET"})
-     */
+    #[Route(path: '/request/generate-form-node-tree/', name: 'translationalresearch_generate_form_node_tree_request', methods: ['GET'])]
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -2800,10 +2788,9 @@ class RequestController extends OrderAbstractController
 
     /**
      * Finds and displays a progress review form for this request entity.
-     *
-     * @Route("/work-request/progress/review/{id}", name="translationalresearch_request_review_progress_state", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
      */
+    #[Route(path: '/work-request/progress/review/{id}', name: 'translationalresearch_request_review_progress_state', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/review.html.twig')]
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2851,10 +2838,9 @@ class RequestController extends OrderAbstractController
 
     /**
      * Finds and displays a billing review form for this request entity.
-     *
-     * @Route("/work-request/billing/review/{id}", name="translationalresearch_request_review_billing_state", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/review.html.twig")
      */
+    #[Route(path: '/work-request/billing/review/{id}', name: 'translationalresearch_request_review_billing_state', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/review.html.twig')]
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2900,9 +2886,7 @@ class RequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/request/update-irb-exp-date/", name="translationalresearch_update_irb_exp_date", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/request/update-irb-exp-date/', name: 'translationalresearch_update_irb_exp_date', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
 //        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -3016,9 +3000,7 @@ class RequestController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/request/update-project-pricelist/", name="translationalresearch_update_project_pricelist", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/request/update-project-pricelist/', name: 'translationalresearch_update_project_pricelist', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function updateProjectPriceListAction( Request $request ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -3125,9 +3107,7 @@ class RequestController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/request/update-project-approvedprojectbudget/", name="translationalresearch_update_project_approvedprojectbudget", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/request/update-project-approvedprojectbudget/', name: 'translationalresearch_update_project_approvedprojectbudget', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function updateApprovedProjectBudgetAction( Request $request ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -3206,9 +3186,7 @@ class RequestController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/request/update-project-nobudgetlimit/", name="translationalresearch_update_project_nobudgetlimit", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/request/update-project-nobudgetlimit/', name: 'translationalresearch_update_project_nobudgetlimit', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function updateNoBudgetLimitAction( Request $request ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -3303,10 +3281,8 @@ class RequestController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/fee-schedule.html.twig")
-     */
+    #[Route(path: '/request/fee-schedule', name: 'translationalresearchfeesschedule-list', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/fee-schedule.html.twig')]
     public function feeScheduleAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -3485,9 +3461,8 @@ class RequestController extends OrderAbstractController
 
     /**
      * Deletes a request entity.
-     *
-     * @Route("/delete-multiple-requests/", name="translationalresearch_requests_multiple_delete", methods={"GET"})
      */
+    #[Route(path: '/delete-multiple-requests/', name: 'translationalresearch_requests_multiple_delete', methods: ['GET'])]
     public function deleteMultipleProjectsAction(Request $request)
     {
         exit("Not Available");
@@ -3548,8 +3523,8 @@ class RequestController extends OrderAbstractController
      * http://127.0.0.1/order/translational-research/project-typeahead-search/oid/100/APCP33
      *
      * Used by typeahead js
-     * @Route("/project-typeahead-search/{type}/{limit}/{search}", name="translationalresearch_project_typeahead_search", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/project-typeahead-search/{type}/{limit}/{search}', name: 'translationalresearch_project_typeahead_search', methods: ['GET'], options: ['expose' => true])]
     public function getUserDataSearchAction(Request $request) {
 
         $transresUtil = $this->container->get('transres_util');
@@ -3573,9 +3548,8 @@ class RequestController extends OrderAbstractController
 
     /**
      * Finds and displays filtered product/service according to the project specialty
-     *
-     * @Route("/productservice/ajax/{id}", name="translationalresearch_get_productservice_ajax", methods={"GET"}, options={"expose"=true})
      */
+    #[Route(path: '/productservice/ajax/{id}', name: 'translationalresearch_get_productservice_ajax', methods: ['GET'], options: ['expose' => true])]
     public function getProductServiceByProjectAction(Request $request, Project $project)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {

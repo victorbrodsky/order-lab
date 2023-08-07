@@ -40,10 +40,9 @@ class SearchController extends OrderAbstractController {
 
     /**
      * Lists all Message entities.
-     *
-     * @Route("/patients/search", name="scan_search_patients", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/patients/search', name: 'scan_search_patients', methods: ['GET'])]
+    #[Template]
     public function searchPatientAction( Request $request ) {
 
         if(

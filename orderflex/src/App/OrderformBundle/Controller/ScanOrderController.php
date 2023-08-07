@@ -58,27 +58,23 @@ use App\UserdirectoryBundle\Entity\AccessRequest;
 //ScanOrder joins Message + Scan
 /**
  * Message controller.
- *
- * @Route("/")
  */
+#[Route(path: '/')]
 class ScanOrderController extends OrderAbstractController {
 
     protected $limit = 50;
 
-    /**
-     * @Route("/about", name="scan_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'scan_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
         return array('sitename'=>$this->getParameter('scan.sitename'));
     }
 
     /**
      * Lists all Message entities.
-     *
-     * @Route("/", name="scan_home", methods={"GET"})
-     * @Template("AppOrderformBundle/Default/home.html.twig")
      */
+    #[Route(path: '/', name: 'scan_home', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Default/home.html.twig')]
     public function indexAction( Request $request ) {
 
         if(
@@ -114,11 +110,10 @@ class ScanOrderController extends OrderAbstractController {
 
     /**
      * Lists all Message entities.
-     *
-     * @Route("/my-scan-orders", name="my-scan-orders", methods={"GET"})
-     * @Route("/incoming-scan-orders", name="incoming-scan-orders", methods={"GET"})
-     * @Template("AppOrderformBundle/ScanOrder/index.html.twig")
      */
+    #[Route(path: '/my-scan-orders', name: 'my-scan-orders', methods: ['GET'])]
+    #[Route(path: '/incoming-scan-orders', name: 'incoming-scan-orders', methods: ['GET'])]
+    #[Template('AppOrderformBundle/ScanOrder/index.html.twig')]
     public function orderListAction( Request $request ) {
 
         $em = $this->getDoctrine()->getManager();
@@ -307,9 +302,8 @@ class ScanOrderController extends OrderAbstractController {
     //requirements={"id" = "\d+"}
     /**
      * Deletes a Message entity.
-     *
-     * @Route("/scan-order/{id}/delete", name="scanorder_delete", methods={"DELETE"})
      */
+    #[Route(path: '/scan-order/{id}/delete', name: 'scanorder_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
 
@@ -346,10 +340,9 @@ class ScanOrderController extends OrderAbstractController {
 
     /**
      * Change status of message
-     *
-     * @Route("/scan-order/{id}/status/{status}/", name="scanorder_status", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/scan-order/{id}/status/{status}/', name: 'scanorder_status', methods: ['GET'])]
+    #[Template]
     public function statusAction(Request $request, $id, $status) {
 
         if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
@@ -400,11 +393,8 @@ class ScanOrderController extends OrderAbstractController {
     }
     
     
-    /**   
-     * @Route("/thanks", name="thanks")
-     * 
-     * @Template("AppOrderformBundle/ScanOrder/thanks.html.twig")
-     */
+    #[Route(path: '/thanks', name: 'thanks')]
+    #[Template('AppOrderformBundle/ScanOrder/thanks.html.twig')]
     public function thanksAction( $oid = '' )
     {    
         
@@ -840,8 +830,8 @@ class ScanOrderController extends OrderAbstractController {
 
     /**
      * Find accession by #
-     * @Route("/scanorder-complex-search", name="scanorder-complex-search", methods={"POST"})
      */
+    #[Route(path: '/scanorder-complex-search', name: 'scanorder-complex-search', methods: ['POST'])]
     public function getSearchViewAjaxAction( Request $request ) {
 
         $routename   = $request->get('routename');

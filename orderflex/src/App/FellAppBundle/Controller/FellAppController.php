@@ -72,13 +72,13 @@ class FellAppController extends OrderAbstractController {
     /**
      * Show home page
      *
-     * @Route("/", name="fellapp_home")
-     * @Route("/my-interviewees/", name="fellapp_myinterviewees")
-     * @Route("/send-rejection-emails", name="fellapp_send_rejection_emails")
-     * @Route("/accepted-fellows", name="fellapp_accepted_fellows")
      *
-     * @Template("AppFellAppBundle/Default/home.html.twig")
      */
+    #[Route(path: '/', name: 'fellapp_home')]
+    #[Route(path: '/my-interviewees/', name: 'fellapp_myinterviewees')]
+    #[Route(path: '/send-rejection-emails', name: 'fellapp_send_rejection_emails')]
+    #[Route(path: '/accepted-fellows', name: 'fellapp_accepted_fellows')]
+    #[Template('AppFellAppBundle/Default/home.html.twig')]
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
 
@@ -685,25 +685,19 @@ class FellAppController extends OrderAbstractController {
     }
 
 //    //check for active access requests
-//    public function getActiveAccessReq() {
-//        if( !$this->isGranted('ROLE_FELLAPP_ADMIN') ) {
-//            return null;
-//        }
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
-//        return $accessreqs;
-//    }
-
-
-
-
+    //    public function getActiveAccessReq() {
+    //        if( !$this->isGranted('ROLE_FELLAPP_ADMIN') ) {
+    //            return null;
+    //        }
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
+    //        return $accessreqs;
+    //    }
     //@Route("/edit/{id}", name="fellapp_edit")
     //@Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
-    /**
-     * @Route("/show/{id}", name="fellapp_show")
-     * @Route("/download/{id}", name="fellapp_download")
-     * @Template("AppFellAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/show/{id}', name: 'fellapp_show')]
+    #[Route(path: '/download/{id}', name: 'fellapp_download')]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function showAction(Request $request, Security $security, TokenStorageInterface $tokenStorage, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
@@ -824,11 +818,8 @@ class FellAppController extends OrderAbstractController {
         return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
 
-    /**
-     * @Route("/new/", name="fellapp_new")
-     *
-     * @Template("AppFellAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/new/', name: 'fellapp_new')]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function newAction(Request $request, Security $security) {
 
         //coordinator and director can create
@@ -1016,227 +1007,225 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * -NOT-USED
-//     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED", methods={"PUT"})
-//     * @Template("AppFellAppBundle/Form/new.html.twig")
-//     */
-//    public function updateNotUsedAction(Request $request, $id) {
-//
-////        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
-////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-////        }
-////        if( false == $this->isGranted("update","FellowshipApplication") ){
-////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-////        }
-//
-//        //echo "update <br>";
-//        //exit('update');
-//
-//        //ini_set('memory_limit', '3072M'); //3072M
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        //$user = $this->getUser();
-//        $user = $this->getUser();
-//
-//        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-//        }
-//
-//        //user who has the same fell type can view or edit
-//        $fellappUtil = $this->container->get('fellapp_util');
-//        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//
-//        if( false == $this->isGranted("update",$entity) ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//
-//        // Create an ArrayCollection of the current interviews
-//        $originalInterviews = new ArrayCollection();
-//        foreach( $entity->getInterviews() as $interview) {
-//            $originalInterviews->add($interview);
-//        }
-//
-//        $originalReports = new ArrayCollection();
-//        foreach( $entity->getReports() as $report ) {
-//            $originalReports->add($report);
-//        }
-//
-//        $cycle = 'edit';
-//        //$user = $this->getUser();
-//        $user = $this->getUser();
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'em' => $this->getDoctrine()->getManager(),
-//            'user' => $entity->getUser(),
-//            'cloneuser' => null,
-//            'roles' => $user->getRoles(),
-//            'container' => $this->container,
-//            'cycle_type' => "update",
-//            'security' => $this->security
-//        );
-//        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
-//        //$routeName = $request->get('_route');
-//        //$args = $this->getShowParameters($routeName,null,$entity);
-//        //$form = $args['form_pure'];
-//
-//        $form->handleRequest($request);
-//
-//        if( !$form->isSubmitted() ) {
-//            echo "form is not submitted<br>";
-//            $form->submit($request);
-//        }
-//
-//
-////        if ($form->isDisabled()) {
-////            echo "form is disabled<br>";
-////            exit();
-////        }
-////        if (count($form->getErrors(true)) > 0) {
-////            echo "form has errors<br>";
-////        }
-////        echo "errors:<br>";
-////        $string = (string) $form->getErrors(true);
-////        echo "string errors=".$string."<br>";
-////        echo "getErrors count=".count($form->getErrors())."<br>";
-//        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-////        print_r($form->getErrors());
-////        echo "<br>string errors:<br>";
-////        print_r($form->getErrorsAsString());
-////        echo "<br>";
-////        exit();
-//
-//        if(0) {
-//            $errorHelper = new ErrorHelper();
-//            $errors = $errorHelper->getErrorMessages($form);
-//            echo "<br>form errors:<br>";
-//            print_r($errors);
-//
-//            //echo "<br><br>getErrors:<br>";
-//            //var_dump($form->getErrors());die;
-//        }
-//
-//
-//
-//        $force = false;
-//        //$force = true;
-//        if( $form->isValid() || $force ) {
-//
-//            //exit('form valid');
-//
-//            /////////////// Process Removed Collections ///////////////
-//            $removedCollections = array();
-//
-//            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
-//            if( $removedInfo ) {
-//                $removedCollections[] = $removedInfo;
-//            }
-//            /////////////// EOF Process Removed Collections ///////////////
-//
-//            $this->calculateScore($entity);
-//
-//            $this->processDocuments($entity);
-//
-//            $this->assignFellAppAccessRoles($entity);
-//
-//            //set update author application
-//            $em = $this->getDoctrine()->getManager();
-//            $userUtil = $this->container->get('user_utility');
-//            //$userUtil = new UserUtil();
-//            //$secTokenStorage = $this->container->get('security.token_storage');
-//            $userUtil->setUpdateInfo($entity);
-//
-//
-//            /////////////// Add event log on edit (edit or add collection) ///////////////
-//            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-//            $changedInfoArr = $this->setEventLogChanges($entity);
-//
-//            //report (Complete Application PDF) diff
-//            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
-//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-//            //exit('report');
-//
-//            //set Edit event log for removed collection and changed fields or added collection
-//            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
-//                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
-//                $event = $event . implode("<br>", $changedInfoArr);
-//                $event = $event . "<br>" . implode("<br>", $removedCollections);
-//                $event = $event . $reportsDiffInfoStr;
-//                //echo "Diff event=".$event."<br>";
-//                //$userSecUtil = $this->container->get('user_security_utility');
-//                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
-//            }
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            //don't regenerate report if it was added.
-//            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
-//            //echo "report count=".count($entity->getReports())."<br>";
-//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-//            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
-//                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-//                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
-//                $this->addFlash(
-//                    'notice',
-//                    'A new Complete Fellowship Application PDF will be generated.'
-//                );
-//                //echo "Regenerate!!!! <br>";
-//            } else {
-//                //echo "NO Regenerate!!!! <br>";
-//            }
-//            //exit('report regen');
-//
-//            //set logger for update
-//            //$logger = $this->container->get('logger');
-//            //$logger->notice("update: timezone=".date_default_timezone_get());
-//            //$userSecUtil = $this->container->get('user_security_utility');
-//            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-//            $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-//            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
-//            //exit('event='.$event);
-//
-//            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
-//        } else {
-//            echo "getErrors count=".count($form->getErrors(true))."<br>";
-//            $string = (string) $form->getErrors(true);
-//            //echo "Error:<br>$string<br><br><pre>";
-//            //print_r($form->getErrors());
-//            //echo "</pre>";
-//
-//            $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
-//            //$userSecUtil = $this->container->get('user_security_utility');
-//            //$userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
-//            exit($msg."<br>Notification email has been sent to the system administrator.");
-//            //throw new \Exception($msg);
-//        }
-//
-//        //echo 'form invalid <br>';
-//        //exit('form invalid');
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $entity,
-//            'pathbase' => 'fellapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->getParameter('fellapp.sitename')
-//        );
-//    }
+    //     * -NOT-USED
+    //     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED", methods={"PUT"})
+    //     * @Template("AppFellAppBundle/Form/new.html.twig")
+    //     */
+    //    public function updateNotUsedAction(Request $request, $id) {
+    //
+    ////        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+    ////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    ////        }
+    ////        if( false == $this->isGranted("update","FellowshipApplication") ){
+    ////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    ////        }
+    //
+    //        //echo "update <br>";
+    //        //exit('update');
+    //
+    //        //ini_set('memory_limit', '3072M'); //3072M
+    //
+    //        $userSecUtil = $this->container->get('user_security_utility');
+    //        //$user = $this->getUser();
+    //        $user = $this->getUser();
+    //
+    //        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+    //
+    //        if( !$entity ) {
+    //            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+    //        }
+    //
+    //        //user who has the same fell type can view or edit
+    //        $fellappUtil = $this->container->get('fellapp_util');
+    //        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+    //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    //        }
+    //
+    //        if( false == $this->isGranted("update",$entity) ){
+    //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    //        }
+    //
+    //        // Create an ArrayCollection of the current interviews
+    //        $originalInterviews = new ArrayCollection();
+    //        foreach( $entity->getInterviews() as $interview) {
+    //            $originalInterviews->add($interview);
+    //        }
+    //
+    //        $originalReports = new ArrayCollection();
+    //        foreach( $entity->getReports() as $report ) {
+    //            $originalReports->add($report);
+    //        }
+    //
+    //        $cycle = 'edit';
+    //        //$user = $this->getUser();
+    //        $user = $this->getUser();
+    //
+    //        $params = array(
+    //            'cycle' => $cycle,
+    //            'em' => $this->getDoctrine()->getManager(),
+    //            'user' => $entity->getUser(),
+    //            'cloneuser' => null,
+    //            'roles' => $user->getRoles(),
+    //            'container' => $this->container,
+    //            'cycle_type' => "update",
+    //            'security' => $this->security
+    //        );
+    //        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
+    //        //$routeName = $request->get('_route');
+    //        //$args = $this->getShowParameters($routeName,null,$entity);
+    //        //$form = $args['form_pure'];
+    //
+    //        $form->handleRequest($request);
+    //
+    //        if( !$form->isSubmitted() ) {
+    //            echo "form is not submitted<br>";
+    //            $form->submit($request);
+    //        }
+    //
+    //
+    ////        if ($form->isDisabled()) {
+    ////            echo "form is disabled<br>";
+    ////            exit();
+    ////        }
+    ////        if (count($form->getErrors(true)) > 0) {
+    ////            echo "form has errors<br>";
+    ////        }
+    ////        echo "errors:<br>";
+    ////        $string = (string) $form->getErrors(true);
+    ////        echo "string errors=".$string."<br>";
+    ////        echo "getErrors count=".count($form->getErrors())."<br>";
+    //        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+    ////        print_r($form->getErrors());
+    ////        echo "<br>string errors:<br>";
+    ////        print_r($form->getErrorsAsString());
+    ////        echo "<br>";
+    ////        exit();
+    //
+    //        if(0) {
+    //            $errorHelper = new ErrorHelper();
+    //            $errors = $errorHelper->getErrorMessages($form);
+    //            echo "<br>form errors:<br>";
+    //            print_r($errors);
+    //
+    //            //echo "<br><br>getErrors:<br>";
+    //            //var_dump($form->getErrors());die;
+    //        }
+    //
+    //
+    //
+    //        $force = false;
+    //        //$force = true;
+    //        if( $form->isValid() || $force ) {
+    //
+    //            //exit('form valid');
+    //
+    //            /////////////// Process Removed Collections ///////////////
+    //            $removedCollections = array();
+    //
+    //            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+    //            if( $removedInfo ) {
+    //                $removedCollections[] = $removedInfo;
+    //            }
+    //            /////////////// EOF Process Removed Collections ///////////////
+    //
+    //            $this->calculateScore($entity);
+    //
+    //            $this->processDocuments($entity);
+    //
+    //            $this->assignFellAppAccessRoles($entity);
+    //
+    //            //set update author application
+    //            $em = $this->getDoctrine()->getManager();
+    //            $userUtil = $this->container->get('user_utility');
+    //            //$userUtil = new UserUtil();
+    //            //$secTokenStorage = $this->container->get('security.token_storage');
+    //            $userUtil->setUpdateInfo($entity);
+    //
+    //
+    //            /////////////// Add event log on edit (edit or add collection) ///////////////
+    //            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+    //            $changedInfoArr = $this->setEventLogChanges($entity);
+    //
+    //            //report (Complete Application PDF) diff
+    //            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
+    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+    //            //exit('report');
+    //
+    //            //set Edit event log for removed collection and changed fields or added collection
+    //            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
+    //                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+    //                $event = $event . implode("<br>", $changedInfoArr);
+    //                $event = $event . "<br>" . implode("<br>", $removedCollections);
+    //                $event = $event . $reportsDiffInfoStr;
+    //                //echo "Diff event=".$event."<br>";
+    //                //$userSecUtil = $this->container->get('user_security_utility');
+    //                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+    //            }
+    //
+    //            $em = $this->getDoctrine()->getManager();
+    //            $em->persist($entity);
+    //            $em->flush();
+    //
+    //            //don't regenerate report if it was added.
+    //            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
+    //            //echo "report count=".count($entity->getReports())."<br>";
+    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+    //            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
+    //                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+    //                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+    //                $this->addFlash(
+    //                    'notice',
+    //                    'A new Complete Fellowship Application PDF will be generated.'
+    //                );
+    //                //echo "Regenerate!!!! <br>";
+    //            } else {
+    //                //echo "NO Regenerate!!!! <br>";
+    //            }
+    //            //exit('report regen');
+    //
+    //            //set logger for update
+    //            //$logger = $this->container->get('logger');
+    //            //$logger->notice("update: timezone=".date_default_timezone_get());
+    //            //$userSecUtil = $this->container->get('user_security_utility');
+    //            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+    //            $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
+    //            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+    //            //exit('event='.$event);
+    //
+    //            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+    //        } else {
+    //            echo "getErrors count=".count($form->getErrors(true))."<br>";
+    //            $string = (string) $form->getErrors(true);
+    //            //echo "Error:<br>$string<br><br><pre>";
+    //            //print_r($form->getErrors());
+    //            //echo "</pre>";
+    //
+    //            $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
+    //            //$userSecUtil = $this->container->get('user_security_utility');
+    //            //$userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
+    //            exit($msg."<br>Notification email has been sent to the system administrator.");
+    //            //throw new \Exception($msg);
+    //        }
+    //
+    //        //echo 'form invalid <br>';
+    //        //exit('form invalid');
+    //
+    //        return array(
+    //            'form' => $form->createView(),
+    //            'entity' => $entity,
+    //            'pathbase' => 'fellapp',
+    //            'cycle' => $cycle,
+    //            'sitename' => $this->getParameter('fellapp.sitename')
+    //        );
+    //    }
     //EOF -NOT-USED
-
     /**
      * Separate edit/update controller action to insure csrf token is valid
      * Displays a form to edit an existing fellapp entity.
-     *
-     * @Route("/edit/{id}", name="fellapp_edit", methods={"GET","POST"})
-     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers", methods={"GET","POST"})
-     * @Template("AppFellAppBundle/Form/edit.html.twig")
      */
+    #[Route(path: '/edit/{id}', name: 'fellapp_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/edit-with-default-interviewers/{id}', name: 'fellapp_edit_default_interviewers', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/Form/edit.html.twig')]
     public function editAction(Request $request, Security $security, FellowshipApplication $entity)
     {
         if( !$entity ) {
@@ -1591,10 +1580,8 @@ class FellAppController extends OrderAbstractController {
         return "New";
     }
 
-    /**
-     * @Route("/applicant/new", name="fellapp_create_applicant", methods={"POST"})
-     * @Template("AppFellAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/applicant/new', name: 'fellapp_create_applicant', methods: ['POST'])]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function createApplicantAction( Request $request, Security $security )
     {
 
@@ -1864,10 +1851,8 @@ class FellAppController extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/change-status/{id}/{status}", name="fellapp_status", methods={"GET"})
-     * @Route("/status/{id}/{status}", name="fellapp_status_email", methods={"GET"})
-     */
+    #[Route(path: '/change-status/{id}/{status}', name: 'fellapp_status', methods: ['GET'])]
+    #[Route(path: '/status/{id}/{status}', name: 'fellapp_status_email', methods: ['GET'])]
     public function statusAction( Request $request, $id, $status ) {
 
         //$logger = $this->container->get('logger');
@@ -1996,9 +1981,7 @@ class FellAppController extends OrderAbstractController {
         return $event;
     }
 
-    /**
-     * @Route("/move-year/{id}/{year}", name="fellapp_application_move_year", methods={"GET"})
-     */
+    #[Route(path: '/move-year/{id}/{year}', name: 'fellapp_application_move_year', methods: ['GET'])]
     public function moveYearAction( Request $request, $id, $year ) {
 
         $em = $this->getDoctrine()->getManager();
@@ -2067,33 +2050,30 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/status-sync/", name="fellapp_sincstatus", methods={"GET"})
-//     */
-//    public function syncStatusAction( Request $request ) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $applications = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
-//
-//        foreach( $applications as $application ) {
-//            $status = $application->getApplicationStatus();
-//            $statusObj = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($status);
-//            if( !$statusObj ) {
-//                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
-//            }
-//            $application->setAppStatus($statusObj);
-//            //$application->setApplicationStatus(NULL);
-//        }
-//
-//        $em->flush();
-//
-//        return $this->redirect( $this->generateUrl('fellapp_home') );
-//    }
-
-    /**
-     * @Route("/application-evaluation/show/{id}", name="fellapp_application_show", methods={"GET"})
-     * @Route("/application-evaluation/{id}", name="fellapp_application_edit", methods={"GET"})
-     * @Template("AppFellAppBundle/Interview/interview_selector.html.twig")
-     */
+    //     * @Route("/status-sync/", name="fellapp_sincstatus", methods={"GET"})
+    //     */
+    //    public function syncStatusAction( Request $request ) {
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $applications = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+    //
+    //        foreach( $applications as $application ) {
+    //            $status = $application->getApplicationStatus();
+    //            $statusObj = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($status);
+    //            if( !$statusObj ) {
+    //                throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);
+    //            }
+    //            $application->setAppStatus($statusObj);
+    //            //$application->setApplicationStatus(NULL);
+    //        }
+    //
+    //        $em->flush();
+    //
+    //        return $this->redirect( $this->generateUrl('fellapp_home') );
+    //    }
+    #[Route(path: '/application-evaluation/show/{id}', name: 'fellapp_application_show', methods: ['GET'])]
+    #[Route(path: '/application-evaluation/{id}', name: 'fellapp_application_edit', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Interview/interview_selector.html.twig')]
     public function applicationAction( Request $request, FellowshipApplication $fellapp )
     {
 
@@ -2155,11 +2135,9 @@ class FellAppController extends OrderAbstractController {
         return $this->redirect($this->generateUrl('fellapp-nopermission'));
     }
 
-    /**
-     * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show", methods={"GET"})
-     * @Route("/interview-evaluation/{id}", name="fellapp_interview_edit", methods={"GET"})
-     * @Template("AppFellAppBundle/Interview/new.html.twig")
-     */
+    #[Route(path: '/interview-evaluation/show/{id}', name: 'fellapp_interview_show', methods: ['GET'])]
+    #[Route(path: '/interview-evaluation/{id}', name: 'fellapp_interview_edit', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Interview/new.html.twig')]
     public function interviewAction( Request $request, $id ) {
 
         //echo "status <br>";
@@ -2255,10 +2233,8 @@ class FellAppController extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/interview/update/{id}", name="fellapp_interview_update", methods={"POST"})
-     * @Template("AppFellAppBundle/Interview/new.html.twig")
-     */
+    #[Route(path: '/interview/update/{id}', name: 'fellapp_interview_update', methods: ['POST'])]
+    #[Template('AppFellAppBundle/Interview/new.html.twig')]
     public function interviewUpdateAction( Request $request, $id ) {
 
         //echo "status <br>";
@@ -2391,54 +2367,45 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
-//     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
-//     * @Template("AppFellAppBundle/Interview/new.html.twig")
-//     */
-//    public function createInterviewAction( Request $request ) {
-//
-//        //echo "status <br>";
-//
-//        if( false == $this->isGranted('ROLE_FELLAPP_INTERVIEWER') ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $interview = $this->getDoctrine()->getRepository('AppFellAppBundle:Interview')->find($id);
-//
-//        if( !$interview ) {
-//            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
-//        }
-//
-//        $cycle = "new";
-//
-//        $params = array(
-//            'cycle' => $cycle,
-//            'sc' => $this->container->get('security.context'),
-//            'em' => $this->getDoctrine()->getManager(),
-//        );
-//        $form = $this->createForm( new InterviewType($params), $interview );
-//
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $interview,
-//            'pathbase' => 'fellapp',
-//            'cycle' => $cycle,
-//            'sitename' => $this->getParameter('fellapp.sitename')
-//        );
-//
-//    }
-
-
-
-
-
-
-
-    /**
-     * @Route("/remove/{id}", name="fellapp_remove")
-     */
+    //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
+    //     * @Route("/interview/new/{fellappid}/{interviewid}", name="fellapp_interview_new", methods={"GET"})
+    //     * @Template("AppFellAppBundle/Interview/new.html.twig")
+    //     */
+    //    public function createInterviewAction( Request $request ) {
+    //
+    //        //echo "status <br>";
+    //
+    //        if( false == $this->isGranted('ROLE_FELLAPP_INTERVIEWER') ){
+    //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    //        }
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        $interview = $this->getDoctrine()->getRepository('AppFellAppBundle:Interview')->find($id);
+    //
+    //        if( !$interview ) {
+    //            throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
+    //        }
+    //
+    //        $cycle = "new";
+    //
+    //        $params = array(
+    //            'cycle' => $cycle,
+    //            'sc' => $this->container->get('security.context'),
+    //            'em' => $this->getDoctrine()->getManager(),
+    //        );
+    //        $form = $this->createForm( new InterviewType($params), $interview );
+    //
+    //        return array(
+    //            'form' => $form->createView(),
+    //            'entity' => $interview,
+    //            'pathbase' => 'fellapp',
+    //            'cycle' => $cycle,
+    //            'sitename' => $this->getParameter('fellapp.sitename')
+    //        );
+    //
+    //    }
+    #[Route(path: '/remove/{id}', name: 'fellapp_remove')]
     public function removeAction($id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -2456,9 +2423,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Manually import and populate applicants from Google
-     *
-     * @Route("/populate-import", name="fellapp_import_populate")
      */
+    #[Route(path: '/populate-import', name: 'fellapp_import_populate')]
     public function importAndPopulateAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -2518,9 +2484,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Manually import and populate recommendation letters from Google
-     *
-     * @Route("/populate-import-letters", name="fellapp_import_populate_letters")
      */
+    #[Route(path: '/populate-import-letters', name: 'fellapp_import_populate_letters')]
     public function importAndPopulateLettersAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -2541,9 +2506,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Show home page
-     *
-     * @Route("/populate", name="fellapp_populate")
      */
+    #[Route(path: '/populate', name: 'fellapp_populate')]
     public function populateSpreadsheetAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -2572,9 +2536,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Import spreadsheet to C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Spreadsheets
-     *
-     * @Route("/import", name="fellapp_import")
      */
+    #[Route(path: '/import', name: 'fellapp_import')]
     public function importAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -2606,45 +2569,42 @@ class FellAppController extends OrderAbstractController {
 
 
 //    /**
-//     * NOT USED NOW
-//     * update report by js
-//     *
-//     * @Route("/update-report/", name="fellapp_update_report", methods={"POST"}, options={"expose"=true})
-//     */
-//    public function updateReportAction(Request $request) {
-//
-//        $id = $request->get('id');
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-//        }
-//
-//        echo "reports = " . count($entity->getReports()) . "<br>";
-//        exit();
-//
-//        //update report if report does not exists
-//        if( count($entity->getReports()) == 0 ) {
-//            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-//            $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
-//        }
-//
-//        $response = new Response();
-//        $response->setContent('Sent to queue');
-//        return $response;
-//    }
-
-
+    //     * NOT USED NOW
+    //     * update report by js
+    //     *
+    //     * @Route("/update-report/", name="fellapp_update_report", methods={"POST"}, options={"expose"=true})
+    //     */
+    //    public function updateReportAction(Request $request) {
+    //
+    //        $id = $request->get('id');
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+    //
+    //        if( !$entity ) {
+    //            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+    //        }
+    //
+    //        echo "reports = " . count($entity->getReports()) . "<br>";
+    //        exit();
+    //
+    //        //update report if report does not exists
+    //        if( count($entity->getReports()) == 0 ) {
+    //            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+    //            $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+    //        }
+    //
+    //        $response = new Response();
+    //        $response->setContent('Sent to queue');
+    //        return $response;
+    //    }
     /**
      * Download application using
      * https://github.com/KnpLabs/KnpSnappyBundle
      * https://github.com/devandclick/EnseparHtml2pdfBundle
-     *
-     * @Route("/download-pdf/{id}", name="fellapp_download_pdf", methods={"GET"})
-     * @Route("/view-pdf/{id}", name="fellapp_view_pdf", methods={"GET"})
      */
+    #[Route(path: '/download-pdf/{id}', name: 'fellapp_download_pdf', methods: ['GET'])]
+    #[Route(path: '/view-pdf/{id}', name: 'fellapp_view_pdf', methods: ['GET'])]
     public function downloadReportAction(Request $request, $id) {
 
 //        if( false == $this->isGranted('ROLE_FELLAPP_USER') ){
@@ -2720,8 +2680,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Download itinerary
-     * @Route("/download-itinerary-pdf/{id}", name="fellapp_download_itinerary_pdf", methods={"GET"})
      */
+    #[Route(path: '/download-itinerary-pdf/{id}', name: 'fellapp_download_itinerary_pdf', methods: ['GET'])]
     public function downloadItineraryAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
@@ -2743,11 +2703,11 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/regenerate-all-complete-application-pdfs/2021
-     * 
-     * @Route("/regenerate-all-complete-application-pdfs/{year}", name="fellapp_regenerate_reports")
      *
-     * @Template("AppFellAppBundle/Form/new.html.twig")
+     *
      */
+    #[Route(path: '/regenerate-all-complete-application-pdfs/{year}', name: 'fellapp_regenerate_reports')]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function regenerateAllReportsAction(Request $request, $year) {
 
         exit("This method is disabled for security reason.");
@@ -2776,11 +2736,8 @@ class FellAppController extends OrderAbstractController {
         return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
-    /**
-     * @Route("/reset-queue-and-run/", name="fellapp_reset_queue_run")
-     *
-     * @Template("AppFellAppBundle/Form/new.html.twig")
-     */
+    #[Route(path: '/reset-queue-and-run/', name: 'fellapp_reset_queue_run')]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function resetQueueRunAction(Request $request) {
 
         //$logger = $this->container->get('logger');
@@ -2836,9 +2793,7 @@ class FellAppController extends OrderAbstractController {
 
 
     
-    /**
-     * @Route("/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}", name="fellapp_download_applicants_list_excel")
-     */
+    #[Route(path: '/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_excel')]
     public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
 //        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
@@ -2906,10 +2861,8 @@ class FellAppController extends OrderAbstractController {
         exit();      
     }
 
-    /**
-     * @Route("/send-rejection-emails-action/", name="fellapp_send_rejection_emails_action", methods={"POST"}, options={"expose"=true})
-     * @Template("AppFellAppBundle/Form/send-notification-emails.html.twig")
-     */
+    #[Route(path: '/send-rejection-emails-action/', name: 'fellapp_send_rejection_emails_action', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppFellAppBundle/Form/send-notification-emails.html.twig')]
     public function sendRejectionEmailsAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -3096,9 +3049,8 @@ class FellAppController extends OrderAbstractController {
 
     /**
      * Show home page
-     *
-     * @Route("/test", name="fellapp_test", methods={"GET"})
      */
+    #[Route(path: '/test', name: 'fellapp_test', methods: ['GET'])]
     public function testAction() {
 
         exit('tests');

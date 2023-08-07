@@ -31,14 +31,10 @@ class TransResListController extends ListController
     protected $sitename = "translationalresearch";
     protected $postPath = "_translationalresearch";
 
-    /**
-     * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch", methods={"GET"})
-     *
-     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list_translationalresearch", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-list/", name="transresprojectspecialties-list", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
-     */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/', name: 'transresrequestcategorytypes-list_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties/', name: 'transresprojectspecialties-list_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-list/', name: 'transresprojectspecialties-list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
         if(
@@ -53,10 +49,8 @@ class TransResListController extends ListController
     }
 
     //Custom Antibody list
-    /**
-     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Request/antibodies.html.twig")
-     */
+    #[Route(path: '/list/antibodies/', name: 'antibodies-list_translationalresearch', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Request/antibodies.html.twig')]
     public function indexAntibodiesAction(Request $request)
     {
         if(
@@ -75,13 +69,10 @@ class TransResListController extends ListController
     }
 
 
-    /**
-     * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes_create_translationalresearch", methods={"POST"})
-     * @Route("/list/antibodies/", name="antibodies_create_translationalresearch", methods={"POST"})
-     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties_create_translationalresearch", methods={"POST"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
-     */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/', name: 'transresrequestcategorytypes_create_translationalresearch', methods: ['POST'])]
+    #[Route(path: '/list/antibodies/', name: 'antibodies_create_translationalresearch', methods: ['POST'])]
+    #[Route(path: '/list/translational-research-project-specialties/', name: 'transresprojectspecialties_create_translationalresearch', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
         //exit("trp createList");
@@ -119,15 +110,11 @@ class TransResListController extends ListController
         return NULL;
     }
 
-    /**
-     * @Route("/list/translational-research-work-request-products-and-services/new", name="transresrequestcategorytypes_new_translationalresearch", methods={"GET"})
-     * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch", methods={"GET"})
-     *
-     * @Route("/list/translational-research-project-specialties/new", name="transresprojectspecialties_new_translationalresearch", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-new/new", name="transresprojectspecialties_new", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
-     */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/new', name: 'transresrequestcategorytypes_new_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/new', name: 'antibodies_new_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties/new', name: 'transresprojectspecialties_new_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-new/new', name: 'transresprojectspecialties_new', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
         if(
@@ -143,13 +130,13 @@ class TransResListController extends ListController
     /**
      * ("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show_translationalresearch", methods={"GET"})
      *
-     * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_show_translationalresearch", methods={"GET"})
-     * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show_translationalresearch", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-show/{id}", name="transresprojectspecialties_show", methods={"GET"})
      *
-     * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/{id}', name: 'transresrequestcategorytypes_show_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/{id}', name: 'antibodies_show_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties/{id}', name: 'transresprojectspecialties_show_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-show/{id}', name: 'transresprojectspecialties_show', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
 
@@ -163,15 +150,11 @@ class TransResListController extends ListController
         return $this->showList($request,$id,true);
     }
 
-    /**
-     * @Route("/list/translational-research-work-request-products-and-services/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch", methods={"GET"})
-     * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch", methods={"GET"})
-     *
-     * @Route("/list/translational-research-project-specialties/{id}/edit", name="transresprojectspecialties_edit_translationalresearch", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties-edit/{id}/edit", name="transresprojectspecialties_edit", methods={"GET"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
-     */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/{id}/edit', name: 'transresrequestcategorytypes_edit_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/antibodies/{id}/edit', name: 'antibodies_edit_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties/{id}/edit', name: 'transresprojectspecialties_edit_translationalresearch', methods: ['GET'])]
+    #[Route(path: '/list/translational-research-project-specialties-edit/{id}/edit', name: 'transresprojectspecialties_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         if(
@@ -184,13 +167,10 @@ class TransResListController extends ListController
         return $this->editList($request,$id);
     }
 
-    /**
-     * @Route("/list/translational-research-work-request-products-and-services/{id}", name="transresrequestcategorytypes_update_translationalresearch", methods={"PUT"})
-     * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch", methods={"PUT"})
-     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_update_translationalresearch", methods={"PUT"})
-     *
-     * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
-     */
+    #[Route(path: '/list/translational-research-work-request-products-and-services/{id}', name: 'transresrequestcategorytypes_update_translationalresearch', methods: ['PUT'])]
+    #[Route(path: '/list/antibodies/{id}', name: 'antibodies_update_translationalresearch', methods: ['PUT'])]
+    #[Route(path: '/list/translational-research-project-specialties/{id}', name: 'transresprojectspecialties_update_translationalresearch', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         if(
@@ -204,10 +184,8 @@ class TransResListController extends ListController
     }
 
 
-    /**
-     * @Route("/download-fees-list-excel", name="trp_download_fees_list_excel")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/download-fees-list-excel', name: 'trp_download_fees_list_excel')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function downloadFeesListExcelAction( Request $request ) {
         //$ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";

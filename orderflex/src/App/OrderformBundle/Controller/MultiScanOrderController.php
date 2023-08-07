@@ -75,15 +75,12 @@ class MultiScanOrderController extends OrderAbstractController {
     private $datastructure = null;
     //for testing data structure
     //private $datastructure = 'datastructure';
-
-
     /**
      * Creates a new Message entity.
-     *
-     * @Route("/scan-order/one-slide/create", name="singleorder_create", methods={"POST"})
-     * @Route("/scan-order/multi-slide/create", name="multi_create", methods={"POST"})
-     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
+    #[Route(path: '/scan-order/one-slide/create', name: 'singleorder_create', methods: ['POST'])]
+    #[Route(path: '/scan-order/multi-slide/create', name: 'multi_create', methods: ['POST'])]
+    #[Template('AppOrderformBundle/MultiScanOrder/new.html.twig')]
     public function multyCreateAction(Request $request)
     { 
 
@@ -331,9 +328,7 @@ class MultiScanOrderController extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/scan-order/submitted/successfully", name="scan-order-submitted-get", methods={"GET"})
-     */
+    #[Route(path: '/scan-order/submitted/successfully', name: 'scan-order-submitted-get', methods: ['GET'])]
     public function thanksScanorderGetAction(Request $request) {
 
         $session = $request->getSession();
@@ -350,11 +345,10 @@ class MultiScanOrderController extends OrderAbstractController {
     
     /**
      * Displays a form to create a new Message + Scan entities.
-     *
-     * @Route("/scan-order/one-slide/new", name="single_new", methods={"GET"})
-     * @Route("/scan-order/multi-slide/new", name="multi_new", methods={"GET"})
-     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
+    #[Route(path: '/scan-order/one-slide/new', name: 'single_new', methods: ['GET'])]
+    #[Route(path: '/scan-order/multi-slide/new', name: 'multi_new', methods: ['GET'])]
+    #[Template('AppOrderformBundle/MultiScanOrder/new.html.twig')]
     public function newMultyAction(Request $request)
     {
 
@@ -545,12 +539,12 @@ class MultiScanOrderController extends OrderAbstractController {
 
     /**
      * Displays a form to view, update, amend an Message + Scan entities. $id is oid of the message object
-     * @Route("/scan-order/{id}/edit", name="multy_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/scan-order/{id}/amend", name="order_amend", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/scan-order/{id}/show", name="multy_show", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Route("/scan-order/data-structure/{id}/show", name="scan_datastructure", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppOrderformBundle/MultiScanOrder/new.html.twig")
      */
+    #[Route(path: '/scan-order/{id}/edit', name: 'multy_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/scan-order/{id}/amend', name: 'order_amend', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/scan-order/{id}/show', name: 'multy_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/scan-order/data-structure/{id}/show', name: 'scan_datastructure', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppOrderformBundle/MultiScanOrder/new.html.twig')]
     public function showMultyAction( Request $request, $id, $type = "show" )
     {
 
@@ -927,8 +921,8 @@ class MultiScanOrderController extends OrderAbstractController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/scan-order/download/{id}", name="download_file", methods={"GET"}, requirements={"id" = "\d+"})
      */
+    #[Route(path: '/scan-order/download/{id}', name: 'download_file', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadAction($id) {
 
         $em = $this->getDoctrine()->getManager();

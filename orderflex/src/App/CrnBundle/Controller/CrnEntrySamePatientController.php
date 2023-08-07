@@ -74,10 +74,9 @@ class CrnEntrySamePatientController extends CrnEntryController
 
     /**
      * Crn Entry New Page Same Patient
-     *
-     * @Route("/entry/same-patient/new", name="crn_crnentry_same_patient")
-     * @Template("AppCrnBundle/Crn/crn-entry-same-patient.html.twig")
      */
+    #[Route(path: '/entry/same-patient/new', name: 'crn_crnentry_same_patient')]
+    #[Template('AppCrnBundle/Crn/crn-entry-same-patient.html.twig')]
     public function crnEntrySamePatientAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){
@@ -318,9 +317,9 @@ class CrnEntrySamePatientController extends CrnEntryController
 
     /**
      * Save Critical Result Notification Entry Same Patient
-     * @Route("/entry/same-patient/save", name="crn_save_entry_same_patient", methods={"POST"}, options={"expose"=true})
-     * @Template("AppCrnBundle/Crn/crn-entry-same-patient.html.twig")
      */
+    #[Route(path: '/entry/same-patient/save', name: 'crn_save_entry_same_patient', methods: ['POST'], options: ['expose' => true])]
+    #[Template('AppCrnBundle/Crn/crn-entry-same-patient.html.twig')]
     public function saveEntrySamePatientAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_CRN_USER") ){

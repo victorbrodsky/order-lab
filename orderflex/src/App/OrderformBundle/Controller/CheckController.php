@@ -47,10 +47,9 @@ use App\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * Message controller.
- *
- * @Route("/check")
- * @Template("AppOrderformBundle/Patient/edit_single.html.twig")
  */
+#[Route(path: '/check')]
+#[Template('AppOrderformBundle/Patient/edit_single.html.twig')]
 class CheckController extends OrderAbstractController {
 
     public function getArrayFieldJson( $fields, $childrenArr = null ) {
@@ -142,9 +141,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Find an element in DB
-     * @Route("/patient/check", name="get-patientdata", methods={"GET"})
-     * //TODO: use POST?
      */
+    #[Route(path: '/patient/check', name: 'get-patientdata', methods: ['GET'])]
     public function getPatientAction(Request $request) {
 
         $user = $this->getUser();
@@ -222,8 +220,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Create new element with status RESERVED
-     * @Route("/patient/generate", name="create-mrn", methods={"GET"})
      */
+    #[Route(path: '/patient/generate', name: 'create-mrn', methods: ['GET'])]
     public function createPatientAction(Request $request) {
 
 //        if (false === $this->isGranted('ROLE_USER')) {
@@ -273,8 +271,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * TODO: test on collage. DELETE might not work with a new php version and ajax calls (symfony bug?)?
-     * @Route("/patient/delete/{key}", name="delete-mrn-keytype", methods={"POST","DELETE"})
      */
+    #[Route(path: '/patient/delete/{key}', name: 'delete-mrn-keytype', methods: ['POST', 'DELETE'])]
     public function deleteMrnAction( Request $request ) {
         //echo "deleteMrnAction key=".$key."<br>";
         //exit('delete finish');
@@ -310,8 +308,8 @@ class CheckController extends OrderAbstractController {
     /************************ ACCESSION *************************/
     /**
      * Find accession by #
-     * @Route("/accession/check", name="get-accession", methods={"GET"})
      */
+    #[Route(path: '/accession/check', name: 'get-accession', methods: ['GET'])]
     public function getAccessionAction(Request $request) {
 
         $user = $this->getUser();
@@ -483,8 +481,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Accession from DB
-     * @Route("/accession/generate", name="create-accession", methods={"GET"})
      */
+    #[Route(path: '/accession/generate', name: 'create-accession', methods: ['GET'])]
     public function createAccessionAction(Request $request) {
 
 //        if (false === $this->isGranted('ROLE_USER')) {
@@ -531,9 +529,7 @@ class CheckController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/accession/delete/{key}", name="delete-accession", methods={"POST", "DELETE"})
-     */
+    #[Route(path: '/accession/delete/{key}', name: 'delete-accession', methods: ['POST', 'DELETE'])]
     public function deleteAccessionAction(Request $request) {
 
         $user = $this->getUser();
@@ -567,8 +563,8 @@ class CheckController extends OrderAbstractController {
     /************************ PART *************************/
     /**
      * Get Part from DB if existed
-     * @Route("/part/check", name="get-part", methods={"GET"})
      */
+    #[Route(path: '/part/check', name: 'get-part', methods: ['GET'])]
     public function getPartAction(Request $request) {
 
         $key = trim((string)$request->get('key') );
@@ -629,8 +625,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Part from DB by giving Accession number
-     * @Route("/part/generate", name="create-part", methods={"GET"})
      */
+    #[Route(path: '/part/generate', name: 'create-part', methods: ['GET'])]
     public function createPartAction(Request $request) {
 
         $accession = trim((string)$request->get('parentkey') );
@@ -670,9 +666,7 @@ class CheckController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/part/delete/{key}", name="delete-part", methods={"POST", "DELETE"})
-     */
+    #[Route(path: '/part/delete/{key}', name: 'delete-part', methods: ['POST', 'DELETE'])]
     public function deletePartAction(Request $request) {
 
         $key = trim((string)$request->get('key') );
@@ -703,8 +697,8 @@ class CheckController extends OrderAbstractController {
     /************************ BLOCK *************************/
     /**
      * Get BLOCK from DB if existed
-     * @Route("/block/check", name="get-block", methods={"GET"})
      */
+    #[Route(path: '/block/check', name: 'get-block', methods: ['GET'])]
     public function getBlockAction(Request $request) {
 
         $key = trim((string)$request->get('key'));
@@ -765,8 +759,8 @@ class CheckController extends OrderAbstractController {
 
     /**
      * Get next available Block from DB by giving Accession number and Part name
-     * @Route("/block/generate", name="create-block", methods={"GET"})
      */
+    #[Route(path: '/block/generate', name: 'create-block', methods: ['GET'])]
     public function createBlockAction(Request $request) {
         $partname = trim((string)$request->get('parentkey'));
         $accession = trim((string)$request->get('grandparentkey')); //need accession number to check if part exists in DB 
@@ -809,9 +803,7 @@ class CheckController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/block/delete/{key}", name="delete-block", methods={"POST", "DELETE"})
-     */
+    #[Route(path: '/block/delete/{key}', name: 'delete-block', methods: ['POST', 'DELETE'])]
     public function deleteBlockAction(Request $request) {
 
         $key = trim((string)$request->get('key'));            
@@ -840,10 +832,8 @@ class CheckController extends OrderAbstractController {
 
 
     //get keytype ids by keytype string for handsontable
-    /**
-     * @Route("/accession/keytype/{keytype}", name="get-accession-keytypeid", methods={"GET"})
-     * @Route("/patient/keytype/{keytype}", name="get-patient-keytypeid", methods={"GET"})
-     */
+    #[Route(path: '/accession/keytype/{keytype}', name: 'get-accession-keytypeid', methods: ['GET'])]
+    #[Route(path: '/patient/keytype/{keytype}', name: 'get-patient-keytypeid', methods: ['GET'])]
     public function getKeytypeIdAction(Request $request, $keytype) {
 
         $em = $this->getDoctrine()->getManager();

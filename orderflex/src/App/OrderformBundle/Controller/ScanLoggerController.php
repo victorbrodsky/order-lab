@@ -31,18 +31,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class ScanLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="scan_logger", methods={"GET"})
-     * @Template("AppOrderformBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'scan_logger', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
 		$params = array('sitename'=>$this->getParameter('scan.sitename'));
@@ -50,10 +48,8 @@ class ScanLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="scan_logger_user_all", methods={"GET"})
-     * @Template("AppOrderformBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'scan_logger_user_all', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');

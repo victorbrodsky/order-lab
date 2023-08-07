@@ -27,10 +27,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/about", name="translationalresearch_about_page", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'translationalresearch_about_page', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //$em = $this->getDoctrine()->getManager();
@@ -264,10 +262,8 @@ class DefaultController extends OrderAbstractController
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
-    /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="translationalresearch_thankfordownloading", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     */
+    #[Route(path: '/thanks-for-downloading/{id}/{sitename}', name: 'translationalresearch_thankfordownloading', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
             'fileid' => $id,
@@ -277,9 +273,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * Used in TrpTest->testSendInvoiceEmail()
-     *
-     * @Route("/test-invoice-email", name="translationalresearch_test-invoice-email")
      */
+    #[Route(path: '/test-invoice-email', name: 'translationalresearch_test-invoice-email')]
     public function testInvoiceEmailAction( Request $request ) {
 
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -297,27 +292,23 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * @Route("/", name="translationalresearch_home", methods={"GET"})
-//     * @Template("AppTranslationalResearchBundle/Default/index.html.twig")
-//     */
-//    public function indexAction( Request $request ) {
-//
-//        if( false == $this->container->get('security.context')->isGranted('ROLE_TRANSRES_USER') ){
-//            //exit('deidentifier: no permission');
-//            return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
-//        }
-//
-//        return $this->redirect( $this->generateUrl('translationalresearch_project_index') );
-//
-////        return array(
-////            'title' => "Translational Research"
-////        );
-//    }
-
-
-    /**
-     * @Route("/download/human-tissue-form", name="translationalresearch_download_humanTissueForm")
-     */
+    //     * @Route("/", name="translationalresearch_home", methods={"GET"})
+    //     * @Template("AppTranslationalResearchBundle/Default/index.html.twig")
+    //     */
+    //    public function indexAction( Request $request ) {
+    //
+    //        if( false == $this->container->get('security.context')->isGranted('ROLE_TRANSRES_USER') ){
+    //            //exit('deidentifier: no permission');
+    //            return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
+    //        }
+    //
+    //        return $this->redirect( $this->generateUrl('translationalresearch_project_index') );
+    //
+    ////        return array(
+    ////            'title' => "Translational Research"
+    ////        );
+    //    }
+    #[Route(path: '/download/human-tissue-form', name: 'translationalresearch_download_humanTissueForm')]
     public function downloadHumanTissueFormAction( Request $request ) {
 
         $originalname = "human_tissue_request_form.pdf";
@@ -334,9 +325,7 @@ class DefaultController extends OrderAbstractController
         exit;
     }
 
-    /**
-     * @Route("/download/new-study-intake-form/{specialtyId}", name="translationalresearch_download_new_study_intake_form")
-     */
+    #[Route(path: '/download/new-study-intake-form/{specialtyId}', name: 'translationalresearch_download_new_study_intake_form')]
     public function downloadNewStudyIntakeFormAction( Request $request, $specialtyId=NULL ) {
 
         //$originalname = "trp_new_study_intake_form.pdf";
@@ -375,9 +364,7 @@ class DefaultController extends OrderAbstractController
         exit;
     }
 
-    /**
-     * @Route("/transresitemcodes", name="translationalresearch_get_transresitemcodes_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/transresitemcodes', name: 'translationalresearch_get_transresitemcodes_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getTransResItemCodesAjaxAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -525,9 +512,7 @@ class DefaultController extends OrderAbstractController
         }
         return false;
     }
-    /**
-     * @Route("/transresitemcodes-orig", name="translationalresearch_get_transresitemcodes_orig_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/transresitemcodes-orig', name: 'translationalresearch_get_transresitemcodes_orig_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getTransResItemCodesAjaxOrigAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -635,9 +620,7 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * @Route("/transres-project-remaining-budget", name="translationalresearch_get_project_remaining_budget_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/transres-project-remaining-budget', name: 'translationalresearch_get_project_remaining_budget_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getTransResRecalculateProjectRemainingBudgetAjaxAction(Request $request) {
 
         $transresUtil = $this->container->get('transres_util');
@@ -848,9 +831,8 @@ class DefaultController extends OrderAbstractController
      * 2) Make sure the Admin and default AP-CP reviewers are set correctly
      * 3) Run Steps 1, 2, 3 and 4
      * 4) Run Step 5
-     * 
-     * @Route("/import-old-data/{startRow}", name="translationalresearch_import_old_data", methods={"GET"})
      */
+    #[Route(path: '/import-old-data/{startRow}', name: 'translationalresearch_import_old_data', methods: ['GET'])]
     public function importOldDataAction(Request $request, $startRow=null) {
 
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -1032,10 +1014,9 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://localhost/order/translational-research/barcode-demo
-     *
-     * @Route("/barcode-demo", name="translationalresearch_barcode-demo")
-     * @Template("AppTranslationalResearchBundle/Request/barcodedemo.html.twig")
      */
+    #[Route(path: '/barcode-demo', name: 'translationalresearch_barcode-demo')]
+    #[Template('AppTranslationalResearchBundle/Request/barcodedemo.html.twig')]
     public function barcodeDemoAction( Request $request ) {
         return array();
     }
@@ -1044,8 +1025,8 @@ class DefaultController extends OrderAbstractController
      * generateAntibodyList and setAntibodyListProperties
      * run: http://127.0.0.1/order/translational-research/generate-antibody-list/ihc_antibody_mssql.sql
      * run: http://127.0.0.1/order/translational-research/generate-antibody-list/ihc_antibody_mssql_2.sql
-     * @Route("/generate-antibody-list/{filename}", name="translationalresearch_generate_antibody_list")
      */
+    #[Route(path: '/generate-antibody-list/{filename}', name: 'translationalresearch_generate_antibody_list')]
     public function generateAntibodyListAction(Request $request, $filename) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1078,8 +1059,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Load Antibody list into Platform List Manager
      * run: http://localhost/order/translational-research/set-properties-antibody-list/
-     * @Route("/set-properties-antibody-list/", name="translationalresearch_set_properties_antibody_list")
      */
+    #[Route(path: '/set-properties-antibody-list/', name: 'translationalresearch_set_properties_antibody_list')]
     public function setPropertiesAntibodyListAction() {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1109,8 +1090,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Update or Insert AntibodyList
      * run: http://127.0.0.1/order/translational-research/update-insert-antibody-list
-     * @Route("/update-insert-antibody-list", name="translationalresearch_update_insert_antibody_list")
      */
+    #[Route(path: '/update-insert-antibody-list', name: 'translationalresearch_update_insert_antibody_list')]
     public function updateInsertAntibodyListAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1136,8 +1117,8 @@ class DefaultController extends OrderAbstractController
     /**
      * Sync ID for AntibodyList
      * run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
-     * @Route("/sync-id-antibody-list", name="translationalresearch_sync_id_antibody_list")
      */
+    #[Route(path: '/sync-id-antibody-list', name: 'translationalresearch_sync_id_antibody_list')]
     public function syncIdAntibodyListAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1160,9 +1141,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/update-projects-implicit-date
-     *
-     * @Route("/update-projects-implicit-date", name="translationalresearch_update_projects_implicit_date")
      */
+    #[Route(path: '/update-projects-implicit-date', name: 'translationalresearch_update_projects_implicit_date')]
     public function updateProjectsImplicitDateAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1310,9 +1290,8 @@ class DefaultController extends OrderAbstractController
     //update fees
     /**
      * http://127.0.0.1/order/translational-research/update-fees
-     *
-     * @Route("/update-fees", name="translationalresearch_update_fees")
      */
+    #[Route(path: '/update-fees', name: 'translationalresearch_update_fees')]
     public function updateFeesAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1354,10 +1333,9 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/add-misi-fees
-     *
-     * @Route("/add-misi-fees", name="translationalresearch_add_misi_fees")
-     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
+    #[Route(path: '/add-misi-fees', name: 'translationalresearch_add_misi_fees')]
+    #[Template('AppTranslationalResearchBundle/Default/upload-csv-file.html.twig')]
     public function addMisiFeesAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1395,9 +1373,8 @@ class DefaultController extends OrderAbstractController
     /**
      * NOT USED: use a separate field to show mergeInfo
      * http://127.0.0.1/order/translational-research/merge-project-info
-     *
-     * @Route("/merge-project-info", name="translationalresearch_merge-project-info")
      */
+    #[Route(path: '/merge-project-info', name: 'translationalresearch_merge-project-info')]
     public function mergeProjectInfoAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1451,10 +1428,9 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/update-multiple-fees
-     *
-     * @Route("/update-multiple-fees", name="translationalresearch_update_multiple_fees")
-     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
+    #[Route(path: '/update-multiple-fees', name: 'translationalresearch_update_multiple_fees')]
+    #[Template('AppTranslationalResearchBundle/Default/upload-csv-file.html.twig')]
     public function updateMultipleFeesAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1490,10 +1466,9 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
- * http://127.0.0.1/order/translational-research/update-project-price-list
- *
- * @Route("/update-project-price-list", name="translationalresearch_update_project_list")
- */
+     * http://127.0.0.1/order/translational-research/update-project-price-list
+     */
+    #[Route(path: '/update-project-price-list', name: 'translationalresearch_update_project_list')]
     public function updateProjectPriceListAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1567,9 +1542,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/update-remove-external-price-list
-     *
-     * @Route("/update-remove-external-price-list", name="translationalresearch_update_remove_external_price_list")
      */
+    #[Route(path: '/update-remove-external-price-list', name: 'translationalresearch_update_remove_external_price_list')]
     public function removeExternalPriceListAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1625,9 +1599,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/update-project-budget
-     *
-     * @Route("/update-project-budget", name="translationalresearch_update_project_budget")
      */
+    #[Route(path: '/update-project-budget', name: 'translationalresearch_update_project_budget')]
     public function updateProjectBudgetAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1668,9 +1641,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/update-project-total
-     *
-     * @Route("/update-project-total", name="translationalresearch_update_project_total")
      */
+    #[Route(path: '/update-project-total', name: 'translationalresearch_update_project_total')]
     public function updateProjectTotalAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1735,73 +1707,72 @@ class DefaultController extends OrderAbstractController
     }
 
 //    /**
-//     * http://127.0.0.1/order/translational-research/batch-close-projects
-//     *
-//     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
-//     */
-//    public function closeProjectsAction1( Request $request ) {
-//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
-//        }
-//
-//        exit("closeProjectsAction: Not allowed");
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
-//        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
-//        $dql =  $repository->createQueryBuilder("project");
-//        $dql->select('project');
-//        $dql->where("project.noBudgetLimit IS NULL");
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//        //echo "query=".$query->getSql()."<br>";
-//        $projects = $query->getResult();
-//        echo "projects=".count($projects)."<br>";
-//
-//
-//
-//        $projectOids = array();
-//
-//        $count = 0;
-//        foreach($projects as $project) {
-//            //echo "project=".$project."<br>";
-//            if( $project ) {
-//
-//                //$testing = false;
-//                $originalStateStr = $project->getState();
-//                $to = "closed";
-//
-//                $project->setState($to);
-//
-//                //$em->flush($project);
-//
-//                $projectOids[] = $project->getOid()." (original state=".$originalStateStr.")";
-//
-//                $count++;
-//            } else {
-//                echo "!!! project is null <br>";
-//            }
-//        }
-//
-//        //event log
-//        $eventType = "Project Updated";
-//        $resultMsg = $count." projects are closed in batch by a script: " . implode(", ",$projectOids);
-//
-//        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
-//
-//        $this->addFlash(
-//            'notice',
-//            $resultMsg
-//        );
-//
-//        exit("updated $count projects");
-//    }
+    //     * http://127.0.0.1/order/translational-research/batch-close-projects
+    //     *
+    //     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
+    //     */
+    //    public function closeProjectsAction1( Request $request ) {
+    //        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+    //            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+    //        }
+    //
+    //        exit("closeProjectsAction: Not allowed");
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+    //        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+    //        $dql =  $repository->createQueryBuilder("project");
+    //        $dql->select('project');
+    //        $dql->where("project.noBudgetLimit IS NULL");
+    //        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+    //        //echo "query=".$query->getSql()."<br>";
+    //        $projects = $query->getResult();
+    //        echo "projects=".count($projects)."<br>";
+    //
+    //
+    //
+    //        $projectOids = array();
+    //
+    //        $count = 0;
+    //        foreach($projects as $project) {
+    //            //echo "project=".$project."<br>";
+    //            if( $project ) {
+    //
+    //                //$testing = false;
+    //                $originalStateStr = $project->getState();
+    //                $to = "closed";
+    //
+    //                $project->setState($to);
+    //
+    //                //$em->flush($project);
+    //
+    //                $projectOids[] = $project->getOid()." (original state=".$originalStateStr.")";
+    //
+    //                $count++;
+    //            } else {
+    //                echo "!!! project is null <br>";
+    //            }
+    //        }
+    //
+    //        //event log
+    //        $eventType = "Project Updated";
+    //        $resultMsg = $count." projects are closed in batch by a script: " . implode(", ",$projectOids);
+    //
+    //        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
+    //
+    //        $this->addFlash(
+    //            'notice',
+    //            $resultMsg
+    //        );
+    //
+    //        exit("updated $count projects");
+    //    }
     /**
      * http://127.0.0.1/order/translational-research/batch-close-projects
-     *
-     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
-     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
+    #[Route(path: '/batch-close-projects', name: 'translationalresearch_batch_close_projects')]
+    #[Template('AppTranslationalResearchBundle/Default/upload-csv-file.html.twig')]
     public function closeProjectsAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1838,9 +1809,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/email-notation-test
-     *
-     * @Route("/email-notation-test", name="translationalresearch_email_notation_test")
      */
+    #[Route(path: '/email-notation-test', name: 'translationalresearch_email_notation_test')]
     public function emailNotationTestAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -1960,9 +1930,7 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/transres-test-email-notation-ajax", name="translationalresearch_test_email_notation_ajax", methods={"GET","POST"}, options={"expose"=true})
-     */
+    #[Route(path: '/transres-test-email-notation-ajax', name: 'translationalresearch_test_email_notation_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getTransResTestEmailNotationAjaxAction(Request $request) {
 
         //$transresUtil = $this->container->get('transres_util');
@@ -2122,9 +2090,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/test-trp-site-parameters
-     *
-     * @Route("/test-trp-site-parameters", name="translationalresearch_test_trp_site_parameters")
      */
+    #[Route(path: '/test-trp-site-parameters', name: 'translationalresearch_test_trp_site_parameters')]
     public function testTrpSiteParametersAction( Request $request ) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2209,9 +2176,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/reverse-fee-schedule-list
-     *
-     * @Route("/reverse-fee-schedule-list/", name="translationalresearch_reverse_fee_schedule_list")
      */
+    #[Route(path: '/reverse-fee-schedule-list/', name: 'translationalresearch_reverse_fee_schedule_list')]
     public function reverseFeeScheduleListAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2366,9 +2332,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/update-products-in-work-requests
-     *
-     * @Route("/update-products-in-work-requests/", name="translationalresearch_update_products_in_work_requests")
      */
+    #[Route(path: '/update-products-in-work-requests/', name: 'translationalresearch_update_products_in_work_requests')]
     public function updateProductsInWorkRequestsAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2516,9 +2481,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/update-not-completed-products-in-work-requests/
-     *
-     * @Route("/update-not-completed-products-in-work-requests/", name="translationalresearch_update_not_completed_products_in_work_requests")
      */
+    #[Route(path: '/update-not-completed-products-in-work-requests/', name: 'translationalresearch_update_not_completed_products_in_work_requests')]
     public function updateNotCompletedProductsInWorkRequestsAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2668,9 +2632,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/populate-project-expiration-date
-     *
-     * @Route("/populate-project-expiration-date/", name="translationalresearch_populate_project_expiration_date")
      */
+    #[Route(path: '/populate-project-expiration-date/', name: 'translationalresearch_populate_project_expiration_date')]
     public function populateProjectExpectedExpirationDateAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2759,9 +2722,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/reset-project-expiration-date
-     *
-     * @Route("/reset-project-expiration-date/", name="translationalresearch_reset_project_expiration_date")
      */
+    #[Route(path: '/reset-project-expiration-date/', name: 'translationalresearch_reset_project_expiration_date')]
     public function resetProjectExpectedExpirationDateAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -2895,9 +2857,8 @@ class DefaultController extends OrderAbstractController
     //If project switch from funded to non-funded?
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/clear-funded-project-expiration-date
-     *
-     * @Route("/clear-funded-project-expiration-date/", name="translationalresearch_clear_funded_project_expiration_date")
      */
+    #[Route(path: '/clear-funded-project-expiration-date/', name: 'translationalresearch_clear_funded_project_expiration_date')]
     public function clearFundedProjectExpectedExpirationDateAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -3023,9 +2984,8 @@ class DefaultController extends OrderAbstractController
      * Clear expectedExpirationDate for all non-funded projects without Approval date
      *
      * http://127.0.0.1/order/index_dev.php/translational-research/clear-nonfunded-project-expdate-without-approvaldate
-     *
-     * @Route("/clear-nonfunded-project-expdate-without-approvaldate/", name="translationalresearch_clear_nonfunded_project_expdate_without_approvaldate")
      */
+    #[Route(path: '/clear-nonfunded-project-expdate-without-approvaldate/', name: 'translationalresearch_clear_nonfunded_project_expdate_without_approvaldate')]
     public function clearNonFundedProjectExpectedExpdateAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -3125,10 +3085,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/multi-level-test/", name="translationalresearch_multi-level-test", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Default/multi-level-test.html.twig")
-     */
+    #[Route(path: '/multi-level-test/', name: 'translationalresearch_multi-level-test', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Default/multi-level-test.html.twig')]
     public function multiLevelMenuTestAction( Request $request ) {
 
         return array();

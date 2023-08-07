@@ -33,18 +33,16 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class DashboardSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="dashboard_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'dashboard_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -55,10 +53,9 @@ class DashboardSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="dashboard_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'dashboard_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         return $this->editParameters($request,$id);
@@ -66,10 +63,9 @@ class DashboardSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="dashboard_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'dashboard_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request, $id);
@@ -78,10 +74,9 @@ class DashboardSiteParametersController extends SiteParametersController
 
     /**
      * DashboardSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="dashboard_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppDashboardBundle/SiteParameter/edit-content.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'dashboard_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppDashboardBundle/SiteParameter/edit-content.html.twig')]
     public function dashboardSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_DASHBOARD_ADMIN') ) {
@@ -103,10 +98,8 @@ class DashboardSiteParametersController extends SiteParametersController
         );
     }
 
-    /**
-     * @Route("/specific-site-parameters/edit-page/", name="dashboard_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
-     * @Template("AppDashboardBundle/SiteParameter/edit.html.twig")
-     */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'dashboard_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppDashboardBundle/SiteParameter/edit.html.twig')]
     public function dashboardSiteParameterEditAction( Request $request ) {
 
         //exit('dashboardSiteParameterEditAction');

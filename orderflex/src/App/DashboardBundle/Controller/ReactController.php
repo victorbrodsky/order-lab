@@ -29,9 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ReactController extends OrderAbstractController
 {
     //@Template("AppDashboardBundle/Default/index.html.twig")
-    /**
-     * @Route("/react2/{reactRouting}", name="dashboard_home_react_dashboard", defaults={"reactRouting": null})
-     */
+    #[Route(path: '/react2/{reactRouting}', name: 'dashboard_home_react_dashboard', defaults: ['reactRouting' => null])]
     public function index()
     {
         return $this->render('AppDashboardBundle/React/index.html.twig', array('testflag'=>'testflag1'));
@@ -42,9 +40,9 @@ class ReactController extends OrderAbstractController
      * Test React
      * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
      *
-     * @Route("/api/charts", name="dashboard_api_charts", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
+    #[Route(path: '/api/charts', name: 'dashboard_api_charts', options: ['expose' => true])]
     public function getCharts()
     {
         $users = [
@@ -94,9 +92,9 @@ class ReactController extends OrderAbstractController
      * Test React
      * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
      *
-     * @Route("/api/session-flash-bag", name="dashboard_api_session_flash_bag", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
+    #[Route(path: '/api/session-flash-bag', name: 'dashboard_api_session_flash_bag', options: ['expose' => true])]
     public function getSessionFlashBagAction()
     {
         if( $this->isGranted('ROLE_DASHBOARD_USER') ) {

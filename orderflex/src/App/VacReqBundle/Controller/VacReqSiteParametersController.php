@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class VacReqSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="vacreq_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'vacreq_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -56,10 +54,9 @@ class VacReqSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="vacreq_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'vacreq_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         return $this->editParameters($request,$id,'ROLE_VACREQ_ADMIN');
@@ -67,10 +64,9 @@ class VacReqSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="vacreq_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'vacreq_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request,$id,'ROLE_VACREQ_ADMIN');
@@ -82,10 +78,9 @@ class VacReqSiteParametersController extends SiteParametersController
 
     /**
      * VacreqSiteParameter
-     *
-     * @Route("/specific-site-parameters/edit-page/", name="vacreq_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/SiteParameter/edit.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'vacreq_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppVacReqBundle/SiteParameter/edit.html.twig')]
     public function vacreqSiteParameterEditAction( Request $request ) {
 
         //exit('vacreqSiteParameterEditAction');
@@ -122,10 +117,9 @@ class VacReqSiteParametersController extends SiteParametersController
 
     /**
      * VacreqSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="vacreq_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppVacReqBundle/SiteParameter/edit-content.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'vacreq_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppVacReqBundle/SiteParameter/edit-content.html.twig')]
     public function vacreqSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_VACREQ_ADMIN') ) {

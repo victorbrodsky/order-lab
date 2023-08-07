@@ -32,18 +32,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class TranslationalResearchLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="translationalresearch_logger", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'translationalresearch_logger', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_TRANSRES_ADMIN") ){
@@ -57,10 +55,8 @@ class TranslationalResearchLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="translationalresearch_logger_user_all", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'translationalresearch_logger_user_all', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -85,33 +81,27 @@ class TranslationalResearchLoggerController extends LoggerController
 
 
 //    /**
-//     * Generation Log with eventTypes = "Generate Vacation Request"
-//     *
-//     * @Route("/generation-log/", name="translationalresearch_generation_log", methods={"GET"})
-//     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
-//     */
-//    public function generationLogAction(Request $request)
-//    {
-//
-//    }
-
-
-//    /**
-//     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
-//     *
-//     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log", methods={"GET"})
-//     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
-//     */
-//    public function myGenerationLogAction(Request $request)
-//    {
-//
-//    }
-
-    /**
-     *
-     * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
-     */
+    //     * Generation Log with eventTypes = "Generate Vacation Request"
+    //     *
+    //     * @Route("/generation-log/", name="translationalresearch_generation_log", methods={"GET"})
+    //     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
+    //     */
+    //    public function generationLogAction(Request $request)
+    //    {
+    //
+    //    }
+    //    /**
+    //     * Generation Log with eventTypes = "Generate Vacation Request" and users = current user id
+    //     *
+    //     * @Route("/event-log-per-user-per-event-type/", name="translationalresearch_my_generation_log", methods={"GET"})
+    //     * @Template("AppTranslationalResearchBundle/Logger/index.html.twig")
+    //     */
+    //    public function myGenerationLogAction(Request $request)
+    //    {
+    //
+    //    }
+    #[Route(path: '/event-log-per-object/', name: 'translationalresearch_event-log-per-object_log', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Logger/index.html.twig')]
     public function transresEventLogPerObjectAction(Request $request)
     {
         if (false == $this->isGranted("ROLE_TRANSRES_ADMIN")) {

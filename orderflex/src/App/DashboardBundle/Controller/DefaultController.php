@@ -35,10 +35,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends OrderAbstractController
 {
-    /**
-     * @Route("/about", name="dashboard_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'dashboard_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
         //testing
@@ -198,18 +196,14 @@ class DefaultController extends OrderAbstractController
     }
 
 //    /**
-//     * @Route("/", name="dashboard_home")
-//     * @Template("AppDashboardBundle/Default/index.html.twig")
-//     */
-//    public function indexAction( Request $request ) {
-//        return array('sitename'=>$this->getParameter('dashboard.sitename'));
-//    }
-
-
-    /**
-     * @Route("/test", name="dashboard_test")
-     * @Template("AppDashboardBundle/Default/test.html.twig")
-     */
+    //     * @Route("/", name="dashboard_home")
+    //     * @Template("AppDashboardBundle/Default/index.html.twig")
+    //     */
+    //    public function indexAction( Request $request ) {
+    //        return array('sitename'=>$this->getParameter('dashboard.sitename'));
+    //    }
+    #[Route(path: '/test', name: 'dashboard_test')]
+    #[Template('AppDashboardBundle/Default/test.html.twig')]
     public function testAction( Request $request ) {
 
         exit('testAction disable');
@@ -225,10 +219,9 @@ class DefaultController extends OrderAbstractController
 
     /**
      * NOT USED: moved to /list/init-dashboard-charts
-     * 
-     * @Route("/init-set-chart-list", name="dashboard_init_set_chart_list")
-     * @Template("AppDashboardBundle/Default/test.html.twig")
      */
+    #[Route(path: '/init-set-chart-list', name: 'dashboard_init_set_chart_list')]
+    #[Template('AppDashboardBundle/Default/test.html.twig')]
     public function setChartListAction( Request $request ) {
 
         exit('setChartListAction disable');
@@ -359,10 +352,9 @@ class DefaultController extends OrderAbstractController
     /**
      * NOT USED: moved to /list/init-dashboard-charts
      * Set chart types (Line, Bar ...)
-     *
-     * @Route("/init-set-chart-type", name="dashboard_init_set_chart_type")
-     * @Template("AppDashboardBundle/Default/test.html.twig")
      */
+    #[Route(path: '/init-set-chart-type', name: 'dashboard_init_set_chart_type')]
+    #[Template('AppDashboardBundle/Default/test.html.twig')]
     public function setChartTypesAction( Request $request ) {
 
         exit('setChartTypesAction disable');
@@ -469,9 +461,7 @@ class DefaultController extends OrderAbstractController
 
 
     //@Template("AppDashboardBundle/Default/index.html.twig")
-    /**
-     * @Route("/react/{reactRouting}", name="dashboard_home_react", defaults={"reactRouting": null})
-     */
+    #[Route(path: '/react/{reactRouting}', name: 'dashboard_home_react', defaults: ['reactRouting' => null])]
     public function index()
     {
         return $this->render('AppDashboardBundle/Default/index.html.twig', array('testflag'=>'testflag1'));
@@ -481,9 +471,9 @@ class DefaultController extends OrderAbstractController
      * Test React
      * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
      *
-     * @Route("/api/users", name="dashboard_api_users", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
+    #[Route(path: '/api/users', name: 'dashboard_api_users', options: ['expose' => true])]
     public function getUsers()
     {
         $users = [
@@ -530,9 +520,7 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/reset-chart-view-counter", name="dashboard_reset-chart-view-counter")
-     */
+    #[Route(path: '/reset-chart-view-counter', name: 'dashboard_reset-chart-view-counter')]
     public function resetChartViewCounterAction( Request $request ) {
 
         exit('resetChartViewCounterAction disable');

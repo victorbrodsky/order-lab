@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Form\LoggerType;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class ResAppLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="resapp_logger", methods={"GET"})
-     * @Template("AppResAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'resapp_logger', methods: ['GET'])]
+    #[Template('AppResAppBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if(
@@ -72,10 +70,9 @@ class ResAppLoggerController extends LoggerController
 
     /**
      * Filter by Object Type "ResidencyApplication" and Object ID
-     *
-     * @Route("/application-log/{id}", name="resapp_application_log", methods={"GET"})
-     * @Template("AppResAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/application-log/{id}', name: 'resapp_application_log', methods: ['GET'])]
+    #[Template('AppResAppBundle/Logger/index.html.twig')]
     public function applicationLogAction(Request $request,$id) {
 
         if(
@@ -118,10 +115,9 @@ class ResAppLoggerController extends LoggerController
 
     /**
      * Filter by Object Type "ResidencyApplication" and Object ID
-     *
-     * @Route("/event-log-per-object/", name="resapp_event-log-per-object_log", methods={"GET"})
-     * @Template("AppResAppBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-object/', name: 'resapp_event-log-per-object_log', methods: ['GET'])]
+    #[Template('AppResAppBundle/Logger/index.html.twig')]
     public function applicationPerObjectLogAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();

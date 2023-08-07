@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Controller\LoggerController;
 
 /**
  * Logger controller.
- *
- * @Route("/event-log")
  */
+#[Route(path: '/event-log')]
 class DashboardLoggerController extends LoggerController
 {
 
     /**
      * Lists all Logger entities.
-     *
-     * @Route("/", name="dashboard_logger", methods={"GET"})
-     * @Template("AppDashboardBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/', name: 'dashboard_logger', methods: ['GET'])]
+    #[Template('AppDashboardBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
@@ -59,10 +57,8 @@ class DashboardLoggerController extends LoggerController
     }
 
 
-    /**
-     * @Route("/user/{id}/all", name="dashboard_logger_user_all", methods={"GET"})
-     * @Template("AppDashboardBundle/Logger/index.html.twig")
-     */
+    #[Route(path: '/user/{id}/all', name: 'dashboard_logger_user_all', methods: ['GET'])]
+    #[Template('AppDashboardBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->get('postData');
@@ -92,10 +88,9 @@ class DashboardLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "Generate Accession Dashboard ID"
-     *
-     * @Route("/generation-log/", name="dashboard_generation_log", methods={"GET"})
-     * @Template("AppDashboardBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/generation-log/', name: 'dashboard_generation_log', methods: ['GET'])]
+    #[Template('AppDashboardBundle/Logger/index.html.twig')]
     public function generationLogAction(Request $request)
     {
         if( false == $this->isGranted("create", "Accession") ){
@@ -155,10 +150,9 @@ class DashboardLoggerController extends LoggerController
 
     /**
      * Generation Log with eventTypes = "Generate Accession Dashboard ID" and users = current user id
-     *
-     * @Route("/event-log-per-user-per-event-type/", name="dashboard_my_generation_log", methods={"GET"})
-     * @Template("AppDashboardBundle/Logger/index.html.twig")
      */
+    #[Route(path: '/event-log-per-user-per-event-type/', name: 'dashboard_my_generation_log', methods: ['GET'])]
+    #[Template('AppDashboardBundle/Logger/index.html.twig')]
     public function myGenerationLogAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_USER") ){

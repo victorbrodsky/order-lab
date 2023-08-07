@@ -35,19 +35,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class TranslationalResearchSecurityController extends SecurityController
 {
 
-    /**
-     * @Route("/login", name="translationalresearch_login")
-     * @Template()
-     */
+    #[Route(path: '/login', name: 'translationalresearch_login')]
+    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('translationalresearch: loginAction');
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    /**
-     * @Route("/setloginvisit/", name="translationalresearch_setloginvisit", methods={"GET"})
-     */
+    #[Route(path: '/setloginvisit/', name: 'translationalresearch_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //exit('translationalresearch: setAjaxLoginVisit');
@@ -55,10 +51,8 @@ class TranslationalResearchSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/no-permission", name="translationalresearch-nopermission", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
-     */
+    #[Route(path: '/no-permission', name: 'translationalresearch-nopermission', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
@@ -72,11 +66,9 @@ class TranslationalResearchSecurityController extends SecurityController
     }
 
 
-    /**
-     * @Route("/idle-log-out", name="translationalresearch_idlelogout")
-     * @Route("/idle-log-out/{flag}", name="translationalresearch_idlelogout-saveorder")
-     * @Template()
-     */
+    #[Route(path: '/idle-log-out', name: 'translationalresearch_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'translationalresearch_idlelogout-saveorder')]
+    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('translationalresearch: idlelogoutAction');

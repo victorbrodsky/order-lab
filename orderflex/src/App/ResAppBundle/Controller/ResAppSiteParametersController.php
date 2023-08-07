@@ -34,18 +34,16 @@ use App\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class ResAppSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/site-settings/", name="resapp_sitesettings_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/site-index.html.twig")
      */
+    #[Route(path: '/site-settings/', name: 'resapp_sitesettings_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/site-index.html.twig')]
     public function indexSiteSettingsAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -56,10 +54,9 @@ class ResAppSiteParametersController extends SiteParametersController
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="resapp_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'resapp_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -70,10 +67,9 @@ class ResAppSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="resapp_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'resapp_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
         return $this->editParameters($request,$id);
@@ -81,10 +77,9 @@ class ResAppSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="resapp_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'resapp_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request, $id);
@@ -93,10 +88,9 @@ class ResAppSiteParametersController extends SiteParametersController
 
     /**
      * ResAppSiteParameter
-     *
-     * @Route("/specific-site-parameters/edit-page/", name="resapp_siteparameters_edit_specific_site_parameters", methods={"GET","POST"})
-     * @Template("AppResAppBundle/SiteParameter/edit.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'resapp_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppResAppBundle/SiteParameter/edit.html.twig')]
     public function resappSiteParameterEditAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -130,10 +124,9 @@ class ResAppSiteParametersController extends SiteParametersController
 
     /**
      * ResAppSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="resapp_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppResAppBundle/SiteParameter/edit-content.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'resapp_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppResAppBundle/SiteParameter/edit-content.html.twig')]
     public function resappSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {

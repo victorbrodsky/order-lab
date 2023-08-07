@@ -58,10 +58,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class FellAppManagement extends OrderAbstractController {
 
-    /**
-     * @Route("/fellowship-types-settings", name="fellapp_fellowshiptype_settings", methods={"GET"})
-     * @Template("AppFellAppBundle/Management/management.html.twig")
-     */
+    #[Route(path: '/fellowship-types-settings', name: 'fellapp_fellowshiptype_settings', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Management/management.html.twig')]
     public function felltypeSettingsAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -99,10 +97,8 @@ class FellAppManagement extends OrderAbstractController {
 
     }
 
-    /**
-     * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add", methods={"GET","POST"})
-     * @Template("AppFellAppBundle/Management/new-fellowship-application-type.html.twig")
-     */
+    #[Route(path: '/add-fellowship-application-type', name: 'fellapp_fellowship_application_type_add', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/Management/new-fellowship-application-type.html.twig')]
     public function addFellowshipApplicationTypeAction(Request $request )
     {
 
@@ -257,9 +253,8 @@ class FellAppManagement extends OrderAbstractController {
     /**
      * It should ONLY remove/strip all of THIS GROUP's roles from all users.
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
-     *
-     * @Route("/fellowship-application-type-remove/{fellaptypeid}", name="fellapp_fellowship_application_type_remove", methods={"GET","POST"})
      */
+    #[Route(path: '/fellowship-application-type-remove/{fellaptypeid}', name: 'fellapp_fellowship_application_type_remove', methods: ['GET', 'POST'])]
     public function removeFellowshipApplicationTypeAction(Request $request, $fellaptypeid )
     {
 
@@ -316,10 +311,8 @@ class FellAppManagement extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show", methods={"GET"})
-     * @Template("AppFellAppBundle/Management/new.html.twig")
-     */
+    #[Route(path: '/fellowship-type/show/{id}', name: 'fellapp_fellowshiptype_setting_show', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Management/new.html.twig')]
     public function showAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -354,10 +347,8 @@ class FellAppManagement extends OrderAbstractController {
         );
     }
 
-    /**
-     * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit", methods={"GET","POST"})
-     * @Template("AppFellAppBundle/Management/new.html.twig")
-     */
+    #[Route(path: '/fellowship-type/edit/{id}', name: 'fellapp_fellowshiptype_setting_edit', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/Management/new.html.twig')]
     public function editAction(Request $request, $id) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -516,10 +507,8 @@ class FellAppManagement extends OrderAbstractController {
 
 
 
-    /**
-     * @Route("/populate-default", name="fellapp_populate_default", methods={"GET"})
-     * @Template("AppFellAppBundle/Management/management.html.twig")
-     */
+    #[Route(path: '/populate-default', name: 'fellapp_populate_default', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Management/management.html.twig')]
     public function populateDefaultAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
@@ -737,9 +726,7 @@ class FellAppManagement extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/update-inst-user-role", name="fellapp_update_inst_user_role", methods={"GET"})
-     */
+    #[Route(path: '/update-inst-user-role', name: 'fellapp_update_inst_user_role', methods: ['GET'])]
     public function updateUserInstRoleAction(Request $request)
     {
 
@@ -829,9 +816,7 @@ class FellAppManagement extends OrderAbstractController {
         exit("EOF updateUserInstRoleAction");
     }
 
-    /**
-     * @Route("/create-default-fellowship-type", name="fellapp_create_default_fellowship_type", methods={"GET"})
-     */
+    #[Route(path: '/create-default-fellowship-type', name: 'fellapp_create_default_fellowship_type', methods: ['GET'])]
     public function createDefaultFellowshipTypeAction(Request $request)
     {
 
@@ -995,10 +980,8 @@ class FellAppManagement extends OrderAbstractController {
     }
 
 
-    /**
-     * @Route("/fellowship-test-session", name="fellapp_test-session", methods={"GET"})
-     * @Template("AppFellAppBundle/Management/management.html.twig")
-     */
+    #[Route(path: '/fellowship-test-session', name: 'fellapp_test-session', methods: ['GET'])]
+    #[Template('AppFellAppBundle/Management/management.html.twig')]
     public function testSession(Request $request) {
 
         $request->getSession()->getFlashBag()->add(

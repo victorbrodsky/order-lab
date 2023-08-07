@@ -94,19 +94,17 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Patient controller.
- *
- * @Route("/patient")
  */
+#[Route(path: '/patient')]
 class PatientController extends OrderAbstractController
 {
 
 
     /**
      * Lists all Patient entities.
-     *
-     * @Route("/", name="scan-patient-list", methods={"GET"})
-     * @Template()
      */
+    #[Route(path: '/', name: 'scan-patient-list', methods: ['GET'])]
+    #[Template]
     public function indexAction(Request $request)
     {
         $searchUtil = $this->container->get('search_utility');
@@ -122,10 +120,9 @@ class PatientController extends OrderAbstractController
 
     /**
      * New Patient.
-     *
-     * @Route("/data-structure", name="scan-patient-new", methods={"GET"})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/data-structure', name: 'scan-patient-new', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function newPatientAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -218,11 +215,10 @@ class PatientController extends OrderAbstractController
 
     /**
      * Finds and displays a Patient entity.
-     *
-     * @Route("/{id}", name="scan-patient-show", methods={"GET"})
-     * @Route("/info/{id}", name="scan-patient-info-show", methods={"GET"})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/{id}', name: 'scan-patient-show', methods: ['GET'])]
+    #[Route(path: '/info/{id}', name: 'scan-patient-info-show', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function showAction( Request $request, $id )
     {
 
@@ -375,10 +371,9 @@ class PatientController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing Patient entity.
-     *
-     * @Route("/{id}/edit", name="scan-patient-edit", methods={"GET"})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'scan-patient-edit', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function editAction( Request $request, $id )
     {
         if (false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
@@ -513,10 +508,9 @@ class PatientController extends OrderAbstractController
 
     /**
      * Edits an existing Patient entity.
-     *
-     * @Route("/{id}/edit", name="scan_patient_update", methods={"POST"})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'scan_patient_update', methods: ['POST'])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function updateAction( Request $request, $id )
     {
         if (false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
@@ -754,10 +748,8 @@ class PatientController extends OrderAbstractController
 
 
     //create Test Patient
-    /**
-     * @Route("/data-structure/new-test-patient", name="scan_testpatient_new", methods={"GET"})
-     * @Template("AppOrderformBundle/Patient/new.html.twig")
-     */
+    #[Route(path: '/data-structure/new-test-patient', name: 'scan_testpatient_new', methods: ['GET'])]
+    #[Template('AppOrderformBundle/Patient/new.html.twig')]
     public function newTestPatientAction() {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

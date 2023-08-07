@@ -35,18 +35,16 @@ use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 /**
  * SiteParameters controller.
- *
- * @Route("/settings")
  */
+#[Route(path: '/settings')]
 class CrnSiteParametersController extends SiteParametersController
 {
 
     /**
      * Lists all SiteParameters entities.
-     *
-     * @Route("/", name="crn_siteparameters", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/index.html.twig")
      */
+    #[Route(path: '/', name: 'crn_siteparameters', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -62,10 +60,9 @@ class CrnSiteParametersController extends SiteParametersController
 
     /**
      * Displays a form to edit an existing SiteParameters entity.
-     *
-     * @Route("/{id}/edit", name="crn_siteparameters_edit", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}/edit', name: 'crn_siteparameters_edit', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request, $id)
     {
         //exit("crn editAction id=".$id);
@@ -74,10 +71,9 @@ class CrnSiteParametersController extends SiteParametersController
 
     /**
      * Edits an existing SiteParameters entity.
-     *
-     * @Route("/{id}", name="crn_siteparameters_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
+    #[Route(path: '/{id}', name: 'crn_siteparameters_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
         return $this->updateParameters($request,$id,'ROLE_CRN_PATHOLOGY_ATTENDING');
@@ -86,10 +82,9 @@ class CrnSiteParametersController extends SiteParametersController
 
     /**
      * Resource page
-     *
-     * @Route("/edit-resources/show", name="crn_siteparameters_resources_edit", methods={"GET","POST"})
-     * @Template("AppCrnBundle/SiteParameter/resource-edit.html.twig")
      */
+    #[Route(path: '/edit-resources/show', name: 'crn_siteparameters_resources_edit', methods: ['GET', 'POST'])]
+    #[Template('AppCrnBundle/SiteParameter/resource-edit.html.twig')]
     public function editResourcesAction( Request $request )
     {
         //exit('editResourcesAction');
@@ -138,10 +133,9 @@ class CrnSiteParametersController extends SiteParametersController
 
     /**
      * CrnSiteParameter
-     *
-     * @Route("/specific-site-parameters/edit-page/", name="crn_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
-     * @Template("AppCrnBundle/SiteParameter/edit.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/edit-page/', name: 'crn_siteparameters_edit_specific_site_parameters', methods: ['GET', 'POST'])]
+    #[Template('AppCrnBundle/SiteParameter/edit.html.twig')]
     public function crnSiteParameterEditAction( Request $request ) {
 
         //exit('crnSiteParameterEditAction');
@@ -178,10 +172,9 @@ class CrnSiteParametersController extends SiteParametersController
 
     /**
      * CrnSiteParameter Show
-     *
-     * @Route("/specific-site-parameters/show/", name="crn_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppCrnBundle/SiteParameter/edit-content.html.twig")
      */
+    #[Route(path: '/specific-site-parameters/show/', name: 'crn_siteparameters_show_specific_site_parameters', methods: ['GET'])]
+    #[Template('AppCrnBundle/SiteParameter/edit-content.html.twig')]
     public function crnSiteParameterShowAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {

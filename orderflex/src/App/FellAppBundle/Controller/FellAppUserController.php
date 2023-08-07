@@ -29,17 +29,15 @@ class FellAppUserController extends UserController
 
     /**
      * Optimized show user
-     * @Route("/user/{id}", name="fellapp_showuser", methods={"GET"}, requirements={"id" = "\d+"}, options={"expose"=true})
-     * @Template("AppUserdirectoryBundle/Profile/show_user.html.twig")
      */
+    #[Route(path: '/user/{id}', name: 'fellapp_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('fellapp.sitename'));
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="fellapp_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'fellapp_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');
@@ -56,10 +54,8 @@ class FellAppUserController extends UserController
         return $editUser;
     }
 
-    /**
-     * @Route("/edit-user-profile/{id}", name="fellapp_user_update", methods={"PUT"})
-     * @Template("AppUserdirectoryBundle/Profile/edit_user.html.twig")
-     */
+    #[Route(path: '/edit-user-profile/{id}', name: 'fellapp_user_update', methods: ['PUT'])]
+    #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->container->get('user_security_utility');

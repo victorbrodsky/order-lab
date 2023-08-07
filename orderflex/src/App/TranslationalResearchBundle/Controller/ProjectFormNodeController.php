@@ -47,10 +47,9 @@ class ProjectFormNodeController extends ProjectController
 
     /**
      * Creates a new project entity with formnode.
-     *
-     * @Route("/project/formnode/new", name="translationalresearch_project_formnode_new_selector", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      */
+    #[Route(path: '/project/formnode/new', name: 'translationalresearch_project_formnode_new_selector', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/new-project-selector.html.twig')]
     public function newProjectSelectorAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_USER')) {
@@ -72,10 +71,9 @@ class ProjectFormNodeController extends ProjectController
 
     /**
      * Creates a new project entity with formnode.
-     *
-     * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      */
+    #[Route(path: '/project/formnode/new/{specialtyStr}', name: 'translationalresearch_project_formnode_new', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/new.html.twig')]
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
         if (false == $this->isGranted('ROLE_USER')) { //ROLE_USER, PUBLIC_ACCESS, ROLE_TRANSRES_REQUESTER
@@ -272,10 +270,9 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Get Project Edit page
      * Originally edit form generates a new entity Project with new id and same oid.
-     *
-     * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
      */
+    #[Route(path: '/project/formnode/edit/{id}', name: 'translationalresearch_project_formnode_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/edit.html.twig')]
     public function editAction(Request $request, Project $project)
     {
 
@@ -504,40 +501,34 @@ class ProjectFormNodeController extends ProjectController
 
 
 //    public function createProjectEntity($user,$project=null) {
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        if( !$project ) {
-//            $project = new Project($user);
-//            $project->setVersion(1);
-//        }
-//
-//        if( !$project->getInstitution() ) {
-//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-//            $project->setInstitution($institution);
-//        }
-//
-//        //set order category
-//        if( !$project->getMessageCategory() ) {
-//            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-//            //$categoryStr = "Nesting Test"; //testing
-//            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-//
-//            if (!$messageCategory) {
-//                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
-//            }
-//            $project->setMessageCategory($messageCategory);
-//        }
-//
-//        return $project;
-//    }
-
-
-
-
-    /**
-     * @Route("/project/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree", methods={"GET"})
-     */
+    //
+    //        $em = $this->getDoctrine()->getManager();
+    //
+    //        if( !$project ) {
+    //            $project = new Project($user);
+    //            $project->setVersion(1);
+    //        }
+    //
+    //        if( !$project->getInstitution() ) {
+    //            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+    //            $project->setInstitution($institution);
+    //        }
+    //
+    //        //set order category
+    //        if( !$project->getMessageCategory() ) {
+    //            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+    //            //$categoryStr = "Nesting Test"; //testing
+    //            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+    //
+    //            if (!$messageCategory) {
+    //                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+    //            }
+    //            $project->setMessageCategory($messageCategory);
+    //        }
+    //
+    //        return $project;
+    //    }
+    #[Route(path: '/project/generate-form-node-tree/', name: 'translationalresearch_generate_form_node_tree', methods: ['GET'])]
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

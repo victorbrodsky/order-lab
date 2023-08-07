@@ -28,9 +28,8 @@ use App\OrderformBundle\Form\StatusType;
 
 /**
  * Status controller.
- *
- * @Route("/status")
  */
+#[Route(path: '/status')]
 class StatusController extends OrderAbstractController
 {
 

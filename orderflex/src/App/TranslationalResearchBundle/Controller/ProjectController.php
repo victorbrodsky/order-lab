@@ -62,9 +62,7 @@ use Symfony\Component\Workflow\Transition;
 class ProjectController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/", name="translationalresearch_home", methods={"GET"})
-     */
+    #[Route(path: '/', name: 'translationalresearch_home', methods: ['GET'])]
     public function homeAction()
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -88,25 +86,25 @@ class ProjectController extends OrderAbstractController
     /**
      * Lists all project entities.
      *
-     * @Route("/projects/", name="translationalresearch_project_index", methods={"GET"})
-     * @Route("/my-projects/", name="translationalresearch_my_project_index", methods={"GET"})
-     * @Route("/projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_index", methods={"GET"})
-     * @Route("/draft-projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_draft_index", methods={"GET"})
-     * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index", methods={"GET"})
-     * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index", methods={"GET"})
-     * @Route("/projects-pending-review/", name="translationalresearch_pending_review_project_index", methods={"GET"})
-     * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index", methods={"GET"})
      *
      *
-     * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index", methods={"GET"})
-     * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index", methods={"GET"})
-     * @Route("/active-project-requests-non-funded-over-budget/", name="translationalresearch_active_non_funded_over_budget_project_index", methods={"GET"})
      *
-     * @Route("/approved-project-requests-funded/", name="translationalresearch_approved_funded_project_index", methods={"GET"})
-     * @Route("/approved-project-requests-non-funded/", name="translationalresearch_approved_non_funded_project_index", methods={"GET"})
      *
-     * @Template("AppTranslationalResearchBundle/Project/index.html.twig")
      */
+    #[Route(path: '/projects/', name: 'translationalresearch_project_index', methods: ['GET'])]
+    #[Route(path: '/my-projects/', name: 'translationalresearch_my_project_index', methods: ['GET'])]
+    #[Route(path: '/projects-where-i-am-the-requester/', name: 'translationalresearch_my_request_project_index', methods: ['GET'])]
+    #[Route(path: '/draft-projects-where-i-am-the-requester/', name: 'translationalresearch_my_request_project_draft_index', methods: ['GET'])]
+    #[Route(path: '/projects-i-have-reviewed/', name: 'translationalresearch_my_reviewed_project_index', methods: ['GET'])]
+    #[Route(path: '/projects-pending-my-review/', name: 'translationalresearch_my_pending_review_project_index', methods: ['GET'])]
+    #[Route(path: '/projects-pending-review/', name: 'translationalresearch_pending_review_project_index', methods: ['GET'])]
+    #[Route(path: '/projects-awaiting-additional-info-to-be-reviewed/', name: 'translationalresearch_my_missinginfo_review_project_index', methods: ['GET'])]
+    #[Route(path: '/active-project-requests-with-expired-approval/', name: 'translationalresearch_active_expired_project_index', methods: ['GET'])]
+    #[Route(path: '/active-project-requests-with-approval-expiring-soon/', name: 'translationalresearch_active_expired_soon_project_index', methods: ['GET'])]
+    #[Route(path: '/active-project-requests-non-funded-over-budget/', name: 'translationalresearch_active_non_funded_over_budget_project_index', methods: ['GET'])]
+    #[Route(path: '/approved-project-requests-funded/', name: 'translationalresearch_approved_funded_project_index', methods: ['GET'])]
+    #[Route(path: '/approved-project-requests-non-funded/', name: 'translationalresearch_approved_non_funded_project_index', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Project/index.html.twig')]
     public function indexAction(Request $request)
     {
 
@@ -1283,10 +1281,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Select new project specialty
-     *
-     * @Route("/project/select-new-project-type", name="translationalresearch_project_new_selector", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      */
+    #[Route(path: '/project/select-new-project-type', name: 'translationalresearch_project_new_selector', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/new-project-selector.html.twig')]
     public function newProjectSelectorAction(Request $request)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -1341,10 +1338,9 @@ class ProjectController extends OrderAbstractController
     /**
      * Select new project specialty
      * "/project/new/{specialtyStr}/{requesterGroup}"
-     *
-     * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      */
+    #[Route(path: '/project/new/{specialtyStr}', name: 'translationalresearch_project_new', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/new.html.twig')]
     public function newProjectAction(Request $request, $specialtyStr=null)
     {
 
@@ -1624,10 +1620,9 @@ class ProjectController extends OrderAbstractController
     /**
      * Get Project Edit page
      * Originally edit form generates a new entity Project with new id and same oid.
-     *
-     * @Route("/project/edit/{id}", name="translationalresearch_project_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
      */
+    #[Route(path: '/project/edit/{id}', name: 'translationalresearch_project_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Project/edit.html.twig')]
     public function editAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2014,10 +2009,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Finds and displays a project entity.
-     *
-     * @Route("/project/show/{id}", name="translationalresearch_project_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Project/show.html.twig")
      */
+    #[Route(path: '/project/show/{id}', name: 'translationalresearch_project_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Project/show.html.twig')]
     public function showAction(Request $request, Project $project, $cycle="show")
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2102,10 +2096,9 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a project entity on a simple html page
      * via ajax when project is changed on the new work request page.
-     *
-     * @Route("/project/show-simple/{id}", name="translationalresearch_project_show_simple", methods={"GET"}, options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle/Project/show-simple.html.twig")
      */
+    #[Route(path: '/project/show-simple/{id}', name: 'translationalresearch_project_show_simple', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Project/show-simple.html.twig')]
     public function includeProjectDetailsAction(Request $request, Project $project)
     {
 
@@ -2182,10 +2175,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Finds and displays a review form for this project entity.
-     *
-     * @Route("/project/review/{id}", name="translationalresearch_project_review", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      */
+    #[Route(path: '/project/review/{id}', name: 'translationalresearch_project_review', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
     public function reviewAction(Request $request, Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -2250,10 +2242,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Finds and displays a resubmit form for this project entity.
-     *
-     * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      */
+    #[Route(path: '/project/resubmit/{id}', name: 'translationalresearch_project_resubmit', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
     public function resubmitAction(Request $request, Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -2562,10 +2553,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Finds and displays a resubmit form for this project entity.
-     *
-     * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", methods={"GET"}, options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle/Project/review.html.twig")
      */
+    #[Route(path: '/project/ajax/{id}', name: 'translationalresearch_get_project_ajax', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
     public function getProjectAction(Request $request, Project $project)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
@@ -2632,9 +2622,8 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Download one single project
-     *
-     * @Route("/download-projects-spreadsheet/{ids}/{limit}", methods={"GET"}, name="translationalresearch_download_projects_excel")
      */
+    #[Route(path: '/download-projects-spreadsheet/{ids}/{limit}', methods: ['GET'], name: 'translationalresearch_download_projects_excel')]
     public function downloadApplicantListExcelAction(Request $request, $ids=null, $limit=null) {
 
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
@@ -2712,9 +2701,8 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Download multiple filtered projects
-     *
-     * @Route("/download-projects-spreadsheet-post", methods={"POST"}, name="translationalresearch_download_projects_excel_post")
      */
+    #[Route(path: '/download-projects-spreadsheet-post', methods: ['POST'], name: 'translationalresearch_download_projects_excel_post')]
     public function downloadApplicantListExcelPostAction(Request $request) {
 
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
@@ -2757,9 +2745,8 @@ class ProjectController extends OrderAbstractController
     /**
      * Download one single project
      * Similarly as fellapp_download_interview_applicants_list_pdf
-     *
-     * @Route("/download-projects-pdf/{id}", methods={"GET"}, name="translationalresearch_download_projects_pdf")
      */
+    #[Route(path: '/download-projects-pdf/{id}', methods: ['GET'], name: 'translationalresearch_download_projects_pdf')]
     public function downloadProjectPdfAction(Request $request, $id=null) {
 
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
@@ -2829,10 +2816,9 @@ class ProjectController extends OrderAbstractController
     /**
      * Finds and displays a project entity on a simple html page
      * via ajax when project is changed on the new work request page.
-     *
-     * @Route("/project/show-simple-pdf/{id}", name="translationalresearch_project_show_simple_pdf", methods={"GET"}, options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
      */
+    #[Route(path: '/project/show-simple-pdf/{id}', name: 'translationalresearch_project_show_simple_pdf', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig')]
     public function showProjectPdfAction(Request $request, Project $project)
     {
         return $this->showAction($request, $project, "pdf");
@@ -2840,10 +2826,9 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Force to update project PDF
-     *
-     * @Route("/project/update-project-pdf/", name="translationalresearch_update_project_pdf", methods={"GET","POST"}, options={"expose"=true})
-     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
      */
+    #[Route(path: '/project/update-project-pdf/', name: 'translationalresearch_update_project_pdf', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig')]
     public function updateProjectPdfAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();

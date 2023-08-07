@@ -40,10 +40,8 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends OrderAbstractController
 {
 
-    /**
-     * @Route("/about", name="crn_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'crn_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
 
@@ -57,21 +55,19 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * Alerts
-//     * @Route("/alerts/", name="crn_alerts")
-//     * @Template("AppCrnBundle/Default/under_construction.html.twig")
-//     */
-//    public function alertsAction(Request $request)
-//    {
-//        return;
-//    }
-
-
+    //     * Alerts
+    //     * @Route("/alerts/", name="crn_alerts")
+    //     * @Template("AppCrnBundle/Default/under_construction.html.twig")
+    //     */
+    //    public function alertsAction(Request $request)
+    //    {
+    //        return;
+    //    }
     /**
      * Resources
-     * @Route("/resources/", name="crn_resources")
-     * @Template("AppCrnBundle/Crn/resources.html.twig")
      */
+    #[Route(path: '/resources/', name: 'crn_resources')]
+    #[Template('AppCrnBundle/Crn/resources.html.twig')]
     public function resourcesAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_CRN_USER') ) {
@@ -118,20 +114,18 @@ class DefaultController extends OrderAbstractController
 
 
 //    /**
-//     * Resources
-//     * @Route("/check-encounter-location/", name="crn_check_encounter_location", methods={"POST"}, options={"expose"=true})
-//     */
-//    public function checkLocationAction(Request $request)
-//    {
-//        exit("Not used");
-//    }
-
-
+    //     * Resources
+    //     * @Route("/check-encounter-location/", name="crn_check_encounter_location", methods={"POST"}, options={"expose"=true})
+    //     */
+    //    public function checkLocationAction(Request $request)
+    //    {
+    //        exit("Not used");
+    //    }
     /**
      * http://localhost/order/crn/assign-crn-users
      * This is one time run method to assign the crn roles
-     * @Route("/assign-crn-users", name="crn_assign-crn-users")
      */
+    #[Route(path: '/assign-crn-users', name: 'crn_assign-crn-users')]
     public function assignUsersAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -278,8 +272,8 @@ class DefaultController extends OrderAbstractController
     /**
      * http://localhost/order/crn/update-cache-values-now
      * method to populate/update all Critical Result Notification Entry cache in XML format
-     * @Route("/update-cache-values-now/", name="crn_update_cache_values_now")
      */
+    #[Route(path: '/update-cache-values-now/', name: 'crn_update_cache_values_now')]
     public function populateEntryCacheAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -351,10 +345,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/update-cache-manually/{id}", name="crn_update_cache_manually")
-     * @Template("AppCrnBundle/Crn/update-cache-manually.html.twig")
-     */
+    #[Route(path: '/update-cache-manually/{id}', name: 'crn_update_cache_manually')]
+    #[Template('AppCrnBundle/Crn/update-cache-manually.html.twig')]
     public function updateCacheManuallyAction(Request $request, Message $message)
     {
         if( false === $this->isGranted('ROLE_CRN_ADMIN') ) {
@@ -410,9 +402,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * 127.0.0.1/order/crn/update-text-html
-     *
-     * @Route("/update-text-html", name="crn_update_text_html")
      */
+    #[Route(path: '/update-text-html', name: 'crn_update_text_html')]
     public function updateTextHtmlAction(Request $request)
     {
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {

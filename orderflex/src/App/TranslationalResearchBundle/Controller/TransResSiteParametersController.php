@@ -19,90 +19,85 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * SiteParameters controller.
- *
- * @Route("site-parameters")
  */
+#[Route(path: 'site-parameters')]
 class TransResSiteParametersController extends OrderAbstractController
 {
 
 //    /**
-//     * Lists all SiteParameters entities.
-//     *
-//     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index", methods={"GET"})
-//     * @Template("AppTranslationalResearchBundle/SiteParameters/index.html.twig")
-//     */
-//    public function indexAction(Request $request, $specialtyStr)
-//    {
-//        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
-//
-//
-//
-//        return array(
-//            //
-//        );
-//    }
-
-//    /**
-//     * Creates a new SiteParameters entity.
-//     *
-//     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new", methods={"GET","POST"})
-//     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
-//     */
-//    public function newAction(Request $request, $specialtyStr)
-//    {
-//        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
-//
-//        //$em = $this->getDoctrine()->getManager();
-//        //$transresUtil = $this->container->get('transres_util');
-//        $transresRequestUtil = $this->container->get('transres_request_util');
-//        $user = $this->getUser();
-//        //$user = null; //testing
-//        $cycle = "new";
-//
-//        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
-//
-//        $form = $this->createSiteParameterForm($invoice,$cycle,$transresRequest);
-//
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            //exit('new');
-//
-//            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
-//
-//            if( $form->getClickedButton() && 'saveAndSend' === $form->getClickedButton()->getName() ) {
-//                //TODO: generate and send PDF
-//            }
-//
-//            //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
-//
-//            $this->addFlash(
-//                'notice',
-//                $msg
-//            );
-//
-//            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-//        }
-
-//        return array(
-//            'transresRequest' => $transresRequest,
-//            'invoice' => $invoice,
-//            'form' => $form->createView(),
-//            'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
-//            'cycle' => $cycle
-//        );
-//    }
-
+    //     * Lists all SiteParameters entities.
+    //     *
+    //     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index", methods={"GET"})
+    //     * @Template("AppTranslationalResearchBundle/SiteParameters/index.html.twig")
+    //     */
+    //    public function indexAction(Request $request, $specialtyStr)
+    //    {
+    //        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+    //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+    //        }
+    //
+    //
+    //
+    //        return array(
+    //            //
+    //        );
+    //    }
+    //    /**
+    //     * Creates a new SiteParameters entity.
+    //     *
+    //     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new", methods={"GET","POST"})
+    //     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
+    //     */
+    //    public function newAction(Request $request, $specialtyStr)
+    //    {
+    //        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+    //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+    //        }
+    //
+    //        //$em = $this->getDoctrine()->getManager();
+    //        //$transresUtil = $this->container->get('transres_util');
+    //        $transresRequestUtil = $this->container->get('transres_request_util');
+    //        $user = $this->getUser();
+    //        //$user = null; //testing
+    //        $cycle = "new";
+    //
+    //        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
+    //
+    //        $form = $this->createSiteParameterForm($invoice,$cycle,$transresRequest);
+    //
+    //        $form->handleRequest($request);
+    //
+    //        if ($form->isSubmitted() && $form->isValid()) {
+    //            //exit('new');
+    //
+    //            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
+    //
+    //            if( $form->getClickedButton() && 'saveAndSend' === $form->getClickedButton()->getName() ) {
+    //                //TODO: generate and send PDF
+    //            }
+    //
+    //            //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+    //
+    //            $this->addFlash(
+    //                'notice',
+    //                $msg
+    //            );
+    //
+    //            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+    //        }
+    //        return array(
+    //            'transresRequest' => $transresRequest,
+    //            'invoice' => $invoice,
+    //            'form' => $form->createView(),
+    //            'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
+    //            'cycle' => $cycle
+    //        );
+    //    }
     /**
      * Finds and displays site parameters entity.
-     *
-     * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      */
+    #[Route(path: '/show/{specialtyStr}', name: 'translationalresearch_standalone_siteparameters_show', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/SiteParameters/new.html.twig')]
     public function showAction(Request $request, $specialtyStr=NULL)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -131,10 +126,9 @@ class TransResSiteParametersController extends OrderAbstractController
 
     /**
      * Finds and displays site parameters entity.
-     *
-     * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/SiteParameters/show-content.html.twig")
      */
+    #[Route(path: '/show-content/{specialtyStr}', name: 'translationalresearch_standalone_siteparameters_show_content', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/SiteParameters/show-content.html.twig')]
     public function showContentAction(Request $request, $specialtyStr=NULL)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -162,10 +156,9 @@ class TransResSiteParametersController extends OrderAbstractController
 
     /**
      * Displays a form to edit an existing entity.
-     *
-     * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit", methods={"GET","POST"})
-     * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      */
+    #[Route(path: '/edit/{specialtyStr}', name: 'translationalresearch_standalone_siteparameters_edit', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/SiteParameters/new.html.twig')]
     public function editAction(Request $request, $specialtyStr=NULL)
     {
 

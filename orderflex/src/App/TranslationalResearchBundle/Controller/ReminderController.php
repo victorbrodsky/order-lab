@@ -21,10 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ReminderController extends OrderAbstractController
 {
     
-    /**
-     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show", methods={"GET"})
-     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send", methods={"GET"})
-     */
+    #[Route(path: '/unpaid-invoice-reminder/show-summary', name: 'translationalresearch_unpaid_invoice_reminder_show', methods: ['GET'])]
+    #[Route(path: '/unpaid-invoice-reminder/send-emails', name: 'translationalresearch_unpaid_invoice_reminder_send', methods: ['GET'])]
     public function unpaidInvoiceReminderAction( Request $request )
     {
         if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -101,10 +99,9 @@ class ReminderController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/translational-research/project-request-review-reminder/show-summary
-     *
-     * @Route("/project-request-review-reminder/show-summary", name="translationalresearch_project_reminder_show", methods={"GET"})
-     * @Route("/project-request-review-reminder/send-emails", name="translationalresearch_project_reminder_send", methods={"GET"})
      */
+    #[Route(path: '/project-request-review-reminder/show-summary', name: 'translationalresearch_project_reminder_show', methods: ['GET'])]
+    #[Route(path: '/project-request-review-reminder/send-emails', name: 'translationalresearch_project_reminder_send', methods: ['GET'])]
     public function projectReminderAction( Request $request )
     {
         if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -214,16 +211,16 @@ class ReminderController extends OrderAbstractController
     /**
      * http://127.0.0.1/order/translational-research/work-request-pending-reminder/show-summary
      *
-     * @Route("/work-request-pending-reminder/show-summary", name="translationalresearch_request_pending_reminder_show", methods={"GET"})
-     * @Route("/work-request-pending-reminder/send-emails",  name="translationalresearch_request_pending_reminder_send", methods={"GET"})
      *
-     * @Route("/work-request-completed-not-notified-reminder/show-summary", name="translationalresearch_request_completed_reminder_show", methods={"GET"})
-     * @Route("/work-request-completed-not-notified-reminder/send-emails",  name="translationalresearch_request_completed_reminder_send", methods={"GET"})
      *
-     * @Route("/work-request-completed-no-invoice-issued-reminder/show-summary", name="translationalresearch_request_completed_no_invoice_issued_reminder_show", methods={"GET"})
-     * @Route("/work-request-completed-no-invoice-issued-reminder/send-emails",  name="translationalresearch_request_completed_no_invoice_issued_reminder_send", methods={"GET"})
      *
      */
+    #[Route(path: '/work-request-pending-reminder/show-summary', name: 'translationalresearch_request_pending_reminder_show', methods: ['GET'])]
+    #[Route(path: '/work-request-pending-reminder/send-emails', name: 'translationalresearch_request_pending_reminder_send', methods: ['GET'])]
+    #[Route(path: '/work-request-completed-not-notified-reminder/show-summary', name: 'translationalresearch_request_completed_reminder_show', methods: ['GET'])]
+    #[Route(path: '/work-request-completed-not-notified-reminder/send-emails', name: 'translationalresearch_request_completed_reminder_send', methods: ['GET'])]
+    #[Route(path: '/work-request-completed-no-invoice-issued-reminder/show-summary', name: 'translationalresearch_request_completed_no_invoice_issued_reminder_show', methods: ['GET'])]
+    #[Route(path: '/work-request-completed-no-invoice-issued-reminder/send-emails', name: 'translationalresearch_request_completed_no_invoice_issued_reminder_send', methods: ['GET'])]
     public function delayedRequestReminderAction( Request $request )
     {
         if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {

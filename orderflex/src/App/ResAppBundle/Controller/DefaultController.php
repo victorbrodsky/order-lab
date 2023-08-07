@@ -35,18 +35,15 @@ class DefaultController extends OrderAbstractController
 {
 
 //    /**
-//     * @Route("/hello/{name}")
-//     * @Template()
-//     */
-//    public function indexAction($name)
-//    {
-//        return array('name' => $name);
-//    }
-
-    /**
-     * @Route("/help/", name="resapp_help_page", methods={"GET"})
-     * @Template("AppResAppBundle/Default/help.html.twig")
-     */
+    //     * @Route("/hello/{name}")
+    //     * @Template()
+    //     */
+    //    public function indexAction($name)
+    //    {
+    //        return array('name' => $name);
+    //    }
+    #[Route(path: '/help/', name: 'resapp_help_page', methods: ['GET'])]
+    #[Template('AppResAppBundle/Default/help.html.twig')]
     public function helpPageAction(Request $request) {
 
         return array(
@@ -55,10 +52,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/thanks-for-downloading/{id}/{sitename}", name="resapp_thankfordownloading", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
-     */
+    #[Route(path: '/thanks-for-downloading/{id}/{sitename}', name: 'resapp_thankfordownloading', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
     public function thankfordownloadingAction(Request $request, $id, $sitename) {
         return array(
             'fileid' => $id,
@@ -67,10 +62,8 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * @Route("/about", name="resapp_about_page")
-     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
-     */
+    #[Route(path: '/about', name: 'resapp_about_page')]
+    #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
 //        $fits = $this->getDoctrine()->getRepository('AppResAppBundle:ResAppFitForProgram')->findAll();
@@ -161,9 +154,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * 127.0.0.1/order/residency-applications/test_google_file
-     *
-     * @Route("/test_google_file", name="resapp_test_google_file")
      */
+    #[Route(path: '/test_google_file', name: 'resapp_test_google_file')]
     public function testGoogleFileAction( Request $request ) {
 
         //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
@@ -207,9 +199,7 @@ class DefaultController extends OrderAbstractController
     }
 
     //generateRecLetterId
-    /**
-     * @Route("/generate-rec-letter-id", name="resapp_rec_letter_id")
-     */
+    #[Route(path: '/generate-rec-letter-id', name: 'resapp_rec_letter_id')]
     public function generateRecLetterIdAction( Request $request ) {
 
         //testing checkAndSendCompleteEmail
@@ -260,10 +250,8 @@ class DefaultController extends OrderAbstractController
         exit("end of generateRecLetterIdAction");
     }
 
-    /**
-     * @Route("/confirmation/{id}", name="resapp_simple_confirmation")
-     * @Template("AppResAppBundle/Default/simple-confirmation.html.twig")
-     */
+    #[Route(path: '/confirmation/{id}', name: 'resapp_simple_confirmation')]
+    #[Template('AppResAppBundle/Default/simple-confirmation.html.twig')]
     public function confirmationAction( Request $request, ResidencyApplication $resapp ) {
 
         return array(
@@ -273,9 +261,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/residency-applications/generate-thumbnails
-     * 
-     * @Route("/generate-thumbnails", name="resapp_generate_thumbnails")
      */
+    #[Route(path: '/generate-thumbnails', name: 'resapp_generate_thumbnails')]
     public function generateThumbnailsAction( Request $request ) {
 
         exit("not allowed");
@@ -317,9 +304,7 @@ class DefaultController extends OrderAbstractController
         exit("end of resapp thumbnails, counter=$counter");
     }
 
-    /**
-     * @Route("/import-from-old-system/{max}", name="resapp_import_from_old_system")
-     */
+    #[Route(path: '/import-from-old-system/{max}', name: 'resapp_import_from_old_system')]
     public function importFromOldSystemAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         exit("not allowed");
@@ -334,9 +319,7 @@ class DefaultController extends OrderAbstractController
         
         exit($res);
     }
-    /**
-     * @Route("/import-from-old-system-files1/{max}", name="resapp_import_from_old_system_files1")
-     */
+    #[Route(path: '/import-from-old-system-files1/{max}', name: 'resapp_import_from_old_system_files1')]
     public function importFromOldSystem2Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         exit("not allowed");
@@ -354,9 +337,7 @@ class DefaultController extends OrderAbstractController
 
         exit($res);
     }
-    /**
-     * @Route("/import-from-old-system-files2/{max}", name="resapp_import_from_old_system_files2")
-     */
+    #[Route(path: '/import-from-old-system-files2/{max}', name: 'resapp_import_from_old_system_files2')]
     public function importFromOldSystem3Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         exit("not allowed");
@@ -377,9 +358,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interviewers
-     *
-     * @Route("/import-from-old-system-interviewers", name="resapp_import_from_old_system_interviewers")
      */
+    #[Route(path: '/import-from-old-system-interviewers', name: 'resapp_import_from_old_system_interviewers')]
     public function importFromOldSystemInterviewersAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
 
         exit("not allowed");
@@ -398,9 +378,8 @@ class DefaultController extends OrderAbstractController
     }
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
-     * 
-     * @Route("/import-from-old-system-interview/{max}", name="resapp_import_from_old_system_interview")
      */
+    #[Route(path: '/import-from-old-system-interview/{max}', name: 'resapp_import_from_old_system_interview')]
     public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         exit("not allowed");
@@ -419,9 +398,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/update-application-season-start-date
-     *
-     * @Route("/update-application-season-start-date", name="resapp_update_application_season_start_date")
      */
+    #[Route(path: '/update-application-season-start-date', name: 'resapp_update_application_season_start_date')]
     public function updateApplicationSeasonStartDateAction( Request $request ) {
 
         exit("not allowed");
@@ -504,9 +482,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/update-application-residency-track
-     *
-     * @Route("/update-application-residency-track", name="resapp_update_application_residency_track")
      */
+    #[Route(path: '/update-application-residency-track', name: 'resapp_update_application_residency_track')]
     public function updateApplicationResidencyTrackAction( Request $request ) {
 
         exit("not allowed");
@@ -599,9 +576,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * Testing missing/corrupted attached files
-     *
-     * @Route("/testing/", name="resapp_testing", methods={"GET"})
      */
+    #[Route(path: '/testing/', name: 'resapp_testing', methods: ['GET'])]
     public function testingAction(Request $request) {
 
         exit("EOF testingAction");
@@ -640,9 +616,8 @@ class DefaultController extends OrderAbstractController
 
     /**
      * Testing missing/corrupted attached files
-     *
-     * @Route("/remove-default-interviewers/", name="resapp_remove_default_interviewers", methods={"GET"})
      */
+    #[Route(path: '/remove-default-interviewers/', name: 'resapp_remove_default_interviewers', methods: ['GET'])]
     public function removeDefaultInterviewersAction(Request $request) {
 
         exit("EOF removeDefaultInterviewersAction");
