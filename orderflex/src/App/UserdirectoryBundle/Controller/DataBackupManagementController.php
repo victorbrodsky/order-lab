@@ -639,8 +639,6 @@ class DataBackupManagementController extends OrderAbstractController
         echo "pwd=".$pwd."<br>";
         echo "host=".$host."<br>";
 
-        $host = '127.0.0.1';
-
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         //$sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
