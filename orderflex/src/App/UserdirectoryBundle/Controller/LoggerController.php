@@ -773,7 +773,6 @@ class LoggerController extends OrderAbstractController
      * Displays a form to create a new Logger entity.
      */
     #[Route(path: '/new', name: 'logger_new', methods: ['GET'])]
-    #[Template]
     public function newAction()
     {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -792,7 +791,6 @@ class LoggerController extends OrderAbstractController
      * Finds and displays a Logger entity.
      */
     #[Route(path: '/{id}', name: 'logger_show', methods: ['GET'])]
-    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -816,7 +814,6 @@ class LoggerController extends OrderAbstractController
      * Displays a form to edit an existing Logger entity.
      */
     #[Route(path: '/{id}/edit', name: 'logger_edit', methods: ['GET'])]
-    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();

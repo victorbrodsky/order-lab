@@ -21,35 +21,15 @@ namespace App\CrnBundle\Controller;
 
 
 use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
-
-
 use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
-
-
 use App\OrderformBundle\Entity\CalllogAttachmentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CalllogAttachmentTypeList
-
-
 use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
-
-
 use App\OrderformBundle\Entity\PatientRecordStatusList; //process.py script: replaced namespace by ::class: added use line for classname=PatientRecordStatusList
-
-
 use App\OrderformBundle\Entity\EncounterStatusList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterStatusList
-
-
 use App\OrderformBundle\Entity\EncounterInfoTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterInfoTypeList
-
-
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
-
-
 use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
-
-
 use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
-
-
 
 use App\CrnBundle\Util\CrnUtil;
 use App\OrderformBundle\Entity\Accession;
@@ -91,7 +71,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -2331,7 +2311,6 @@ class CrnEntryController extends OrderAbstractController
      * Search Crn Entry
      */
     #[Route(path: '/crnentry/search', name: 'crn_search_crnentry', methods: ['GET'])]
-    #[Template]
     public function searchCrnEntryAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CRN_USER') ){
@@ -2385,7 +2364,6 @@ class CrnEntryController extends OrderAbstractController
      * Search Patient
      */
     #[Route(path: '/patient/search', name: 'crn_search_patient', methods: ['GET'], options: ['expose' => true])]
-    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CRN_USER')) {
@@ -2624,7 +2602,6 @@ class CrnEntryController extends OrderAbstractController
      * Create a new Patient
      */
     #[Route(path: '/patient/create', name: 'crn_create_patient', methods: ['GET'], options: ['expose' => true])]
-    #[Template]
     public function createPatientAction(Request $request)
     {
 

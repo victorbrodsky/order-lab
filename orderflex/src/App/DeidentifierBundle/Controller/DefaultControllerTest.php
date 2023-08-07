@@ -43,7 +43,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use App\UserdirectoryBundle\Entity\SiteList;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 //use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;

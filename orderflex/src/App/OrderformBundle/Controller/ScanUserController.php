@@ -27,7 +27,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Form\FormError;
@@ -274,7 +274,6 @@ class ScanUserController extends UserController
 
 
     #[Route(path: '/lockunlock/change/{id}/{status}', name: 'scan_lockunlock_change', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {

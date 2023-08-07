@@ -50,7 +50,7 @@ use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 //use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

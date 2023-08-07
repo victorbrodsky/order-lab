@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use App\OrderformBundle\Entity\History;
 use App\OrderformBundle\Form\HistoryType;
@@ -150,7 +150,6 @@ class HistoryController extends OrderAbstractController
      * Displays a form to create a new History entity.
      */
     #[Route(path: '/scan-order/progress-and-comments/new', name: 'history_new', methods: ['GET'])]
-    #[Template]
     public function newAction()
     {
         $entity = new History();
@@ -166,7 +165,6 @@ class HistoryController extends OrderAbstractController
      * Finds and displays a History entity.
      */
     #[Route(path: '/scan-order/progress-and-comments/{id}', name: 'history_show', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -196,7 +194,6 @@ class HistoryController extends OrderAbstractController
      * Displays a form to edit an existing History entity.
      */
     #[Route(path: '/scan-order/progress-and-comments/{id}/edit', name: 'history_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();

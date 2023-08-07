@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\Imaging;
@@ -50,7 +50,6 @@ class ScanController extends OrderAbstractController
      * Lists all Scan entities.
      */
     #[Route(path: '/', name: 'scan', methods: ['GET'])]
-    #[Template]
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -122,7 +121,6 @@ class ScanController extends OrderAbstractController
      * Displays a form to create a new Scan entity.
      */
     #[Route(path: '/new', name: 'scan_new', methods: ['GET'])]
-    #[Template]
     public function newAction()
     {
         $helper = new FormHelper();
@@ -145,7 +143,6 @@ class ScanController extends OrderAbstractController
      * Finds and displays a Scan entity.
      */
     #[Route(path: '/{id}', name: 'scan_show', methods: ['GET'])]
-    #[Template]
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -169,7 +166,6 @@ class ScanController extends OrderAbstractController
      * Displays a form to edit an existing Imaging entity.
      */
     #[Route(path: '/{id}/edit', name: 'scan_edit', methods: ['GET'])]
-    #[Template]
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();

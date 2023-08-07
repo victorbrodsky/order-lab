@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Entity\AccessRequest;
@@ -78,7 +78,6 @@ class ResAppAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'resapp_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
@@ -99,7 +98,6 @@ class ResAppAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/deny-access-request/{userId}', name: 'resapp_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function accessRequestRemoveAction(Request $reques, $userId )
     {
         return parent::accessRequestRemoveAction($reques, $userId);
@@ -127,7 +125,6 @@ class ResAppAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/revoke-access-authorization/{userId}', name: 'resapp_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);

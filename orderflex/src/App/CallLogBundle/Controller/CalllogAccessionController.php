@@ -42,7 +42,7 @@ use App\CallLogBundle\Form\CalllogAccessionDummyType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -277,7 +277,6 @@ class CalllogAccessionController extends OrderAbstractController {
      * Search Accession
      */
     #[Route(path: '/accession/search', name: 'calllog_search_accession', methods: ['GET'], options: ['expose' => true])]
-    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {

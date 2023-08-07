@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\AccessRequestController;
@@ -76,7 +76,6 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'deidentifier_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
@@ -97,7 +96,6 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/deny-access-request/{userId}', name: 'deidentifier_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function accessRequestRemoveAction(Request $request, $userId )
     {
         return parent::accessRequestRemoveAction($request,$userId);
@@ -125,7 +123,6 @@ class DeidentifierAccessRequestController extends AccessRequestController
     }
 
     #[Route(path: '/revoke-access-authorization/{userId}', name: 'deidentifier_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);

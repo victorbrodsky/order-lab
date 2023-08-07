@@ -24,7 +24,7 @@ use App\TranslationalResearchBundle\Form\ProjectChangeStatusConfirmationType;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

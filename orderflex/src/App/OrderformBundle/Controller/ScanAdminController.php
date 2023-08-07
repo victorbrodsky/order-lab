@@ -52,7 +52,7 @@ use App\OrderformBundle\Entity\ResearchGroupType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,7 +143,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/populate-all-lists-with-default-values', name: 'generate_all', methods: ['GET'])]
-    #[Template]
     public function generateAllAction(Request $request)
     {
 
@@ -289,7 +288,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/populate-stain-list-with-default-values', name: 'generate_stain', methods: ['GET'])]
-    #[Template]
     public function generateStainAction()
     {
 
@@ -324,7 +322,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/populate-organ-list-with-default-values', name: 'generate_organ', methods: ['GET'])]
-    #[Template]
     public function generateOrganAction()
     {
 
@@ -357,7 +354,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/populate-procedure-types-list-with-default-values', name: 'generate_procedure', methods: ['GET'])]
-    #[Template]
     public function generateProcedureAction(Request $request)
     {
 
@@ -421,7 +417,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/genslidetype', name: 'generate_slidetype', methods: ['GET'])]
-    #[Template]
     public function generateSlideTypeAction()
     {
 
@@ -451,7 +446,6 @@ class ScanAdminController extends AdminController
      * Populate DB
      */
     #[Route(path: '/genmrntype', name: 'generate_mrntype', methods: ['GET'])]
-    #[Template]
     public function generateMrnTypeAction()
     {
 
@@ -709,7 +703,6 @@ class ScanAdminController extends AdminController
      * Remove all stains: Danger function: will remove all orders (patients) and stains
      */
     #[Route(path: '/remove-all-stains', name: 'remove-all-stains', methods: ['GET'])]
-    #[Template]
     public function removeAllOrdersStainsAction() {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

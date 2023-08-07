@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
@@ -41,7 +41,6 @@ class ScanListController extends ListController
 {
 
     #[Route(path: '/stains-spreadsheet/', name: 'stain-list-excel', methods: ['GET'])]
-    #[Template]
     public function downloadStainExcelAction(Request $request)
     {
 
@@ -78,7 +77,6 @@ class ScanListController extends ListController
     }
 
     #[Route(path: '/stains-update-full-title/', name: 'stain_update_fulltitle', methods: ['GET'])]
-    #[Template]
     public function updateFullTitleListAction(Request $request)
     {
 

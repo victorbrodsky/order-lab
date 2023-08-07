@@ -41,7 +41,7 @@ use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -74,7 +74,6 @@ class SecurityController extends OrderAbstractController
      */
     #[Route(path: '/directory/login', name: 'directory_login')]
     #[Route(path: '/login', name: 'employees_login')]
-    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('user: loginAction');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -328,7 +327,6 @@ class SecurityController extends OrderAbstractController
      */
     #[Route(path: '/idle-log-out', name: 'employees_idlelogout')]
     #[Route(path: '/idle-log-out/{flag}', name: 'employees_idlelogout-saveorder')]
-    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('idlelogoutAction');

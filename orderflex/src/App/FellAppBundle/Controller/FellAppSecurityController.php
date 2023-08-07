@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,6 @@ class FellAppSecurityController extends SecurityController
 {
 
     #[Route(path: '/login', name: 'fellapp_login')]
-    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -66,7 +65,6 @@ class FellAppSecurityController extends SecurityController
 
     #[Route(path: '/idle-log-out', name: 'fellapp_idlelogout')]
     #[Route(path: '/idle-log-out/{flag}', name: 'fellapp_idlelogout-saveorder')]
-    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

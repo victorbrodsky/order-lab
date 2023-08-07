@@ -25,7 +25,7 @@ use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\UserdirectoryBundle\Entity\ResidencyTrackList;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

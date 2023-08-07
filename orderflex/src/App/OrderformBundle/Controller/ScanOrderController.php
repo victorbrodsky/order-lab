@@ -20,22 +20,11 @@ namespace App\OrderformBundle\Controller;
 
 
 use App\OrderformBundle\Entity\SlideReturnRequest; //process.py script: replaced namespace by ::class: added use line for classname=SlideReturnRequest
-
-
 use App\OrderformBundle\Entity\ProcessorComments; //process.py script: replaced namespace by ::class: added use line for classname=ProcessorComments
-
-
 use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
-
-
 use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
-
-
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
-
-
 use App\UserdirectoryBundle\Entity\UserRequest; //process.py script: replaced namespace by ::class: added use line for classname=UserRequest
-
 
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,10 +32,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -342,7 +330,6 @@ class ScanOrderController extends OrderAbstractController {
      * Change status of message
      */
     #[Route(path: '/scan-order/{id}/status/{status}/', name: 'scanorder_status', methods: ['GET'])]
-    #[Template]
     public function statusAction(Request $request, $id, $status) {
 
         if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {

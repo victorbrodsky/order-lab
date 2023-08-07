@@ -741,7 +741,6 @@ class AccessRequestController extends OrderAbstractController
      * No, thanks.
      */
     #[Route(path: '/no-thanks-access-requests/{sitename}', name: 'employees_no_thanks_accessrequest', methods: ['GET'])]
-    #[Template]
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
         $session = $request->getSession();
@@ -830,7 +829,6 @@ class AccessRequestController extends OrderAbstractController
 
 
     #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'employees_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
 
@@ -1197,7 +1195,6 @@ class AccessRequestController extends OrderAbstractController
 
 
     #[Route(path: '/deny-access-request/{userId}', name: 'employees_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function accessRequestRemoveAction(Request $request,$userId)
     {
 
@@ -1211,7 +1208,6 @@ class AccessRequestController extends OrderAbstractController
     }
 
     #[Route(path: '/revoke-access-authorization/{userId}', name: 'employees_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    #[Template]
     public function authorizationRemoveAction(Request $request, $userId)
     {
 

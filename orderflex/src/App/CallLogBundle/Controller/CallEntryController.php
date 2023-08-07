@@ -89,9 +89,7 @@ use App\UserdirectoryBundle\Entity\Spot;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -2420,7 +2418,6 @@ class CallEntryController extends OrderAbstractController
      * Search Call Entry
      */
     #[Route(path: '/callentry/search', name: 'calllog_search_callentry', methods: ['GET'])]
-    #[Template]
     public function searchCallEntryAction(Request $request)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
@@ -2474,7 +2471,6 @@ class CallEntryController extends OrderAbstractController
      * Search Patient
      */
     #[Route(path: '/patient/search', name: 'calllog_search_patient', methods: ['GET'], options: ['expose' => true])]
-    #[Template]
     public function patientSearchAction(Request $request)
     {
         if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
@@ -2713,7 +2709,6 @@ class CallEntryController extends OrderAbstractController
      * Create a new Patient
      */
     #[Route(path: '/patient/create', name: 'calllog_create_patient', methods: ['GET'], options: ['expose' => true])]
-    #[Template]
     public function createPatientAction(Request $request)
     {
 

@@ -23,9 +23,7 @@ use App\CallLogBundle\Form\CalllogSiteParameterType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\UserdirectoryBundle\Controller\SiteParametersController;

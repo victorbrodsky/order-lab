@@ -251,7 +251,6 @@ class UserRequestController extends OrderAbstractController
      * Finds and displays a UserRequest entity.
      */
     #[Route(path: '/account-requests/{id}', name: 'employees_accountrequest_show', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function showAction($id)
     {
         if (false === $this->isGranted($this->roleEditor)) {
@@ -530,7 +529,6 @@ class UserRequestController extends OrderAbstractController
      * Displays a form to edit an existing UserRequest entity.
      */
     #[Route(path: '/account-requests/{id}/edit', name: 'employees_accountrequest_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function editAction($id)
     {
         if (false === $this->isGranted($this->roleEditor)) {

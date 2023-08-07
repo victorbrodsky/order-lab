@@ -22,7 +22,7 @@ use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,6 @@ class TranslationalResearchSecurityController extends SecurityController
 {
 
     #[Route(path: '/login', name: 'translationalresearch_login')]
-    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('translationalresearch: loginAction');
         return parent::loginAction($request,$authenticationUtils);
@@ -68,7 +67,6 @@ class TranslationalResearchSecurityController extends SecurityController
 
     #[Route(path: '/idle-log-out', name: 'translationalresearch_idlelogout')]
     #[Route(path: '/idle-log-out/{flag}', name: 'translationalresearch_idlelogout-saveorder')]
-    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('translationalresearch: idlelogoutAction');

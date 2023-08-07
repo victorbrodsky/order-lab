@@ -34,7 +34,7 @@ use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestFloating;
 use App\VacReqBundle\Form\VacReqFilterType;
 use App\VacReqBundle\Form\VacReqRequestFloatingType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;

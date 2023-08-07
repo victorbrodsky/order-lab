@@ -1224,7 +1224,6 @@ class AdminController extends OrderAbstractController
 
 
     #[Route(path: '/populate-residency-specialties-with-default-values', name: 'generate_residencyspecialties', methods: ['GET'])]
-    #[Template]
     public function generateResidencySpecialtiesAction(Request $request)
     {
 
@@ -1252,7 +1251,6 @@ class AdminController extends OrderAbstractController
 
 
     #[Route(path: '/populate-country-city-list-with-default-values', name: 'generate_country_city', methods: ['GET'])]
-    #[Template]
     public function generateProcedureAction(Request $request)
     {
 

@@ -4441,7 +4441,6 @@ class UserController extends OrderAbstractController
 
 
     #[Route(path: '/lockunlock/change/{id}/{status}', name: 'employees_lockunlock_change', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template]
     public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if (false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR')) {

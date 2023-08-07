@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -42,7 +42,6 @@ class SearchController extends OrderAbstractController {
      * Lists all Message entities.
      */
     #[Route(path: '/patients/search', name: 'scan_search_patients', methods: ['GET'])]
-    #[Template]
     public function searchPatientAction( Request $request ) {
 
         if(

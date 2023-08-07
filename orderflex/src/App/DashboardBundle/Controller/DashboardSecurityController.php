@@ -20,7 +20,7 @@ namespace App\DashboardBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,6 @@ class DashboardSecurityController extends SecurityController
 {
 
     #[Route(path: '/login', name: 'dashboard_login')]
-    #[Template]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -61,7 +60,6 @@ class DashboardSecurityController extends SecurityController
 
     #[Route(path: '/idle-log-out', name: 'dashboard_idlelogout')]
     #[Route(path: '/idle-log-out/{flag}', name: 'dashboard_idlelogout-saveorder')]
-    #[Template]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

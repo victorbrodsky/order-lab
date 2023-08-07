@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
@@ -104,7 +104,6 @@ class PatientController extends OrderAbstractController
      * Lists all Patient entities.
      */
     #[Route(path: '/', name: 'scan-patient-list', methods: ['GET'])]
-    #[Template]
     public function indexAction(Request $request)
     {
         $searchUtil = $this->container->get('search_utility');
