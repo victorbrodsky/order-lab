@@ -286,9 +286,6 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
 
-    /**
-     * //@Template("AppUserdirectoryBundle/DataBackup/create_backup.html.twig")
-     */
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function createBackupAction(Request $request) {
@@ -307,12 +304,11 @@ class DataBackupManagementController extends OrderAbstractController
                 //'notice',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
-            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+            return $this->redirect($this->generateUrl('employees_data_backup_management_orig'));
         }
 
         $em = $this->getDoctrine()->getManager();
         $sitename = "employees";
-
 
         if( $networkDrivePath ) {
 
@@ -327,22 +323,14 @@ class DataBackupManagementController extends OrderAbstractController
                 $res
             );
 
-            return $this->redirect($this->generateUrl('employees_create_backup'));
+        } else {
+            $this->addFlash(
+                'pnotify-error',
+                "Error backup"
+            );
         }
 
-
-        $this->addFlash(
-            'pnotify-error',
-            "Error backup"
-        );
-
-        return $this->redirect($this->generateUrl('employees_create_backup'));
-//        return array(
-//            //'form' => $form->createView(),
-//            'sitename' => $sitename,
-//            'title' => "Create Backup",
-//            'cycle' => 'new'
-//        );
+        return $this->redirect($this->generateUrl('employees_data_backup_management_orig'));
     }
 
 
