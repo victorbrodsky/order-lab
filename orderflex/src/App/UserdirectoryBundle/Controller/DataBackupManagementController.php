@@ -31,6 +31,7 @@ use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -665,7 +666,15 @@ class DataBackupManagementController extends OrderAbstractController
 //            dump($return);
 //        }
 
-        $res = shell_exec($sql);
+        $process = Process::fromShellCommandline($sql);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if( !$process->isSuccessful() ) {
+            throw new ProcessFailedException($process);
+        }
+        $res = $process->getOutput();
+
+        //$res = shell_exec($sql);
 
         //$params['backupfile'] = $backupfile;
         //$query = $em->getConnection()->prepare($sql);
