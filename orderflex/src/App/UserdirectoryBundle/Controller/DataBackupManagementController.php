@@ -455,6 +455,7 @@ class DataBackupManagementController extends OrderAbstractController
 //        $host = "127.0.0.1";
 //        $driver = "pdo_sqlsrv";
 
+        //https://stackoverflow.com/questions/7953053/call-to-undefined-function-sqlsrv-connect-when-trying-to-connect-to-azure-db
         $dbname = $this->getParameter('database_name');
         $uid = $this->getParameter('database_user');
         $pwd = $this->getParameter('database_password');
@@ -465,7 +466,9 @@ class DataBackupManagementController extends OrderAbstractController
         echo "driver=".$driver."<br>";
         //$pwd = $pwd."1";
 
-        if( 1 ) {
+        //$serverName = "tcp:sample.database.windows.net, 1433";
+
+        if( 0 ) {
             $connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
             $conn = sqlsrv_connect($serverName, $connOptions); //it does not work for php > 5.3 ???
 
@@ -477,38 +480,33 @@ class DataBackupManagementController extends OrderAbstractController
 //            echo "env=".$res['environment']."<br>";
         }
 
-//        if( 0 ) {
-//            $config = new \Doctrine\DBAL\Configuration();
-//            $connectionParams = array(
-//                'dbname' => $dbname,
-//                'user' => $uid,
-//                'password' => $pwd,
-//                'host' => $host,
-//                'driver' => $driver,
-//            );
-//            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-//
-//            //testing
-//            $sql = "SELECT * FROM user_siteParameters";
-//            echo "sql=".$sql."<br>";
-//            $params = $conn->query($sql); // Simple, but has several drawbacks
-//            $res = $params->fetch();
-//            echo "env=".$res['environment']."<br>";
-//        }
+        if( 1 ) {
+            $config = new \Doctrine\DBAL\Configuration();
+            $connectionParams = array(
+                'dbname' => $dbname,
+                'user' => $uid,
+                'password' => $pwd,
+                'host' => $host,
+                'driver' => $driver,
+            );
+            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
-        if( $conn ) {
+            //testing
+            //$sql = "SELECT * FROM user_siteParameters";
+            //echo "sql=".$sql."<br>";
+            //$params = $conn->query($sql); // Simple, but has several drawbacks
+            //$res = $params->fetch();
+            //echo "env=".$res['environment']."<br>";
+        }
+
+        if( $conn !== false ) {
             echo "Connection established.<br />";
         }else{
             echo "Connection could not be established.<br />";
             die( print_r( sqlsrv_errors(), true));
         }
 
-
-
         return $conn;
-
-        //$em = $this->getDoctrine()->getManager();
-        //return $em->getConnection();
     }
 
     //SQL Server Database backup FULL
@@ -516,26 +514,16 @@ class DataBackupManagementController extends OrderAbstractController
     public function creatingBackupSQLFull_OLD( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
-        //echo "timePrefix=".$timePrefix."<br>";
-        //$timePrefix = str_replace(" ","_",$timePrefix);
+
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
 
-        //$backupfile = "testbackup_$timePrefix.bak";
-        //$backupfile = "c:\\backup\\testbackup_$timePrefix.bak";
-        //$backupfile = $filepath . DIRECTORY_SEPARATOR . "testbackup_$timePrefix.bak";
         $backupfile = $filepath . "testbackup_$timePrefix.bak";
         echo "backupfile=".$backupfile."<br>";
 
-        //create file on disk
-        //$myfile = fopen($backupfile, "w") or die("Unable to open file!");
-        //fclose($backupfile);
-        //touch($backupfile);
-        //chmod($backupfile, 777);
-
         //$em = $this->getDoctrine()->getManager();
-        sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
 
 //        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
 //        $setRecovery = false;
@@ -554,6 +542,7 @@ class DataBackupManagementController extends OrderAbstractController
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        $sql = "SELECT id FROM crn_crntask";
         echo "FULL sql=".$sql."<br>";
 
 //        $params['backupfile'] = $backupfile;
@@ -583,7 +572,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         return $msg;
     }
-    public function creatingBackupSQLFull( $filepath ) {
+    public function creatingBackupSQLFull_OLD1( $filepath ) {
         $em = $this->getDoctrine()->getManager();
         $msg = null;
 
@@ -594,26 +583,10 @@ class DataBackupManagementController extends OrderAbstractController
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
 
-        //$em = $this->getDoctrine()->getManager();
-        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
-
-//        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
-//        $setRecovery = false;
-//        if( $setRecovery ) {
-//            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
-//            $stmt = sqlsrv_query($conn, $sql);
-//            if ($stmt === false) {
-//                die(print_r(sqlsrv_errors()));
-//            } else {
-//                $msg = "Recovery model set to FULL<br>";
-//                echo $msg;
-//            }
-//        }
-//        ////////////////// EOF 1 ////////////////////
-
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        //$sql = "BACKUP DATABASE ScanOrder TO DISK = 'C:\\db_backup_managtestbackup_07-08-2023-16-10-05.bak'";
         //$sql = "SELECT id FROM crn_crntask";
         echo "FULL sql=".$sql."<br>";
 
@@ -628,6 +601,59 @@ class DataBackupManagementController extends OrderAbstractController
         //$res = $query->execute($params);
         $res = $query->execute();
         //echo "res=".$res."<br>";
+
+        //$results = $query->fetchAll();
+        //dump($results);
+
+        //$query = $em->createQuery($sql);
+        //$res = $query->getResult();
+
+        dump($res);
+        exit('111');
+
+        return $res;
+        ////////////////// EOF 2 //////////////////
+
+        ////////////////// 3) Backup log //////////////////
+        //2. Create periodic log backups. These capture activity since the last backup.
+        //$msgLog = $this->creatingBackupSQLLog($filepath);
+        //$msg = $msg . "<br>" . $msgLog;
+
+        return $msg;
+    }
+    public function creatingBackupSQLFull( $filepath ) {
+        $em = $this->getDoctrine()->getManager();
+        $msg = null;
+
+        $timePrefix = date("d-m-Y-H-i-s");
+        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+        echo "backupfile=".$backupfile."<br>";
+
+        $dbname = $this->getParameter('database_name');
+        echo "dbname=".$dbname."<br>";
+
+        ////////////////// 2) Full //////////////////
+        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
+        //$sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        //$sql = "BACKUP DATABASE ScanOrder TO DISK = 'C:\\db_backup_managtestbackup_07-08-2023-16-10-05.bak'";
+        //$sql = "SELECT id FROM crn_crntask";
+        $sql = "pg_dump -U postgres $dbname > $backupfile";
+        echo "FULL sql=".$sql."<br>";
+
+//        $sql = "
+//          SELECT id, field
+//          FROM scan_patientlastname
+//          WHERE field LIKE '%Doe%'
+//        ";
+
+        $res = exec($sql);
+
+        //$params['backupfile'] = $backupfile;
+        //$query = $em->getConnection()->prepare($sql);
+        //$res = $query->execute($params);
+        //$res = $query->execute();
+        //echo "res=".$res."<br>";
+        //$res = $em->getConnection()->exec($sql);
 
         //$results = $query->fetchAll();
         //dump($results);
