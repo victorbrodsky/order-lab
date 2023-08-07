@@ -657,13 +657,15 @@ class DataBackupManagementController extends OrderAbstractController
 //          WHERE field LIKE '%Doe%'
 //        ";
 
-        $res = exec($sql,$output,$return);
-        print_r($output);
+//        $res = exec($sql,$output,$return);
+//        print_r($output);
+//
+//        if( $return == 1 && count($output) > 0 ) {
+//            dump($output);
+//            dump($return);
+//        }
 
-        if( $return == 1 && count($output) > 0 ) {
-            dump($output);
-            dump($return);
-        }
+        $res = shell_exec($sql);
 
         //$params['backupfile'] = $backupfile;
         //$query = $em->getConnection()->prepare($sql);
