@@ -1509,6 +1509,8 @@ Pathology and Laboratory Medicine",
             closedir($handle);
         }
 
+        $resArr[] = 'MyApplication ' . ApplicationVersion::get();
+
         if( count($resArr) > 0 ) {
             $res = implode("<br>",$resArr);
         }
