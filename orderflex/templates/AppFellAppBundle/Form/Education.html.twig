@@ -220,9 +220,9 @@
                                 {#JobTitleList was already present for the same ID. This exception#}
                                 {#is a safeguard against an internal inconsistency - IDs should uniquely map to#}
                                 {#entity object instances#}
-                                {#{% set jobTitleStr = training.vars.value.jobTitle.getName() %}#}
+                                {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
                                 {#{% set jobTitleStr = training.vars.value %}#}
-                                {% set jobTitleStr = "" %}
+                                {#{% set jobTitleStr = "" %}#}
                             {% else %}
                                 {% set jobTitleStr = "" %}
                             {% endif %}

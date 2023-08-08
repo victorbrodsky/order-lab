@@ -1723,7 +1723,18 @@ in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFel
 
 revert to 'git checkout 58d83c63b4fddacd09939843925e63d66c1446fe'
 
-### Fix for: An exception occurred while executing a query: SQLSTATE[08P01]: ###
+### Fix for: ###
+https://github.com/doctrine/orm/issues/10877
+https://github.com/doctrine/orm/issues/10869
+1) Callog create new: An exception occurred while executing a query: SQLSTATE[08P01]:
 <<Unknown error>>: 7 ERROR: bind message supplies 0 parameters, but prepared statement "" requires 5
-"doctrine/orm": "^2.9", => "doctrine/orm": "2.15.3",
+
+2) Fellowship show: An exception has been thrown during the rendering of a template
+("While adding an entity of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList with an ID hash of "1833"
+to the identity map,
+another object of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList was already present for the same ID.
+This exception is a safeguard against an internal inconsistency - IDs should uniquely map to
+entity object instances
+
+"doctrine/orm": "^2.9", (uses 2.16.0) => "doctrine/orm": "2.15.3" or "2.15.5",
 ### EOF ###
