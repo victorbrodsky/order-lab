@@ -1454,11 +1454,11 @@ Pathology and Laboratory Medicine",
 
     public function getGitVersionDate()
     {
-        $ver = $this->getCurrentGitCommit();
-        return $ver;
-
+        //$ver = $this->getCurrentGitCommit();
+        //return $ver;
 
         $commitHash = $this->runProcess('git log --pretty="%h" -n1 HEAD');
+        //$commitHash = $this->runProcess('pwd');
         $commitDate = $this->runProcess('git log -n1 --pretty=%ci HEAD');
         $commitDateStr = null;
         if( $commitDate ) {
@@ -1469,17 +1469,17 @@ Pathology and Laboratory Medicine",
         //print_r($ver);
         return $ver;
 
-        $MAJOR = 1;
-        $MINOR = 2;
-        $PATCH = 3;
-
-        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
-        echo "hash=".$commitHash."<br>";
-
-        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-        $commitDate->setTimezone(new \DateTimeZone('UTC'));
-
-        return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
+//        $MAJOR = 1;
+//        $MINOR = 2;
+//        $PATCH = 3;
+//
+//        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
+//        echo "hash=".$commitHash."<br>";
+//
+//        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+//        $commitDate->setTimezone(new \DateTimeZone('UTC'));
+//
+//        return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
         //return sprintf('v%s.%s.%s-dev.%s (%s)', $MAJOR, $MINOR, $PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
     }
 
@@ -1509,7 +1509,7 @@ Pathology and Laboratory Medicine",
             closedir($handle);
         }
 
-        $resArr[] = 'MyApplication ' . ApplicationVersion::get();
+        //$resArr[] = "Current Git: ".$this->getGitVersionDate();
 
         if( count($resArr) > 0 ) {
             $res = implode("<br>",$resArr);
@@ -1776,6 +1776,9 @@ Pathology and Laboratory Medicine",
             //echo 'This is a server using Windows!';
             $windows = true;
             $linux = false;
+
+            //$windows = false;
+            //$linux = true;
         } else {
             //echo 'This is a server not using Windows! Assume Linux';
             $windows = false;
