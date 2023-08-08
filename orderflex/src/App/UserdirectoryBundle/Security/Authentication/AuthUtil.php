@@ -606,7 +606,7 @@ class AuthUtil {
         }
 
         foreach( $identifiers as $identifier ) {
-            //$this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
+            $this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
 
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 

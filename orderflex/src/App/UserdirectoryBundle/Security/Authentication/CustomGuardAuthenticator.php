@@ -409,6 +409,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         }
 
         if ($user) {
+            $logger->notice("authenticateToken: user found by token");
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user, $providerKey);
         }
