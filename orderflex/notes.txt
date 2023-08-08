@@ -1722,3 +1722,8 @@ in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFel
 
 
 revert to 'git checkout 58d83c63b4fddacd09939843925e63d66c1446fe'
+
+### Fix for: An exception occurred while executing a query: SQLSTATE[08P01]: ###
+<<Unknown error>>: 7 ERROR: bind message supplies 0 parameters, but prepared statement "" requires 5
+"doctrine/orm": "^2.9", => "doctrine/orm": "2.15.3",
+### EOF ###

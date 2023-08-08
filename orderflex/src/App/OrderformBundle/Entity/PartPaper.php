@@ -32,10 +32,10 @@ use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+//[ORM\HasLifecycleCallbacks]
 
 #[ORM\Table(name: 'scan_partPaper')]
 #[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
 class PartPaper extends PartArrayFieldAbstract
 {
 

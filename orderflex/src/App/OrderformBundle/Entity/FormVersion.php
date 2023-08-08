@@ -23,9 +23,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 //UPDATE 'user_formNode' SET version='1' WHERE version IS NULL;
 
+//[ORM\HasLifecycleCallbacks]
+
 #[ORM\Table(name: 'scan_formVersion')]
 #[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
 class FormVersion {
 
 

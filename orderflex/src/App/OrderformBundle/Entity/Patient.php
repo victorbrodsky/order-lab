@@ -26,10 +26,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+//[ORM\HasLifecycleCallbacks]
+
 //UniqueEntity({"mrn"})
 #[ORM\Table(name: 'scan_patient')]
 #[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\PatientRepository')]
-#[ORM\HasLifecycleCallbacks]
 class Patient extends ObjectAbstract
 {
 

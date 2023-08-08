@@ -28,10 +28,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Message, Holder of different orders (i.e. scanorder, laborder)
  */
+//[ORM\HasLifecycleCallbacks] - use event listener DoctrineListener
+
 #[ORM\Table(name: 'scan_message')]
 #[ORM\Index(name: 'oid_idx', columns: ['oid'])]
 #[ORM\Entity(repositoryClass: 'App\OrderformBundle\Repository\MessageRepository')]
-#[ORM\HasLifecycleCallbacks]
 class Message {
 
     /**
@@ -657,9 +658,6 @@ class Message {
     }
 
 
-//    /**
-//     * @ORM\PrePersist
-//     */
     public function setOrderdate($date=null) {
         //exit('exit setOrderdate');
         if( $date ) {

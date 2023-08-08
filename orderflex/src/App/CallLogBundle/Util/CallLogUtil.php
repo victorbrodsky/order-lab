@@ -2127,6 +2127,7 @@ class CallLogUtil
             foreach( $formNodes as $formNode ) {
 
                 $formVersion = new FormVersion();
+                //$this->em->persist($formVersion);
                 $formVersion->setFormNode($formNode);
                 $message->addFormVersion($formVersion);
                 //echo "formVersionEntity: ".$formVersion."<br>";
