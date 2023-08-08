@@ -31,7 +31,7 @@ class DataQuality
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    protected $id;
 
     #[ORM\Column(type: 'text', nullable: true)]
     protected $description;
@@ -41,13 +41,13 @@ class DataQuality
      * @var \DateTime
      */
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $creationdate;
+    protected $creationdate;
 
     /**
      * @var \DateTime
      */
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $resolvedate;
+    protected $resolvedate;
 
     #[ORM\Column(type: 'string', nullable: true)]
     protected $status;
@@ -58,7 +58,7 @@ class DataQuality
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     #[ORM\JoinColumn(name: 'resolver', referencedColumnName: 'id')]
-    private $resolver;
+    protected $resolver;
 
 
     public function getId()

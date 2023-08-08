@@ -121,8 +121,8 @@ function validateUser(btnEl,origuserid) {
 
     //check if CWID exists in LDAP active directory
     var userTypeText = $('.user-keytype-field').select2('data').text;
-    //if( userTypeText == "WCM CWID" ) {
-    if( userTypeText != "Local User" && userTypeText != "External Authentication" ) {
+    if( userTypeText == "CWID" ) {
+    //if( userTypeText != "Local User" && userTypeText != "External Authentication" ) {
         if( isValidCWID(primaryPublicUserId,userTypeText) == false ) {
             $('#userinfo').collapse('show');
             $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");        
