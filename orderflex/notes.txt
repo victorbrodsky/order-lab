@@ -1669,18 +1669,6 @@ composer.phar config --global --auth github-oauth.github.com mytoken
 C:\Users\ch3\AppData\Roaming\Composer\auth.json
 
 Rector:
-[ERROR] Could not process
-         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract
-
-         "System error: "Cannot rename
-         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\Arr345A.tmp" to
-         "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract
-         .php":
-         rename(C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\Arr345A.tmp,
-         C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\ArrayFieldAbstract.
-
-         Run Rector with "--debug" option and post the report here: https://github.com/rectorphp/rector/issues/new". On line: 283
-
 How to convert symfony gedmo annotation to PHP 8 Attributes
 https://stackoverflow.com/questions/75215518/how-to-convert-symfony-gedmo-annotation-to-php-8-attributes
 
@@ -1693,35 +1681,7 @@ public function index(): array
 { return [...] }
 
 
-
-
-An exception has been thrown during the rendering of a template ("While adding an entity of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList with an ID hash of "463" to the identity map,
-another object of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList was already present for the same ID. This exception
-is a safeguard against an internal inconsistency - IDs should uniquely map to
-entity object instances. This problem may occur if:
-
-- you use application-provided IDs and reuse ID values;
-- database-provided IDs are reassigned after truncating the database without
-clearing the EntityManager;
-- you might have been using EntityManager#getReference() to create a reference
-for a nonexistent ID that was subsequently (by the RDBMS) assigned to another
-entity.
-
-Education.html #224
-Otherwise, it might be an ORM-internal inconsistency, please report it. ").
-Twig\Error\ RuntimeError
-Show exception properties
-in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFellAppBundle\Form\Education.html.twig (line 216)
-
-                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
-                            {% if training.jobTitle is defined %}
-                                {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
-                            {% else %}
-                                {% if training.vars.value.jobTitle %}
-                                    {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
-
-
-revert to 'git checkout 58d83c63b4fddacd09939843925e63d66c1446fe'
+revert to version before major upgrades: 'git checkout 58d83c63b4fddacd09939843925e63d66c1446fe'
 
 ### Fix for: ###
 https://github.com/doctrine/orm/issues/10877
@@ -1735,6 +1695,19 @@ to the identity map,
 another object of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList was already present for the same ID.
 This exception is a safeguard against an internal inconsistency - IDs should uniquely map to
 entity object instances
+Education.html #224
+Otherwise, it might be an ORM-internal inconsistency, please report it. ").
+Twig\Error\ RuntimeError
+Show exception properties
+in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFellAppBundle\Form\Education.html.twig (line 216)
+
+                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
+                            {% if training.jobTitle is defined %}
+                                {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
+                            {% else %}
+                                {% if training.vars.value.jobTitle %}
+                                    {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
+
 
 "doctrine/orm": "^2.9", (uses 2.16.0) => "doctrine/orm": "2.15.3" or "2.15.5",
 ### EOF ###
