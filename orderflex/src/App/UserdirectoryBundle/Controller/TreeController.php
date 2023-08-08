@@ -458,7 +458,8 @@ class TreeController extends OrderAbstractController {
         if( $node && $action == 'rename_node' ) {
             if( $node->getName()."" != $nodetext ) {
                 $node->setName($nodetext);
-                $em->flush($node);
+                //$em->flush($node);
+                $em->flush();
                 $output = "ok";
             }
         } //rename_node
@@ -490,7 +491,8 @@ class TreeController extends OrderAbstractController {
                     }
                 }
 
-                $em->flush($node);
+                //$em->flush($node);
+                $em->flush();
                 $output = "ok";
 
             } else {

@@ -210,7 +210,8 @@ class GenericManyToManyTransformer implements DataTransformerInterface
 
             //echo "persist and flush !!!!!!!!!!!!!!!! <br>";
             $this->em->persist($newEntity);
-            $this->em->flush($newEntity);
+            //$this->em->flush($newEntity);
+            $this->em->flush();
 
             return $newEntity;
         } else {

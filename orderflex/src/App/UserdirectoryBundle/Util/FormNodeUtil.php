@@ -302,7 +302,8 @@ class FormNodeUtil
 
             if( !$testing ) {
                 $this->em->persist($newListElement);
-                $this->em->flush($newListElement);
+                //$this->em->flush($newListElement);
+                $this->em->flush();
             }
 
         }
@@ -462,7 +463,8 @@ class FormNodeUtil
 
             if( !$testing ) {
                 $this->em->persist($newListElement);
-                $this->em->flush($newListElement);
+                //$this->em->flush($newListElement);
+                $this->em->flush();
             }
 
             return;
@@ -487,7 +489,8 @@ class FormNodeUtil
 
             if( !$testing ) {
                 $this->em->persist($newListElement);
-                $this->em->flush($newListElement);
+                //$this->em->flush($newListElement);
+                $this->em->flush();
             }
 
             return;
@@ -522,7 +525,8 @@ class FormNodeUtil
 
                 if( !$noflush ) {
                     $this->em->persist($newListElement);
-                    $this->em->flush($newListElement); //testing
+                    //$this->em->flush($newListElement); //testing
+                    $this->em->flush();
                 }
 
                 //echo "Editable => return existing listelement <br>";
@@ -583,7 +587,8 @@ class FormNodeUtil
 
         if( !$noflush ) {
             $this->em->persist($newListElement);
-            $this->em->flush($newListElement); //testing
+            //$this->em->flush($newListElement); //testing
+            $this->em->flush();
         }
 
         return $newListElement;
@@ -1271,7 +1276,8 @@ class FormNodeUtil
 
         if( $populated == 1 ) {
             if( !$testing ) {
-                $this->em->flush($message);
+                //$this->em->flush($message);
+                $this->em->flush();
             }
             return $message->getId();
         }
@@ -2163,7 +2169,8 @@ class FormNodeUtil
             if( $updated ) {
                 //echo "update node=".$node." <br>";
                 $em->persist($node);
-                $em->flush($node);
+                //$em->flush($node);
+                $em->flush();
             }
 
         }//if !$node
@@ -3195,7 +3202,8 @@ class FormNodeUtil
             $UnitPlateletCount->setObject($CCIUnitPlateletCountDefaultValueList);
             //echo "1 namespace=".$UnitPlateletCount->getEntityNamespace()." ".$UnitPlateletCount->getEntityName()."<br>";
             //$this->em->persist($UnitPlateletCount);
-            $this->em->flush($UnitPlateletCount);
+            //$this->em->flush($UnitPlateletCount);
+            $this->em->flush();
         } else {
             exit('Unit Platelet Count setObject not set');
         }

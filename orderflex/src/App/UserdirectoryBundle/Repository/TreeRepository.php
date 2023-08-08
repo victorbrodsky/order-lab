@@ -724,7 +724,8 @@ class TreeRepository extends NestedTreeRepository {
             //exit();
 
             $this->_em->persist($newChild);
-            $this->_em->flush($newChild);
+            //$this->_em->flush($newChild);
+            $this->_em->flush();
 
             return $newChild;
 

@@ -669,11 +669,13 @@ class SiteParametersController extends OrderAbstractController
 
             if( $modifiedAdminUser ) {
                 $em->persist($administratorUser);
-                $em->flush($administratorUser);
+                //$em->flush($administratorUser);
+                $em->flush();
             }
 
             $em->persist($entity);
-            $em->flush($entity);
+            //$em->flush($entity);
+            $em->flush();
 
             $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->createEmailCronJob();

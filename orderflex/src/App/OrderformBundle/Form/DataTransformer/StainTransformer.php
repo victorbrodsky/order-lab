@@ -129,7 +129,8 @@ class StainTransformer implements DataTransformerInterface
             $stain->setOrderinlist($nextorder);
             
             $this->em->persist($stain);
-            $this->em->flush($stain);
+            //$this->em->flush($stain);
+            $this->em->flush();
 
             return $stain;
         } else {

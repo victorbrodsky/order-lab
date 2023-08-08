@@ -296,7 +296,8 @@ class SignUpController extends OrderAbstractController
 
             //exit('flush');
             $em->persist($signUp);
-            $em->flush($signUp);
+            //$em->flush($signUp);
+            $em->flush();
 
             //Email
             $this->sendEmailWithActivationLink($signUp,$request);
@@ -374,7 +375,8 @@ class SignUpController extends OrderAbstractController
         $signUp->incrementEmailSentCounter();
 
         //$em->persist($signUp);
-        $em->flush($signUp);
+        //$em->flush($signUp);
+        $em->flush();
 
         $signUpUser = $signUp->getUser();
 
@@ -1082,7 +1084,8 @@ class SignUpController extends OrderAbstractController
 
             //exit('flush');
             $em->persist($resetPassword);
-            $em->flush($resetPassword);
+            //$em->flush($resetPassword);
+            $em->flush();
 
             //Email
             $this->sendEmailWithResetLink($resetPassword,$request);
@@ -1154,7 +1157,8 @@ class SignUpController extends OrderAbstractController
         $resetPassword->incrementEmailSentCounter();
 
         //$em->persist($signUp);
-        $em->flush($resetPassword);
+        //$em->flush($resetPassword);
+        $em->flush();
 
         $signUpUser = $resetPassword->getUser();
 
@@ -1358,8 +1362,9 @@ class SignUpController extends OrderAbstractController
             $resetPassword->setUser($user);
 
             //exit('reset flush');
-            $em->flush($resetPassword);
-            $em->flush($user);
+            //$em->flush($resetPassword);
+            //$em->flush($user);
+            $em->flush();
 
             //Event Log
             //$author = $this->getUser();

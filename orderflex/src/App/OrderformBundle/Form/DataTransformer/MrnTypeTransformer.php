@@ -136,7 +136,8 @@ class MrnTypeTransformer implements DataTransformerInterface
 
             if( $withFlush ) {
                 $this->em->persist($newEntity);
-                $this->em->flush($newEntity);
+                //$this->em->flush($newEntity);
+                $this->em->flush();
             }
 
             return $newEntity;

@@ -895,9 +895,10 @@ class UserSecurityUtil {
 //            $em->flush();
 //        }
 
-        if( $saveEventObjectType ) {
-            $em->flush($eventObjectType);
-        }
+        //if( $saveEventObjectType ) {
+            //$em->flush($eventObjectType);
+            //$em->flush();
+        //}
 
         return $eventLog;
     }

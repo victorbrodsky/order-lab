@@ -2137,10 +2137,11 @@ class CallEntryController extends OrderAbstractController
                     //exit('Exit Case 2');
                     if( !$testing ) {
                         $em->persist($newEncounter);
-                        $em->flush($newEncounter); //testing
-
+                        //$em->flush($newEncounter); //testing
                         $em->persist($message);
-                        $em->flush($message); //testing
+                        //$em->flush($message); //testing
+
+                        $em->flush(); //testing
                     }
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();

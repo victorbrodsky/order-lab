@@ -4326,7 +4326,8 @@ class ListController extends OrderAbstractController
 
         if( $type ) {
             $entity->setType($type);
-            $em->flush($entity);
+            //$em->flush($entity);
+            $em->flush();
 
             $event = "The type of the list entry '" . $entity . "' has been changed to '" . $type . "'";
 

@@ -2108,6 +2108,8 @@ class CallLogUtil
     //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
     public function setFormVersions( $message, $cycle ) {
 
+        //return null; //testing error: 'INSERT INTO scan_formVersion (id, formId, formTitle, formVersion, message_id) VALUES (?, ?, ?, ?, ?)', array(), array())
+
         $targetMessageCategory = $message->getMessageCategory();
         if( !$targetMessageCategory ) {
             return null;
@@ -2874,7 +2876,8 @@ class CallLogUtil
                     $thisMessage->setMessageStatusPrior($thisMessage->getMessageStatus());
                     $thisMessage->setMessageStatus($messageStatusDeleted);
                     if( !$testing ) {
-                        $em->flush($thisMessage);
+                        //$em->flush($thisMessage);
+                        $em->flush();
 
                         //save message info
                         $patientInfoStr = $thisMessage->getPatientNameMrnInfo();

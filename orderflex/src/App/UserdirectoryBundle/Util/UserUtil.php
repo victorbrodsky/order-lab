@@ -667,7 +667,8 @@ class UserUtil {
             $originalInstitution->removeUserPosition($originalUserPosition);
 
             $this->em->remove($originalUserPosition);
-            $this->em->flush($originalUserPosition);
+            //$this->em->flush($originalUserPosition);
+            $this->em->flush();
 
             $this->em->persist($originalInstitution);
         }

@@ -233,7 +233,8 @@ class DefaultController extends OrderAbstractController
                     if (!$attendingUser->hasRole($roleStr)) {
                         $attendingUser->addRole($roleStr);
                         //save
-                        $em->flush($attendingUser);
+                        //$em->flush($attendingUser);
+                        $em->flush();
                         echo "Role $roleStr has been assigned to user " . $attendingUser . "<br>";
                         $count++;
                     } else {
@@ -393,7 +394,8 @@ class DefaultController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // $entityManager->persist($task);
-            $em->flush($message);
+            //$em->flush($message);
+            $em->flush();
 
             $msg = "Call Log cache has been manually updated for " . $message->getOid();
 

@@ -225,7 +225,8 @@ class GenericTreeTransformer implements DataTransformerInterface
             //exit('1');
 
             $this->em->persist($newEntity);
-            $this->em->flush($newEntity);
+            //$this->em->flush($newEntity);
+            $this->em->flush();
 
             return $newEntity;
         } else {

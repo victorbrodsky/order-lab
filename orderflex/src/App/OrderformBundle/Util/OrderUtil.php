@@ -813,8 +813,9 @@ class OrderUtil {
                 //$this->em->persist($userSiteSettings);
             }
             $userSiteSettings->addPermittedInstitutionalPHIScope($autoAssignInstitution);
-            $this->em->flush($userSiteSettings);
-            $this->em->flush($user);
+            //$this->em->flush($userSiteSettings);
+            //$this->em->flush($user);
+            $this->em->flush();
 
             if( $session ) {
                 $session->getFlashBag()->add(

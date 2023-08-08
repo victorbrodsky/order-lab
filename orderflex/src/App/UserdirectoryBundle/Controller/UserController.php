@@ -3838,7 +3838,8 @@ class UserController extends OrderAbstractController
             //exit('user exit');
 
             //$em->persist($entity);
-            $em->flush($entity);
+            //$em->flush($entity);
+            $em->flush();
 
             //delete old avatar document from DB
             $this->processDeleteOldAvatar($entity,$oldAvatarId);
@@ -4134,7 +4135,8 @@ class UserController extends OrderAbstractController
                     //remove user from this wrapper
                     $userWrapper->setUser(null);
                     $em->persist($userWrapper);
-                    $em->flush($userWrapper);
+                    //$em->flush($userWrapper);
+                    $em->flush();
                 } else {
                     //echo $userWrapper->getId().": keep this wrapper=".$userWrapper."<br>";
                 }
@@ -4148,7 +4150,8 @@ class UserController extends OrderAbstractController
                     if( !$userWrapper->getUser() ) {
                         $userWrapper->setUser($user);
                         $em->persist($userWrapper);
-                        $em->flush($userWrapper);
+                        //$em->flush($userWrapper);
+                        $em->flush();
                     } else {
                         //wrapper already has a linked user
                     }
@@ -4858,7 +4861,8 @@ class UserController extends OrderAbstractController
             $object->setType($documentType);
 
             $em->persist($object);
-            $em->flush($object);
+            //$em->flush($object);
+            $em->flush();
 
             $avatarid = $object->getId();
             $avatarpath = $object->getAbsoluteUploadFullPath();

@@ -248,7 +248,8 @@ class UserWrapperTransformer implements DataTransformerInterface
             $userWrapper->setUser($user);
 
             $this->em->persist($userWrapper);
-            $this->em->flush($userWrapper);
+            //$this->em->flush($userWrapper);
+            $this->em->flush();
         }
 
         return $userWrapper;
@@ -288,7 +289,8 @@ class UserWrapperTransformer implements DataTransformerInterface
         }
 
         $this->em->persist($userWrapper);
-        $this->em->flush($userWrapper);
+        //$this->em->flush($userWrapper);
+        $this->em->flush();
 
         return $userWrapper;
     }

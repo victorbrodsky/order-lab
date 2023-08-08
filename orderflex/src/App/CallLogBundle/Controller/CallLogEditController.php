@@ -114,7 +114,8 @@ class CallLogEditController extends CallEntryController
 
         $message->setMessageStatus($messageStatusPrior);
 
-        $em->flush($message);
+        //$em->flush($message);
+        $em->flush();
 
         //Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
         // [submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD successfully
@@ -159,7 +160,8 @@ class CallLogEditController extends CallEntryController
         $message->setMessageStatus($messageStatus);
 
         if( !$testing ) {
-            $em->flush($message);
+            //$em->flush($message);
+            $em->flush();
         }
 
         //"Entry 123 for PatientFirstName PatientLastName (DOB: MM/DD/YYYY) submitted on
@@ -834,6 +836,7 @@ class CallLogEditController extends CallEntryController
                     if( !$testing ) {
                         $em->persist($newEncounter);
                         //$em->flush($newEncounter); //testing
+                        //$em->flush(); //testing flush
 
                         $em->persist($message);
                         //$em->flush($message); //testing

@@ -625,7 +625,8 @@ class CallLogPatientController extends PatientController {
                 //////////// EOF Patient Info //////////////////
 
                 if( $populated ) {
-                    $em->flush($message);
+                    //$em->flush($message);
+                    $em->flush();
                 }
             }
             //////////////// EOF update all associated messages patient info for CSV export ////////////////

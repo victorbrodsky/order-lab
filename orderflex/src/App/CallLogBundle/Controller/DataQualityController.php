@@ -775,7 +775,8 @@ class DataQualityController extends CallEntryController
             $task->setStatusUpdatedBy($user);
             $task->setStatusUpdatedDate(new \DateTime());
 
-            $em->flush($task);
+            //$em->flush($task);
+            $em->flush();
 
             $patient = NULL;
             $patientStr = NULL;

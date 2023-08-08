@@ -1415,7 +1415,8 @@ class AuthUtil {
             if( $userFailedAttempts > $permittedFailedLoginAttempt ) {
                 //lock
                 $user->setEnabled(false);
-                $this->em->flush($user);
+                //$this->em->flush($user);
+                $this->em->flush();
 
                 $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
                 $msg = $permittedFailedLoginAttempt." attempts have been made to log into this account with incorrect credentials.<br>".
@@ -1432,7 +1433,8 @@ class AuthUtil {
 
                 throw new AuthenticationException($msg);
             } else {
-                $this->em->flush($user);
+                //$this->em->flush($user);
+                $this->em->flush();
             }
 
         }//if $permittedFailedLoginAttempt
@@ -2090,7 +2092,8 @@ class AuthUtil {
 
             }//foreach $ldapBindDNArr
 
-            $this->em->flush($user);
+            //$this->em->flush($user);
+            $this->em->flush();
 
         }//foreach $users
 
