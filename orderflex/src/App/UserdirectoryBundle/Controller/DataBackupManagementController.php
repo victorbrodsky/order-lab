@@ -344,9 +344,13 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $hostname = $request->getSchemeAndHttpHost();
-        echo "hostname=$hostname<br>";
-        if( strpos((string)$hostname, 'med.cornell.edu') !== false ) {
+//        $hostname = $request->getSchemeAndHttpHost();
+//        echo "hostname=$hostname<br>";
+//        if( strpos((string)$hostname, 'med.cornell.edu') !== false ) {
+//            exit("Live server: Under construction!!!");
+//        }
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
             exit("Live server: Under construction!!!");
         }
         //exit('Under construction!!!');
