@@ -349,6 +349,7 @@ class DataBackupManagementController extends OrderAbstractController
 //        if( strpos((string)$hostname, 'med.cornell.edu') !== false ) {
 //            exit("Live server: Under construction!!!");
 //        }
+        $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
             exit("Live server: Under construction!!!");
