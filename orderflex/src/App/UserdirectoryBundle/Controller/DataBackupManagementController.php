@@ -262,6 +262,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
             $this->addFlash(
@@ -297,6 +298,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
             $this->addFlash(
@@ -350,21 +352,21 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('Under construction!!!');
 
         //networkDrivePath
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        if( !$networkDrivePath ) {
-            //exit("No networkDrivePath is defined");
-            $this->addFlash(
-                'error',
-                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
-            );
-            return $this->redirect($this->generateUrl('employees_data_backup_management'));
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+//        if( !$networkDrivePath ) {
+//            //exit("No networkDrivePath is defined");
+//            $this->addFlash(
+//                'error',
+//                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+//            );
+//            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+//        }
 
         echo "backupFilePath=".$backupFilePath."<br>";
 
         //get backup files
-        $backupFiles = $this->getBackupFiles($networkDrivePath);
+        //$backupFiles = $this->getBackupFiles($networkDrivePath);
 
         $sitename = "employees";
 
@@ -380,16 +382,17 @@ class DataBackupManagementController extends OrderAbstractController
                 $res
             );
 
-            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
         }
 
-        return array(
-            'sitename' => $sitename,
-            'title' => "Data Backup Management",
-            'cycle' => 'new',
-            'networkDrivePath' => $networkDrivePath,
-            'backupFiles' => $backupFiles
-        );
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+
+//        return array(
+//            'sitename' => $sitename,
+//            'title' => "Data Backup Management",
+//            'cycle' => 'new',
+//            'networkDrivePath' => $networkDrivePath,
+//            'backupFiles' => $backupFiles
+//        );
     }
 
 
@@ -403,7 +406,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         if (file_exists($networkDrivePath)) {
-            //echo "The file $networkDrivePath exists";
+            echo "The path=$networkDrivePath";
         } else {
             //echo "The file $networkDrivePath does not exist";
             return null;
@@ -419,8 +422,13 @@ class DataBackupManagementController extends OrderAbstractController
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
-                $fileOption = array("id"=>$file,"name"=>$file);
-                $backupFiles[] = $fileOption;
+                echo "file=$file <br>";
+                //if( is_dir($file) === false ) {
+                //if( is_file($file) ) {
+                if( pathinfo($file, PATHINFO_EXTENSION) ) {
+                    $fileOption = array("id" => $file, "name" => $file);
+                    $backupFiles[] = $fileOption;
+                }
             }
         }
 
