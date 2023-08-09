@@ -345,9 +345,9 @@ class DataBackupManagementController extends OrderAbstractController
         $hostname = $request->getSchemeAndHttpHost();
         echo "hostname=$hostname<br>";
         if( strpos((string)$hostname, 'med.cornell.edu') !== false ) {
-            exit("Under construction!!!");
+            exit("Live server: Under construction!!!");
         }
-        exit('Under construction!!!');
+        //exit('Under construction!!!');
 
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
@@ -370,8 +370,9 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFilePath ) {
 
+            exit('Under construction: backupFilePath='.$backupFilePath);
             //create backup
-            $res = $this->restoringBackupSQLFull($networkDrivePath);
+            $res = $this->restoringBackupSQLFull($backupFilePath);
             //exit($res);
 
             $this->addFlash(
@@ -379,13 +380,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $res
             );
 
-            $this->addFlash(
-                'pnotify',
-                //"DB has been restored by backup ".$backupFilePath
-                $res
-            );
-
-            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
         }
 
         return array(
@@ -745,7 +740,50 @@ class DataBackupManagementController extends OrderAbstractController
 
 
 
-    public function restoringBackupSQLFull($networkDrivePath) {
+    public function restoringBackupSQLFull($backupFilePath) {
+        $msg = null;
+        $em = $this->getDoctrine()->getManager();
+        $msg = null;
+
+        $dbname = $this->getParameter('database_name');
+        $uid = $this->getParameter('database_user');
+        $pwd = $this->getParameter('database_password');
+        $host = $this->getParameter('database_host');
+        $driver = $this->getParameter('database_driver');
+        echo "dbname=".$dbname."<br>";
+        echo "uid=".$uid."<br>";
+        echo "pwd=".$pwd."<br>";
+        echo "host=".$host."<br>";
+
+        //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
+        //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+        $sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupfile;
+
+        echo "FULL sql=".$sql."<br>";
+
+//        $sql = "
+//          SELECT id, field
+//          FROM scan_patientlastname
+//          WHERE field LIKE '%Doe%'
+//        ";
+
+        $process = Process::fromShellCommandline($sql);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if( !$process->isSuccessful() ) {
+            throw new ProcessFailedException($process);
+        }
+        $res = $process->getOutput();
+        $res =  "Successefully restore backup DataBase $dbname from $backupFilePath. " . $res;
+
+        //dump($res);
+        //exit('111');
+
+        return $res;
+
+        return $msg;
+    }
+    public function restoringBackupSQLFull_MSSQL($networkDrivePath) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
         //echo "timePrefix=".$timePrefix."<br>";
@@ -783,4 +821,5 @@ class DataBackupManagementController extends OrderAbstractController
 
         return $msg;
     }
+
 }
