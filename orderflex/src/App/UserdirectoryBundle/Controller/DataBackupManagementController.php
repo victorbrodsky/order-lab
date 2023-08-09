@@ -415,7 +415,7 @@ class DataBackupManagementController extends OrderAbstractController
         //dump($files);
         //exit('111');
 
-
+        $backupFiles = array();
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
@@ -424,12 +424,11 @@ class DataBackupManagementController extends OrderAbstractController
             }
         }
 
-        $file0 = array("id"=>null,"name"=>"");
-        $file1 = array("id"=>1,"name"=>"file 1");
-        $file2 = array("id"=>2,"name"=>"file 2");
-        $backupFiles = array($file0,$file1,$file2);
-        //$backupFiles = array($file0);
-        //$backupFiles = array("file1", "file2");
+//        $file0 = array("id"=>null,"name"=>"");
+//        $file1 = array("id"=>1,"name"=>"file 1");
+//        $backupFiles[] = $file1;
+//        $file2 = array("id"=>2,"name"=>"file 2");
+//        $backupFiles = array($file0,$file1,$file2);
 
         return $backupFiles;
     }

@@ -47,7 +47,7 @@
 
     <br>
 
-    {% if backupFiles %}
+    {#{% if backupFiles %}#}
 
         <div class="row">
             <div class="col-xs-3"></div>
@@ -70,6 +70,10 @@
             {#<a class="btn btn-danger" href="{{ path(employees_sitename~'_restore_backup') }}">Restore Backup</a>#}
         {#</p>#}
 
+        {% set disabledFalg = 'disabled' %}
+        {% if backupFiles|length > 0 %}
+            {% set disabledFalg = '' %}
+        {% endif %}
         <p>
             <a
                 id="btn-restore-backup"
@@ -77,14 +81,14 @@
                 {#general-data-confirm="Are you sure you want to restore backup DB? This action will overwrite all existing data."#}
                 {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
                 href="#"
-                disabled
+                {{ disabledFalg }}
                 onclick="return restoreBackup();"
             >Restore Backup</a>
         </p>
 
-    {% else %}
-        <div class="alert alert-danger">Backup folder does not exists</div>
-    {% endif %}
+    {#{% else %}#}
+        {#<div class="alert alert-danger">Backup folder does not exists or empty</div>#}
+    {#{% endif %}#}
 
 
 {% endblock %}
