@@ -379,6 +379,11 @@ class DataBackupManagementController extends OrderAbstractController
 
             //exit('Under construction: backupFilePath='.$backupFilePath);
             //create backup
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            $backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
+
             $res = $this->restoringBackupSQLFull($backupFilePath);
             //exit($res);
 
@@ -757,7 +762,7 @@ class DataBackupManagementController extends OrderAbstractController
         $res = null;
 
         $dbname = $this->getParameter('database_name');
-        $dbname = "ScanOrderTest";
+        $dbname = "ScanOrderTest"; //testing replace for testing
         $uid = $this->getParameter('database_user');
         $pwd = $this->getParameter('database_password');
         $host = $this->getParameter('database_host');
@@ -766,6 +771,7 @@ class DataBackupManagementController extends OrderAbstractController
         echo "uid=".$uid."<br>";
         echo "pwd=".$pwd."<br>";
         echo "host=".$host."<br>";
+        echo "backupFilePath=".$backupFilePath."<br>";
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
