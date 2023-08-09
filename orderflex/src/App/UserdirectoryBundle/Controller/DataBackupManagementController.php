@@ -382,6 +382,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             $userSecUtil = $this->container->get('user_security_utility');
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            $networkDrivePath = realpath($networkDrivePath);
             $backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
             $res = $this->restoringBackupSQLFull($backupFilePath);
