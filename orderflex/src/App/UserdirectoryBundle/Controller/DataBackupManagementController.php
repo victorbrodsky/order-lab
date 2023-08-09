@@ -630,7 +630,7 @@ class DataBackupManagementController extends OrderAbstractController
         $msg = null;
 
         $timePrefix = date("d-m-Y-H-i-s");
-        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+        $backupfile = $filepath . "testbackup_$timePrefix.dump";
         echo "backupfile=".$backupfile."<br>";
 
         $dbname = $this->getParameter('database_name');
@@ -776,7 +776,10 @@ class DataBackupManagementController extends OrderAbstractController
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
-        $sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
+        //pg_restore -d newdb db.dump
+        //$sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
+        $sql = 'pg_restore -d --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
+        //$sql = 'pg_restore --verbose --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' < '.$backupFilePath;
 
         echo "FULL sql=".$sql."<br>";
 
