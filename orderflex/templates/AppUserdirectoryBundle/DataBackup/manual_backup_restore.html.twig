@@ -41,7 +41,10 @@
         <div class="well">Current Network Drive Path: {{ networkDrivePath }}</div>
     </p>
 
-    <br>
+    <p>
+        <a class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}">Create Backup</a>
+    </p>
+
     <br>
 
     {% if backupFiles %}
@@ -63,18 +66,21 @@
 
         <br>
 
-        <p>
-            <a href="{{ path(employees_sitename~'_create_backup') }}">Create Backup</a>
-        </p>
-
         {#<p>#}
-            {#<a#}
-                    {#general-data-confirm="Are you sure you want to load backup DB? This action will overwrite all existing data."#}
-                    {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
-                    {#href="#"#}
-                    {#onclick="return restoreBackup();"#}
-            {#>Load Backup</a>#}
+            {#<a class="btn btn-danger" href="{{ path(employees_sitename~'_restore_backup') }}">Restore Backup</a>#}
         {#</p>#}
+
+        <p>
+            <a
+                id="btn-restore-backup"
+                class="btn btn-danger"
+                general-data-confirm="Are you sure you want to restore backup DB? This action will overwrite all existing data."
+                {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
+                href="#"
+                disabled
+                onclick="return restoreBackup();"
+            >Restore Backup</a>
+        </p>
 
     {% else %}
         <div class="alert alert-danger">Backup folder does not exists</div>
@@ -91,20 +97,25 @@
 
             $('#backup-file-id').on("change", function(e) {
                 var fileId = $(this).select2('val');
-                console.log('fileId='+fileId);
-                $('#fileId').val(fileId);
+                if( fileId ) {
+                    console.log('fileId=' + fileId);
+                    $('#fileId').val(fileId);
+                    $('#btn-restore-backup').removeAttr('disabled');
+                } else {
+                    console.log('No file selected');
+                    $('#btn-restore-backup').attr('disabled', true);
+                }
             });
 
         });
 
         function restoreBackup() {
-
-            var result = confirm("Are you sure you want to load backup DB? This action will overwrite all existing data.");
-            if (result) {
-                //Logic to delete the item
-            } else {
-                return;
-            }
+//            var result = confirm("Are you sure you want to load backup DB? This action will overwrite all existing data.");
+//            if (result) {
+//                //Logic to delete the item
+//            } else {
+//                return;
+//            }
 
             var file = $('#backup-file-id').select2('data');
             if( file ) {
@@ -116,6 +127,8 @@
                 console.log("url=" + url);
 
                 window.location.replace(url);
+            } else {
+                console.log("no backup file");
             }
         }
     </script>

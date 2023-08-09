@@ -251,8 +251,8 @@ class DataBackupManagementController extends OrderAbstractController
      * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
      * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
      */
-    #[Route(path: '/data-backup-management-orig/', name: 'employees_data_backup_management_orig', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management_orig.html.twig')]
+    #[Route(path: '/manual-backup-restore/', name: 'employees_manual_backup_restore', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/manual_backup_restore.html.twig')]
     public function dataBackupManagementAction_ORIG(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -274,7 +274,7 @@ class DataBackupManagementController extends OrderAbstractController
         $sitename = "employees";
 
         //get backup files
-        $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_data_backup_management_orig
+        $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_manual_backup_restore
 
         return array(
             'sitename' => $sitename,
@@ -304,7 +304,7 @@ class DataBackupManagementController extends OrderAbstractController
                 //'notice',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
-            return $this->redirect($this->generateUrl('employees_data_backup_management_orig'));
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -330,7 +330,7 @@ class DataBackupManagementController extends OrderAbstractController
             );
         }
 
-        return $this->redirect($this->generateUrl('employees_data_backup_management_orig'));
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
 
@@ -416,16 +416,10 @@ class DataBackupManagementController extends OrderAbstractController
 
         //echo "networkDrivePath=$networkDrivePath <br>";
 
-        $file0 = array("id"=>null,"name"=>"");
-//        $file1 = array("id"=>1,"name"=>"file 1");
-//        $file2 = array("id"=>2,"name"=>"file 2");
-//        $backupFiles = array($file0,$file1,$file2);
-
-        $backupFiles = array($file0);
-
         $files = scandir($networkDrivePath); //with dots
         //dump($files);
         //exit('111');
+
 
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
@@ -434,6 +428,13 @@ class DataBackupManagementController extends OrderAbstractController
                 $backupFiles[] = $fileOption;
             }
         }
+
+        $file0 = array("id"=>null,"name"=>"");
+        $file1 = array("id"=>1,"name"=>"file 1");
+        $file2 = array("id"=>2,"name"=>"file 2");
+        $backupFiles = array($file0,$file1,$file2);
+        //$backupFiles = array($file0);
+        //$backupFiles = array("file1", "file2");
 
         return $backupFiles;
     }
@@ -499,118 +500,118 @@ class DataBackupManagementController extends OrderAbstractController
         return $conn;
     }
 
-    //SQL Server Database backup FULL
-    //https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
-    public function creatingBackupSQLFull_OLD( $filepath ) {
-        $msg = null;
-        $timePrefix = date("d-m-Y-H-i-s");
-
-        $conn = $this->getConnection();
-        $dbname = $this->getParameter('database_name');
-        echo "dbname=".$dbname."<br>";
-
-        $backupfile = $filepath . "testbackup_$timePrefix.bak";
-        echo "backupfile=".$backupfile."<br>";
-
-        //$em = $this->getDoctrine()->getManager();
-        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
-
-//        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
-//        $setRecovery = false;
-//        if( $setRecovery ) {
-//            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
-//            $stmt = sqlsrv_query($conn, $sql);
-//            if ($stmt === false) {
-//                die(print_r(sqlsrv_errors()));
-//            } else {
-//                $msg = "Recovery model set to FULL<br>";
-//                echo $msg;
-//            }
+//    //SQL Server Database backup FULL
+//    //https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
+//    public function creatingBackupSQLFull_OLD( $filepath ) {
+//        $msg = null;
+//        $timePrefix = date("d-m-Y-H-i-s");
+//
+//        $conn = $this->getConnection();
+//        $dbname = $this->getParameter('database_name');
+//        echo "dbname=".$dbname."<br>";
+//
+//        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+//        echo "backupfile=".$backupfile."<br>";
+//
+//        //$em = $this->getDoctrine()->getManager();
+//        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+//
+////        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
+////        $setRecovery = false;
+////        if( $setRecovery ) {
+////            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+////            $stmt = sqlsrv_query($conn, $sql);
+////            if ($stmt === false) {
+////                die(print_r(sqlsrv_errors()));
+////            } else {
+////                $msg = "Recovery model set to FULL<br>";
+////                echo $msg;
+////            }
+////        }
+////        ////////////////// EOF 1 ////////////////////
+//
+//        ////////////////// 2) Full //////////////////
+//        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
+//        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+//        $sql = "SELECT id FROM crn_crntask";
+//        echo "FULL sql=".$sql."<br>";
+//
+////        $params['backupfile'] = $backupfile;
+////        $query = $em->getConnection()->prepare($sql);
+////        $res = $query->execute($params);
+////        echo "res=".$res."<br>";
+//
+//        $stmt = sqlsrv_query($conn, $sql);
+//        //$stmt = $conn->query($sql);
+//
+//        if($stmt === false)
+//        {
+//            die(print_r(sqlsrv_errors(),true));
 //        }
-//        ////////////////// EOF 1 ////////////////////
-
-        ////////////////// 2) Full //////////////////
-        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
-        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
-        $sql = "SELECT id FROM crn_crntask";
-        echo "FULL sql=".$sql."<br>";
-
+//        else
+//        {
+//            $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
+//            echo $msg."<br>";
+//            exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
+//        }
+//        ////////////////// EOF 2 //////////////////
+//
+//        ////////////////// 3) Backup log //////////////////
+//        //2. Create periodic log backups. These capture activity since the last backup.
+//        //$msgLog = $this->creatingBackupSQLLog($filepath);
+//        //$msg = $msg . "<br>" . $msgLog;
+//
+//        return $msg;
+//    }
+//    public function creatingBackupSQLFull_OLD1( $filepath ) {
+//        $em = $this->getDoctrine()->getManager();
+//        $msg = null;
+//
+//        $timePrefix = date("d-m-Y-H-i-s");
+//        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+//        echo "backupfile=".$backupfile."<br>";
+//
+//        $dbname = $this->getParameter('database_name');
+//        echo "dbname=".$dbname."<br>";
+//
+//        ////////////////// 2) Full //////////////////
+//        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
+//        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+//        //$sql = "BACKUP DATABASE ScanOrder TO DISK = 'C:\\db_backup_managtestbackup_07-08-2023-16-10-05.bak'";
+//        //$sql = "SELECT id FROM crn_crntask";
+//        echo "FULL sql=".$sql."<br>";
+//
+////        $sql = "
+////          SELECT id, field
+////          FROM scan_patientlastname
+////          WHERE field LIKE '%Doe%'
+////        ";
+//
 //        $params['backupfile'] = $backupfile;
 //        $query = $em->getConnection()->prepare($sql);
-//        $res = $query->execute($params);
-//        echo "res=".$res."<br>";
-
-        $stmt = sqlsrv_query($conn, $sql);
-        //$stmt = $conn->query($sql);
-
-        if($stmt === false)
-        {
-            die(print_r(sqlsrv_errors(),true));
-        }
-        else
-        {
-            $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
-            echo $msg."<br>";
-            exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
-        }
-        ////////////////// EOF 2 //////////////////
-
-        ////////////////// 3) Backup log //////////////////
-        //2. Create periodic log backups. These capture activity since the last backup.
-        //$msgLog = $this->creatingBackupSQLLog($filepath);
-        //$msg = $msg . "<br>" . $msgLog;
-
-        return $msg;
-    }
-    public function creatingBackupSQLFull_OLD1( $filepath ) {
-        $em = $this->getDoctrine()->getManager();
-        $msg = null;
-
-        $timePrefix = date("d-m-Y-H-i-s");
-        $backupfile = $filepath . "testbackup_$timePrefix.bak";
-        echo "backupfile=".$backupfile."<br>";
-
-        $dbname = $this->getParameter('database_name');
-        echo "dbname=".$dbname."<br>";
-
-        ////////////////// 2) Full //////////////////
-        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
-        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
-        //$sql = "BACKUP DATABASE ScanOrder TO DISK = 'C:\\db_backup_managtestbackup_07-08-2023-16-10-05.bak'";
-        //$sql = "SELECT id FROM crn_crntask";
-        echo "FULL sql=".$sql."<br>";
-
-//        $sql = "
-//          SELECT id, field
-//          FROM scan_patientlastname
-//          WHERE field LIKE '%Doe%'
-//        ";
-
-        $params['backupfile'] = $backupfile;
-        $query = $em->getConnection()->prepare($sql);
-        //$res = $query->execute($params);
-        $res = $query->execute();
-        //echo "res=".$res."<br>";
-
-        //$results = $query->fetchAll();
-        //dump($results);
-
-        //$query = $em->createQuery($sql);
-        //$res = $query->getResult();
-
-        dump($res);
-        exit('111');
-
-        return $res;
-        ////////////////// EOF 2 //////////////////
-
-        ////////////////// 3) Backup log //////////////////
-        //2. Create periodic log backups. These capture activity since the last backup.
-        //$msgLog = $this->creatingBackupSQLLog($filepath);
-        //$msg = $msg . "<br>" . $msgLog;
-
-        return $msg;
-    }
+//        //$res = $query->execute($params);
+//        $res = $query->execute();
+//        //echo "res=".$res."<br>";
+//
+//        //$results = $query->fetchAll();
+//        //dump($results);
+//
+//        //$query = $em->createQuery($sql);
+//        //$res = $query->getResult();
+//
+//        dump($res);
+//        exit('111');
+//
+//        return $res;
+//        ////////////////// EOF 2 //////////////////
+//
+//        ////////////////// 3) Backup log //////////////////
+//        //2. Create periodic log backups. These capture activity since the last backup.
+//        //$msgLog = $this->creatingBackupSQLLog($filepath);
+//        //$msg = $msg . "<br>" . $msgLog;
+//
+//        return $msg;
+//    }
     public function creatingBackupSQLFull( $filepath ) {
         $em = $this->getDoctrine()->getManager();
         $msg = null;
