@@ -779,7 +779,7 @@ class DataBackupManagementController extends OrderAbstractController
 //          WHERE field LIKE '%Doe%'
 //        ";
 
-        if(0) {
+        if(1) {
             $process = Process::fromShellCommandline($sql);
             $process->setTimeout(1800); //sec; 1800 sec => 30 min
             $process->run();
@@ -789,7 +789,7 @@ class DataBackupManagementController extends OrderAbstractController
             $res = $process->getOutput();
             $res = "Successefully restore backup DataBase $dbname from $backupFilePath. " . $res;
         } else {
-            $res = "Backup process is disabled";
+            $res = "Restore process is disabled";
         }
 
         //dump($res);
