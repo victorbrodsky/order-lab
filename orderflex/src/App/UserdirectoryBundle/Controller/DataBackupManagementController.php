@@ -370,7 +370,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFilePath ) {
 
-            exit('Under construction: backupFilePath='.$backupFilePath);
+            //exit('Under construction: backupFilePath='.$backupFilePath);
             //create backup
             $res = $this->restoringBackupSQLFull($backupFilePath);
             //exit($res);
@@ -741,11 +741,11 @@ class DataBackupManagementController extends OrderAbstractController
 
 
     public function restoringBackupSQLFull($backupFilePath) {
-        $msg = null;
         $em = $this->getDoctrine()->getManager();
-        $msg = null;
+        $res = null;
 
         $dbname = $this->getParameter('database_name');
+        $dbname = "ScanOrderTest";
         $uid = $this->getParameter('database_user');
         $pwd = $this->getParameter('database_password');
         $host = $this->getParameter('database_host');
@@ -757,7 +757,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
-        $sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupfile;
+        $sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
 
         echo "FULL sql=".$sql."<br>";
 
@@ -767,21 +767,23 @@ class DataBackupManagementController extends OrderAbstractController
 //          WHERE field LIKE '%Doe%'
 //        ";
 
-        $process = Process::fromShellCommandline($sql);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $process->run();
-        if( !$process->isSuccessful() ) {
-            throw new ProcessFailedException($process);
+        if(0) {
+            $process = Process::fromShellCommandline($sql);
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            $res = $process->getOutput();
+            $res = "Successefully restore backup DataBase $dbname from $backupFilePath. " . $res;
+        } else {
+            $res = "Backup process is disabled";
         }
-        $res = $process->getOutput();
-        $res =  "Successefully restore backup DataBase $dbname from $backupFilePath. " . $res;
 
         //dump($res);
         //exit('111');
 
         return $res;
-
-        return $msg;
     }
     public function restoringBackupSQLFull_MSSQL($networkDrivePath) {
         $msg = null;
