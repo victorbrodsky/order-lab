@@ -652,7 +652,10 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = "pg_dump -U postgres $dbname > $backupfile";
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
-        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+        //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+
+        //C:\xampp\pgsql\14\bin\pg_dump.exe --file "C:\\Users\\ch3\\DOCUME~1\\MyDocs\\WCMC\\Backup\\DB_BAC~1\\Dev\\10AUGU~3.SQL" --host "127.0.0.1" --port "5432" --username "postgres" --no-password --verbose --format=c --blobs "ScanOrder"
+        $sql = "pg_dump --file $backupfile --host $host --port 5432 --username $uid --no-password --verbose --format=c --blobs $dbname";
 
         echo "FULL sql=".$sql."<br>";
 
@@ -760,42 +763,52 @@ class DataBackupManagementController extends OrderAbstractController
     //Restore to the empty DB (no more than 9 users)
     //$backupFilePath is plain, sql file
     //Use DB ScanOrderTest
-    public function restoringBackupSQLFull($backupFilePath) {
+    public function restoringBackupSQLFull_Plain($backupFilePath) {
         if (file_exists($backupFilePath)) {
             //echo "The file $filename exists";
         } else {
             return "The file $backupFilePath does not exist";
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         //1 admininstrator user + 8 tests users = 9 users
-        $users = $this->em->getRepository(User::class)->findAll();
+        $users = $em->getRepository(User::class)->findAll();
         echo "users=".count($users)."<br>";
         if( count($users) > 9 ) {
-            return "Exit: Users are populated in DB, DB is not empty.";
+            return "Exit: Users are already populated in DB, therefore DB is not empty.";
         }
-        exit('111');
+        //exit('111');
 
         //check if db compatable with filename
         $userServiceUtil = $this->container->get('user_service_utility');
         $dbInfo = $userServiceUtil->getDbVersion(); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64-bit
         $dbInfoLower = strtolower($dbInfo);
-        //ihc_antibody_postgresql.sql
-        if( str_contains($filename, 'postgresql') ) {
-            if( str_contains($dbInfoLower, 'postgresql') === false ) {
-                return "File ".$filename. " is not compatable with current database " . $dbInfo;
-            }
+        echo "$dbInfoLower=".$dbInfoLower."<br>";
+        if( str_contains($dbInfoLower, 'postgresql') === false ) {
+            return "File ".$filename. " is not compatable with current database " . $dbInfo;
         }
+        $memory_limit = ini_get('memory_limit');
+        echo "Current memory limit is: " . $memory_limit . "<br>";
+        echo "Peak memory usage: " . memory_get_peak_usage() . "<br>";
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', '-1');
+        $memory_limit = ini_get('memory_limit');
+        echo "memory_limit: " . $memory_limit . "<br>";
+        $max_execution_time = ini_get('max_execution_time');
+        echo "max_execution_time: " . $max_execution_time . "<br>";
+        //exit('111');
 
         $sql = file_get_contents($backupFilePath);  // Read file contents
 
-        $this->em->getConnection()->exec($sql);  // Execute native SQL
+        $em->getConnection()->exec($sql);  // Execute native SQL
 
-        $this->em->flush();
+        $em->flush();
 
         //exit("generateAntibodyList: Finished");
         return true;
     }
-    public function restoringBackupSQLFull_Postgres($backupFilePath) {
+    public function restoringBackupSQLFull($backupFilePath) {
         $em = $this->getDoctrine()->getManager();
         $res = null;
 
@@ -816,7 +829,12 @@ class DataBackupManagementController extends OrderAbstractController
         //pg_restore -d newdb db.dump
         //$sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
         //$sql = 'pg_restore -d --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
-        $sql = 'pg_restore --verbose --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' < '.$backupFilePath;
+        //$sql = 'pg_restore --verbose --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' < '.$backupFilePath;
+        //pg_restore.exe --host "127.0.0.1" --port "5432" --username "postgres" --no-password --dbname "ScanOrderTest" --verbose
+        //$ospath = '/c/xampp/pgsql/14/bin/';
+        $ospath = "C:\\xampp\\pgsql\\14\\bin\\";
+        $sql = $ospath."pg_restore --host $host --port 5432 --username $uid --no-password --dbname $dbname --verbose $backupFilePath";
+        //$sql = $ospath."pg_restore --help";
 
         echo "FULL sql=".$sql."<br>";
 

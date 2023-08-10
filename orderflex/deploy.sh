@@ -46,6 +46,8 @@ fi
 
 echo WEB_USER="$WEB_USER"
 
+#$PROJECT_LOCAL_PATH/bin/console => php bin/console
+
 ##### Functions #####
 function prep()
 {

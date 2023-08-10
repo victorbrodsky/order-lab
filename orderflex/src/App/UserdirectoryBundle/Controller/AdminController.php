@@ -806,6 +806,18 @@ class AdminController extends OrderAbstractController
         $msg = $this->generateAll($request);
         $em->clear();
 
+        //convert flash array to a single message
+        $flashBag = $request->getSession()->getFlashBag()->all();
+        if( count($flashBag['notice']) > 5 ) {
+            //dump($flashBag);
+            //exit('111');
+            $flashBagStr = implode("<br>", $flashBag['notice']);
+            $this->addFlash(
+                'notice',
+                $flashBagStr
+            );
+        }
+
         $this->addFlash(
             'notice',
             $msg
