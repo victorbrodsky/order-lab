@@ -432,7 +432,8 @@ class UserUtil {
                 break;
             default:
                 //search by name
-                $criteriastr .= " AND location.name LIKE '%".$search."%'";
+                //$criteriastr .= " AND location.name LIKE '%".$search."%'";
+                $criteriastr .= " AND location.name LIKE :search";
         }
 
         //The "Supervisor" column for the orphaned Location should be the person who belongs to the same "Service" as the orphan location according
@@ -451,6 +452,14 @@ class UserUtil {
 
         //$em = $doctrine->getManager();
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+
+        if( str_contains($criteriastr,':search') ) {
+            $query->setParameters(
+                array(
+                    ':search' => '%'.$search.'%',
+                )
+            );
+        }
 
         $limitFlag = true;
         if( $limitFlag ) {

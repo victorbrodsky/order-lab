@@ -459,6 +459,11 @@ class UserController extends OrderAbstractController
         $userid = trim((string)$request->get('userid') );
         $all = trim((string)$request->get('all'));
 
+        //clean $search
+        $search = str_replace("'","",$search);
+        $search = str_replace('"','',$search);
+        $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+
         //echo "all=".$all."<br>";
 
 //        $page = $request->get('page');
@@ -618,6 +623,11 @@ class UserController extends OrderAbstractController
         //echo "search=".$search."<br>";
         //echo "all=".$all."<br>";
 
+        //clean $search
+        $search = str_replace("'","",$search);
+        $search = str_replace('"','',$search);
+        $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+
         //$request = $this->container->get('request');
         $postData = $request->query->all();
 
@@ -770,6 +780,14 @@ class UserController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
+        if( str_contains($totalcriteriastr,':search') ) {
+            $query->setParameters(
+                array(
+                    ':search' => '%'.$search.'%',
+                )
+            );
+        }
+
         //$limitFlag = null;//testing
         if( $limitFlag ) {
             //echo "use paginator limitFlag=$limitFlag<br>";
@@ -811,91 +829,96 @@ class UserController extends OrderAbstractController
             return $inputCriteriastr;
         }
 
+        //clean $search
+        $search = str_replace("'","",$search);
+        $search = str_replace('"','',$search);
+        $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+
         //last name
-        $criteriastr .= "LOWER(infos.lastName) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(infos.lastName) LIKE LOWER(:search) OR ";
         //$criteriastr .= "user.lastName='".$search."' OR ";
 
         //first name
-        $criteriastr .= "LOWER(infos.firstName) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(infos.firstName) LIKE LOWER(:search) OR ";
         //$criteriastr .= "user.firstName='".$search."' OR ";
 
         //Middle Name
-        $criteriastr .= "LOWER(infos.middleName) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(infos.middleName) LIKE LOWER(:search) OR ";
         //$criteriastr .= "user.middleName='".$search."' OR ";
 
         //Preferred Full Name for Display
-        $criteriastr .= "LOWER(infos.displayName) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(infos.displayName) LIKE LOWER(:search) OR ";
 
         //Abbreviated Name/Initials field
-        //$criteriastr .= "user.initials LIKE '%".$search."%' OR ";
+        //$criteriastr .= "user.initials LIKE :search OR ";
         $criteriastr .= "LOWER(infos.initials)=LOWER('".$search."') OR ";
 
         //preferred email
-        $criteriastr .= "LOWER(infos.email) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(infos.email) LIKE LOWER(:search) OR ";
         //$criteriastr .= "user.email='".$search."' OR ";
 
         //email in locations
-        $criteriastr .= "LOWER(locations.email) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(locations.email) LIKE LOWER(:search) OR ";
         //$criteriastr .= "locations.email='".$search."' OR ";
 
         //User ID/CWID
-        $criteriastr .= "LOWER(user.primaryPublicUserId) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(user.primaryPublicUserId) LIKE LOWER(:search) OR ";
         //$criteriastr .= "user.primaryPublicUserId='".$search."' OR ";
 
         //Username
-        $criteriastr .= "LOWER(user.username) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(user.username) LIKE LOWER(:search) OR ";
 
 
         //////////////////// administrative title
         //institution
-        $criteriastr .= "LOWER(administrativeInstitution.name) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(administrativeInstitution.name) LIKE LOWER(:search) OR ";
         //department
-        //$criteriastr .= "administrativeDepartment.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "administrativeDepartment.name LIKE :search OR ";
         //division
-        //$criteriastr .= "administrativeDivision.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "administrativeDivision.name LIKE :search OR ";
         //service
-        //$criteriastr .= "administrativeService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "LOWER(administrativeName.name) LIKE LOWER('%".$search."%') OR ";
+        //$criteriastr .= "administrativeService.name LIKE :search OR ";
+        $criteriastr .= "LOWER(administrativeName.name) LIKE LOWER(:search) OR ";
 
 
         //////////////////// academic appointment title
         //institution
-        $criteriastr .= "LOWER(appointmentInstitution.name) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(appointmentInstitution.name) LIKE LOWER(:search) OR ";
         //department
-        //$criteriastr .= "appointmentDepartment.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "appointmentDepartment.name LIKE :search OR ";
         //division
-        //$criteriastr .= "appointmentDivision.name LIKE '%".$search."%' OR ";
+        //$criteriastr .= "appointmentDivision.name LIKE :search OR ";
         //service
-        //$criteriastr .= "appointmentService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "LOWER(appointmentName.name) LIKE LOWER('%".$search."%') OR ";
+        //$criteriastr .= "appointmentService.name LIKE :search OR ";
+        $criteriastr .= "LOWER(appointmentName.name) LIKE LOWER(:search) OR ";
 
 
         //////////////////// medical appointment title
         //institution
-        $criteriastr .= "LOWER(medicalInstitution.name) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(medicalInstitution.name) LIKE LOWER(:search) OR ";
         //department
         //$criteriastr .= "medicalDepartment.name LIKE '%".$search."%' OR ";
         //division
         //$criteriastr .= "medicalDivision.name LIKE '%".$search."%' OR ";
         //service
         //$criteriastr .= "medicalService.name LIKE '%".$search."%' OR ";
-        $criteriastr .= "LOWER(medicalName.name) LIKE LOWER('%".$search."%') OR ";
+        $criteriastr .= "LOWER(medicalName.name) LIKE LOWER(:search) OR ";
 
 
         //Associated NYPH Code in Locations
-        //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
+        //$criteriastr .= "locations.associatedCode LIKE :search OR ";
         $criteriastr .= "locations.associatedCode='".$search."' OR ";
 
         if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //WCMC Employee Identification Number (EIN)
             //NPI
             $dql->leftJoin("credentials.identifiers", "identifiers");
-            //$criteriastr .= "identifiers.field LIKE '%".$search."%' OR ";
+            //$criteriastr .= "identifiers.field LIKE :search OR ";
             $criteriastr .= "identifiers.field='".$search."' OR ";
 
             //NYPH Code
             $dql->leftJoin("credentials.codeNYPH", "codeNYPH");
-            //$criteriastr .= "codeNYPH.field LIKE '%".$search."%' OR ";
+            //$criteriastr .= "codeNYPH.field LIKE :search OR ";
             $criteriastr .= "codeNYPH.field='".$search."' OR ";
 
             //License Number
@@ -903,16 +926,16 @@ class UserController extends OrderAbstractController
             //Specialty (in Board Certifications)
             $dql->leftJoin("credentials.boardCertification", "boardCertification");
             $dql->leftJoin("boardCertification.specialty", "specialty");
-            $criteriastr .= "specialty.name LIKE '%".$search."%' OR ";
+            $criteriastr .= "specialty.name LIKE :search OR ";
         }
 
         //Position Type
         //$dql->leftJoin("appointmentTitles.positions", "appointmentTitlesPositions");
-        $criteriastr .= " appointmentTitlesPositions.name LIKE '%".$search."%' ";
+        $criteriastr .= " appointmentTitlesPositions.name LIKE :search ";
 
         //Specialties
         $dql->leftJoin("medicalTitles.specialties", "medicalSpecialties");
-        $criteriastr .= " OR medicalSpecialties.name LIKE '%".$search."%' ";
+        $criteriastr .= " OR medicalSpecialties.name LIKE :search ";
 
 
         if( $criteriastr != "" ) {

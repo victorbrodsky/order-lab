@@ -1273,6 +1273,11 @@ class UtilController extends OrderAbstractController {
         $search = trim((string)$request->get('search') );
         $limit = trim((string)$request->get('limit') );
 
+        //clean $search
+        $search = str_replace("'","",$search);
+        $search = str_replace('"','',$search);
+        $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+
         //echo "type=".$type."<br>";
         //echo "search=".$search."<br>";
         //echo "limit=".$limit."<br>";
@@ -1304,7 +1309,8 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "infos.displayName IS NOT NULL";
             } else {
-                $criteriastr = "LOWER(infos.displayName) LIKE LOWER('%".$search."%')";
+                //$criteriastr = "LOWER(infos.displayName) LIKE LOWER('%".$search."%')";
+                $criteriastr = "LOWER(infos.displayName) LIKE LOWER(:search)";
             }
         }
 
@@ -1321,10 +1327,14 @@ class UtilController extends OrderAbstractController {
                 $criteriastr .= "appointmentInstitution.name IS NOT NULL OR ";
                 $criteriastr .= "medicalInstitution.name IS NOT NULL";
             } else {
-                $criteriastr = "administrativeInstitution.name LIKE '%".$search."%' OR ";
+                //$criteriastr = "administrativeInstitution.name LIKE '%".$search."%' OR ";
+                //$criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
+                //$criteriastr .= "medicalInstitution.name LIKE '%".$search."%'";
+
+                $criteriastr = "administrativeInstitution.name LIKE :search OR ";
                 //$criteriastr .= "administrativeInstitution.abbreviation LIKE '%".$search."%' OR ";
-                $criteriastr .= "appointmentInstitution.name LIKE '%".$search."%' OR ";
-                $criteriastr .= "medicalInstitution.name LIKE '%".$search."%'";
+                $criteriastr .= "appointmentInstitution.name LIKE :search OR ";
+                $criteriastr .= "medicalInstitution.name LIKE :search";
             }
 
             //time
@@ -1337,7 +1347,8 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "user.primaryPublicUserId IS NOT NULL";
             } else {
-                $criteriastr = "user.primaryPublicUserId LIKE '%".$search."%'";
+                //$criteriastr = "user.primaryPublicUserId LIKE '%".$search."%'";
+                $criteriastr = "user.primaryPublicUserId LIKE :search";
             }
         }
 
@@ -1348,7 +1359,8 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "adminTitleName.name IS NOT NULL";
             } else {
-                $criteriastr = "adminTitleName.name LIKE '%".$search."%'";
+                //$criteriastr = "adminTitleName.name LIKE '%".$search."%'";
+                $criteriastr = "adminTitleName.name LIKE :search";
             }
 
             //time
@@ -1364,7 +1376,8 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "appointmentTitleName.name IS NOT NULL";
             } else {
-                $criteriastr = "appointmentTitleName.name LIKE '%".$search."%'";
+                //$criteriastr = "appointmentTitleName.name LIKE '%".$search."%'";
+                $criteriastr = "appointmentTitleName.name LIKE :search";//
             }
 
             //time
@@ -1380,7 +1393,8 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr = "medicalTitleName.name IS NOT NULL";
             } else {
-                $criteriastr = "medicalTitleName.name LIKE '%".$search."%'";
+                //$criteriastr = "medicalTitleName.name LIKE '%".$search."%'";
+                $criteriastr = "medicalTitleName.name LIKE :search";
             }
 
             //time
@@ -1411,13 +1425,13 @@ class UtilController extends OrderAbstractController {
             if( $search == "prefetchmin" ) {
                 $criteriastr .= "infos.displayName IS NOT NULL";
             } else {
-                $criteriastr .= "LOWER(infos.displayName) LIKE LOWER('%".$search."%')";
+                //$criteriastr .= "LOWER(infos.displayName) LIKE LOWER('%".$search."%')";
+                $criteriastr .= "LOWER(infos.displayName) LIKE LOWER(:search)";
             }
 
             //echo "1 criteriastr=".$criteriastr."<br>";
 
         }
-
 
         //filter out Pathology Fellowship Applicants
         $criteriastr = "(".$criteriastr . ") AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
@@ -1442,6 +1456,14 @@ class UtilController extends OrderAbstractController {
         $query->setMaxResults($limit);
 
         $output = $query->getResult();
+
+        if( str_contains($criteriastr,':search') ) {
+            $query->setParameters(
+                array(
+                    ':search' => '%'.$search.'%',
+                )
+            );
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
