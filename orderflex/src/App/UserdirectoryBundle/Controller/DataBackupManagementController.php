@@ -835,7 +835,8 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = 'pg_restore --verbose --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' < '.$backupFilePath;
         //pg_restore.exe --host "127.0.0.1" --port "5432" --username "postgres" --no-password --dbname "ScanOrderTest" --verbose backupfile
         //$ospath = '/c/xampp/pgsql/14/bin/';
-        $ospath = "C:\\xampp\\pgsql\\14\\bin\\";
+        //$ospath = "C:\\xampp\\pgsql\\14\\bin\\";
+        $ospath = "";
         $sql = $ospath."pg_restore --host '$host' --port 5432 --username '$uid' --no-password --dbname '$dbname' --verbose '$backupFilePath'";
         //$sql = $ospath."pg_restore --help";
 
