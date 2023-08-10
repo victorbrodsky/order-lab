@@ -25,6 +25,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\BackupManagementType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\DBAL\Configuration;
@@ -756,9 +757,43 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
-
-
+    //$backupFilePath is plain, sql file
     public function restoringBackupSQLFull($backupFilePath) {
+        if (file_exists($backupFilePath)) {
+            //echo "The file $filename exists";
+        } else {
+            return "The file $backupFilePath does not exist";
+        }
+
+        //1 admininstrator user + 8 tests users = 9 users
+        $users = $this->em->getRepository(User::class)->findAll();
+        echo "users=".count($users)."<br>";
+        if( count($users) > 9 ) {
+            return "Exit: Users are populated in DB, DB is not empty.";
+        }
+        exit('111');
+
+        //check if db compatable with filename
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $dbInfo = $userServiceUtil->getDbVersion(); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64-bit
+        $dbInfoLower = strtolower($dbInfo);
+        //ihc_antibody_postgresql.sql
+        if( str_contains($filename, 'postgresql') ) {
+            if( str_contains($dbInfoLower, 'postgresql') === false ) {
+                return "File ".$filename. " is not compatable with current database " . $dbInfo;
+            }
+        }
+
+        $sql = file_get_contents($backupFilePath);  // Read file contents
+
+        $this->em->getConnection()->exec($sql);  // Execute native SQL
+
+        $this->em->flush();
+
+        //exit("generateAntibodyList: Finished");
+        return true;
+    }
+    public function restoringBackupSQLFull_Postgres($backupFilePath) {
         $em = $this->getDoctrine()->getManager();
         $res = null;
 
