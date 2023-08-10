@@ -860,13 +860,13 @@ class DataBackupManagementController extends OrderAbstractController
             $projectRoot = $this->container->get('kernel')->getProjectDir();
 
             //1) drop existing DB: php bin/console doctrine:database:drop --force
-            $drop = $phpPath . $projectRoot.'/bin/console doctrine:database:drop --force';
+            $drop = $phpPath . ' ' .$projectRoot.'/bin/console doctrine:database:drop --force';
             $logger->notice("drop command=[".$drop."]");
             $res = $this->runProcess($drop);
             echo "drop res=".$res."<br>";
 
             //2 create DB: php bin/console doctrine:database:create
-            $create = $phpPath . $projectRoot.'/bin/console doctrine:database:create';
+            $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
             $logger->notice("create command=[".$create."]");
             $res = $this->runProcess($create);
             echo "create res=".$res."<br>";
