@@ -655,10 +655,11 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = "pg_dump -U postgres $dbname > $backupfile";
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
-        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile; //working
 
+        //C:\xampp\pgsql\14\bin\pg_dump.exe --file "10AUGU~2.SQL" --host "157.139.226.86" --port "5432" --username "symfony" --no-password --verbose --format=c --blobs "ScanOrder"
         //C:\xampp\pgsql\14\bin\pg_dump.exe --file "C:\\Users\\ch3\\DOCUME~1\\MyDocs\\WCMC\\Backup\\DB_BAC~1\\Dev\\10AUGU~3.SQL" --host "127.0.0.1" --port "5432" --username "postgres" --no-password --verbose --format=c --blobs "ScanOrder"
-        //$sql = "pg_dump --file '$backupfile' --host '$host' --port 5432 --username '$uid' --no-password --verbose --format=c --blobs '$dbname'";
+        $sql = "pg_dump --file '$backupfile' --host '$host' --port '5432' --username '$uid' --no-password --verbose --format=c --blobs '$dbname'";
 
         echo "FULL sql=".$sql."<br>";
 
@@ -852,13 +853,16 @@ class DataBackupManagementController extends OrderAbstractController
 //        ";
 
         if(1) {
-            $process = Process::fromShellCommandline($sql);
-            $process->setTimeout(1800); //sec; 1800 sec => 30 min
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-            $res = $process->getOutput();
+            //1) drop existing DB: php bin/console doctrine:database:drop --force
+            $res = $this->runProcess("php bin/console doctrine:database:drop --force");
+            echo "drop res=".$res."<br>";
+
+            //2 create DB: php bin/console doctrine:database:create
+            $res = $this->runProcess("php bin/console doctrine:database:create");
+            echo "create res=".$res."<br>";
+
+            //Restore DB
+            $res = $this->runProcess($sql);
             $res = "Successefully restore backup DataBase $dbname from $backupFilePath. " . $res;
         } else {
             $res = "Restore process is disabled";
@@ -906,6 +910,17 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         return $msg;
+    }
+
+    public function runProcess($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
     }
 
 }
