@@ -639,6 +639,9 @@ class DataBackupManagementController extends OrderAbstractController
         $pwd = $this->getParameter('database_password');
         $host = $this->getParameter('database_host');
         $driver = $this->getParameter('database_driver');
+
+        $uid = 'postgresql';
+
         echo "dbname=".$dbname."<br>";
         echo "uid=".$uid."<br>";
         echo "pwd=".$pwd."<br>";
