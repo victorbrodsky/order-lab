@@ -867,7 +867,7 @@ class DataBackupManagementController extends OrderAbstractController
                 echo "drop res=" . $res . "<br>";
             } else {
                 //DROP DATABASE db_name WITH (FORCE)
-                $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
+                $sqlDrop = 'DROP DATABASE ' . 'ScanOrderTest' . ' WITH (FORCE)';
                 $em->getConnection()->exec($sqlDrop);  // Execute native SQL
                 $em->flush();
             }
