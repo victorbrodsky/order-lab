@@ -655,7 +655,7 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
 
         //C:\xampp\pgsql\14\bin\pg_dump.exe --file "C:\\Users\\ch3\\DOCUME~1\\MyDocs\\WCMC\\Backup\\DB_BAC~1\\Dev\\10AUGU~3.SQL" --host "127.0.0.1" --port "5432" --username "postgres" --no-password --verbose --format=c --blobs "ScanOrder"
-        $sql = "pg_dump --file $backupfile --host $host --port 5432 --username $uid --no-password --verbose --format=c --blobs $dbname";
+        $sql = "pg_dump --file '$backupfile' --host '$host' --port 5432 --username '$uid'' --no-password --verbose --format=c --blobs '$dbname'";
 
         echo "FULL sql=".$sql."<br>";
 
@@ -813,11 +813,14 @@ class DataBackupManagementController extends OrderAbstractController
         $res = null;
 
         $dbname = $this->getParameter('database_name');
-        $dbname = "ScanOrderTest"; //testing replace for testing
         $uid = $this->getParameter('database_user');
         $pwd = $this->getParameter('database_password');
         $host = $this->getParameter('database_host');
         $driver = $this->getParameter('database_driver');
+
+        $dbname = "ScanOrderTest"; //testing replace for testing
+        $uid = 'postgres';
+
         echo "dbname=".$dbname."<br>";
         echo "uid=".$uid."<br>";
         echo "pwd=".$pwd."<br>";
@@ -830,10 +833,10 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
         //$sql = 'pg_restore -d --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
         //$sql = 'pg_restore --verbose --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' < '.$backupFilePath;
-        //pg_restore.exe --host "127.0.0.1" --port "5432" --username "postgres" --no-password --dbname "ScanOrderTest" --verbose
+        //pg_restore.exe --host "127.0.0.1" --port "5432" --username "postgres" --no-password --dbname "ScanOrderTest" --verbose backupfile
         //$ospath = '/c/xampp/pgsql/14/bin/';
         $ospath = "C:\\xampp\\pgsql\\14\\bin\\";
-        $sql = $ospath."pg_restore --host $host --port 5432 --username $uid --no-password --dbname $dbname --verbose $backupFilePath";
+        $sql = $ospath."pg_restore --host '$host' --port 5432 --username '$uid' --no-password --dbname '$dbname' --verbose '$backupFilePath'";
         //$sql = $ospath."pg_restore --help";
 
         echo "FULL sql=".$sql."<br>";
