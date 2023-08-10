@@ -656,10 +656,11 @@ class DataBackupManagementController extends OrderAbstractController
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
         $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile; //working
+        $sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' -f '.$backupfile; //working?
 
         //C:\xampp\pgsql\14\bin\pg_dump.exe --file "10AUGU~2.SQL" --host "157.139.226.86" --port "5432" --username "symfony" --no-password --verbose --format=c --blobs "ScanOrder"
         //C:\xampp\pgsql\14\bin\pg_dump.exe --file "C:\\Users\\ch3\\DOCUME~1\\MyDocs\\WCMC\\Backup\\DB_BAC~1\\Dev\\10AUGU~3.SQL" --host "127.0.0.1" --port "5432" --username "postgres" --no-password --verbose --format=c --blobs "ScanOrder"
-        $sql = "pg_dump --file '$backupfile' --host '$host' --port '5432' --username '$uid' --no-password --verbose --format=c --blobs '$dbname'";
+        //$sql = "pg_dump --file '$backupfile' --host '$host' --port '5432' --username '$uid' --no-password --verbose --format=c --blobs '$dbname'";
 
         echo "FULL sql=".$sql."<br>";
 
