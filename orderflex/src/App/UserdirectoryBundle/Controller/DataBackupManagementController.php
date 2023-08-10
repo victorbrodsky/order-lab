@@ -757,7 +757,9 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
+    //Restore to the empty DB (no more than 9 users)
     //$backupFilePath is plain, sql file
+    //Use DB ScanOrderTest
     public function restoringBackupSQLFull($backupFilePath) {
         if (file_exists($backupFilePath)) {
             //echo "The file $filename exists";
