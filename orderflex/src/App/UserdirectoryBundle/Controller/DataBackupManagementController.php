@@ -631,7 +631,7 @@ class DataBackupManagementController extends OrderAbstractController
         $msg = null;
 
         $timePrefix = date("d-m-Y-H-i-s");
-        $backupfile = $filepath . "testbackup_$timePrefix.dump";
+        $backupfile = $filepath . "testbackup_$timePrefix.sql";
         echo "backupfile=".$backupfile."<br>";
 
         $dbname = $this->getParameter('database_name');
