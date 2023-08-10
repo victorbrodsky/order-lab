@@ -655,7 +655,7 @@ class DataBackupManagementController extends OrderAbstractController
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
 
         //C:\xampp\pgsql\14\bin\pg_dump.exe --file "C:\\Users\\ch3\\DOCUME~1\\MyDocs\\WCMC\\Backup\\DB_BAC~1\\Dev\\10AUGU~3.SQL" --host "127.0.0.1" --port "5432" --username "postgres" --no-password --verbose --format=c --blobs "ScanOrder"
-        $sql = "pg_dump --file '$backupfile' --host '$host' --port 5432 --username '$uid'' --no-password --verbose --format=c --blobs '$dbname'";
+        $sql = "pg_dump --file '$backupfile' --host '$host' --port 5432 --username '$uid' --no-password --verbose --format=c --blobs '$dbname'";
 
         echo "FULL sql=".$sql."<br>";
 
