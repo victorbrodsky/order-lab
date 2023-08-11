@@ -794,7 +794,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( str_contains($dbInfoLower, 'postgresql') === false ) {
             return "File ".$filename. " is not compatable with current database " . $dbInfo;
         }
-        
+
         $memory_limit = ini_get('memory_limit');
         echo "Current memory limit is: " . $memory_limit . "<br>";
         echo "Peak memory usage: " . memory_get_peak_usage() . "<br>";
@@ -838,8 +838,10 @@ class DataBackupManagementController extends OrderAbstractController
             }
         }
 
+        echo "Start restore. Read file: " . $backupFilePath . "<br>";
         $sql = file_get_contents($backupFilePath);  // Read file contents
 
+        echo "Start restore: exec dql from file: " . $backupFilePath . "<br>";
         $em->getConnection()->exec($sql);  // Execute native SQL
 
         $em->flush();
