@@ -782,7 +782,7 @@ class DataBackupManagementController extends OrderAbstractController
         $users = $em->getRepository(User::class)->findAll();
         echo "users=".count($users)."<br>";
         if( count($users) > 9 ) {
-            return "Exit: Users are already populated in DB, therefore DB is not empty.";
+            //return "Exit: Users are already populated in DB, therefore DB is not empty.";
         }
         //exit('111');
 
@@ -794,6 +794,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( str_contains($dbInfoLower, 'postgresql') === false ) {
             return "File ".$filename. " is not compatable with current database " . $dbInfo;
         }
+        
         $memory_limit = ini_get('memory_limit');
         echo "Current memory limit is: " . $memory_limit . "<br>";
         echo "Peak memory usage: " . memory_get_peak_usage() . "<br>";
