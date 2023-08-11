@@ -2565,7 +2565,7 @@ class User extends UserBase {
         return $addInfo;
     }
 
-    public function getEmploymentStartEndDates()
+    public function getEmploymentStartEndDates( $asString=true, $format='m/d/Y' )
     {
         $resArr = array();
         $startDate = NULL;
@@ -2582,10 +2582,16 @@ class User extends UserBase {
         if( $latestEmploymentStatus ) {
 
             if( $latestEmploymentStatus->getHireDate() ) {
-                $startDate = $latestEmploymentStatus->getHireDate()->format("m/d/Y");
+                $startDate = $latestEmploymentStatus->getHireDate();
+                if( $startDate && $asString ) {
+                    $startDate = $startDate->format($format);
+                }
             }
             if( $latestEmploymentStatus->getTerminationDate() ) {
-                $endDate = $latestEmploymentStatus->getTerminationDate()->format("m/d/Y");
+                $endDate = $latestEmploymentStatus->getTerminationDate();
+                if( $endDate && $endDate ) {
+                    $endDate = $endDate->format($format);
+                }
             }
         }
 

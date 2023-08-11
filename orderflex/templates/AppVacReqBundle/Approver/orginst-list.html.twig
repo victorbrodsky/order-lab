@@ -138,13 +138,20 @@
                     </thead>
                     <tbody id="table-body-submitter">
                         {% for submitter in submitters %}
-                            {% set startEndDates = submitter.getEmploymentStartEndDates() %}
+                            {% set startEndDates = submitter.getEmploymentStartEndDates(false) %}
                             {% set startDate = null %}
                             {% set endDate = null %}
                             {% if startEndDates and startEndDates|length == 2 %}
                                 {% set startDate = startEndDates['startDate'] %}
+                                {% if startDate %}
+                                    {% set startDate = startDate|date("m/d/Y",false) %}
+                                {% endif %}
                                 {% set endDate = startEndDates['endDate'] %}
+                                {% if endDate %}
+                                    {% set endDate = endDate|date("m/d/Y",false) %}
+                                {% endif %}
                             {% endif %}
+                            {#startDate={{ startDate }}, endDate={{ endDate }}<br>#}
                             <tr>
                                 <td>
                                     <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
@@ -153,11 +160,12 @@
                                 <td>
                                     {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
                                     {#Latest Employment Start Date#}
+                                    {#startDate={{ startDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
                                         <input id="vacreq_start_date"
                                                class="datepicker form-control submit-on-enter-field"
                                                placeholder="Latest Employment Start Date" type="text"
-                                               value="{{ startDate|date('d-m-Y') }}"
+                                               value="{{ startDate }}"
                                         >
                                         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
@@ -165,11 +173,12 @@
                                 <td>
                                     {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
                                     {#Latest Employment End Date#}
+                                    {#endDate={{ endDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
                                         <input id="vacreq_end_date"
                                                class="datepicker form-control submit-on-enter-field"
                                                placeholder="Latest Employment End Date" type="text"
-                                               value="{{ endDate|date('d-m-Y') }}"
+                                               value="{{ endDate }}"
                                         >
                                         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
