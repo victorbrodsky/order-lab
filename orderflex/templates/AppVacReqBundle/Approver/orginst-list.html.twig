@@ -78,6 +78,18 @@
                 {% endfor %}
             </div>
 
+            {% if 1 %}
+            <div class="well" align="justify">
+                <strong>Submitter(s)</strong>
+                <br>
+                {% for submitter in submitters %}
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                    >{{ submitter.getUserNameStr(true) }}</a>
+                    <br>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             {% set auditYearRangeArr = vacreq_util.getAuditYearRange() %}
             {% if 0 %}
                 <div class="well" align="justify">
@@ -108,7 +120,8 @@
                         {#<br>#}
                     {% endfor %}
                 </div>
-            {% else %}
+            {% endif %}
+            {% if 0 %}
             <div class="well" align="justify">
                 <strong>Submitter(s)</strong>
                 <br>
@@ -118,7 +131,7 @@
                         <th>Submitter</th>
                         <th>Latest Employment Start Date</th>
                         <th>Latest Employment End Date</th>
-                        <th>Action</th>
+                        <th>Save Dates</th>
                         <th>Download Audit Summary for {{ auditYearRangeArr[1] }}</th>
                         {#<th>Download [2021-2022] Audit</th>#}
                     </tr>
@@ -132,6 +145,14 @@
                                 </td>
                                 <td>
                                     Latest Employment Start Date
+                                    <div class="input-group input-group-reg date allow-future-date">
+                                        <input id="vacreq_start_date"
+                                               class="datepicker form-control submit-on-enter-field"
+                                               placeholder="Latest Employment Start Date" type="text"
+                                               value="{{ submitter.createDate|date('d-m-Y') }}"
+                                        >
+                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
                                 </td>
                                 <td>
                                     Latest Employment End Date
@@ -145,6 +166,7 @@
                                 <td>
                                     {#Download Audit Summary#}
                                     <a class="btn btn-default"
+                                       title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
                                         href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
                                         { 'userId': submitter.id }) }}">Download</a>
                                 </td>
