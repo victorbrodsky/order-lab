@@ -871,7 +871,8 @@ class DataBackupManagementController extends OrderAbstractController
                     // for connection named default An exception occurred while executing
                     // a query: SQLSTATE[55006]: Object in use: 7 ERROR:  database "ScanOrderTest"
                     // is being accessed by other users DETAIL:  There is 1 other session using the database.
-                    $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose --env=dev';
+                    $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose';
+                    $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
                     $logger->notice("drop command=[" . $drop . "]");
                     $res = $this->runProcess($drop);
                     echo "drop res=" . $res . "<br>";
