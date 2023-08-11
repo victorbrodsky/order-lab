@@ -366,7 +366,6 @@ class VacReqRequestType extends AbstractType
             }
 
             $builder->add('user', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                 'class' => User::class,
                 'label' => "Person Away:",
                 'required' => true,

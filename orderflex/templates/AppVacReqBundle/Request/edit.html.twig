@@ -1276,6 +1276,13 @@
             //    return;
             //}
 
+            //record original person away
+            var personAwayId = 0;
+            var personAway = $("select.vacreq-person-away").select2('data');
+            if( personAway ) {
+                personAwayId = personAway.id;
+            }
+
             var instSelector = '.vacreq-institution';
             if( _requestType == "carryover" ) {
                 instSelector = '.vacreq-tentativeInstitution';
@@ -1311,10 +1318,10 @@
             }).done(function(data) {
                 console.log('vacreqSetPersonAway reset person away');
                 $('select.vacreq-person-away').empty().trigger("change");
-                vacreqUpdatePersonAway(data);
+                vacreqUpdatePersonAway(data,personAwayId);
             });
         }
-        function vacreqUpdatePersonAway(users) {
+        function vacreqUpdatePersonAway(users,personAwayId) {
             users.forEach(function(item){
                 var thisUserId = item['id'];
                 var thisUserText = item['text'];
@@ -1324,10 +1331,15 @@
                 }
             });
             //$("select.vacreq-person-away").select2('val',null);
-            var userid = $('#authuser_id').val();
-            if( userid && userid.length > 0 ) {
-                //console.log('vacreqSetPersonAway set user userid='+userid);
-                $("select.vacreq-person-away").select2('val',userid);
+            if( personAwayId ) {
+                console.log('vacreqSetPersonAway set user personAwayId='+personAwayId);
+                $("select.vacreq-person-away").select2('val',personAwayId);
+            } else {
+                var userid = $('#authuser_id').val();
+                if (userid && userid.length > 0) {
+                    console.log('vacreqSetPersonAway set user userid=' + userid);
+                    $("select.vacreq-person-away").select2('val', userid);
+                }
             }
         }
 
