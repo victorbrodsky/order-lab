@@ -78,16 +78,85 @@
                 {% endfor %}
             </div>
 
+            {% set auditYearRangeArr = vacreq_util.getAuditYearRange() %}
+            {% if 0 %}
+                <div class="well" align="justify">
+                    <strong>Submitter(s)</strong>
+                    <br><br>
+                    {% for submitter in submitters %}
+                        <div class="row">
+                            <div class="col-xs-5" align="left">
+                                <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                >{{ submitter.getUserNameStr(true) }}</a>
+                            </div>
+                            <div class="col-xs-2" align="left">
+                                Latest Employment Start Date
+                            </div>
+                            <div class="col-xs-2" align="left">
+                                Latest Employment End Date
+                            </div>
+                            <div class="col-xs-1" align="left">
+                                <button type="button">Save</button>
+                            </div>
+                            <div class="col-xs-1" align="left">
+                                <button type="button" title="Download [2022-2023] Audit">[2022-2023]</button>
+                            </div>
+                            <div class="col-xs-1" align="left">
+                                <button type="button" title="Download [2021-2022] Audit">[2021-2022]</button>
+                            </div>
+                        </div>
+                        {#<br>#}
+                    {% endfor %}
+                </div>
+            {% else %}
             <div class="well" align="justify">
                 <strong>Submitter(s)</strong>
                 <br>
-                {% for submitter in submitters %}
-                    {#{{ submitter }}#}
-                    {#({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})#}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter.getUserNameStr(true) }}</a>
-                    <br>
-                {% endfor %}
-            </div>
+                <table class="records_list table table-hover table-condensed text-left table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Submitter</th>
+                        <th>Latest Employment Start Date</th>
+                        <th>Latest Employment End Date</th>
+                        <th>Action</th>
+                        <th>Download Audit Summary for {{ auditYearRangeArr[1] }}</th>
+                        {#<th>Download [2021-2022] Audit</th>#}
+                    </tr>
+                    </thead>
+                    <tbody id="table-body-submitter">
+                        {% for submitter in submitters %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                    >{{ submitter.getUserNameStr(true) }}</a>
+                                </td>
+                                <td>
+                                    Latest Employment Start Date
+                                </td>
+                                <td>
+                                    Latest Employment End Date
+                                </td>
+                                {#<td>#}
+                                    {#{{ vacreq_calendar_util.getHolidayDate(holiday.vars.value)|date('M d',false) }}#}
+                                {#</td>#}
+                                <td>
+                                    <button class="btn btn-primary" type="button">Save</button>
+                                </td>
+                                <td>
+                                    {#Download Audit Summary#}
+                                    <a class="btn btn-default"
+                                        href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
+                                        { 'userId': submitter.id }) }}">Download</a>
+                                </td>
+                                {#<td>#}
+                                    {#Download [2021-2022] Audit#}
+                                {#</td>#}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
 
             <div class="well" align="justify">
                 <strong>Proxy Submitter(s)</strong>

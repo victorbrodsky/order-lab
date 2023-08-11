@@ -8050,6 +8050,30 @@ class VacReqUtil
         return NULL;
     }
 
+    public function getAuditYearRange() {
+        $yearRanges = array();
+
+        //Current Academic Year
+        $currentAcademicYearRange = $this->getCurrentAcademicYearRange();
+        list($year1,$maxYear) = explode("-", $currentAcademicYearRange);
+        //$maxYear = $year2;
+        $yearRanges[] = $currentAcademicYearRange;
+
+        //Current Academic Year - 1
+        $yearRanges[] = $this->getPreviousAcademicYearRange();
+
+        //Current Academic Year - 2
+        $previousAcademicYearRange = $this->getPreviousAcademicYearRange(1);
+        $yearRanges[] = $previousAcademicYearRange;
+        list($year1,$minYear) = explode("-", $previousAcademicYearRange);
+        //$minYear = $year1;
+
+        $yearRangeStr = $minYear."-".$maxYear;
+        //echo "yearRangeStr=$yearRangeStr <br>";
+
+        return array($yearRanges, $yearRangeStr);
+    }
+
     public function downloadSummarySpreadsheet() {
 
     }

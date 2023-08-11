@@ -415,25 +415,31 @@ class DefaultController extends OrderAbstractController
 
         $yearRangeStr = $request->request->get('year');
 
-        $yearRanges = array();
+        ////////// Get Year Range //////////
+//        $yearRanges = array();
+//
+//        //Current Academic Year
+//        $currentAcademicYearRange = $vacreqUtil->getCurrentAcademicYearRange();
+//        list($year1,$maxYear) = explode("-", $currentAcademicYearRange);
+//        //$maxYear = $year2;
+//        $yearRanges[] = $currentAcademicYearRange;
+//
+//        //Current Academic Year - 1
+//        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
+//
+//        //Current Academic Year - 2
+//        $previousAcademicYearRange = $vacreqUtil->getPreviousAcademicYearRange(1);
+//        $yearRanges[] = $previousAcademicYearRange;
+//        list($year1,$minYear) = explode("-", $previousAcademicYearRange);
+//        //$minYear = $year1;
+//
+//        $yearRangeStr = $minYear."-".$maxYear;
+//        //echo "yearRangeStr=$yearRangeStr <br>";
 
-        //Current Academic Year
-        $currentAcademicYearRange = $vacreqUtil->getCurrentAcademicYearRange();
-        list($year1,$maxYear) = explode("-", $currentAcademicYearRange);
-        //$maxYear = $year2;
-        $yearRanges[] = $currentAcademicYearRange;
-
-        //Current Academic Year - 1
-        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
-
-        //Current Academic Year - 2
-        $previousAcademicYearRange = $vacreqUtil->getPreviousAcademicYearRange(1);
-        $yearRanges[] = $previousAcademicYearRange;
-        list($year1,$minYear) = explode("-", $previousAcademicYearRange);
-        //$minYear = $year1;
-
-        $yearRangeStr = $minYear."-".$maxYear;
-        //echo "yearRangeStr=$yearRangeStr <br>";
+        $yearRangeArr = $vacreqUtil->getAuditYearRange();
+        $yearRanges = $yearRangeArr[0];
+        $yearRangeStr = $yearRangeArr[1];
+        ////////// EOF Get Year Range //////////
 
         //$fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
         //2022-2023 Away Request Audit Summary for FirstName LastName generated on MM-DD-YYYY at HH-MM-SS.csv
