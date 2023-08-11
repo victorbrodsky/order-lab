@@ -807,7 +807,7 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('111');
 
         //1) drop current DB
-        if(1) {
+        if(0) {
             $logger = $this->container->get('logger');
             $userServiceUtil = $this->container->get('user_service_utility');
             $phpPath = $userServiceUtil->getPhpPath();
