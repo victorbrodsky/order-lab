@@ -2589,6 +2589,7 @@ class User extends UserBase {
             }
         }
 
+        //echo "startDate=".$startDate."<br>";
         $resArr['startDate'] = $startDate;
         $resArr['endDate'] = $endDate;
 

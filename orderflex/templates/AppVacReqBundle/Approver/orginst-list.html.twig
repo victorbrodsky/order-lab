@@ -90,7 +90,6 @@
             </div>
             {% endif %}
 
-            {% set auditYearRangeArr = vacreq_util.getAuditYearRange() %}
             {% if 0 %}
                 <div class="well" align="justify">
                     <strong>Submitter(s)</strong>
@@ -122,6 +121,7 @@
                 </div>
             {% endif %}
             {% if 0 %}
+            {% set auditYearRangeArr = vacreq_util.getAuditYearRange() %}
             <div class="well" align="justify">
                 <strong>Submitter(s)</strong>
                 <br>
@@ -138,6 +138,13 @@
                     </thead>
                     <tbody id="table-body-submitter">
                         {% for submitter in submitters %}
+                            {% set startEndDates = submitter.getEmploymentStartEndDates() %}
+                            {% set startDate = null %}
+                            {% set endDate = null %}
+                            {% if startEndDates and startEndDates|length == 2 %}
+                                {% set startDate = startEndDates['startDate'] %}
+                                {% set endDate = startEndDates['endDate'] %}
+                            {% endif %}
                             <tr>
                                 <td>
                                     <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
@@ -150,7 +157,7 @@
                                         <input id="vacreq_start_date"
                                                class="datepicker form-control submit-on-enter-field"
                                                placeholder="Latest Employment Start Date" type="text"
-                                               value="{{ submitter.createDate|date('d-m-Y') }}"
+                                               value="{{ startDate|date('d-m-Y') }}"
                                         >
                                         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
@@ -162,7 +169,7 @@
                                         <input id="vacreq_end_date"
                                                class="datepicker form-control submit-on-enter-field"
                                                placeholder="Latest Employment End Date" type="text"
-                                               value="{{ submitter.createDate|date('d-m-Y') }}"
+                                               value="{{ endDate|date('d-m-Y') }}"
                                         >
                                         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
