@@ -355,7 +355,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $environment == 'live' ) {
             exit("Live server: Under construction!!!");
         }
-        //exit('Under construction!!!');
+        exit('Not Allowed');
 
         //networkDrivePath
 //        $userSecUtil = $this->container->get('user_security_utility');
@@ -647,6 +647,12 @@ class DataBackupManagementController extends OrderAbstractController
         echo "uid=".$uid."<br>";
         echo "pwd=".$pwd."<br>";
         echo "host=".$host."<br>";
+
+        //Testing
+        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        $em->getConnection()->exec($sql);  // Execute native SQL
+        $em->flush();
+        return true;
 
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
