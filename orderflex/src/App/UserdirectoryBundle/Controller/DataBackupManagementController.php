@@ -807,14 +807,14 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('111');
 
         //1) drop current DB
-        if(0) {
+        if(1) {
             $logger = $this->container->get('logger');
             $userServiceUtil = $this->container->get('user_service_utility');
             $phpPath = $userServiceUtil->getPhpPath();
             $projectRoot = $this->container->get('kernel')->getProjectDir();
 
             //drop existing DB: php bin/console doctrine:database:drop --force
-            if (1) {
+            if (0) {
                 //request.CRITICAL: Uncaught PHP Exception
                 // Symfony\Component\Process\Exception\ProcessFailedException:
                 // "The command "/opt/remi/php82/root/usr/bin/php
@@ -832,6 +832,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("drop res=".$res);
             } else {
                 //DROP DATABASE db_name WITH (FORCE)
+                echo "Start drop DB <br>";
                 $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
                 $em->getConnection()->exec($sqlDrop);  // Execute native SQL
                 $em->flush();
