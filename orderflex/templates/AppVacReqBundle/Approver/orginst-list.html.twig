@@ -144,7 +144,8 @@
                                     >{{ submitter.getUserNameStr(true) }}</a>
                                 </td>
                                 <td>
-                                    Latest Employment Start Date
+                                    {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
+                                    {#Latest Employment Start Date#}
                                     <div class="input-group input-group-reg date allow-future-date">
                                         <input id="vacreq_start_date"
                                                class="datepicker form-control submit-on-enter-field"
@@ -155,7 +156,16 @@
                                     </div>
                                 </td>
                                 <td>
-                                    Latest Employment End Date
+                                    {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
+                                    {#Latest Employment End Date#}
+                                    <div class="input-group input-group-reg date allow-future-date">
+                                        <input id="vacreq_end_date"
+                                               class="datepicker form-control submit-on-enter-field"
+                                               placeholder="Latest Employment End Date" type="text"
+                                               value="{{ submitter.createDate|date('d-m-Y') }}"
+                                        >
+                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
                                 </td>
                                 {#<td>#}
                                     {#{{ vacreq_calendar_util.getHolidayDate(holiday.vars.value)|date('M d',false) }}#}
