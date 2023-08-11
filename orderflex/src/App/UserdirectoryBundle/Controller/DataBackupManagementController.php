@@ -386,8 +386,8 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = realpath($networkDrivePath);
             $backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
-            //$res = $this->restoringBackupSQLFull($backupFilePath);
-            $res = $this->restoringBackupSQLFull_Plain($backupFilePath);
+            $res = $this->restoringBackupSQLFull($backupFilePath);
+            //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
             //exit($res);
 
             $this->addFlash(
@@ -851,6 +851,7 @@ class DataBackupManagementController extends OrderAbstractController
         return true;
     }
     public function restoringBackupSQLFull($backupFilePath) {
+        exit("Not Allowed!");
         $em = $this->getDoctrine()->getManager();
         $res = null;
 
