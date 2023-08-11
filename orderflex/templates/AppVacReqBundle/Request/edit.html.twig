@@ -1266,10 +1266,10 @@
             var holder = $('#vacreq-request-form');
 
             if( $('#s2id_oleg_vacreqbundle_request_user').hasClass('select2-container-disabled') ) {
-                console.log("vacreq-person-away is disabled");
+                //console.log("vacreq-person-away is disabled");
                 return;
             } else {
-                console.log("vacreq-person-away is enabled");
+                //console.log("vacreq-person-away is enabled");
             }
 
             //if( _requestType == "carryover" ) {
@@ -1297,7 +1297,7 @@
             if( typeof instid === 'undefined' ) {
                 instid = 0;
             }
-            console.log('vacreqSetPersonAway instid='+instid);
+            //console.log('vacreqSetPersonAway instid='+instid);
 
             //update #vacreq-defaultInformUsers
             var url = Routing.generate('vacreq_orginst_personaway_ajax', {instid:instid});
@@ -1316,7 +1316,7 @@
                 async: asyncflag,
                 data: {instid: instid},
             }).done(function(data) {
-                console.log('vacreqSetPersonAway reset person away');
+                //console.log('vacreqSetPersonAway reset person away');
                 $('select.vacreq-person-away').empty().trigger("change");
                 vacreqUpdatePersonAway(data,personAwayId);
             });
@@ -1332,12 +1332,12 @@
             });
             //$("select.vacreq-person-away").select2('val',null);
             if( personAwayId ) {
-                console.log('vacreqSetPersonAway set user personAwayId='+personAwayId);
+                //console.log('vacreqSetPersonAway set user personAwayId='+personAwayId);
                 $("select.vacreq-person-away").select2('val',personAwayId);
             } else {
                 var userid = $('#authuser_id').val();
                 if (userid && userid.length > 0) {
-                    console.log('vacreqSetPersonAway set user userid=' + userid);
+                    //console.log('vacreqSetPersonAway set user userid=' + userid);
                     $("select.vacreq-person-away").select2('val', userid);
                 }
             }
