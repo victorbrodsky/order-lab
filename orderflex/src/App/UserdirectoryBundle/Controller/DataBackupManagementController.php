@@ -386,7 +386,8 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = realpath($networkDrivePath);
             $backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
-            $res = $this->restoringBackupSQLFull($backupFilePath);
+            //$res = $this->restoringBackupSQLFull($backupFilePath);
+            $res = $this->restoringBackupSQLFull_Plain($backupFilePath);
             //exit($res);
 
             $this->addFlash(
@@ -804,6 +805,38 @@ class DataBackupManagementController extends OrderAbstractController
         echo "max_execution_time: " . $max_execution_time . "<br>";
         //exit('111');
 
+        //1) drop current DB
+        if(0) {
+            $logger = $this->container->get('logger');
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $phpPath = $userServiceUtil->getPhpPath();
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+
+            //drop existing DB: php bin/console doctrine:database:drop --force
+            if (1) {
+                //request.CRITICAL: Uncaught PHP Exception
+                // Symfony\Component\Process\Exception\ProcessFailedException:
+                // "The command "/opt/remi/php82/root/usr/bin/php
+                // /opt/order-lab/orderflex/bin/console doctrine:database:drop --force" failed.
+                //  Exit Code: 1(General error)  Working directory: /opt/order-lab/orderflex/public
+                //  Output: ================ Could not drop database "ScanOrderTest"
+                // for connection named default An exception occurred while executing
+                // a query: SQLSTATE[55006]: Object in use: 7 ERROR:  database "ScanOrderTest"
+                // is being accessed by other users DETAIL:  There is 1 other session using the database.
+                //$drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose';
+                $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
+                $logger->notice("drop command=[" . $drop . "]");
+                $res = $this->runProcess($drop);
+                echo "drop res=" . $res . "<br>";
+                $logger->notice("drop res=".$res);
+            } else {
+                //DROP DATABASE db_name WITH (FORCE)
+                $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
+                $em->getConnection()->exec($sqlDrop);  // Execute native SQL
+                $em->flush();
+            }
+        }
+
         $sql = file_get_contents($backupFilePath);  // Read file contents
 
         $em->getConnection()->exec($sql);  // Execute native SQL
@@ -834,6 +867,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //exec('pg_dump --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase > dbbackup.sql',$output);
         //$sql = 'pg_dump --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' > '.$backupfile;
+        //pg_restore --dbname=postgresql://username:password@127.0.0.1:5432/mydatabase --verbose
         //pg_restore -d newdb db.dump
         //$sql = 'pg_restore --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
         //$sql = 'pg_restore -d --dbname=postgresql://'.$uid.':'.$pwd.'@'.$host.':5432/'.$dbname.' '.$backupFilePath;
@@ -871,11 +905,12 @@ class DataBackupManagementController extends OrderAbstractController
                     // for connection named default An exception occurred while executing
                     // a query: SQLSTATE[55006]: Object in use: 7 ERROR:  database "ScanOrderTest"
                     // is being accessed by other users DETAIL:  There is 1 other session using the database.
-                    $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose';
+                    //$drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose';
                     $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
                     $logger->notice("drop command=[" . $drop . "]");
                     $res = $this->runProcess($drop);
                     echo "drop res=" . $res . "<br>";
+                    $logger->notice("drop res=".$res);
                 } else {
                     //DROP DATABASE db_name WITH (FORCE)
                     $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
