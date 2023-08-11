@@ -861,24 +861,26 @@ class DataBackupManagementController extends OrderAbstractController
 
             //1) drop existing DB: php bin/console doctrine:database:drop --force
             if(1) {
-                //request.CRITICAL: Uncaught PHP Exception
-                // Symfony\Component\Process\Exception\ProcessFailedException:
-                // "The command "/opt/remi/php82/root/usr/bin/php
-                // /opt/order-lab/orderflex/bin/console doctrine:database:drop --force" failed.
-                //  Exit Code: 1(General error)  Working directory: /opt/order-lab/orderflex/public
-                //  Output: ================ Could not drop database "ScanOrderTest"
-                // for connection named default An exception occurred while executing
-                // a query: SQLSTATE[55006]: Object in use: 7 ERROR:  database "ScanOrderTest"
-                // is being accessed by other users DETAIL:  There is 1 other session using the database.
-                $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force';
-                $logger->notice("drop command=[" . $drop . "]");
-                $res = $this->runProcess($drop);
-                echo "drop res=" . $res . "<br>";
-            } else {
-                //DROP DATABASE db_name WITH (FORCE)
-                $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
-                $em->getConnection()->exec($sqlDrop);  // Execute native SQL
-                $em->flush();
+                if (1) {
+                    //request.CRITICAL: Uncaught PHP Exception
+                    // Symfony\Component\Process\Exception\ProcessFailedException:
+                    // "The command "/opt/remi/php82/root/usr/bin/php
+                    // /opt/order-lab/orderflex/bin/console doctrine:database:drop --force" failed.
+                    //  Exit Code: 1(General error)  Working directory: /opt/order-lab/orderflex/public
+                    //  Output: ================ Could not drop database "ScanOrderTest"
+                    // for connection named default An exception occurred while executing
+                    // a query: SQLSTATE[55006]: Object in use: 7 ERROR:  database "ScanOrderTest"
+                    // is being accessed by other users DETAIL:  There is 1 other session using the database.
+                    $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:drop --force --verbose --env=dev';
+                    $logger->notice("drop command=[" . $drop . "]");
+                    $res = $this->runProcess($drop);
+                    echo "drop res=" . $res . "<br>";
+                } else {
+                    //DROP DATABASE db_name WITH (FORCE)
+                    $sqlDrop = 'DROP DATABASE ' . $dbname . ' WITH (FORCE)';
+                    $em->getConnection()->exec($sqlDrop);  // Execute native SQL
+                    $em->flush();
+                }
             }
 
             //2 create DB: php bin/console doctrine:database:create
