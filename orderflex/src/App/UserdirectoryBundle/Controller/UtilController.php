@@ -1455,6 +1455,14 @@ class UtilController extends OrderAbstractController {
         $query = $dql->getQuery();
         $query->setMaxResults($limit);
 
+        if( str_contains($criteriastr,':search') ) {
+            $query->setParameters(
+                array(
+                    ':search' => '%'.$search.'%',
+                )
+            );
+        }
+
         $output = $query->getResult();
 
         if( str_contains($criteriastr,':search') ) {
