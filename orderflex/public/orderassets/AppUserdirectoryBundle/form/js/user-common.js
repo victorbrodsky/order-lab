@@ -890,9 +890,10 @@ function initSingleDatepicker( datepickerElement ) {
         //datepickerElement.datepicker().on("clearDate", function(e){
         datepickerElement.on("clearDate", function (e) {
             var inputField = $(this).find('input.datepicker, input.datepicker-exception');
-            //console.log('on clear Date');
+            console.log('on clear Date');
             //printF(inputField, "clearDate input:");
-            clearErrorField(inputField);
+            clearErrorField(inputField); //callback  - clear masking field in user-masking.js
+            customClearDatepickerFunction(inputField); //callback - use other custom function
 
             //if( inputField.hasClass('datepicker-onclear-cleartooltip') ) {
             //    console.log("clear tooltip!!!!!!");
@@ -963,6 +964,11 @@ function initSingleDatepicker( datepickerElement ) {
 
     }
 
+    return;
+}
+
+function customClearDatepickerFunction(inputField) {
+    //console.log('customClearDatepickerFunction');
     return;
 }
 

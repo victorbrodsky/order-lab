@@ -64,26 +64,66 @@
 
     <script language="Javascript">
 
-//        $(document).ready(function() {
-//
-//            $('[data-toggle="tooltip"]').tooltip({html: true});
-//
-//        });
+        $(document).ready(function() {
 
-        function updateUserStartEndDate(userId,saveBtn) {
+            $('.user-start-date').on('change', function(event) {
+                vacreqActivateDateBtn(this);
+            });
+//            $('.user-start-date').on("clearDate", function (e) {
+//                //var inputField = $(this).find('input.datepicker, input.datepicker-exception');
+//                console.log('vacreq on clear Date');
+//                vacreqActivateDateBtn(this);
+//            });
+
+            $('.user-end-date').on('change', function(event) {
+                vacreqActivateDateBtn(this);
+            });
+
+        });
+
+        //override datepicker's customClearDatepickerFunction in user-common.js
+        function customClearDatepickerFunction(inputField) {
+            console.log('vacreq customClearDatepickerFunction');
+            vacreqActivateDateBtn(inputField.get(0));
+        }
+
+        function vacreqActivateDateBtn(dateField) {
+            console.log('vacreqActivateDateBtn btn changed');
+            var tr = $(dateField).closest('tr');
+            tr.find('.save-dates-btn').removeClass('btn-default').addClass('btn-primary');
+            tr.find('.save-dates-btn').prop('disabled', false);
+        }
+
+        function vacreqDisableBtn(saveBtn) {
+            $(saveBtn).removeClass('btn-primary').addClass('btn-default');
+            $(saveBtn).prop('disabled', true);
+
+            //var tr = $(saveBtn).closest('tr');
+            //tr.find('.save-dates-btn').prop('disabled', true);
+            //saveBtn.disabled = true;
+            //tr.find('.save-dates-btn').prop('disabled', true);
+
+            //clearTimeout(timer);
+            //button.disabled = false;
+            //saveBtn.removeAttribute('data-loading');
+
+            //$(saveBtn).find('span').remove();
+            //$(saveBtn).find('div').remove();
+            //$(saveBtn).prop('disabled', true);
+            //saveBtn.disabled = true;
+            //saveBtn.setAttribute("disabled", "");
+            //$(saveBtn).addClass("disabled");
+        }
+
+        function vacreqUpdateUserStartEndDate(userId,saveBtn) {
             console.log('Save btn clicked');
+            var lbtn = Ladda.create(saveBtn);
+            lbtn.start();
+
             var tr = $(saveBtn).closest('tr');
             var startDate = tr.find('.user-start-date').val();
             var endDate = tr.find('.user-end-date').val();
             console.log('userId='+userId+', startDate='+startDate+', endDate='+endDate);
-
-            //var deactivateDataArr = []; //empty array
-//            var userData = {
-//                'userId': userId,
-//                'startDate': startDate,
-//                'endDate': endDate
-//            };
-            //var modifiedDataArr = [userData];
 
             var url = Routing.generate('employees_update_users_date_vacreq');
             $.ajax({
@@ -96,8 +136,12 @@
                 data: {'userId': userId, 'startDate': startDate, 'endDate': endDate}
             }).success(function(response) {
                 console.log(response);
+                //disable button and set to default
+                vacreqDisableBtn(saveBtn);
             }).done(function() {
                 console.log("done");
+                lbtn.stop();
+                //lbtn.remove();
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
                 //$("#panel-title-products").show();

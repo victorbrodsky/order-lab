@@ -188,7 +188,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" type="button" onclick="updateUserStartEndDate({{ submitter.id }},this)">Save</button>
+                                    <button class="btn btn-default save-dates-btn"
+                                            type="button"
+                                            disabled
+                                            onclick="vacreqUpdateUserStartEndDate({{ submitter.id }},this)"
+                                    >Save</button>
                                 </td>
                                 <td>
                                     {#Download Audit Summary#}
