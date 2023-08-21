@@ -90,12 +90,18 @@
                 type: "POST",
                 url: url,
                 timeout: _ajaxTimeout,
-                dataType: 'json',
+                //dataType: 'json',
                 async: asyncflag,
                 //data: {modifiedData: modifiedDataArr},
                 data: {'userId': userId, 'startDate': startDate, 'endDate': endDate}
-            }).done(function(data) {
-                console.log(data);
+            }).success(function(response) {
+                console.log(response);
+            }).done(function() {
+                console.log("done");
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+                //$("#panel-title-products").show();
+                //$("#panel-title-products").html(errorThrown);
             });
         }
 

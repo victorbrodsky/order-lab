@@ -588,29 +588,31 @@ class UserDatesController extends OrderAbstractController
         }
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //$eventArr = $this->processData($deactivateData,$request,true,$testing);
         //dump($eventArr);
         //exit('111');
         //$eventStr = implode("<br>",$eventArr);
 
-        $eventArr = $this->processData($modifiedData,$request,false,$testing,'by manage group');
-        $eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
+        $noteStr = "on the vacation system's Manage Groups page";
+        $eventArr = $this->processData($modifiedData,$request,false,$testing,$noteStr);
+        $eventStr = implode("<br>",$eventArr);
 
-        $this->addFlash(
-            'notice',
-            $eventStr
-        );
+//        $this->addFlash(
+//            'notice',
+//            $eventStr
+//        );
 
         //exit('Not implemented');
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode(200);
+        //$response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        //$response->setStatusCode(200);
         //$response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->setContent(json_encode($results));
+        //$response->setContent(json_encode($results));
 
+        $response = new Response($eventStr);
         return $response;
     }
 
