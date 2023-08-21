@@ -60,4 +60,45 @@
 
 {% endblock %}
 
+{% block additionaljs %}
 
+    <script language="Javascript">
+
+//        $(document).ready(function() {
+//
+//            $('[data-toggle="tooltip"]').tooltip({html: true});
+//
+//        });
+
+        function updateUserStartEndDate(userId,saveBtn) {
+            console.log('Save btn clicked');
+            var tr = $(saveBtn).closest('tr');
+            var startDate = tr.find('.user-start-date').val();
+            var endDate = tr.find('.user-end-date').val();
+            console.log('userId='+userId+', startDate='+startDate+', endDate='+endDate);
+
+            //var deactivateDataArr = []; //empty array
+//            var userData = {
+//                'userId': userId,
+//                'startDate': startDate,
+//                'endDate': endDate
+//            };
+            //var modifiedDataArr = [userData];
+
+            var url = Routing.generate('employees_update_users_date_vacreq');
+            $.ajax({
+                type: "POST",
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: asyncflag,
+                //data: {modifiedData: modifiedDataArr},
+                data: {'userId': userId, 'startDate': startDate, 'endDate': endDate}
+            }).done(function(data) {
+                console.log(data);
+            });
+        }
+
+    </script>
+
+{% endblock %}

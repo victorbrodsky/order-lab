@@ -471,6 +471,7 @@ class UserDatesController extends OrderAbstractController
         return $response;
     }
 
+    #Change user dates by "Employment dates" page using react
     #[Route(path: '/update-users-dates/', name: 'employees_update_users_date', options: ['expose' => true])]
     public function updateUsersDateAction( Request $request ) {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -487,12 +488,13 @@ class UserDatesController extends OrderAbstractController
 
         $datas = json_decode($request->getContent(), true);
         //dump($datas);
+        //exit('111');
 
         $deactivateData = $datas['deactivateData'];
         $modifiedData = $datas['modifiedData'];
         //dump($deactivateData);
         //dump($modifiedData);
-        //exit('111');
+        //exit('222');
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
         $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Full Time");
@@ -528,7 +530,92 @@ class UserDatesController extends OrderAbstractController
         return $response;
     }
 
-    public function processData($inputData,$request,$withLocking=false,$testing=false) {
+    #Change user dates by "Manage Groups" page on the vacreq system
+    #[Route(path: '/update-users-dates-vacreq/', name: 'employees_update_users_date_vacreq', options: ['expose' => true])]
+    public function updateUsersDateVacReqAction( Request $request ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $currentUser = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $results = 'ok';
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //dump($request);
+        //exit('111');
+
+        //$deactivateData = $request->query->get('deactivateData');
+        //$modifiedData = $request->query->get('modifiedData');
+        //dump($deactivateData);
+        //dump($modifiedData);
+        //exit('111');
+
+//        $userId = json_decode($request->get('userId'));
+//        $startDate = json_decode($request->get('startDate'));
+//        $endDate = json_decode($request->get('endDate'));
+        $userId = $request->get('userId');
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
+        echo "userId=$userId, startDate=$startDate, endDate=$endDate <br>";
+        //exit('111');
+
+        $userData = array(
+            'userId' => $userId,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );
+        $modifiedData = array($userData);
+
+        //$datas = json_decode($request->getContent());
+        //dump($datas);
+        //exit('111');
+
+        //$deactivateData = $datas['deactivateData'];
+        //$modifiedData = $datas['modifiedData'];
+        //dump($deactivateData);
+        //dump($modifiedData);
+        //exit('222');
+
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Full Time");
+        if( !$employmentType ) {
+            $results = 'Unable to find EmploymentType entity by name='."Full Time";
+            //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
+        }
+
+        $testing = false;
+        $testing = true;
+
+        //$eventArr = $this->processData($deactivateData,$request,true,$testing);
+        //dump($eventArr);
+        //exit('111');
+        //$eventStr = implode("<br>",$eventArr);
+
+        $eventArr = $this->processData($modifiedData,$request,false,$testing,'by manage group');
+        $eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
+
+        $this->addFlash(
+            'notice',
+            $eventStr
+        );
+
+        //exit('Not implemented');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(200);
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setContent(json_encode($results));
+
+        return $response;
+    }
+
+    //Process Dates: set start/end employment dates
+    public function processData($inputData,$request,$withLocking=false,$testing=false,$noteStr='with bulk updates') {
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
         $sitename = $this->getParameter('employees.sitename');
@@ -642,7 +729,7 @@ class UserDatesController extends OrderAbstractController
                     $em->flush();
                 }
 
-                $event = "User profile of " . $user . " has been changed by " . $currentUser . " with bulk updates:" . "<br>";
+                $event = "User profile of " . $user . " has been changed by " . $currentUser . " $noteStr:" . "<br>";
                 $changeStr = implode("; ", $changeArr);
 
                 $event = $event . $changeStr;
@@ -652,7 +739,7 @@ class UserDatesController extends OrderAbstractController
                     $userSecUtil->createUserEditEvent($sitename, $event, $currentUser, $user, $request, 'User record updated');
                 }
             } else {
-                $event = "User profile of " . $user . " has not been changed by " . $currentUser . " with bulk updates";
+                $event = "User profile of " . $user . " has not been changed by " . $currentUser . " $noteStr";
             }
 
             $eventArr[] = $event . "<br>";

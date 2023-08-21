@@ -231,7 +231,6 @@ class ApproverController extends OrderAbstractController
 
         //find role approvers by institution
         $approvers = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $roleApprovers = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
@@ -243,12 +242,10 @@ class ApproverController extends OrderAbstractController
 
         //find role submitters by institution
         $submitters = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "submitters=".count($submitters)."<br>";
@@ -256,14 +253,12 @@ class ApproverController extends OrderAbstractController
         //find role proxy submitters by institution
         $roleProxySubmitter = NULL;
         $proxySubmitters = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $roleProxySubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
         if( count($roleProxySubmitters) > 0 ) {
             $roleProxySubmitter = $roleProxySubmitters[0];
         }
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleProxySubmitter ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $proxySubmitters = $em->getRepository(User::class)->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "proxySubmitters=".count($proxySubmitters)."<br>";

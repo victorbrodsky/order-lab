@@ -78,7 +78,9 @@
                 {% endfor %}
             </div>
 
-            {% if 1 %}
+            {% set usermanage = false %}
+            {% set usermanage = true %}
+            {% if usermanage == false %}
             <div class="well" align="justify">
                 <strong>Submitter(s)</strong>
                 <br>
@@ -91,6 +93,7 @@
             {% endif %}
 
             {% if 0 %}
+                {#User start/end date as row#}
                 <div class="well" align="justify">
                     <strong>Submitter(s)</strong>
                     <br><br>
@@ -120,7 +123,8 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            {% if 0 %}
+            {% if usermanage %}
+            {#User start/end date as table#}
             {% set auditYearRangeArr = vacreq_util.getAuditYearRange() %}
             <div class="well" align="justify">
                 <strong>Submitter(s)</strong>
@@ -162,8 +166,8 @@
                                     {#Latest Employment Start Date#}
                                     {#startDate={{ startDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
-                                        <input id="vacreq_start_date"
-                                               class="datepicker form-control submit-on-enter-field"
+                                        <input id="vacreq_start_date_{{ submitter.id }}"
+                                               class="datepicker form-control submit-on-enter-field user-start-date"
                                                placeholder="Latest Employment Start Date" type="text"
                                                value="{{ startDate }}"
                                         >
@@ -175,19 +179,16 @@
                                     {#Latest Employment End Date#}
                                     {#endDate={{ endDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
-                                        <input id="vacreq_end_date"
-                                               class="datepicker form-control submit-on-enter-field"
+                                        <input id="vacreq_end_date_{{ submitter.id }}"
+                                               class="datepicker form-control submit-on-enter-field user-end-date"
                                                placeholder="Latest Employment End Date" type="text"
                                                value="{{ endDate }}"
                                         >
                                         <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
                                 </td>
-                                {#<td>#}
-                                    {#{{ vacreq_calendar_util.getHolidayDate(holiday.vars.value)|date('M d',false) }}#}
-                                {#</td>#}
                                 <td>
-                                    <button class="btn btn-primary" type="button">Save</button>
+                                    <button class="btn btn-primary" type="button" onclick="updateUserStartEndDate({{ submitter.id }},this)">Save</button>
                                 </td>
                                 <td>
                                     {#Download Audit Summary#}
@@ -196,13 +197,11 @@
                                         href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
                                         { 'userId': submitter.id }) }}">Download</a>
                                 </td>
-                                {#<td>#}
-                                    {#Download [2021-2022] Audit#}
-                                {#</td>#}
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
             {% endif %}
 
 
@@ -259,5 +258,6 @@
         </div> <!-- panel-body -->
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
+
 
 
