@@ -1,0 +1,2 @@
+https://stackoverflow.com/questions/23732900/postgresql-database-backup-using-python
+https://gist.github.com/valferon/4d6ebfa8a7f3d4e84085183609d10f14

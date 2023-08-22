@@ -967,6 +967,7 @@ function initSingleDatepicker( datepickerElement ) {
     return;
 }
 
+//This call function can be overriden
 function customClearDatepickerFunction(inputField) {
     //console.log('customClearDatepickerFunction');
     return;

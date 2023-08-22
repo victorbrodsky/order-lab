@@ -90,13 +90,16 @@
         function vacreqActivateDateBtn(dateField) {
             console.log('vacreqActivateDateBtn btn changed');
             var tr = $(dateField).closest('tr');
-            tr.find('.save-dates-btn').removeClass('btn-default').addClass('btn-primary');
-            tr.find('.save-dates-btn').prop('disabled', false);
+            var btn = tr.find('.save-dates-btn');
+            btn.html('Save');
+            btn.removeClass('btn-default').addClass('btn-primary');
+            btn.prop('disabled', false);
         }
 
         function vacreqDisableBtn(saveBtn) {
             $(saveBtn).removeClass('btn-primary').addClass('btn-default');
             $(saveBtn).prop('disabled', true);
+            $(saveBtn).html('Saved');
 
             //var tr = $(saveBtn).closest('tr');
             //tr.find('.save-dates-btn').prop('disabled', true);
@@ -115,10 +118,33 @@
             //$(saveBtn).addClass("disabled");
         }
 
+        function vacreqSyncUsersInOtherGroups( userId, startDate, endDate ) {
+            //class=vacreq_end_date_userId
+            $('.vacreq_start_date_'+userId).each(function() {
+                vacreqSetEmploymentDate($(this),startDate);
+            });
+            $('.vacreq_end_date_'+userId).each(function() {
+                vacreqSetEmploymentDate($(this),endDate);
+            });
+        }
+        function vacreqSetEmploymentDate( inputEl, date ) {
+            console.log('vacreqSetEmploymentDate: date='+date);
+            inputEl.datepicker('setDate', date);
+
+            //disable save button
+            var tr = inputEl.closest('tr');
+            var saveBtn = tr.find('.save-dates-btn').get(0);
+            vacreqDisableBtn(saveBtn);
+        }
+
         function vacreqUpdateUserStartEndDate(userId,saveBtn) {
             console.log('Save btn clicked');
-            var lbtn = Ladda.create(saveBtn);
-            lbtn.start();
+            //var lbtn = Ladda.create(saveBtn);
+            //lbtn.start();
+
+            //$(saveBtn).attr('value', '1Saving...');
+            //$(saveBtn).prop('value', '2Saving...');
+            $(saveBtn).html('Saving...');
 
             var tr = $(saveBtn).closest('tr');
             var startDate = tr.find('.user-start-date').val();
@@ -138,10 +164,13 @@
                 console.log(response);
                 //disable button and set to default
                 vacreqDisableBtn(saveBtn);
+                //sync in other groups
+                vacreqSyncUsersInOtherGroups(userId,startDate,endDate);
             }).done(function() {
                 console.log("done");
-                lbtn.stop();
+                //lbtn.stop();
                 //lbtn.remove();
+                //$(saveBtn).prop('value', 'Saved');
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
                 //$("#panel-title-products").show();

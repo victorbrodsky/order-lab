@@ -166,8 +166,7 @@
                                     {#Latest Employment Start Date#}
                                     {#startDate={{ startDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
-                                        <input id="vacreq_start_date_{{ submitter.id }}"
-                                               class="datepicker form-control submit-on-enter-field user-start-date"
+                                        <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}"
                                                placeholder="Latest Employment Start Date" type="text"
                                                value="{{ startDate }}"
                                         >
@@ -179,8 +178,7 @@
                                     {#Latest Employment End Date#}
                                     {#endDate={{ endDate }}#}
                                     <div class="input-group input-group-reg date allow-future-date">
-                                        <input id="vacreq_end_date_{{ submitter.id }}"
-                                               class="datepicker form-control submit-on-enter-field user-end-date"
+                                        <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}"
                                                placeholder="Latest Employment End Date" type="text"
                                                value="{{ endDate }}"
                                         >
