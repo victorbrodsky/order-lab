@@ -11,4 +11,6 @@ Certificate
 Vendorutil
 /*/.idea/
 orderflex_orig
+/utils/db-manage/postgres-manage-python/venv/
+/utils/db-manage/psql.config
 
