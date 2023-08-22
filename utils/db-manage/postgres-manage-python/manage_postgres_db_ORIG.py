@@ -48,21 +48,15 @@ def download_from_s3(backup_s3_key, dest_file, manager_config):
 
 def list_available_backups(storage_engine, manager_config):
     key_list = []
-    backup_list = []
-    #print("storage_engine=",storage_engine)
     if storage_engine == 'LOCAL':
-        #print("Local storage")
         try:
-            print("Local storage")
             backup_folder = manager_config.get('LOCAL_BACKUP_PATH')
             backup_list = os.listdir(backup_folder)
-            print("backup_list",backup_list)
         except FileNotFoundError:
             print(f'Could not found {backup_folder} when searching for backups.'
                   f'Check your .config file settings')
             exit(1)
     elif storage_engine == 'S3':
-        #print("S3 storage")
         # logger.info('Listing S3 bucket s3://{}/{} content :'.format(aws_bucket_name, aws_bucket_path))
         s3_client = boto3.client('s3')
         s3_objects = s3_client.list_objects_v2(Bucket=manager_config.get('AWS_BUCKET_NAME'),
@@ -71,7 +65,6 @@ def list_available_backups(storage_engine, manager_config):
 
     for bckp in backup_list:
         key_list.append(bckp)
-    #print("key_list=", key_list)
     return key_list
 
 
