@@ -52,6 +52,8 @@ def list_available_backups(storage_engine, manager_config):
     #print("storage_engine=",storage_engine)
     if storage_engine == 'LOCAL':
         #print("Local storage")
+        backup_folder = manager_config.get('LOCAL_BACKUP_PATH')
+        backup_list = os.listdir(backup_folder)
         try:
             print("Local storage")
             backup_folder = manager_config.get('LOCAL_BACKUP_PATH')
