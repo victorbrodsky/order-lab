@@ -1,3 +1,5 @@
 /postgres-manage-python/venv/
+/postgres-manage-python/*.config
 *.config
+!/postgres-manage-python/sample.config
 
