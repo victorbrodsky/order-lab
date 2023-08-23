@@ -815,7 +815,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
-        echo "command res=".$res."<br>";
+        echo "python res=".$res."<br>";
+        exit('111');
     }
 
     //Restore to the empty DB (no more than 9 users)
