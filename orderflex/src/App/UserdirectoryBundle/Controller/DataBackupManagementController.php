@@ -325,7 +325,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             $this->addFlash(
                 'notice',
-                "Backup successfully created ".$res
+                "Backup successfully created<br>".$res
             );
 
         } else {
@@ -830,8 +830,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
-        //echo "python res=".$res."<br>";
-        //exit('111');
+        echo "python res=".$res."<br>";
+        exit('111');
         return $res;
     }
 
@@ -1061,7 +1061,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $process->getOutput();
     }
 
-    public function runProcess($script) {
+    public function runProcess_2($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -1069,7 +1069,7 @@ class DataBackupManagementController extends OrderAbstractController
         $iterator = $process->getIterator($process::ITER_SKIP_ERR | $process::ITER_KEEP_OUTPUT);
         $res = array();
         foreach ($iterator as $data) {
-            //echo $data."\n";
+            echo $data."\n";
             $res[] = $data;
         }
 
@@ -1078,6 +1078,22 @@ class DataBackupManagementController extends OrderAbstractController
             $resStr = implode("<br>", $res);
         }
 
+        return $resStr;
+    }
+
+    public function runProcess($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run(function ($type, $buffer): void {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+            } else {
+                echo 'OUT > '.$buffer;
+            }
+        });
+
+        $resStr = "process result is empty";
         return $resStr;
     }
 
