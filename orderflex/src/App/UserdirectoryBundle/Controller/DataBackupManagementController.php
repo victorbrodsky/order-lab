@@ -320,12 +320,12 @@ class DataBackupManagementController extends OrderAbstractController
             //$backupfile = "c:\\backup\\test.bak";
             //$networkDrivePath = "c:\\backup\\";
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            $res = $this->creatingBackupPython($networkDrivePath); //Use python script pg_dump
+            $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             //exit($res);
 
             $this->addFlash(
                 'notice',
-                "Backup created in ".$res
+                "Backup successfully created ".$res
             );
 
         } else {
@@ -386,10 +386,11 @@ class DataBackupManagementController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
             $networkDrivePath = realpath($networkDrivePath);
-            $backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
+            //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
-            $res = $this->restoringBackupSQLFull($backupFilePath);
+            //$res = $this->restoringBackupSQLFull($backupFilePath);
             //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
+            $res = $this->dbManagePython($networkDrivePath,'restore',$backupFilePath); //Use python script pg_restore
             //exit($res);
 
             $this->addFlash(
@@ -769,7 +770,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
-    public function creatingBackupPython( $networkDrivePath ) {
+    public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
         //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
         //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
 
@@ -812,7 +813,20 @@ class DataBackupManagementController extends OrderAbstractController
 
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
-        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action backup --verbose true --path $networkDrivePath";
+
+        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --verbose true --path $networkDrivePath";
+
+        if( $action == 'backup' ) {
+            $command = $command . " --action backup";
+        } elseif( $action == 'restore' ) {
+            if( $backupFileName ) {
+                $command = $command . " --action restore --date $backupFileName";
+            } else {
+                return "backup file is not provided";
+            }
+        } else {
+            return "Invalid action ".$action;
+        }
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
@@ -1036,7 +1050,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
-    public function runProcess($script) {
+    public function runProcess_ORIG($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -1045,6 +1059,26 @@ class DataBackupManagementController extends OrderAbstractController
             throw new ProcessFailedException($process);
         }
         return $process->getOutput();
+    }
+
+    public function runProcess($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->start();
+        $iterator = $process->getIterator($process::ITER_SKIP_ERR | $process::ITER_KEEP_OUTPUT);
+        $res = array();
+        foreach ($iterator as $data) {
+            //echo $data."\n";
+            $res[] = $data;
+        }
+
+        $resStr = "process result is empty";
+        if( count($res) > 0 ) {
+            $resStr = implode("<br>", $res);
+        }
+
+        return $resStr;
     }
 
 }
