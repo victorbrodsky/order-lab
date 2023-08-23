@@ -288,6 +288,7 @@ def main():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
     args_parser = argparse.ArgumentParser(description='Postgres database management')
     args_parser.add_argument("--action",
                              metavar="action",
@@ -333,7 +334,9 @@ def main():
     if args.path:
         local_storage_path = args.path
 
-    print("path=",local_storage_path)
+    #print("path=",local_storage_path)
+    logging.basicConfig(filename=local_storage_path+"pythondb.log")
+    #print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
 
     manager_config = {
         'AWS_BUCKET_NAME': aws_bucket_name,
