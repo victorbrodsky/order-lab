@@ -32,6 +32,7 @@ use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
@@ -771,6 +772,37 @@ class DataBackupManagementController extends OrderAbstractController
     public function creatingBackupPython( $filepath ) {
         //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
         //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
+
+        $logger = $this->container->get('logger');
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        //echo "projectRoot=".$projectRoot."<br>";
+
+        $projectRoot = str_replace('order-lab', '', $projectRoot);
+        $parentRoot = str_replace('orderflex', '', $projectRoot);
+        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+
+        $managePackagePath = $parentRoot .
+            DIRECTORY_SEPARATOR . "order-lab" .
+            DIRECTORY_SEPARATOR . "utils" .
+            DIRECTORY_SEPARATOR . "db-manage" .
+            DIRECTORY_SEPARATOR . "postgres-manage-python";
+        //echo 'scriptPath='.$scriptPath."<br>";
+
+        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
+        //exit('111='.$pythonScriptPath);
+
+        //python in virtualenv'ed scripts: /path/to/venv/bin/python3
+        $pythonEnvPath = $managePackagePath .
+            DIRECTORY_SEPARATOR . "venv" .
+            DIRECTORY_SEPARATOR . "Scripts" .
+            DIRECTORY_SEPARATOR . "python";
+        echo "pythonEnvPath=".$pythonEnvPath."<br>";
+
+        $command = "$pythonEnvPath $pythonScriptPath --configfile dev.config --action list --verbose true";
+        $logger->notice("command=[".$command."]");
+        $res = $this->runProcess($command);
+        echo "command res=".$res."<br>";
     }
 
     //Restore to the empty DB (no more than 9 users)
