@@ -773,6 +773,7 @@ class DataBackupManagementController extends OrderAbstractController
         //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
         //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $logger = $this->container->get('logger');
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
@@ -793,11 +794,18 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('111='.$pythonScriptPath);
 
         //python in virtualenv'ed scripts: /path/to/venv/bin/python3
-        $pythonEnvPath = $managePackagePath .
-            DIRECTORY_SEPARATOR . "venv" .
-            //DIRECTORY_SEPARATOR . "Scripts" . //Windows
-            DIRECTORY_SEPARATOR . "bin" . //Linux
-            DIRECTORY_SEPARATOR . "python";
+        if( $userServiceUtil->isWindows() ){
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "Scripts" . //Windows
+                DIRECTORY_SEPARATOR . "python";
+        } else {
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "bin" . //Linux
+                DIRECTORY_SEPARATOR . "python";
+        }
+
         echo "pythonEnvPath=".$pythonEnvPath."<br>";
 
         $command = "$pythonEnvPath $pythonScriptPath --configfile dev.config --action list --verbose true";
