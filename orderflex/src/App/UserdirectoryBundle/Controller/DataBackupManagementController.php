@@ -812,6 +812,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
+        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action backup --verbose true --path $networkDrivePath";
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
