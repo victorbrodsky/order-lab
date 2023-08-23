@@ -810,14 +810,15 @@ class DataBackupManagementController extends OrderAbstractController
         }
         echo "pythonEnvPath=".$pythonEnvPath."<br>";
 
-        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
-        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
+        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
+        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
         $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action backup --verbose true --path $networkDrivePath";
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
-        echo "python res=".$res."<br>";
-        exit('111');
+        //echo "python res=".$res."<br>";
+        //exit('111');
+        return $res;
     }
 
     //Restore to the empty DB (no more than 9 users)
