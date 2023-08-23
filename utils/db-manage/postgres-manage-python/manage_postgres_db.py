@@ -306,6 +306,9 @@ def main():
     args_parser.add_argument("--configfile",
                              required=True,
                              help="Database configuration file")
+    args_parser.add_argument("--path",
+                             default=False,
+                             help="Destination path to overwrite config's path")
     args = args_parser.parse_args()
 
     config = configparser.ConfigParser()
@@ -326,6 +329,11 @@ def main():
     restore_filename = '/tmp/restore.dump.gz'
     restore_uncompressed = '/tmp/restore.dump'
     local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
+
+    if args.path:
+        local_storage_path = args.path
+
+    print("path=",local_storage_path)
 
     manager_config = {
         'AWS_BUCKET_NAME': aws_bucket_name,

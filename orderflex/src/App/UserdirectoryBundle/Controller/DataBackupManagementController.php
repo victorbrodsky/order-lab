@@ -318,7 +318,8 @@ class DataBackupManagementController extends OrderAbstractController
             //create backup
             //$backupfile = "c:\\backup\\test.bak";
             //$networkDrivePath = "c:\\backup\\";
-            $res = $this->creatingBackupSQLFull($networkDrivePath);
+            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
+            $res = $this->creatingBackupPython($networkDrivePath); //Use python script pg_dump
             //exit($res);
 
             $this->addFlash(
@@ -764,6 +765,12 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         return $msg;
+    }
+
+    //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
+    public function creatingBackupPython( $filepath ) {
+        //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
+        //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
     }
 
     //Restore to the empty DB (no more than 9 users)
