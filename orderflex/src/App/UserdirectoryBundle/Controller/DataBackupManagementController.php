@@ -769,7 +769,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
-    public function creatingBackupPython( $filepath ) {
+    public function creatingBackupPython( $networkDrivePath ) {
         //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
         //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
 
@@ -790,6 +790,9 @@ class DataBackupManagementController extends OrderAbstractController
             DIRECTORY_SEPARATOR . "postgres-manage-python";
         //echo 'scriptPath='.$scriptPath."<br>";
 
+        //config file
+        $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
+
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
         //exit('111='.$pythonScriptPath);
 
@@ -805,10 +808,11 @@ class DataBackupManagementController extends OrderAbstractController
                 DIRECTORY_SEPARATOR . "bin" . //Linux
                 DIRECTORY_SEPARATOR . "python";
         }
-
         echo "pythonEnvPath=".$pythonEnvPath."<br>";
 
-        $command = "$pythonEnvPath $pythonScriptPath --configfile dev.config --action list --verbose true";
+        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
+        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
+
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
         echo "command res=".$res."<br>";
