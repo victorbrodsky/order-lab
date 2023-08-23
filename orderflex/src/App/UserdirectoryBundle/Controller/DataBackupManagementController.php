@@ -795,7 +795,8 @@ class DataBackupManagementController extends OrderAbstractController
         //python in virtualenv'ed scripts: /path/to/venv/bin/python3
         $pythonEnvPath = $managePackagePath .
             DIRECTORY_SEPARATOR . "venv" .
-            DIRECTORY_SEPARATOR . "Scripts" .
+            //DIRECTORY_SEPARATOR . "Scripts" . //Windows
+            DIRECTORY_SEPARATOR . "bin" . //Linux
             DIRECTORY_SEPARATOR . "python";
         echo "pythonEnvPath=".$pythonEnvPath."<br>";
 
