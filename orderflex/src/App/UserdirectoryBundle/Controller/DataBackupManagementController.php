@@ -1058,7 +1058,8 @@ class DataBackupManagementController extends OrderAbstractController
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        return $process->getOutput();
+        //return $process->getOutput();
+        echo $process->getOutput();
     }
 
     public function runProcess_2($script) {
