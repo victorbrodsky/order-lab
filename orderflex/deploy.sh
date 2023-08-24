@@ -119,6 +119,7 @@ function prep()
     #chown -R apache:apache $PROJECT_LOCAL_PATH/public
     #chown -R apache:apache $PROJECT_LOCAL_PATH/../backup
 
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/cache
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/log
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
