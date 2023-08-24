@@ -323,9 +323,15 @@ class DataBackupManagementController extends OrderAbstractController
             $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             //exit($res);
 
+            if( !$res ) {
+                $resStr = "Backup successfully created in $networkDrivePath";
+            } else {
+                $resStr = $res;
+            }
+
             $this->addFlash(
                 'notice',
-                "Backup successfully created<br>".$res
+                $res
             );
 
         } else {
@@ -357,7 +363,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $environment == 'live' ) {
             exit("Live server: Under construction!!!");
         }
-        exit('Not Allowed');
+        //exit('Not Allowed');
 
         //networkDrivePath
 //        $userSecUtil = $this->container->get('user_security_utility');
@@ -380,7 +386,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFilePath ) {
 
-            //exit('Under construction: backupFilePath='.$backupFilePath);
+            exit('Under construction: backupFilePath='.$backupFilePath);
             //create backup
 
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1050,7 +1056,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
-    public function runProcess_ORIG($script) {
+    public function runProcess($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -1081,7 +1087,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $resStr;
     }
 
-    public function runProcess($script) {
+    public function runProcess_3($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
