@@ -324,7 +324,7 @@ class DataBackupManagementController extends OrderAbstractController
             //exit($res);
 
             if( !$res ) {
-                $resStr = "Backup successfully created in $networkDrivePath";
+                $resStr = "Backup successfully created in folder $networkDrivePath";
             } else {
                 $resStr = $res;
             }

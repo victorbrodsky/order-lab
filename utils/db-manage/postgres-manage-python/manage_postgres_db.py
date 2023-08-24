@@ -380,7 +380,10 @@ def main():
         if storage_engine == 'LOCAL':
             logger.info('Moving {} to local storage...'.format(comp_file))
             move_to_local_storage(comp_file, filename_compressed, manager_config)
-            logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
+            movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
+            #logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
+            logger.info(movedmsg)
+            print(movedmsg)
         elif storage_engine == 'S3':
             logger.info('Uploading {} to Amazon S3...'.format(comp_file))
             upload_to_s3(comp_file, filename_compressed, manager_config)
