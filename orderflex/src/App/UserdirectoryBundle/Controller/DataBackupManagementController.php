@@ -1089,6 +1089,7 @@ class DataBackupManagementController extends OrderAbstractController
         $process->run(function ($type, $buffer): void {
             if (Process::ERR === $type) {
                 echo 'ERR > '.$buffer;
+                $res[] = $buffer;
             } else {
                 echo 'OUT > '.$buffer;
                 $res[] = $buffer;
