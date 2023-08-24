@@ -24,7 +24,7 @@ python -m venv venv
 .\venv\Scripts\activate
 pip3 install -r requirements.txt
 
-Create psql.config:
+Create db.config:
 [setup]
 # define if LOCAL or S3 storage will be used when storing/restoring the backup
 storage_engine='S3'
