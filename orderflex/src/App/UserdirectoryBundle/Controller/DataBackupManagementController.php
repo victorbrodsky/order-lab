@@ -809,6 +809,11 @@ class DataBackupManagementController extends OrderAbstractController
                 DIRECTORY_SEPARATOR . "python";
         }
         echo "pythonEnvPath=".$pythonEnvPath."<br>";
+        if( file_exists($pythonEnvPath) ) {
+            //echo "The file $filename exists";
+        } else {
+            return "The file $pythonEnvPath does not exist. Make sure pytnon's environment venv has been installed";
+        }
 
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
