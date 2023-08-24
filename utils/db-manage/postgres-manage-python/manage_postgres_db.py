@@ -375,7 +375,7 @@ def main():
                 logger.info(line)
 
         logger.info("Backup complete")
-        print("Backup complete")
+        print("Backup complete.")
         logger.info("Compressing {}".format(local_file_path))
         comp_file = compress_file(local_file_path)
         if storage_engine == 'LOCAL':
@@ -384,6 +384,7 @@ def main():
             movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
             #logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
             logger.info(movedmsg)
+            movedmsg = "Backup file {}".format(filename_compressed);
             print(movedmsg)
         elif storage_engine == 'S3':
             logger.info('Uploading {} to Amazon S3...'.format(comp_file))
