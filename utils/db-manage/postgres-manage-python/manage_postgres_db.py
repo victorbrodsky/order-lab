@@ -375,6 +375,7 @@ def main():
                 logger.info(line)
 
         logger.info("Backup complete")
+        print("Backup complete")
         logger.info("Compressing {}".format(local_file_path))
         comp_file = compress_file(local_file_path)
         if storage_engine == 'LOCAL':
