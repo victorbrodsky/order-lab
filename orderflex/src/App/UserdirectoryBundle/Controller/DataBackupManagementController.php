@@ -331,7 +331,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             $this->addFlash(
                 'notice',
-                $res
+                $resStr
             );
 
         } else {
