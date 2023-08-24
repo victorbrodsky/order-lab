@@ -444,14 +444,24 @@ def main():
             logger.info("Restore complete")
             if args.dest_db is not None:
                 restored_db_name = args.dest_db
-                logger.info("Switching restored database with new one : {} > {}".format(
+                restoremsg = "Switching restored database with new one : {} > {}".format(
                     postgres_restore, restored_db_name
-                ))
+                )
+                #logger.info("Switching restored database with new one : {} > {}".format(
+                #    postgres_restore, restored_db_name
+                #))
+                logger.info(restoremsg)
+                print(restoremsg)
             else:
                 restored_db_name = postgres_db
-                logger.info("Switching restored database with active one : {} > {}".format(
+                restoremsg = "Switching restored database with active one : {} > {}".format(
                     postgres_restore, restored_db_name
-                ))
+                )
+                #logger.info("Switching restored database with active one : {} > {}".format(
+                #    postgres_restore, restored_db_name
+                #))
+                logger.info(restoremsg)
+                print(restoremsg)
 
             swap_after_restore(postgres_host,
                                postgres_restore,
@@ -460,6 +470,7 @@ def main():
                                postgres_user,
                                postgres_password)
             logger.info("Database restored and active.")
+            print("Database restored and active.")
     else:
         logger.warn("No valid argument was given.")
         logger.warn(args)
