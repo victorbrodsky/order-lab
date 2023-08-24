@@ -386,7 +386,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFilePath ) {
 
-            exit('Under construction: backupFilePath='.$backupFilePath);
+            //exit('Under construction: backupFilePath='.$backupFilePath);
             //create backup
 
             $userSecUtil = $this->container->get('user_security_utility');
