@@ -445,7 +445,8 @@ class DataBackupManagementController extends OrderAbstractController
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
                 //echo "file=$file <br>";
-                if( pathinfo($file, PATHINFO_EXTENSION) ) {
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if( $ext && $ext != 'log' && $ext != 'txt' ) {
                     $fileOption = array("id" => $file, "name" => $file);
                     $backupFiles[] = $fileOption;
                 }
