@@ -264,7 +264,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        echo "networkDrivePath=".$networkDrivePath."<br>";
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
             $this->addFlash(
@@ -300,7 +300,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        echo "networkDrivePath=".$networkDrivePath."<br>";
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
             $this->addFlash(
@@ -428,7 +428,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         if (file_exists($networkDrivePath)) {
-            echo "The path=$networkDrivePath";
+            //echo "The path=$networkDrivePath";
         } else {
             //echo "The file $networkDrivePath does not exist";
             return null;
@@ -444,21 +444,13 @@ class DataBackupManagementController extends OrderAbstractController
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
-                echo "file=$file <br>";
-                //if( is_dir($file) === false ) {
-                //if( is_file($file) ) {
+                //echo "file=$file <br>";
                 if( pathinfo($file, PATHINFO_EXTENSION) ) {
                     $fileOption = array("id" => $file, "name" => $file);
                     $backupFiles[] = $fileOption;
                 }
             }
         }
-
-//        $file0 = array("id"=>null,"name"=>"");
-//        $file1 = array("id"=>1,"name"=>"file 1");
-//        $backupFiles[] = $file1;
-//        $file2 = array("id"=>2,"name"=>"file 2");
-//        $backupFiles = array($file0,$file1,$file2);
 
         return $backupFiles;
     }
