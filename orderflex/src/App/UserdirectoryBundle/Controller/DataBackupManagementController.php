@@ -830,8 +830,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger->notice("command=[".$command."]");
         $res = $this->runProcess($command);
-        echo "python res=".$res."<br>";
-        exit('111');
+        //echo "python res=".$res."<br>";
+        //exit('111');
         return $res;
     }
 
@@ -1050,7 +1050,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
-    public function runProcess($script) {
+    public function runProcess_ORIG($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -1058,8 +1058,7 @@ class DataBackupManagementController extends OrderAbstractController
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        //return $process->getOutput();
-        echo $process->getOutput();
+        return $process->getOutput();
     }
 
     public function runProcess_2($script) {
@@ -1082,7 +1081,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $resStr;
     }
 
-    public function runProcess_3($script) {
+    public function runProcess($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
