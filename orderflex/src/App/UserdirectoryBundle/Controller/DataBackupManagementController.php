@@ -365,7 +365,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             $output = array(
                 'status' => "NOTOK",
-                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' in the site settings."
+                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
             );
             $response = new Response();
             $response->setContent(json_encode($output));
