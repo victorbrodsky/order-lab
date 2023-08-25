@@ -357,6 +357,7 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
@@ -382,10 +383,15 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $fileId ) {
 
+            //Original site settings
+            $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+
             //exit('Under construction: backupFilePath='.$fileId);
             //create backup
 
-            $userSecUtil = $this->container->get('user_security_utility');
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
             $networkDrivePath = realpath($networkDrivePath);
             //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
@@ -401,11 +407,23 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                //liveSiteRootUrl
-                //environment
                 //mailerDeliveryAddresses to admin
+                //environment
+                //liveSiteRootUrl
+                //networkDrivePath
+                //connectionChannel
+                $param = $this->getSingleSiteSettingsParam();
+                $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+                $param->setEnvironment($environment);
+                $param->setLiveSiteRootUrl($liveSiteRootUrl);
+                $param->setNetworkDrivePath($networkDrivePath);
+                $param->setConnectionChannel($connectionChannel);
+                $em->flush();
 
-                $resStr = $resStr . " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.";
+                $resStr = $resStr .
+                    " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+                    " Also it might be required to run the deploy_prod.sh script."
+                ;
 
                 $output = array(
                     'status' => 'OK',
