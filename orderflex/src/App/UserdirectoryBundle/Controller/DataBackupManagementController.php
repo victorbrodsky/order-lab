@@ -415,12 +415,13 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
+                $logger->notice("set site settings parameters");
                 //mailerDeliveryAddresses to admin
                 //environment
                 //liveSiteRootUrl
                 //networkDrivePath
                 //connectionChannel
-                $param = $this->getSingleSiteSettingsParam();
+                $param = $userSecUtil->getSingleSiteSettingsParam();
                 $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
                 $param->setEnvironment($environment);
                 $param->setLiveSiteRootUrl($liveSiteRootUrl);
