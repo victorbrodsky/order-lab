@@ -415,25 +415,27 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                $logger->notice("set site settings parameters");
-                //mailerDeliveryAddresses to admin
-                //environment
-                //liveSiteRootUrl
-                //networkDrivePath
-                //connectionChannel
-                $param = $userSecUtil->getSingleSiteSettingsParam();
-                $logger->notice("After get settings parameters. paramId=".$param->getId());
+                if(0) {
+                    $logger->notice("set site settings parameters");
+                    //mailerDeliveryAddresses to admin
+                    //environment
+                    //liveSiteRootUrl
+                    //networkDrivePath
+                    //connectionChannel
+                    $param = $userSecUtil->getSingleSiteSettingsParam();
+                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
-                $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-                $param->setEnvironment($environment);
-                $param->setLiveSiteRootUrl($liveSiteRootUrl);
-                $param->setNetworkDrivePath($networkDrivePath);
-                $param->setConnectionChannel($connectionChannel);
-                $logger->notice("After set settings parameters.");
+                    $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+                    $param->setEnvironment($environment);
+                    $param->setLiveSiteRootUrl($liveSiteRootUrl);
+                    $param->setNetworkDrivePath($networkDrivePath);
+                    $param->setConnectionChannel($connectionChannel);
+                    $logger->notice("After set settings parameters.");
 
-                $em->flush();
+                    $em->flush();
 
-                $logger->notice("After flush");
+                    $logger->notice("After flush");
+                }
 
                 $resStr = $resStr .
                     " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
