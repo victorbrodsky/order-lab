@@ -361,11 +361,11 @@ class DataBackupManagementController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
-            exit("Live server: Under construction!!!");
+            //exit("Live server: Under construction!!!");
 
             $output = array(
                 'status' => "NOTOK",
-                'message' => "Live server: Under construction!!!"
+                'message' => "Live server: restore not allowed."
             );
             $response = new Response();
             $response->setContent(json_encode($output));
