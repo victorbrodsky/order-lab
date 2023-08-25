@@ -399,6 +399,14 @@ class DataBackupManagementController extends OrderAbstractController
             $resStr = $res['message'];
 
             if( $resStatus == 'OK' ) {
+
+                //set site settings parameters
+                //liveSiteRootUrl
+                //environment
+                //mailerDeliveryAddresses to admin
+
+                $resStr = $resStr . " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.";
+
                 $output = array(
                     'status' => 'OK',
                     'message' => $resStr
