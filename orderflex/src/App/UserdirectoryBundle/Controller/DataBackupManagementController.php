@@ -422,6 +422,8 @@ class DataBackupManagementController extends OrderAbstractController
                 //networkDrivePath
                 //connectionChannel
                 $param = $userSecUtil->getSingleSiteSettingsParam();
+                $logger->notice("After get settings parameters. paramId=".$param->getId());
+
                 $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
                 $param->setEnvironment($environment);
                 $param->setLiveSiteRootUrl($liveSiteRootUrl);
