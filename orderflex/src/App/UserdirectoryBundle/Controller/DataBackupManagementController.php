@@ -357,12 +357,13 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
             //exit("Live server: Under construction!!!");
-
+            $logger->notice("Live server: restore not allowed");
             $output = array(
                 'status' => "NOTOK",
                 'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
@@ -374,6 +375,7 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('Not Allowed');
 
         $fileId = $request->get('fileId');
+        $logger->notice("backupFilePath=".$fileId);
         //echo "backupFilePath=".$fileId."<br>";
 
         //get backup files
@@ -396,13 +398,19 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = realpath($networkDrivePath);
             //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
+            $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
+
             //$res = $this->restoringBackupSQLFull($backupFilePath);
             //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
             $res = $this->dbManagePython($networkDrivePath,'restore',$fileId); //Use python script pg_restore
             //exit($res);
 
+            $logger->notice("After dbManagePython");
+
             $resStatus = $res['status'];
             $resStr = $res['message'];
+
+            $logger->notice("After dbManagePython: status=$resStatus, resStr=$resStr");
 
             if( $resStatus == 'OK' ) {
 
@@ -420,6 +428,8 @@ class DataBackupManagementController extends OrderAbstractController
                 $param->setConnectionChannel($connectionChannel);
                 $em->flush();
 
+                $logger->notice("After flush");
+
                 $resStr = $resStr .
                     " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
                     " Also it might be required to run the deploy_prod.sh script."
@@ -436,6 +446,7 @@ class DataBackupManagementController extends OrderAbstractController
                 );
             }
 
+            $logger->notice("Before sending response");
             $response = new Response();
             $response->setContent(json_encode($output));
             return $response;
