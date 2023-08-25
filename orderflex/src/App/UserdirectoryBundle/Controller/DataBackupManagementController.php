@@ -239,7 +239,6 @@ class DataBackupManagementController extends OrderAbstractController
     
     
     
-    //NOT USED below. Old version of backup
     /**
      * Manual backup/restore using a user's local folder
      *
@@ -415,8 +414,13 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                if(0) {
+                if(1) {
                     $logger->notice("set site settings parameters");
+
+                    $projectRoot = $this->container->get('kernel')->getProjectDir();
+                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+                    $this->runProcess($projectRoot.DIRECTORY_SEPARATOR."bash deploy.sh");
+
                     //mailerDeliveryAddresses to admin
                     //environment
                     //liveSiteRootUrl
