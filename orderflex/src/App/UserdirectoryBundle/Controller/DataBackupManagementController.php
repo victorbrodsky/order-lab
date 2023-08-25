@@ -429,6 +429,8 @@ class DataBackupManagementController extends OrderAbstractController
                 $param->setLiveSiteRootUrl($liveSiteRootUrl);
                 $param->setNetworkDrivePath($networkDrivePath);
                 $param->setConnectionChannel($connectionChannel);
+                $logger->notice("After set settings parameters.");
+
                 $em->flush();
 
                 $logger->notice("After flush");
