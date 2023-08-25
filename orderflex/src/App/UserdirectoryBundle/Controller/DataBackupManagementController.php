@@ -149,7 +149,7 @@ class DataBackupManagementController extends OrderAbstractController
             $resStatus = $res['status'];
             $resStr = $res['message'];
 
-            if( $resStatus == 'OK' && !$resStr ) {
+            if( $resStatus == 'OK' ) {
                 $resStr = "Backup successfully created in folder $networkDrivePath";
                 $this->addFlash(
                     'notice',
