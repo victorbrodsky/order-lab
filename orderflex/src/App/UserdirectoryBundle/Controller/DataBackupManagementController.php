@@ -425,6 +425,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $response;
     }
 
+    //NOT USED. Call restore directly
     #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function restoreBackupAction_ORIG( Request $request, $backupFilePath ) {

@@ -94,14 +94,23 @@
         <div class="col-lg-4"></div>
         <div class="col-lg-4" align="left">
             <div class="input-group">
-                <input type="password" id="backup-user-token" class="form-control" placeholder="Enter password" style="min-width: 100%">
+                <input
+                    type="password"
+                    id="backup-user-token"
+                    class="form-control"
+                    autocomplete="off"
+                    placeholder="Enter password"
+                    style="min-width: 100%"
+                    required
+                    readonly onfocus="this.removeAttribute('readonly');"
+                >
                 <span class="input-group-btn">
                     <button
                             id="btn-restore-backup"
                             class="btn btn-danger"
                             type="button"
                             {{ disabledFalg }}
-                            onclick="userVerifyRestoreBackup(this);"
+                            onclick="userVerifyRestoreBackup(this)"
                     >Restore Backup</button>
                 </span>
             </div><!-- /input-group -->
@@ -124,41 +133,20 @@
             $('#backup-file-id').on("change", function(e) {
                 var fileId = $(this).select2('val');
                 if( fileId ) {
-                    console.log('fileId=' + fileId);
+                    //console.log('fileId=' + fileId);
                     $('#fileId').val(fileId);
                     $('#btn-restore-backup').removeAttr('disabled');
                 } else {
-                    console.log('No file selected');
+                    //console.log('No file selected');
                     $('#btn-restore-backup').attr('disabled', true);
                 }
             });
 
         });
 
-        function restoreBackup_ORIG() {
-            var result = confirm("Warning!!! Are you sure you want to load backup DB? This action will overwrite all existing data!");
-            if (result) {
-                //Logic to delete the item
-            } else {
-                return;
-            }
-
-            var file = $('#backup-file-id').select2('data');
-            if( file ) {
-                var fileId = file.id;
-                console.log("fileId=" + fileId);
-
-                var url = Routing.generate('employees_restore_backup');
-                url = url + "/" + fileId;
-                console.log("url=" + url);
-
-                window.location.replace(url);
-            } else {
-                console.log("no backup file");
-            }
-        }
-
         function userVerifyRestoreBackup(btn) {
+            console.log("userVerifyRestoreBackup start");
+
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
 
@@ -169,9 +157,21 @@
                 return;
             }
 
-            //TODO: disable btn
-            var lbtn = Ladda.create( btn );
-            userStartBtn(lbtn);
+            var lbtn = null;
+            //var lbtn = Ladda.create( btn );
+            userStartBtn(btn,lbtn);
+            setTimeout(function(){
+                //do what you need here
+                userVerifyRestoreBackupAction(btn,lbtn)
+            }, 1000);
+        }
+
+        function userVerifyRestoreBackupAction(btn,lbtn) {
+            //disable btn does not work here, therefore use userVerifyRestoreBackup with setTimeout
+            //console.log("Disable btn");
+            //var lbtn = '';
+            //var lbtn = Ladda.create( btn );
+            //userStartBtn(btn,lbtn);
 
             var file = $('#backup-file-id').select2('data');
             if( file ) {
@@ -186,51 +186,35 @@
                     timeout: _ajaxTimeout,
                     type: "POST",
                     async: false,
-                    data: {token: token},
+                    data: {token: token}
                 }).success(function(data) {
                     //console.log("data="+data);
                     if( data == "OK" ) {
                         $('#backup-msg-danger-box').html("");
                         $('#backup-msg-danger-box').hide();
-                        userStopBtn(lbtn);
+                        //userStopBtn(btn,lbtn);
                         //userRestoreBackup();
-                        userRestoreBackupAjax(btn);
+                        userRestoreBackupAjax(btn,lbtn);
                     } else {
                         $('#backup-msg-danger-box').html(error);
                         $('#backup-msg-danger-box').show();
-                        userStopBtn(lbtn);
+                        userStopBtn(btn,lbtn);
                     }
                 }).fail(function() {
                     //alert(error);
                     $('#backup-msg-danger-box').html(error);
                     $('#backup-msg-danger-box').show();
                 }).done(function() {
-                    userStopBtn(lbtn);
-                    //console.log("token ok");
+                    //userStopBtn(btn,lbtn);
+                    console.log("token verification done");
                 });
 
-
-
             } else {
                 console.log("no backup file");
             }
         }
-        function userRestoreBackup(btn) {
-            var file = $('#backup-file-id').select2('data');
-            if( file ) {
-                var fileId = file.id;
-                console.log("fileId=" + fileId);
 
-                var url = Routing.generate('employees_restore_backup');
-                url = url + "/" + fileId;
-                console.log("url=" + url);
-
-                window.location.replace(url);
-            } else {
-                console.log("no backup file");
-            }
-        }
-        function userRestoreBackupAjax(btn) {
+        function userRestoreBackupAjax(btn,lbtn) {
 
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
@@ -241,8 +225,8 @@
                 alert("no backup file selected");
             }
 
-            var lbtn = Ladda.create( btn );
-            userStartBtn(lbtn);
+            //var lbtn = Ladda.create( btn );
+            //userStartBtn(btn,lbtn);
 
             var fileId = file.id;
             console.log("fileId=" + fileId);
@@ -278,47 +262,67 @@
                 $('#backup-msg-danger-box').html(error);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
-                userStopBtn(lbtn);
+                userStopBtn(btn,lbtn);
                 console.log("restore done");
             });
         }
-//        function userVerifyAuthUser( token ) {
-//            var url = Routing.generate('employees_authenticate_user');
-//            $.ajax({
-//                url: url,
-//                timeout: _ajaxTimeout,
-//                type: "POST",
-//                async: false,
-//                data: {token: token},
-//            }).success(function(data) {
-//                //console.log("data="+data);
-//                if( data == "OK" ) {
-//                    $('.formnode-holder-disabled').remove();
-//                    $('#messageStatusJs').val(messageStatus);
-//                    $('#calllog-new-entry-form').submit();
-//                } else {
-//                    $('#calllog-msg-danger-box').html(error);
-//                    $('#calllog-msg-danger-box').show();
-//                    userStopBtn(lbtn);
-//                }
-//            }).fail(function() {
-//                //alert(error);
-//                $('#calllog-msg-danger-box').html(error);
-//                $('#calllog-msg-danger-box').show();
-//            }).done(function() {
-//                //userStopBtn(lbtn);
-//                //console.log("token ok");
-//            });
+
+        function userStartBtn(btn,lbtn) {
+            $(btn).prop('disabled',true);
+            $(btn).text('Please wait...');
+            //lbtn.start();
+        }
+        function userStopBtn(btn,lbtn) {
+            //lbtn.stop();
+            $(btn).prop('disabled',false);
+            $(btn).text('Restore Backup');
+        }
+
+
+
+
+
+        //NOT USED
+        //call restore directly
+        function userRestoreBackup(btn) {
+            var file = $('#backup-file-id').select2('data');
+            if( file ) {
+                var fileId = file.id;
+                console.log("fileId=" + fileId);
+
+                var url = Routing.generate('employees_restore_backup');
+                url = url + "/" + fileId;
+                console.log("url=" + url);
+
+                window.location.replace(url);
+            } else {
+                console.log("no backup file");
+            }
+        }
+
+//        function restoreBackup_ORIG() {
+//            var result = confirm("Warning!!! Are you sure you want to load backup DB? This action will overwrite all existing data!");
+//            if (result) {
+//                //Logic to delete the item
+//            } else {
+//                return;
+//            }
+//
+//            var file = $('#backup-file-id').select2('data');
+//            if( file ) {
+//                var fileId = file.id;
+//                console.log("fileId=" + fileId);
+//
+//                var url = Routing.generate('employees_restore_backup');
+//                url = url + "/" + fileId;
+//                console.log("url=" + url);
+//
+//                window.location.replace(url);
+//            } else {
+//                console.log("no backup file");
+//            }
 //        }
 
-        function userStartBtn(lbtn) {
-            $('button').prop('disabled',true);
-            lbtn.start();
-        }
-        function userStopBtn(lbtn) {
-            lbtn.stop();
-            $('button').prop('disabled',false);
-        }
     </script>
 
 {% endblock %}
