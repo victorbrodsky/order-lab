@@ -124,6 +124,8 @@ class ExceptionListener {
 
         }
 
+        $logger->notice("Original exception message=".$exception->getMessage());
+
         //Ignore: Unable to create the storage directory (/srv/order-lab/orderflex/var/cache/prod/profiler)
         if (strpos((string)$exception->getMessage(), 'Unable to create the storage directory') !== false) {
             return false;
