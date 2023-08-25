@@ -200,9 +200,9 @@
                         $('#backup-msg-danger-box').show();
                         userStopBtn(btn,lbtn);
                     }
-                }).fail(function() {
+                }).fail(function(jqXHR, exception) {
                     //alert(error);
-                    $('#backup-msg-danger-box').html(error);
+                    $('#backup-msg-danger-box').html(exception);
                     $('#backup-msg-danger-box').show();
                 }).done(function() {
                     //userStopBtn(btn,lbtn);
@@ -257,9 +257,9 @@
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
-            }).fail(function() {
+            }).fail(function(jqXHR, exception) {
                 //alert(error);
-                $('#backup-msg-danger-box').html(error);
+                $('#backup-msg-danger-box').html(exception);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
                 userStopBtn(btn,lbtn);
