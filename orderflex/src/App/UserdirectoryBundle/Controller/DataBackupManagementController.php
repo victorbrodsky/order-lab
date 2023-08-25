@@ -442,8 +442,8 @@ class DataBackupManagementController extends OrderAbstractController
                 }
 
                 $resStr = $resStr .
-                    " The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
-                    " Also it might be required to run the deploy_prod.sh script."
+                    " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+                    " <br>Also it might be required to run the deploy_prod.sh script."
                 ;
 
                 $output = array(
