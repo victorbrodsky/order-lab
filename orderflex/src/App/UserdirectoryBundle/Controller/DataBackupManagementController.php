@@ -414,7 +414,7 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                if(1) {
+                if(0) {
                     $logger->notice("set site settings parameters");
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
