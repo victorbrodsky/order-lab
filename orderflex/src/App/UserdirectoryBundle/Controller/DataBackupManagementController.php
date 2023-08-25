@@ -72,6 +72,436 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     /**
+     * Manual backup/restore using a user's local folder
+     * Resources: https://github.com/valferon/postgres-manage-python
+     */
+    #[Route(path: '/manual-backup-restore/', name: 'employees_manual_backup_restore', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/manual_backup_restore.html.twig')]
+    public function manualBackupRestoreManagementAction(Request $request) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        if( $userServiceUtil->isWindows() ){
+            $this->addFlash(
+                'pnotify-error',
+                "DB management is not implemented for Windows"
+            );
+        }
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $this->addFlash(
+                'pnotify-error',
+                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+            );
+            return $this->redirect($this->generateUrl('employees_home'));
+        }
+
+        $sitename = "employees";
+
+        //get backup files
+        $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_manual_backup_restore
+
+        return array(
+            'sitename' => $sitename,
+            'title' => "Data Backup Management",
+            'cycle' => 'new',
+            'networkDrivePath' => $networkDrivePath,
+            'backupFiles' => $backupFiles
+        );
+    }
+
+    #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
+    public function createBackupAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $this->addFlash(
+                'pnotify-error',
+                //'notice',
+                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+            );
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        }
+
+        if( $networkDrivePath ) {
+
+            //create backup
+            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
+            $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            //exit($res);
+
+            $resStatus = $res['status'];
+            $resStr = $res['message'];
+
+            if( $resStatus == 'OK' && !$resStr ) {
+                $resStr = "Backup successfully created in folder $networkDrivePath";
+                $this->addFlash(
+                    'notice',
+                    $resStr
+                );
+            } else {
+                $this->addFlash(
+                    'pnotify-error',
+                    $resStr
+                );
+            }
+
+        } else {
+            $this->addFlash(
+                'pnotify-error',
+                "Error backup"
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+    }
+
+    #[Route(path: '/restore-backup-ajax/', name: 'employees_restore_backup_ajax', methods: ['POST'], options: ['expose' => true])]
+    public function restoreBackupAjaxAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            //exit("Live server: Under construction!!!");
+            $logger->notice("Live server: restore not allowed");
+            $output = array(
+                'status' => "NOTOK",
+                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+        //exit('Not Allowed');
+
+        $fileId = $request->get('fileId');
+        $logger->notice("backupFilePath=".$fileId);
+        //echo "backupFilePath=".$fileId."<br>";
+
+        //get backup files
+        //$backupFiles = $this->getBackupFiles($networkDrivePath);
+
+        $sitename = "employees";
+
+        if( $fileId ) {
+
+            //Original site settings
+            $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+
+            //exit('Under construction: backupFilePath='.$fileId);
+            //create backup
+
+            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            $networkDrivePath = realpath($networkDrivePath);
+            //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
+
+            $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
+
+            //$res = $this->restoringBackupSQLFull($backupFilePath);
+            //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
+            $res = $this->dbManagePython($networkDrivePath,'restore',$fileId); //Use python script pg_restore
+            //exit($res);
+
+            $logger->notice("After dbManagePython");
+
+            $resStatus = $res['status'];
+            $resStr = $res['message'];
+
+            $logger->notice("After dbManagePython: status=$resStatus, resStr=$resStr");
+
+            if( $resStatus == 'OK' ) {
+
+                //set site settings parameters
+                if(0) {
+                    $logger->notice("set site settings parameters");
+
+                    $projectRoot = $this->container->get('kernel')->getProjectDir();
+                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+                    $this->runProcess($projectRoot.DIRECTORY_SEPARATOR."bash deploy.sh");
+
+                    $param = $userSecUtil->getSingleSiteSettingsParam();
+                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
+
+                    //mailerDeliveryAddresses to admin
+                    //environment
+                    //liveSiteRootUrl
+                    //networkDrivePath
+                    //connectionChannel
+
+                    $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+                    $param->setEnvironment($environment);
+                    $param->setLiveSiteRootUrl($liveSiteRootUrl);
+                    $param->setNetworkDrivePath($networkDrivePath);
+                    $param->setConnectionChannel($connectionChannel);
+                    $logger->notice("After set settings parameters.");
+
+                    $em->flush();
+
+                    $logger->notice("After flush");
+                }
+
+                $resStr = $resStr .
+                    " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+                    " <br>Also it might be required to run the deploy_prod.sh script."
+                ;
+
+                $output = array(
+                    'status' => 'OK',
+                    'message' => $resStr
+                );
+            } else {
+                $output = array(
+                    'status' => 'NOTOK',
+                    'message' => $resStr
+                );
+            }
+
+            $logger->notice("Before sending response");
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+
+        }
+
+        $output = array(
+            'status' => 'NOTOK',
+            'message' => 'Backup file is not provided'
+        );
+        $response = new Response();
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    //NOT USED, was replaced by restoreBackupAjaxAction. Call restore directly
+    #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
+    public function restoreBackupAction_ORIG( Request $request, $backupFilePath ) {
+
+        exit('Not Allowed');
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            exit("Live server: Under construction!!!");
+        }
+
+        //echo "backupFilePath=".$backupFilePath."<br>";
+        if( $backupFilePath ) {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            $networkDrivePath = realpath($networkDrivePath);
+
+            $res = $this->dbManagePython($networkDrivePath,'restore',$backupFilePath); //Use python script pg_restore
+
+            $resStr = $res['message'];
+
+            $this->addFlash(
+                'notice',
+                $resStr
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+    }
+
+    //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
+    public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        if( $userServiceUtil->isWindows() ){
+            $res = array(
+                'status' => "NOTOK",
+                'message' => "DB management is not implemented for Windows"
+            );
+            return $res;
+        }
+
+        //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
+        //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
+
+        $logger = $this->container->get('logger');
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        //echo "projectRoot=".$projectRoot."<br>";
+
+        $projectRoot = str_replace('order-lab', '', $projectRoot);
+        $parentRoot = str_replace('orderflex', '', $projectRoot);
+        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+
+        $managePackagePath = $parentRoot .
+            DIRECTORY_SEPARATOR . "order-lab" .
+            DIRECTORY_SEPARATOR . "utils" .
+            DIRECTORY_SEPARATOR . "db-manage" .
+            DIRECTORY_SEPARATOR . "postgres-manage-python";
+        //echo 'scriptPath='.$scriptPath."<br>";
+
+        //config file
+        $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
+
+        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
+        //exit('111='.$pythonScriptPath);
+
+        //python in virtualenv'ed scripts: /path/to/venv/bin/python3
+        if( $userServiceUtil->isWindows() ){
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "Scripts" . //Windows
+                DIRECTORY_SEPARATOR . "python";
+        } else {
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "bin" . //Linux
+                DIRECTORY_SEPARATOR . "python";
+        }
+        //echo "pythonEnvPath=".$pythonEnvPath."<br>";
+        if( file_exists($pythonEnvPath) ) {
+            //echo "The file $filename exists";
+        } else {
+            $msg = "Error in DB management (action $action): The file $pythonEnvPath does not exist.".
+                " Make sure pytnon's environment venv has been installed";
+            $res = array(
+                'status' => "NOTOK",
+                'message' => $msg
+            );
+            return $res;
+        }
+
+        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
+        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
+
+        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --verbose true --path $networkDrivePath";
+
+        if( $action == 'backup' ) {
+            $command = $command . " --action backup";
+        } elseif( $action == 'restore' ) {
+            if( $backupFileName ) {
+                $command = $command . " --action restore --date $backupFileName";
+            } else {
+                $msg = "Error in DB management (action $action): backup file is not provided";
+                $res = array(
+                    'status' => "NOTOK",
+                    'message' => $msg
+                );
+                return $res;
+            }
+        } else {
+            $msg = "Error in DB management (action $action): invalid action ".$action;
+            $res = array(
+                'status' => "NOTOK",
+                'message' => $msg
+            );
+            return $res;
+        }
+
+        $logger->notice("command=[".$command."]");
+        $res = $this->runProcess($command);
+        //echo "python res=".$res."<br>";
+        //exit('111');
+        $res = array(
+            'status' => "OK",
+            'message' => $res
+        );
+        return $res;
+    }
+
+
+    public function getBackupFiles( $networkDrivePath ) {
+        if( !$networkDrivePath ) {
+            return null;
+        }
+
+        if (file_exists($networkDrivePath)) {
+            //echo "The path=$networkDrivePath";
+        } else {
+            //echo "The file $networkDrivePath does not exist";
+            return null;
+        }
+
+        //echo "networkDrivePath=$networkDrivePath <br>";
+
+        $files = scandir($networkDrivePath); //with dots
+        //dump($files);
+        //exit('111');
+
+        $backupFiles = array();
+        if( $files && is_array($files) ) {
+            $files = array_diff($files, array('..', '.'));
+            foreach( $files as $file ) {
+                //echo "file=$file <br>";
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if( $ext && $ext != 'log' && $ext != 'txt' ) {
+                    $fileOption = array("id" => $file, "name" => $file);
+                    $backupFiles[] = $fileOption;
+                }
+            }
+        }
+
+        return $backupFiles;
+    }
+
+    public function runProcess($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
+    }
+
+
+
+
+
+
+
+    ///////////////// NOT USED, OLD /////////////////////
+    /**
+     * Manual backup/restore using a user's local folder
+     *
+     * Resources: https://github.com/valferon/postgres-manage-python
+     * https://blogs.msdn.microsoft.com/brian_swan/2010/07/01/restoring-a-sql-server-database-from-php/
+     * https://channaly.wordpress.com/2012/01/31/backup-and-restoring-mssql-database-with-php/
+     * https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
+     * Bundle (no MSSQL): https://github.com/dizda/CloudBackupBundle
+     *
+     * Table specific backup/restore:
+     * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
+     * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
+     */
+
+    /**
      * NOT USED
      *
      * Backup management page with JSON configuration
@@ -183,10 +613,6 @@ class DataBackupManagementController extends OrderAbstractController
         return $form;
     }
 
-
-
-
-
     //NOT USED below. Old version of backup
     /**
      * NOT USED
@@ -232,333 +658,6 @@ class DataBackupManagementController extends OrderAbstractController
         );
 
         return $this->redirect($this->generateUrl('employees_data_backup_management'));
-    }
-
-
-    
-    
-    
-    
-    /**
-     * Manual backup/restore using a user's local folder
-     *
-     * Resources:
-     * https://blogs.msdn.microsoft.com/brian_swan/2010/07/01/restoring-a-sql-server-database-from-php/
-     * https://channaly.wordpress.com/2012/01/31/backup-and-restoring-mssql-database-with-php/
-     * https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
-     * Bundle (no MSSQL): https://github.com/dizda/CloudBackupBundle
-     *
-     * Table specific backup/restore:
-     * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
-     * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
-     */
-    #[Route(path: '/manual-backup-restore/', name: 'employees_manual_backup_restore', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/DataBackup/manual_backup_restore.html.twig')]
-    public function dataBackupManagementAction_ORIG(Request $request) {
-
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        //networkDrivePath
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
-        if( !$networkDrivePath ) {
-            //exit("No networkDrivePath is defined");
-            $this->addFlash(
-                'pnotify-error',
-                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
-            );
-            return $this->redirect($this->generateUrl('employees_home'));
-        }
-
-        $sitename = "employees";
-
-        //get backup files
-        $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_manual_backup_restore
-
-        return array(
-            'sitename' => $sitename,
-            'title' => "Data Backup Management",
-            'cycle' => 'new',
-            'networkDrivePath' => $networkDrivePath,
-            'backupFiles' => $backupFiles
-        );
-    }
-
-
-    #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
-    public function createBackupAction(Request $request) {
-
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        //networkDrivePath
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
-        if( !$networkDrivePath ) {
-            //exit("No networkDrivePath is defined");
-            $this->addFlash(
-                'pnotify-error',
-                //'notice',
-                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
-            );
-            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $sitename = "employees";
-
-        if( $networkDrivePath ) {
-
-            //create backup
-            //$backupfile = "c:\\backup\\test.bak";
-            //$networkDrivePath = "c:\\backup\\";
-            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
-            //exit($res);
-
-            $resStatus = $res['status'];
-            $resStr = $res['message'];
-
-            if( $resStatus == 'OK' && !$resStr ) {
-                $resStr = "Backup successfully created in folder $networkDrivePath";
-                $this->addFlash(
-                    'notice',
-                    $resStr
-                );
-            } else {
-                $this->addFlash(
-                    'error',
-                    $resStr
-                );
-            }
-
-        } else {
-            $this->addFlash(
-                'pnotify-error',
-                "Error backup"
-            );
-        }
-
-        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
-    }
-
-
-    #[Route(path: '/restore-backup-ajax/', name: 'employees_restore_backup_ajax', methods: ['POST'], options: ['expose' => true])]
-    public function restoreBackupAjaxAction( Request $request ) {
-
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == 'live' ) {
-            //exit("Live server: Under construction!!!");
-            $logger->notice("Live server: restore not allowed");
-            $output = array(
-                'status' => "NOTOK",
-                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
-            );
-            $response = new Response();
-            $response->setContent(json_encode($output));
-            return $response;
-        }
-        //exit('Not Allowed');
-
-        $fileId = $request->get('fileId');
-        $logger->notice("backupFilePath=".$fileId);
-        //echo "backupFilePath=".$fileId."<br>";
-
-        //get backup files
-        //$backupFiles = $this->getBackupFiles($networkDrivePath);
-
-        $sitename = "employees";
-
-        if( $fileId ) {
-
-            //Original site settings
-            $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
-            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-
-            //exit('Under construction: backupFilePath='.$fileId);
-            //create backup
-
-            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-            $networkDrivePath = realpath($networkDrivePath);
-            //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
-
-            $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
-
-            //$res = $this->restoringBackupSQLFull($backupFilePath);
-            //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-            $res = $this->dbManagePython($networkDrivePath,'restore',$fileId); //Use python script pg_restore
-            //exit($res);
-
-            $logger->notice("After dbManagePython");
-
-            $resStatus = $res['status'];
-            $resStr = $res['message'];
-
-            $logger->notice("After dbManagePython: status=$resStatus, resStr=$resStr");
-
-            if( $resStatus == 'OK' ) {
-
-                //set site settings parameters
-                if(0) {
-                    $logger->notice("set site settings parameters");
-
-                    $projectRoot = $this->container->get('kernel')->getProjectDir();
-                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-                    $this->runProcess($projectRoot.DIRECTORY_SEPARATOR."bash deploy.sh");
-
-                    //mailerDeliveryAddresses to admin
-                    //environment
-                    //liveSiteRootUrl
-                    //networkDrivePath
-                    //connectionChannel
-                    $param = $userSecUtil->getSingleSiteSettingsParam();
-                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
-
-                    $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-                    $param->setEnvironment($environment);
-                    $param->setLiveSiteRootUrl($liveSiteRootUrl);
-                    $param->setNetworkDrivePath($networkDrivePath);
-                    $param->setConnectionChannel($connectionChannel);
-                    $logger->notice("After set settings parameters.");
-
-                    $em->flush();
-
-                    $logger->notice("After flush");
-                }
-
-                $resStr = $resStr .
-                    " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
-                    " <br>Also it might be required to run the deploy_prod.sh script."
-                ;
-
-                $output = array(
-                    'status' => 'OK',
-                    'message' => $resStr
-                );
-            } else {
-                $output = array(
-                    'status' => 'NOTOK',
-                    'message' => $resStr
-                );
-            }
-
-            $logger->notice("Before sending response");
-            $response = new Response();
-            $response->setContent(json_encode($output));
-            return $response;
-
-        }
-
-        $output = array(
-            'status' => 'NOTOK',
-            'message' => 'Backup file is not provided'
-        );
-        $response = new Response();
-        $response->setContent(json_encode($output));
-        return $response;
-    }
-
-    //NOT USED. Call restore directly
-    #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
-    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
-    public function restoreBackupAction_ORIG( Request $request, $backupFilePath ) {
-
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == 'live' ) {
-            exit("Live server: Under construction!!!");
-        }
-        //exit('Not Allowed');
-
-        //echo "backupFilePath=".$backupFilePath."<br>";
-
-        //get backup files
-        //$backupFiles = $this->getBackupFiles($networkDrivePath);
-
-        $sitename = "employees";
-
-        if( $backupFilePath ) {
-
-            //exit('Under construction: backupFilePath='.$backupFilePath);
-            //create backup
-
-            $userSecUtil = $this->container->get('user_security_utility');
-            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-            $networkDrivePath = realpath($networkDrivePath);
-            //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
-
-            //$res = $this->restoringBackupSQLFull($backupFilePath);
-            //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-            $res = $this->dbManagePython($networkDrivePath,'restore',$backupFilePath); //Use python script pg_restore
-            //exit($res);
-
-            $resStr = $res['message'];
-
-            $this->addFlash(
-                'notice',
-                $resStr
-            );
-
-        }
-
-        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
-    }
-
-
-
-    ///////////////// UTIL METHODS /////////////////////
-
-    public function getBackupFiles( $networkDrivePath ) {
-        if( !$networkDrivePath ) {
-            return null;
-        }
-
-        if (file_exists($networkDrivePath)) {
-            //echo "The path=$networkDrivePath";
-        } else {
-            //echo "The file $networkDrivePath does not exist";
-            return null;
-        }
-
-        //echo "networkDrivePath=$networkDrivePath <br>";
-
-        $files = scandir($networkDrivePath); //with dots
-        //dump($files);
-        //exit('111');
-
-        $backupFiles = array();
-        if( $files && is_array($files) ) {
-            $files = array_diff($files, array('..', '.'));
-            foreach( $files as $file ) {
-                //echo "file=$file <br>";
-                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                if( $ext && $ext != 'log' && $ext != 'txt' ) {
-                    $fileOption = array("id" => $file, "name" => $file);
-                    $backupFiles[] = $fileOption;
-                }
-            }
-        }
-
-        return $backupFiles;
     }
 
     public function getConnection() {
@@ -873,97 +972,6 @@ class DataBackupManagementController extends OrderAbstractController
         return $msg;
     }
 
-    //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
-    public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
-        //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
-        //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
-
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $logger = $this->container->get('logger');
-
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
-        //echo "projectRoot=".$projectRoot."<br>";
-
-        $projectRoot = str_replace('order-lab', '', $projectRoot);
-        $parentRoot = str_replace('orderflex', '', $projectRoot);
-        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-
-        $managePackagePath = $parentRoot .
-            DIRECTORY_SEPARATOR . "order-lab" .
-            DIRECTORY_SEPARATOR . "utils" .
-            DIRECTORY_SEPARATOR . "db-manage" .
-            DIRECTORY_SEPARATOR . "postgres-manage-python";
-        //echo 'scriptPath='.$scriptPath."<br>";
-
-        //config file
-        $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
-
-        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
-        //exit('111='.$pythonScriptPath);
-
-        //python in virtualenv'ed scripts: /path/to/venv/bin/python3
-        if( $userServiceUtil->isWindows() ){
-            $pythonEnvPath = $managePackagePath .
-                DIRECTORY_SEPARATOR . "venv" .
-                DIRECTORY_SEPARATOR . "Scripts" . //Windows
-                DIRECTORY_SEPARATOR . "python";
-        } else {
-            $pythonEnvPath = $managePackagePath .
-                DIRECTORY_SEPARATOR . "venv" .
-                DIRECTORY_SEPARATOR . "bin" . //Linux
-                DIRECTORY_SEPARATOR . "python";
-        }
-        //echo "pythonEnvPath=".$pythonEnvPath."<br>";
-        if( file_exists($pythonEnvPath) ) {
-            //echo "The file $filename exists";
-        } else {
-            $msg = "Error in DB management (action $action): The file $pythonEnvPath does not exist.".
-            " Make sure pytnon's environment venv has been installed";
-            $res = array(
-                'status' => "NOTOK",
-                'message' => $msg
-            );
-            return $res;
-        }
-
-        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
-        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
-
-        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --verbose true --path $networkDrivePath";
-
-        if( $action == 'backup' ) {
-            $command = $command . " --action backup";
-        } elseif( $action == 'restore' ) {
-            if( $backupFileName ) {
-                $command = $command . " --action restore --date $backupFileName";
-            } else {
-                $msg = "Error in DB management (action $action): backup file is not provided";
-                $res = array(
-                    'status' => "NOTOK",
-                    'message' => $msg
-                );
-                return $res;
-            }
-        } else {
-            $msg = "Error in DB management (action $action): invalid action ".$action;
-            $res = array(
-                'status' => "NOTOK",
-                'message' => $msg
-            );
-            return $res;
-        }
-
-        $logger->notice("command=[".$command."]");
-        $res = $this->runProcess($command);
-        //echo "python res=".$res."<br>";
-        //exit('111');
-        $res = array(
-            'status' => "OK",
-            'message' => $res
-        );
-        return $res;
-    }
-
     //Restore to the empty DB (no more than 9 users)
     //$backupFilePath is plain, sql file
     //Use DB ScanOrderTest
@@ -1177,60 +1185,6 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         return $msg;
-    }
-
-    public function runProcess($script) {
-        //$process = new Process($script);
-        $process = Process::fromShellCommandline($script);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        return $process->getOutput();
-    }
-
-    public function runProcess_2($script) {
-        //$process = new Process($script);
-        $process = Process::fromShellCommandline($script);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $process->start();
-        $iterator = $process->getIterator($process::ITER_SKIP_ERR | $process::ITER_KEEP_OUTPUT);
-        $res = array();
-        foreach ($iterator as $data) {
-            echo $data."\n";
-            $res[] = $data;
-        }
-
-        $resStr = "process result is empty";
-        if( count($res) > 0 ) {
-            $resStr = implode("<br>", $res);
-        }
-
-        return $resStr;
-    }
-
-    public function runProcess_3($script) {
-        //$process = new Process($script);
-        $process = Process::fromShellCommandline($script);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $res = array();
-        $process->run(function ($type, $buffer): void {
-            if (Process::ERR === $type) {
-                echo 'ERR > '.$buffer;
-                $res[] = $buffer;
-            } else {
-                echo 'OUT > '.$buffer;
-                $res[] = $buffer;
-            }
-        });
-
-        $resStr = "process result is empty";
-        if( count($res) > 0 ) {
-            $resStr = implode("<br>",$res);
-        }
-
-        return $resStr;
     }
 
 }
