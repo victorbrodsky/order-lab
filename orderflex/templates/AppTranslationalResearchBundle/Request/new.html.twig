@@ -764,8 +764,9 @@
             console.log('projectProducts=',projectProducts);
             //$(".product-category-combobox").select2('data',projectProducts);
 
+            _productServices = projectProducts;
             $('select.product-category-combobox').empty().trigger("change");
-            trpUpdateProducts(projectProducts);
+            trpUpdateProducts(_productServices);
         }
 
         function transresIncludeProjectDetails( projectField ) {
@@ -953,24 +954,15 @@
             //first empty
             var newOption = new Option('', '', false, false);
             $("select.product-category-combobox").append(newOption).trigger('change');
-            
+
             products.forEach(function(item){
-
-//                if( $(this).find("option[value='" + userId + "']").length ) {
-//
-//                } else {
-//
-//                }
-
                 var thisEncounterId = item['id'];
                 var thisEncounterText = item['text'];
                 //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
                 //text += thisEncounterText;
                 if( thisEncounterText ) {
                     var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-                    //var newOption = new Option(thisEncounterId, thisEncounterText, false, false);
                     $("select.product-category-combobox").append(newOption).trigger('change');
-                    //$("select.combobox-previous-encounters").append(newOption);
                 }
             });
         }
