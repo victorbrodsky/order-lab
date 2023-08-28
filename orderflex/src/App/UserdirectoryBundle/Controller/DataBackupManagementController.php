@@ -434,6 +434,82 @@ class DataBackupManagementController extends OrderAbstractController
         return $res;
     }
 
+    //Create Upload Folder Backup order-lab\orderflex\public\Uploaded\
+    #[Route(path: '/create-backup-upload/', name: 'employees_create_backup_upload', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
+    public function createUploadBackupAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $this->addFlash(
+                'pnotify-error',
+                //'notice',
+                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+            );
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        }
+
+        if( $networkDrivePath ) {
+
+            //create backup tar -zcvf archive.tar.gz directory/
+            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+            //exit($networkDrivePath);
+
+            $archiveFile = "upload_".$date = date('Y-m-d-H-i-s').".tar.gz";
+            $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
+            echo "archiveFile=".$archiveFile."<br>";
+
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            //echo "projectRoot=".$projectRoot."<br>";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            echo "folder=".$folder."<br>";
+            //exit('111');
+
+            $command = "tar -zcvf $archiveFile $folder";
+            $res = $this->runProcess($command);
+            exit("res=".$res);
+
+            if( !$res ) {
+                $res = "Uploaded folder backup $archiveFile has been successfully created";
+            }
+
+            $this->addFlash(
+                'notice',
+                $res
+            );
+
+//            if( $res ) {
+//                $resStr = "Backup successfully created in folder $networkDrivePath";
+//                $this->addFlash(
+//                    'notice',
+//                    $resStr
+//                );
+//            } else {
+//                $this->addFlash(
+//                    'pnotify-error',
+//                    $resStr
+//                );
+//            }
+
+        } else {
+            $this->addFlash(
+                'pnotify-error',
+                "Error backup"
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+    }
+
 
     public function getBackupFiles( $networkDrivePath ) {
         if( !$networkDrivePath ) {

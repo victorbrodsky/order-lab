@@ -42,10 +42,20 @@
     </p>
 
     <p>
-        <a
-            general-data-confirm="Are you sure you want to create a database backup?"
-            class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
-        >Create Backup</a>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <a
+                    general-data-confirm="Are you sure you want to create a database backup?"
+                    class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
+                >Create DB Backup</a>
+            </div>
+            <div class="col-xs-6" align="left">
+                <a
+                    general-data-confirm="Are you sure you want to create a upload folder backup?"
+                    class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
+                >Create Upload Folder Backup</a>
+            </div>
+        </div>
     </p>
 
     <br>
