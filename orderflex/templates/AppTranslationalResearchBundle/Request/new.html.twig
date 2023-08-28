@@ -997,6 +997,7 @@
         }
 
         function transresCloneExistingObject(btn,classname,confirmationMessage) {
+            console.log("transresCloneExistingObject");
             transresProductItemListener();
 
             var cloneBtnEl = $(btn);
@@ -1040,8 +1041,7 @@
             }
 
             var category = holder.find('.product-category-combobox').select2('data');
-            console.log("category=",category);
-            //console.log(category);
+            console.log("copy category=",category);
             if( category ) {
                 newHolder.find('.product-category-combobox').select2('data',category);
             }
@@ -1272,6 +1272,7 @@
         }
 
         function transresProductItemListener() {
+            console.log("transresProductItemListener");
             if( $('#project-funded').val() ) {
                 //funded => do not use remaining budget recalculation
                 return;
