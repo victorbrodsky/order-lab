@@ -197,7 +197,6 @@ class ProductType extends AbstractType
         //dynamically get label and price according to the priceList
         if(0) {
             $builder->add('category', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
                 'class' => RequestCategoryTypeList::class,
                 //'choice_label' => 'getOptimalAbbreviationName',
                 //            'choice_value' => function ($entity) {
@@ -224,7 +223,6 @@ class ProductType extends AbstractType
         } else {
 
             $builder->add('category', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
                 'class' => RequestCategoryTypeList::class,
                 'choice_label' => function (RequestCategoryTypeList $entity) {
                     if ($entity) {

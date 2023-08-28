@@ -2564,6 +2564,7 @@ class ProjectController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->addFlash(
@@ -2605,13 +2606,19 @@ class ProjectController extends OrderAbstractController
             }
         }
 
+        //get project's related "Product or Service" list
+        // by getProductServiceByProjectSpecialty( $projectSpecialty, $project=null )
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectProducts = $transresRequestUtil->getSelectProductServiceByProjectSpecialty($projectSpecialty,$project);
+
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
             "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
             "fundedStr" => $fundedStr,
-            "businessPurposes" => $businessPurposesArr
+            "businessPurposes" => $businessPurposesArr,
+            'projectProducts' => $projectProducts,
         );
 
         $response = new Response();

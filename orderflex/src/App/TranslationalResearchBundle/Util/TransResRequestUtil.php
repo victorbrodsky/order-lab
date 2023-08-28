@@ -4978,6 +4978,25 @@ class TransResRequestUtil
         exit();
     }
 
+    public function getSelectProductServiceByProjectSpecialty( $projectSpecialty, $project=null ) {
+        $projectProducts = $this->getProductServiceByProjectSpecialty($projectSpecialty,$project);
+
+        $priceList = NULL;
+        if( $project ) {
+            $priceList = $project->getPriceList();
+        }
+
+        $output = array();
+        foreach($projectProducts as $projectProduct) {
+            $output[] = array(
+                'id' => $projectProduct->getId(),
+                'text' => $projectProduct->getOptimalAbbreviationName($priceList)
+            );
+        }
+
+        return $output;
+    }
+
     public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null ) {
 
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
