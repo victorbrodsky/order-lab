@@ -452,6 +452,7 @@
 
             //transresProductCloneListener();
 
+            //console.log("document ready: transresProductItemListener");
             transresProductItemListener(this);
 
             transresDetectMajorWorkRequestChanges();
@@ -765,8 +766,12 @@
             //$(".product-category-combobox").select2('data',projectProducts);
 
             _productServices = projectProducts;
+            //$('select.product-category-combobox').empty().trigger("change");
+            //trpUpdateProducts(_productServices);
+
             $('select.product-category-combobox').empty().trigger("change");
-            trpUpdateProducts(_productServices);
+            //trpUpdateProducts(_productServices,$("#oleg_translationalresearchbundle_request_products___products___category"));
+            trpUpdateProducts(_productServices,$("select.product-category-combobox"));
         }
 
         function transresIncludeProjectDetails( projectField ) {
@@ -951,6 +956,24 @@
         }
 
         function trpUpdateProducts(products,comboboxEl) {
+            //comboboxEl.empty().trigger("change");
+
+            //first empty element
+            var newOption = new Option('', '', false, false);
+            comboboxEl.append(newOption).trigger('change');
+
+            products.forEach(function(item){
+                var thisEncounterId = item['id'];
+                var thisEncounterText = item['text'];
+                //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+                //text += thisEncounterText;
+                if( thisEncounterText ) {
+                    var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                    comboboxEl.append(newOption).trigger('change');
+                }
+            });
+        }
+        function trpUpdateProducts_ORIG(products,comboboxEl) {
             //first empty
             var newOption = new Option('', '', false, false);
             $("select.product-category-combobox").append(newOption).trigger('change');

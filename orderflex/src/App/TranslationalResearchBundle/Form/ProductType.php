@@ -198,14 +198,6 @@ class ProductType extends AbstractType
         if(0) {
             $builder->add('category', EntityType::class, array(
                 'class' => RequestCategoryTypeList::class,
-                //'choice_label' => 'getOptimalAbbreviationName',
-                //            'choice_value' => function ($entity) {
-                //                //return "111";
-                //                if( $entity ) {
-                //                    return $entity->getOptimalAbbreviationName($this->priceList);
-                //                }
-                //                return '';
-                //            },
                 'choice_label' => function (RequestCategoryTypeList $entity) {
                     if ($entity) {
                         return $entity->getOptimalAbbreviationName($this->priceList);
