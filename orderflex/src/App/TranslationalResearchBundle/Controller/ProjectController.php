@@ -2612,6 +2612,7 @@ class ProjectController extends OrderAbstractController
         $projectProducts = $transresRequestUtil->getSelectProductServiceByProjectSpecialty($projectSpecialty,$project);
 
         $output = array(
+            "projectId" => $project->getOid(),
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
             "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,

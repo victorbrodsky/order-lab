@@ -68,7 +68,7 @@
     {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
 
     <h4 class="text-info" align="center">
-        {{ title }}
+        <div id="new-work-request-title">{{ title }}</div>
         {% if invoiceShowUrl %}
             (See latest invoice {{ invoiceShowUrl|raw }})
         {% endif %}
@@ -722,6 +722,10 @@
                     async: asyncflag
                 }).success(function(response) {
                     //console.log(response);
+
+                    //set title
+                    $('#new-work-request-title').text("New Work Request for project ID "+response.projectId);
+
                     //set fundedAccountNumber
                     $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(response.fundedAccountNumber);
 
