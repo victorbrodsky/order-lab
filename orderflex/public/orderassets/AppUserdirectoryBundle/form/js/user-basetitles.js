@@ -46,12 +46,13 @@ function addNewObject(btn,classname,callback) {
     //printF(newForm,"added el:");
     //console.log(newForm);
 
-    initBaseAdd(newForm,callback);
+    userInitBaseAdd(newForm,callback);
     processEmploymentStatusRemoveButtons(btn,'add');
 
 }
 
-function initBaseAdd(newForm,callback) {
+//btn - js button elememnt which was clicked to add this new Object
+function userInitBaseAdd(newForm,callback) {
     expandTextarea();
     regularCombobox();
 
@@ -90,7 +91,7 @@ function initBaseAdd(newForm,callback) {
     newPriceListListener(newForm);
 
     if( callback ) {
-        callback();
+        callback(newForm);
     }
 }
 

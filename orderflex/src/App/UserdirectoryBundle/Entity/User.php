@@ -261,6 +261,8 @@ class User extends UserBase {
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $notificationEmailUser;
 
+    //TODO: add multiple email addresses to notify or replace $notificationEmailUser to support many users
+
     /**
      * @var \DateTime
      */
