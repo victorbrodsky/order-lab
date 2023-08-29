@@ -1296,6 +1296,13 @@
 
         function transresProductItemListener() {
             console.log("transresProductItemListener");
+
+            //update product-category-combobox for new product-category-combobox
+            if( _productServices && _productServices.length > 0 ) {
+                $('select.product-category-combobox').empty().trigger("change");
+                trpUpdateProducts(_productServices, $("select.product-category-combobox"));
+            }
+
             if( $('#project-funded').val() ) {
                 //funded => do not use remaining budget recalculation
                 return;
