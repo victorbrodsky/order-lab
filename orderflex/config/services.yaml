@@ -2,6 +2,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 imports:
+    - { resource: assets_version.php }
     - { resource: "parameters.yml" }
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }

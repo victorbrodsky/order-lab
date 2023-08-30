@@ -6,6 +6,7 @@ framework:
       #enabled: false
     assets:
           version: 'v2'
+          #version_strategy: 'app.asset.my_versioning_strategy'
 
     secret: '%secret%'
 #    secret: '%env(APP_SECRET)%'
