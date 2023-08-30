@@ -51,7 +51,7 @@ function addNewObject(btn,classname,callback) {
 
 }
 
-//btn - js button elememnt which was clicked to add this new Object
+//newForm - jquery this newly added form
 function userInitBaseAdd(newForm,callback) {
     expandTextarea();
     regularCombobox();

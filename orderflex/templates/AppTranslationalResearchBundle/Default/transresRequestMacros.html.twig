@@ -834,7 +834,13 @@
                     {% endfor %}
 
                     {% if cycle != "show" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',"transres-add-product-btn","transresProductItemListener") }}
+                        {{ usermacros.addNewObjectBtn(
+                            cycle,
+                            'transres-products',
+                            'Add Product or Service',
+                            "transres-add-product-btn",
+                            "transresProductItemListener"
+                        ) }}
                     {% endif %}
 
                     {#get added invoice items without or with non existed category#}

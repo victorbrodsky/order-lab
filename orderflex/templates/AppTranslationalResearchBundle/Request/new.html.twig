@@ -1286,28 +1286,25 @@
         }
 
         //btn - js button elememnt which was clicked to add this new Object
-        //newForm - jquery newly added form
+        //newForm - jquery this newly added form
         //TODO: rename to transresInitProductServiceForm( newForm )
         function transresProductItemListener( newForm ) {
             console.log("transresProductItemListener");
 
             //update product-category-combobox for only this new product-category-combobox associated with btn
             if( newForm && _productServices && _productServices.length > 0 ) {
-                console.log(newForm);
+                console.log("newForm:",newForm);
                 var newProductForm = newForm.find('select.product-category-combobox');
                 //newProductForm.empty().trigger("change");
                 trpUpdateProducts(_productServices, newProductForm);
+            } else {
+                console.log("newForm is null");
             }
 
             if( $('#project-funded').val() ) {
                 //funded => do not use remaining budget recalculation
                 return;
             }
-
-//            $('.product-requested-quantity').on('input', function(event) {
-//                console.log("product-requested-quantity changed");
-//                transresRecalculateRemaniningBudget();
-//            });
 
             //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
