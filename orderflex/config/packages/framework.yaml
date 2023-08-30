@@ -4,6 +4,8 @@ framework:
 #    translator: ~
     #translator:
       #enabled: false
+    assets:
+          version: 'v2'
 
     secret: '%secret%'
 #    secret: '%env(APP_SECRET)%'
