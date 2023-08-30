@@ -542,13 +542,26 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/some-testing/', name: 'employees_some_testing')]
     public function someTestingAction() {
 
-        exit("disabled");
+        //exit("disabled");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        //get users with notificationEmailUser
+        $repository = $em->getRepository(User::class);
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->where("user.notificationEmailUser IS NOT NULL");
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        $users = $query->getResult();
+        echo "usesr count=".count($users)."<br>";
+        foreach( $users as $user ) {
+            echo $user." => ".$user->getNotificationEmailUser()."<br>";
+        }
+        exit('111');
 
         if(0) {
             echo "############### <br>";
