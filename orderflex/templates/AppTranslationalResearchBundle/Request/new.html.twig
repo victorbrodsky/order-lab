@@ -744,8 +744,11 @@
 
                     $('#transer-funded').val(response.fundedStr);
 
+                    //project-remaining-budget-amount
+                    $('#project-remaining-budget-amount').val(response.remainingBudget);
+
                     if( update ) {
-                        transresSetProductServiceList(response.projectProducts);
+                        transresSetProductServiceListByProject(response.projectProducts);
                     }
 
                 }).done(function() {
@@ -765,7 +768,7 @@
             }
         }
 
-        function transresSetProductServiceList(projectProducts) {
+        function transresSetProductServiceListByProject(projectProducts) {
             //console.log('projectProducts=',projectProducts);
             //$(".product-category-combobox").select2('data',projectProducts);
 
@@ -773,8 +776,7 @@
             //$('select.product-category-combobox').empty().trigger("change");
             //trpUpdateProducts(_productServices);
 
-            $('select.product-category-combobox').empty().trigger("change");
-            //trpUpdateProducts(_productServices,$("#oleg_translationalresearchbundle_request_products___products___category"));
+            //$('select.product-category-combobox').empty().trigger("change");
             trpUpdateProducts(_productServices,$("select.product-category-combobox"));
         }
 
@@ -831,7 +833,8 @@
 
         //NOT USED
         //populate filteres list products according to the project type
-        function transresPrepopulateProductServices( projectField ) {
+        function transresPrepopulateProductServices_NOTUSED( projectField ) {
+            console.log("transresPrepopulateProductServices_NOTUSED");
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField.length ) {
                 projectId = projectField.val();
@@ -901,14 +904,13 @@
             }//_productServices.length == 0
 
             if( _productServices.length > 0 ) {
-                //console.log("set products");
+                console.log("set products");
                 //$('.product-category-combobox').val(null).trigger('change');
                 //$(".product-category-combobox").trigger('change');
 
                 //$("select.product-category-combobox").select2('data', null);
-                $('select.product-category-combobox').empty().trigger("change");
-
-                trpUpdateProducts(_productServices);
+                //$('select.product-category-combobox').empty().trigger("change");
+                trpUpdateProducts(_productServices,$('select.product-category-combobox'));
             }
 
 //            //console.log("projectId="+projectId);
@@ -961,10 +963,11 @@
 
         function trpUpdateProducts(products,comboboxEl) {
             //comboboxEl.empty().trigger("change");
+            comboboxEl.empty();//.trigger("change");
 
             //first empty element
             var newOption = new Option('', '', false, false);
-            comboboxEl.append(newOption).trigger('change');
+            comboboxEl.append(newOption);//.trigger('change');
 
             products.forEach(function(item){
                 var thisEncounterId = item['id'];
@@ -973,26 +976,12 @@
                 //text += thisEncounterText;
                 if( thisEncounterText ) {
                     var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-                    comboboxEl.append(newOption).trigger('change');
+                    comboboxEl.append(newOption);//.trigger('change');
                 }
             });
+            comboboxEl.trigger('change');
         }
-        function trpUpdateProducts_ORIG(products,comboboxEl) {
-            //first empty
-            var newOption = new Option('', '', false, false);
-            $("select.product-category-combobox").append(newOption).trigger('change');
 
-            products.forEach(function(item){
-                var thisEncounterId = item['id'];
-                var thisEncounterText = item['text'];
-                //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
-                //text += thisEncounterText;
-                if( thisEncounterText ) {
-                    var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-                    $("select.product-category-combobox").append(newOption).trigger('change');
-                }
-            });
-        }
         function updateUserComboboxes(response,fieldId) {
             //console.log("update user comboboxes; response:");
             //console.log(response);
@@ -1137,7 +1126,7 @@
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
                 //return;
             }
-            console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
+            //console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
             //$('#project-remaining-budget-amount').text(currentRemainingBudget);
@@ -1149,11 +1138,6 @@
 
                 //foreach product: get categoryId, quantity
                 var productsArr = [];
-//                var productArr = [
-//                    'categoryId',
-//                    '1'
-//                ];
-
                 var workrequestId = $('#workrequest-id').val();
 
                 $('.transres-products').each(function(){
@@ -1180,7 +1164,7 @@
                         productsArr.push(productArr);
                     }
                 });
-                console.log("transresRecalculateRemaniningBudget, productsArr:",productsArr);
+                //console.log("transresRecalculateRemaniningBudget, productsArr:",productsArr);
 
                 if( productsArr.length == 0 ) {
                     //console.log("products are empty");
@@ -1227,7 +1211,7 @@
                 });
 
             } else {
-
+                console.log("projectId is null");
             }
         }
 
@@ -1310,7 +1294,7 @@
             if( newForm && _productServices && _productServices.length > 0 ) {
                 console.log(newForm);
                 var newProductForm = newForm.find('select.product-category-combobox');
-                newProductForm.empty().trigger("change");
+                //newProductForm.empty().trigger("change");
                 trpUpdateProducts(_productServices, newProductForm);
             }
 
@@ -1324,9 +1308,13 @@
 //                transresRecalculateRemaniningBudget();
 //            });
 
-            //delay user input listener
+            //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
-            $(".product-requested-quantity").bind("input propertychange", function (evt) {
+            var quantitySelector = $(".product-requested-quantity");
+            if( newForm ) {
+                quantitySelector = newForm.find(".product-requested-quantity");
+            }
+            quantitySelector.bind("input propertychange", function (evt) {
                 // If it's the propertychange event, make sure it's the value that changed.
                 if (window.event && event.type == "propertychange" && event.propertyName != "value")
                     return;
@@ -1339,7 +1327,11 @@
                 }, timer));
             });
 
-            $('.product-category-combobox').on('change', function(event) {
+            var categorySelector = $(".product-category-combobox");
+            if( newForm ) {
+                categorySelector = newForm.find(".product-category-combobox");
+            }
+            categorySelector.on('change', function(event) {
                 console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
