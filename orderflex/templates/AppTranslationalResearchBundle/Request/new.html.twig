@@ -453,8 +453,8 @@
 
             //transresProductCloneListener();
 
-            //console.log("document ready: transresProductItemListener");
-            transresProductItemListener();
+            //console.log("document ready: transresInitAddedProductForm");
+            transresInitAddedProductForm();
 
             transresDetectMajorWorkRequestChanges();
 
@@ -1023,7 +1023,6 @@
 
         function transresCloneExistingObject(btn,classname,confirmationMessage) {
             console.log("transresCloneExistingObject");
-            //transresProductItemListener($('.transres-products-holder').find('.user-collection-holder').last());
 
             var cloneBtnEl = $(btn);
 
@@ -1041,7 +1040,7 @@
                 return;
             }
 
-            transresProductItemListener(newHolder);
+            transresInitAddedProductForm(newHolder);
 
             var requestedQuantity = holder.find('.product-requested-quantity').val();
             //console.log("requestedQuantity="+requestedQuantity);
@@ -1117,7 +1116,6 @@
             transresHideShowRemoveProductSection();
         }
 
-        //transresProductItemListener
         function transresRecalculateRemaniningBudget() {
             //return; //testing
 
@@ -1287,9 +1285,9 @@
 
         //btn - js button elememnt which was clicked to add this new Object
         //newForm - jquery this newly added form
-        //TODO: rename to transresInitProductServiceForm( newForm )
-        function transresProductItemListener( newForm ) {
-            console.log("transresProductItemListener");
+        //TODO: rename transresProductItemListener to transresInitAddedProductForm( newForm )
+        function transresInitAddedProductForm( newForm ) {
+            console.log("transresInitAddedProductForm");
 
             //update product-category-combobox for only this new product-category-combobox associated with btn
             if( newForm && _productServices && _productServices.length > 0 ) {
