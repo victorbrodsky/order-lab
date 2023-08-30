@@ -1293,7 +1293,7 @@
 
             //update product-category-combobox for only this new product-category-combobox associated with btn
             if( newForm && _productServices && _productServices.length > 0 ) {
-                console.log("newForm:",newForm);
+                console.log("newForm exist: update product-category-combobox");
                 var newProductForm = newForm.find('select.product-category-combobox');
                 //newProductForm.empty().trigger("change");
                 trpUpdateProducts(_productServices, newProductForm);
