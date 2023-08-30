@@ -608,7 +608,6 @@
                 //funded => do not use remaining budget recalculation
             } else {
                 //un-funded => use over budget warning
-                //var projectRemainingBudget = $('#project-remaining-budget').val();
                 //console.log("projectRemainingBudget="+projectRemainingBudget);
                 var projectRemainingBudgetValue = $('#project-remaining-budget-value').val();
                 //console.log("projectRemainingBudgetValue="+projectRemainingBudgetValue);
@@ -1139,7 +1138,6 @@
             //console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
-            //$('#project-remaining-budget-amount').text(currentRemainingBudget);
             transresSetRemainingBudgetNote(currentRemainingBudget);
             //$('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
 
@@ -1180,7 +1178,6 @@
                     //console.log("products are empty");
 
                     var originalRemainingBudget = $('#project-original-remaining-budget').val();
-                    //$('#project-remaining-budget-amount').text(originalRemainingBudget);
                     originalRemainingBudget = transresDollarSignValue(originalRemainingBudget);
                     transresSetRemainingBudgetNote(originalRemainingBudget);
 
@@ -1208,8 +1205,6 @@
                         //console.log(response);
                         console.log("ajax result remainingBudget=" + response.remainingBudget); //TODO: it shows in loop?
                         if (response.error == null) {
-                            //$('#project-remaining-budget-amount').text(response.remainingBudget);
-                            //$('#project-remaining-budget').val(response.remainingBudget);
                             transresSetRemainingBudgetNote(response.remainingBudget);
                             $('#project-remaining-budget-value').val(response.remainingBudgetValue);
                         }
@@ -1226,10 +1221,6 @@
         }
 
         function transresSetRemainingBudgetNote(remainingBudgetValue) {
-            //$('#project-remaining-budget-value').val(response.remainingBudgetValue);
-            //$('#project-remaining-budget-amount').val(originalRemainingBudget);
-
-            //var currentRemainingBudget = response.remainingBudget;
             $('#project-remaining-budget-amount').text(remainingBudgetValue);
             $('#project-remaining-budget').val(remainingBudgetValue);
             if( remainingBudgetValue.indexOf('-') !== -1 ) {
