@@ -2,7 +2,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 imports:
-    #- { resource: assets_version.php }
+    - { resource: assets_version.php }
     - { resource: "parameters.yml" }
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
@@ -31,7 +31,7 @@ services:
     Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
     Symfony\Component\HttpFoundation\Session\Session: ~
 
-    App\Asset\VersionStrategy\DateVersionStrategy: ~
+    #App\Asset\VersionStrategy\DateVersionStrategy: ~
     #        arguments: ["%kernel.project_dir%/busters.json", "%%s?version=%%s"]
 
 #    Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface: ~

@@ -5,9 +5,9 @@ framework:
     #translator:
       #enabled: false
     assets:
-          #version: 'v1' #will be replaced by version's from assets_version.php every time when run deploy script
+          version: 'v1' #will be replaced by version's from services.yaml->assets_version.php every time when run deploy script
           #version_strategy: 'app.asset.my_versioning_strategy' //https://symfony.com/doc/current/frontend/custom_version_strategy.html
-          version_strategy: 'App\Asset\VersionStrategy\DateVersionStrategy'
+          #version_strategy: 'App\Asset\VersionStrategy\DateVersionStrategy'
 
     secret: '%secret%'
 #    secret: '%env(APP_SECRET)%'

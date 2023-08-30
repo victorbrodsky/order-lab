@@ -11,7 +11,7 @@ class DateVersionStrategy implements VersionStrategyInterface
 
     public function __construct()
     {
-        $this->version = date('Ymd');
+        $this->version = date('Ymdhis');
     }
 
     public function getVersion(string $path): string
