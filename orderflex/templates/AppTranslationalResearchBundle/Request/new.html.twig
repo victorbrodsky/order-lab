@@ -454,7 +454,7 @@
             //transresProductCloneListener();
 
             //console.log("document ready: transresProductItemListener");
-            transresProductItemListener(false);
+            transresProductItemListener();
 
             transresDetectMajorWorkRequestChanges();
 
@@ -1292,7 +1292,7 @@
             console.log("transresProductItemListener");
 
             //update product-category-combobox for only this new product-category-combobox associated with btn
-            if( newForm != false && _productServices && _productServices.length > 0 ) {
+            if( newForm && _productServices && _productServices.length > 0 ) {
                 console.log("newForm:",newForm);
                 var newProductForm = newForm.find('select.product-category-combobox');
                 //newProductForm.empty().trigger("change");
@@ -1309,7 +1309,7 @@
             //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
             var quantitySelector = $(".product-requested-quantity");
-            if( newForm != false ) {
+            if( newForm ) {
                 quantitySelector = newForm.find(".product-requested-quantity");
             }
             quantitySelector.bind("input propertychange", function (evt) {
@@ -1326,7 +1326,7 @@
             });
 
             var categorySelector = $(".product-category-combobox");
-            if( newForm != false ) {
+            if( newForm ) {
                 categorySelector = newForm.find(".product-category-combobox");
             }
             categorySelector.on('change', function(event) {
