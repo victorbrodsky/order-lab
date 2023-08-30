@@ -843,7 +843,7 @@
         //NOT USED
         //populate filteres list products according to the project type
         function transresPrepopulateProductServices_NOTUSED( projectField ) {
-            console.log("transresPrepopulateProductServices_NOTUSED");
+            //console.log("transresPrepopulateProductServices_NOTUSED");
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField.length ) {
                 projectId = projectField.val();
@@ -861,7 +861,7 @@
             if( _productServices.length == 0 ) {
                 //console.log("projectId="+projectId);
                 if( projectId ) {
-                    console.log("transresPrepopulateProductServices before ajax projectId=: "+projectId);
+                    //console.log("transresPrepopulateProductServices before ajax projectId=: "+projectId);
 
                     var url = Routing.generate('translationalresearch_get_productservice_ajax',{id: projectId});
                     //url = url + "/" + projectId;
@@ -875,7 +875,7 @@
                         async: false //asyncflag
                     }).success(function(response) {
 
-                        console.log("transresPrepopulateProductServices after ajax");
+                        //console.log("transresPrepopulateProductServices after ajax");
                         //console.log(response);
 
                         _productServices = response.products;
@@ -913,7 +913,7 @@
             }//_productServices.length == 0
 
             if( _productServices.length > 0 ) {
-                console.log("set products");
+                //console.log("set products");
                 //$('.product-category-combobox').val(null).trigger('change');
                 //$(".product-category-combobox").trigger('change');
 
@@ -1022,7 +1022,7 @@
         }
 
         function transresCloneExistingObject(btn,classname,confirmationMessage) {
-            console.log("transresCloneExistingObject");
+            //console.log("transresCloneExistingObject");
 
             var cloneBtnEl = $(btn);
 
@@ -1067,7 +1067,7 @@
             }
 
             var category = holder.find('.product-category-combobox').select2('data');
-            console.log("copy category=",category);
+            //console.log("copy category=",category);
             if( category ) {
                 newHolder.find('.product-category-combobox').select2('data',category);
             }
@@ -1201,7 +1201,7 @@
                     if( responses ) {
                         var response = responses[0];
                         //console.log(response);
-                        console.log("ajax result remainingBudget=" + response.remainingBudget); //TODO: it shows in loop?
+                        //console.log("ajax result remainingBudget=" + response.remainingBudget); //TODO: it shows in loop?
                         if (response.error == null) {
                             transresSetRemainingBudgetNote(response.remainingBudget);
                             $('#project-remaining-budget-value').val(response.remainingBudgetValue);
@@ -1287,16 +1287,16 @@
         //newForm - jquery this newly added form
         //TODO: rename transresProductItemListener to transresInitAddedProductForm( newForm )
         function transresInitAddedProductForm( newForm ) {
-            console.log("transresInitAddedProductForm");
+            //console.log("transresInitAddedProductForm");
 
             //update product-category-combobox for only this new product-category-combobox associated with btn
             if( newForm && _productServices && _productServices.length > 0 ) {
-                console.log("newForm exist: update product-category-combobox");
+                //console.log("newForm exist: update product-category-combobox");
                 var newProductForm = newForm.find('select.product-category-combobox');
                 //newProductForm.empty().trigger("change");
                 trpUpdateProducts(_productServices, newProductForm);
             } else {
-                console.log("newForm is null");
+                //console.log("newForm is null");
             }
 
             if( $('#project-funded').val() ) {
@@ -1318,7 +1318,7 @@
                 // Clear any previously set timer before setting a fresh one
                 window.clearTimeout($(this).data("timeout"));
                 $(this).data("timeout", setTimeout(function () {
-                    console.log("product-requested-quantity changed");
+                    //console.log("product-requested-quantity changed");
                     transresRecalculateRemaniningBudget();
                 }, timer));
             });
@@ -1328,7 +1328,7 @@
                 categorySelector = newForm.find(".product-category-combobox");
             }
             categorySelector.on('change', function(event) {
-                console.log("product-category-combobox changed");
+                //console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
         }
