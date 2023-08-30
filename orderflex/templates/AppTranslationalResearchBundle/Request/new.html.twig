@@ -49,11 +49,12 @@
     {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project,false) %}
 
     <input type="hidden" id="project-funded" value="{{ projectFunded }}" />
+    <input type="hidden" id="project-admin-emails" value="{{ projectAdminEmailStr }}" />
+
     <input type="hidden" id="project-approved-budget" value="{{ projectApprovedProjectBudget }}" />
     <input type="hidden" id="project-original-remaining-budget" value="{{ projectRemainingBudget }}" />
     <input type="hidden" id="project-remaining-budget" value="{{ projectRemainingBudget }}" />
     <input type="hidden" id="project-remaining-budget-value" value="{{ projectRemainingBudget }}" />
-    <input type="hidden" id="project-admin-emails" value="{{ projectAdminEmailStr }}" />
 
     {#project might be null#}
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
@@ -744,8 +745,17 @@
 
                     $('#transer-funded').val(response.fundedStr);
 
-                    //project-remaining-budget-amount
-                    $('#project-remaining-budget-amount').val(response.remainingBudget);
+                    //update project's budget
+                    //Title
+                    $('#project-remaining-budget-amount').text(response.remainingProjectBudget); //string
+                    //"project-approved-budget": project.getApprovedProjectBudget() string
+                    $('#project-approved-budget').val(response.projectApprovedProjectBudget);
+                    //"project-original-remaining-budget": project.getRemainingBudget() remainingProjectBudgetValue
+                    $('#project-original-remaining-budget').val(response.remainingProjectBudgetValue);
+                    //"project-remaining-budget": project.getRemainingBudget()
+                    $('#project-remaining-budget').val(response.remainingProjectBudgetValue);
+                    //"project-remaining-budget-value": project.getRemainingBudget()
+                    $('#project-remaining-budget-value').val(response.remainingProjectBudgetValue);
 
                     if( update ) {
                         transresSetProductServiceListByProject(response.projectProducts);

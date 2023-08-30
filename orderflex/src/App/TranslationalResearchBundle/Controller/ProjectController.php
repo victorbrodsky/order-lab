@@ -2611,7 +2611,9 @@ class ProjectController extends OrderAbstractController
         $projectSpecialty = $project->getProjectSpecialty();
         $projectProducts = $transresRequestUtil->getSelectProductServiceByProjectSpecialty($projectSpecialty,$project);
 
-        $remainingBudget = 0; //TODO:
+        $remainingProjectBudgetValue = $project->getRemainingBudget();
+        $remainingProjectBudget = $transresUtil->dollarSignValue($remainingProjectBudgetValue);
+        $projectApprovedProjectBudget = $project->getApprovedProjectBudget();
 
         $output = array(
             "projectId" => $project->getOid(),
@@ -2622,7 +2624,9 @@ class ProjectController extends OrderAbstractController
             "fundedStr" => $fundedStr,
             "businessPurposes" => $businessPurposesArr,
             'projectProducts' => $projectProducts,
-            'remainingBudget' => $remainingBudget
+            'remainingProjectBudgetValue' => $remainingProjectBudgetValue,
+            'remainingProjectBudget' => $remainingProjectBudget,
+            'projectApprovedProjectBudget' => $projectApprovedProjectBudget
         );
 
         $response = new Response();
