@@ -100,7 +100,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
 
     //public function processSql($sql) {
-    public function addSql(string $sql)
+    public function addSql(string $sql,  array $params = [], array $types = []): void
     {
 
         if( count($this->indexArr) == 0 ) {
@@ -115,7 +115,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
             echo $this->counter.":###Ignore1 ".$sql.$newline;
-            return FALSE;
+            return;// FALSE;
         }
 
         //CREATE SEQUENCE transres_committeereview_id_seq
@@ -127,7 +127,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return FALSE;
+                    return;// FALSE;
                 }
             }
         }
@@ -139,7 +139,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return FALSE;
+                    return;// FALSE;
                 }
             }
         }
@@ -148,7 +148,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //Always skip: Primary keys are already exists
         if( strpos((string)$sql, ' ADD PRIMARY KEY ') !== FALSE ) {
             echo $this->counter.":###Ignore3 ".$sql.$newline;
-            return FALSE;
+            return;// FALSE;
         }
 
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
@@ -160,7 +160,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 $sqlIndex = $sqlArr[2];
                 echo "!!!sqlIndex=[".$sqlIndex."]".$newline;
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return FALSE;
+                    return;// FALSE;
                 }
             //}
         }
