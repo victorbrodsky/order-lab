@@ -2388,10 +2388,17 @@ class User extends UserBase {
         return $emailArr;
     }
 
-    //if not critical, use "Send email notification to" field in the user profile
+    //$critical=true - this email will be used in the critical emails send directly to the user.
+    //$critical=false - this email will not be sent to the user, but it will be sent to the notification user(s).
+    //TODO: add additional emails from "Only send notifications to the following email address(es)"
+    // if critical==true. Or add new method getUserEmails() and replace getSingleEmail(false) by getUserEmails()
+    // if thoses emails are used as receipients. If these emails somehow are used as a sender,
+    // then choose only the first one.
+    //$critical is not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
     public function getSingleEmail( $critical=true ): mixed
     {
         if( !$critical ) {
+            //if not critical, use "Send email notification to" field in the user profile
             $notificationEmailUser = $this->getNotificationEmailUser();
             if( $notificationEmailUser ) {
                 $notificationEmailUserSingleEmail = $notificationEmailUser->getSingleEmail();
@@ -2417,6 +2424,12 @@ class User extends UserBase {
 
         return null;
     }
+
+//    public function getRecipientEmails(): string
+//    {
+//        $emails = "";
+//        return $emails;
+//    }
 
     //Get "name <email>"
     public function getNameEmail(): string
