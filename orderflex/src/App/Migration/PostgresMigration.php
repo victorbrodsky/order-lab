@@ -99,7 +99,8 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     }
 
 
-    public function processSql($sql) {
+    //public function processSql($sql) {
+    public function addSql($sql) {
 
         if( count($this->indexArr) == 0 ) {
             $this->createIndexArr();
@@ -170,7 +171,8 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //}
 
         echo $this->counter.": Process sql=".$sql.$newline;
-        $this->addSql($sql);
+        //$this->addSql($sql);
+        parent::addSql($sql);
 
     }
 
