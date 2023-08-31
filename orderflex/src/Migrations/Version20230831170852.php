@@ -6,11 +6,12 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use App\Migration\PostgresMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230831170852 extends AbstractMigration
+final class Version20230831170852 extends PostgresMigration
 {
     public function getDescription(): string
     {
