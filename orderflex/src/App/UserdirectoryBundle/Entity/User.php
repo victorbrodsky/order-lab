@@ -262,6 +262,11 @@ class User extends UserBase {
     private $notificationEmailUser;
 
     //TODO: add multiple email addresses to notify or replace $notificationEmailUser to support many users
+    #[ORM\JoinTable(name: 'user_users_notifyusers')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'notifyuser_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: 'User')]
+    private $notifyUsers;
 
     /**
      * @var \DateTime
@@ -309,6 +314,8 @@ class User extends UserBase {
         $this->publicComments = new ArrayCollection();
         $this->confidentialComments = new ArrayCollection();
         $this->adminComments = new ArrayCollection();
+
+        $this->notifyUsers = new ArrayCollection();
 
         //create user info
         $userInfo = new UserInfo();
@@ -1052,6 +1059,27 @@ class User extends UserBase {
     public function setNotificationEmailUser($notificationEmailUser): void
     {
         $this->notificationEmailUser = $notificationEmailUser;
+    }
+
+    public function getNotifyUsers(): mixed
+    {
+        return $this->notifyUsers;
+    }
+    public function addNotifyUser( $item ): ?self
+    {
+        if( !$item ) {
+            return null;
+        }
+
+        if( !$this->notifyUsers->contains($item) ) {
+            $this->notifyUsers->add($item);
+        }
+
+        return $this;
+    }
+    public function removeNotifyUser($item): void
+    {
+        $this->notifyUsers->removeElement($item);
     }
 
     /**
@@ -2395,7 +2423,7 @@ class User extends UserBase {
     // if thoses emails are used as receipients. If these emails somehow are used as a sender,
     // then choose only the first one.
     //$critical is not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
-    public function getSingleEmail( $critical=true ): mixed
+    public function getSingleEmail_ORIG( $critical=true ): mixed
     {
         if( !$critical ) {
             //if not critical, use "Send email notification to" field in the user profile
@@ -2424,12 +2452,46 @@ class User extends UserBase {
 
         return null;
     }
+    //notifyUsers
+    //$critical=true - this email will be used in the critical emails send directly to the user.
+    //$critical=false - this email will not be sent to the user, but it will be sent to the notification user(s).
+    // if thoses emails are used as receipients. If these emails somehow are used as a sender,
+    // then choose only the first one.
+    //$critical might not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
+    public function getSingleEmail( $critical=true ): mixed
+    {
+        if( !$critical ) {
+            //if not critical, use "Send email notification to" field in the user profile
+            $notifyUserEmails = array();
+            $notifyUsers = $this->getNotifyUsers();
+            foreach( $notifyUsers as $notifyUser) {
+                $notifyUserEmails[] = $notifyUser->getSingleEmail();
+            }
+            $notifyUserEmailsStr = null;
+            if( count($notifyUserEmails) > 0 ) {
+                $notifyUserEmailsStr = implode(",",$notifyUserEmails);
+            }
+            return $notifyUserEmailsStr;
+        }
 
-//    public function getRecipientEmails(): string
-//    {
-//        $emails = "";
-//        return $emails;
-//    }
+        if( $this->getEmail() ) {
+            return $this->getEmail();
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getEmail() && $location->hasLocationTypeName("Employee Office") ) {
+                return $location->getEmail();
+            }
+        }
+
+        foreach( $this->getLocations() as $location ) {
+            if( $location->getEmail() ) {
+                return $location->getEmail();
+            }
+        }
+
+        return null;
+    }
 
     //Get "name <email>"
     public function getNameEmail(): string

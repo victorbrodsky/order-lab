@@ -314,14 +314,19 @@ class ReminderUtil
             if ($invoicePDF) {
 
                 //It's working when run from the web.
-                //On cron getAttachmentEmailPath returns NULL because it uses getcwd()=/usr/share/httpd and as the result is NULL
+                //On cron getAttachmentEmailPath returns NULL because it uses getcwd()=/usr/share/httpd and as
+                // the result is NULL
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
-                //Result: attachmentPath=C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\transres\InvoicePDF\Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf
+                //Result: attachmentPath=
+                //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\
+                //Uploaded\transres\InvoicePDF
+                //\Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf
 
                 //It's working with cron
                 if( !$attachmentPath ) {
                     $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
-                    //Result: http://127.0.0.1/Uploaded/transres/InvoicePDF/Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf;
+                    //Result: http://127.0.0.1/Uploaded/transres/InvoicePDF/
+                    //Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf;
                 }
 
                 //TODO: live server => $attachmentPath is empty

@@ -542,13 +542,16 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/some-testing/', name: 'employees_some_testing')]
     public function someTestingAction() {
 
-        exit("disabled");
+        //exit("disabled");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->testComplexEmails();
 
         if(0) {
             //get users with notificationEmailUser

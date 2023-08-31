@@ -71,7 +71,15 @@ class EmailUtil {
     // or array - array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
     //$attachmentFilename: attachment file name (optional)
     //$fromEmail: site's email or system email will be used if null (optional)
-    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentData=null, $attachmentFilename=null ) {
+    public function sendEmail(
+        $emails,
+        $subject,
+        $body,
+        $ccs=null,
+        $fromEmail=null,
+        $attachmentData=null,
+        $attachmentFilename=null
+    ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -166,6 +174,12 @@ class EmailUtil {
 
         if( !$fromEmail ) {
             $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        }
+
+        //if $fromEmail has comma separated emails or arra of emails => use the first email
+        $fromEmailArr = $this->checkEmails($fromEmail);
+        if( count($fromEmailArr) > 0 ) {
+            $fromEmail = $fromEmailArr[0];
         }
 
         if( !$fromEmail ) {
@@ -529,42 +543,54 @@ class EmailUtil {
         return $message;
     }
 
+    //emails can be a string or a mixed array with element as emails array plus string separated emails:
+    //array(array('email1@e.com'),array('email2@e.com','email3@e.com,email4@e.com','email5@e.com'),'email6@e.com');
     //Convert emails to unique array
     //return: array of unique emails
     public function checkEmails( $emails ) {
-        //$logger = $this->container->get('logger');
-
-        $cleanEmailsArr = array();
-
         if( !$emails ) {
             return $cleanEmailsArr;
         }
 
+        $resEmailsStr = '';
+
+        //1) convert all emails to string emails
         if( is_array($emails) ) {
             //array
-            foreach($emails as $email) {
-                if( $email ) {
-                    $email = $this->cleanEmail($email);
-                    if( $email ) {
-                        $cleanEmailsArr[] = $email;
-                    }
-                }
-            } //foreach
-
+            $resEmailsStr = $this->checkArrEmails($emails);
         } else {
             //string
-            //if( $emails && str_contains($emails, ',') ) {
-                $cleanEmailsArr = array();
-                $emailsArr = explode(',', $emails);
-                foreach($emailsArr as $email) {
-                    if( $email ) {
-                        $email = $this->cleanEmail($email);
-                        if( $email ) {
-                            $cleanEmailsArr[] = $email;
-                        }
-                    }
+            $resEmailsStr = $emails;
+        }
+
+        //2) clean string emails
+        return $this->cleanStrEmails($resEmailsStr);
+    }
+    //convert mixed array to string using recursion
+    public function checkArrEmails( $emails, $resEmailsStr='' ) {
+        if( is_array($emails) ) {
+            foreach($emails as $mixedEmail) {
+                if( is_array($mixedEmail) ) {
+                    $resEmailsStr = $resEmailsStr . ',' . $this->checkArrEmails($mixedEmail,$resEmailsStr);
+                } else {
+                    $resEmailsStr = $resEmailsStr . ',' . $mixedEmail;
                 }
-            //}
+            }
+        } else {
+            $resEmailsStr = $emails;
+        }
+        return $resEmailsStr;
+    }
+    public function cleanStrEmails($resEmailsStr) {
+        $cleanEmailsArr = array();
+        $emailsArr = explode(',', $resEmailsStr);
+        foreach($emailsArr as $email) {
+            if( $email && str_contains($email,'@') ) {
+                $email = $this->cleanEmail($email);
+                if ($email) {
+                    $cleanEmailsArr[] = $email;
+                }
+            }
         }
 
         if( count($cleanEmailsArr) > 0 ) {
@@ -574,6 +600,48 @@ class EmailUtil {
         return $cleanEmailsArr;
     }
 
+//    public function checkEmails_ORIG( $emails ) {
+//        //$logger = $this->container->get('logger');
+//
+//        $cleanEmailsArr = array();
+//
+//        if( !$emails ) {
+//            return $cleanEmailsArr;
+//        }
+//
+//        if( is_array($emails) ) {
+//            //array
+//            foreach($emails as $email) {
+//                if( $email ) {
+//                    $email = $this->cleanEmail($email);
+//                    if( $email ) {
+//                        $cleanEmailsArr[] = $email;
+//                    }
+//                }
+//            } //foreach
+//        } else {
+//            //string
+//            //if( $emails && str_contains($emails, ',') ) {
+//            $cleanEmailsArr = array();
+//            $emailsArr = explode(',', $emails);
+//            foreach($emailsArr as $email) {
+//                if( $email ) {
+//                    $email = $this->cleanEmail($email);
+//                    if( $email ) {
+//                        $cleanEmailsArr[] = $email;
+//                    }
+//                }
+//            }
+//            //}
+//        }
+//
+//        if( count($cleanEmailsArr) > 0 ) {
+//            $cleanEmailsArr = array_unique($cleanEmailsArr);
+//        }
+//
+//        return $cleanEmailsArr;
+//    }
+
     public function cleanEmail($email) {
         if( $email ) {
             $email = trim((string)$email);
@@ -581,6 +649,7 @@ class EmailUtil {
             $email = str_replace(",,,", ",", $email);
             $email = str_replace(",,", ",", $email);
             $email = str_replace(",", "", $email);
+            $email = str_replace("..", ".", $email);
         }
 
         return $email;
@@ -847,6 +916,29 @@ class EmailUtil {
         $res = "Testing email sent";
 
         return $res;
+    }
+
+    public function testComplexEmails() {
+        $emails = "email1@e.com,    email2@e.com,email3@e.com,, ,.";
+        $res = $this->checkEmails($emails);
+        dump("expected: email1@e.com, email2@e.com, email3@e.com",$res);
+
+
+        $emails = array(
+            array('email0@e. com, email1@e.com, ,,,'),
+            array(),
+            $emails,
+            array('email2@e.com','email3@e.com,email4@e.com','email5@e.com'),'email6@e.com',
+            'email7@e.com, email8@e.com'
+        );
+        $res = $this->checkEmails($emails);
+        dump("expected:".
+            "email0@e.com, email1@e.com, email2@e.com,".
+            "email3@e.com, email4@e.com, email5@e.com,".
+            "email6@e.com, email7@e.com, email8@e.com",
+            $res);
+
+        exit('EOF testComplexEmails');
     }
 
 
