@@ -28,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //1) Pre-Generating: php bin/console cache:clear
 //2) Pre-Generating: php bin/console doctrine:cache:clear-metadata
 //3) Pre-Generating: php bin/console doctrine:schema:validate
+//1,2,3) bash prepare_migration.sh
 
 //4) Status: php bin/console doctrine:migrations:status
 //5) Generate: php bin/console doctrine:migrations:diff
@@ -98,11 +99,9 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         echo "Found " . count($this->sequenceArr) . " sequences in " . count($tables) . " tables" . $newline;
     }
 
-
-    //public function processSql($sql) {
+    //public function processSql($sql)
     public function addSql(string $sql,  array $params = [], array $types = []): void
     {
-
         if( count($this->indexArr) == 0 ) {
             $this->createIndexArr();
         }
@@ -115,19 +114,18 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
             echo $this->counter.":###Ignore1 ".$sql.$newline;
-            return;// FALSE;
+            return; //FALSE;
         }
 
         //CREATE SEQUENCE transres_committeereview_id_seq
         if( strpos((string)$sql, 'CREATE SEQUENCE ') !== false ) {
             //echo $this->counter.":###Ignore2 ".$sql.$newline;
-            //return FALSE;
             $sqlArr = explode(" ",$sql);
             if( count($sqlArr) == 3 ) {
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return;// FALSE;
+                    return; // FALSE;
                 }
             }
         }
@@ -139,7 +137,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return;// FALSE;
+                    return; // FALSE;
                 }
             }
         }
@@ -148,7 +146,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //Always skip: Primary keys are already exists
         if( strpos((string)$sql, ' ADD PRIMARY KEY ') !== FALSE ) {
             echo $this->counter.":###Ignore3 ".$sql.$newline;
-            return;// FALSE;
+            return; // FALSE;
         }
 
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
@@ -160,7 +158,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 $sqlIndex = $sqlArr[2];
                 echo "!!!sqlIndex=[".$sqlIndex."]".$newline;
                 if( !$this->indexExistsSimple($sqlIndex) ) {
-                    return;// FALSE;
+                    return; // FALSE;
                 }
             //}
         }
@@ -174,7 +172,6 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         echo $this->counter.": Process sql=".$sql.$newline;
         //$this->addSql($sql);
         parent::addSql($sql);
-
     }
 
     public function indexExistsSimple($sqlIndex) {

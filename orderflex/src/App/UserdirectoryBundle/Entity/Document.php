@@ -94,7 +94,7 @@ class Document {
     /**
      * @var \DateTime
      */
-    #[ORM\Column(name: 'externalCreatedate', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'externalcreatedate', type: 'datetime', nullable: true)]
     private $externalCreatedate;
 
     /**
@@ -109,7 +109,7 @@ class Document {
     #[ORM\Column(type: 'string', nullable: true)]
     private $uniqueid;
 
-//    /**
+    //    /**
     //     * @ORM\ManyToOne(targetEntity="GeneralEntity", cascade={"persist","remove"})
     //     * @ORM\JoinColumn(name="useObject_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
     //     */

@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-#[ORM\Table(name: 'fellapp_fellowshipApplication')]
+#[ORM\Table(name: 'fellapp_fellowshipapplication')]
 #[ORM\Entity]
 class FellowshipApplication extends BaseUserAttributes {
 
@@ -56,15 +56,15 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     private $institution;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_coverLetter')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'coverLetter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_coverletter')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'coverletter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $coverLetters;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_cv')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_cv')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'cv_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
@@ -75,9 +75,9 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\Column(type: 'string', nullable: true)]
     private $reprimand;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_reprimandDocument')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'reprimandDocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_reprimanddocument')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'reprimanddocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $reprimandDocuments;
@@ -86,9 +86,9 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\Column(type: 'string', nullable: true)]
     private $lawsuit;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_lawsuitDocument')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'lawsuitDocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_lawsuitdocument')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'lawsuitdocument_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $lawsuitDocuments;
@@ -132,8 +132,8 @@ class FellowshipApplication extends BaseUserAttributes {
     private $timestamp;
 
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_report')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_report')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
@@ -142,9 +142,9 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Application PDF without attached documents: Will be automatically generated if left empty
      **/
-    #[ORM\JoinTable(name: 'fellapp_fellApp_formReport')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'formReport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_formreport')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'formreport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $formReports;
@@ -159,9 +159,9 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $manualReports;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_oldReport')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'oldReport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_oldreport')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'oldreport_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $oldReports;
@@ -169,8 +169,8 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Other Documents
      **/
-    #[ORM\JoinTable(name: 'fellapp_fellApp_document')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_document')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
@@ -179,8 +179,8 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * Itinerarys
      **/
-    #[ORM\JoinTable(name: 'fellapp_fellApp_itinerary')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_itinerary')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'itinerary_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
@@ -192,8 +192,8 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\OneToMany(targetEntity: 'Interview', mappedBy: 'fellapp', cascade: ['persist', 'remove'])]
     private $interviews;
 
-    #[ORM\JoinTable(name: 'fellapp_fellApp_observer')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_observer')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'observer_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $observers;
@@ -206,17 +206,17 @@ class FellowshipApplication extends BaseUserAttributes {
     /////////// user objects /////////////
     //    /**
     //     * @ORM\ManyToMany(targetEntity="EmploymentStatus")
-    //     * @ORM\JoinTable(name="fellapp_fellowshipApplication_employmentStatus",
-    //     *      joinColumns={@ORM\JoinColumn(name="fellowshipApplication_id", referencedColumnName="id")},
-    //     *      inverseJoinColumns={@ORM\JoinColumn(name="employmentStatus_id", referencedColumnName="id")}
+    //     * @ORM\JoinTable(name="fellapp_fellowshipapplication_employmentstatus",
+    //     *      joinColumns={@ORM\JoinColumn(name="fellowshipapplication_id", referencedColumnName="id")},
+    //     *      inverseJoinColumns={@ORM\JoinColumn(name="employmentstatus_id", referencedColumnName="id")}
     //     *      )
     //     **/
     //    private $employmentStatuses;
     /**
      * Other Documents
      **/
-    #[ORM\JoinTable(name: 'fellapp_fellApp_avatar')]
-    #[ORM\JoinColumn(name: 'fellApp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinTable(name: 'fellapp_fellapp_avatar')]
+    #[ORM\JoinColumn(name: 'fellapp_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'avatar_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
@@ -225,40 +225,40 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * //"completionDate" = "DESC", "orderinlist" = "ASC"
      **/
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_training')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_training')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'training_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Training', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $trainings;
 
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_examination')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_examination')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'examination_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Examination', cascade: ['persist', 'remove'])]
     private $examinations;
 
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_location')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_location')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'location_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Location', cascade: ['persist', 'remove'])]
     private $locations;
 
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_citizenship')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_citizenship')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'citizenship_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Citizenship', cascade: ['persist', 'remove'])]
     private $citizenships;
 
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_stateLicense')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'stateLicense_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_statelicense')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'statelicense_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\StateLicense', cascade: ['persist', 'remove'])]
     private $stateLicenses;
 
-    #[ORM\JoinTable(name: 'fellapp_fellowshipApplication_boardCertification')]
-    #[ORM\JoinColumn(name: 'fellowshipApplication_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'boardCertification_id', referencedColumnName: 'id')]
+    #[ORM\JoinTable(name: 'fellapp_fellowshipapplication_boardcertification')]
+    #[ORM\JoinColumn(name: 'fellowshipapplication_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'boardcertification_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\BoardCertification', cascade: ['persist', 'remove'])]
     private $boardCertifications;
 

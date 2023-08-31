@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_calllogEntryMessage')]
+#[ORM\Table(name: 'scan_calllogentrymessage')]
 #[ORM\Entity]
 class CalllogEntryMessage extends OrderBase {
 
@@ -41,7 +41,7 @@ class CalllogEntryMessage extends OrderBase {
     //     * @ORM\ManyToOne(targetEntity="PatientListHierarchy")
     //     **/
     //    private $patientList;
-    #[ORM\JoinTable(name: 'scan_calllogEntryMessage_patientList')]
+    #[ORM\JoinTable(name: 'scan_calllogentrymessage_patientlist')]
     #[ORM\ManyToMany(targetEntity: 'PatientListHierarchy', inversedBy: 'calllogEntryMessages')]
     private $patientLists;
 
@@ -49,7 +49,7 @@ class CalllogEntryMessage extends OrderBase {
      * TODO: move to the message level, sync DB
      * Call Log Entry Tags
      **/
-    #[ORM\JoinTable(name: 'scan_calllogEntryMessage_entryTag')]
+    #[ORM\JoinTable(name: 'scan_calllogentrymessage_entrytag')]
     #[ORM\ManyToMany(targetEntity: 'CalllogEntryTagsList', inversedBy: 'calllogEntryMessages')]
     private $entryTags;
 

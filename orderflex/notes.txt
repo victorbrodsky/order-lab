@@ -1718,3 +1718,9 @@ in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFel
 External monitor cron job: cron:externalurlmonitor cron job status: */15 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
 
 php bin/console list doctrine
+--dump-sql
+--dry-run
+php bin/console doctrine:schema:update --dump-sql
+php bin/console doctrine:schema:update --force
+https://akashicseer.com/web-development/using-doctrine-commands-in-the-console-with-symfony-framework/
+Migration: symfony doctrine migration trying to drop not existed constraint
