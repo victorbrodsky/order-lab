@@ -570,7 +570,7 @@ class DefaultController extends OrderAbstractController
             }
         }
         echo "<br><br>";
-        //exit('111');
+        exit('111');
 
 //        if(0) {
 //            //get users with notificationEmailUser
