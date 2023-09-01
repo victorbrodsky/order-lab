@@ -85,11 +85,6 @@ class Rank {
     private $updatedate;
 
 
-
-
-
-
-
     public function __construct() {
         $this->creationdate = new \DateTime();
 

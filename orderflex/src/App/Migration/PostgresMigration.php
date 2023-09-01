@@ -70,6 +70,19 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     public function up(Schema $schema) : void {}
     public function down(Schema $schema) : void {}
 
+    //This method postUp gets called after the up() is called.
+    //https://www.doctrine-project.org/projects/doctrine-migrations/en/3.6/reference/migration-classes.html
+    /** @throws MigrationException|DBALException */
+    public function postUp(Schema $schema): void
+    {
+        //Show processed info
+        $newline = "\n";
+        echo "Processed sqls=".$this->processedCounter.$newline;
+        foreach($this->processedArr as $processedStr) {
+            echo $processedStr.$newline;
+        }
+    }
+
     public function createIndexArr() {
         $newline = "\n";
         $em = $this->container->get('doctrine.orm.entity_manager');
