@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\Grant;
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
 
@@ -552,6 +553,19 @@ class DefaultController extends OrderAbstractController
 
         //$emailUtil = $this->container->get('user_mailer_utility');
         //$emailUtil->testComplexEmails();
+
+        //check user_grant with name=null
+        $repository = $em->getRepository(Grant::class);
+        $dql = $repository->createQueryBuilder("grant");
+        $dql->select('grant');
+        $dql->where("grant.name IS NULL");
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        $grants = $query->getResult();
+        echo "grant count=" . count($grants) . "<br>";
+        foreach ($grants as $grant) {
+            echo $grant . "<br>";
+        }
+        exit('111');
 
         if(1) {
             //get users with notificationEmailUser
