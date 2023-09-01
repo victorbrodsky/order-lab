@@ -543,7 +543,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/some-testing/', name: 'employees_some_testing')]
     public function someTestingAction() {
 
-        //exit("disabled");
+        exit("disabled");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -554,23 +554,25 @@ class DefaultController extends OrderAbstractController
         //$emailUtil = $this->container->get('user_mailer_utility');
         //$emailUtil->testComplexEmails();
 
-        //check user_grant with name=null
-        $repository = $em->getRepository(Grant::class);
-        $dql = $repository->createQueryBuilder("grant");
-        $dql->select('grant');
-        //$dql->where("grant.name IS NULL");
-        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $grants = $query->getResult();
-        echo "grant count=" . count($grants) . "<br>";
-        foreach ($grants as $grant) {
-            echo "<br> Grant ID=".$grant->getId()."<br>";
-            $users = $grant->getUser();
-            foreach($users as $user) {
-                echo $grant . ", user=" . $user . "<br>";
+        if(0) {
+            //check user_grant with name=null
+            $repository = $em->getRepository(Grant::class);
+            $dql = $repository->createQueryBuilder("grant");
+            $dql->select('grant');
+            //$dql->where("grant.name IS NULL");
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+            $grants = $query->getResult();
+            echo "grant count=" . count($grants) . "<br>";
+            foreach ($grants as $grant) {
+                echo "<br> Grant ID=" . $grant->getId() . "<br>";
+                $users = $grant->getUser();
+                foreach ($users as $user) {
+                    echo $grant . ", user=" . $user . "<br>";
+                }
             }
+            echo "<br><br>";
+            exit('111');
         }
-        echo "<br><br>";
-        exit('111');
 
 //        if(0) {
 //            //get users with notificationEmailUser
