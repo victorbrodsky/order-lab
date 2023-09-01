@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 //6) Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
 
-//Skip:         php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --add
+//Skip:         php bin/console doctrine:migrations:version DoctrineMigrations\\Version20230901140854 --add
 //Skip all:     php bin/console doctrine:migrations:version --add --all
 //If error "The metadata storage is not up to date..":   php bin/console doctrine:migration:sync-metadata-storage
 
@@ -125,6 +125,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
+                    echo $this->counter.":###Ignore2 ".$sql.$newline;
                     return; // FALSE;
                 }
             }
@@ -137,6 +138,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
                 if( !$this->indexExistsSimple($sqlIndex) ) {
+                    echo $this->counter.":###Ignore3 ".$sql.$newline;
                     return; // FALSE;
                 }
             }
@@ -145,7 +147,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
         //Always skip: Primary keys are already exists
         if( strpos((string)$sql, ' ADD PRIMARY KEY ') !== FALSE ) {
-            echo $this->counter.":###Ignore3 ".$sql.$newline;
+            echo $this->counter.":###Ignore4 ".$sql.$newline;
             return; // FALSE;
         }
 
@@ -156,11 +158,25 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             //if( count($sqlArr) == 6 ) {
                 //We need the index 3
                 $sqlIndex = $sqlArr[2];
-                echo "!!!sqlIndex=[".$sqlIndex."]".$newline;
+                //echo "!!!sqlIndex=[".$sqlIndex."]".$newline;
                 if( !$this->indexExistsSimple($sqlIndex) ) {
+                    echo $this->counter.":###Ignore5 ".$sql.$newline;
                     return; // FALSE;
                 }
             //}
+        }
+
+        //Case: ALTER TABLE fellapp_fellapp_coverletter DROP CONSTRAINT fellapp_fellapp_coverletter_pkey
+        if( strpos((string)$sql, 'DROP CONSTRAINT ') !== false ) {
+            $sqlArr = explode(" ",$sql);
+            if( count($sqlArr) == 6 ) {
+                //We need the last index 5
+                $sqlIndex = $sqlArr[5];
+                if( str_contains($sqlIndex,'_pkey') ) {
+                    echo $this->counter.":###Ignore6 ".$sql.$newline;
+                    return; // FALSE;
+                }
+            }
         }
 
         //ALTER INDEX idx_7ecb11f7378898f400000 RENAME TO IDX_7ECB11F7378898F4

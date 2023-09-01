@@ -4,3 +4,6 @@ doctrine_migrations:
         # as migrations classes should NOT be autoloaded
         'DoctrineMigrations': '%kernel.project_dir%/src/Migrations'
     enable_profiler: '%kernel.debug%'
+
+    all_or_nothing: true
+    #transactional: true #Whether or not to wrap migrations in a single transaction
