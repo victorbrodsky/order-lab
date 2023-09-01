@@ -50,6 +50,10 @@ class SiteParametersType extends AbstractType
     public function formConstructor( $params )
     {
         $this->params = $params;
+
+        if( !isset($this->params['param']) ) {
+            $this->params['param'] = null;
+        }
     }
 
 
@@ -68,6 +72,7 @@ class SiteParametersType extends AbstractType
 //        }
 
         //echo "$always_empty=".$always_empty."<br>";
+        //echo "param=".$this->params['param']."<br>";
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'connectionChannel' ) {
 //            $builder->add('connectionChannel',null,array(

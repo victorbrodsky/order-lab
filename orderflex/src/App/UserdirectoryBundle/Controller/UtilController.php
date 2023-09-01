@@ -1196,7 +1196,7 @@ class UtilController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/usertype-userid', name: 'employees_check_usertype-userid', methods: ['GET'])]
+    #[Route(path: '/usertype-userid', name: 'employees_check_usertype-userid', methods: ['GET'], options: ['expose' => true])]
     public function checkUsertypeUseridAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
@@ -1241,8 +1241,6 @@ class UtilController extends OrderAbstractController {
 
         $output = "ok";
         
-        //$em = $this->getDoctrine()->getManager();
-        //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->container->get('authenticator_utility');
         
         //search this user if exists in ldap directory
@@ -1255,6 +1253,7 @@ class UtilController extends OrderAbstractController {
                 $output = "notok";
             }
         }
+        exit($output);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1483,7 +1482,7 @@ class UtilController extends OrderAbstractController {
     /**
      * It is used in User mrn type where the link is created between user and patient
      */
-    #[Route(path: '/common/mrntype-identifier', name: 'employees_check_mrntype_identifier', methods: ['GET'])]
+    #[Route(path: '/common/mrntype-identifier', name: 'employees_check_mrntype_identifier', methods: ['GET'], options: ['expose' => true])]
     public function checkMrntypeIdentifierAction(Request $request) {
 
         if( false === $this->isGranted('IS_AUTHENTICATED_FULLY') ) {

@@ -23,6 +23,7 @@
  */
 
 var _treenodedata = [];
+//var _ajaxCallUrl = [];
 
 var _commenttype = [];
 var _identifiers = [];
@@ -244,9 +245,8 @@ function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,opti
 //'data-compositetree-initnode-function' => 'setOptionalUserEducational'
 //'data-compositetree-params' => //all other parameters. For example, get entities only by ids: entityIds=1,3,5
 function getChildrenByParent( bundleName, entityName, thiselement, thisid, parentid, opt ) {
-
+    //console.log('getChildrenByParent');
     return Q.promise(function(resolve, reject, treedata) {
-
         //console.log('entityName='+entityName+', thisid='+thisid+", parentid="+parentid);
 
         //do nothing if new element was enetered. In this case pid will be a string with a new element name.
@@ -325,25 +325,48 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
 //        console.log('ajaxTimeout='+_ajaxTimeout);
 //        console.log('asyncflag='+asyncflag);
 
-        try {
-            $.ajax({
-                url: treeUrl,
-                timeout: _ajaxTimeout,
-                async: asyncflag
-            }).success(function(data) {
-                //console.log("employees_get_composition_tree: thisid="+thisid+"; parentid="+parentid);
-                //console.log(data);
-                _treenodedata[bundleName+entityName][thisid] = data;
-                treeSelectAdditionalJsAction(thiselement);
-                resolve(data);
-            }).error(function() {
-                //console.log('error getting nodes');
-                reject('error getting nodes');
-            });
-        }
-        catch(err) {
-            console.log("ajax tree retrival failed err="+err);
-            throw new Error("ajax tree retrival failed err="+err);
+        var existBundleEntityName = false;
+        //Try to optimize and avoid multiple ajax call for the same data
+        // if( typeof _ajaxCallUrl[treeUrl] !== 'undefined' ) {
+        //         existBundleEntityName = true;
+        //         console.log('EXIST: bundleName+entityName+thisid:'+_treenodedata[bundleName+entityName][thisid]);
+        //         treeSelectAdditionalJsAction(thiselement);
+        //         resolve(_ajaxCallUrl[treeUrl]);
+        //     }
+        // }
+        // if( typeof _treenodedata[bundleName+entityName] !== -1 ) {
+        //     if( typeof _treenodedata[bundleName+entityName][thisid] !== -1 ) {
+        //         existBundleEntityName = true;
+        //         console.log('EXIST: bundleName+entityName+thisid:'+_treenodedata[bundleName+entityName][thisid]);
+        //         treeSelectAdditionalJsAction(thiselement);
+        //         resolve(_treenodedata[bundleName+entityName][thisid]);
+        //     }
+        // }
+
+        if( existBundleEntityName == false ) {
+            //console.log('NEW: bundleName='+bundleName+'; entityName='+entityName+'; thisid='+thisid);
+            try {
+                $.ajax({
+                    url: treeUrl,
+                    timeout: _ajaxTimeout,
+                    async: asyncflag
+                }).success(function (data) {
+                    //console.log("employees_get_composition_tree: thisid="+thisid+"; parentid="+parentid);
+                    //console.log(data);
+                    //_ajaxCallUrl[treeUrl] = data;
+                    _treenodedata[bundleName + entityName][thisid] = data;
+                    treeSelectAdditionalJsAction(thiselement);
+                    resolve(data);
+                }).error(function () {
+                    //console.log('error getting nodes');
+                    reject('error getting nodes');
+                });
+            }
+            catch (err) {
+                console.log("ajax tree retrival failed err=" + err);
+                throw new Error("ajax tree retrival failed err=" + err);
+            }
+
         }
 
     });

@@ -129,7 +129,7 @@ function validateUser(btnEl,origuserid) {
 
             var alert = 'An employee with the provided User ID Type "'+userTypeText+
                 '" and User ID "'+primaryPublicUserId+'" does not exists in LDAP directory.' +
-                " Please correct the new employee's User ID Type and/or User ID.";
+                " Please correct the employee's 'Primary Public User ID Type' and/or User ID.";
             addErrorAlert(alert);
             lbtn.stop();
             return false;
@@ -200,7 +200,10 @@ function validateUser(btnEl,origuserid) {
         return false;
     }
 
+    //testing
+    //lbtn.stop(); //testing
     //return false; //testing
+
     $("#user-profile-form").submit();
 }
 
@@ -260,7 +263,9 @@ function checkDuplicateIdentifier(number,name) {
 
 function checkUsertypeUserid(userType,userId) {
     var user = new Array();
-    var url = getCommonBaseUrl("util/"+"usertype-userid","employees");
+    //var url = getCommonBaseUrl("util/"+"usertype-userid","employees");
+    var url = Routing.generate('employees_check_usertype-userid');
+    //employees_check_usertype
     $.ajax({
         url: url,
         type: 'GET',
@@ -279,7 +284,9 @@ function checkUsertypeUserid(userType,userId) {
 
 function isValidCWID(userId) {
     var valid = true;
-    var url = getCommonBaseUrl("util/"+"ldap-usertype-userid","employees");
+    //var url = getCommonBaseUrl("util/"+"ldap-usertype-userid","employees");
+    //employees_check_ldap-usertype-userid
+    var url = Routing.generate('employees_check_ldap-usertype-userid');
     $.ajax({
         url: url,
         type: 'GET',
@@ -352,7 +359,8 @@ function validateMrntypeIdentifier() {
 
         if( keytypemrnVal && keytypemrnVal != "" && identifier && identifier != "" ) {
 
-            var url = getCommonBaseUrl("util/common/mrntype-identifier","employees");
+            //var url = getCommonBaseUrl("util/common/mrntype-identifier","employees");
+            var url = Routing.generate('employees_check_mrntype_identifier');
             var valid = true;
 
             $.ajax({

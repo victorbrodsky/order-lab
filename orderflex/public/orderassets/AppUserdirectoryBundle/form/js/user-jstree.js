@@ -23,7 +23,7 @@
 //used by admin page
 function getJstree(bundleName,entityName,menu,search,closeall,type) {
 
-    //console.log('getJstree: cycle='+cycle);
+    console.log('getJstree: cycle='+cycle);
 
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
