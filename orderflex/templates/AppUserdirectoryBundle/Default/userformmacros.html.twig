@@ -880,7 +880,7 @@
                             <table>
                                 {% if user.getEmail %}
                                     <tr class="row-withspace">
-                                        <td class="left-column">email:</td>
+                                        <td class="left-column" style="vertical-align: baseline;">email:</td>
                                         <td>
                                             {#{{ user.getEmail }}#}
                                             <a href="mailto:{{ user.getEmail }}" target="_top">{{ user.getEmail }}</a>
@@ -892,7 +892,7 @@
                                 {% set notificationEmail = user.getSingleEmail(false,', ') %}
                                 {% if notificationEmail != criticalEmail %}
                                     <tr class="row-withspace">
-                                        <td class="left-column">notification email:</td>
+                                        <td class="left-column" style="vertical-align: baseline;">notification email:</td>
                                         <td>
                                             <a href="mailto:{{ notificationEmail }}" target="_top">{{ notificationEmail }}</a>
                                         </td>
