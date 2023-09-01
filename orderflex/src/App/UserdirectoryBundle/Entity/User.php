@@ -250,16 +250,11 @@ class User extends UserBase {
     private $failedAttemptCounter;
 
 //    /**
-    //     * @var \DateTime
-    //     * @ORM\Column(type="datetime", nullable=true)
-    //     */
-    //    private $lastFailedAttemptDate;
-    /**
-     *  Send email notifications to
-     */
-    #[ORM\ManyToOne(targetEntity: 'User')]
-    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
-    private $notificationEmailUser;
+//     *  Send email notifications to
+//     */
+//    #[ORM\ManyToOne(targetEntity: 'User')]
+//    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
+//    private $notificationEmailUser;
 
     //TODO: add multiple email addresses to notify or replace $notificationEmailUser to support many users
     #[ORM\JoinTable(name: 'user_users_notifyusers')]
@@ -1045,21 +1040,21 @@ class User extends UserBase {
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNotificationEmailUser(): mixed
-    {
-        return $this->notificationEmailUser;
-    }
-
-    /**
-     * @param mixed $notificationEmailUser
-     */
-    public function setNotificationEmailUser($notificationEmailUser): void
-    {
-        $this->notificationEmailUser = $notificationEmailUser;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getNotificationEmailUser(): mixed
+//    {
+//        return $this->notificationEmailUser;
+//    }
+//
+//    /**
+//     * @param mixed $notificationEmailUser
+//     */
+//    public function setNotificationEmailUser($notificationEmailUser): void
+//    {
+//        $this->notificationEmailUser = $notificationEmailUser;
+//    }
 
     public function getNotifyUsers(): mixed
     {
@@ -2416,43 +2411,43 @@ class User extends UserBase {
         return $emailArr;
     }
 
-    //$critical=true - this email will be used in the critical emails send directly to the user.
-    //$critical=false - this email will not be sent to the user, but it will be sent to the notification user(s).
-    //TODO: add additional emails from "Only send notifications to the following email address(es)"
-    // if critical==true. Or add new method getUserEmails() and replace getSingleEmail(false) by getUserEmails()
-    // if thoses emails are used as receipients. If these emails somehow are used as a sender,
-    // then choose only the first one.
-    //$critical is not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
-    public function getSingleEmail_ORIG( $critical=true ): mixed
-    {
-        if( !$critical ) {
-            //if not critical, use "Send email notification to" field in the user profile
-            $notificationEmailUser = $this->getNotificationEmailUser();
-            if( $notificationEmailUser ) {
-                $notificationEmailUserSingleEmail = $notificationEmailUser->getSingleEmail();
-                return $notificationEmailUserSingleEmail;
-            }
-        }
+//    //$critical=true - this email will be used in the critical emails send directly to the user.
+//    //$critical=false - this email will not be sent to the user, but it will be sent to the notification user(s).
+//    //TODO: add additional emails from "Only send notifications to the following email address(es)"
+//    // if critical==true. Or add new method getUserEmails() and replace getSingleEmail(false) by getUserEmails()
+//    // if thoses emails are used as receipients. If these emails somehow are used as a sender,
+//    // then choose only the first one.
+//    //$critical is not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
+//    public function getSingleEmail_ORIG( $critical=true ): mixed
+//    {
+//        if( !$critical ) {
+//            //if not critical, use "Send email notification to" field in the user profile
+//            $notificationEmailUser = $this->getNotificationEmailUser();
+//            if( $notificationEmailUser ) {
+//                $notificationEmailUserSingleEmail = $notificationEmailUser->getSingleEmail();
+//                return $notificationEmailUserSingleEmail;
+//            }
+//        }
+//
+//        if( $this->getEmail() ) {
+//            return $this->getEmail();
+//        }
+//
+//        foreach( $this->getLocations() as $location ) {
+//            if( $location->getEmail() && $location->hasLocationTypeName("Employee Office") ) {
+//                return $location->getEmail();
+//            }
+//        }
+//
+//        foreach( $this->getLocations() as $location ) {
+//            if( $location->getEmail() ) {
+//                return $location->getEmail();
+//            }
+//        }
+//
+//        return null;
+//    }
 
-        if( $this->getEmail() ) {
-            return $this->getEmail();
-        }
-
-        foreach( $this->getLocations() as $location ) {
-            if( $location->getEmail() && $location->hasLocationTypeName("Employee Office") ) {
-                return $location->getEmail();
-            }
-        }
-
-        foreach( $this->getLocations() as $location ) {
-            if( $location->getEmail() ) {
-                return $location->getEmail();
-            }
-        }
-
-        return null;
-    }
-    //notifyUsers
     //$critical=true - this email will be used in the critical emails send directly to the user.
     //$critical=false - this email will not be sent to the user, but it will be sent to the notification user(s).
     // if thoses emails are used as receipients. If these emails somehow are used as a sender,

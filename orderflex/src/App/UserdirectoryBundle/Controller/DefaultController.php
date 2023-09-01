@@ -572,20 +572,20 @@ class DefaultController extends OrderAbstractController
         echo "<br><br>";
         //exit('111');
 
-        if(1) {
-            //get users with notificationEmailUser
-            $repository = $em->getRepository(User::class);
-            $dql = $repository->createQueryBuilder("user");
-            $dql->select('user');
-            $dql->where("user.notificationEmailUser IS NOT NULL");
-            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-            $users = $query->getResult();
-            echo "users count=" . count($users) . "<br>";
-            foreach ($users as $user) {
-                echo $user . " => " . $user->getNotificationEmailUser() . "<br>";
-            }
-            exit('111');
-        }
+//        if(0) {
+//            //get users with notificationEmailUser
+//            $repository = $em->getRepository(User::class);
+//            $dql = $repository->createQueryBuilder("user");
+//            $dql->select('user');
+//            $dql->where("user.notificationEmailUser IS NOT NULL");
+//            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+//            $users = $query->getResult();
+//            echo "users count=" . count($users) . "<br>";
+//            foreach ($users as $user) {
+//                echo $user . " => " . $user->getNotificationEmailUser() . "<br>";
+//            }
+//            exit('111');
+//        }
 
         if(0) {
             echo "############### <br>";
