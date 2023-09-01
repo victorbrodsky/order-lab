@@ -549,7 +549,7 @@ class EmailUtil {
     //return: array of unique emails
     public function checkEmails( $emails ) {
         if( !$emails ) {
-            return $cleanEmailsArr;
+            return array();
         }
 
         $resEmailsStr = '';
