@@ -550,10 +550,10 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->testComplexEmails();
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil->testComplexEmails();
 
-        if(0) {
+        if(1) {
             //get users with notificationEmailUser
             $repository = $em->getRepository(User::class);
             $dql = $repository->createQueryBuilder("user");

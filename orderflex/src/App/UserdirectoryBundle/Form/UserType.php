@@ -142,6 +142,7 @@ class UserType extends AbstractType
         $this->addUserInfos($builder);
 
         $this->addNotificationEmailUser($builder);
+        $this->addNotifyUsers($builder);
 
         //Global User Preferences
         $this->globalUserPreferences($builder);
@@ -326,6 +327,14 @@ class UserType extends AbstractType
         $builder->add('notificationEmailUser', null, array(
             'label' => 'Send email notifications to:',
             'multiple' => false,
+            'required' => false,
+            'attr' => array('class'=>'combobox')
+        ));
+    }
+    public function addNotifyUsers($builder) {
+        $builder->add('notifyUsers', null, array(
+            'label' => 'Send email notifications to:',
+            'multiple' => true,
             'required' => false,
             'attr' => array('class'=>'combobox')
         ));

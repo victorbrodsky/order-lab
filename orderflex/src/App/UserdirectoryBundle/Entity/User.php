@@ -2467,6 +2467,7 @@ class User extends UserBase {
             foreach( $notifyUsers as $notifyUser) {
                 $notifyUserEmails[] = $notifyUser->getSingleEmail();
             }
+
             $notifyUserEmailsStr = null;
             if( count($notifyUserEmails) > 0 ) {
                 $notifyUserEmailsStr = implode(",",$notifyUserEmails);
