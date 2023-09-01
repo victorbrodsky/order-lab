@@ -114,7 +114,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         echo "Found " . count($this->sequenceArr) . " sequences in " . count($tables) . " tables" . $newline;
     }
 
-    //public function processSql($sql)
+    //support previous version of PostgresMigration to call processSql instead of addSql
+    public function processSql($sql) {
+        $this->addSql($sql);
+    }
     public function addSql(string $sql,  array $params = [], array $types = []): void
     {
         if( count($this->indexArr) == 0 ) {
