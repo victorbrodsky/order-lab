@@ -568,6 +568,7 @@ class DefaultController extends OrderAbstractController
                 echo $grant . ", user=" . $user . "<br>";
             }
         }
+        echo "<br><br>";
         //exit('111');
 
         if(1) {
@@ -578,7 +579,7 @@ class DefaultController extends OrderAbstractController
             $dql->where("user.notificationEmailUser IS NOT NULL");
             $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             $users = $query->getResult();
-            echo "usesr count=" . count($users) . "<br>";
+            echo "users count=" . count($users) . "<br>";
             foreach ($users as $user) {
                 echo $user . " => " . $user->getNotificationEmailUser() . "<br>";
             }
