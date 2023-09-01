@@ -54,6 +54,8 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     private $foreignkeyArr = array();
     private $sequenceArr = array();
     private $counter = 0;
+    private $processedCounter = 0;
+    private $processedArr = array();
 
     /**
      * Sets the container.
@@ -185,7 +187,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //    exit("exit: ".$sql);
         //}
 
-        echo $this->counter.": Process sql=".$sql.$newline;
+        $this->processedCounter ++;
+        $msg = $this->counter."; processedCounter=".$this->processedCounter.": Process sql=".$sql;
+        echo $msg.$newline;
+        $this->processedArr[] = $msg;
         //$this->addSql($sql);
         parent::addSql($sql);
     }
