@@ -889,7 +889,7 @@
                                 {% endif %}
 
                                 {% set criticalEmail = user.getSingleEmail() %}
-                                {% set notificationEmail = user.getSingleEmail(false) %}
+                                {% set notificationEmail = user.getSingleEmail(false,', ') %}
                                 {% if notificationEmail != criticalEmail %}
                                     <tr class="row-withspace">
                                         <td class="left-column">notification email:</td>

@@ -264,7 +264,7 @@ class User extends UserBase {
     //TODO: add multiple email addresses to notify or replace $notificationEmailUser to support many users
     #[ORM\JoinTable(name: 'user_users_notifyusers')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'notifyuser_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\InverseJoinColumn(name: 'notifyuser_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'User')]
     private $notifyUsers;
 
@@ -2458,7 +2458,7 @@ class User extends UserBase {
     // if thoses emails are used as receipients. If these emails somehow are used as a sender,
     // then choose only the first one.
     //$critical might not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
-    public function getSingleEmail( $critical=true ): mixed
+    public function getSingleEmail( $critical=true, $delimeter="," ): mixed
     {
         if( !$critical ) {
             //if not critical, use "Send email notification to" field in the user profile
@@ -2470,7 +2470,7 @@ class User extends UserBase {
 
             $notifyUserEmailsStr = null;
             if( count($notifyUserEmails) > 0 ) {
-                $notifyUserEmailsStr = implode(",",$notifyUserEmails);
+                $notifyUserEmailsStr = implode($delimeter,$notifyUserEmails);
             }
             return $notifyUserEmailsStr;
         }

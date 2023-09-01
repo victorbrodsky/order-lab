@@ -131,18 +131,18 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
             }
         }
 
-        //Case: DROP INDEX idx_d267b39c33f7837
-        if( strpos((string)$sql, 'DROP INDEX ') !== false ) {
-            $sqlArr = explode(" ",$sql);
-            if( count($sqlArr) == 3 ) {
-                //We need the index 3
-                $sqlIndex = $sqlArr[2];
-                if( !$this->indexExistsSimple($sqlIndex) ) {
-                    echo $this->counter.":###Ignore3 ".$sql.$newline;
-                    return; // FALSE;
-                }
-            }
-        }
+//        //Case: DROP INDEX idx_d267b39c33f7837
+//        if( strpos((string)$sql, 'DROP INDEX ') !== false ) {
+//            $sqlArr = explode(" ",$sql);
+//            if( count($sqlArr) == 3 ) {
+//                //We need the index 3
+//                $sqlIndex = $sqlArr[2];
+//                if( !$this->indexExistsSimple($sqlIndex) ) {
+//                    echo $this->counter.":###Ignore3 ".$sql.$newline;
+//                    return; // FALSE;
+//                }
+//            }
+//        }
 
         //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
         //Always skip: Primary keys are already exists
