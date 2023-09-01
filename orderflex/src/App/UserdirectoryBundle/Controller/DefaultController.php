@@ -563,7 +563,10 @@ class DefaultController extends OrderAbstractController
         $grants = $query->getResult();
         echo "grant count=" . count($grants) . "<br>";
         foreach ($grants as $grant) {
-            echo $grant. ", user=" . $grant->getUser() . "<br>";
+            $users = $grant->getUser();
+            foreach($users as $user) {
+                echo $grant . ", user=" . $user . "<br>";
+            }
         }
         //exit('111');
 
