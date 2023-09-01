@@ -558,14 +558,14 @@ class DefaultController extends OrderAbstractController
         $repository = $em->getRepository(Grant::class);
         $dql = $repository->createQueryBuilder("grant");
         $dql->select('grant');
-        $dql->where("grant.name IS NULL");
+        //$dql->where("grant.name IS NULL");
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $grants = $query->getResult();
         echo "grant count=" . count($grants) . "<br>";
         foreach ($grants as $grant) {
             echo $grant . "<br>";
         }
-        exit('111');
+        //exit('111');
 
         if(1) {
             //get users with notificationEmailUser
