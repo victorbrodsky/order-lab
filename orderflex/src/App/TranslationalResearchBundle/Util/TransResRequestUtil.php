@@ -3059,7 +3059,11 @@ class TransResRequestUtil
         $piEmailArr = $this->getInvoicePis($invoice);
 
         if( count($piEmailArr) == 0 ) {
-            return "There are no PI and/or Billing Contact emails. Email has not been sent.";
+            //event log
+            $eventType = "Invoice PDF Issued";
+            $msg = "There are no PI and/or Billing Contact emails. Email has not been sent.";
+            $transresUtil->setEventLog($invoice,$eventType,$msg);
+            return $msg;
         }
 
         //Attachment: Invoice PDF
@@ -3310,9 +3314,12 @@ class TransResRequestUtil
             //use submitter
             $pi = $invoice->getSubmitter();
         }
+        //echo "pi=$pi <br>";
 
         if( $asEmail ) {
             $piEmail = $pi->getSingleEmail(false);
+            //echo "piEmail=$piEmail <br>";
+            //echo "getSingleEmail piEmail=".$pi->getSingleEmail()."<br>";
             if( $piEmail ) {
                 $piEmailArr[] = $piEmail;
             }
@@ -3322,9 +3329,11 @@ class TransResRequestUtil
 
         //Invoice's Billing Contact
         $invoiceBillingContact = $invoice->getBillingContact();
+        //echo "invoiceBillingContact=$invoiceBillingContact <br>";
         if( $invoiceBillingContact ) {
             if( $asEmail ) {
                 $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail(false);
+                //echo "invoiceBillingContactEmail=$invoiceBillingContactEmail <br>";
                 if ($invoiceBillingContactEmail) {
                     $piEmailArr[] = $invoiceBillingContactEmail;
                 }
@@ -3333,6 +3342,8 @@ class TransResRequestUtil
             }
         }
 
+        //dump($piEmailArr);
+        //exit('getInvoicePis');
         return $piEmailArr;
     }
     public function getInvoicePisStr($invoice) {

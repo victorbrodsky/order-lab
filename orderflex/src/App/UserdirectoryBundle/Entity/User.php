@@ -2466,8 +2466,11 @@ class User extends UserBase {
             $notifyUserEmailsStr = null;
             if( count($notifyUserEmails) > 0 ) {
                 $notifyUserEmailsStr = implode($delimeter,$notifyUserEmails);
+                //echo "notifyUserEmailsStr=$notifyUserEmailsStr<br>";
+                if( $notifyUserEmailsStr ) {
+                    return $notifyUserEmailsStr;
+                }
             }
-            return $notifyUserEmailsStr;
         }
 
         if( $this->getEmail() ) {
