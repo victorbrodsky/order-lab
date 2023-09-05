@@ -64,6 +64,7 @@ class TrpTest extends WebTestBase
         $btnsCount = $btns->count();
         if( $btnsCount > 0 ) {
             $link = $btns->first()->link();
+            $this->client->followRedirects();
             $crawler = $this->client->click($link);
             $content = $this->client->getResponse()->getContent();
             exit("content=$content");
