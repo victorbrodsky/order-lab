@@ -63,7 +63,7 @@ class TrpTest extends WebTestBase
         $links = $crawler->filter('.btn-send-latest-invoice-pdf-email');
         $linksCount = $links->count();
         if( $linksCount > 0 ) {
-            $link = $links[0];
+            $link = $links->first();
             //btn-send-latest-invoice-pdf-email
             $crawler = $this->client->click($link);
             $this->assertGreaterThan(
