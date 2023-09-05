@@ -75,30 +75,29 @@
         {% endif %}
     </h4>
 
-    {#{% set projectRemainingBudgetNoteStyle = 'style: display: none;' %}#}
-    {#{% if projectRemainingBudgetNote %}#}
-        {#{% set projectRemainingBudgetNoteStyle = '' %}#}
-    {#{% endif %}#}
-
     <div id="project-remaining-budget-note">
         {% if projectRemainingBudgetNote %}
             {{ projectRemainingBudgetNote|raw }}
         {% endif %}
     </div>
 
-    {% if 0 and projectRemainingBudgetNote %}
-        {% set projectRemainingBudgetNoteStyle = '' %}
-        <div id="project-remaining-budget-note-well" class="well well-sm" {{ projectRemainingBudgetNoteStyle }}>
-            {% if projectRemainingBudget > 0 %}
-                {% set alertClass = "alert-secondary" %}
-            {% else %}
-                {% set alertClass = "alert-warning" %}
-            {% endif %}
-            <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
+    {#{% if 0 and projectRemainingBudgetNote %}#}
+        {#{% set projectRemainingBudgetNoteStyle = '' %}#}
+        {#{% set projectRemainingBudgetNoteStyle = 'style: display: none;' %}#}
+        {#{% if projectRemainingBudgetNote %}#}
+        {#{% set projectRemainingBudgetNoteStyle = '' %}#}
+        {#{% endif %}#}
+        {#<div id="project-remaining-budget-note-well" class="well well-sm" {{ projectRemainingBudgetNoteStyle }}>#}
+            {#{% if projectRemainingBudget > 0 %}#}
+                {#{% set alertClass = "alert-secondary" %}#}
+            {#{% else %}#}
+                {#{% set alertClass = "alert-warning" %}#}
+            {#{% endif %}#}
+            {#<div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">#}
                 {#<p>#}
-                    {{ projectRemainingBudgetNote|raw }}
+                    {#{{ projectRemainingBudgetNote|raw }}#}
                 {#</p>#}
-            </div>
+            {#</div>#}
 
             {#Modal for over budget 222(7)#}
             {#<div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">#}
@@ -133,8 +132,8 @@
                     {#</div>#}
                 {#</div>#}
             {#</div>#}
-        </div>
-    {% endif %}
+        {#</div>#}
+    {#{% endif %}#}
 
     {% if cycle == "new" %}
         <div class="well well-sm">
