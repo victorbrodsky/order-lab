@@ -60,7 +60,7 @@ class TrpTest extends WebTestBase
 
         //link Review Project if exists
         //$linksCount = $crawler->filter('html:contains("Send the most recent invoice PDF by email to")')->count();
-        $linksCount = $crawler->filter('.btn-send-latest-invoice-pdf-email")')->count();
+        $linksCount = $crawler->filter('.btn-send-latest-invoice-pdf-email')->count();
         if( $linksCount > 0 ) {
             $link = $linksCount[0];
             //btn-send-latest-invoice-pdf-email

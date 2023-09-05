@@ -146,9 +146,13 @@ class InvoiceController extends OrderAbstractController
         //$filterwell = trim((string)$request->get('filterwell') );
 
         //$filterType = trim((string)$request->get('type') );
-        $invoicetype = str_replace("-", " ", $invoicetype);
-        $invoicetypeLowerCase = strtolower($invoicetype);
+        $invoicetypeLowerCase = null;
         //echo "invoicetype=$invoicetype<br>";
+        if( $invoicetype ) {
+            $invoicetype = str_replace("-", " ", $invoicetype);
+            $invoicetypeLowerCase = strtolower($invoicetype);
+        }
+        //echo "invoicetypeLowerCase=$invoicetypeLowerCase<br>";
 
 //        if(
 //            ($routeName == "translationalresearch_invoice_index_filter" && !$filterTitle)
