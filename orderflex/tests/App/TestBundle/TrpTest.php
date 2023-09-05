@@ -64,8 +64,9 @@ class TrpTest extends WebTestBase
         $btnsCount = $btns->count();
         if( $btnsCount > 0 ) {
             $link = $btns->first()->link();
-            //btn-send-latest-invoice-pdf-email
             $crawler = $this->client->click($link);
+            $content = $this->client->getResponse()->getContent();
+            exit("content=$content");
             $this->assertGreaterThan(
                 0,
                 $crawler->filter('html:contains("PDF has been sent by email to ")')->count()
