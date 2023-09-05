@@ -75,52 +75,64 @@
         {% endif %}
     </h4>
 
-    {% if projectRemainingBudgetNote %}
-        <div class="well well-sm">
+    {#{% set projectRemainingBudgetNoteStyle = 'style: display: none;' %}#}
+    {#{% if projectRemainingBudgetNote %}#}
+        {#{% set projectRemainingBudgetNoteStyle = '' %}#}
+    {#{% endif %}#}
+
+    <div id="project-remaining-budget-note">
+        {% if projectRemainingBudgetNote %}
+            {{ projectRemainingBudgetNote|raw }}
+        {% endif %}
+    </div>
+
+    {% if 0 and projectRemainingBudgetNote %}
+        {% set projectRemainingBudgetNoteStyle = '' %}
+        <div id="project-remaining-budget-note-well" class="well well-sm" {{ projectRemainingBudgetNoteStyle }}>
             {% if projectRemainingBudget > 0 %}
                 {% set alertClass = "alert-secondary" %}
             {% else %}
                 {% set alertClass = "alert-warning" %}
             {% endif %}
             <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
-                <p>
+                {#<p>#}
                     {{ projectRemainingBudgetNote|raw }}
-                </p>
+                {#</p>#}
             </div>
 
             {#Modal for over budget 222(7)#}
-            <div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Over the Approved Project Budget</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
+            {#<div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">#}
+                {#<div class="modal-dialog" role="document">#}
+                    {#<div class="modal-content">#}
+                        {#<div class="modal-header">#}
+                            {#<h5 class="modal-title">Over the Approved Project Budget</h5>#}
+                            {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                                {#<span aria-hidden="true">&times;</span>#}
+                            {#</button>#}
+                        {#</div>#}
+                        {#<div class="modal-body">#}
                             {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy. #}
                             {#You may need to submit an updated budget estimate along with an explanation. #}
                             {#Please contact the administrator by emailing [FirstName LastName at email - first user with admin review role for this project type] #}
                             {#to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)”#}
 
-                            <p>
-                                <div id="over-budget-warning-modal-text">
-                                    This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.
-                                    You may need to submit an updated budget estimate along with an explanation.
-                                    Please contact the administrator by emailing [FirstName LastName at email -
-                                    first user with admin review role for this project type] to ensure this work request is completed.
-                                    Are you sure you would like to submit this work request?
-                                </div>
-                            </p>
+                            {#<p>#}
+                                {#<div id="over-budget-warning-modal-text">#}
+                                    {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.#}
+                                    {#You may need to submit an updated budget estimate along with an explanation.#}
+                                    {#Please contact the administrator by emailing [FirstName LastName at email -#}
+                                    {#first user with admin review role for this project type] to ensure this work request is completed.#}
+                                    {#Are you sure you would like to submit this work request?#}
+                                {#</div>#}
+                            {#</p>#}
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        {#</div>#}
+                        {#<div class="modal-footer">#}
+                            {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
         </div>
     {% endif %}
 
@@ -724,7 +736,19 @@
                     //console.log(response);
 
                     //set title
+                    document.title = "New Work Request for project ID "+response.projectId;
+
                     $('#new-work-request-title').text("New Work Request for project ID "+response.projectId);
+
+                    //enable/disable project-remaining-budget-note
+                    {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
+                    if( response.projectRemainingBudgetNote ) {
+                        $('#project-remaining-budget-note').show();
+                        $('#projectRemainingBudgetNote div p:first').text(response.projectRemainingBudgetNote);
+                    } else {
+                        $('#project-remaining-budget-note').hide();
+                        $('#projectRemainingBudgetNote div p:first').text('');
+                    }
 
                     //set fundedAccountNumber
                     $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(response.fundedAccountNumber);
@@ -1226,9 +1250,9 @@
             $('#project-remaining-budget').val(remainingBudgetValue);
             if( remainingBudgetValue.indexOf('-') !== -1 ) {
                 //'-' exists
-                $('#project-remaining-budget-note').removeClass('alert-secondary').addClass('alert-warning');
+                $('#project-remaining-budget-note-alert').removeClass('alert-secondary').addClass('alert-warning');
             } else {
-                $('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
+                $('#project-remaining-budget-note-alert').removeClass('alert-warning').addClass('alert-secondary');
             }
         }
 

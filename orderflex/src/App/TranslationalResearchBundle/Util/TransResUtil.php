@@ -771,43 +771,28 @@ class TransResUtil
     }
 
     public function getProjectRemainingBudgetNote($project) {
-
         //return NULL; //testing
         if( !$project ) {
             return NULL;
         }
 
         if( $this->isAdminPrimaryRevExecutiveOrRequester($project) ) {
-            //echo "show remaining budget <br>";
-            $remainingBudget = $project->getRemainingBudget();
+            $remainingBudgetValue = $project->getRemainingBudget();
             //echo "remainingBudget=[$remainingBudget] <br>";
 
-            if( $remainingBudget !== NULL ) {
-                //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
-                // If you have questions about this, please [email the system administrator]
-                //$remainingBudget = $project->toMoney($remainingBudget);
-                //echo "remainingBudget1=[$remainingBudget] <br>";
-                $remainingBudget = $this->dollarSignValue($remainingBudget);
-                //echo "remainingBudget2=[$remainingBudget] <br>";
-
-//                $adminEmailsStr = "";
-//                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
-//                if (count($adminEmails) > 0) {
-//                    $adminEmailsStr = implode(", ", $adminEmails);
-//                }
+            if( $remainingBudgetValue !== NULL ) {
+                $remainingBudget = $this->dollarSignValue($remainingBudgetValue);
                 $adminEmailsStr = $this->getAdminEmailsStr($project,false);
-
                 $trpName = $this->getBusinessEntityAbbreviation();
 
-//                $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
-//                    " " .
-//                    "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
-//                    "." .
-//                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
+                $divWell = '<div class="well well-sm">';
 
-                //Based on this project’s approved budget, invoices, work requests, and the items selected below,
-                // the remaining budget appears to be $20.00.
-                // If you have any questions, please email the CTP administrator Name (email)
+                if( $remainingBudgetValue > 0 ) {
+                    $alertClass = "alert-secondary";
+                } else {
+                    $alertClass = "alert-warning";
+                }
+                $div = '<div id="project-remaining-budget-note-alert" class="alert '.$alertClass.'" role="alert">';
 
                 $note = "Based on this project’s approved budget, invoices, work requests, ".
                         "and the items selected below, the remaining budget appears to be ".
@@ -815,7 +800,12 @@ class TransResUtil
                         "." .
                         "<br>If you have any questions, please email the $trpName administrator ".$adminEmailsStr;
 
-                $note = "<h4>" . $note . "</h4>";
+                $note = $divWell.
+                            $div.
+                                "<p>".
+                                    "<h4>" . $note . "</h4>"."</p>".
+                            "</div>".
+                        "</div>";
 
                 return $note;
             }
