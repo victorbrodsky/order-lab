@@ -2590,8 +2590,9 @@ class ProjectController extends OrderAbstractController
             $implicitExpirationDate = $project->getImplicitExpirationDate()->format("m/d/Y");
         }
 
+        $projectFunded = $project->getFunded();
         $fundedStr = "Not-Funded";
-        if( $project->getFunded() ) {
+        if( $projectFunded ) {
             $fundedStr = "Funded";
         }
 
@@ -2624,6 +2625,7 @@ class ProjectController extends OrderAbstractController
             "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
+            "projectFunded" => $projectFunded,
             "fundedStr" => $fundedStr,
             "businessPurposes" => $businessPurposesArr,
             'projectProducts' => $projectProducts,

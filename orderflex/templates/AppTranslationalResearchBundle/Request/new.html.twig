@@ -795,8 +795,12 @@
 
                     if( update ) {
                         transresSetProductServiceListByProject(response.projectProducts);
-                        transresAddProductListener();
                     }
+
+                    //update #project-funded: this value will be used in budget recalculation logic
+                    $('#project-funded').val(response.projectFunded);
+
+                    transresAddProductListener();
 
                 }).done(function() {
                     //
