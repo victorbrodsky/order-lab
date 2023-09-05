@@ -1337,16 +1337,16 @@
                 //console.log("newForm is null");
             }
 
-            if( $('#project-funded').val() ) {
-                //funded => do not use remaining budget recalculation
-                console.log("funded => do not use remaining budget recalculation");
-                return;
-            }
-            console.log("use remaining budget recalculation");
-
             transresAddProductListener(newForm);
             ////////// transresAddProductListener /////////////
             if(0) {
+                if( $('#project-funded').val() ) {
+                    //funded => do not use remaining budget recalculation
+                    console.log("funded => do not use remaining budget recalculation");
+                    return;
+                }
+                console.log("use remaining budget recalculation");
+
                 //delay user input listener to give enough time to enter the full quantity
                 var timer = 700; //0.7 sec, 2000=>2 sec
                 var quantitySelector = $(".product-requested-quantity");
@@ -1379,6 +1379,13 @@
         }
 
         function transresAddProductListener( newForm ) {
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                console.log("funded => do not use remaining budget recalculation");
+                return;
+            }
+            console.log("use remaining budget recalculation");
+
             //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
             var quantitySelector = $(".product-requested-quantity");
