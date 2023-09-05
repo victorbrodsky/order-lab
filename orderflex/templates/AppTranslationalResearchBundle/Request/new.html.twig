@@ -734,6 +734,7 @@
                     async: asyncflag
                 }).success(function(response) {
                     //console.log(response);
+                    console.log("translationalresearch_get_project_ajax: update work request");
 
                     //set title
                     document.title = "New Work Request for project ID "+response.projectId;
@@ -743,11 +744,13 @@
                     //enable/disable project-remaining-budget-note
                     {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
                     if( response.projectRemainingBudgetNote ) {
+                        console.log("translationalresearch_get_project_ajax: update projectRemainingBudgetNote");
                         $('#project-remaining-budget-note').show();
-                        $('#project-remaining-budget-note div p:first').html(response.projectRemainingBudgetNote);
+                        $('#project-remaining-budget-note').html(response.projectRemainingBudgetNote);
                     } else {
+                        console.log("translationalresearch_get_project_ajax: empty projectRemainingBudgetNote");
                         $('#project-remaining-budget-note').hide();
-                        $('#project-remaining-budget-note div p:first').html('');
+                        $('#project-remaining-budget-note').html('');
                     }
 
                     //set fundedAccountNumber
