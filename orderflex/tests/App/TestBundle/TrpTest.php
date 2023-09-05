@@ -51,6 +51,30 @@ class TrpTest extends WebTestBase
         //$this->fail("Expected exception 1162011 not thrown");
     }
 
+    public function testSendInvoicePdfEmail() {
+        $this->logIn();
+
+        //http://127.0.0.1/order/index_dev.php/translational-research/
+        //invoice/list/?filter%5Bversion%5D=Latest&title=Latest%20Versions%20of%20All%20Invoices
+        $crawler = $this->client->request('GET', '/translational-research/invoice/list/?filter[version]=Latest&title=Latest Versions of All Invoices');
+
+        //link Review Project if exists
+        //$linksCount = $crawler->filter('html:contains("Send the most recent invoice PDF by email to")')->count();
+        $linksCount = $crawler->filter('.btn-send-latest-invoice-pdf-email")')->count();
+        if( $linksCount > 0 ) {
+            $link = $linksCount[0];
+            //btn-send-latest-invoice-pdf-email
+            $crawler = $this->client->click($link);
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("PDF has been sent by email to ")')->count()
+            );
+        } else {
+            echo "Skip testSendInvoicePdfEmail: no invoices with pdf";
+            return null;
+        }
+    }
+
     public function testProjectAction() {
         $this->logIn();
 

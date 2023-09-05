@@ -288,7 +288,7 @@
                                     {% if transres_request_util.isUserHasInvoicePermission(invoice,"send-invoice-pdf-email") %}
                                         <li>
                                             {#Send the most recent invoice PDF by e-mail#}
-                                            <a
+                                            <a  class="btn-send-latest-invoice-pdf-email"
                                                 general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} PDF by email to PI and Billing Contact?"
                                                 href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
                                             >Send the most recent invoice PDF by email to PI and Billing Contact{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
