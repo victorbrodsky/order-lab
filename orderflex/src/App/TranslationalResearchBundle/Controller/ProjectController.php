@@ -2616,6 +2616,8 @@ class ProjectController extends OrderAbstractController
         $remainingProjectBudget = $transresUtil->dollarSignValue($remainingProjectBudgetValue);
         $projectApprovedProjectBudget = $project->getApprovedProjectBudget();
 
+        $messageToUsers = $transresUtil->getTrpMessageToUsers($project);
+
         $output = array(
             "projectId" => $project->getOid(),
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
@@ -2628,7 +2630,8 @@ class ProjectController extends OrderAbstractController
             'projectRemainingBudgetNote' => $projectRemainingBudgetNote,
             'remainingProjectBudgetValue' => $remainingProjectBudgetValue,
             'remainingProjectBudget' => $remainingProjectBudget,
-            'projectApprovedProjectBudget' => $projectApprovedProjectBudget
+            'projectApprovedProjectBudget' => $projectApprovedProjectBudget,
+            'messageToUsers' => $messageToUsers
         );
 
         $response = new Response();

@@ -59,7 +59,7 @@
     {#project might be null#}
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
     {% if messageToUsers is defined and messageToUsers %}
-        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+        <h5 id="trp-message-to-users" class="alert alert-danger well-lg safary-fix" align="center">
             {{ messageToUsers|raw }}
         </h5>
     {% endif %}
@@ -745,12 +745,19 @@
                     {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
                     if( response.projectRemainingBudgetNote ) {
                         console.log("translationalresearch_get_project_ajax: update projectRemainingBudgetNote");
-                        $('#project-remaining-budget-note').show();
-                        $('#project-remaining-budget-note').html(response.projectRemainingBudgetNote);
+                        $('#project-remaining-budget-note').show().html(response.projectRemainingBudgetNote);
                     } else {
                         console.log("translationalresearch_get_project_ajax: empty projectRemainingBudgetNote");
-                        $('#project-remaining-budget-note').hide();
-                        $('#project-remaining-budget-note').html('');
+                        $('#project-remaining-budget-note').hide().html('');
+                    }
+
+                    //messageToUsers = transres_util.getTrpMessageToUsers(project)
+                    if( response.messageToUsers ) {
+                        console.log("translationalresearch_get_project_ajax: update trp-message-to-users");
+                        $('#trp-message-to-users').show().html(response.messageToUsers)
+                    } else {
+                        console.log("translationalresearch_get_project_ajax: empty trp-message-to-users");
+                        $('#trp-message-to-users').hide().html('');
                     }
 
                     //set fundedAccountNumber
