@@ -400,7 +400,7 @@
 
             //if( $('#oleg_translationalresearchbundle_request_project') ) {
                 //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
-                //transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project'), false );
+                transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project'), false );
 
                 //update project related request's fields
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
@@ -795,6 +795,7 @@
 
                     if( update ) {
                         transresSetProductServiceListByProject(response.projectProducts);
+                        transresAddProductListener();
                     }
 
                 }).done(function() {
@@ -1336,13 +1337,48 @@
                 //console.log("newForm is null");
             }
 
-//            if( $('#project-funded').val() ) {
-//                //funded => do not use remaining budget recalculation
-//                console.log("funded => do not use remaining budget recalculation");
-//                return;
-//            }
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                console.log("funded => do not use remaining budget recalculation");
+                return;
+            }
             console.log("use remaining budget recalculation");
 
+            transresAddProductListener(newForm);
+            ////////// transresAddProductListener /////////////
+            if(0) {
+                //delay user input listener to give enough time to enter the full quantity
+                var timer = 700; //0.7 sec, 2000=>2 sec
+                var quantitySelector = $(".product-requested-quantity");
+                if (newForm) {
+                    quantitySelector = newForm.find(".product-requested-quantity");
+                }
+                quantitySelector.bind("input propertychange", function (evt) {
+                    // If it's the propertychange event, make sure it's the value that changed.
+                    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                        return;
+
+                    // Clear any previously set timer before setting a fresh one
+                    window.clearTimeout($(this).data("timeout"));
+                    $(this).data("timeout", setTimeout(function () {
+                        //console.log("product-requested-quantity changed");
+                        transresRecalculateRemaniningBudget();
+                    }, timer));
+                });
+
+                var categorySelector = $(".product-category-combobox");
+                if (newForm) {
+                    categorySelector = newForm.find(".product-category-combobox");
+                }
+                categorySelector.on('change', function (event) {
+                    //console.log("product-category-combobox changed");
+                    transresRecalculateRemaniningBudget();
+                });
+            }
+            ////////// EOF transresAddProductListener /////////////
+        }
+
+        function transresAddProductListener( newForm ) {
             //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
             var quantitySelector = $(".product-requested-quantity");
