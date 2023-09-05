@@ -66,8 +66,8 @@ class TrpTest extends WebTestBase
             $link = $btns->first()->link();
             $this->client->followRedirects();
             $crawler = $this->client->click($link);
-            $content = $this->client->getResponse()->getContent();
-            exit("content=$content");
+            //$content = $this->client->getResponse()->getContent();
+            //exit("content=$content");
             $this->assertGreaterThan(
                 0,
                 $crawler->filter('html:contains("PDF has been sent by email to ")')->count()
