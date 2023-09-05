@@ -803,7 +803,8 @@ class TransResUtil
                 $note = $divWell.
                             $div.
                                 "<p>".
-                                    "<h4>" . $note . "</h4>"."</p>".
+                                    "<h4>" . $note . "</h4>".
+                                "</p>".
                             "</div>".
                         "</div>";
 

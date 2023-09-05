@@ -66,7 +66,7 @@
 
 
     {% set invoiceShowUrl = transres_request_util.getInvoiceShowUrlByWorkRequest(transresRequest) %}
-    {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
+    {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
 
     <h4 class="text-info" align="center">
         <div id="new-work-request-title">{{ title }}</div>
@@ -76,9 +76,10 @@
     </h4>
 
     <div id="project-remaining-budget-note">
-        {% if projectRemainingBudgetNote %}
-            {{ projectRemainingBudgetNote|raw }}
-        {% endif %}
+        {#{% if projectRemainingBudgetNote %}#}
+            {#{{ projectRemainingBudgetNote|raw }}#}
+            {{ transres_util.getProjectRemainingBudgetNote(project)|raw }}
+        {#{% endif %}#}
     </div>
 
     {#{% if 0 and projectRemainingBudgetNote %}#}
@@ -399,11 +400,11 @@
 
             //if( $('#oleg_translationalresearchbundle_request_project') ) {
                 //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
-                transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project'), false );
+                //transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project'), false );
 
                 //update project related request's fields
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
-                    //console.log("project changed: change");
+                    console.log("project changed: change");
                     //var projectId = $(this).val();
 
                     if(1) {
@@ -717,7 +718,7 @@
                 return;
             }
 
-            //console.log("projectId="+projectId);
+            console.log("projectId="+projectId);
             if( projectId ) {
                 //console.log("get project account number");
 
@@ -743,10 +744,10 @@
                     {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
                     if( response.projectRemainingBudgetNote ) {
                         $('#project-remaining-budget-note').show();
-                        $('#projectRemainingBudgetNote div p:first').text(response.projectRemainingBudgetNote);
+                        $('#project-remaining-budget-note div p:first').html(response.projectRemainingBudgetNote);
                     } else {
                         $('#project-remaining-budget-note').hide();
-                        $('#projectRemainingBudgetNote div p:first').text('');
+                        $('#project-remaining-budget-note div p:first').html('');
                     }
 
                     //set fundedAccountNumber
