@@ -204,9 +204,9 @@ class DataBackupManagementController extends OrderAbstractController
         }
         //exit('Not Allowed');
 
-        $fileId = $request->get('fileId');
+        $backupFileName = $request->get('fileId');
         $env = $request->get('env');
-        $logger->notice("backupFilePath=".$fileId."; env=".$env);
+        $logger->notice("backupFilePath=".$backupFileName."; env=".$env);
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
 
@@ -215,7 +215,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $sitename = "employees";
 
-        if( $fileId ) {
+        if( $backupFileName ) {
 
             //Original site settings
             $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
@@ -231,7 +231,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
             }
 
-            //exit('Under construction: backupFilePath='.$fileId);
+            //exit('Under construction: backupFilePath='.$backupFileName);
             //create backup
 
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -242,7 +242,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             //$res = $this->restoringBackupSQLFull($backupFilePath);
             //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-            $res = $this->dbManagePython($networkDrivePath,'restore',$fileId); //Use python script pg_restore
+            $res = $this->dbManagePython($networkDrivePath,'restore',$backupFileName); //Use python script pg_restore
             //exit($res);
 
             $logger->notice("After dbManagePython");
@@ -302,7 +302,9 @@ class DataBackupManagementController extends OrderAbstractController
                     $logger->notice("After flush");
                 }
 
-                $resStr = $resStr .
+                $resStr =
+                    "Restored database " . $backupFileName . "<br>" .
+                    $resStr .
                     " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
                     " <br>Also it might be required to run the deploy_prod.sh script."
                 ;
