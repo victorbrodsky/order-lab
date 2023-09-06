@@ -51,11 +51,12 @@ class TrpTest extends WebTestBase
         //$this->fail("Expected exception 1162011 not thrown");
     }
 
-    //TODO: disable for prod env
     public function testSendInvoicePdfEmail() {
 
+        //disable for live env
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
+        echo "environment=$environment";
         if( $environment == 'live' ) {
             echo "Skip test to send invoice on live";
             return;
