@@ -54,13 +54,14 @@ class TrpTest extends WebTestBase
     public function testSendInvoicePdfEmail() {
 
         //disable for live env
-        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->testContainer->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         echo "environment=$environment";
         if( $environment == 'live' ) {
             echo "Skip test to send invoice on live";
             return;
         }
+        exit('111');
         return;
 
         $this->logIn();
