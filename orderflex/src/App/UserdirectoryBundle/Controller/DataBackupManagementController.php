@@ -108,12 +108,20 @@ class DataBackupManagementController extends OrderAbstractController
         //get backup files
         $backupFiles = $this->getBackupFiles($networkDrivePath); //employees_manual_backup_restore
 
+        //'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
+        $environmentsArr = $userServiceUtil->getEnvironments();
+        $environments = array();
+        foreach( $environmentsArr as $id => $name ) {
+            $environments[] = array('id'=>$id, 'name'=>$name);
+        }
+
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
             'cycle' => 'new',
             'networkDrivePath' => $networkDrivePath,
-            'backupFiles' => $backupFiles
+            'backupFiles' => $backupFiles,
+            'environments' => $environments
         );
     }
 
@@ -197,8 +205,10 @@ class DataBackupManagementController extends OrderAbstractController
         //exit('Not Allowed');
 
         $fileId = $request->get('fileId');
-        $logger->notice("backupFilePath=".$fileId);
-        //echo "backupFilePath=".$fileId."<br>";
+        $env = $request->get('env');
+        $logger->notice("backupFilePath=".$fileId."; env=".$env);
+        //echo "backupFilePath=".$fileId."; env=".$env."<br>";
+        //exit('111');
 
         //get backup files
         //$backupFiles = $this->getBackupFiles($networkDrivePath);
@@ -208,10 +218,18 @@ class DataBackupManagementController extends OrderAbstractController
         if( $fileId ) {
 
             //Original site settings
-            $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-            $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
-            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if( !$siteEmail ) {
+                $siteEmail = "myemail@example.com";
+            }
+            $exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
+
+            if(0) {
+                $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
+                $environment = $userSecUtil->getSiteSettingParameter('environment');
+                $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
+                $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            }
 
             //exit('Under construction: backupFilePath='.$fileId);
             //create backup
@@ -237,7 +255,8 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                if(0) {
+                if(1) {
+                    $em = $this->getDoctrine()->getManager();
                     $logger->notice("set site settings parameters");
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
@@ -247,19 +266,35 @@ class DataBackupManagementController extends OrderAbstractController
                     $param = $userSecUtil->getSingleSiteSettingsParam();
                     $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
-                    //mailerDeliveryAddresses to admin
-                    //environment
-                    //liveSiteRootUrl
-                    //networkDrivePath
-                    //connectionChannel
+                    if(0) {
+                        /////// set original parameters //////////
+                        //mailerDeliveryAddresses to admin
+                        //environment
+                        //liveSiteRootUrl
+                        //networkDrivePath
+                        //connectionChannel
+                        $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+                        $param->setEnvironment($environment);
+                        $param->setLiveSiteRootUrl($liveSiteRootUrl);
+                        $param->setNetworkDrivePath($networkDrivePath);
+                        $param->setConnectionChannel($connectionChannel);
+                        /////// EOF set original parameters //////////
+                    }
 
-                    $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-                    $param->setEnvironment($environment);
-                    $param->setLiveSiteRootUrl($liveSiteRootUrl);
-                    $param->setNetworkDrivePath($networkDrivePath);
-                    $param->setConnectionChannel($connectionChannel);
-                    $logger->notice("After set settings parameters.");
+                    /////// set parameters //////////
+                    //set environment
+                    $param->setEnvironment($env);
 
+                    //prevent sending emails to real users
+                    $param->setMailerDeliveryAddresses($siteEmail);
+
+                    //prevent sending critical emails
+                    foreach($exceptionUsers as $exceptionUser) {
+                        $param->addEmailCriticalErrorExceptionUser($exceptionUser);
+                    }
+                    /////// EOF set parameters //////////
+
+                    $logger->notice("After set settings parameters. Before flush");
                     $em->flush();
 
                     $logger->notice("After flush");

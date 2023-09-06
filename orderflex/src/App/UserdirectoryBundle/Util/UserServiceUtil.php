@@ -4339,7 +4339,9 @@ Pathology and Laboratory Medicine",
         return $pendingCount;
     }
 
-
+    public function getEnvironments() {
+        return array("live"=>"live", "test"=>"test", "dev"=>"dev");
+    }
 
 
 

@@ -33,102 +33,115 @@
     <input type="hidden" id="fileId" value="" />
 
     <h4 class="text-info" align="center">{{ title }}</h4>
+    Current Network Drive Path: {{ networkDrivePath }}
 
     <br>
     <br>
 
-    <p>
-        <div class="well">Current Network Drive Path: {{ networkDrivePath }}</div>
-    </p>
-
-    <p>
-        <div class="row">
-            <div class="col-xs-6" align="right">
-                <a
-                    general-data-confirm="Are you sure you want to create a database backup?"
-                    class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
-                >Create DB Backup</a>
-            </div>
-            <div class="col-xs-6" align="left">
-                <a
-                    general-data-confirm="Are you sure you want to create a upload folder backup?"
-                    class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
-                >Create Upload Folder Backup</a>
+    {#Backup panel#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Create Backups</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    <a
+                        general-data-confirm="Are you sure you want to create a database backup?"
+                        class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
+                    >Create DB Backup</a>
+                </div>
+                <div class="col-xs-6" align="left">
+                    <a
+                        general-data-confirm="Are you sure you want to create a upload folder backup?"
+                        class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
+                    >Create Upload Folder Backup</a>
+                </div>
             </div>
         </div>
-    </p>
-
-    <br>
-
-    {#{% if backupFiles %}#}
-
-        <div class="row">
-            <div class="col-xs-3"></div>
-            <div class="col-xs-6">
-                {#{{ formmacros.field(backupFiles) }}#}
-                <p>
-                    <select id="backup-file-id" class="combobox" style="width: 30%;">
-                        <option value=""></option>
-                        {% for  backupFile in backupFiles %}
-                            <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-            </div>
-            <div class="col-xs-3"></div>
-        </div>
-
-        <br>
-
-        {#<p>#}
-            {#<a class="btn btn-danger" href="{{ path(employees_sitename~'_restore_backup') }}">Restore Backup</a>#}
-        {#</p>#}
-
-        {% set disabledFalg = 'disabled' %}
-        {#{% if backupFiles|length > 0 %}#}
-            {#{% set disabledFalg = '' %}#}
-        {#{% endif %}#}
-        {#<p>#}
-            {#<a#}
-                {#id="btn-restore-backup"#}
-                {#class="btn btn-danger"#}
-                {#general-data-confirm="Are you sure you want to restore DB from backup? This action will overwrite all existing data."#}
-                {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
-                {#href="#"#}
-                {#{{ disabledFalg }}#}
-                {#onclick="return restoreBackup();"#}
-            {#>Restore Backup</a>#}
-        {#</p>#}
-
-    <div class="row">
-        <div class="col-lg-4"></div>
-        <div class="col-lg-4" align="left">
-            <div class="input-group">
-                <input
-                    type="password"
-                    id="backup-user-token"
-                    class="form-control"
-                    autocomplete="off"
-                    placeholder="Enter password"
-                    style="min-width: 100%"
-                    required
-                    readonly onfocus="this.removeAttribute('readonly');"
-                >
-                <span class="input-group-btn">
-                    <button
-                            id="btn-restore-backup"
-                            class="btn btn-danger"
-                            type="button"
-                            {{ disabledFalg }}
-                            onclick="userVerifyRestoreBackup(this)"
-                    >Restore Backup</button>
-                </span>
-            </div><!-- /input-group -->
-        </div>
-        <div class="col-lg-4"></div>
     </div>
 
     <br>
+
+    {#Restore panel#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Restore</div>
+
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-3">
+                    <p>
+                        <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
+                            <option value=""></option>
+                            {% for  environment in environments %}
+                                <option value="{{ environment.id }}">{{ environment.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </p></div>
+                <div class="col-xs-6">
+                    {#{{ formmacros.field(backupFiles) }}#}
+                    <p>
+                        <select id="backup-file-id" class="combobox backup-required" style="width: 30%;">
+                            <option value=""></option>
+                            {% for  backupFile in backupFiles %}
+                                <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                </div>
+            </div>
+
+            <br>
+
+
+            {% set disabledFalg = 'disabled' %}
+            {#{% if backupFiles|length > 0 %}#}
+                {#{% set disabledFalg = '' %}#}
+            {#{% endif %}#}
+            {#<p>#}
+                {#<a#}
+                    {#id="btn-restore-backup"#}
+                    {#class="btn btn-danger"#}
+                    {#general-data-confirm="Are you sure you want to restore DB from backup? This action will overwrite all existing data."#}
+                    {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
+                    {#href="#"#}
+                    {#{{ disabledFalg }}#}
+                    {#onclick="return restoreBackup();"#}
+                {#>Restore Backup</a>#}
+            {#</p>#}
+
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4" align="left">
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            id="backup-user-token"
+                            class="form-control"
+                            autocomplete="off"
+                            placeholder="Enter password"
+                            style="min-width: 100%"
+                            required
+                            readonly onfocus="this.removeAttribute('readonly');"
+                        >
+                        <span class="input-group-btn">
+                            <button
+                                    id="btn-restore-backup"
+                                    class="btn btn-danger"
+                                    type="button"
+                                    {{ disabledFalg }}
+                                    onclick="userVerifyRestoreBackup(this)"
+                            >Restore Backup</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div> {#panel-body#}
+    </div> {#panel#}
+
+    <br>
+
     <div id="backup-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
     <div id="backup-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
 
@@ -140,10 +153,13 @@
     <script>
         $(document).ready(function () {
 
-            $('#backup-file-id').on("change", function(e) {
-                var fileId = $(this).select2('val');
-                if( fileId ) {
-                    //console.log('fileId=' + fileId);
+            //$('#backup-file-id')
+            $('.backup-required').on("change", function(e) {
+                var fileId = $('#backup-file-id').select2('val'); //$(this).select2('val');
+                var env = $('#backup-env-id').select2('val');
+
+                if( fileId && env ) {
+                    console.log('fileId=' + fileId + '; env=' + env);
                     $('#fileId').val(fileId);
                     $('#btn-restore-backup').removeAttr('disabled');
                 } else {
@@ -241,6 +257,9 @@
             var fileId = file.id;
             console.log("fileId=" + fileId);
 
+            var env = $('#backup-env-id').select2('data').text;
+            console.log("env=" + env);
+
             //var url = Routing.generate('employees_restore_backup_ajax',{fileId: fileId});
             var url = Routing.generate('employees_restore_backup_ajax');
 
@@ -249,7 +268,7 @@
                 timeout: _ajaxTimeout,
                 type: "POST",
                 async: false,
-                data: {fileId: fileId},
+                data: {fileId: fileId, env: env},
                 dataType: 'json'
             }).success(function(data) {
                 console.log("data="+data);
