@@ -404,7 +404,7 @@
 
                 //update project related request's fields
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
-                    console.log("project changed: change");
+                    //console.log("project changed: change");
                     //var projectId = $(this).val();
 
                     if(1) {
@@ -718,7 +718,7 @@
                 return;
             }
 
-            console.log("projectId="+projectId);
+            //console.log("transresPrepopulateProjectDetails: projectId="+projectId);
             if( projectId ) {
                 //console.log("get project account number");
 
@@ -734,38 +734,38 @@
                     async: asyncflag
                 }).success(function(response) {
                     //console.log(response);
-                    console.log("translationalresearch_get_project_ajax: update work request");
+                    //console.log("translationalresearch_get_project_ajax: update work request");
 
                     //set title
                     document.title = "New Work Request for project ID "+response.projectId;
 
                     //update #project-funded: this value will be used in budget recalculation logic
                     $('#project-funded').val(response.projectFundedVal);
-                    console.log("translationalresearch_get_project_ajax: update #project-funded="+$('#project-funded').val());
-                    if( $('#project-funded').val() ) {
-                        console.log("funded");
-                    } else {
-                        console.log("unfunded");
-                    }
+//                    console.log("translationalresearch_get_project_ajax: update #project-funded="+$('#project-funded').val());
+//                    if( $('#project-funded').val() ) {
+//                        console.log("funded");
+//                    } else {
+//                        console.log("unfunded");
+//                    }
 
                     $('#new-work-request-title').text("New Work Request for project ID "+response.projectId);
 
                     //enable/disable project-remaining-budget-note
                     {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
                     if( response.projectRemainingBudgetNote ) {
-                        console.log("translationalresearch_get_project_ajax: update projectRemainingBudgetNote");
+                        //console.log("translationalresearch_get_project_ajax: update projectRemainingBudgetNote");
                         $('#project-remaining-budget-note').show().html(response.projectRemainingBudgetNote);
                     } else {
-                        console.log("translationalresearch_get_project_ajax: empty projectRemainingBudgetNote");
+                        //console.log("translationalresearch_get_project_ajax: empty projectRemainingBudgetNote");
                         $('#project-remaining-budget-note').hide().html('');
                     }
 
                     //messageToUsers = transres_util.getTrpMessageToUsers(project)
                     if( response.messageToUsers ) {
-                        console.log("translationalresearch_get_project_ajax: update trp-message-to-users");
+                        //console.log("translationalresearch_get_project_ajax: update trp-message-to-users");
                         $('#trp-message-to-users').show().html(response.messageToUsers)
                     } else {
-                        console.log("translationalresearch_get_project_ajax: empty trp-message-to-users");
+                        //console.log("translationalresearch_get_project_ajax: empty trp-message-to-users");
                         $('#trp-message-to-users').hide().html('');
                     }
 
@@ -805,8 +805,6 @@
                     if( update ) {
                         transresSetProductServiceListByProject(response.projectProducts);
                     }
-
-                    //transresAddProductListener();
 
                 }).done(function() {
                     //
@@ -1169,7 +1167,7 @@
 
             if( $('#project-funded').val() ) {
                 //funded => do not use remaining budget recalculation
-                console.log("transresRecalculateRemaniningBudget: funded => do not use remaining budget recalculation");
+                //console.log("transresRecalculateRemaniningBudget: funded => do not use remaining budget recalculation");
                 return;
             }
 
@@ -1182,7 +1180,7 @@
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
                 //return;
             }
-            console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
+            //console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
             transresSetRemainingBudgetNote(currentRemainingBudget);
@@ -1349,44 +1347,45 @@
             }
 
             transresAddProductListener(newForm);
-            ////////// transresAddProductListener /////////////
-            if(0) {
-                if( $('#project-funded').val() ) {
-                    //funded => do not use remaining budget recalculation
-                    console.log("funded => do not use remaining budget recalculation");
-                    return;
-                }
-                console.log("use remaining budget recalculation");
 
-                //delay user input listener to give enough time to enter the full quantity
-                var timer = 700; //0.7 sec, 2000=>2 sec
-                var quantitySelector = $(".product-requested-quantity");
-                if (newForm) {
-                    quantitySelector = newForm.find(".product-requested-quantity");
-                }
-                quantitySelector.bind("input propertychange", function (evt) {
-                    // If it's the propertychange event, make sure it's the value that changed.
-                    if (window.event && event.type == "propertychange" && event.propertyName != "value")
-                        return;
-
-                    // Clear any previously set timer before setting a fresh one
-                    window.clearTimeout($(this).data("timeout"));
-                    $(this).data("timeout", setTimeout(function () {
-                        //console.log("product-requested-quantity changed");
-                        transresRecalculateRemaniningBudget();
-                    }, timer));
-                });
-
-                var categorySelector = $(".product-category-combobox");
-                if (newForm) {
-                    categorySelector = newForm.find(".product-category-combobox");
-                }
-                categorySelector.on('change', function (event) {
-                    //console.log("product-category-combobox changed");
-                    transresRecalculateRemaniningBudget();
-                });
-            }
-            ////////// EOF transresAddProductListener /////////////
+//            ////////// transresAddProductListener /////////////
+//            if(0) {
+//                if( $('#project-funded').val() ) {
+//                    //funded => do not use remaining budget recalculation
+//                    console.log("funded => do not use remaining budget recalculation");
+//                    return;
+//                }
+//                console.log("use remaining budget recalculation");
+//
+//                //delay user input listener to give enough time to enter the full quantity
+//                var timer = 700; //0.7 sec, 2000=>2 sec
+//                var quantitySelector = $(".product-requested-quantity");
+//                if (newForm) {
+//                    quantitySelector = newForm.find(".product-requested-quantity");
+//                }
+//                quantitySelector.bind("input propertychange", function (evt) {
+//                    // If it's the propertychange event, make sure it's the value that changed.
+//                    if (window.event && event.type == "propertychange" && event.propertyName != "value")
+//                        return;
+//
+//                    // Clear any previously set timer before setting a fresh one
+//                    window.clearTimeout($(this).data("timeout"));
+//                    $(this).data("timeout", setTimeout(function () {
+//                        //console.log("product-requested-quantity changed");
+//                        transresRecalculateRemaniningBudget();
+//                    }, timer));
+//                });
+//
+//                var categorySelector = $(".product-category-combobox");
+//                if (newForm) {
+//                    categorySelector = newForm.find(".product-category-combobox");
+//                }
+//                categorySelector.on('change', function (event) {
+//                    //console.log("product-category-combobox changed");
+//                    transresRecalculateRemaniningBudget();
+//                });
+//            }
+//            ////////// EOF transresAddProductListener /////////////
         }
 
         function transresAddProductListener( newForm ) {
@@ -1395,7 +1394,7 @@
 //                console.log("funded => do not use remaining budget recalculation");
 //                return;
 //            }
-            console.log("use remaining budget recalculation");
+            //console.log("use remaining budget recalculation");
 
             //delay user input listener to give enough time to enter the full quantity
             var timer = 700; //0.7 sec, 2000=>2 sec
@@ -1411,7 +1410,7 @@
                 // Clear any previously set timer before setting a fresh one
                 window.clearTimeout($(this).data("timeout"));
                 $(this).data("timeout", setTimeout(function () {
-                    console.log("product-requested-quantity changed");
+                    //console.log("product-requested-quantity changed");
                     transresRecalculateRemaniningBudget();
                 }, timer));
             });
@@ -1421,7 +1420,7 @@
                 categorySelector = newForm.find(".product-category-combobox");
             }
             categorySelector.on('change', function(event) {
-                console.log("product-category-combobox changed");
+                //console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
         }
