@@ -56,12 +56,12 @@ class TrpTest extends WebTestBase
         //disable for live env
         $userSecUtil = $this->testContainer->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        echo "environment=$environment";
+        //echo "environment=$environment";
         if( $environment == 'live' ) {
             echo "Skip test to send invoice on live";
             return;
         }
-        exit('111');
+        //exit('111');
         return;
 
         $this->logIn();
