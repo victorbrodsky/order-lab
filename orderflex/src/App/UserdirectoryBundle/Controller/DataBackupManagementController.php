@@ -261,7 +261,7 @@ class DataBackupManagementController extends OrderAbstractController
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-                    $this->runProcess($projectRoot.DIRECTORY_SEPARATOR."bash deploy.sh");
+                    $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
 
                     $param = $userSecUtil->getSingleSiteSettingsParam();
                     $logger->notice("After get settings parameters. paramId=" . $param->getId());
