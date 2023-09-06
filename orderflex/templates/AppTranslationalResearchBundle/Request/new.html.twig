@@ -739,6 +739,9 @@
                     //set title
                     document.title = "New Work Request for project ID "+response.projectId;
 
+                    //update #project-funded: this value will be used in budget recalculation logic
+                    $('#project-funded').val(response.projectFunded);
+
                     $('#new-work-request-title').text("New Work Request for project ID "+response.projectId);
 
                     //enable/disable project-remaining-budget-note
@@ -796,9 +799,6 @@
                     if( update ) {
                         transresSetProductServiceListByProject(response.projectProducts);
                     }
-
-                    //update #project-funded: this value will be used in budget recalculation logic
-                    //$('#project-funded').val(response.projectFunded);
 
                     transresAddProductListener();
 
@@ -1163,6 +1163,7 @@
 
             if( $('#project-funded').val() ) {
                 //funded => do not use remaining budget recalculation
+                console.log("transresRecalculateRemaniningBudget: funded => do not use remaining budget recalculation");
                 return;
             }
 
@@ -1175,7 +1176,7 @@
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
                 //return;
             }
-            //console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
+            console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
             transresSetRemainingBudgetNote(currentRemainingBudget);
@@ -1383,11 +1384,11 @@
         }
 
         function transresAddProductListener( newForm ) {
-            if( $('#project-funded').val() ) {
-                //funded => do not use remaining budget recalculation
-                console.log("funded => do not use remaining budget recalculation");
-                return;
-            }
+//            if( $('#project-funded').val() ) {
+//                //funded => do not use remaining budget recalculation
+//                console.log("funded => do not use remaining budget recalculation");
+//                return;
+//            }
             console.log("use remaining budget recalculation");
 
             //delay user input listener to give enough time to enter the full quantity
@@ -1404,7 +1405,7 @@
                 // Clear any previously set timer before setting a fresh one
                 window.clearTimeout($(this).data("timeout"));
                 $(this).data("timeout", setTimeout(function () {
-                    //console.log("product-requested-quantity changed");
+                    console.log("product-requested-quantity changed");
                     transresRecalculateRemaniningBudget();
                 }, timer));
             });
@@ -1414,7 +1415,7 @@
                 categorySelector = newForm.find(".product-category-combobox");
             }
             categorySelector.on('change', function(event) {
-                //console.log("product-category-combobox changed");
+                console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
         }
