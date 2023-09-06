@@ -285,11 +285,13 @@ class DataBackupManagementController extends OrderAbstractController
                     //set environment
                     $param->setEnvironment($env);
 
-                    //prevent sending emails to real users
-                    $param->setMailerDeliveryAddresses($siteEmail);
+                    if( $env != 'live' ) {
+                        //prevent sending emails to real users for not live environment
+                        $param->setMailerDeliveryAddresses($siteEmail);
+                    }
 
                     //prevent sending critical emails
-                    foreach($exceptionUsers as $exceptionUser) {
+                    foreach ($exceptionUsers as $exceptionUser) {
                         $param->addEmailCriticalErrorExceptionUser($exceptionUser);
                     }
                     /////// EOF set parameters //////////
