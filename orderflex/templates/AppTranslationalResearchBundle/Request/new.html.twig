@@ -740,7 +740,13 @@
                     document.title = "New Work Request for project ID "+response.projectId;
 
                     //update #project-funded: this value will be used in budget recalculation logic
-                    $('#project-funded').val(response.projectFunded);
+                    $('#project-funded').val(response.projectFundedVal);
+                    console.log("translationalresearch_get_project_ajax: update #project-funded="+$('#project-funded').val());
+                    if( $('#project-funded').val() ) {
+                        console.log("funded");
+                    } else {
+                        console.log("unfunded");
+                    }
 
                     $('#new-work-request-title').text("New Work Request for project ID "+response.projectId);
 

@@ -2592,8 +2592,10 @@ class ProjectController extends OrderAbstractController
 
         $projectFunded = $project->getFunded();
         $fundedStr = "Not-Funded";
+        $projectFundedVal = null;
         if( $projectFunded ) {
             $fundedStr = "Funded";
+            $projectFundedVal = 1;
         }
 
         //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
@@ -2625,7 +2627,7 @@ class ProjectController extends OrderAbstractController
             "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
-            "projectFunded" => $projectFunded,
+            "projectFundedVal" => $projectFundedVal,
             "fundedStr" => $fundedStr,
             "businessPurposes" => $businessPurposesArr,
             'projectProducts' => $projectProducts,
