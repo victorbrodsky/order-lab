@@ -340,6 +340,7 @@ def main():
 
     if args.source_db:
         postgres_db = args.source_db
+        postgres_restore = "{}_restore".format(postgres_db)
 
     #print("path=",local_storage_path)
     logging.basicConfig(filename=local_storage_path+"pythondb.log")
