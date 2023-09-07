@@ -390,7 +390,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
 
-        $dbName = $this->container->getParameter('database_name');
+        $dbName = $this->getParameter('database_name');
         if( !$dbName ) {
             $res = array(
                 'status' => "NOTOK",
