@@ -255,7 +255,7 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                if(1) {
+                if(0) {
                     $em = $this->getDoctrine()->getManager();
                     $logger->notice("set site settings parameters");
 
