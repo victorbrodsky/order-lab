@@ -310,6 +310,10 @@ def main():
     args_parser.add_argument("--path",
                              default=False,
                              help="Destination path to overwrite config's path")
+    args_parser.add_argument("--source-db",
+                             metavar="source_db",
+                             default=False,
+                             help="Name of the source database to overwrite config's db")
     args = args_parser.parse_args()
 
     config = configparser.ConfigParser()
@@ -334,9 +338,14 @@ def main():
     if args.path:
         local_storage_path = args.path
 
+    if args.source_db:
+        postgres_db = args.source_db
+
     #print("path=",local_storage_path)
     logging.basicConfig(filename=local_storage_path+"pythondb.log")
     #print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
+
+    logger.info('Source database name postgres_db={}'.format(postgres_db))
 
     manager_config = {
         'AWS_BUCKET_NAME': aws_bucket_name,
