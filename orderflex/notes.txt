@@ -1730,3 +1730,7 @@ php app/console doctrine:database:drop --force
 php app/console doctrine:database:create
 php app/console doctrine:query:sql "$(< 1Sep2023_data_plain.sql)" => Aborted (core dumped)
 
+Restored database backup_live-20230824-124415-ScanOrder.dump.gz
+Switching restored database with active one : scanorder1_restore > scanorder1 Database restored and active.
+The next step would be to make sure the public 'Uploaded' folder corresponds to the restored DB.
+Also it might be required to run the deploy_prod.sh script.

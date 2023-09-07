@@ -390,6 +390,15 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
 
+        $dbName = $this->container->getParameter('database_name');
+        if( !$dbName ) {
+            $res = array(
+                'status' => "NOTOK",
+                'message' => "Logical error: database_name is not defined in the parameters.yml"
+            );
+            return $res;
+        }
+
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
 
@@ -438,11 +447,17 @@ class DataBackupManagementController extends OrderAbstractController
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
 
-        $command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --verbose true --path $networkDrivePath";
+        $command = "$pythonEnvPath $pythonScriptPath".
+            " --configfile $configFilePath --verbose true".
+            " --path $networkDrivePath".
+            " --source-db $dbName"
+        ;
 
         if( $action == 'backup' ) {
+            //backup
             $command = $command . " --action backup";
         } elseif( $action == 'restore' ) {
+            //restore
             if( $backupFileName ) {
                 $command = $command . " --action restore --date $backupFileName";
             } else {
@@ -454,6 +469,7 @@ class DataBackupManagementController extends OrderAbstractController
                 return $res;
             }
         } else {
+            //Invalid action
             $msg = "Error in DB management (action $action): invalid action ".$action;
             $res = array(
                 'status' => "NOTOK",
