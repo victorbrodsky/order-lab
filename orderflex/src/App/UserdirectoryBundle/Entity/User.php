@@ -2455,6 +2455,12 @@ class User extends UserBase {
     //$critical might not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
     public function getSingleEmail( $critical=true, $delimeter="," ): mixed
     {
+        //Always send email to notifyUsers instead of original email
+        $notifyUsers = $this->getNotifyUsers();
+        if( count($notifyUsers) > 0 ) {
+            $critical = false;
+        }
+
         if( !$critical ) {
             //if not critical, use "Send email notification to" field in the user profile
             $notifyUserEmails = array();

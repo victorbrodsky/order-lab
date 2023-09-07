@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,18 +75,28 @@ class EmailController extends OrderAbstractController
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $newline =  "<br>\n";
+        //$newline =  "\n";
 
         //$user = $this->getUser();
         //$toEmail = $user->getSingleEmail();
 
+        $emails = null;
         if( isset($_POST['email']) ) {
             $emails = $_POST['email'];
         }
+
+        $ccs = null;
         if( isset($_POST['emailcc']) ) {
             $ccs = $_POST['emailcc'];
         }
 
-        if( isset($emails) ) {
+        $usersStr = null;
+        if( isset($_POST['emailcc']) ) {
+            $usersStr = $_POST['users'];
+        }
+
+        if( $emails || $ccs || $usersStr ) {
             //$toEmail = "cinava@yahoo.com,cinava10@gmail.com";
             //$ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
 
@@ -98,7 +109,42 @@ class EmailController extends OrderAbstractController
             $today = new \DateTime();
             $msg = "ORDER Platform Test Message from " . $schemeAndHttpHost . " on " . $today->format('m/d/Y H:i:s');
 
-            $emailRes = $emailUtil->sendEmail($emails, $msg, $msg, $ccs);
+            if( $usersStr ) {
+                $usersEmails = array();
+                $usersArr = explode(",", $usersStr);
+                foreach($usersArr as $userCwid) {
+                    $userCwid = trim($userCwid);
+                    $userCwid = strtolower($userCwid);
+                    $em = $this->getDoctrine()->getManager();
+                    $repository = $em->getRepository(User::class);
+                    $dql = $repository->createQueryBuilder("user");
+                    $dql->where("user.username LIKE :username");
+                    $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+                    $query->setParameter("username",$userCwid."%");
+                    $users = $query->getResult();
+                    echo "Generated users count=".count($users)."<br>";
+                    $user = null;
+                    if( count($users) > 0 ) {
+                        $user = $users[0];
+                        echo "user=$user <br>";
+                        $usersEmails[] = $user->getSingleEmail();;
+                    }
+                }
+                $usersEmails = array_unique($usersEmails);
+                $thisMsg = $msg . $newline .
+                    " Receiver users: ".$usersStr. $newline .
+                    " emails: " . implode(', ',$usersEmails) . $newline .
+                    " css: ".$ccs;
+                $emailRes1 = $emailUtil->sendEmail($usersEmails, $msg, $thisMsg, $ccs);
+                $this->addFlash(
+                    'notice',
+                    $thisMsg
+                    //'Test email sent to users: '.$usersStr.'; emails: '.implode(', ',$usersEmails).'; ccs:'.$ccs. "<br> Status: ".$emailRes1
+                );
+            }
+
+            $thisMsg = $msg . "\n Receiver emails: " . $emails . '; css:'.$ccs;;
+            $emailRes = $emailUtil->sendEmail($emails, $thisMsg, $msg, $ccs);
             //exit("email res=".$emailRes);
 
             //Flash
