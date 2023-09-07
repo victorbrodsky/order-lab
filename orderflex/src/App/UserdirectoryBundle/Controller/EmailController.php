@@ -130,8 +130,12 @@ class EmailController extends OrderAbstractController
                         $usersEmails[] = $user->getSingleEmail();;
                     }
                 }
+                //dump($usersEmails);
+                //exit('111');
                 $usersEmails = array_unique($usersEmails);
-                $thisMsg = $msg . $newline .
+                $thisMsg =
+                    "### Please ignore this testing email ###" . $newline . $newline .
+                    $msg . $newline .
                     " Receiver users: ".$usersStr. $newline .
                     " emails: " . implode(', ',$usersEmails) . $newline .
                     " css: ".$ccs;
@@ -141,9 +145,15 @@ class EmailController extends OrderAbstractController
                     $thisMsg
                     //'Test email sent to users: '.$usersStr.'; emails: '.implode(', ',$usersEmails).'; ccs:'.$ccs. "<br> Status: ".$emailRes1
                 );
+
+                return $this->redirectToRoute('employees_home');
             }
 
-            $thisMsg = $msg . "\n Receiver emails: " . $emails . '; css:'.$ccs;;
+            $thisMsg =
+                "### Please ignore this testing email ###" . $newline . $newline.
+                $msg . $newline .
+                " Receiver emails: " . $emails . $newline .
+                ' css: '.$ccs;;
             $emailRes = $emailUtil->sendEmail($emails, $thisMsg, $msg, $ccs);
             //exit("email res=".$emailRes);
 
