@@ -231,6 +231,12 @@ class EmailUtil {
             //$message->to($mailerDeliveryAddresses);
             $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
 
+            if( is_array($mailerDeliveryAddresses) ) {
+                $mailerDeliveryAddressesStr = implode(", ",$mailerDeliveryAddresses);
+            } else {
+                $mailerDeliveryAddressesStr = $mailerDeliveryAddresses;
+            }
+
             if( is_array($emails) ) {
                 $emailsToStr = implode(", ",$emails);
             } else {
@@ -238,18 +244,21 @@ class EmailUtil {
             }
 
             if( is_array($ccs) ) {
-                $ccsToStr = implode(", ",$ccs);
+                $ccsStr = implode(", ",$ccs);
             } else {
-                $ccsToStr = $ccs;
+                $ccsStr = $ccs;
             }
 
             if( is_array($bcc) ) {
-                $bccsToStr = implode(", ",$bcc);
+                $bccsStr = implode(", ",$bcc);
             } else {
-                $bccsToStr = $bcc;
+                $bccsStr = $bcc;
             }
 
-            $logger->notice("Original emails replaced. emails: ".$emailsToStr."; ccs: ".$ccsToStr."; bcc=".$bccsToStr);
+            $logger->notice(
+                "Email sent to $mailerDeliveryAddressesStr, instead of original emails. emails: ".
+                $emailsToStr."; ccs: ".$ccsStr."; bcc=".$bccsStr
+            );
 
             //Don't add email copy for logged in user, because I might want to impersonate to test someone else,
             //then email will be sent to this user
