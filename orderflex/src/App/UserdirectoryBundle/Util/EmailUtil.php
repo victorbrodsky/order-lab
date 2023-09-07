@@ -231,6 +231,26 @@ class EmailUtil {
             //$message->to($mailerDeliveryAddresses);
             $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
 
+            if( is_array($emails) ) {
+                $emailsToStr = implode(", ",$emails);
+            } else {
+                $emailsToStr = $emails;
+            }
+
+            if( is_array($ccs) ) {
+                $ccsToStr = implode(", ",$ccs);
+            } else {
+                $ccsToStr = $ccs;
+            }
+
+            if( is_array($bcc) ) {
+                $bccsToStr = implode(", ",$bcc);
+            } else {
+                $bccsToStr = $bcc;
+            }
+
+            $logger->notice("Original emails replaced. emails: ".$emailsToStr."; ccs: ".$ccsToStr."; bcc=".$bccsToStr);
+
             //Don't add email copy for logged in user, because I might want to impersonate to test someone else,
             //then email will be sent to this user
 //            //Only on tester server when redirect exists
