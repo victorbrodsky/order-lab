@@ -888,13 +888,13 @@
                                     </tr>
                                 {% endif %}
 
-                                {% set criticalEmail = user.getSingleEmail() %}
-                                {% set notificationEmail = user.getSingleEmail(false,', ') %}
-                                {% if notificationEmail != criticalEmail %}
+                                {#{% set criticalEmail = user.getSingleEmail() %}#}
+                                {% set notificationEmails = user.getSingleEmail(false,', ') %}
+                                {% if notificationEmails %}
                                     <tr class="row-withspace">
                                         <td class="left-column" style="vertical-align: baseline;">notification email:</td>
                                         <td>
-                                            <a href="mailto:{{ notificationEmail }}" target="_top">{{ notificationEmail }}</a>
+                                            <a href="mailto:{{ notificationEmails }}" target="_top">{{ notificationEmails }}</a>
                                         </td>
                                     </tr>
                                 {% endif %}

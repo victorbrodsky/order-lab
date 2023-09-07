@@ -2453,18 +2453,16 @@ class User extends UserBase {
     // if thoses emails are used as receipients. If these emails somehow are used as a sender,
     // then choose only the first one.
     //$critical might not need it. Create new function getRecipientEmails() that will be used as a recepeint emails.
+    //Return string of email(s)
     public function getSingleEmail( $critical=true, $delimeter=", " ): mixed
     {
+        //$critical not used, it can be remove;
+        //if( !$critical ) {
         //Always send email to notifyUsers instead of original email
         $notifyUsers = $this->getNotifyUsers();
         if( count($notifyUsers) > 0 ) {
-            $critical = false;
-        }
-
-        if( !$critical ) {
             //if not critical, use "Send email notification to" field in the user profile
             $notifyUserEmails = array();
-            $notifyUsers = $this->getNotifyUsers();
             foreach( $notifyUsers as $notifyUser) {
                 $notifyUserEmails[] = $notifyUser->getSingleEmail();
             }
