@@ -255,7 +255,7 @@ class DataBackupManagementController extends OrderAbstractController
             if( $resStatus == 'OK' ) {
 
                 //set site settings parameters
-                if(0) {
+                if(1) {
                     $em = $this->getDoctrine()->getManager();
                     $logger->notice("set site settings parameters");
 
@@ -591,13 +591,48 @@ class DataBackupManagementController extends OrderAbstractController
                 //echo "file=$file <br>";
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if( $ext && $ext != 'log' && $ext != 'txt' ) {
-                    $fileOption = array("id" => $file, "name" => $file);
+                    $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $file;
+                    $fileName = $file .
+                        " (" .
+                        date("F d Y H:i:s", filemtime($filePath)) .
+                        ", " . $this->formatSizeUnits(filesize($filePath)) .
+                        ")";
+                    $fileOption = array("id" => $file, "name" => $fileName);
                     $backupFiles[] = $fileOption;
                 }
             }
         }
 
         return $backupFiles;
+    }
+    public function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
     }
 
     public function runProcess($script) {
