@@ -259,6 +259,10 @@ class DataBackupManagementController extends OrderAbstractController
                     $logger->notice("set site settings parameters");
 
                     //restart postgresql server?
+                    $command = "sudo systemctl restart httpd.service";
+                    $logger->notice("command=[".$command."]");
+                    $res = $this->runProcess($command);
+                    $logger->notice("systemctl restart httpd.service=".$res);
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
