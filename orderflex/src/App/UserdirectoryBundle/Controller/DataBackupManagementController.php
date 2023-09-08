@@ -277,8 +277,8 @@ class DataBackupManagementController extends OrderAbstractController
                 $results = $stmt->executeQuery();
                 $logger->notice("after executeQuery");
 
-                $resStr = print_r($results->fetchAll());
-                $logger->notice("after executeQuery. res=".$resStr);
+                //$resStr = print_r($results->fetchAll());
+                //$logger->notice("after executeQuery. res=".$resStr);
 
                 //re-deploy
                 $projectRoot = $this->container->get('kernel')->getProjectDir();
