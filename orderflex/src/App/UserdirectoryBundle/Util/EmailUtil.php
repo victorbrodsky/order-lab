@@ -96,7 +96,6 @@ class EmailUtil {
         $sitenameAbbreviation = null;
         $url = null;
         $attachmentPath = null; //single attachment path or comma separated attachment paths
-        //$replacedEmailMsg = null;
 
         //site specific settings
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -231,38 +230,6 @@ class EmailUtil {
             //echo "mailerDeliveryAddresses2=[".json_encode($mailerDeliveryAddresses)."]<br>";
             //$message->to($mailerDeliveryAddresses);
             $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
-
-            //////// log replaced users /////////
-//            if(0) {
-//                if (is_array($mailerDeliveryAddresses)) {
-//                    $mailerDeliveryAddressesStr = implode(", ", $mailerDeliveryAddresses);
-//                } else {
-//                    $mailerDeliveryAddressesStr = $mailerDeliveryAddresses;
-//                }
-//
-//                if (is_array($emails)) {
-//                    $emailsToStr = implode(", ", $emails);
-//                } else {
-//                    $emailsToStr = $emails;
-//                }
-//
-//                if (is_array($ccs)) {
-//                    $ccsStr = implode(", ", $ccs);
-//                } else {
-//                    $ccsStr = $ccs;
-//                }
-//
-//                if (is_array($bcc)) {
-//                    $bccsStr = implode(", ", $bcc);
-//                } else {
-//                    $bccsStr = $bcc;
-//                }
-//
-//                $replacedEmailMsg = "Email sent to $mailerDeliveryAddressesStr, instead of original emails. emails: " .
-//                    $emailsToStr . "; ccs: " . $ccsStr . "; bcc=" . $bccsStr;
-//                //$logger->notice($replacedEmailMsg);
-//            }
-            //////// EOF log replaced users /////////
 
             //Don't add email copy for logged in user, because I might want to impersonate to test someone else,
             //then email will be sent to this user

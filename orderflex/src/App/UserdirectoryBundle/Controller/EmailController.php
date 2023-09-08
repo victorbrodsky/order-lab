@@ -171,7 +171,37 @@ class EmailController extends OrderAbstractController
         return array();
     }
 
+    /**
+     * https://collage.med.cornell.edu/order/directory/list-notify-users/
+     */
+    #[Route(path: '/list-notify-users/', name: 'employees_list_notify_users')]
+    #[Template('AppUserdirectoryBundle/Email/list-notify-users.html.twig')]
+    public function someTestingAction()
+    {
+        if (false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
 
+        $em = $this->getDoctrine()->getManager();
+
+        //get users with notifiyUsers
+        $repository = $em->getRepository(User::class);
+        $dql = $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin('user.notifyUsers', 'notifyUsers');
+        $dql->where("notifyUsers IS NOT NULL");
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        $users = $query->getResult();
+
+//        echo "users count=" . count($users) . "<br>";
+//        foreach ($users as $user) {
+//            echo $user . " => " . $user->getSingleEmail() . "<br>";
+//        }
+
+        return array(
+            'users' => $users
+        );
+    }
 
 
 }
