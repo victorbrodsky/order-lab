@@ -256,12 +256,15 @@ class DataBackupManagementController extends OrderAbstractController
 
             if( $resStatus == 'OK' ) {
 
+                $logger->notice("before getConnection");
                 $conn = $this->getConnection();
-
+                $logger->notice("after getConnection");
                 //$em = $this->container->get('doctrine.orm.entity_manager');
                 $em = $this->getDoctrine()->getManager();
                 //$sm = $em->getConnection()->getSchemaManager();
+                $logger->notice("before createSchemaManager");
                 $sm = $em->getConnection()->createSchemaManager();
+                $logger->notice("after createSchemaManager");
                 $tables = $sm->listTables();
                 $logger->notice("tables count=".count($tables));
 
