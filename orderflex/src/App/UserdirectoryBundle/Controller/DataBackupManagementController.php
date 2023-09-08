@@ -190,6 +190,8 @@ class DataBackupManagementController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
             //exit("Live server: Under construction!!!");
@@ -254,8 +256,9 @@ class DataBackupManagementController extends OrderAbstractController
 
             if( $resStatus == 'OK' ) {
 
+                $userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
                 //set site settings parameters
-                if(1) {
+                if(0) {
                     $logger->notice("set site settings parameters");
 
                     //restart postgresql server? sudo systemctl restart httpd.service
