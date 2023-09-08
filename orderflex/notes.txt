@@ -1734,3 +1734,10 @@ Restored database backup_live-20230824-124415-ScanOrder.dump.gz
 Switching restored database with active one : scanorder1_restore > scanorder1 Database restored and active.
 The next step would be to make sure the public 'Uploaded' folder corresponds to the restored DB.
 Also it might be required to run the deploy_prod.sh script.
+
+[2023-09-08T15:17:19.173986+00:00] app.NOTICE: Original exception message=An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
+This probably means the server terminated abnormally 	before or while processing the request. [] []
+[2023-09-08T15:17:19.176775+00:00] app.NOTICE: hostname=view-testmedcornelledu [] []
+[2023-09-08T15:17:19.176828+00:00] app.NOTICE: Original exception message=An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 no connection to the server [] []
