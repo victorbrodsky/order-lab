@@ -266,12 +266,14 @@ class DataBackupManagementController extends OrderAbstractController
                         " WHERE id=1";
                 $sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
                 $logger->notice("sql=".$sql);
-                $statement = $conn->prepare($sql);
+                $stmt = $conn->prepare($sql);
                 $logger->notice("after prepare");
-                $statement->execute();
-                $logger->notice("after execute");
-                $res = $statement->fetchAll();
-                $logger->notice("after fetchAll. res=".$res);
+                //$statement->execute();
+                //$logger->notice("after execute");
+                //$res = $statement->fetchAll();
+                //$logger->notice("after fetchAll. res=".$res);
+                $res = $stmt->executeQuery();
+                $logger->notice("after executeQuery. res=".$res);
 
 //                //$em = $this->container->get('doctrine.orm.entity_manager');
 //                $em = $this->getDoctrine()->getManager();
