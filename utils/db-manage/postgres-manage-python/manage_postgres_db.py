@@ -341,6 +341,8 @@ def main():
     if args.source_db:
         postgres_db = args.source_db
         postgres_restore = "{}_restore".format(postgres_db)
+        filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
+        filename_compressed = '{}.gz'.format(filename)
 
     #print("path=",local_storage_path)
     logging.basicConfig(filename=local_storage_path+"pythondb.log")
