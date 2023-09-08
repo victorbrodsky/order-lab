@@ -256,7 +256,16 @@ class DataBackupManagementController extends OrderAbstractController
 
             if( $resStatus == 'OK' ) {
 
+                $conn = $this->getConnection();
+
+                $em = $this->container->get('doctrine.orm.entity_manager');
+                //$sm = $em->getConnection()->getSchemaManager();
+                $sm = $em->getConnection()->createSchemaManager();
+                $tables = $sm->listTables();
+                $logger->notice("tables count=".count($tables));
+
                 $userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
+                
                 //set site settings parameters
                 if(0) {
                     $logger->notice("set site settings parameters");

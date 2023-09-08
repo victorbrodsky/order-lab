@@ -113,15 +113,13 @@ class ExceptionListener {
             }
 
             $hostname = str_replace('.','',$hostname);
-            $logger->notice("hostname=$hostname");
+            //$logger->notice("hostname=$hostname");
 
             //check if numeric
             if( is_numeric($hostname) ) {
                 $logger->notice("Ignoring numeric hostname=$hostname");
                 return false;
             }
-
-
         }
 
         $logger->notice("Original exception message=".$exception->getMessage());
