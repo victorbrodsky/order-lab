@@ -580,7 +580,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         //echo "networkDrivePath=$networkDrivePath <br>";
 
-        $files = scandir($networkDrivePath); //with dots
+        //$files = scandir($networkDrivePath); //with dots
+        $files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
         //dump($files);
         //exit('111');
 
@@ -634,6 +635,38 @@ class DataBackupManagementController extends OrderAbstractController
 
         return $bytes;
     }
+    //https://stackoverflow.com/questions/11923235/scandir-to-sort-by-date-modified
+    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING) {
+
+        /****************************************************************************/
+        // Roll through the scandir values.
+        $files = array();
+        foreach (scandir($dir, $sorting_order) as $file) {
+            if ($file[0] === '.') {
+                continue;
+            }
+            $files[$file] = filemtime($dir . '/' . $file);
+        } // foreach
+
+        /****************************************************************************/
+        // Sort the files array.
+        if ($sorting_order == SCANDIR_SORT_ASCENDING) {
+            asort($files, SORT_NUMERIC);
+        }
+        else {
+            arsort($files, SORT_NUMERIC);
+        }
+
+        /****************************************************************************/
+        // Set the final return value.
+        $ret = array_keys($files);
+
+        /****************************************************************************/
+        // Return the final value.
+        return $ret;
+
+    } // better_scandir
+
 
     public function runProcess($script) {
         //$process = new Process($script);
