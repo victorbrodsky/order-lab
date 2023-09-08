@@ -261,6 +261,10 @@ class DataBackupManagementController extends OrderAbstractController
                 $conn = $this->getConnection();
                 $logger->notice("after getConnection");
 
+                if( $env == 'live' ) {
+                    $siteEmail == '';
+                }
+
                 //App\\UserdirectoryBundle\\Entity\\SiteParameters
                 $sql =  "UPDATE user_siteparameters".
                         " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='3'".
@@ -269,14 +273,17 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("sql=".$sql);
                 $stmt = $conn->prepare($sql);
                 $logger->notice("after prepare");
-                //$statement->execute();
-                //$logger->notice("after execute");
-                //$res = $statement->fetchAll();
-                //$logger->notice("after fetchAll. res=".$res);
+
                 $results = $stmt->executeQuery();
                 $logger->notice("after executeQuery");
+
                 $resStr = print_r($results->fetchAll());
                 $logger->notice("after executeQuery. res=".$resStr);
+
+                //re-deploy
+                $projectRoot = $this->container->get('kernel')->getProjectDir();
+                //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+                $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
 
 //                //$em = $this->container->get('doctrine.orm.entity_manager');
 //                $em = $this->getDoctrine()->getManager();
