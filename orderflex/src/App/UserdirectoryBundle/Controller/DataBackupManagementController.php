@@ -260,11 +260,12 @@ class DataBackupManagementController extends OrderAbstractController
                 $conn = $this->getConnection();
                 $logger->notice("after getConnection");
 
-                //App\\OrderformBundle\\Entity\\AccessionType
-                $sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+                //App\\UserdirectoryBundle\\Entity\\SiteParameters
                 $sql =  "UPDATE user_siteparameters".
                         " SET mailerdeliveryaddresses=$mailerDeliveryAddresses, environment=$env, version=3".
                         " WHERE id=1";
+                $sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+                $logger->notice("sql=".$sql);
                 $statement = $conn->prepare($sql);
                 $logger->notice("after prepare");
                 $statement->execute();
