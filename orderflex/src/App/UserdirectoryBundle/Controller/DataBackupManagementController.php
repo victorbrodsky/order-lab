@@ -271,7 +271,7 @@ class DataBackupManagementController extends OrderAbstractController
 
                     //$em = $this->getDoctrine()->getManager();
                     //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
-                    $em = $this->getDoctrine()->resetManager();
+                    //$em = $this->getDoctrine()->resetManager();
                     $em = $this->getDoctrine()->getManager();
 
                     $param = $userSecUtil->getSingleSiteSettingsParam();
