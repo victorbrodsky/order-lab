@@ -263,7 +263,7 @@ class DataBackupManagementController extends OrderAbstractController
                     $command = "sudo systemctl restart postgresql-14";
                     $logger->notice("command=[".$command."]");
                     $res = $this->runProcess($command);
-                    $logger->notice("systemctl restart httpd.service=".$res);
+                    $logger->notice("systemctl restart postgresql-14: res=".$res);
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
@@ -271,8 +271,8 @@ class DataBackupManagementController extends OrderAbstractController
 
                     //$em = $this->getDoctrine()->getManager();
                     //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
-                    //$em = $this->getDoctrine()->resetManager();
-                    $em = $this->getDoctrine()->getManager();
+                    $em = $this->getDoctrine()->resetManager();
+                    //$em = $this->getDoctrine()->getManager();
 
                     $param = $userSecUtil->getSingleSiteSettingsParam();
                     $logger->notice("After get settings parameters. paramId=" . $param->getId());
