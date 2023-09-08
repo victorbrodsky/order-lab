@@ -4343,66 +4343,66 @@ Pathology and Laboratory Medicine",
         return array("live"=>"live", "test"=>"test", "dev"=>"dev");
     }
 
-    public function updateSiteSettingParametersAfterRestore( $env, $exceptionUsers, $siteEmail ) {
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $logger->notice("updateSiteSettingParametersAfterRestore: set site settings parameters");
-
-        //restart postgresql server? sudo systemctl restart httpd.service
-        //$command = "systemctl restart httpd.service";
-//        $command = "sudo systemctl restart postgresql-14";
-//        $logger->notice("command=[".$command."]");
-//        $res = $this->runProcess($command);
-//        $logger->notice("systemctl restart postgresql-14: res=".$res);
-
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
-        //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
-
-        //$em = $this->getDoctrine()->getManager();
-        //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
-        //$em = $this->getDoctrine()->resetManager();
-        //$em = $this->getDoctrine()->getManager();
-
-        $param = $userSecUtil->getSingleSiteSettingsParam();
-        $logger->notice("After get settings parameters. paramId=" . $param->getId());
-
-        if(0) {
-            /////// set original parameters //////////
-            //mailerDeliveryAddresses to admin
-            //environment
-            //liveSiteRootUrl
-            //networkDrivePath
-            //connectionChannel
-            $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-            $param->setEnvironment($environment);
-            $param->setLiveSiteRootUrl($liveSiteRootUrl);
-            $param->setNetworkDrivePath($networkDrivePath);
-            $param->setConnectionChannel($connectionChannel);
-            /////// EOF set original parameters //////////
-        }
-
-        /////// set parameters //////////
-        //set environment
-        $param->setEnvironment($env);
-
-        if( $env != 'live' ) {
-            //prevent sending emails to real users for not live environment
-            $param->setMailerDeliveryAddresses($siteEmail);
-        }
-
-        //prevent sending critical emails
-        foreach ($exceptionUsers as $exceptionUser) {
-            $param->addEmailCriticalErrorExceptionUser($exceptionUser);
-        }
-        /////// EOF set parameters //////////
-
-        $logger->notice("After set settings parameters. Before flush");
-        $this->em->flush();
-
-        $logger->notice("updateSiteSettingParametersAfterRestore: After flush");
-    }
+//    public function updateSiteSettingParametersAfterRestore( $env, $exceptionUsers, $siteEmail ) {
+//        $logger = $this->container->get('logger');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        $logger->notice("updateSiteSettingParametersAfterRestore: set site settings parameters");
+//
+//        //restart postgresql server? sudo systemctl restart httpd.service
+//        //$command = "systemctl restart httpd.service";
+////        $command = "sudo systemctl restart postgresql-14";
+////        $logger->notice("command=[".$command."]");
+////        $res = $this->runProcess($command);
+////        $logger->notice("systemctl restart postgresql-14: res=".$res);
+//
+//        $projectRoot = $this->container->get('kernel')->getProjectDir();
+//        //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//        $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
+//
+//        //$em = $this->getDoctrine()->getManager();
+//        //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
+//        //$em = $this->getDoctrine()->resetManager();
+//        //$em = $this->getDoctrine()->getManager();
+//
+//        $param = $userSecUtil->getSingleSiteSettingsParam();
+//        $logger->notice("After get settings parameters. paramId=" . $param->getId());
+//
+//        if(0) {
+//            /////// set original parameters //////////
+//            //mailerDeliveryAddresses to admin
+//            //environment
+//            //liveSiteRootUrl
+//            //networkDrivePath
+//            //connectionChannel
+//            $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+//            $param->setEnvironment($environment);
+//            $param->setLiveSiteRootUrl($liveSiteRootUrl);
+//            $param->setNetworkDrivePath($networkDrivePath);
+//            $param->setConnectionChannel($connectionChannel);
+//            /////// EOF set original parameters //////////
+//        }
+//
+//        /////// set parameters //////////
+//        //set environment
+//        $param->setEnvironment($env);
+//
+//        if( $env != 'live' ) {
+//            //prevent sending emails to real users for not live environment
+//            $param->setMailerDeliveryAddresses($siteEmail);
+//        }
+//
+//        //prevent sending critical emails
+//        foreach ($exceptionUsers as $exceptionUser) {
+//            $param->addEmailCriticalErrorExceptionUser($exceptionUser);
+//        }
+//        /////// EOF set parameters //////////
+//
+//        $logger->notice("After set settings parameters. Before flush");
+//        $this->em->flush();
+//
+//        $logger->notice("updateSiteSettingParametersAfterRestore: After flush");
+//    }
     
 
     /////////////// NOT USED ///////////////////

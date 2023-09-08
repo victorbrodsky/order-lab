@@ -285,15 +285,6 @@ class DataBackupManagementController extends OrderAbstractController
                 //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
                 $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
 
-//                //$em = $this->container->get('doctrine.orm.entity_manager');
-//                $em = $this->getDoctrine()->getManager();
-//                //$sm = $em->getConnection()->getSchemaManager();
-//                $logger->notice("before createSchemaManager");
-//                $sm = $em->getConnection()->createSchemaManager();
-//                $logger->notice("after createSchemaManager");
-//                $tables = $sm->listTables();
-//                $logger->notice("tables count=".count($tables));
-
                 //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
 
                 //set site settings parameters
