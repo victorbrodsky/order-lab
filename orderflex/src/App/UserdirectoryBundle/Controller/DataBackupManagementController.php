@@ -264,7 +264,11 @@ class DataBackupManagementController extends OrderAbstractController
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
                     $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
 
+                    //$em = $this->getDoctrine()->getManager();
+                    //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
+                    $em = $this->getDoctrine()->resetManager();
                     $em = $this->getDoctrine()->getManager();
+
                     $param = $userSecUtil->getSingleSiteSettingsParam();
                     $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
