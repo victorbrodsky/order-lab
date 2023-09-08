@@ -919,8 +919,8 @@ class DataBackupManagementController extends OrderAbstractController
         $host = $this->getParameter('database_host');
         $driver = $this->getParameter('database_driver');
         $serverName = gethostname();    //"COLLAGE";
-        echo "serverName=".$serverName."<br>";
-        echo "driver=".$driver."<br>";
+        //echo "serverName=".$serverName."<br>";
+        //echo "driver=".$driver."<br>";
         //$pwd = $pwd."1";
 
         //$serverName = "tcp:sample.database.windows.net, 1433";
@@ -957,7 +957,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         if( $conn !== false ) {
-            echo "Connection established.<br />";
+            //echo "Connection established.<br />";
         }else{
             echo "Connection could not be established.<br />";
             die( print_r( sqlsrv_errors(), true));
