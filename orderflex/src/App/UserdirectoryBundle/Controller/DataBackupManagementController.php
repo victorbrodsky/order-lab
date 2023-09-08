@@ -273,7 +273,8 @@ class DataBackupManagementController extends OrderAbstractController
                 //$res = $statement->fetchAll();
                 //$logger->notice("after fetchAll. res=".$res);
                 $res = $stmt->executeQuery();
-                $logger->notice("after executeQuery. res=".$res);
+                $resStr = print_r($results->fetchAll());
+                $logger->notice("after executeQuery. res=".$resStr);
 
 //                //$em = $this->container->get('doctrine.orm.entity_manager');
 //                $em = $this->getDoctrine()->getManager();
