@@ -261,6 +261,8 @@ class DataBackupManagementController extends OrderAbstractController
                 if(0) {
                     $logger->notice("set site settings parameters");
 
+                    //$this->getConnection();
+
                     //restart postgresql server? sudo systemctl restart httpd.service
                     //$command = "systemctl restart httpd.service";
                     $command = "sudo systemctl restart postgresql-14";
