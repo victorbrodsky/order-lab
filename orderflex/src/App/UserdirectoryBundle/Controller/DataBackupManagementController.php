@@ -259,16 +259,29 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("before getConnection");
                 $conn = $this->getConnection();
                 $logger->notice("after getConnection");
-                //$em = $this->container->get('doctrine.orm.entity_manager');
-                $em = $this->getDoctrine()->getManager();
-                //$sm = $em->getConnection()->getSchemaManager();
-                $logger->notice("before createSchemaManager");
-                $sm = $em->getConnection()->createSchemaManager();
-                $logger->notice("after createSchemaManager");
-                $tables = $sm->listTables();
-                $logger->notice("tables count=".count($tables));
 
-                $userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
+                //App\\OrderformBundle\\Entity\\AccessionType
+                $sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+                $sql =  "UPDATE user_siteparameters".
+                        " SET mailerdeliveryaddresses=$mailerDeliveryAddresses, environment=$env, version=3".
+                        " WHERE id=1";
+                $statement = $conn->prepare($sql);
+                $logger->notice("after prepare");
+                $statement->execute();
+                $logger->notice("after execute");
+                $res = $statement->fetchAll();
+                $logger->notice("after fetchAll. res=".$res);
+
+//                //$em = $this->container->get('doctrine.orm.entity_manager');
+//                $em = $this->getDoctrine()->getManager();
+//                //$sm = $em->getConnection()->getSchemaManager();
+//                $logger->notice("before createSchemaManager");
+//                $sm = $em->getConnection()->createSchemaManager();
+//                $logger->notice("after createSchemaManager");
+//                $tables = $sm->listTables();
+//                $logger->notice("tables count=".count($tables));
+
+                //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
 
                 //set site settings parameters
                 if(0) {
