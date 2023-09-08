@@ -225,6 +225,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $siteEmail = "myemail@example.com";
             }
             $exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
+            //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
 
             if(0) {
                 $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
@@ -262,7 +263,7 @@ class DataBackupManagementController extends OrderAbstractController
 
                 //App\\UserdirectoryBundle\\Entity\\SiteParameters
                 $sql =  "UPDATE user_siteparameters".
-                        " SET mailerdeliveryaddresses='$mailerDeliveryAddresses', environment='$env', version='3'".
+                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='3'".
                         " WHERE id=1";
                 //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
                 $logger->notice("sql=".$sql);
