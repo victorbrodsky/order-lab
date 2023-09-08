@@ -256,13 +256,13 @@ class DataBackupManagementController extends OrderAbstractController
 
                 //set site settings parameters
                 if(1) {
-                    $em = $this->getDoctrine()->getManager();
                     $logger->notice("set site settings parameters");
 
                     $projectRoot = $this->container->get('kernel')->getProjectDir();
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
                     $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
 
+                    $em = $this->getDoctrine()->getManager();
                     $param = $userSecUtil->getSingleSiteSettingsParam();
                     $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
