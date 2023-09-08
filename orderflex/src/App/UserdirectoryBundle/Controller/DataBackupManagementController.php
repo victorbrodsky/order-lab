@@ -272,7 +272,8 @@ class DataBackupManagementController extends OrderAbstractController
                 //$logger->notice("after execute");
                 //$res = $statement->fetchAll();
                 //$logger->notice("after fetchAll. res=".$res);
-                $res = $stmt->executeQuery();
+                $results = $stmt->executeQuery();
+                $logger->notice("after executeQuery");
                 $resStr = print_r($results->fetchAll());
                 $logger->notice("after executeQuery. res=".$resStr);
 
