@@ -124,6 +124,14 @@ function prep()
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/log
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../backup
+
+    chmod 744 $PROJECT_LOCAL_PATH/../backup/pg_backup.sh
+    chown postgres $PROJECT_LOCAL_PATH/../backup/pg_backup.sh
+    chgrp postgres $PROJECT_LOCAL_PATH/../backup/pg_backup.sh
+
+    chmod 744 $PROJECT_LOCAL_PATH/../backup/alert_dba
+    chown postgres $PROJECT_LOCAL_PATH/../backup/alert_dba
+    chgrp postgres $PROJECT_LOCAL_PATH/../backup/alert_dba
 }
 
 

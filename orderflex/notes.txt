@@ -1748,6 +1748,10 @@ crontab -u apache -l
 0 */6 * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:useradstatus --env=prod
 /////////// EOF All cron jobs ///////////
 
+#pg_hba.conf -> enable postgres user login:
+local   all             all                                     ident
+#Login to server
+$ sudo -u postgres psql
 
 php bin/console list doctrine
 --dump-sql

@@ -284,8 +284,18 @@
         {{ user_service_utility.listAllCronJobsLinux()|raw }}
     </div>
     <div class="well">
-        <p><h4>List of all postgres cron jobs</h4></p>
-        {{ user_service_utility.listAllCronJobsLinux('postgres')|raw }}
+        <p><h4>Note auto DB backup cron jobs</h4></p>
+        {#{{ user_service_utility.listAllCronJobsLinux('postgres')|raw }}#}
+        Crontab for postgres is not accessible from web running as apache/web user.<br>
+        How to set postgres crotab:<br>
+        1) Login as a root<br>
+        2) crontab -u postgres -e<br>
+        3) press 'I' to edit<br>
+        4) append to the bootom of the file:<br>
+        0 0-2,4-23 * * * pathto/order-lab/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1 <br>
+        0 3 * * * pathto/order-lab/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1 <br>
+        5) Make sure pg_backup.sh and alert_db files has permission: -rwxr--r-- 1 postgres postgres pg_backup.sh
+
     </div>
 
 {% endblock %}

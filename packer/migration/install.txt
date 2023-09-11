@@ -51,6 +51,9 @@ echo -e ${COLOR} Set port ${NC}
 sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf		
 sudo systemctl restart postgresql-12
 
+pg_hba.conf -> enable postgres user login:
+local   all             all                                     ident
+
 #Check iptables: 
 sudo iptables -L
 #Important: Open all incoming traffic in port 80:
