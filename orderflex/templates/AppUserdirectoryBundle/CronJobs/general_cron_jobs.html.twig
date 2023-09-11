@@ -280,9 +280,9 @@
     </div>
 
     <div class="well">
-        <p>List of all cron jobs</p>
+        <p><h4>List of all cron jobs</h4></p>
         {{ user_service_utility.listAllCronJobsLinux()|raw }}
-        <p>List of all postgres cron jobs</p>
+        <p><h4>List of all postgres cron jobs</h4></p>
         {{ user_service_utility.listAllCronJobsLinux('postgres')|raw }}
     </div>
 
