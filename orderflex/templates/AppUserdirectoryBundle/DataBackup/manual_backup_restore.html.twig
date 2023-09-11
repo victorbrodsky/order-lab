@@ -68,8 +68,8 @@
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-xs-3"></div>
-                <div class="col-xs-3">
+                {#<div class="col-xs-3"></div>#}
+                <div class="col-xs-2" align="left">
                     <p>
                         <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
                             <option value=""></option>
@@ -78,7 +78,7 @@
                             {% endfor %}
                         </select>
                     </p></div>
-                <div class="col-xs-6">
+                <div class="col-xs-6" align="left">
                     {#{{ formmacros.field(backupFiles) }}#}
                     <p>
                         <select id="backup-file-id" class="combobox backup-required" style="width: 30%;">
@@ -88,6 +88,32 @@
                             {% endfor %}
                         </select>
                     </p>
+                </div>
+                <div class="col-xs-2" align="left">
+                    {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
+                    <a  id="btn-download-backup-href"
+                        target="_blank"
+                        disabled
+                        class="btn btn-info"
+                        href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
+                    >Download selected backup</a>
+                    {#<button#}
+                            {#id="btn-download-backup"#}
+                            {#class="btn"#}
+                            {#type="button"#}
+                            {#target="_blank"#}
+                            {#disabled#}
+                            {#onclick="return userDownloadBackup()"#}
+                    {#>Download selected backup file</button>#}
+                    {#</span>#}
+                </div>
+                <div class="col-xs-2" align="left">
+                    {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
+                    <a  id="btn-upload-backup-href"
+                        target="_blank"
+                        class="btn btn-info"
+                        href="{{ path(employees_sitename~'_upload_backup_file', {'filename': null}) }}"
+                    >Upload backup</a>
                 </div>
             </div>
 
@@ -158,6 +184,9 @@
                 var fileId = $('#backup-file-id').select2('val'); //$(this).select2('val');
                 var env = $('#backup-env-id').select2('val');
 
+                //var origHref = $('#btn-download-backup-href').attr('href');
+                var origHref = Routing.generate('employees_download_backup_file');
+
                 if( fileId && env ) {
                     console.log('fileId=' + fileId + '; env=' + env);
                     $('#fileId').val(fileId);
@@ -166,9 +195,41 @@
                     //console.log('No file selected');
                     $('#btn-restore-backup').attr('disabled', true);
                 }
+
+                if( fileId ) {
+                    //var href = $('#btn-download-backup-href').attr('href');
+                    href = origHref + "/" + fileId;
+                    $('#btn-download-backup-href').removeAttr('disabled');
+                    $('#btn-download-backup-href').attr("href", href);
+                } else {
+                    $('#btn-download-backup-href').attr('disabled', true);
+                    $('#btn-download-backup-href').attr("href", origHref);
+                }
             });
 
         });
+
+//        $('#btn-download-backup').click(function(e) {
+//            userDownloadBackup(e);
+//        });
+//        function userDownloadBackup(e) {
+//            console.log("userDownloadBackup start");
+//
+//            //disable btn-download-backup buttons
+//            $('#btn-create-backup').attr('disabled', true);
+//            $('#btn-create-backup-upload').attr('disabled', true);
+//            $('#btn-download-backup').attr('disabled', true);
+//
+//            var fileId = $('#backup-file-id').select2('val');
+//
+//            var url = Routing.generate('employees_download_backup_file');
+//            url = url + '?filename=' + fileId;
+//            console.log("url="+url);
+//
+//            e.preventDefault();  //stop the browser from following
+//            window.location.href = url;
+//            return false;
+//        }
 
         function userVerifyRestoreBackup(btn) {
             console.log("userVerifyRestoreBackup start");
@@ -179,6 +240,7 @@
             //disable backup buttons
             $('#btn-create-backup').attr('disabled', true);
             $('#btn-create-backup-upload').attr('disabled', true);
+            $('#btn-download-backup-href').attr('disabled', true);
 
             var result = confirm("Warning!!! Are you sure you want to load backup DB? This action will overwrite all existing data!");
             if (result) {
@@ -198,6 +260,7 @@
                 console.log("enable backup buttons");
                 $('#btn-create-backup').removeAttr('disabled');
                 $('#btn-create-backup-upload').removeAttr('disabled');
+                $('#btn-download-backup-href').removeAttr('disabled');
 
             }, 1000);
         }

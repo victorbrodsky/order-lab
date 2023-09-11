@@ -31,6 +31,7 @@ use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -303,23 +304,25 @@ class DataBackupManagementController extends OrderAbstractController
                     //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
                     $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
 
-                    //Generate cron jobs:
-                    //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
-                    // - directory/admin/list/generate-cron-jobs/
-                    $userServiceUtil->createCrons();
+                    //Generate cron jobs only for live server
+                    if ($env == 'live') {
+                        //Generate cron jobs:
+                        //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
+                        // - directory/admin/list/generate-cron-jobs/
+                        $userServiceUtil->createCrons();
 
-                    //2) Create status cron job (check if the system in the maintenance mode):
-                    // - directory/admin/list/generate-cron-jobs/status
-                    //$userServiceUtil->createStatusCronLinux(); //included in $userServiceUtil->createCrons();
+                        //2) Create status cron job (check if the system in the maintenance mode):
+                        // - directory/admin/list/generate-cron-jobs/status
+                        //$userServiceUtil->createStatusCronLinux(); //included in $userServiceUtil->createCrons();
 
-                    //3) Create useradstatus cron job (update users AD status)
-                    // - directory/admin/list/generate-useradstatus-cron/
-                    $userServiceUtil->createUserADStatusCron('6h');
+                        //3) Create useradstatus cron job (update users AD status)
+                        // - directory/admin/list/generate-useradstatus-cron/
+                        $userServiceUtil->createUserADStatusCron('6h');
 
-                    //4) Create backup cron jobs based on the JSON file
-                    // - /directory/admin/list/update-cron-job/uploads-live-HOURLY/filesBackupConfig
-                    // - /directory/admin/list/update-cron-job/db-mount-HOURLY/filesBackupConfig
-
+                        //4) Create backup cron jobs based on the JSON file
+                        // - /directory/admin/list/update-cron-job/uploads-live-HOURLY/filesBackupConfig
+                        // - /directory/admin/list/update-cron-job/db-mount-HOURLY/filesBackupConfig
+                    }
 
 
                 }//if $param
@@ -459,6 +462,10 @@ class DataBackupManagementController extends OrderAbstractController
 
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
+
+        if ( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
 
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
@@ -764,9 +771,45 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
 
+    #[Route(path: '/download-backup-file/{filename}', name: 'employees_download_backup_file', methods: ['GET'], options: ['expose' => true])]
+    public function downloadBackupFileAction( Request $request, $filename=null )
+    {
+        //exit('downloadBackupFileAction');
+        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
 
+        //$backupFileName = $request->get('fileId');
+        //$filename = $request->query->get('filename');
 
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        $networkDrivePath = realpath($networkDrivePath);
+
+        $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $filename;
+        $filePath = realpath($filePath);
+        //exit('$filePath='.$filePath);
+
+        return $this->file($filePath, $filename);
+        $response = new BinaryFileResponse($filePath);
+        $response->send();
+    }
+
+    #[Route(path: '/upload-backup-file/{filename}', name: 'employees_upload_backup_file', methods: ['GET'], options: ['expose' => true])]
+    public function uploadBackupFileAction( Request $request, $filename=null )
+    {
+        exit('uploadBackupFileAction');
+        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        exit();
+    }
 
 
     ///////////////// NOT USED, OLD /////////////////////
