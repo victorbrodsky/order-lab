@@ -38,8 +38,13 @@ class Crontab {
         return $string;
     }
 
-    static public function getJobs() {
-        $output = shell_exec('crontab -l');
+    static public function getJobs( $user=null ) {
+        if( $user ) {
+            $output = shell_exec('crontab -u '.$user.' -l');
+        } else {
+            $output = shell_exec('crontab -l');
+        }
+
         return self::stringToArray($output);
     }
 

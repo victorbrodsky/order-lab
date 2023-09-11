@@ -282,6 +282,8 @@
     <div class="well">
         <p>List of all cron jobs</p>
         {{ user_service_utility.listAllCronJobsLinux()|raw }}
+        <p>List of all postgres cron jobs</p>
+        {{ user_service_utility.listAllCronJobsLinux('postgres')|raw }}
     </div>
 
 {% endblock %}

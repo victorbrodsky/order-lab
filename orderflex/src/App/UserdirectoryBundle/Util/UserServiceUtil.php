@@ -2802,9 +2802,10 @@ Pathology and Laboratory Medicine",
         }
     }
 
-    public function listAllCronJobsLinux() {
+    public function listAllCronJobsLinux($user=null) {
         $crontab = new Crontab();
-        $jobs = $crontab->getJobs();
+        $jobs = $crontab->getJobs($user);
+        //$jobs = $crontab->getJobs('postgres');
         
         if( isset($jobs) && is_array($jobs) ) {
             $res = "";
