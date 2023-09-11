@@ -194,7 +194,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
-            //exit("Live server: Under construction!!!");
+            exit("Live server: Under construction!!!");
             $logger->notice("Live server: restore not allowed");
             $output = array(
                 'status' => "NOTOK",
@@ -227,7 +227,13 @@ class DataBackupManagementController extends OrderAbstractController
             //$exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
             //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
             $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig');
+            if( $filesBackupConfig ) {
+                $filesBackupConfig = str_replace("'","''",$filesBackupConfig);
+            }
             $monitorScript = $userSecUtil->getSiteSettingParameter('monitorScript');
+            if( $monitorScript ) {
+                $monitorScript = str_replace("'","''",$monitorScript);
+            }
 
             if(0) {
                 //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
