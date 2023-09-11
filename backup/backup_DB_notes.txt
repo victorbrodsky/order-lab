@@ -8,6 +8,7 @@ Total: 134 files
 18Oct2022 a2 10:27am: 154 files
 
 Set permission for pg_backup.sh and alert_dba:
+-rwxr--r-- 1 postgres postgres 1M Sep  6  2022 pg_backup.sh
 chmod 744 pg_backup.sh
 chmod 744 alert_dba
 chmod 755 folders bin and logs
@@ -67,13 +68,13 @@ sudo crontab -u postgres -l
 0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
 create crontab: crontab -e -u postgres
-0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "HOURLY" "ScanOrder" "symfony"> /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
-0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "DAILY" "ScanOrder" "symfony"> /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+0 0-2,4-23 * * * /srv/order-lab/backup/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /srv/order-lab/backup/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
-0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
-0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
-
-sudo -u postgres /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+execute a single backup file:
+sudo -u postgres /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+Test DB backup (every 5 min):
+*/5 * * * * /srv/order-lab/backup/pg_backup.sh '/mnt/pathology/view-backup/db-backup/' 'TESTFIVEMIN' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_test.sh.log 2>&1
 
 Mount:
 sudo mount -t cifs -o username=shareusername,password=sharepassword //server/share /mnt/pathology/view-backup

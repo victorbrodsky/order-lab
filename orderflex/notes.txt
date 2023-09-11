@@ -1715,7 +1715,39 @@ in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFel
 //https://github.com/backup-manager/symfony
 //https://www.postgresql.org/message-id/43B43971.6060407@ydreams.com
 
-External monitor cron job: cron:externalurlmonitor cron job status: */15 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
+External monitor cron job: cron:externalurlmonitor cron job status:
+*/15 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
+
+/////////// All cron jobs ///////////
+Set permission for pg_backup.sh and alert_dba:
+-rwxr--r-- 1 postgres postgres 1M Sep  6  2022 pg_backup.sh
+chmod 744 pg_backup.sh
+chmod 744 alert_dba
+chmod 755 folders bin and logs
+chown postgres filename
+chgrp postgres filename
+
+Edit crontab file, or create one if it doesn’t already exist:
+crontab -u apache -e
+crontab -u postgres -e
+
+sudo crontab -u postgres -l
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+crontab -u apache -l
+*/15 * * * * python3 '/srv/order-lab/webmonitor/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service' -U 'http://view.med.cornell.edu' -e LiveServer >> /srv/order-lab/orderflex/var/log/webmonitor.log
+0 */1 * * *  python3 /srv/order-lab/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab/orderflex/var/log/db-mount-HOURLY.log
+0 */4 * * *  python3 /srv/order-lab/backup/filesbackup.py -s /srv/order-lab/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-HOURLY -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab/orderflex/var/log/uploads-live-HOURLY.log
+*/15 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
+00 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:importfellapp --env=prod
+0 */6 * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:verifyimport --env=prod
+00 06 * * Mon /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:invoice-reminder-emails --env=prod
+00 05 * * Mon /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:expiration-reminder-emails --env=prod
+*/30 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:status --env=prod
+0 */6 * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:useradstatus --env=prod
+/////////// EOF All cron jobs ///////////
+
 
 php bin/console list doctrine
 --dump-sql
