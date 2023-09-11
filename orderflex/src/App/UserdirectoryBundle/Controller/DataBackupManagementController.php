@@ -224,13 +224,15 @@ class DataBackupManagementController extends OrderAbstractController
             if( !$siteEmail ) {
                 $siteEmail = "myemail@example.com";
             }
-            $exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
+            //$exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
             //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
+            $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig');
+            $monitorScript = $userSecUtil->getSiteSettingParameter('monitorScript');
 
             if(0) {
-                $mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-                $environment = $userSecUtil->getSiteSettingParameter('environment');
-                $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
+                //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
+                //$environment = $userSecUtil->getSiteSettingParameter('environment');
+                //$liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
                 $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
             }
 
@@ -257,36 +259,60 @@ class DataBackupManagementController extends OrderAbstractController
 
             if( $resStatus == 'OK' ) {
 
-                $logger->notice("before getConnection");
-                $conn = $this->getConnection();
-                $logger->notice("after getConnection");
+                $param = $userSecUtil->getSingleSiteSettingsParam();
+                $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
-                if( $env == 'live' ) {
-                    $siteEmail == '';
-                }
+                if( $param && $param->getId() ) {
 
-                //App\\UserdirectoryBundle\\Entity\\SiteParameters
-                $sql =  "UPDATE user_siteparameters".
-                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'".
-                        " WHERE id=1";
-                //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
-                $logger->notice("sql=".$sql);
-                $stmt = $conn->prepare($sql);
-                $logger->notice("after prepare");
+                    $logger->notice("before getConnection");
+                    $conn = $this->getConnection();
+                    $logger->notice("after getConnection");
 
-                $results = $stmt->executeQuery();
-                $logger->notice("after executeQuery");
+                    if ($env == 'live') {
+                        $siteEmail == '';
+                    }
 
-                //$resStr = print_r($results->fetchAll());
-                //$logger->notice("after executeQuery. res=".$resStr);
+                    //filesBackupConfig - json file with backup config (server dependents: /srv/order-lab/orderflex/public)
+                    //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
 
-                //re-deploy
-                $projectRoot = $this->container->get('kernel')->getProjectDir();
-                //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-                $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
+                    //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
+                    $sql = "UPDATE user_siteparameters" .
+                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
+                        ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
+                        " WHERE id=" . $param->getId();
+                    //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+                    $logger->notice("sql=" . $sql);
+
+                    $stmt = $conn->prepare($sql);
+                    $logger->notice("after prepare");
+
+                    $results = $stmt->executeQuery();
+                    $logger->notice("after executeQuery");
+
+                    //$resStr = print_r($results->fetchAll());
+                    //$logger->notice("after executeQuery. res=".$resStr);
+
+                    //re-deploy
+                    $projectRoot = $this->container->get('kernel')->getProjectDir();
+                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+                    $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+
+                    //Generate cron jobs:
+                    //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
+                    // - directory/admin/list/generate-cron-jobs/
+                    $userServiceUtil->createCrons();
+
+                    //2) Create status cron job (check if the system in the maintenance mode):
+                    // - directory/admin/list/generate-cron-jobs/status
+                    //$userServiceUtil->createStatusCronLinux(); //included in $userServiceUtil->createCrons();
+
+                    //3) Create useradstatus cron job (update users AD status)
+                    // - directory/admin/list/generate-useradstatus-cron/
+                    $userServiceUtil->createUserADStatusCron('6h');
+
+                }//if $param
 
                 //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
-
                 //set site settings parameters
                 if(0) {
                     $logger->notice("set site settings parameters");
