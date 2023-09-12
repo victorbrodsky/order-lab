@@ -646,8 +646,13 @@ class DataBackupManagementController extends OrderAbstractController
             echo "folder=".$folder."<br>";
             //exit('111');
 
+            //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
+            // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
+
             //use tar.gz archive
             $command = "tar -zcvf $archiveFile $folder";
+            echo "command=".$command."<br>";
+
             $res = $this->runProcess($command);
             exit("res=".$res);
 
