@@ -151,9 +151,15 @@
                 {#>Restore Backup</a>#}
             {#</p>#}
 
+            {#Prevent trigger saved logins in the preceding field#}
+            <div class="input-group" style="display: none">
+                <input class="form-control"/>
+            </div>
+
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4" align="left">
+                    <p>
                     <div class="input-group">
                         <input
                             type="password"
@@ -175,6 +181,7 @@
                             >Restore Backup</button>
                         </span>
                     </div><!-- /input-group -->
+                    </p>
                 </div>
                 <div class="col-lg-4"></div>
             </div>
