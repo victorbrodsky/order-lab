@@ -859,7 +859,7 @@ class DataBackupManagementController extends OrderAbstractController
 
                     $this->addFlash(
                         'notice',
-                        'Backup file has successefully uploaded as '.$newFilename
+                        'Backup file has successfully uploaded as '.$newFilename
                     );
 
                 } catch (FileException $e) {
