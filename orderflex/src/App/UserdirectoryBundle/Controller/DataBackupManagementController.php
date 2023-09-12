@@ -623,6 +623,9 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $networkDrivePath ) {
 
+            set_time_limit(3600); //3600 seconds => 1 hours
+            //set_time_limit(900); //900 sec => 15 min
+
             //create backup tar -zcvf archive.tar.gz directory/
             $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
             //exit($networkDrivePath);
