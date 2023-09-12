@@ -556,7 +556,14 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $action == 'backup' ) {
             //backup
-            $command = $command . " --action backup";
+
+            //prefix - string to add to the backup filename "backup-prefix-..."
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( !$environment ) {
+                $environment = "unknownenv";
+            }
+
+            $command = $command . " --action backup --prefix $environment";
         } elseif( $action == 'restore' ) {
             //restore
             if( $backupFileName ) {
@@ -619,7 +626,12 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
             //exit($networkDrivePath);
 
-            $archiveFile = "upload_".$date = date('Y-m-d-H-i-s').".tar.gz";
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( !$environment ) {
+                $environment = "unknownenv";
+            }
+
+            $archiveFile = "upload_".$environment."_".$date = date('Y-m-d-H-i-s').".tar.gz";
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
             echo "archiveFile=".$archiveFile."<br>";
 
@@ -630,6 +642,7 @@ class DataBackupManagementController extends OrderAbstractController
             echo "folder=".$folder."<br>";
             //exit('111');
 
+            //use tar.gz archive
             $command = "tar -zcvf $archiveFile $folder";
             $res = $this->runProcess($command);
             exit("res=".$res);
