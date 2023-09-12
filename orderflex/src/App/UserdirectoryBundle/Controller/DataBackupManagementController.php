@@ -558,6 +558,7 @@ class DataBackupManagementController extends OrderAbstractController
             //backup
 
             //prefix - string to add to the backup filename "backup-prefix-..."
+            $userSecUtil = $this->container->get('user_security_utility');
             $environment = $userSecUtil->getSiteSettingParameter('environment');
             if( !$environment ) {
                 $environment = "unknownenv";
