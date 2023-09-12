@@ -114,6 +114,12 @@
                         class="btn btn-info"
                         href="{{ path(employees_sitename~'_upload_backup_file', {'filename': null}) }}"
                     >Upload backup</a>
+
+                    <br>
+                    {{ form_start(form,{action:path('employees_upload_backup_file')}) }}
+                        {{ form_row(form.uploadfile) }}
+                        {{ form_row(form.submit, { 'label': 'Upload' }) }}
+                    {{ form_end(form) }}
                 </div>
             </div>
 

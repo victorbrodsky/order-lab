@@ -16,6 +16,8 @@ parameters:
 
   wkhtmltopdfpath:
 
+#  backup_upload_directory: '%kernel.project_dir%/public/uploads/brochures'
+
   #ldap
 #  ldaphost: your_value
 #  ldapport: your_value
@@ -165,6 +167,11 @@ services:
     user_manager:
         class: App\UserdirectoryBundle\User\Model\UserManager
 #        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
+
+
+#    App\UserdirectoryBundle\Services\FileUploader:
+#        arguments:
+#            $targetDirectory: '%backup_upload_directory%'
 
 #    user_cache_clear:
 #        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand

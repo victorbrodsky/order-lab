@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\BackupManagementType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Form\UploadSingleFileType;
 use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -38,6 +39,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class DataBackupManagementController extends OrderAbstractController
 {
@@ -116,13 +118,23 @@ class DataBackupManagementController extends OrderAbstractController
             $environments[] = array('id'=>$id, 'name'=>$name);
         }
 
+        $form = $this->createForm(UploadSingleFileType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadFile */
+            $uploadFile = $form->get('uploadfile')->getData();
+            exit('manualBackupRestoreManagementAction uploadFile');
+        }
+
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
             'cycle' => 'new',
             'networkDrivePath' => $networkDrivePath,
             'backupFiles' => $backupFiles,
-            'environments' => $environments
+            'environments' => $environments,
+            'form' => $form
         );
     }
 
@@ -797,10 +809,10 @@ class DataBackupManagementController extends OrderAbstractController
         $response->send();
     }
 
-    #[Route(path: '/upload-backup-file/{filename}', name: 'employees_upload_backup_file', methods: ['GET'], options: ['expose' => true])]
-    public function uploadBackupFileAction( Request $request, $filename=null )
+    #[Route(path: '/upload-backup-file-1/{filename}', name: 'employees_upload_backup_file_1', methods: ['GET'], options: ['expose' => true])]
+    public function uploadBackupFile1Action( Request $request, $filename=null )
     {
-        exit('uploadBackupFileAction');
+        exit('uploadBackupFile1Action');
         if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -809,6 +821,53 @@ class DataBackupManagementController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         exit();
+    }
+    #[Route(path: '/upload-backup-file/', name: 'employees_upload_backup_file', methods: ['POST'])]
+    public function uploadBackupFileAction(Request $request, SluggerInterface $slugger) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $form = $this->createForm(UploadSingleFileType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadFile */
+            $uploadFile = $form->get('uploadfile')->getData();
+
+            if( $uploadFile ) {
+                $originalFilename = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadFile->guessExtension();
+                echo "safeFilename=$safeFilename <br>";
+                echo "newFilename=$newFilename <br>";
+
+                $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+                $networkDrivePath = realpath($networkDrivePath);
+                echo "networkDrivePath=$networkDrivePath <br>";
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $uploadFile->move(
+                        //$this->getParameter('backup_upload_directory'),
+                        $networkDrivePath,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                    echo "An error occurred while uploading backup file. ".$e->getMessage();
+                }
+            }
+
+            //dump($uploadFile);
+            //exit('uploadBackupFileAction uploadFile');
+        }
+
+        //exit('uploadBackupFileAction');
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
 
