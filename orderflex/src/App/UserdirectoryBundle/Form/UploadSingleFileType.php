@@ -36,7 +36,7 @@ class UploadSingleFileType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '10240M', //10Gig
+                        'maxSize' => '10G' //'10240M', //10Gig
 //                        'mimeTypes' => [
 //                            'application/pdf',
 //                            'application/x-pdf',
@@ -48,7 +48,7 @@ class UploadSingleFileType extends AbstractType
         ;
 
         $builder->add('submit', SubmitType::class, [
-            'attr' => ['class' => 'submit btn btn-info'],
+            'attr' => ['class' => 'submit btn btn-info upload-backup-file-btn'],
         ]);
     }
 

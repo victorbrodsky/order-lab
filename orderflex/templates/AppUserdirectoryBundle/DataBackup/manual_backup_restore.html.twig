@@ -59,8 +59,8 @@
 
                 <div class="col-xs-6" align="left">
                     {{ form_start(form,{action:path('employees_upload_backup_file')}) }}
-                    <p>{{ form_row(form.uploadfile) }}</p>
-                    {{ form_row(form.submit, { 'label': 'Upload backup' }) }}
+                        <p>{{ form_row(form.uploadfile) }}</p>
+                        {{ form_row(form.submit, { 'label': 'Upload backup' }) }}
                     {{ form_end(form) }}
                 </div>
                 {#<div class="col-xs-2"></div>#}
@@ -117,18 +117,6 @@
                     {#</span>#}
                 </div>
                 <div class="col-xs-2" align="left">
-                    {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
-                    {#<a  id="btn-upload-backup-href"#}
-                        {#target="_blank"#}
-                        {#class="btn btn-info"#}
-                        {#href="{{ path(employees_sitename~'_upload_backup_file', {'filename': null}) }}"#}
-                    {#>Upload backup</a>#}
-                    {#<br>#}
-
-                    {#{{ form_start(form,{action:path('employees_upload_backup_file')}) }}#}
-                        {#<p>{{ form_row(form.uploadfile) }}</p>#}
-                        {#{{ form_row(form.submit, { 'label': 'Upload backup' }) }}#}
-                    {#{{ form_end(form) }}#}
                 </div>
             </div>
 
@@ -227,6 +215,10 @@
                     $('#btn-download-backup-href').attr('disabled', true);
                     $('#btn-download-backup-href').attr("href", origHref);
                 }
+            });
+
+            $('#upload_single_file_submit').click(function(e) {
+                $(this).text("Please wait...").attr('disabled', true);
             });
 
         });

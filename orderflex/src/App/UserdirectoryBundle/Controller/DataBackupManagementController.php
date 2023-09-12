@@ -120,13 +120,12 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $form = $this->createForm(UploadSingleFileType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $uploadFile */
-            $uploadFile = $form->get('uploadfile')->getData();
-            exit('manualBackupRestoreManagementAction uploadFile');
-        }
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            /** @var UploadedFile $uploadFile */
+//            $uploadFile = $form->get('uploadfile')->getData();
+//            exit('manualBackupRestoreManagementAction uploadFile');
+//        }
 
         return array(
             'sitename' => $sitename,
@@ -808,24 +807,30 @@ class DataBackupManagementController extends OrderAbstractController
         $response->send();
     }
 
-    #[Route(path: '/upload-backup-file-1/{filename}', name: 'employees_upload_backup_file_1', methods: ['GET'], options: ['expose' => true])]
-    public function uploadBackupFile1Action( Request $request, $filename=null )
-    {
-        exit('uploadBackupFile1Action');
-        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect($this->generateUrl('employees-nopermission'));
-        }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $em = $this->getDoctrine()->getManager();
-
-        exit();
-    }
+//    #[Route(path: '/upload-backup-file-1/{filename}', name: 'employees_upload_backup_file_1', methods: ['GET'], options: ['expose' => true])]
+//    public function uploadBackupFile1Action( Request $request, $filename=null )
+//    {
+//        exit('uploadBackupFile1Action');
+//        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            return $this->redirect($this->generateUrl('employees-nopermission'));
+//        }
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $em = $this->getDoctrine()->getManager();
+//
+//        exit();
+//    }
+    
+    //https://symfony.com/doc/current/controller/upload_file.html
     #[Route(path: '/upload-backup-file/', name: 'employees_upload_backup_file', methods: ['POST'])]
     public function uploadBackupFileAction(Request $request, SluggerInterface $slugger) {
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
+
+        //Make sure upload_max_filesize is large enough
+//        ini_set('upload_max_filesize', '10240M');
+//        ini_set('post_max_size', '0');
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -860,7 +865,7 @@ class DataBackupManagementController extends OrderAbstractController
                         'notice',
                         'Backup file has successfully uploaded as '.$newFilename
                     );
-
+                    return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
                 } catch( FileException $e ) {
                     $this->addFlash(
                         'notice',
@@ -873,9 +878,10 @@ class DataBackupManagementController extends OrderAbstractController
             } else {
                 //exit('upload file is not provided');
                 $this->addFlash(
-                    'notice',
-                    "upload file is not provided"
+                    'warning',
+                    "Upload file is not provided"
                 );
+                //exit('upload file is not provided');
                 return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
             }
 
@@ -883,8 +889,8 @@ class DataBackupManagementController extends OrderAbstractController
             //exit('uploadBackupFileAction uploadFile');
         }
 
-        //exit('uploadBackupFileAction');
-        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        exit('uploadBackupFileAction end');
+        //return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
 
