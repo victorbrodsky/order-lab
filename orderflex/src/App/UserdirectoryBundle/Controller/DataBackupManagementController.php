@@ -623,7 +623,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $networkDrivePath ) {
 
-            set_time_limit(3600); //3600 seconds => 1 hours
+            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
             //set_time_limit(900); //900 sec => 15 min
 
             //create backup tar -zcvf archive.tar.gz directory/
