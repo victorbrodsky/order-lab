@@ -632,7 +632,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $environment = "unknownenv";
             }
 
-            $archiveFile = "upload_".$environment."_".$date = date('Y-m-d-H-i-s').".tar.gz";
+            $archiveFile = "backupfiles-".$environment."_".$date = date('Y-m-d-H-i-s').".tar.gz";
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
             echo "archiveFile=".$archiveFile."<br>";
 
