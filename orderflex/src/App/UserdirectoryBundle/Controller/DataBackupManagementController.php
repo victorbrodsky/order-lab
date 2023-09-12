@@ -33,6 +33,7 @@ use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -335,71 +336,69 @@ class DataBackupManagementController extends OrderAbstractController
                         // - /directory/admin/list/update-cron-job/uploads-live-HOURLY/filesBackupConfig
                         // - /directory/admin/list/update-cron-job/db-mount-HOURLY/filesBackupConfig
                     }
-
-
                 }//if $param
 
-                //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
-                //set site settings parameters
-                if(0) {
-                    $logger->notice("set site settings parameters");
-
-                    //$this->getConnection();
-
-                    //restart postgresql server? sudo systemctl restart httpd.service
-                    //$command = "systemctl restart httpd.service";
-                    $command = "sudo systemctl restart postgresql-14";
-                    $logger->notice("command=[".$command."]");
-                    $res = $this->runProcess($command);
-                    $logger->notice("systemctl restart postgresql-14: res=".$res);
-
-                    $projectRoot = $this->container->get('kernel')->getProjectDir();
-                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-                    $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
-
-                    //$em = $this->getDoctrine()->getManager();
-                    //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
-                    $em = $this->getDoctrine()->resetManager();
-                    //$em = $this->getDoctrine()->getManager();
-
-                    $param = $userSecUtil->getSingleSiteSettingsParam();
-                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
-
-                    if(0) {
-                        /////// set original parameters //////////
-                        //mailerDeliveryAddresses to admin
-                        //environment
-                        //liveSiteRootUrl
-                        //networkDrivePath
-                        //connectionChannel
-                        $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-                        $param->setEnvironment($environment);
-                        $param->setLiveSiteRootUrl($liveSiteRootUrl);
-                        $param->setNetworkDrivePath($networkDrivePath);
-                        $param->setConnectionChannel($connectionChannel);
-                        /////// EOF set original parameters //////////
-                    }
-
-                    /////// set parameters //////////
-                    //set environment
-                    $param->setEnvironment($env);
-
-                    if( $env != 'live' ) {
-                        //prevent sending emails to real users for not live environment
-                        $param->setMailerDeliveryAddresses($siteEmail);
-                    }
-
-                    //prevent sending critical emails
-                    foreach ($exceptionUsers as $exceptionUser) {
-                        $param->addEmailCriticalErrorExceptionUser($exceptionUser);
-                    }
-                    /////// EOF set parameters //////////
-
-                    $logger->notice("After set settings parameters. Before flush");
-                    $em->flush();
-
-                    $logger->notice("After flush");
-                }
+//                //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
+//                //set site settings parameters
+//                if(0) {
+//                    $logger->notice("set site settings parameters");
+//
+//                    //$this->getConnection();
+//
+//                    //restart postgresql server? sudo systemctl restart httpd.service
+//                    //$command = "systemctl restart httpd.service";
+//                    $command = "sudo systemctl restart postgresql-14";
+//                    $logger->notice("command=[".$command."]");
+//                    $res = $this->runProcess($command);
+//                    $logger->notice("systemctl restart postgresql-14: res=".$res);
+//
+//                    $projectRoot = $this->container->get('kernel')->getProjectDir();
+//                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//                    $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
+//
+//                    //$em = $this->getDoctrine()->getManager();
+//                    //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
+//                    $em = $this->getDoctrine()->resetManager();
+//                    //$em = $this->getDoctrine()->getManager();
+//
+//                    $param = $userSecUtil->getSingleSiteSettingsParam();
+//                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
+//
+//                    if(0) {
+//                        /////// set original parameters //////////
+//                        //mailerDeliveryAddresses to admin
+//                        //environment
+//                        //liveSiteRootUrl
+//                        //networkDrivePath
+//                        //connectionChannel
+//                        $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
+//                        $param->setEnvironment($environment);
+//                        $param->setLiveSiteRootUrl($liveSiteRootUrl);
+//                        $param->setNetworkDrivePath($networkDrivePath);
+//                        $param->setConnectionChannel($connectionChannel);
+//                        /////// EOF set original parameters //////////
+//                    }
+//
+//                    /////// set parameters //////////
+//                    //set environment
+//                    $param->setEnvironment($env);
+//
+//                    if( $env != 'live' ) {
+//                        //prevent sending emails to real users for not live environment
+//                        $param->setMailerDeliveryAddresses($siteEmail);
+//                    }
+//
+//                    //prevent sending critical emails
+//                    foreach ($exceptionUsers as $exceptionUser) {
+//                        $param->addEmailCriticalErrorExceptionUser($exceptionUser);
+//                    }
+//                    /////// EOF set parameters //////////
+//
+//                    $logger->notice("After set settings parameters. Before flush");
+//                    $em->flush();
+//
+//                    $logger->notice("After flush");
+//                }
 
                 $resStr =
                     "Restored database " . $backupFileName . "<br>" .
@@ -862,10 +861,22 @@ class DataBackupManagementController extends OrderAbstractController
                         'Backup file has successfully uploaded as '.$newFilename
                     );
 
-                } catch (FileException $e) {
+                } catch( FileException $e ) {
+                    $this->addFlash(
+                        'notice',
+                        "An error occurred while uploading backup file. ".$e->getMessage()
+                    );
                     // ... handle exception if something happens during file upload
                     echo "An error occurred while uploading backup file. ".$e->getMessage();
+                    exit('error backup uploaded');
                 }
+            } else {
+                //exit('upload file is not provided');
+                $this->addFlash(
+                    'notice',
+                    "upload file is not provided"
+                );
+                return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
             }
 
             //dump($uploadFile);
