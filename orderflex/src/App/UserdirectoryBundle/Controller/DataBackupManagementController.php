@@ -794,7 +794,8 @@ class DataBackupManagementController extends OrderAbstractController
     public function runProcess($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        //$process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(7200); //7200 sec => 2 hours
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
