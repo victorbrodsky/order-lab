@@ -310,6 +310,9 @@ def main():
     args_parser.add_argument("--path",
                              default=False,
                              help="Destination path to overwrite config's path")
+    args_parser.add_argument("--prefix",
+                             default=False,
+                             help="Prefix attach to the backup filename 'backup-prefix...'")
     args_parser.add_argument("--source-db",
                              metavar="source_db",
                              default=False,
@@ -338,10 +341,15 @@ def main():
     if args.path:
         local_storage_path = args.path
 
+    if args.prefix:
+        prefix = args.prefix
+    else:
+        prefix = 'unknownenv'
+
     if args.source_db:
         postgres_db = args.source_db
         postgres_restore = "{}_restore".format(postgres_db)
-        filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
+        filename = 'backup-{}-{}-{}.dump'.format(prefix, timestr, postgres_db)
         filename_compressed = '{}.gz'.format(filename)
 
     #print("path=",local_storage_path)
