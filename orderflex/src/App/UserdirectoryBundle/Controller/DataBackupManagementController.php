@@ -639,7 +639,7 @@ class DataBackupManagementController extends OrderAbstractController
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             echo "folder=".$folder."<br>";
             //exit('111');
 
