@@ -654,7 +654,7 @@ class DataBackupManagementController extends OrderAbstractController
             echo "command=".$command."<br>";
 
             $res = $this->runProcess($command);
-            exit("res=".$res);
+            //exit("res=".$res);
 
             if( !$res ) {
                 $res = "Uploaded folder backup $archiveFile has been successfully created";
