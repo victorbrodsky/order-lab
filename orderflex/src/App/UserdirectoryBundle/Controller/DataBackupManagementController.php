@@ -856,6 +856,12 @@ class DataBackupManagementController extends OrderAbstractController
                         $networkDrivePath,
                         $newFilename
                     );
+
+                    $this->addFlash(
+                        'notice',
+                        'Backup file has successefully uploaded as '.$newFilename
+                    );
+
                 } catch (FileException $e) {
                     // ... handle exception if something happens during file upload
                     echo "An error occurred while uploading backup file. ".$e->getMessage();

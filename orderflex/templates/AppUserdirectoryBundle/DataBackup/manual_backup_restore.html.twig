@@ -43,18 +43,27 @@
         <div class="panel-heading">Create Backups</div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-xs-6" align="right">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-2" align="right">
                     <a  id="btn-create-backup"
                         general-data-confirm="Are you sure you want to create a database backup?"
                         class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
                     >Create DB Backup</a>
                 </div>
-                <div class="col-xs-6" align="left">
+                <div class="col-xs-2" align="right">
                     <a  id="btn-create-backup-upload"
                         general-data-confirm="Are you sure you want to create a upload folder backup?"
                         class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
                     >Create Upload Folder Backup</a>
                 </div>
+
+                <div class="col-xs-6" align="left">
+                    {{ form_start(form,{action:path('employees_upload_backup_file')}) }}
+                    <p>{{ form_row(form.uploadfile) }}</p>
+                    {{ form_row(form.submit, { 'label': 'Upload backup' }) }}
+                    {{ form_end(form) }}
+                </div>
+                {#<div class="col-xs-2"></div>#}
             </div>
         </div>
     </div>
@@ -109,17 +118,17 @@
                 </div>
                 <div class="col-xs-2" align="left">
                     {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
-                    <a  id="btn-upload-backup-href"
-                        target="_blank"
-                        class="btn btn-info"
-                        href="{{ path(employees_sitename~'_upload_backup_file', {'filename': null}) }}"
-                    >Upload backup</a>
+                    {#<a  id="btn-upload-backup-href"#}
+                        {#target="_blank"#}
+                        {#class="btn btn-info"#}
+                        {#href="{{ path(employees_sitename~'_upload_backup_file', {'filename': null}) }}"#}
+                    {#>Upload backup</a>#}
+                    {#<br>#}
 
-                    <br>
-                    {{ form_start(form,{action:path('employees_upload_backup_file')}) }}
-                        {{ form_row(form.uploadfile) }}
-                        {{ form_row(form.submit, { 'label': 'Upload' }) }}
-                    {{ form_end(form) }}
+                    {#{{ form_start(form,{action:path('employees_upload_backup_file')}) }}#}
+                        {#<p>{{ form_row(form.uploadfile) }}</p>#}
+                        {#{{ form_row(form.submit, { 'label': 'Upload backup' }) }}#}
+                    {#{{ form_end(form) }}#}
                 </div>
             </div>
 

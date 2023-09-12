@@ -23,7 +23,7 @@ class UploadSingleFileType extends AbstractType
         $builder
             // ...
             ->add('uploadfile', FileType::class, [
-                'label' => 'Uplaod File',
+                'label' => false, //'Upload backup file',
 
                 // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
@@ -48,7 +48,7 @@ class UploadSingleFileType extends AbstractType
         ;
 
         $builder->add('submit', SubmitType::class, [
-            'attr' => ['class' => 'submit'],
+            'attr' => ['class' => 'submit btn btn-info'],
         ]);
     }
 
