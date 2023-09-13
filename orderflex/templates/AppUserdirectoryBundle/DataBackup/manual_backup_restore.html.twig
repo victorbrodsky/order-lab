@@ -33,10 +33,11 @@
     <input type="hidden" id="fileId" value="" />
 
     <h4 class="text-info" align="center">{{ title }}</h4>
-    Current Network Drive Path: {{ networkDrivePath }}
-
-    <br>
-    <br>
+    <p>Current Network Drive Path: {{ networkDrivePath }}</p>
+    <p>
+        DB backup files will have the format: <strong>backupdb-***.dump.gz</strong><br>
+        Upload folder backup file will have the format: <strong>backupfiles-***.tar.gz</strong>
+    </p>
 
     {#Backup panel#}
     <div class="panel panel-default">
@@ -239,13 +240,15 @@
 
                 if( fileId && env ) {
                     console.log('fileId=' + fileId + '; env=' + env);
-                    $('#fileId').val(fileId);
-                    $('#btn-restore-backup').removeAttr('disabled');
-                    $('#btn-restore-files-backup').removeAttr('disabled');
+                    //$('#fileId').val(fileId);
+                    if( fileId.includes('backupdb') && fileId.includes('.gz') ) {
+                        $('#btn-restore-backup').removeAttr('disabled');
+                    } else {
+                        $('#btn-restore-backup').attr('disabled', true);
+                    }
                 } else {
                     //console.log('No file selected');
                     $('#btn-restore-backup').attr('disabled', true);
-                    $('#btn-restore-files-backup').attr('disabled', true);
                 }
 
                 if( fileId ) {
@@ -253,9 +256,17 @@
                     href = origHref + "/" + fileId;
                     $('#btn-download-backup-href').removeAttr('disabled');
                     $('#btn-download-backup-href').attr("href", href);
+
+                    if( fileId.includes('backupfiles') && fileId.includes('.tar.gz') ) {
+                        $('#btn-restore-files-backup').removeAttr('disabled');
+                    } else {
+                        $('#btn-restore-files-backup').attr('disabled', true);
+                    }
                 } else {
                     $('#btn-download-backup-href').attr('disabled', true);
                     $('#btn-download-backup-href').attr("href", origHref);
+
+                    $('#btn-restore-files-backup').attr('disabled', true);
                 }
             });
 

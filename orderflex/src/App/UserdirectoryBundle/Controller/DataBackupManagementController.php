@@ -225,10 +225,20 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
 
-        //get backup files
-        //$backupFiles = $this->getBackupFiles($networkDrivePath);
-
-        $sitename = "employees";
+        if( str_contains($backupFileName,'backupdb') && str_contains($backupFileName,'.gz') ) {
+            //ok
+        } else {
+            $output = array(
+                'status' => "NOTOK",
+                'message' => "Invalid backup DB file name:".
+                    $backupFileName.
+                    " File must contain 'backupdb' and '.gz' substring.".
+                    " Example: backupdb-***.dump.gz"
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
 
         if( $backupFileName ) {
 
@@ -642,8 +652,8 @@ class DataBackupManagementController extends OrderAbstractController
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public";//.DIRECTORY_SEPARATOR."Uploaded";
+            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             echo "folder=".$folder."<br>";
             //exit('111');
 
@@ -651,7 +661,8 @@ class DataBackupManagementController extends OrderAbstractController
             // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
 
             //use tar.gz archive
-            $command = "tar -zcf $archiveFile $folder";
+            $command = "tar -zcf $archiveFile -C $folder Uploaded";
+            $command = "tar -zcf $archiveFile -C $folder UploadedTest"; //testing
             echo "command=".$command."<br>";
 
             $res = $this->runProcess($command);
@@ -722,6 +733,21 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
 
+        if( str_contains($backupFileName,'backupfiles') && str_contains($backupFileName,'.tar.gz') ) {
+            //ok
+        } else {
+            $output = array(
+                'status' => "NOTOK",
+                'message' => "Invalid backup uploads file name:".
+                    $backupFileName.
+                    " File must contain 'backupfiles' and '.tar.gz' substring.".
+                    " Example: backupfiles-***.tar.gz"
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
         //get backup files
         //$backupFiles = $this->getBackupFiles($networkDrivePath);
 
@@ -760,8 +786,17 @@ class DataBackupManagementController extends OrderAbstractController
             $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded_".$date;
 
             //Rename current Upload folder (Windows 'move')
-            $command = "move $folder $folderNew";
+            if( $userServiceUtil->isWindows() ){
+                $command = "move $folder $folderNew";
+            } else {
+                $command = "mv $folder $folderNew";
+            }
             //echo "mv command=".$command."<br>";
+            $res = $this->runProcess($command);
+
+            //Create new folder instead of moved
+            $command = "mkdir $folder";
+            //echo "mkdir command=".$command."<br>";
             $res = $this->runProcess($command);
 
             //use tar.gz un-archive
