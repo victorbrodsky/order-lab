@@ -747,26 +747,26 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
 
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
-            echo "archiveFile=".$archiveFile."<br>";
+            //echo "archiveFile=".$archiveFile."<br>";
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."test";
             //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
-            echo "folder=".$folder."<br>";
+            //echo "folder=".$folder."<br>";
 
             $date = date('Y-m-d-H-i-s');
             $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".$date;
 
             //Rename current Upload folder
             $command = "mv $folder $folderNew";
-            echo "mv command=".$command."<br>";
+            //echo "mv command=".$command."<br>";
             $res = $this->runProcess($command);
 
             //use tar.gz un-archive
             $command = "tar -xf $archiveFile -C $folder";
-            echo "tar command=".$command."<br>";
+            //echo "tar command=".$command."<br>";
             $res = $this->runProcess($command);
             //exit("res=".$res);
 
