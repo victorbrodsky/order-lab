@@ -166,13 +166,44 @@
                                     type="button"
                                     {{ disabledFalg }}
                                     onclick="userVerifyRestoreBackup(this)"
-                            >Restore Backup</button>
+                            >Restore DB Backup</button>
                         </span>
                     </div><!-- /input-group -->
                     </p>
                 </div>
                 <div class="col-lg-4"></div>
             </div>
+
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4" align="left">
+                    <p>
+                    <div class="input-group">
+                        <input
+                                type="password"
+                                id="backup-user-token"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="Enter password"
+                                style="min-width: 100%"
+                                required
+                                readonly onfocus="this.removeAttribute('readonly');"
+                        >
+                        <span class="input-group-btn">
+                            <button
+                                    id="btn-restore-uploadfiles-backup"
+                                    class="btn btn-danger"
+                                    type="button"
+                                    {{ disabledFalg }}
+                                    onclick="userVerifyRestoreUploadfilesBackup(this)"
+                            >Restore Upload Files Backup</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    </p>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+
         </div> {#panel-body#}
     </div> {#panel#}
 
@@ -256,7 +287,7 @@
             $('#btn-create-backup-upload').attr('disabled', true);
             $('#btn-download-backup-href').attr('disabled', true);
 
-            var result = confirm("Warning!!! Are you sure you want to load backup DB? This action will overwrite all existing data!");
+            var result = confirm("Warning!!! Are you sure you want to load/restore backup DB? This action will overwrite all existing data!");
             if (result) {
                 //Logic to delete the item
             } else {
