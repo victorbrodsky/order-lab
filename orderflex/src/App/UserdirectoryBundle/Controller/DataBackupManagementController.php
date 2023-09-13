@@ -757,10 +757,10 @@ class DataBackupManagementController extends OrderAbstractController
             //echo "folder=".$folder."<br>";
 
             $date = date('Y-m-d-H-i-s');
-            $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".$date;
+            $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded_".$date;
 
-            //Rename current Upload folder
-            $command = "mv $folder $folderNew";
+            //Rename current Upload folder (Windows 'move')
+            $command = "move $folder $folderNew";
             //echo "mv command=".$command."<br>";
             $res = $this->runProcess($command);
 
