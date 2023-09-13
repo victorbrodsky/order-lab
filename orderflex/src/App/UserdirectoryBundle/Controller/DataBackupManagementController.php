@@ -635,14 +635,15 @@ class DataBackupManagementController extends OrderAbstractController
                 $environment = "unknownenv";
             }
 
-            $archiveFile = "backupfiles-".$environment."_".$date = date('Y-m-d-H-i-s').".tar.gz";
+            $date = date('Y-m-d-H-i-s');
+            $archiveFile = "backupfiles-".$environment."_".$date.".tar.gz";
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
             echo "archiveFile=".$archiveFile."<br>";
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
-            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             echo "folder=".$folder."<br>";
             //exit('111');
 
@@ -650,7 +651,7 @@ class DataBackupManagementController extends OrderAbstractController
             // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
 
             //use tar.gz archive
-            $command = "tar -zcvf $archiveFile $folder";
+            $command = "tar -zcf $archiveFile $folder";
             echo "command=".$command."<br>";
 
             $res = $this->runProcess($command);
@@ -686,6 +687,108 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+    }
+
+    #[Route(path: '/restore-backup-files-ajax/', name: 'employees_restore_backup_files_ajax', methods: ['POST'], options: ['expose' => true])]
+    public function restoreBackupFilesAjaxAction( Request $request )
+    {
+
+        if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            exit("Live server: Under construction!!!");
+            $logger->notice("Live server: restore not allowed");
+            $output = array(
+                'status' => "NOTOK",
+                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+        //exit('Not Allowed');
+
+        $backupFileName = $request->get('fileId');
+        $env = $request->get('env');
+        $logger->notice("backupFilePath=".$backupFileName."; env=".$env);
+        //echo "backupFilePath=".$fileId."; env=".$env."<br>";
+        //exit('111');
+
+        //get backup files
+        //$backupFiles = $this->getBackupFiles($networkDrivePath);
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $output = array(
+                'status' => 'NOTOK',
+                'message' => 'Network Drive Path is not defined in the Site Settings'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        $sitename = "employees";
+
+        if( $backupFileName ) {
+
+            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+
+            $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
+            echo "archiveFile=".$archiveFile."<br>";
+
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            //echo "projectRoot=".$projectRoot."<br>";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."test";
+            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            echo "folder=".$folder."<br>";
+
+            $date = date('Y-m-d-H-i-s');
+            $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".$date;
+
+            //Rename current Upload folder
+            $command = "mv $folder $folderNew";
+            echo "mv command=".$command."<br>";
+            $res = $this->runProcess($command);
+
+            //use tar.gz un-archive
+            $command = "tar -xf $archiveFile -C $folder";
+            echo "tar command=".$command."<br>";
+            $res = $this->runProcess($command);
+            //exit("res=".$res);
+
+            if( !$res ) {
+                $res = "Uploaded folder backup $archiveFile has been successfully created";
+            }
+
+            $output = array(
+                'status' => 'OK',
+                'message' => 'Backup upload file is provided '.$archiveFile
+            );
+
+        } else {
+            $output = array(
+                'status' => 'NOTOK',
+                'message' => 'Backup upload file is not provided'
+            );
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($output));
+        return $response;
     }
 
 

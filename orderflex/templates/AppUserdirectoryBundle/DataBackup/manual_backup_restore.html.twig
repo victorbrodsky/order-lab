@@ -170,7 +170,7 @@
                         </span>
                         <span class="input-group-btn" style="padding-left: 3px;">
                             <button
-                                    id="btn-restore-backup"
+                                    id="btn-restore-files-backup"
                                     class="btn btn-danger"
                                     type="button"
                                     {{ disabledFalg }}
@@ -241,9 +241,11 @@
                     console.log('fileId=' + fileId + '; env=' + env);
                     $('#fileId').val(fileId);
                     $('#btn-restore-backup').removeAttr('disabled');
+                    $('#btn-restore-files-backup').removeAttr('disabled');
                 } else {
                     //console.log('No file selected');
                     $('#btn-restore-backup').attr('disabled', true);
+                    $('#btn-restore-files-backup').attr('disabled', true);
                 }
 
                 if( fileId ) {
@@ -284,6 +286,8 @@
 //            window.location.href = url;
 //            return false;
 //        }
+
+        var _origBtnTitle = "Restore Backup";
 
         function userVerifyRestoreBackup(btn,type) {
             console.log("userVerifyRestoreBackup start");
@@ -436,6 +440,7 @@
         }
 
         function userStartBtn(btn,lbtn) {
+            _origBtnTitle = $(btn).text();
             $(btn).prop('disabled',true);
             $(btn).text('Please wait...');
             //lbtn.start();
@@ -443,7 +448,7 @@
         function userStopBtn(btn,lbtn) {
             //lbtn.stop();
             $(btn).prop('disabled',false);
-            $(btn).text('Restore Backup');
+            $(btn).text(_origBtnTitle); //'Restore Backup'
         }
 
 
