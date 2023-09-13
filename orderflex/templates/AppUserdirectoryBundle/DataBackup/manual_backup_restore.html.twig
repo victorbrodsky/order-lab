@@ -145,8 +145,8 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4" align="left">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6" align="left">
                     <p>
                     <div class="input-group">
                         <input
@@ -159,50 +159,59 @@
                             required
                             readonly onfocus="this.removeAttribute('readonly');"
                         >
-                        <span class="input-group-btn">
+                        <span class="input-group-btn" style="padding-left: 3px;">
                             <button
                                     id="btn-restore-backup"
                                     class="btn btn-danger"
                                     type="button"
                                     {{ disabledFalg }}
-                                    onclick="userVerifyRestoreBackup(this)"
+                                    onclick="userVerifyRestoreBackup(this,'db')"
                             >Restore DB Backup</button>
                         </span>
-                    </div><!-- /input-group -->
-                    </p>
-                </div>
-                <div class="col-lg-4"></div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4" align="left">
-                    <p>
-                    <div class="input-group">
-                        <input
-                                type="password"
-                                id="backup-user-token"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="Enter password"
-                                style="min-width: 100%"
-                                required
-                                readonly onfocus="this.removeAttribute('readonly');"
-                        >
-                        <span class="input-group-btn">
+                        <span class="input-group-btn" style="padding-left: 3px;">
                             <button
-                                    id="btn-restore-uploadfiles-backup"
+                                    id="btn-restore-backup"
                                     class="btn btn-danger"
                                     type="button"
                                     {{ disabledFalg }}
-                                    onclick="userVerifyRestoreUploadfilesBackup(this)"
+                                    onclick="userVerifyRestoreBackup(this,'files')"
                             >Restore Upload Files Backup</button>
                         </span>
                     </div><!-- /input-group -->
                     </p>
                 </div>
-                <div class="col-lg-4"></div>
+                <div class="col-lg-3"></div>
             </div>
+
+            {#<div class="row">#}
+                {#<div class="col-lg-4"></div>#}
+                {#<div class="col-lg-4" align="left">#}
+                    {#<p>#}
+                    {#<div class="input-group">#}
+                        {#<input#}
+                                {#type="password"#}
+                                {#id="backup-user-token"#}
+                                {#class="form-control"#}
+                                {#autocomplete="off"#}
+                                {#placeholder="Enter password"#}
+                                {#style="min-width: 100%"#}
+                                {#required#}
+                                {#readonly onfocus="this.removeAttribute('readonly');"#}
+                        {#>#}
+                        {#<span class="input-group-btn">#}
+                            {#<button#}
+                                    {#id="btn-restore-uploadfiles-backup"#}
+                                    {#class="btn btn-danger"#}
+                                    {#type="button"#}
+                                    {#{{ disabledFalg }}#}
+                                    {#onclick="userVerifyRestoreUploadfilesBackup(this)"#}
+                            {#>Restore Upload Files Backup</button>#}
+                        {#</span>#}
+                    {#</div><!-- /input-group -->#}
+                    {#</p>#}
+                {#</div>#}
+                {#<div class="col-lg-4"></div>#}
+            {#</div>#}
 
         </div> {#panel-body#}
     </div> {#panel#}
@@ -276,7 +285,7 @@
 //            return false;
 //        }
 
-        function userVerifyRestoreBackup(btn) {
+        function userVerifyRestoreBackup(btn,type) {
             console.log("userVerifyRestoreBackup start");
 
             $('#backup-msg-danger-box').html("");
@@ -287,7 +296,9 @@
             $('#btn-create-backup-upload').attr('disabled', true);
             $('#btn-download-backup-href').attr('disabled', true);
 
-            var result = confirm("Warning!!! Are you sure you want to load/restore backup DB? This action will overwrite all existing data!");
+            var typeStr = type.toUpperCase();
+
+            var result = confirm("Warning!!! Are you sure you want to load/restore backup "+typeStr+"? This action will overwrite all existing data!");
             if (result) {
                 //Logic to delete the item
             } else {
@@ -299,7 +310,7 @@
             userStartBtn(btn,lbtn);
             setTimeout(function(){
                 //do what you need here
-                userVerifyRestoreBackupAction(btn,lbtn);
+                userVerifyRestoreBackupAction(btn,lbtn,type);
 
                 //enable backup buttons
                 console.log("enable backup buttons");
@@ -310,7 +321,7 @@
             }, 1000);
         }
 
-        function userVerifyRestoreBackupAction(btn,lbtn) {
+        function userVerifyRestoreBackupAction(btn,lbtn,type) {
             //disable btn does not work here, therefore use userVerifyRestoreBackup with setTimeout
             //console.log("Disable btn");
             //var lbtn = '';
@@ -338,7 +349,7 @@
                         $('#backup-msg-danger-box').hide();
                         //userStopBtn(btn,lbtn);
                         //userRestoreBackup();
-                        userRestoreBackupAjax(btn,lbtn);
+                        userRestoreBackupAjax(btn,lbtn,type);
                     } else {
                         $('#backup-msg-danger-box').html(error);
                         $('#backup-msg-danger-box').show();
@@ -358,7 +369,7 @@
             }
         }
 
-        function userRestoreBackupAjax(btn,lbtn) {
+        function userRestoreBackupAjax(btn,lbtn,type) {
 
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
@@ -379,7 +390,17 @@
             console.log("env=" + env);
 
             //var url = Routing.generate('employees_restore_backup_ajax',{fileId: fileId});
-            var url = Routing.generate('employees_restore_backup_ajax');
+            var url = null;
+            if( type == 'db' ) {
+                url = Routing.generate('employees_restore_backup_ajax');
+            } else if( type == 'files' ) {
+                url = Routing.generate('employees_restore_backup_files_ajax');
+            } else {
+                $('#backup-msg-danger-box').html('Invalid restore type='+type);
+                $('#backup-msg-danger-box').show();
+                return;
+            }
+
 
             $.ajax({
                 url: url,
