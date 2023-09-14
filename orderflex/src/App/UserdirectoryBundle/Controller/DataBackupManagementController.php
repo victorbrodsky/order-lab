@@ -783,7 +783,7 @@ class DataBackupManagementController extends OrderAbstractController
             //echo "folder=".$folder."<br>";
 
             $targetFolder = "Uploaded";
-            //$targetFolder = "UploadedTest"; //testing
+            $targetFolder = "UploadedTest"; //testing
 
             $date = date('Y-m-d-H-i-s');
 
@@ -810,13 +810,21 @@ class DataBackupManagementController extends OrderAbstractController
             $res = $this->runProcess($command);
             //exit("res=".$res);
 
+            $msg = "Uploaded folder backup $archiveFile has been successfully created.".
+                " As a precaution, the original $targetFolder folder has been moved to " .
+                $targetFolder."_".$date . " and can be deleted later";
+
             if( !$res ) {
-                $res = "Uploaded folder backup $archiveFile has been successfully created";
+                //$logger->notice("restore res is empty");
+            } else {
+                //$logger->notice("restore res is not empty. res=".$res);
+                $msg = $msg . "; res=".$res;
             }
+
 
             $output = array(
                 'status' => 'OK',
-                'message' => 'Backup upload file is provided '.$archiveFile
+                'message' => $msg
             );
 
         } else {
