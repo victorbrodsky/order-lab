@@ -565,8 +565,9 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        //networkDrivePath
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
