@@ -596,13 +596,13 @@ class DataBackupManagementController extends OrderAbstractController
             $date = date('Y-m-d-H-i-s');
             $archiveFile = "backupfiles-".$environment."_".$date.".tar.gz";
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
-            echo "archiveFile=".$archiveFile."<br>";
+            //echo "archiveFile=".$archiveFile."<br>";
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public";//.DIRECTORY_SEPARATOR."Uploaded";
             //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
-            echo "folder=".$folder."<br>";
+            //echo "folder=".$folder."<br>";
             //exit('111');
 
             //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
@@ -613,10 +613,14 @@ class DataBackupManagementController extends OrderAbstractController
 
             //use tar.gz archive
             $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
-            echo "command=".$command."<br>";
+            //echo "command=".$command."<br>";
+
+            $logger->notice("createUploadBackupAction. before command=".$command);
 
             $res = $this->runProcess($command);
             //exit("res=".$res);
+
+            $logger->notice("createUploadBackupAction. after res=".$res);
 
             if( !$res ) {
                 $res = "Uploaded folder backup $archiveFile has been successfully created";
@@ -631,19 +635,6 @@ class DataBackupManagementController extends OrderAbstractController
                 'notice',
                 $res
             );
-
-//            if( $res ) {
-//                $resStr = "Backup successfully created in folder $networkDrivePath";
-//                $this->addFlash(
-//                    'notice',
-//                    $resStr
-//                );
-//            } else {
-//                $this->addFlash(
-//                    'pnotify-error',
-//                    $resStr
-//                );
-//            }
 
         } else {
             $this->addFlash(
