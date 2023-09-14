@@ -176,6 +176,11 @@ class DataBackupManagementController extends OrderAbstractController
                     'notice',
                     $resStr
                 );
+
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
             } else {
                 $this->addFlash(
                     'pnotify-error',
@@ -347,74 +352,17 @@ class DataBackupManagementController extends OrderAbstractController
                     }
                 }//if $param
 
-//                //$userServiceUtil->updateSiteSettingParametersAfterRestore($env,$exceptionUsers,$siteEmail);
-//                //set site settings parameters
-//                if(0) {
-//                    $logger->notice("set site settings parameters");
-//
-//                    //$this->getConnection();
-//
-//                    //restart postgresql server? sudo systemctl restart httpd.service
-//                    //$command = "systemctl restart httpd.service";
-//                    $command = "sudo systemctl restart postgresql-14";
-//                    $logger->notice("command=[".$command."]");
-//                    $res = $this->runProcess($command);
-//                    $logger->notice("systemctl restart postgresql-14: res=".$res);
-//
-//                    $projectRoot = $this->container->get('kernel')->getProjectDir();
-//                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-//                    $this->runProcess("bash ".$projectRoot.DIRECTORY_SEPARATOR."deploy.sh");
-//
-//                    //$em = $this->getDoctrine()->getManager();
-//                    //https://stackoverflow.com/questions/42116749/restore-doctrine-connection-after-failed-flush
-//                    $em = $this->getDoctrine()->resetManager();
-//                    //$em = $this->getDoctrine()->getManager();
-//
-//                    $param = $userSecUtil->getSingleSiteSettingsParam();
-//                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
-//
-//                    if(0) {
-//                        /////// set original parameters //////////
-//                        //mailerDeliveryAddresses to admin
-//                        //environment
-//                        //liveSiteRootUrl
-//                        //networkDrivePath
-//                        //connectionChannel
-//                        $param->setMailerDeliveryAddresses($mailerDeliveryAddresses);
-//                        $param->setEnvironment($environment);
-//                        $param->setLiveSiteRootUrl($liveSiteRootUrl);
-//                        $param->setNetworkDrivePath($networkDrivePath);
-//                        $param->setConnectionChannel($connectionChannel);
-//                        /////// EOF set original parameters //////////
-//                    }
-//
-//                    /////// set parameters //////////
-//                    //set environment
-//                    $param->setEnvironment($env);
-//
-//                    if( $env != 'live' ) {
-//                        //prevent sending emails to real users for not live environment
-//                        $param->setMailerDeliveryAddresses($siteEmail);
-//                    }
-//
-//                    //prevent sending critical emails
-//                    foreach ($exceptionUsers as $exceptionUser) {
-//                        $param->addEmailCriticalErrorExceptionUser($exceptionUser);
-//                    }
-//                    /////// EOF set parameters //////////
-//
-//                    $logger->notice("After set settings parameters. Before flush");
-//                    $em->flush();
-//
-//                    $logger->notice("After flush");
-//                }
-
                 $resStr =
                     "Restored database " . $backupFileName . "<br>" .
                     $resStr .
                     " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
                     " <br>Also it might be required to run the deploy_prod.sh script."
                 ;
+
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
 
                 $output = array(
                     'status' => 'OK',
@@ -674,6 +622,11 @@ class DataBackupManagementController extends OrderAbstractController
                 $res = "Uploaded folder backup $archiveFile has been successfully created";
             }
 
+            //Event Log
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$res,$user,null,$request,'Create Backup Upload Files');
+
             $this->addFlash(
                 'notice',
                 $res
@@ -754,7 +707,6 @@ class DataBackupManagementController extends OrderAbstractController
         //$backupFiles = $this->getBackupFiles($networkDrivePath);
 
         //networkDrivePath
-        $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
@@ -783,7 +735,7 @@ class DataBackupManagementController extends OrderAbstractController
             //echo "folder=".$folder."<br>";
 
             $targetFolder = "Uploaded";
-            $targetFolder = "UploadedTest"; //testing
+            //$targetFolder = "UploadedTest"; //testing
 
             $date = date('Y-m-d-H-i-s');
 
@@ -821,6 +773,10 @@ class DataBackupManagementController extends OrderAbstractController
                 $msg = $msg . "; res=".$res;
             }
 
+            //Event Log
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
 
             $output = array(
                 'status' => 'OK',
