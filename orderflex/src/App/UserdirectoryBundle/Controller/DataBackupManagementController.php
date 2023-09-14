@@ -660,9 +660,11 @@ class DataBackupManagementController extends OrderAbstractController
             //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
             // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
 
+            $targetFolder = "Uploaded";
+            //$targetFolder = "UploadedTest"; //testing
+
             //use tar.gz archive
-            $command = "tar -zcf $archiveFile -C $folder Uploaded";
-            $command = "tar -zcf $archiveFile -C $folder UploadedTest"; //testing
+            $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
             echo "command=".$command."<br>";
 
             $res = $this->runProcess($command);
@@ -778,24 +780,27 @@ class DataBackupManagementController extends OrderAbstractController
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
             $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
-            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."test";
-            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             //echo "folder=".$folder."<br>";
 
+            $targetFolder = "Uploaded";
+            //$targetFolder = "UploadedTest"; //testing
+
             $date = date('Y-m-d-H-i-s');
-            $folderNew = $folder . DIRECTORY_SEPARATOR . "Uploaded_".$date;
 
             //Rename current Upload folder (Windows 'move')
             $moveCommand = "mv";
             if( $userServiceUtil->isWindows() ){
                 $moveCommand = "move";
             }
-            $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . "Uploaded" . " " . $folderNew;
+
+            //Move target folder to folder_date
+            $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . $targetFolder .
+                " " . $folder . DIRECTORY_SEPARATOR . $targetFolder."_".$date; //restore
             //echo "mv command=".$command."<br>";
             $res = $this->runProcess($command);
 
             //Create new folder instead of moved
-            $command = "mkdir $folder";
+            $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
             //echo "mkdir command=".$command."<br>";
             $res = $this->runProcess($command);
 

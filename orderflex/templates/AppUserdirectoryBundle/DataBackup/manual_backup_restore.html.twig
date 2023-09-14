@@ -400,7 +400,11 @@
             var fileId = file.id;
             console.log("fileId=" + fileId);
 
-            var env = $('#backup-env-id').select2('data').text;
+            var env = null;
+            var envBox = $('#backup-env-id').select2('data');
+            if( envBox ) {
+                env = envBox.text;
+            }
             console.log("env=" + env);
 
             //var url = Routing.generate('employees_restore_backup_ajax',{fileId: fileId});
