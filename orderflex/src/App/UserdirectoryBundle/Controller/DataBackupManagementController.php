@@ -777,20 +777,20 @@ class DataBackupManagementController extends OrderAbstractController
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."test";
+            $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
+            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."test";
             //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             //echo "folder=".$folder."<br>";
 
             $date = date('Y-m-d-H-i-s');
-            $folderNew = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded_".$date;
+            $folderNew = $folder . DIRECTORY_SEPARATOR . "Uploaded_".$date;
 
             //Rename current Upload folder (Windows 'move')
+            $moveCommand = "mv";
             if( $userServiceUtil->isWindows() ){
-                $command = "move $folder $folderNew";
-            } else {
-                $command = "mv $folder $folderNew";
+                $moveCommand = "move";
             }
+            $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . "Uploaded" . " " . $folderNew;
             //echo "mv command=".$command."<br>";
             $res = $this->runProcess($command);
 
