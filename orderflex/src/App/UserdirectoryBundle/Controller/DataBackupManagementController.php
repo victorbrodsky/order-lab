@@ -1030,8 +1030,8 @@ class DataBackupManagementController extends OrderAbstractController
             //exit('uploadBackupFileAction uploadFile');
         }
 
-        exit('uploadBackupFileAction end');
-        //return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        //exit('uploadBackupFileAction end');
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
 
