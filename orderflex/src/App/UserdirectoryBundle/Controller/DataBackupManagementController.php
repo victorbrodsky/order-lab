@@ -475,6 +475,18 @@ class DataBackupManagementController extends OrderAbstractController
         //config file
         $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
 
+        //TODO: check/create d.config file
+        //[setup]
+        //storage_engine=LOCAL
+        //[local_storage]
+        //path=C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\
+        //[postgresql]
+        //host=127.0.0.1
+        //port=5432
+        //db=ScanOrder
+        //user=username
+        //password=userpassword
+
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
         //exit('111='.$pythonScriptPath);
 
@@ -488,7 +500,7 @@ class DataBackupManagementController extends OrderAbstractController
             $pythonEnvPath = $managePackagePath .
                 DIRECTORY_SEPARATOR . "venv" .
                 DIRECTORY_SEPARATOR . "bin" . //Linux
-                DIRECTORY_SEPARATOR . "python3";
+                DIRECTORY_SEPARATOR . "python";
         }
         //echo "pythonEnvPath=".$pythonEnvPath."<br>";
         if( file_exists($pythonEnvPath) ) {
