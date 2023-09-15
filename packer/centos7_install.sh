@@ -311,6 +311,13 @@ f_install_python3 () {
 	sudo yum install -y python3-pip
 	sudo pip3 install requests
 	python3 -V
+	
+	echo -e "${COLOR} Installing env python for "
+	cd /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/
+	python3 -m venv venv
+	source venv/bin/activate
+	#sudo pip3 install -r requirements.txt
+	python -m pip install -r requirements.txt
 }
 
 f_install_order () {
@@ -384,7 +391,7 @@ f_install_prepare () {
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
-	cp /usr/local/bin/order-lab/packer/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
+	cp /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
