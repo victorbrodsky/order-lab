@@ -716,6 +716,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFileName ) {
 
+            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+
             $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
 
             $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
