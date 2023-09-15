@@ -334,7 +334,7 @@ f_install_prepare () {
 	cp /etc/php.ini /etc/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
-	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/ ${NC}
+	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
 	cp /usr/local/bin/order-lab/packer/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
 	
 	#sudo service apache2 restart

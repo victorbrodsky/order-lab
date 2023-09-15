@@ -455,6 +455,9 @@ f_install_prepare () {
 	cp /etc/php/8.2/apache2/php.ini /etc/php/8.2/apache2/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.2/apache2/
 	
+	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
+	cp /usr/local/bin/order-lab/packer/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
+	
 	#sudo service apache2 restart
 	echo -e ${COLOR} Restart apache ${NC}
 	sudo systemctl restart apache2.service
