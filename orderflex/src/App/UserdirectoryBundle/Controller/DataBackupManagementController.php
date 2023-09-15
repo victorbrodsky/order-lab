@@ -518,10 +518,15 @@ class DataBackupManagementController extends OrderAbstractController
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
 
+        $dbUsername = $this->getParameter('database_user');
+        $dbPassword = $this->getParameter('database_password');
+
         $command = "$pythonEnvPath $pythonScriptPath".
             " --configfile $configFilePath --verbose true".
             " --path $networkDrivePath".
-            " --source-db $dbName"
+            " --source-db $dbName".
+            " --user $dbUsername".
+            " --password $dbPassword"
         ;
 
         if( $action == 'backup' ) {

@@ -317,6 +317,13 @@ def main():
                              metavar="source_db",
                              default=False,
                              help="Name of the source database to overwrite config's db")
+    args_parser.add_argument("--user",
+                             default=False,
+                             help="DB username")
+    args_parser.add_argument("--password",
+                             default=False,
+                             help="DB password")
+
     args = args_parser.parse_args()
 
     config = configparser.ConfigParser()
@@ -345,6 +352,11 @@ def main():
         prefix = args.prefix
     else:
         prefix = 'unknownenv'
+
+    if args.user:
+        postgres_user = args.user
+    if args.password:
+        postgres_password = args.password
 
     if args.source_db:
         postgres_db = args.source_db
