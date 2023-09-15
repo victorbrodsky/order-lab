@@ -276,9 +276,9 @@ f_install_python3 () {
 	python3 -V
 	
 	echo -e "${COLOR} Installing env python for "
-	cd /usr/local/bin/order-lab/db-manage/postgres-manage-python/
+	cd /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/
 	python3 -m venv venv
-	sudo source venv/bin/activate
+	source venv/bin/activate
 	sudo pip3 install -r requirements.txt
 }
 

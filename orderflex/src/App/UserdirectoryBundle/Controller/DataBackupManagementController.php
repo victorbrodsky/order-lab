@@ -488,7 +488,7 @@ class DataBackupManagementController extends OrderAbstractController
             $pythonEnvPath = $managePackagePath .
                 DIRECTORY_SEPARATOR . "venv" .
                 DIRECTORY_SEPARATOR . "bin" . //Linux
-                DIRECTORY_SEPARATOR . "python";
+                DIRECTORY_SEPARATOR . "python3";
         }
         //echo "pythonEnvPath=".$pythonEnvPath."<br>";
         if( file_exists($pythonEnvPath) ) {
