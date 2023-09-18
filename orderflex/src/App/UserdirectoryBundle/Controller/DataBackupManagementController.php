@@ -963,15 +963,15 @@ class DataBackupManagementController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $logger->notice("uploadBackupFileAction: before createForm");
+        //$logger->notice("uploadBackupFileAction: before createForm");
         $form = $this->createForm(UploadSingleFileType::class);
-        $logger->notice("uploadBackupFileAction: after createForm");
+        //$logger->notice("uploadBackupFileAction: after createForm");
 
         $form->handleRequest($request);
-        $logger->notice("uploadBackupFileAction: after handleRequest");
+        //$logger->notice("uploadBackupFileAction: after handleRequest");
 
         if( $form->isSubmitted() ) {
-            $logger->notice("uploadBackupFileAction: isSubmitted");
+            //$logger->notice("uploadBackupFileAction: isSubmitted");
         } else {
             $logger->notice("uploadBackupFileAction: NO isSubmitted");
             $this->addFlash(
@@ -980,7 +980,7 @@ class DataBackupManagementController extends OrderAbstractController
             );
         }
         if( $form->isValid() ) {
-            $logger->notice("uploadBackupFileAction: isValid");
+            //$logger->notice("uploadBackupFileAction: isValid");
         } else {
             $logger->notice("uploadBackupFileAction: NO isValid");
             $this->addFlash(
@@ -993,13 +993,13 @@ class DataBackupManagementController extends OrderAbstractController
             );
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if( $form->isSubmitted() && $form->isValid() ) {
             /** @var UploadedFile $uploadFile */
             $uploadFile = $form->get('uploadfile')->getData();
-            $logger->notice("uploadBackupFileAction: isSubmitted uploadFile=$uploadFile");
+            //$logger->notice("uploadBackupFileAction: isSubmitted uploadFile=$uploadFile");
 
             if( $uploadFile ) {
-                $logger->notice("uploadFile=$uploadFile");
+                //$logger->notice("uploadFile=$uploadFile");
                 $originalFilename = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -1011,15 +1011,23 @@ class DataBackupManagementController extends OrderAbstractController
                 $networkDrivePath = realpath($networkDrivePath);
                 echo "networkDrivePath=$networkDrivePath <br>";
 
+                if( !$networkDrivePath ) {
+                    $logger->notice("Error: Undefined networkDrivePath");
+                    $this->addFlash(
+                        'warning',
+                        "Error: Undefined networkDrivePath"
+                    );
+                }
+
                 // Move the file to the directory where brochures are stored
                 try {
-                    $logger->notice("before move. networkDrivePath=$networkDrivePath, newFilename=$newFilename");
+                    //$logger->notice("before move. networkDrivePath=$networkDrivePath, newFilename=$newFilename");
                     $uploadFile->move(
                         //$this->getParameter('backup_upload_directory'),
                         $networkDrivePath,
                         $newFilename
                     );
-                    $logger->notice("after move");
+                    //$logger->notice("after move");
 
                     $this->addFlash(
                         'notice',
@@ -1028,7 +1036,7 @@ class DataBackupManagementController extends OrderAbstractController
                     return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
                 } catch( FileException $e ) {
                     $this->addFlash(
-                        'notice',
+                        'warning',
                         "An error occurred while uploading backup file. ".$e->getMessage()
                     );
                     // ... handle exception if something happens during file upload

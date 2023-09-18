@@ -368,6 +368,7 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
 	cp /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
 	
+	#sudo service php-fpm restart
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
 	
