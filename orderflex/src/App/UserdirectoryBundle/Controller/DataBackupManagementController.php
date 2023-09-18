@@ -974,11 +974,21 @@ class DataBackupManagementController extends OrderAbstractController
             $logger->notice("uploadBackupFileAction: isSubmitted");
         } else {
             $logger->notice("uploadBackupFileAction: NO isSubmitted");
+            $this->addFlash(
+                'warning',
+                "Upload file logical error: form is not submitted"
+            );
         }
         if( $form->isValid() ) {
             $logger->notice("uploadBackupFileAction: isValid");
         } else {
             $logger->notice("uploadBackupFileAction: NO isValid");
+            $this->addFlash(
+                'warning',
+                "Upload file logical error: form is not valid. 
+                Please make sure upload_max_filesize and post_max_size in php.ini 
+                are set to a value bigger than upload file size"
+            );
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
