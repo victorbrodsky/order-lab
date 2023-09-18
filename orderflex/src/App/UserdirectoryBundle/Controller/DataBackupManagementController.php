@@ -1020,7 +1020,7 @@ class DataBackupManagementController extends OrderAbstractController
                     //create $networkDrivePath /usr/local/bin/order-lab/orderflex/var/backups/
                     //Create new folder instead of moved
                     $command = "mkdir $networkDrivePath";
-                    $logger->notice("command=".$command);
+                    $logger->notice("mkdir command=".$command);
                     //echo "mkdir command=".$command."<br>";
                     $res = $this->runProcess($command);
                 }
