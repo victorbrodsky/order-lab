@@ -947,20 +947,6 @@ class DataBackupManagementController extends OrderAbstractController
         $response = new BinaryFileResponse($filePath);
         $response->send();
     }
-
-//    #[Route(path: '/upload-backup-file-1/{filename}', name: 'employees_upload_backup_file_1', methods: ['GET'], options: ['expose' => true])]
-//    public function uploadBackupFile1Action( Request $request, $filename=null )
-//    {
-//        exit('uploadBackupFile1Action');
-//        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            return $this->redirect($this->generateUrl('employees-nopermission'));
-//        }
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $em = $this->getDoctrine()->getManager();
-//
-//        exit();
-//    }
     
     //https://symfony.com/doc/current/controller/upload_file.html
     #[Route(path: '/upload-backup-file/', name: 'employees_upload_backup_file', methods: ['POST'])]
@@ -969,9 +955,11 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $logger = $this->container->get('logger');
+
         //Make sure upload_max_filesize is large enough
-//        ini_set('upload_max_filesize', '10240M');
-//        ini_set('post_max_size', '0');
+        ini_set('upload_max_filesize', '10G');
+        ini_set('post_max_size', '10G');
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -983,6 +971,7 @@ class DataBackupManagementController extends OrderAbstractController
             $uploadFile = $form->get('uploadfile')->getData();
 
             if( $uploadFile ) {
+                $logger->notice("uploadFile=$uploadFile");
                 $originalFilename = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -996,11 +985,13 @@ class DataBackupManagementController extends OrderAbstractController
 
                 // Move the file to the directory where brochures are stored
                 try {
+                    $logger->notice("before move. networkDrivePath=$networkDrivePath, newFilename=$newFilename");
                     $uploadFile->move(
                         //$this->getParameter('backup_upload_directory'),
                         $networkDrivePath,
                         $newFilename
                     );
+                    $logger->notice("after move");
 
                     $this->addFlash(
                         'notice',
@@ -1017,6 +1008,7 @@ class DataBackupManagementController extends OrderAbstractController
                     exit('error backup uploaded');
                 }
             } else {
+                $logger->notice("Upload file is not provided");
                 //exit('upload file is not provided');
                 $this->addFlash(
                     'warning',
@@ -1028,9 +1020,11 @@ class DataBackupManagementController extends OrderAbstractController
 
             //dump($uploadFile);
             //exit('uploadBackupFileAction uploadFile');
+            $logger->notice("End of 'if' uploadBackupFileAction uploadFile");
         }
 
         //exit('uploadBackupFileAction end');
+        $logger->notice("uploadBackupFileAction end");
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
