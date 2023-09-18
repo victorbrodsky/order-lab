@@ -970,10 +970,21 @@ class DataBackupManagementController extends OrderAbstractController
         $form->handleRequest($request);
         $logger->notice("uploadBackupFileAction: after handleRequest");
 
+        if( $form->isSubmitted() ) {
+            $logger->notice("uploadBackupFileAction: isSubmitted");
+        } else {
+            $logger->notice("uploadBackupFileAction: NO isSubmitted");
+        }
+        if( $form->isValid() ) {
+            $logger->notice("uploadBackupFileAction: isValid");
+        } else {
+            $logger->notice("uploadBackupFileAction: NO isValid");
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $uploadFile */
             $uploadFile = $form->get('uploadfile')->getData();
-            $logger->notice("uploadBackupFileAction: uploadFile=$uploadFile");
+            $logger->notice("uploadBackupFileAction: isSubmitted uploadFile=$uploadFile");
 
             if( $uploadFile ) {
                 $logger->notice("uploadFile=$uploadFile");
