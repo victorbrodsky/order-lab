@@ -1010,7 +1010,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
                 echo "networkDrivePath=$networkDrivePath <br>";
 
-                if( !$networkDrivePath ) {
+                if( file_exists($networkDrivePath) == false ) {
                     $logger->notice("Warning: Undefined networkDrivePath. Attempting to create $networkDrivePath");
                     $this->addFlash(
                         'warning',
@@ -1026,7 +1026,7 @@ class DataBackupManagementController extends OrderAbstractController
                     $res = $this->runProcess($command);
                 }
 
-                if( !$networkDrivePath ) {
+                if( file_exists($networkDrivePath) == false ) {
                     $logger->notice("Error: Undefined networkDrivePath");
                     $this->addFlash(
                         'warning',
