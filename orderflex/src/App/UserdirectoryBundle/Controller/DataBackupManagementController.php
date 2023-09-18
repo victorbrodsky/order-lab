@@ -326,10 +326,10 @@ class DataBackupManagementController extends OrderAbstractController
                     //$resStr = print_r($results->fetchAll());
                     //$logger->notice("after executeQuery. res=".$resStr);
 
-                    //re-deploy
-                    $projectRoot = $this->container->get('kernel')->getProjectDir();
-                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-                    $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+//                    //re-deploy
+//                    $projectRoot = $this->container->get('kernel')->getProjectDir();
+//                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//                    $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
 
                     //Generate cron jobs only for live server
                     if ($env == 'live') {
@@ -355,10 +355,11 @@ class DataBackupManagementController extends OrderAbstractController
                 $resStr =
                     "Restored database " . $backupFileName . "<br>" .
                     $resStr .
-                    " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
-                    " <br>Make sure that the local administrator user and associated password is set if the backup is used outside the institutional intranet network".
-                    " <br>Also verify the site settings and cron jobs."
-                    //" <br>Also it might be required to run the deploy_prod.sh script."
+                    "<br>The next steps would be:".
+                    " <br>- Make sure that the local administrator user and associated password is set if the backup is used outside the institutional intranet network".
+                    " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+                    " <br>- Verify the site settings and cron jobs.".
+                    " <br>- It is recommended to run the deploy_prod.sh script."
                 ;
 
                 //Event Log

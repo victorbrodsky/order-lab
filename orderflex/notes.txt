@@ -1777,3 +1777,21 @@ This probably means the server terminated abnormally 	before or while processing
 [2023-09-08T15:17:19.176775+00:00] app.NOTICE: hostname=view-testmedcornelledu [] []
 [2023-09-08T15:17:19.176828+00:00] app.NOTICE: Original exception message=An exception occurred while executing a query:
 SQLSTATE[HY000]: General error: 7 no connection to the server [] []
+
+[2023-09-18T20:33:11.821128+00:00] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\DriverException:
+"An exception occurred while executing a query: SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command server closed the connection unexpectedly
+This probably means the server terminated abnormally 	before or while processing the request." at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/API/PostgreSQL/ExceptionConverter.php line 87
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\DriverException(code: 7): An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/API/PostgreSQL/ExceptionConverter.php:87)\n
+[previous exception] [object] (Doctrine\\DBAL\\Driver\\PDO\\Exception(code: 7): SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/PDO/Exception.php:28)\n
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/PDO/Statement.php:121)"} []
