@@ -963,12 +963,17 @@ class DataBackupManagementController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $logger->notice("uploadBackupFileAction: before createForm");
         $form = $this->createForm(UploadSingleFileType::class);
+        $logger->notice("uploadBackupFileAction: after createForm");
+
         $form->handleRequest($request);
+        $logger->notice("uploadBackupFileAction: after handleRequest");
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $uploadFile */
             $uploadFile = $form->get('uploadfile')->getData();
+            $logger->notice("uploadBackupFileAction: uploadFile=$uploadFile");
 
             if( $uploadFile ) {
                 $logger->notice("uploadFile=$uploadFile");
