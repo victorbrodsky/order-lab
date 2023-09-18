@@ -987,7 +987,9 @@ class DataBackupManagementController extends OrderAbstractController
                 'warning',
                 "Upload file logical error: form is not valid. 
                 Please make sure upload_max_filesize and post_max_size in php.ini 
-                are set to a value bigger than upload file size"
+                are set to a value bigger than upload file size".
+                "<br> Currently upload_max_filesize=".ini_get('upload_max_filesize').
+                ", and post_max_size=".ini_get('post_max_size')
             );
         }
 
