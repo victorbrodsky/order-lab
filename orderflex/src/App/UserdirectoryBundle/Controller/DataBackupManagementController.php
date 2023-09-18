@@ -1011,7 +1011,7 @@ class DataBackupManagementController extends OrderAbstractController
                 echo "networkDrivePath=$networkDrivePath <br>";
 
                 if( !$networkDrivePath ) {
-                    $logger->notice("Error: Undefined networkDrivePath");
+                    $logger->notice("Error: Undefined networkDrivePath. Attempting to create $networkDrivePath");
                     $this->addFlash(
                         'warning',
                         "Error: Undefined networkDrivePath. Attempting to create $networkDrivePath"
