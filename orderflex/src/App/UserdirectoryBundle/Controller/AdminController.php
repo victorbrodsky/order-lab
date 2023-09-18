@@ -5378,7 +5378,7 @@ class AdminController extends OrderAbstractController
         foreach( $testusers as $testusername => $roles ) {
 
             $user = new User();
-            $userkeytype = $userSecUtil->getUsernameType("external");
+            $userkeytype = $userSecUtil->getUsernameType("local"); //"external"
             $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($testusername);
 

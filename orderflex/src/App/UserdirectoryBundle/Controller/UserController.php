@@ -4192,17 +4192,10 @@ class UserController extends OrderAbstractController
         //echo "getPassword=".$user->getPassword()."<br>";
         //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
 
-//        $compare = true;
 //        if( !$originalPassword ) {
-//            $originalPassword = $user->getPassword(); //new user
-//            $compare = false;
-//            //return;
+//            exit('no original password');
+//            return;
 //        }
-
-        if( !$originalPassword ) {
-            //exit('no original password');
-            return;
-        }
 
 //        //set salt
 //        if( !$user->getSalt() ) {
@@ -4215,38 +4208,41 @@ class UserController extends OrderAbstractController
         $authUtil = $this->container->get('authenticator_utility');
         $encoded = $authUtil->getEncodedPassword($user, $user->getPassword());
 
-        //password is the same as original one
-        if( !$newUser && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
-            if( $this->isEncodedPassword($user->getPassword()) ) {
-                //exit('password is already encoded and it is the same');
-                return;
-            }
-        }
+        $user->setPassword($encoded);
+        return true;
 
-        //$encoder = $this->container->get('security.password_encoder');
-        //$encoded = $encoder->encodePassword($user, $user->getPassword());
-
-        //echo "compare: $originalPassword == $encoded <br>";
-        $equals = hash_equals($originalPassword, $encoded);
-
-        if( !$equals && $user->getPassword() != "" ) {
-            // 3) Encode the password (you could also do this via Doctrine listener)
-            //echo "new password<br>";
-            //$password = $this->container->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($encoded);
-        } else {
-            //echo "old password<br>";
-        }
-        //exit();
+//        //password is the same as original one
+//        if( !$newUser && $originalPassword && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
+//            //exit('password exists and is the same');
+//            return null;
+//            //if( $this->isEncodedPassword($user->getPassword()) ) {
+//                //exit('password is already encoded and it is the same');
+//                //return;
+//            //}
+//        }
+//
+//        //echo "compare: $originalPassword == $encoded <br>";
+//        $equals = hash_equals($originalPassword, $encoded);
+//
+//        if( $equals == false && $user->getPassword() != "" ) {
+//            // 3) Encode the password (you could also do this via Doctrine listener)
+//            //echo "new password<br>";
+//            //$password = $this->container->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+//            $user->setPassword($encoded);
+//        } else {
+//            //echo "old password<br>";
+//        }
+//        //exit('encryptPassword encoded='.$encoded);
+//        return null;
     }
-    function isEncodedPassword($password) {
-        //return preg_match('/^[a-f0-9]{32}$/', $password);
-        //check the length of the password
-        if( strlen((string)$password) >= 32 ) {
-            return true;
-        }
-        return false;
-    }
+//    function isEncodedPassword($password) {
+//        //return preg_match('/^[a-f0-9]{32}$/', $password);
+//        //check the length of the password
+//        if( strlen((string)$password) >= 32 ) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
