@@ -1011,11 +1011,12 @@ class DataBackupManagementController extends OrderAbstractController
                 echo "networkDrivePath=$networkDrivePath <br>";
 
                 if( !$networkDrivePath ) {
-                    $logger->notice("Error: Undefined networkDrivePath. Attempting to create $networkDrivePath");
+                    $logger->notice("Warning: Undefined networkDrivePath. Attempting to create $networkDrivePath");
                     $this->addFlash(
                         'warning',
-                        "Error: Undefined networkDrivePath. Attempting to create $networkDrivePath"
+                        "Warning: Undefined networkDrivePath. Attempting to create $networkDrivePath"
                     );
+                    echo "Warning: Undefined networkDrivePath. Attempting to create $networkDrivePath <br>";
 
                     //create $networkDrivePath /usr/local/bin/order-lab/orderflex/var/backups/
                     //Create new folder instead of moved
