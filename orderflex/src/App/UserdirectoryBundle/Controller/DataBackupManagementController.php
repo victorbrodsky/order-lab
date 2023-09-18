@@ -1015,8 +1015,23 @@ class DataBackupManagementController extends OrderAbstractController
                     $logger->notice("Error: Undefined networkDrivePath");
                     $this->addFlash(
                         'warning',
-                        "Error: Undefined networkDrivePath"
+                        "Error: Undefined networkDrivePath. Attempting to create $networkDrivePath"
                     );
+
+                    //create $networkDrivePath /usr/local/bin/order-lab/orderflex/var/backups/
+                    //Create new folder instead of moved
+                    $command = "mkdir $networkDrivePath";
+                    //echo "mkdir command=".$command."<br>";
+                    $res = $this->runProcess($command);
+                }
+
+                if( !$networkDrivePath ) {
+                    $logger->notice("Error: Undefined networkDrivePath");
+                    $this->addFlash(
+                        'warning',
+                        "Error: Undefined networkDrivePath".$networkDrivePath
+                    );
+                    return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
                 }
 
                 // Move the file to the directory where brochures are stored
