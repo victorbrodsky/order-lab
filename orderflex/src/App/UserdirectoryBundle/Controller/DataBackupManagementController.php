@@ -356,7 +356,9 @@ class DataBackupManagementController extends OrderAbstractController
                     "Restored database " . $backupFileName . "<br>" .
                     $resStr .
                     " <br>The next step would be to make sure the  public 'Uploaded' folder corresponds to the restored DB.".
-                    " <br>Also it might be required to run the deploy_prod.sh script."
+                    " <br>Make sure that the local administrator user and associated password is set if the backup is used outside the institutional intranet network".
+                    " <br>Also verify the site settings and cron jobs."
+                    //" <br>Also it might be required to run the deploy_prod.sh script."
                 ;
 
                 //Event Log
