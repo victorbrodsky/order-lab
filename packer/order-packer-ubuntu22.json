@@ -73,7 +73,11 @@
 		   "composer self-update",   
            "yes | composer install",
 		   "echo @### Install yarn package.json ###",
-		   "sudo yarn install --frozen-lockfile",		   
+		   "sudo yarn install --frozen-lockfile",	
+
+		   "echo @### Install additional.sh. env for python ###",
+		   "bash /usr/local/bin/order-lab/packer/additional.sh",
+		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
 	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",		           

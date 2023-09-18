@@ -316,13 +316,6 @@ f_install_python3 () {
 	sudo yum install -y python3-pip
 	sudo pip3 install requests
 	python3 -V
-	
-	echo -e "${COLOR} Installing env python for "
-	cd /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/
-	python3 -m venv venv
-	source venv/bin/activate
-	#sudo pip3 install -r requirements.txt
-	python -m pip install -r requirements.txt
 }
 
 f_install_order () {
@@ -412,6 +405,15 @@ f_install_prepare () {
 	#install Composer in the /usr/local/bin directory
 	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	php composer-setup.php --install-dir=/usr/local/bin --filename=composer	
+	
+	#echo -e "${COLOR} Installing env python for "
+	#cd /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/
+	#python3 -m venv venv
+	#source venv/bin/activate
+	#sudo pip3 install -r requirements.txt
+	#python -m pip install -r requirements.txt
+	#echo -e "${COLOR} Installing additional.sh: env for python"
+	#source /usr/local/bin/order-lab/packer/additional.sh
 	
 	echo -e ${COLOR} OS Info ${NC}
 	sudo hostnamectl
