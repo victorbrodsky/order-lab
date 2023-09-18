@@ -272,6 +272,11 @@ f_install_util () {
 	curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
 	sudo yum install -y yarn
 	yarn --version
+	
+	echo -e ${COLOR} Append lsl alias to ~/.bashrc ${NC}
+	echo 'alias lsl="ls -lrt"' >> ~/.bashrc
+	source ~/.bashrc
+	
 	echo ""
     sleep 1
 }

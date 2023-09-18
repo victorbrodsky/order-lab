@@ -354,6 +354,10 @@ f_install_util () {
 	echo -e ${COLOR} Nodejs version ${NC}
 	node -v
 	
+	echo -e ${COLOR} Append lsl alias to ~/.bashrc ${NC}
+	echo 'alias lsl="ls -lrt"' >> ~/.bashrc
+	source ~/.bashrc
+	
 	#If above Nodejs is not working:
 	#sudo apt remove libnode72
 	#sudo apt remove libnode-dev
