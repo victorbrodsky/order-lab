@@ -1008,7 +1008,6 @@ class DataBackupManagementController extends OrderAbstractController
                 echo "newFilename=$newFilename <br>";
 
                 $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-                $networkDrivePath = realpath($networkDrivePath);
                 echo "networkDrivePath=$networkDrivePath <br>";
 
                 if( !$networkDrivePath ) {
@@ -1034,6 +1033,8 @@ class DataBackupManagementController extends OrderAbstractController
                     );
                     return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
                 }
+
+                $networkDrivePath = realpath($networkDrivePath);
 
                 // Move the file to the directory where brochures are stored
                 try {
