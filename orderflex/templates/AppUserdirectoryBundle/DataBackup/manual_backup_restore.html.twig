@@ -445,6 +445,7 @@
                     $('#backup-msg-success-box').show();
 
                     //userPostRestoreAjax(btn,lbtn,type);
+                    userPostRestoreEventLogAjax(btn,lbtn,type);
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -459,6 +460,9 @@
                     failMsg = "Restore completed. Reloading ...";
                     $('#backup-msg-success-box').html(failMsg);
                     $('#backup-msg-success-box').show();
+
+                    userPostRestoreEventLogAjax(btn,lbtn,type);
+
                     location.reload();
                 } else {
                     $('#backup-msg-danger-box').html(failMsg);
@@ -514,6 +518,47 @@
             }).done(function() {
                 userStopBtn(btn,lbtn);
                 console.log("post restore done");
+            });
+        }
+
+        function userPostRestoreEventLogAjax(btn,lbtn,type) {
+            $('#backup-msg-danger-box').html("");
+            $('#backup-msg-danger-box').hide();
+
+            var url = Routing.generate('employees_post_restore_eventlog_ajax');
+
+            $.ajax({
+                url: url,
+                timeout: _backupAjaxTimeout,
+                type: "POST",
+                async: false, //true,
+                //data: {fileId: fileId, env: env},
+                dataType: 'json'
+            }).success(function(data) {
+                console.log("user PostRestoreEventLogAjax data="+data);
+                console.log("user PostRestoreEventLogAjax data.status="+data.status);
+                console.log("user PostRestoreEventLogAjax data.message="+data.message);
+                if( data.status == 'OK' ) {
+                    console.log("post restore EventLog ok");
+                    $('#backup-msg-danger-box').html("");
+                    $('#backup-msg-danger-box').hide();
+                    //backup-msg-success-box
+                    //$('#backup-msg-success-box').html(data.message);
+                    //$('#backup-msg-success-box').show();
+                } else {
+                    console.log("post restore EventLog error");
+                    $('#backup-msg-danger-box').html(data.message);
+                    $('#backup-msg-danger-box').show();
+                }
+            }).fail(function(jqXHR, textStatus, error) {
+                //alert(error);
+                var failMsg = "post restore EventLog fail. textStatus="+textStatus+", error="+error;
+                console.log(failMsg);
+                $('#backup-msg-danger-box').html(failMsg);
+                $('#backup-msg-danger-box').show();
+            }).done(function() {
+                userStopBtn(btn,lbtn);
+                console.log("post restore EventLog done");
             });
         }
 
