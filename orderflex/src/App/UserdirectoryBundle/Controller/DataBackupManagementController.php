@@ -277,8 +277,8 @@ class DataBackupManagementController extends OrderAbstractController
             //exit('Under construction: backupFilePath='.$backupFileName);
             //create backup
 
-            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-            $networkDrivePath = realpath($networkDrivePath);
+            $networkDrivePathOrig = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            $networkDrivePath = realpath($networkDrivePathOrig);
             //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
             $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
@@ -318,6 +318,7 @@ class DataBackupManagementController extends OrderAbstractController
                         " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
                         ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
                         ", connectionChannel='$connectionChannel'".
+                        ", networkDrivePath='$networkDrivePathOrig'".
                         " WHERE id=" . $param->getId();
                     //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
                     $logger->notice("sql=" . $sql);
