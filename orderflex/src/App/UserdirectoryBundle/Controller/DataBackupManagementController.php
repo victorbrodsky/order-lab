@@ -433,6 +433,9 @@ class DataBackupManagementController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        $user = $this->getUser();
+        $userStr = $user->getUsernameOptimal()."";
+
         //Original site settings
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( !$siteEmail ) {
@@ -468,11 +471,11 @@ class DataBackupManagementController extends OrderAbstractController
         //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
         //Event Log
-        $user = $this->getUser();
-        $sitename = $this->getParameter('employees.sitename');
-        $resStr = "Restoring database from backup " . $backupFileName . " located in folder " . $networkDrivePath .
-            " by " . $user . ". Site settings parameters: env=$env, mailerdeliveryaddresses=$siteEmail, connectionChannel=$connectionChannel";
-        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+//        $user = $this->getUser();
+//        $sitename = $this->getParameter('employees.sitename');
+//        $resStr = "Restoring database from backup " . $backupFileName . " located in folder " . $networkDrivePath .
+//            " by " . $user . ". Site settings parameters: env=$env, mailerdeliveryaddresses=$siteEmail, connectionChannel=$connectionChannel";
+//        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
 
         $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
 
@@ -570,6 +573,13 @@ class DataBackupManagementController extends OrderAbstractController
             );
 
             //$logger->notice("After restore DB: resStr=".$resStr);
+
+            if( $siteEmail ) {
+                $subject = "Database restored by ".$userStr;
+                $emailUtil = $this->container->get('user_mailer_utility');
+                //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+                $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+            }
 
             //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
             //Event Log
