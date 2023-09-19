@@ -1265,6 +1265,12 @@ class User extends UserBase {
             //$key = strtolower($key);
             $key = $this->canonicalize($key);
         }
+
+        $keytypeAbbreviation = 'local-user';
+        if( $keytype ) {
+            $keytypeAbbreviation = $keytype->getAbbreviation();
+        }
+
         $username = $key."_@_".$keytype->getAbbreviation();
         $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
         return $usernamestr;
