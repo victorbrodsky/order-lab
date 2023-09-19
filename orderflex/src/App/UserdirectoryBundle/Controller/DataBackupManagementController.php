@@ -467,6 +467,13 @@ class DataBackupManagementController extends OrderAbstractController
         $networkDrivePath = realpath($networkDrivePathOrig);
         //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
 
+        //Event Log
+        $user = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $resStr = "Restoring database from backup " . $backupFileName . " located in folder " . $networkDrivePath .
+            " by " . $user . ". Site settings parameters: env=$env, mailerdeliveryaddresses=$siteEmail, connectionChannel=$connectionChannel";
+        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+
         $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
 
         //$res = $this->restoringBackupSQLFull($backupFilePath);
@@ -985,7 +992,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $backupFileName = $request->get('fileId');
         $env = $request->get('env');
-        $logger->notice("backupFilePath=".$backupFileName."; env=".$env);
+        $logger->notice("restore BackupFilesAjaxAction backupFilePath=".$backupFileName."; env=".$env);
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
 
@@ -1052,18 +1059,22 @@ class DataBackupManagementController extends OrderAbstractController
             $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . $targetFolder .
                 " " . $folder . DIRECTORY_SEPARATOR . $targetFolder."_".$date; //restore
             //echo "mv command=".$command."<br>";
+            $logger->notice("restore BackupFilesAjaxAction mv command=".$command);
             $res = $this->runProcess($command);
 
             //Create new folder instead of moved
             $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
             //echo "mkdir command=".$command."<br>";
+            $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
             $res = $this->runProcess($command);
 
             //use tar.gz un-archive
             $command = "tar -xf $archiveFile -C $folder";
             //echo "tar command=".$command."<br>";
+            $logger->notice("restore BackupFilesAjaxAction tar command=".$command);
             $res = $this->runProcess($command);
             //exit("res=".$res);
+            $logger->notice("restore BackupFilesAjaxAction: after tar");
 
             $msg = "Uploaded folder backup $archiveFile has been successfully created.".
                 " As a precaution, the original $targetFolder folder has been moved to " .
