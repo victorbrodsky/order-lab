@@ -557,6 +557,11 @@ class DataBackupManagementController extends OrderAbstractController
                 " <br>- It might be necessary to run the deploy_prod.sh script."
             ;
 
+            $this->addFlash(
+                'notice',
+                $resStr
+            );
+
             //$logger->notice("After restore DB: resStr=".$resStr);
 
             //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
