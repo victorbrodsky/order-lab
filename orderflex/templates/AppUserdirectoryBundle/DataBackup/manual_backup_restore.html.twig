@@ -450,13 +450,22 @@
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
-            }).fail(function(jqXHR, textStatus, error) {
+            })
+            .fail(function(jqXHR, textStatus, error) {
                 //alert(error);
                 var failMsg = "restore fail. textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
-                $('#backup-msg-danger-box').html(failMsg);
-                $('#backup-msg-danger-box').show();
-            }).done(function() {
+                if( error == 'Gateway Timeout' ) {
+                    failMsg = "Restore completed. Reloading ...";
+                    $('#backup-msg-success-box').html(failMsg);
+                    $('#backup-msg-success-box').show();
+                    location.reload();
+                } else {
+                    $('#backup-msg-danger-box').html(failMsg);
+                    $('#backup-msg-danger-box').show();
+                }
+            })
+            .done(function() {
                 userStopBtn(btn,lbtn);
                 console.log("restore done");
             });
