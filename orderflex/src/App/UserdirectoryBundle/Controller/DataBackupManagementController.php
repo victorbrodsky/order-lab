@@ -575,7 +575,7 @@ class DataBackupManagementController extends OrderAbstractController
             //$logger->notice("After restore DB: resStr=".$resStr);
 
             if( $siteEmail ) {
-                $subject = "Database restored by ".$userStr;
+                $subject = "Warning: Database restored by ".$userStr;
                 $emailUtil = $this->container->get('user_mailer_utility');
                 //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail($siteEmail, $subject, $resStr);
