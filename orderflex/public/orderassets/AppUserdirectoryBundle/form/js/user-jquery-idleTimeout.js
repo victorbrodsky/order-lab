@@ -67,8 +67,22 @@ $(document).ready(function() {
         var cycle = 'show';
     }
 
+    var disableIdleTimeout = null;
+    if( $("#disableIdleTimeout") ) {
+        disableIdleTimeout = $("#disableIdleTimeout").val();
+    }
+
+    var enableIdleTimeout = true;
+
     //console.log('idleTimeout cycle=('+cycle+')');
-    if( cycle !== 'download' ) {
+    if( cycle == 'download' ) {
+        enableIdleTimeout = false;
+    }
+    if( disableIdleTimeout && disableIdleTimeout == '1' ) {
+        enableIdleTimeout = false;
+    }
+    //if( cycle !== 'download' && idleTimeout !== 1 ) {
+    if( enableIdleTimeout ) {
         // var idleTimeout = new idleTimeoutClass();
         // idleTimeout.init();
         // idleTimeout.checkIdleTimeout();

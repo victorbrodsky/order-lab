@@ -31,6 +31,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="fileId" value="" />
+    <input type="hidden" id="disableIdleTimeout" value="1" />
 
     <h4 class="text-info" align="center">{{ title }}</h4>
     <p>Backup files location: {{ networkDrivePath }}<br>
@@ -447,10 +448,11 @@
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
-            }).fail(function(jqXHR, exception) {
+            }).fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                console.log("restore fail. jqXHR="+jqXHR+", exception="+exception);
-                $('#backup-msg-danger-box').html(exception);
+                var failMsg = "restore fail. textStatus="+textStatus+", error="+error;
+                console.log(failMsg);
+                $('#backup-msg-danger-box').html(failMsg);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
                 userStopBtn(btn,lbtn);
