@@ -510,7 +510,7 @@ class DataBackupManagementController extends OrderAbstractController
                 //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
 
                 //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
-                $sql = "UPDATE user_siteparameters by $userStr" .
+                $sql = "UPDATE user_siteparameters" .
                     " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
                     ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
                     ", connectionChannel='$connectionChannel'".
@@ -535,7 +535,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("insert sql=" . $sql);
 
                 $conn = $this->getConnection();
-                
+
                 $stmt = $conn->prepare($sql);
                 $logger->notice("after insert prepare");
 
@@ -572,7 +572,7 @@ class DataBackupManagementController extends OrderAbstractController
             }//if $param
 
             $resStr =
-                "Restored database " . $backupFileName . "<br>" .
+                "Restored database " . $backupFileName . " by " . $userStr . "<br>" .
                 $resStr .
                 "<br>The next steps would be:".
                 " <br>- Make sure that the local administrator user and associated password".
