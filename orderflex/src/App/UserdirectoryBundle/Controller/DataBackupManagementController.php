@@ -525,22 +525,18 @@ class DataBackupManagementController extends OrderAbstractController
                 $results = $stmt->executeQuery();
                 $logger->notice("after executeQuery");
 
-                //INSERT INTO table_name (column1, column2, column3, ...)
-                //VALUES (value1, value2, value3, ...);
-                $event = "UPDATE user_siteparameters by $userStr";
-                $sql = "INSERT INTO user_logger (sitename, username, event)" .
-                    "VALUES ('employees', '".$userStr."', '".$event."')"
-                ;
-
-                $logger->notice("insert sql=" . $sql);
-
-                $conn = $this->getConnection();
-
-                $stmt = $conn->prepare($sql);
-                $logger->notice("after insert prepare");
-
-                $results = $stmt->executeQuery();
-                $logger->notice("after insert executeQuery");
+//                //INSERT INTO table_name (column1, column2, column3, ...)
+//                //VALUES (value1, value2, value3, ...);
+//                $event = "UPDATE user_siteparameters by $userStr";
+//                $sql = "INSERT INTO user_logger (sitename, username, event)" .
+//                    " VALUES ('employees', '".$userStr."', '".$event."')"
+//                ;
+//                $logger->notice("insert sql=" . $sql);
+//                $conn = $this->getConnection();
+//                $stmt = $conn->prepare($sql);
+//                $logger->notice("after insert prepare");
+//                $results = $stmt->executeQuery();
+//                $logger->notice("after insert executeQuery");
 
                 //$resStr = print_r($results->fetchAll());
                 //$logger->notice("after executeQuery. res=".$resStr);
