@@ -428,7 +428,7 @@
                 data: {fileId: fileId, env: env},
                 dataType: 'json'
             }).success(function(data) {
-                console.log("data="+data);
+                //console.log("data="+data);
                 console.log("data.status="+data.status);
                 console.log("data.message="+data.message);
                 if( data.status == 'OK' ) {
@@ -438,6 +438,8 @@
                     //backup-msg-success-box
                     $('#backup-msg-success-box').html(data.message);
                     $('#backup-msg-success-box').show();
+
+                    userPostRestoreBackupAjax(btn,lbtn,type);
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -448,8 +450,52 @@
                 $('#backup-msg-danger-box').html(exception);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
-                userStopBtn(btn,lbtn);
+                //userStopBtn(btn,lbtn);
                 console.log("restore done");
+            });
+        }
+
+        function userPostRestoreBackupAjax(btn,lbtn,type) {
+
+            if( type != 'db' ) {
+                return;
+            }
+
+            $('#backup-msg-danger-box').html("");
+            $('#backup-msg-danger-box').hide();
+
+            var url = Routing.generate('employees_post_restore_ajax');
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                type: "POST",
+                async: false,
+                //data: {fileId: fileId, env: env},
+                dataType: 'json'
+            }).success(function(data) {
+                //console.log("data="+data);
+                console.log("data.status="+data.status);
+                console.log("data.message="+data.message);
+                if( data.status == 'OK' ) {
+                    console.log("post restore ok");
+                    $('#backup-msg-danger-box').html("");
+                    $('#backup-msg-danger-box').hide();
+                    //backup-msg-success-box
+                    //$('#backup-msg-success-box').html(data.message);
+                    //$('#backup-msg-success-box').show();
+                } else {
+                    console.log("post restore error");
+                    $('#backup-msg-danger-box').html(data.message);
+                    $('#backup-msg-danger-box').show();
+                }
+            }).fail(function(jqXHR, exception) {
+                //alert(error);
+                $('#backup-msg-danger-box').html(exception);
+                $('#backup-msg-danger-box').show();
+            }).done(function() {
+                userStopBtn(btn,lbtn);
+                console.log("post restore done");
             });
         }
 

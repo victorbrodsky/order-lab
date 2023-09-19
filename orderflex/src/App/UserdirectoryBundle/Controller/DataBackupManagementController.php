@@ -262,6 +262,10 @@ class DataBackupManagementController extends OrderAbstractController
             if( $monitorScript ) {
                 $monitorScript = str_replace("'","''",$monitorScript);
             }
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            if( !$connectionChannel ) {
+                $connectionChannel = 'http';
+            }
 
             if(0) {
                 //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
@@ -302,9 +306,9 @@ class DataBackupManagementController extends OrderAbstractController
                     $conn = $this->getConnection();
                     $logger->notice("after getConnection");
 
-                    if ($env == 'live') {
-                        $siteEmail == '';
-                    }
+//                    if( $env == 'live' ) {
+//                        $siteEmail == '';
+//                    }
 
                     //filesBackupConfig - json file with backup config (server dependents: /srv/order-lab/orderflex/public)
                     //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
@@ -313,6 +317,7 @@ class DataBackupManagementController extends OrderAbstractController
                     $sql = "UPDATE user_siteparameters" .
                         " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
                         ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
+                        ", connectionChannel='$connectionChannel'".
                         " WHERE id=" . $param->getId();
                     //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
                     $logger->notice("sql=" . $sql);
@@ -332,7 +337,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                    $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
 
                     //Generate cron jobs only for live server
-                    if ($env == 'live') {
+                    if( $env == 'live' ) {
                         //Generate cron jobs:
                         //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
                         // - directory/admin/list/generate-cron-jobs/
@@ -356,10 +361,13 @@ class DataBackupManagementController extends OrderAbstractController
                     "Restored database " . $backupFileName . "<br>" .
                     $resStr .
                     "<br>The next steps would be:".
-                    " <br>- Make sure that the local administrator user and associated password is set if the backup is used outside the institutional intranet network".
+                    " <br>- Make sure that the local administrator user and associated password".
+                        " is set if the backup is used outside the institutional intranet network".
                     " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
-                    " <br>- Verify the site settings and cron jobs.".
-                    " <br>- It is recommended to run the deploy_prod.sh script."
+                    " <br>- Verify the site settings.".
+                        " Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
+                    " <br>- Verify cron jobs.".
+                    " <br>- It might be necessary to run the deploy_prod.sh script."
                 ;
 
                 $logger->notice("After restore DB: ".$resStr);
@@ -391,6 +399,36 @@ class DataBackupManagementController extends OrderAbstractController
         $output = array(
             'status' => 'NOTOK',
             'message' => 'Backup file is not provided'
+        );
+        $response = new Response();
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]
+    public function postRestoreAjaxAction( Request $request )
+    {
+
+        if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $logger->notice("before deploy");
+
+        //re-deploy
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+
+        $logger->notice("Post restore completed");
+
+        $output = array(
+            'status' => 'OK',
+            'message' => 'Post restore completed'
         );
         $response = new Response();
         $response->setContent(json_encode($output));
