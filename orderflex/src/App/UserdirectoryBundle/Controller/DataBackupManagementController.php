@@ -527,8 +527,9 @@ class DataBackupManagementController extends OrderAbstractController
 
                 //INSERT INTO table_name (column1, column2, column3, ...)
                 //VALUES (value1, value2, value3, ...);
+                $event = "UPDATE user_siteparameters by $userStr";
                 $sql = "INSERT INTO user_logger (sitename, username, event) ".
-                    "VALUES ('employees', '$userStr', 'UPDATE user_siteparameters by $userStr')"
+                    "VALUES ('employees', '".$userStr."', '".$event."')"
                 ;
 
                 $logger->notice("insert sql=" . $sql);
