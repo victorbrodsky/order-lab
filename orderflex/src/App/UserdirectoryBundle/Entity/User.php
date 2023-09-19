@@ -1271,7 +1271,7 @@ class User extends UserBase {
             $keytypeAbbreviation = $keytype->getAbbreviation();
         }
 
-        $username = $key."_@_".$keytype->getAbbreviation();
+        $username = $key."_@_".$keytypeAbbreviation;
         $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
         return $usernamestr;
     }
