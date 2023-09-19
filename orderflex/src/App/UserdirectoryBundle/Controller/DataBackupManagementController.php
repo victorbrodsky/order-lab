@@ -248,6 +248,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $backupFileName ) {
 
             ini_set('max_execution_time', 0);
+            ini_set('max_input_time', 0);
 
             //Original site settings
             $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
@@ -416,6 +417,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         ini_set('max_execution_time', 0);
+        ini_set('max_input_time', 0);
 
         $logger = $this->container->get('logger');
         //$em = $this->getDoctrine()->getManager();
@@ -508,6 +510,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //ini_set('memory_limit', 0);
         ini_set('max_execution_time', 0);
+        ini_set('max_input_time', 0);
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
