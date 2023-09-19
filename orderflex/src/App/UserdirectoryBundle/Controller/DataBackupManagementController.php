@@ -267,12 +267,12 @@ class DataBackupManagementController extends OrderAbstractController
                 $connectionChannel = 'http';
             }
 
-            if(0) {
+            //if(0) {
                 //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
                 //$environment = $userSecUtil->getSiteSettingParameter('environment');
                 //$liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
-                $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-            }
+                //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            //}
 
             //exit('Under construction: backupFilePath='.$backupFileName);
             //create backup
@@ -393,7 +393,6 @@ class DataBackupManagementController extends OrderAbstractController
             $response = new Response();
             $response->setContent(json_encode($output));
             return $response;
-
         }
 
         $output = array(
@@ -408,15 +407,15 @@ class DataBackupManagementController extends OrderAbstractController
     #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]
     public function postRestoreAjaxAction( Request $request )
     {
-
+        $logger->notice("postRestoreAjaxAction");
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$em = $this->getDoctrine()->getManager();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 
         $logger->notice("before deploy");
 

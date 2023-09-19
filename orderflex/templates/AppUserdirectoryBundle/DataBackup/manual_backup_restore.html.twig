@@ -419,7 +419,6 @@
                 return;
             }
 
-
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
@@ -429,8 +428,8 @@
                 dataType: 'json'
             }).success(function(data) {
                 //console.log("data="+data);
-                console.log("data.status="+data.status);
-                console.log("data.message="+data.message);
+                console.log("userRestoreBackupAjax data.status="+data.status);
+                console.log("userRestoreBackupAjax data.message="+data.message);
                 if( data.status == 'OK' ) {
                     console.log("restore ok");
                     $('#backup-msg-danger-box').html("");
@@ -439,7 +438,7 @@
                     $('#backup-msg-success-box').html(data.message);
                     $('#backup-msg-success-box').show();
 
-                    userPostRestoreBackupAjax(btn,lbtn,type);
+                    userPostRestoreAjax(btn,lbtn,type);
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -455,7 +454,7 @@
             });
         }
 
-        function userPostRestoreBackupAjax(btn,lbtn,type) {
+        function userPostRestoreAjax(btn,lbtn,type) {
 
             if( type != 'db' ) {
                 return;
@@ -474,9 +473,9 @@
                 //data: {fileId: fileId, env: env},
                 dataType: 'json'
             }).success(function(data) {
-                //console.log("data="+data);
-                console.log("data.status="+data.status);
-                console.log("data.message="+data.message);
+                console.log("userPostRestoreAjax data="+data);
+                console.log("userPostRestoreAjax data.status="+data.status);
+                console.log("userPostRestoreAjax data.message="+data.message);
                 if( data.status == 'OK' ) {
                     console.log("post restore ok");
                     $('#backup-msg-danger-box').html("");
