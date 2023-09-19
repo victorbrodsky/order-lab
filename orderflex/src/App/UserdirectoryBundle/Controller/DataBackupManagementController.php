@@ -245,7 +245,7 @@ class DataBackupManagementController extends OrderAbstractController
             return $response;
         }
 
-        $output = $this->restoreDBWrapper($backupFileName);
+        $output = $this->restoreDBWrapper($backupFileName,$env);
         $response = new Response();
         $response->setContent(json_encode($output));
         return $response;
@@ -415,7 +415,7 @@ class DataBackupManagementController extends OrderAbstractController
         $response->setContent(json_encode($output));
         return $response;
     }
-    public function restoreDBWrapper( $backupFileName ) {
+    public function restoreDBWrapper( $backupFileName, $env ) {
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             $output = array(
                 'status' => 'NOTOK',
@@ -676,7 +676,7 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "backupFilePath=".$backupFilePath."<br>";
         if( $backupFilePath ) {
 
-            $output = $this->restoreDBWrapper($backupFilePath);
+            $output = $this->restoreDBWrapper($backupFilePath,$env='test');
 
 //            $userSecUtil = $this->container->get('user_security_utility');
 //            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
