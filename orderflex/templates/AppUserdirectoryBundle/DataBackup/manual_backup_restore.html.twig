@@ -367,7 +367,7 @@
                         $('#backup-msg-danger-box').hide();
                         //userStopBtn(btn,lbtn);
                         //userDirectRestoreBackup(btn,lbtn);
-                        //userRestoreBackupAjax(btn,lbtn,type);
+                        userRestoreBackupAjax(btn,lbtn,type);
                     } else {
                         $('#backup-msg-danger-box').html(error);
                         $('#backup-msg-danger-box').show();
@@ -382,7 +382,7 @@
                     console.log("token verification done");
                 });
 
-                userDirectRestoreBackup(btn,lbtn);
+                //userDirectRestoreBackup(btn,lbtn);
 
             } else {
                 console.log("no backup file");
