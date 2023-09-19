@@ -445,7 +445,7 @@
                     $('#backup-msg-success-box').show();
 
                     //userPostRestoreAjax(btn,lbtn,type);
-                    userPostRestoreEventLogAjax(btn,lbtn,type);
+                    userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -454,14 +454,14 @@
             })
             .fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                var failMsg = "restore fail. textStatus="+textStatus+", error="+error;
+                var failMsg = "restore might fail. textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
                 if( error == 'Gateway Timeout' ) {
-                    failMsg = "Restore completed. Reloading ...";
-                    $('#backup-msg-success-box').html(failMsg);
+                    var timeoutMsg = "Restore completed. Reloading ...";
+                    $('#backup-msg-success-box').html(timeoutMsg);
                     $('#backup-msg-success-box').show();
 
-                    userPostRestoreEventLogAjax(btn,lbtn,type);
+                    userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
 
                     location.reload();
                 } else {
@@ -521,7 +521,7 @@
             });
         }
 
-        function userPostRestoreEventLogAjax(btn,lbtn,type) {
+        function userPostRestoreEventLogAjax(btn,lbtn,type,msg) {
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
 
@@ -532,7 +532,7 @@
                 timeout: _backupAjaxTimeout,
                 type: "POST",
                 async: false, //true,
-                //data: {fileId: fileId, env: env},
+                data: {type: type, msg: msg},
                 dataType: 'json'
             }).success(function(data) {
                 console.log("user PostRestoreEventLogAjax data="+data);
