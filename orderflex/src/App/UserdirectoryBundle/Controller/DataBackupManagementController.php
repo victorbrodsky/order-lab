@@ -249,6 +249,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             ini_set('max_execution_time', 0);
             ini_set('max_input_time', 0);
+            ini_set("default_socket_timeout", 6000); //sec
 
             //Original site settings
             $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
@@ -418,6 +419,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         ini_set('max_execution_time', 0);
         ini_set('max_input_time', 0);
+        ini_set("default_socket_timeout", 6000); //sec
 
         $logger = $this->container->get('logger');
         //$em = $this->getDoctrine()->getManager();
@@ -511,6 +513,7 @@ class DataBackupManagementController extends OrderAbstractController
         //ini_set('memory_limit', 0);
         ini_set('max_execution_time', 0);
         ini_set('max_input_time', 0);
+        ini_set("default_socket_timeout", 6000); //sec
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
