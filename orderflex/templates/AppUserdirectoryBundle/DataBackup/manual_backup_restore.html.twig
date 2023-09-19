@@ -366,8 +366,8 @@
                         $('#backup-msg-danger-box').html("");
                         $('#backup-msg-danger-box').hide();
                         //userStopBtn(btn,lbtn);
-                        //userRestoreBackup();
-                        userRestoreBackupAjax(btn,lbtn,type);
+                        userDirectRestoreBackup(btn,lbtn);
+                        //userRestoreBackupAjax(btn,lbtn,type);
                     } else {
                         $('#backup-msg-danger-box').html(error);
                         $('#backup-msg-danger-box').show();
@@ -524,7 +524,7 @@
 
         //NOT USED
         //call restore directly
-        function userRestoreBackup(btn) {
+        function userDirectRestoreBackup(btn,lbtn) {
             var file = $('#backup-file-id').select2('data');
             if( file ) {
                 var fileId = file.id;
