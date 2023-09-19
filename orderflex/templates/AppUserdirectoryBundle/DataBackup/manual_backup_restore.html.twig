@@ -227,6 +227,9 @@
 {% block additionaljs %}
 
     <script>
+
+        var _backupAjaxTimeout = 1800000; //millisec 1000 = 1 sec
+
         $(document).ready(function () {
 
             //$('#backup-file-id')
@@ -352,7 +355,7 @@
                 var url = Routing.generate('employees_authenticate_user');
                 $.ajax({
                     url: url,
-                    timeout: _ajaxTimeout,
+                    timeout: _backupAjaxTimeout,
                     type: "POST",
                     async: false,
                     data: {token: token}
@@ -421,7 +424,7 @@
 
             $.ajax({
                 url: url,
-                timeout: _ajaxTimeout,
+                timeout: _backupAjaxTimeout,
                 type: "POST",
                 async: false,
                 data: {fileId: fileId, env: env},
@@ -467,7 +470,7 @@
 
             $.ajax({
                 url: url,
-                timeout: _ajaxTimeout,
+                timeout: _backupAjaxTimeout,
                 type: "POST",
                 async: false,
                 //data: {fileId: fileId, env: env},

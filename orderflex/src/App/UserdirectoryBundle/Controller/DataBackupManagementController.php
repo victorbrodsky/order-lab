@@ -247,6 +247,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $backupFileName ) {
 
+            ini_set('max_execution_time', 0);
+
             //Original site settings
             $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
             if( !$siteEmail ) {
@@ -413,6 +415,8 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        ini_set('max_execution_time', 0);
+
         $logger = $this->container->get('logger');
         //$em = $this->getDoctrine()->getManager();
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -501,6 +505,9 @@ class DataBackupManagementController extends OrderAbstractController
             );
             return $res;
         }
+
+        //ini_set('memory_limit', 0);
+        ini_set('max_execution_time', 0);
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
@@ -1645,8 +1652,8 @@ class DataBackupManagementController extends OrderAbstractController
         $memory_limit = ini_get('memory_limit');
         echo "Current memory limit is: " . $memory_limit . "<br>";
         echo "Peak memory usage: " . memory_get_peak_usage() . "<br>";
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', '-1');
+        ini_set('memory_limit', 0);
+        ini_set('max_execution_time', 0);
         $memory_limit = ini_get('memory_limit');
         echo "memory_limit: " . $memory_limit . "<br>";
         $max_execution_time = ini_get('max_execution_time');
