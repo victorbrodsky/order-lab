@@ -510,7 +510,7 @@ class DataBackupManagementController extends OrderAbstractController
                 //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
 
                 //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
-                $sql = "UPDATE user_siteparameters" .
+                $sql = "UPDATE user_siteparameters by $userStr" .
                     " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
                     ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
                     ", connectionChannel='$connectionChannel'".
@@ -524,6 +524,20 @@ class DataBackupManagementController extends OrderAbstractController
 
                 $results = $stmt->executeQuery();
                 $logger->notice("after executeQuery");
+
+                //INSERT INTO table_name (column1, column2, column3, ...)
+                //VALUES (value1, value2, value3, ...);
+                $sql = "INSERT INTO user_logger (sitename, username, event) ".
+                    "VALUES ('employees', '$userStr', 'UPDATE user_siteparameters by $userStr')"
+                ;
+
+                $logger->notice("insert sql=" . $sql);
+
+                $stmt = $conn->prepare($sql);
+                $logger->notice("after insert prepare");
+
+                $results = $stmt->executeQuery();
+                $logger->notice("after insert executeQuery");
 
                 //$resStr = print_r($results->fetchAll());
                 //$logger->notice("after executeQuery. res=".$resStr);
@@ -677,6 +691,8 @@ class DataBackupManagementController extends OrderAbstractController
     public function postRestoreEventLogAjaxAction( Request $request )
     {
         $logger->notice("postRestoreAjaxAction");
+
+
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }

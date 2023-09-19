@@ -445,7 +445,7 @@
                     $('#backup-msg-success-box').show();
 
                     //userPostRestoreAjax(btn,lbtn,type);
-                    userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
+                    //userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -461,7 +461,7 @@
                     $('#backup-msg-success-box').html(timeoutMsg);
                     $('#backup-msg-success-box').show();
 
-                    userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
+                    //userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
 
                     location.reload();
                 } else {
