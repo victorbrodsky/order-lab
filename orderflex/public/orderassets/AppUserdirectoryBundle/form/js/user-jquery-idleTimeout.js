@@ -81,6 +81,7 @@ $(document).ready(function() {
     if( disableIdleTimeout && disableIdleTimeout == '1' ) {
         enableIdleTimeout = false;
     }
+    console.log('enableIdleTimeout='+enableIdleTimeout);
     //if( cycle !== 'download' && idleTimeout !== 1 ) {
     if( enableIdleTimeout ) {
         // var idleTimeout = new idleTimeoutClass();

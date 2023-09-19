@@ -442,7 +442,7 @@
                     $('#backup-msg-success-box').html(data.message);
                     $('#backup-msg-success-box').show();
 
-                    //userPostRestoreAjax(btn,lbtn,type);
+                    userPostRestoreAjax(btn,lbtn,type);
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -475,7 +475,7 @@
                 url: url,
                 timeout: _backupAjaxTimeout,
                 type: "POST",
-                async: true,
+                async: false, //true,
                 //data: {fileId: fileId, env: env},
                 dataType: 'json'
             }).success(function(data) {
@@ -494,9 +494,11 @@
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
-            }).fail(function(jqXHR, exception) {
+            }).fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                $('#backup-msg-danger-box').html(exception);
+                var failMsg = "post restore fail. textStatus="+textStatus+", error="+error;
+                console.log(failMsg);
+                $('#backup-msg-danger-box').html(failMsg);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
                 userStopBtn(btn,lbtn);
