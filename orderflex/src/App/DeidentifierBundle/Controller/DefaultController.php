@@ -68,6 +68,10 @@ class DefaultController extends OrderAbstractController
         $res = $userServiceUtil->restartDb();
         echo "res=$res <br>";
 
+        $postgreVersionStr = $this->getDBVersionStr(); //postgresql-14
+        $dbRestartCommand = "sudo systemctl stop $postgreVersionStr";
+        return $this->runCommandByPython( $dbRestartCommand );
+
         //test
         $userSecUtil = $this->container->get('user_security_utility');
         $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
