@@ -437,6 +437,8 @@ class DataBackupManagementController extends OrderAbstractController
         $userStr = $user->getUsernameOptimal()."";
 
         //Original site settings
+        $origVersion = $userSecUtil->getSiteSettingParameter('version');
+
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( !$siteEmail ) {
             $siteEmail = "myemail@example.com";
@@ -513,9 +515,11 @@ class DataBackupManagementController extends OrderAbstractController
                 //filesBackupConfig - json file with backup config (server dependents: /srv/order-lab/orderflex/public)
                 //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
 
+                $version = $origVersion . "; Restored $backupFileName by $userStr on " . $date = date('Y-m-d H-i-s');
+
                 //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
                 $sql = "UPDATE user_siteparameters" .
-                    " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
+                    " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
                     ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
                     ", connectionChannel='$connectionChannel'".
                     ", networkDrivePath='$networkDrivePathOrig'".
