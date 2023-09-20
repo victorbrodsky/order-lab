@@ -70,7 +70,8 @@
                     {#</form>#}
 
                     {#https://github.com/1up-lab/OneupUploaderBundle/blob/master/doc/frontend_plupload.md#}
-                    <div id="fileupload"></div>
+                    <div id="fine-uploader"></div>
+
                 </div>
                 {#<div class="col-xs-2"></div>#}
             </div>
@@ -233,6 +234,11 @@
 {% endblock %}
 
 
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/templates/gallery.html') }}" />#}
+{% endblock %}
 {% block additionaljs %}
 
     {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
@@ -240,8 +246,75 @@
     {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>#}
     {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/plupload.full.js"></script>#}
     {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>#}
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/plupload.full.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/plupload.full.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>#}
+
+    {#https://docs.fineuploader.com/quickstart/01-getting-started.html#}
+    {#https://docs.fineuploader.com/branch/master/quickstart/02-setting_options.html#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.core.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.core.js.map') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.map.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.min.js') }}"></script>
+
+    <script type="text/template" id="qq-template">
+        <div class="qq-uploader-selector qq-uploader" qq-drop-area-text="Drop files here">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processing dropped files...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+            <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">Cancel</button>
+                    <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Close</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">No</button>
+                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
 
     <script>
 
@@ -249,11 +322,22 @@
 
         $(document).ready(function () {
 
-            $("#fileupload").plupload(
-            {
-                runtimes: "html5",
-                url: "{{ oneup_uploader_endpoint('employees_gallery') }}"
-            });
+            {#$("#fileupload").plupload(#}
+            {#{#}
+                {#runtimes: "html5",#}
+                {#url: "{{ oneup_uploader_endpoint('employees_gallery') }}"#}
+            {#});#}
+            {#var uploader = new qq.FineUploader({#}
+                {#element: document.getElementById('fine-uploader'),#}
+                {#request: {#}
+                    {#endpoint: "{{ oneup_uploader_endpoint('large_plupload') }}"#}
+                {#},#}
+                {#chunking: {#}
+                    {#enabled: true,#}
+                    {#partSize: 10000000#}
+                {#}#}
+            {#});#}
+            userFineUploader();
 
             //$('#backup-file-id')
             $('.backup-required').on("change", function(e) {
@@ -300,6 +384,74 @@
             });
 
         });
+
+        //https://github.com/FineUploader/server-examples/tree/3.8.0/php
+
+        //Use this:
+        //FineUploader/server-examples: 4.0.0 (t12ung/php-traditional-server https://github.com/t12ung/php-traditional-server/tree/master)
+        //https://docs.fineuploader.com/branch/master/quickstart/03-setting_up_server.html
+        //https://github.com/FineUploader/server-examples/blob/4.0.0/php/traditional/endpoint.php
+
+        //"/vendor/fineuploader/php-traditional-server/endpoint.php"
+        // /src/App/UploadBundle/endpoint.php
+        //src/App/UploadBundle/endpoint.php
+        function userFineUploader() {
+            var endpointUrl = Routing.generate('employees_upload_chunk_file');
+
+            var uploader = new qq.FineUploader({
+                debug: true,
+                element: document.getElementById('fine-uploader'),
+                request: {
+                    endpoint: endpointUrl
+                },
+                deleteFile: {
+                    enabled: true,
+                    endpoint: endpointUrl
+                },
+                chunking: {
+                    enabled: true,
+                    concurrent: {
+                        enabled: true
+                    },
+                    success: {
+                        endpoint: endpointUrl+'?done' //"/vendor/fineuploader/php-traditional-server/endpoint.php?done"
+                    }
+                },
+                resume: {
+                    enabled: true
+                },
+                retry: {
+                    enableAuto: true
+                }
+            });
+
+//            var manualUploader = new qq.FineUploader({
+//                element: document.getElementById("fine-uploader"),
+//                request: {
+//                    endpoint: "/vendor/fineuploader/php-traditional-server/endpoint.php"
+//                },
+//                deleteFile: {
+//                    enabled: true,
+//                    endpoint: "/vendor/fineuploader/php-traditional-server/endpoint.php"
+//                },
+//                chunking: {
+//                    enabled: true,
+//                    concurrent: {
+//                        enabled: true
+//                    },
+//                    success: {
+//                        endpoint: "/vendor/fineuploader/php-traditional-server/endpoint.php?done"
+//                    }
+//                },
+//                resume: {
+//                    enabled: true
+//                },
+//                retry: {
+//                    enableAuto: true,
+//                    showButton: true
+//                }
+//            });
+        }
 
 //        $('#btn-download-backup').click(function(e) {
 //            userDownloadBackup(e);

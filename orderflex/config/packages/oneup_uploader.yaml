@@ -6,6 +6,11 @@
 #            frontend: dropzone # or any uploader you use in the frontend
 
 oneup_uploader:
+    chunks:
+        maxage: 86400
+        storage:
+            directory: '%kernel.cache_dir%/uploader/chunks'
+            #directory: 'Uploaded/%employees.uploadpath%/chunks
     mappings:
         employees_gallery:
             frontend: dropzone
