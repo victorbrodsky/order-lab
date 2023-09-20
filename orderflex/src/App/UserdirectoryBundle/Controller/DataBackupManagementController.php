@@ -617,7 +617,9 @@ class DataBackupManagementController extends OrderAbstractController
     #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]
     public function postRestoreAjaxAction( Request $request )
     {
+        $logger = $this->container->get('logger');
         $logger->notice("postRestoreAjaxAction");
+
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -656,7 +658,9 @@ class DataBackupManagementController extends OrderAbstractController
     }
     public function postRestore( Request $request )
     {
+        $logger = $this->container->get('logger');
         $logger->notice("postRestoreAjaxAction");
+
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -665,7 +669,6 @@ class DataBackupManagementController extends OrderAbstractController
         ini_set('max_input_time', 0);
         ini_set("default_socket_timeout", 6000); //sec
 
-        $logger = $this->container->get('logger');
         //$em = $this->getDoctrine()->getManager();
         //$userSecUtil = $this->container->get('user_security_utility');
         //$userServiceUtil = $this->container->get('user_service_utility');
@@ -689,6 +692,7 @@ class DataBackupManagementController extends OrderAbstractController
     #[Route(path: '/post-restore-eventlog-ajax/', name: 'employees_post_restore_eventlog_ajax', methods: ['POST'], options: ['expose' => true])]
     public function postRestoreEventLogAjaxAction( Request $request )
     {
+        $logger = $this->container->get('logger');
         $logger->notice("postRestoreAjaxAction");
         
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
@@ -718,7 +722,8 @@ class DataBackupManagementController extends OrderAbstractController
     #[Route(path: '/post-restore-eventlog/{type}/{msg}', name: 'employees_post_restore_eventlog', methods: ['GET'], options: ['expose' => true])]
     public function postRestoreEventLogAction( Request $request, $type, $msg )
     {
-        $logger->notice("postRestoreAjaxAction");
+        $logger = $this->container->get('logger');
+        $logger->notice("postRestoreEventLogAction");
 
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -736,9 +741,11 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $resStr = "Restored ".$type." by $user. msg=$msg";
+        $logger->notice("postRestoreEventLogAction: before event log: $resStr");
 
         //Event Log
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+        $logger->notice("postRestoreEventLogAction: after event log");
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
