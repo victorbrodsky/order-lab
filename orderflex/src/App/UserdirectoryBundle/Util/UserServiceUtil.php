@@ -1764,6 +1764,35 @@ Pathology and Laboratory Medicine",
         return $info;
     }
 
+    function getDBVersionStr() {
+        $postgreVersion = null;
+        $dbInfo = $this->getDbVersion(); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64bit
+//        if( str_contains($dbInfo, 'PostgreSQL 14') ) {
+//            $postgreVersion = "postgresql-14";
+//        }
+//        if( str_contains($dbInfo, 'PostgreSQL 15') ) {
+//            $postgreVersion = "postgresql-15";
+//        }
+//        if( str_contains($dbInfo, 'PostgreSQL 16') ) {
+//            $postgreVersion = "postgresql-16";
+//        }
+//        if( str_contains($dbInfo, 'PostgreSQL 17') ) {
+//            $postgreVersion = "postgresql-17";
+//        }
+        if( !$postgreVersion ) {
+            $dbInfo = trim($dbInfo);
+            $dbInfoArr = explode(' ', $dbInfo);
+            if( count($dbInfoArr) > 2 ) {
+                $dbver = $dbInfoArr[1]; //14.3
+                $dbver = strtok($dbver, '.');
+                if( $dbver ) {
+                    $postgreVersion = "postgresql-$dbver";
+                }
+            }
+        }
+        return $postgreVersion;
+    }
+
 //    public function gitVersion() {
 //        //exec('git describe --always',$version_mini_hash);
 //        $version_mini_hash = $this->runProcess('git describe --always');

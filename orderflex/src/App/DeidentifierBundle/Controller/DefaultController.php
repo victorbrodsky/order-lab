@@ -61,23 +61,27 @@ class DefaultController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
-        //Testing IDENTITY comparing to AUTO
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->managerRegistry->getManager();
-        $user = $this->getUser();
-
-        $product = new Product($user);
-        $em->persist($product);
-        echo "product id (IDENTITY)=".$product->getId()."<br>";
-
-        $site = new SiteList($user);
-        $em->persist($site);
-        echo "site id (Auto)=".$site->getId()."<br>";
-
-        $grant = new Grant($user);
-        //$em->getRepository(Grant::class)->testGrant();
-        $em->persist($grant);
-        echo "grant id (Auto)=".$grant->getId()."<br>";
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $ver = $userServiceUtil->getDBVersionStr();
+//        exit('ver='.$ver);
+//
+//        //Testing IDENTITY comparing to AUTO
+//        $em = $this->getDoctrine()->getManager();
+//        //$em = $this->managerRegistry->getManager();
+//        $user = $this->getUser();
+//
+//        $product = new Product($user);
+//        $em->persist($product);
+//        echo "product id (IDENTITY)=".$product->getId()."<br>";
+//
+//        $site = new SiteList($user);
+//        $em->persist($site);
+//        echo "site id (Auto)=".$site->getId()."<br>";
+//
+//        $grant = new Grant($user);
+//        //$em->getRepository(Grant::class)->testGrant();
+//        $em->persist($grant);
+//        echo "grant id (Auto)=".$grant->getId()."<br>";
 
         //return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         //return $this->redirectToRoute('deidentifier-nopermission');

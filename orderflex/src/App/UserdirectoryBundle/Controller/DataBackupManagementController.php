@@ -456,6 +456,10 @@ class DataBackupManagementController extends OrderAbstractController
             $connectionChannel = 'http';
         }
 
+        //Get restart db version for 'sudo systemctl restart postgresql-14'
+        $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
+        $logger->notice("restoreDBWrapper: postgreVersionStr=$postgreVersionStr");
+
         //if(0) {
         //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
@@ -520,10 +524,18 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("sql=" . $sql);
 
                 $stmt = $conn->prepare($sql);
-                $logger->notice("after prepare");
+                $logger->notice("restoreDBWrapper: after prepare");
 
                 $results = $stmt->executeQuery();
-                $logger->notice("after executeQuery");
+                $logger->notice("restoreDBWrapper: after executeQuery");
+
+                //try to restart postgres sudo systemctl restart postgresql-14
+                if( $postgreVersionStr ) {
+                    $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
+                    $logger->notice("restoreDBWrapper: before dbRestartCommand=$dbRestartCommand");
+                    $this->runProcess($dbRestartCommand);
+                    $logger->notice("restoreDBWrapper: after dbRestartCommand");
+                }
 
 //                //INSERT INTO table_name (column1, column2, column3, ...)
 //                //VALUES (value1, value2, value3, ...);
