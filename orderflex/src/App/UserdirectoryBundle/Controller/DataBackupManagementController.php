@@ -740,13 +740,7 @@ class DataBackupManagementController extends OrderAbstractController
         //Event Log
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
 
-        $output = array(
-            'status' => 'OK',
-            'message' => 'event log completed'
-        );
-        $response = new Response();
-        $response->setContent(json_encode($output));
-        return $response;
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
     //NOT USED, was replaced by restoreBackupAjaxAction. Call restore directly
