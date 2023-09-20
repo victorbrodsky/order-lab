@@ -739,12 +739,13 @@ class DataBackupManagementController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
+        $userStr = $user->getUsernameOptimal();
         $sitename = $this->getParameter('employees.sitename');
 
         $type = $request->get('type');
         $msg = $request->get('msg');
 
-        $resStr = "Restored ".$type." by $user. msg=$msg";
+        $resStr = "Restored ".$type." by $userStr. msg=$msg";
 
         //Event Log
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
@@ -768,6 +769,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $user = $this->getUser();
+        $userStr = $user->getUsernameOptimal();
 
         //$type = $request->get('type');
         //$msg = $request->get('msg');
@@ -776,7 +778,7 @@ class DataBackupManagementController extends OrderAbstractController
             $msg = "Restored with Gateway Timeout";
         }
 
-        $resStr = "Restored ".$type." by $user. msg=$msg";
+        $resStr = "Restored ".$type." by $userStr. msg=$msg";
         $logger->notice("postRestoreEventLogAction: before event log: $resStr");
 
         //Event Log
