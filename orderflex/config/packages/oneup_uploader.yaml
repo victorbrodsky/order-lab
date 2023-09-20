@@ -1,6 +1,49 @@
 # Read the documentation: https://github.com/1up-lab/OneupUploaderBundle/blob/master/Resources/doc/index.md
+#oneup_uploader:
+#    mappings:
+        # This is a mapping example, remove it and create your own mappings.
+#        gallery:
+#            frontend: dropzone # or any uploader you use in the frontend
+
 oneup_uploader:
     mappings:
-        # This is a mapping example, remove it and create your own mappings.
-        gallery:
-            frontend: dropzone # or any uploader you use in the frontend
+        employees_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%employees.uploadpath%'
+        scan_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%scan.uploadpath%'
+        fellapp_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%fellapp.uploadpath%'
+        resapp_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%resapp.uploadpath%'
+        vacreq_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%vacreq.uploadpath%'
+        transres_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%transres.uploadpath%'
+        calllog_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%calllog.uploadpath%'
+        crn_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%crn.uploadpath%'
+        dashboard_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%dashboard.uploadpath%'
+        large_plupload:
+            frontend: plupload
+            storage:
+                directory: 'Uploaded/%employees.uploadpath%'

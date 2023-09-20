@@ -434,7 +434,7 @@ class DataBackupManagementController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
 
         $user = $this->getUser();
-        $userStr = $user->getUsernameOptimal()."";
+        $userStr = $user."";
 
         //Original site settings
         $origVersion = $userSecUtil->getSiteSettingParameter('version');
@@ -745,7 +745,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
-        $userStr = $user->getUsernameOptimal();
+        $userStr = $user."";
         $sitename = $this->getParameter('employees.sitename');
 
         $type = $request->get('type');
@@ -775,7 +775,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $user = $this->getUser();
-        $userStr = $user->getUsernameOptimal();
+        $userStr = $user."";
 
         //$type = $request->get('type');
         //$msg = $request->get('msg');
@@ -1399,9 +1399,18 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
 
+        //https://code-boxx.com/upload-large-files-php/
+//        upload_max_filesize = 150M    //PHP_INI_PERDIR
+//        post_max_size = 150M          //PHP_INI_PERDIR
+//        max_input_time = 300          //PHP_INI_PERDIR
+//        max_execution_time = 300      //PHP_INI_ALL
         //Make sure upload_max_filesize is large enough
-        ini_set('upload_max_filesize', '10G');
-        ini_set('post_max_size', '10G');
+        //upload_max_filesize is only changeable in PHP_INI_PERDIR (php.ini or .htaccess file; ini_set("upload_max_filesize", "150M")
+        //max_input_time in PHP_INI_PERDIR (sec)
+        //ini_set('upload_max_filesize', '20G');
+        //ini_set('post_max_size', '20G');
+        //ini_set('max_input_time', '-1');
+        ini_set('max_execution_time', '3000');
 
         $userSecUtil = $this->container->get('user_security_utility');
 

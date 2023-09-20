@@ -59,10 +59,18 @@
                 </div>
 
                 <div class="col-xs-6" align="left">
-                    {{ form_start(form,{action:path('employees_upload_backup_file')}) }}
-                        <p>{{ form_row(form.uploadfile) }}</p>
-                        {{ form_row(form.submit, { 'label': 'Upload backup' }) }}
-                    {{ form_end(form) }}
+                    {#{{ form_start(form,{action:path('employees_upload_backup_file')}) }}#}
+                        {#<p>{{ form_row(form.uploadfile) }}</p>#}
+                        {#{{ form_row(form.submit, { 'label': 'Upload backup' }) }}#}
+                    {#{{ form_end(form) }}#}
+
+                    {#<form>#}
+                        {#<div id="list"></div>#}
+                        {#<input type="button" id="pick" value="Upload">#}
+                    {#</form>#}
+
+                    {#https://github.com/1up-lab/OneupUploaderBundle/blob/master/doc/frontend_plupload.md#}
+                    <div id="fileupload"></div>
                 </div>
                 {#<div class="col-xs-2"></div>#}
             </div>
@@ -227,11 +235,25 @@
 
 {% block additionaljs %}
 
+    {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
+    {#<script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>#}
+    {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>#}
+    {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/plupload.full.js"></script>#}
+    {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/plupload.full.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>
+
     <script>
 
         var _backupAjaxTimeout = 1800000; //millisec 1000 = 1 sec
 
         $(document).ready(function () {
+
+            $("#fileupload").plupload(
+            {
+                runtimes: "html5",
+                url: "{{ oneup_uploader_endpoint('large_plupload') }}"
+            });
 
             //$('#backup-file-id')
             $('.backup-required').on("change", function(e) {

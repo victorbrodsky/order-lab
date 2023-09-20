@@ -247,44 +247,44 @@ services:
 #            - { name: 'twig.extension' }
 
 
-oneup_uploader:
-    mappings:
-        employees_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%employees.uploadpath%'
-        scan_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%scan.uploadpath%'
-        fellapp_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%fellapp.uploadpath%'
-        resapp_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%resapp.uploadpath%'
-        vacreq_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%vacreq.uploadpath%'
-        transres_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%transres.uploadpath%'
-        calllog_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%calllog.uploadpath%'
-        crn_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%crn.uploadpath%'
-        dashboard_gallery:
-            frontend: dropzone
-            storage:
-                directory: 'Uploaded/%dashboard.uploadpath%'
+#oneup_uploader:
+#    mappings:
+#        employees_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%employees.uploadpath%'
+#        scan_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%scan.uploadpath%'
+#        fellapp_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%fellapp.uploadpath%'
+#        resapp_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%resapp.uploadpath%'
+#        vacreq_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%vacreq.uploadpath%'
+#        transres_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%transres.uploadpath%'
+#        calllog_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%calllog.uploadpath%'
+#        crn_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%crn.uploadpath%'
+#        dashboard_gallery:
+#            frontend: dropzone
+#            storage:
+#                directory: 'Uploaded/%dashboard.uploadpath%'
 
 
 
