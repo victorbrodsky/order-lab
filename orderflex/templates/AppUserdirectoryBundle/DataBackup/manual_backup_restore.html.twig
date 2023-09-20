@@ -446,6 +446,9 @@
 
                     //userPostRestoreAjax(btn,lbtn,type);
                     //userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
+
+                    var redirectUrl = Routing.generate('employees_post_restore_eventlog',{type: type, msg: "restored"});
+                    window.location.replace(redirectUrl);
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
@@ -463,7 +466,9 @@
 
                     //userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
 
-                    location.reload();
+                    var redirectUrl = Routing.generate('employees_post_restore_eventlog',{type: type, msg: "timeout"});
+                    window.location.replace(redirectUrl);
+                    //location.reload();
                 } else {
                     $('#backup-msg-danger-box').html(failMsg);
                     $('#backup-msg-danger-box').show();

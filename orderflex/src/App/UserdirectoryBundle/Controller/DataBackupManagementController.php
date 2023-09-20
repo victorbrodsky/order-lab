@@ -690,8 +690,7 @@ class DataBackupManagementController extends OrderAbstractController
     public function postRestoreEventLogAjaxAction( Request $request )
     {
         $logger->notice("postRestoreAjaxAction");
-
-
+        
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -702,6 +701,39 @@ class DataBackupManagementController extends OrderAbstractController
 
         $type = $request->get('type');
         $msg = $request->get('msg');
+
+        $resStr = "Restored ".$type." by $user. msg=$msg";
+
+        //Event Log
+        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+
+        $output = array(
+            'status' => 'OK',
+            'message' => 'event log completed'
+        );
+        $response = new Response();
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+    #[Route(path: '/post-restore-eventlog/{type}/{msg}', name: 'employees_post_restore_eventlog', methods: ['GET'], options: ['expose' => true])]
+    public function postRestoreEventLogAction( Request $request, $type, $msg )
+    {
+        $logger->notice("postRestoreAjaxAction");
+
+        if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+
+        //$type = $request->get('type');
+        //$msg = $request->get('msg');
+
+        if( $msg == 'timeout' ) {
+            $msg = "Restored with Gateway Timeout";
+        }
 
         $resStr = "Restored ".$type." by $user. msg=$msg";
 
