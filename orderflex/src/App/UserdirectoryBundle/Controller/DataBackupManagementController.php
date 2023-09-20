@@ -458,7 +458,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //Get restart db version for 'sudo systemctl restart postgresql-14'
         $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
-        $logger->notice("restoreDBWrapper: postgreVersionStr=$postgreVersionStr");
+        $logger->notice("restore DBWrapper: postgreVersionStr=$postgreVersionStr");
 
         //if(0) {
         //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
@@ -524,21 +524,21 @@ class DataBackupManagementController extends OrderAbstractController
                 $logger->notice("sql=" . $sql);
 
                 $stmt = $conn->prepare($sql);
-                $logger->notice("restoreDBWrapper: after prepare");
+                $logger->notice("restore DBWrapper: after prepare");
 
                 $results = $stmt->executeQuery();
-                $logger->notice("restoreDBWrapper: after executeQuery");
+                $logger->notice("restore DBWrapper: after executeQuery");
 
                 //try to restart postgres sudo systemctl restart postgresql-14
                 if( $postgreVersionStr ) {
                     $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
-                    $logger->notice("restoreDBWrapper: before dbRestartCommand=$dbRestartCommand");
+                    $logger->notice("restore DBWrapper: before dbRestartCommand=$dbRestartCommand");
                     $this->runProcess($dbRestartCommand);
-                    $logger->notice("restoreDBWrapper: after dbRestartCommand");
+                    $logger->notice("restore DBWrapper: after dbRestartCommand");
 
                     //test
                     $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
-                    $logger->notice("restoreDBWrapper: testParam=$testParam");
+                    $logger->notice("restore DBWrapper: testParam=$testParam");
                 }
 
 //                //INSERT INTO table_name (column1, column2, column3, ...)
