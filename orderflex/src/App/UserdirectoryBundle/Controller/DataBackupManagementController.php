@@ -438,6 +438,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //Original site settings
         $origVersion = $userSecUtil->getSiteSettingParameter('version');
+        $version = $origVersion . "; Restored $backupFileName by $userStr on " . $date = date('Y-m-d H-i-s');
 
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( !$siteEmail ) {
@@ -515,23 +516,25 @@ class DataBackupManagementController extends OrderAbstractController
                 //filesBackupConfig - json file with backup config (server dependents: /srv/order-lab/orderflex/public)
                 //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
 
-                $version = $origVersion . "; Restored $backupFileName by $userStr on " . $date = date('Y-m-d H-i-s');
+                ///////////// Update site parameters for newly restored DB /////////////////
+                if(0) {
+                    //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
+                    $sql = "UPDATE user_siteparameters" .
+                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
+                        ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
+                        ", connectionChannel='$connectionChannel'" .
+                        ", networkDrivePath='$networkDrivePathOrig'" .
+                        " WHERE id=" . $param->getId();
+                    //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+                    $logger->notice("sql=" . $sql);
 
-                //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
-                $sql = "UPDATE user_siteparameters" .
-                    " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
-                    ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
-                    ", connectionChannel='$connectionChannel'".
-                    ", networkDrivePath='$networkDrivePathOrig'".
-                    " WHERE id=" . $param->getId();
-                //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
-                $logger->notice("sql=" . $sql);
+                    $stmt = $conn->prepare($sql);
+                    $logger->notice("restore DBWrapper: after prepare");
 
-                $stmt = $conn->prepare($sql);
-                $logger->notice("restore DBWrapper: after prepare");
-
-                $results = $stmt->executeQuery();
-                $logger->notice("restore DBWrapper: after executeQuery");
+                    $results = $stmt->executeQuery();
+                    $logger->notice("restore DBWrapper: after executeQuery");
+                }
+                ///////////// EOF Update site parameters for newly restored DB /////////////////
 
                 //try to restart postgres sudo systemctl restart postgresql-14
                 if( $postgreVersionStr ) {
@@ -545,8 +548,19 @@ class DataBackupManagementController extends OrderAbstractController
                     $logger->notice("restore DBWrapper: after restartApache: resApache=".$resApache);
 
                     //test
-                    $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
-                    $logger->notice("restore DBWrapper: testParam=$testParam");
+                    //$testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
+                    //$logger->notice("restore DBWrapper: testParam=$testParam");
+
+                    $em = $this->getDoctrine()->getManager();
+                    $param = $userSecUtil->getSingleSiteSettingsParam();
+                    $param->setMailerDeliveryAddresses($siteEmail);
+                    $param->setEnvironment($env);
+                    $param->setVersion($version);
+                    $param->setFilesBackupConfig($filesBackupConfig);
+                    $param->setMonitorScript($monitorScript);
+                    $param->setConnectionChannel($connectionChannel);
+                    $param->setNetworkDrivePath($networkDrivePathOrig);
+                    $em->flush();
                 }
 
 //                //INSERT INTO table_name (column1, column2, column3, ...)
@@ -620,9 +634,9 @@ class DataBackupManagementController extends OrderAbstractController
 
             //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
             //Event Log
-            //$user = $this->getUser();
-            //$sitename = $this->getParameter('employees.sitename');
-            //$userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
 
             $output = array(
                 'status' => 'OK',
@@ -753,9 +767,7 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
-        $sitename = $this->getParameter('employees.sitename');
 
         //$type = $request->get('type');
         //$msg = $request->get('msg');
@@ -768,11 +780,19 @@ class DataBackupManagementController extends OrderAbstractController
         $logger->notice("postRestoreEventLogAction: before event log: $resStr");
 
         //Event Log
-        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
-        $logger->notice("postRestoreEventLogAction: after event log");
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$sitename = $this->getParameter('employees.sitename');
+        //$userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
+        //$logger->notice("postRestoreEventLogAction: after event log");
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
+
+//    public function updateSiteSettingsParam() {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $param = $userSecUtil->getSingleSiteSettingsParam();
+//
+//    }
 
     //NOT USED, was replaced by restoreBackupAjaxAction. Call restore directly
     #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
