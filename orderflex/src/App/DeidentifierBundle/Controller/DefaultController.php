@@ -65,30 +65,33 @@ class DefaultController extends OrderAbstractController
 
         //restart DB
         $userServiceUtil = $this->container->get('user_service_utility');
-        $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
-        $dbRestartCommand = "sudo stop restart $postgreVersionStr";
-        echo "dbRestartCommand=$dbRestartCommand <br>";
-
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $projectRoot = str_replace('order-lab', '', $projectRoot);
-        $parentRoot = str_replace('orderflex', '', $projectRoot);
-        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-
-        $managePackagePath = $parentRoot .
-            DIRECTORY_SEPARATOR . "order-lab" .
-            DIRECTORY_SEPARATOR . "utils" .
-            DIRECTORY_SEPARATOR . "db-manage" .
-            DIRECTORY_SEPARATOR . "postgres-manage-python";
-        echo "managePackagePath=$managePackagePath <br>";
-
-        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "restart_db.py";
-
-        $command = "python '$pythonScriptPath' --command  '$dbRestartCommand'";
-        echo "command=$command <br>";
-
-        //$res = $userServiceUtil->runProcess($dbRestartCommand);
-        $res = $this->runProcess($command);
+        $res = $userServiceUtil->restartDb();
         exit('res='.$res);
+
+//        $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
+//        $dbRestartCommand = "sudo stop restart $postgreVersionStr";
+//        echo "dbRestartCommand=$dbRestartCommand <br>";
+//
+//        $projectRoot = $this->container->get('kernel')->getProjectDir();
+//        $projectRoot = str_replace('order-lab', '', $projectRoot);
+//        $parentRoot = str_replace('orderflex', '', $projectRoot);
+//        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+//
+//        $managePackagePath = $parentRoot .
+//            DIRECTORY_SEPARATOR . "order-lab" .
+//            DIRECTORY_SEPARATOR . "utils" .
+//            DIRECTORY_SEPARATOR . "db-manage" .
+//            DIRECTORY_SEPARATOR . "postgres-manage-python";
+//        echo "managePackagePath=$managePackagePath <br>";
+//
+//        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "restart_db.py";
+//
+//        $command = "python '$pythonScriptPath' --command  '$dbRestartCommand'";
+//        echo "command=$command <br>";
+//
+//        //$res = $userServiceUtil->runProcess($dbRestartCommand);
+//        $res = $this->runProcess($command);
+//        exit('res='.$res);
 
 //        $userServiceUtil = $this->container->get('user_service_utility');
 //        $ver = $userServiceUtil->getDBVersionStr();
