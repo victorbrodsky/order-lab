@@ -45,6 +45,8 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\SiteList;
 use Symfony\Bridge\Twig\Attribute\Template;
 //use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +62,15 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/about', name: 'deidentifier_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
+
+        //restart DB
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
+        $dbRestartCommand = "sudo stop restart $postgreVersionStr";
+        echo "dbRestartCommand=$dbRestartCommand <br>";
+        //$res = $userServiceUtil->runProcess($dbRestartCommand);
+        $res = $this->runProcess($dbRestartCommand);
+        exit('res='.$res);
 
 //        $userServiceUtil = $this->container->get('user_service_utility');
 //        $ver = $userServiceUtil->getDBVersionStr();
@@ -88,6 +99,18 @@ class DefaultController extends OrderAbstractController
         //exit('111');
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
+    }
+
+    public function runProcess($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        //$process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(7200); //7200 sec => 2 hours
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
     }
 
     #[Route(path: '/navbar/{accessionTypeStr}/{accessionTypeId}/{accessionNumber}', name: 'deidentifier_navbar', methods: ['GET'])]
