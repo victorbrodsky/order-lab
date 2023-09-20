@@ -535,6 +535,10 @@ class DataBackupManagementController extends OrderAbstractController
                     $logger->notice("restoreDBWrapper: before dbRestartCommand=$dbRestartCommand");
                     $this->runProcess($dbRestartCommand);
                     $logger->notice("restoreDBWrapper: after dbRestartCommand");
+
+                    //test
+                    $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
+                    $logger->notice("restoreDBWrapper: testParam=$testParam");
                 }
 
 //                //INSERT INTO table_name (column1, column2, column3, ...)
