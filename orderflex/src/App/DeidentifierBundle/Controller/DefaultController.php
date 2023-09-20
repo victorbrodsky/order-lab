@@ -66,7 +66,14 @@ class DefaultController extends OrderAbstractController
         //restart DB
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->restartDb();
-        exit('res='.$res);
+        echo "res=$res <br>";
+
+        //test
+        $userSecUtil = $this->container->get('user_security_utility');
+        $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        echo"restore DBWrapper: testParam=$testParam <br>";
+
+        exit('111');
 
 //        $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
 //        $dbRestartCommand = "sudo stop restart $postgreVersionStr";
