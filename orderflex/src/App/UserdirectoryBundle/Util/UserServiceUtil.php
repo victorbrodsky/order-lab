@@ -1794,9 +1794,9 @@ Pathology and Laboratory Medicine",
     }
 
     public function restartDb() {
-        //restart DB
+        //restart DB sudo systemctl restart postgresql-14
         $postgreVersionStr = $this->getDBVersionStr(); //postgresql-14
-        $dbRestartCommand = "sudo stop restart $postgreVersionStr";
+        $dbRestartCommand = "sudo systemctl stop $postgreVersionStr";
         echo "dbRestartCommand=$dbRestartCommand <br>";
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
