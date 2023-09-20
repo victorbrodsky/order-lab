@@ -1794,10 +1794,19 @@ Pathology and Laboratory Medicine",
     }
 
     public function restartDb() {
-        //restart DB sudo systemctl restart postgresql-14
         $postgreVersionStr = $this->getDBVersionStr(); //postgresql-14
-        $dbRestartCommand = "sudo systemctl stop $postgreVersionStr";
-        echo "dbRestartCommand=$dbRestartCommand <br>";
+        $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
+        return $this->runCommandByPython( $dbRestartCommand );
+    }
+    public function restartApache() {
+        $apacheRestartCommand = "sudo systemctl restart httpd.service";
+        return $this->runCommandByPython( $apacheRestartCommand );
+    }
+    public function runCommandByPython( $command ) {
+        //restart DB sudo systemctl restart postgresql-14
+        //$postgreVersionStr = $this->getDBVersionStr(); //postgresql-14
+        //$dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
+        echo "command=$command <br>";
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $projectRoot = str_replace('order-lab', '', $projectRoot);
@@ -1813,11 +1822,10 @@ Pathology and Laboratory Medicine",
 
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "restart_db.py";
 
-        $command = "python '$pythonScriptPath' --command  '$dbRestartCommand'";
-        echo "command=$command <br>";
+        $pyCommand = "python '$pythonScriptPath' --command  '$command'";
+        echo "pyCommand=$pyCommand <br>";
 
-        //$res = $userServiceUtil->runProcess($dbRestartCommand);
-        $res = $this->runProcess($command);
+        $res = $this->runProcess($pyCommand);
 
         return $res;
     }

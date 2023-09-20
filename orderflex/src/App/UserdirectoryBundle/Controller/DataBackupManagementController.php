@@ -533,8 +533,9 @@ class DataBackupManagementController extends OrderAbstractController
                 if( $postgreVersionStr ) {
                     $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
                     $logger->notice("restore DBWrapper: before dbRestartCommand=$dbRestartCommand");
-                    $this->runProcess($dbRestartCommand);
-                    $logger->notice("restore DBWrapper: after dbRestartCommand");
+
+                    $res = $userServiceUtil->runCommandByPython( $dbRestartCommand );
+                    $logger->notice("restore DBWrapper: after dbRestartCommand: res=".$res);
 
                     //test
                     $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
