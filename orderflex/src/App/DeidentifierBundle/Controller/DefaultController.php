@@ -70,7 +70,8 @@ class DefaultController extends OrderAbstractController
 
         $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
         $dbRestartCommand = "sudo systemctl stop $postgreVersionStr";
-        return $userServiceUtil->runCommandByPython( $dbRestartCommand );
+        $res = $userServiceUtil->runCommandByPython( $dbRestartCommand );
+        echo"stop res=$res <br>";
 
         //test
         $userSecUtil = $this->container->get('user_security_utility');
