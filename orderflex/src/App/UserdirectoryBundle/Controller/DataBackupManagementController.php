@@ -537,6 +537,9 @@ class DataBackupManagementController extends OrderAbstractController
                     $res = $userServiceUtil->runCommandByPython( $dbRestartCommand );
                     $logger->notice("restore DBWrapper: after dbRestartCommand: res=".$res);
 
+                    $resApache = $userServiceUtil->restartApache();
+                    $logger->notice("restore DBWrapper: after restartApache: resApache=".$resApache);
+
                     //test
                     $testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
                     $logger->notice("restore DBWrapper: testParam=$testParam");
