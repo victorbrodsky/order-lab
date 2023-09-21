@@ -1264,16 +1264,16 @@ class DataBackupManagementController extends OrderAbstractController
 
         //echo "networkDrivePath=$networkDrivePath <br>";
 
-        //$files = scandir($networkDrivePath); //with dots
-        $files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
-        //dump($files);
-        //exit('111');
+        $files = scandir($networkDrivePath); //with dots
+        //$files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
+        dump($files);
+        exit('111');
 
         $backupFiles = array();
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
-                //echo "file=$file <br>";
+                echo "file=$file <br>";
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if( $ext && $ext != 'log' && $ext != 'txt' ) {
                     $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $file;
@@ -1320,12 +1320,15 @@ class DataBackupManagementController extends OrderAbstractController
         return $bytes;
     }
     //https://stackoverflow.com/questions/11923235/scandir-to-sort-by-date-modified
-    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING) {
+    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING, $files=array()) {
 
         /****************************************************************************/
         // Roll through the scandir values.
-        $files = array();
+        //$files = array();
         foreach (scandir($dir, $sorting_order) as $file) {
+            if( is_dir($file) ) {
+                $this->better_scandir($file,$sorting_order,$files);
+            }
             if ($file[0] === '.') {
                 continue;
             }
@@ -1558,9 +1561,9 @@ class DataBackupManagementController extends OrderAbstractController
         $uploader->inputName = "qqfile"; // matches Fine Uploader's default inputName value by default
 
         // If you want to use the chunking/resume feature, specify the folder to temporarily save parts.
-        $uploader->chunksFolder = "Uploaded/directory/chunks";
+        $uploader->chunksFolder = "Uploaded".DIRECTORY_SEPARATOR."directory".DIRECTORY_SEPARATOR."chunks";
 
-        $uploadDir = "Uploaded/directory";
+        $uploadDir = "Uploaded".DIRECTORY_SEPARATOR."directory";
 
         $method = $this->get_request_method();
         //echo "method=$method<br>";
@@ -1617,58 +1620,6 @@ class DataBackupManagementController extends OrderAbstractController
 
         return $_SERVER["REQUEST_METHOD"];
     }
-
-    #[Route(path: '/upload-chunk-file1/', name: 'employees_upload_chunk_file1', methods: ['POST'], options: ['expose' => true])]
-    public function uploadChunkFileAction1(Request $request, SluggerInterface $slugger)
-    {
-        if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
-            return $this->redirect($this->generateUrl('employees-nopermission'));
-        }
-
-        $logger = $this->container->get('logger');
-
-        $uploader = new UploadHandler();
-
-        // Specify the list of valid extensions, ex. array("jpeg", "xml", "bmp")
-        $uploader->allowedExtensions = array(); // all files types allowed by default
-
-        // Specify max file size in bytes.
-        $uploader->sizeLimit = 10 * 1024 * 1024; // default is 10 MiB
-
-        // Specify the input name set in the javascript.
-        $uploader->inputName = "qqfile"; // matches Fine Uploader's default inputName value by default
-
-        // If you want to use the chunking/resume feature, specify the folder to temporarily save parts.
-        $uploader->chunksFolder = "Uploaded/directory/chunks";
-
-        $method = $_SERVER["REQUEST_METHOD"];
-        if ($method == "POST") {
-            header("Content-Type: text/plain");
-
-            // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
-            //getcwd() => C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public
-            $result = $uploader->handleUpload("Uploaded/directory");
-
-            // To return a name used for uploaded file you can use the following line.
-            $result["uploadName"] = $uploader->getUploadName();
-
-            //echo json_encode($result);
-
-            $response = new Response();
-            $response->setContent(json_encode($result));
-            return $response;
-        }
-        else {
-            //header("HTTP/1.0 405 Method Not Allowed");
-        }
-
-        $result = array('error' => 'Logical error');
-
-        $response = new Response();
-        $response->setContent(json_encode($result));
-        return $response;
-    }
-
 
     ///////////////// NOT USED, OLD /////////////////////
     /**

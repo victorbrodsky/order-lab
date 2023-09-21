@@ -48,7 +48,7 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%dashboard.uploadpath%'
-        large_plupload:
-            frontend: plupload
-            storage:
-                directory: 'Uploaded/%employees.uploadpath%'
+#        large_plupload:
+#            frontend: plupload
+#            storage:
+#                directory: 'Uploaded/%employees.uploadpath%'

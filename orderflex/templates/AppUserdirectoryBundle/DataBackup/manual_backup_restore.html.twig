@@ -231,112 +231,28 @@
     <div id="backup-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
     <div id="backup-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
 
+
 {% endblock %}
 
 
 {% block additionalcss %}
+    {#FineUploader#}
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/templates/gallery.html') }}" />#}
-    <link type = "text/template" id="qq-template" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/templates/gallery.html') }}" />
+
+    {#jQuery File Upload#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/css/jquery.fileupload.css') }}" />#}
 {% endblock %}
 {% block additionaljs %}
 
-    {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
-    {#<script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>#}
-    {#<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>#}
-    {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/plupload.full.js"></script>#}
-    {#<script type="text/javascript" src="http://www.plupload.com/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/plupload.full.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>#}
-
+    {#FineUploader#}
     {#https://docs.fineuploader.com/quickstart/01-getting-started.html#}
     {#https://docs.fineuploader.com/branch/master/quickstart/02-setting_options.html#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.core.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.core.js.map') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.min.js') }}"></script>#}
-
+    {% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.map.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/templates/gallery.html') }}"></script>#}
 
-    {#<script type="text/template" id="qq-template">#}
-        {#<div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">#}
-            {#<div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">#}
-                {#<div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>#}
-            {#</div>#}
-            {#<div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>#}
-                {#<span class="qq-upload-drop-area-text-selector"></span>#}
-            {#</div>#}
-            {#<div class="qq-upload-button-selector qq-upload-button">#}
-                {#<div>Upload a file</div>#}
-            {#</div>#}
-        {#<span class="qq-drop-processing-selector qq-drop-processing">#}
-            {#<span>Processing dropped files...</span>#}
-            {#<span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>#}
-        {#</span>#}
-            {#<ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">#}
-                {#<li>#}
-                    {#<span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>#}
-                    {#<div class="qq-progress-bar-container-selector qq-progress-bar-container">#}
-                        {#<div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>#}
-                    {#</div>#}
-                    {#<span class="qq-upload-spinner-selector qq-upload-spinner"></span>#}
-                    {#<div class="qq-thumbnail-wrapper">#}
-                        {#<img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>#}
-                    {#</div>#}
-                    {#<button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>#}
-                    {#<button type="button" class="qq-upload-retry-selector qq-upload-retry">#}
-                        {#<span class="qq-btn qq-retry-icon" aria-label="Retry"></span>#}
-                        {#Retry#}
-                    {#</button>#}
-
-                    {#<div class="qq-file-info">#}
-                        {#<div class="qq-file-name">#}
-                            {#<span class="qq-upload-file-selector qq-upload-file"></span>#}
-                            {#<span class="qq-edit-filename-icon-selector qq-btn qq-edit-filename-icon" aria-label="Edit filename"></span>#}
-                        {#</div>#}
-                        {#<input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">#}
-                        {#<span class="qq-upload-size-selector qq-upload-size"></span>#}
-                        {#<button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">#}
-                            {#<span class="qq-btn qq-delete-icon" aria-label="Delete"></span>#}
-                        {#</button>#}
-                        {#<button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">#}
-                            {#<span class="qq-btn qq-pause-icon" aria-label="Pause"></span>#}
-                        {#</button>#}
-                        {#<button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">#}
-                            {#<span class="qq-btn qq-continue-icon" aria-label="Continue"></span>#}
-                        {#</button>#}
-                    {#</div>#}
-                {#</li>#}
-            {#</ul>#}
-
-            {#<dialog class="qq-alert-dialog-selector">#}
-                {#<div class="qq-dialog-message-selector"></div>#}
-                {#<div class="qq-dialog-buttons">#}
-                    {#<button type="button" class="qq-cancel-button-selector">Close</button>#}
-                {#</div>#}
-            {#</dialog>#}
-
-            {#<dialog class="qq-confirm-dialog-selector">#}
-                {#<div class="qq-dialog-message-selector"></div>#}
-                {#<div class="qq-dialog-buttons">#}
-                    {#<button type="button" class="qq-cancel-button-selector">No</button>#}
-                    {#<button type="button" class="qq-ok-button-selector">Yes</button>#}
-                {#</div>#}
-            {#</dialog>#}
-
-            {#<dialog class="qq-prompt-dialog-selector">#}
-                {#<div class="qq-dialog-message-selector"></div>#}
-                {#<input type="text">#}
-                {#<div class="qq-dialog-buttons">#}
-                    {#<button type="button" class="qq-cancel-button-selector">Cancel</button>#}
-                    {#<button type="button" class="qq-ok-button-selector">Ok</button>#}
-                {#</div>#}
-            {#</dialog>#}
-        {#</div>#}
-    {#</script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/js/jquery.fileupload.js') }}"></script>#}
 
     <script>
 
@@ -345,6 +261,7 @@
         $(document).ready(function () {
 
             userFineUploader();
+            //userJqueryFileUploader();
 
             //$('#backup-file-id')
             $('.backup-required').on("change", function(e) {
@@ -392,13 +309,24 @@
 
         });
 
-        //https://github.com/FineUploader/server-examples/tree/3.8.0/php
+        function userJqueryFileUploader() {
+            console.log("userJqueryFileUploader start");
+//            $('#fine-uploader').fileupload();
+            $('#fine-uploader').fileupload({
+                dataType: 'json',
+                done: function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        $('<p></p>').text(file.name).appendTo(document.body);
+                    });
+                }
+            });
+        }
 
+        //https://github.com/FineUploader/server-examples/tree/3.8.0/php
         //Use this:
         //FineUploader/server-examples: 4.0.0 (t12ung/php-traditional-server https://github.com/t12ung/php-traditional-server/tree/master)
         //https://docs.fineuploader.com/branch/master/quickstart/03-setting_up_server.html
         //https://github.com/FineUploader/server-examples/blob/4.0.0/php/traditional/endpoint.php
-
         //"/vendor/fineuploader/php-traditional-server/endpoint.php"
         // /src/App/UploadBundle/endpoint.php
         //src/App/UploadBundle/endpoint.php

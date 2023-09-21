@@ -59,10 +59,17 @@ class UploadHandler {
         $targetFolder = $this->chunksFolder.DIRECTORY_SEPARATOR.$uuid;
         $totalParts = isset($_REQUEST['qqtotalparts']) ? (int)$_REQUEST['qqtotalparts'] : 1;
 
+        //Uploaded\directory\3021a4e7-ec84-4060-b83e-284be7e3dd40\backupdb-test-20230918-164528-scanordercopy.dump.gz
         $targetPath = join(DIRECTORY_SEPARATOR, array($uploadDirectory, $uuid, $name));
+        
+        //targetPath=Uploaded\directory\backupdb-test-20230918-164528-scanordercopy.dump.gz
+        //$targetPath = join(DIRECTORY_SEPARATOR, array($uploadDirectory, $name));
+        //$targetPath = $uploadDirectory.DIRECTORY_SEPARATOR.$name;
+        //echo "targetPath=$targetPath<br>";
+        
         $this->uploadName = $name;
 
-        if (!file_exists($targetPath)){
+        if( !file_exists($targetPath) ){
             mkdir(dirname($targetPath), 0777, true);
         }
         $target = fopen($targetPath, 'wb');
