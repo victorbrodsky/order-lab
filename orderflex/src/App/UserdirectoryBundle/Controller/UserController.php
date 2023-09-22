@@ -4223,13 +4223,13 @@ class UserController extends OrderAbstractController
 
         if( !$equals && $user->getPassword() ) {
             if ($encoded) {
-                exit('update password: encoded=' . $encoded);
+                //exit('update password: encoded=' . $encoded);
                 $user->setPassword($encoded);
                 return true;
             }
         }
 
-        exit('end of encryptPassword');
+        //exit('end of encryptPassword');
         return false;
 
 //        //echo "compare: $originalPassword == $encoded <br>";
