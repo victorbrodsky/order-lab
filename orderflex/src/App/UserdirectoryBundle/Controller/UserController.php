@@ -4246,14 +4246,14 @@ class UserController extends OrderAbstractController
 //        //exit('encryptPassword encoded='.$encoded);
 //        return null;
     }
-//    function isEncodedPassword($password) {
-//        //return preg_match('/^[a-f0-9]{32}$/', $password);
-//        //check the length of the password
-//        if( strlen((string)$password) >= 32 ) {
-//            return true;
-//        }
-//        return false;
-//    }
+    function isEncodedPassword($password) {
+        //return preg_match('/^[a-f0-9]{32}$/', $password);
+        //check the length of the password
+        if( strlen((string)$password) >= 32 ) {
+            return true;
+        }
+        return false;
+    }
 
     //explicitly set a new avatar
     public function processSetAvatar($subjectUser) {
