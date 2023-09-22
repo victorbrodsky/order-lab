@@ -933,6 +933,17 @@ class GoogleSheetManagement {
         //dump($credentialsJsonFile);
         //exit('111');
 
+        if( file_exists($credentialsJsonFile) == false ) {
+            $logger->warning('JSON service key does not exits. Json file='.$credentialsJsonFile);
+            //exit('authPathFellApp is not set');
+            $res = array(
+                'client' => null,
+                'service' => null
+            );
+
+            return $res;
+        }
+
         //$scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
         $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$scopes ) {
