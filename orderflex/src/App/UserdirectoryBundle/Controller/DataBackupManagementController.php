@@ -1597,6 +1597,7 @@ class DataBackupManagementController extends OrderAbstractController
         $result = array('error' => 'Logical error');
 
         //Get target folder to keep the final uploaded file
+        //The uploaded file will be stored in this folder with uuid as a prefix
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
 
