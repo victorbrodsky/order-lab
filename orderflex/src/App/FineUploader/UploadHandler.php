@@ -442,6 +442,7 @@ class UploadHandler {
         $folderInaccessible = ($isWin) ? !is_writable($directory) : ( !is_writable($directory) && !is_executable($directory) );
 
         if( $folderInaccessible ) {
+            echo "$directory=".$directory."<br>";
             echo "mkdir=".dirname($directory)."<br>";
             mkdir(dirname($directory), 0755, true);
             //$folderInaccessible = false;
