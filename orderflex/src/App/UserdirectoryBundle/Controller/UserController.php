@@ -4188,8 +4188,8 @@ class UserController extends OrderAbstractController
     public function encryptPassword( $user, $originalPassword, $newUser=false ) {
         //return; //testing
 
-        //echo "originalPassword=".$originalPassword."<br>";
-        //echo "getPassword=".$user->getPassword()."<br>";
+        echo "originalPassword=".$originalPassword."<br>";
+        echo "getPassword=".$user->getPassword()."<br>";
         //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
 
 //        if( !$originalPassword ) {
@@ -4215,6 +4215,7 @@ class UserController extends OrderAbstractController
         $encoded = $authUtil->getEncodedPassword($user, $user->getPassword());
 
         if( $encoded ) {
+            exit('update password: encoded='.$encoded);
             $user->setPassword($encoded);
             return true;
         }
