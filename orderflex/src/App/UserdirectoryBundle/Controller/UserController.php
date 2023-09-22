@@ -4213,7 +4213,7 @@ class UserController extends OrderAbstractController
         if( !$newUser && $originalPassword && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
             //exit('password exists and is the same');
             if( $this->isEncodedPassword($user->getPassword()) ) {
-                exit('password is already encoded and it is the same');
+                //exit('password is already encoded and it is the same');
                 return false;
             }
         }
