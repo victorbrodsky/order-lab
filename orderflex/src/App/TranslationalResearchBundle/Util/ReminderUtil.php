@@ -135,15 +135,15 @@ class ReminderUtil
         }
 
         if( !$invoiceDueDateMax ) {
-            $logger->error("invoiceDueDateMax is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
+            $logger->notice("invoiceDueDateMax is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
         }
         if( !$reminderInterval ) {
-            $logger->error("reminderInterval is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
+            $logger->notice("reminderInterval is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "reminderInterval is not set. Invoice reminder emails are not sent.";
         }
         if( !$maxReminderCount ) {
-            $logger->error("maxReminderCount is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
+            $logger->notice("maxReminderCount is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "maxReminderCount is not set. Invoice reminder emails are not sent.";
         }
 
