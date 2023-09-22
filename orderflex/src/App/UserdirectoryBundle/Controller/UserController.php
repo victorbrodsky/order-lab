@@ -4190,7 +4190,7 @@ class UserController extends OrderAbstractController
 
         echo "originalPassword=".$originalPassword."<br>";
         echo "getPassword=".$user->getPassword()."<br>";
-        //echo "getPlainPassword=".$user->getPlainPassword()."<br>";
+        echo "getPlainPassword=".$user->getPlainPassword()."<br>";
 
 //        if( !$originalPassword ) {
 //            exit('no original password');
