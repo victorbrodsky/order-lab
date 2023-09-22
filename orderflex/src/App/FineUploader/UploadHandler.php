@@ -439,6 +439,13 @@ class UploadHandler {
     protected function isInaccessible($directory) {
         $isWin = $this->isWindows();
         $folderInaccessible = ($isWin) ? !is_writable($directory) : ( !is_writable($directory) && !is_executable($directory) );
+
+        if( $folderInaccessible ) {
+            mkdir(dirname($directory), 0777, true);
+        }
+
+        $folderInaccessible = ($isWin) ? !is_writable($directory) : ( !is_writable($directory) && !is_executable($directory) );
+
         return $folderInaccessible;
     }
 
