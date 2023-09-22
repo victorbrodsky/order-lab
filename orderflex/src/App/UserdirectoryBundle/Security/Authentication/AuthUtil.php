@@ -125,7 +125,7 @@ class AuthUtil {
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
             //$encodeRes = 1; //testing!!! allow authenticate with wrong password
 
-            if( 1 || $encodeRes ) {
+            if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
                 return $user;
             } else {
