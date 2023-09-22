@@ -1596,6 +1596,10 @@ class DataBackupManagementController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $result = array('error' => 'Logical error');
 
+        //Get target folder to keep the final uploaded file
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+
         $uploader = new UploadHandler();
 
         // Specify the list of valid extensions, ex. array("jpeg", "xml", "bmp")
@@ -1608,10 +1612,10 @@ class DataBackupManagementController extends OrderAbstractController
         // Specify the input name set in the javascript.
         $uploader->inputName = "qqfile"; // matches Fine Uploader's default inputName value by default
 
+        $uploadDir = "Uploaded".DIRECTORY_SEPARATOR."directory"; //temp folder to keep uploaded file
+
         // If you want to use the chunking/resume feature, specify the folder to temporarily save parts.
         $uploader->chunksFolder = "Uploaded".DIRECTORY_SEPARATOR."directory".DIRECTORY_SEPARATOR."chunks";
-
-        $uploadDir = "Uploaded".DIRECTORY_SEPARATOR."directory";
 
         $method = $this->get_request_method();
         //echo "method=$method<br>";
@@ -1623,22 +1627,29 @@ class DataBackupManagementController extends OrderAbstractController
             // Assumes you have a chunking.success.endpoint set to point here with a query parameter of "done".
             // For example: /myserver/handlers/endpoint.php?done
             if (isset($_GET["done"])) {
-                $result = $uploader->combineChunks($uploadDir);
+                $result = $uploader->combineChunks($uploadDir,$networkDrivePath);
             }
             // Handles upload requests
             else {
                 // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
-                $result = $uploader->handleUpload($uploadDir);
+                $result = $uploader->handleUpload($uploadDir,$networkDrivePath);
 
                 // To return a name used for uploaded file you can use the following line.
                 $result["uploadName"] = $uploader->getUploadName();
             }
 
+            //$finalFileName = $uploader->getUploadName();
             //echo json_encode($result);
         }
         // for delete file requests
         else if ($method == "DELETE") {
-            $result = $uploader->handleDelete($uploadDir);
+
+//            dump($_FILES);
+//            dump($_REQUEST);
+//            exit('111');
+
+            //$result = $uploader->handleDelete($uploadDir,$networkDrivePath);
+            $result = $uploader->handleFinalTargetDelete($networkDrivePath);
             //echo json_encode($result);
         }
         else {

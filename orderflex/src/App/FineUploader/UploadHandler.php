@@ -51,7 +51,7 @@ class UploadHandler {
         return $this->uploadName;
     }
 
-    public function combineChunks($uploadDirectory, $name = null) {
+    public function combineChunks($uploadDirectory, $finalTargetDir, $name = null) {
         $uuid = $_POST['qquuid'];
         if ($name === null){
             $name = $this->getName();
@@ -95,7 +95,20 @@ class UploadHandler {
             return array("success" => false, "uuid" => $uuid, "preventRetry" => true);
         }
 
+        //Move file from uuid to final destination
+        $this->moveToFinalTargetPath($targetPath,$finalTargetDir,$uuid);
+
         return array("success" => true, "uuid" => $uuid);
+    }
+
+    public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid ) {
+        $finalFileName = $finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME);
+
+        //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\edd1fe1c-63a1-40a0-8358-f927f8e8e8a0_fox.jpg
+        //echo "set finalFileName=".$this->finalFileName."<br>";
+
+        rename($targetPath, $finalFileName);//$finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME));
+        rmdir(dirname($targetPath));
     }
 
     public function getTargetFilePath($uploadDirectory) {
@@ -109,7 +122,7 @@ class UploadHandler {
      * @param string $uploadDirectory Target directory.
      * @param string $name Overwrites the name of the file.
      */
-    public function handleUpload($uploadDirectory, $name = null){
+    public function handleUpload($uploadDirectory, $finalTargetDir, $name = null){
 
         if (is_writable($this->chunksFolder) &&
             1 == mt_rand(1, 1/$this->chunksCleanupProbability)){
@@ -218,6 +231,10 @@ class UploadHandler {
                     mkdir(dirname($target), 0777, true);
                 }
                 if (move_uploaded_file($file['tmp_name'], $target)){
+
+                    //Move file from uuid to final destination
+                    $this->moveToFinalTargetPath($target,$finalTargetDir,$uuid);
+
                     return array('success'=> true, "uuid" => $uuid);
                 }
             }
@@ -233,7 +250,7 @@ class UploadHandler {
      * @params string $name Overwrites the name of the file.
      *
      */
-    public function handleDelete($uploadDirectory, $name=null)
+    public function handleDelete($uploadDirectory, $finalTargetDir, $name=null)
     {
         if ($this->isInaccessible($uploadDirectory)) {
             return array('error' => "Server error. Uploads directory isn't writable" . ((!$this->isWindows()) ? " or executable." : "."));
@@ -266,6 +283,39 @@ class UploadHandler {
             );
         }
 
+    }
+    /**
+     * Process a delete from the final target path.
+     * @param string $uploadDirectory Target directory.
+     * @params string $name Overwrites the name of the file.
+     *
+     */
+    public function handleFinalTargetDelete( $finalTargetDir  )
+    {
+        $uuid = false;
+        $method = $_SERVER["REQUEST_METHOD"];
+        if ($method == "DELETE") {
+            $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $tokens = explode('/', $url);
+            $uuid = $tokens[sizeof($tokens)-1];
+        } else if ($method == "POST") {
+            $uuid = $_REQUEST['qquuid'];
+        } else {
+            return array("success" => false,
+                "error" => "Invalid request method! ".$method
+            );
+        }
+
+        //find file by uuid
+        $file = null;
+        $files = glob($finalTargetDir . DIRECTORY_SEPARATOR . $uuid . "*");
+        foreach($files as $file) {
+            break;
+        }
+
+        //Remove from destination path
+        //echo "unlink finalFileName=".$this->finalFileName."<br>";
+        unlink($file);
     }
 
     /**
