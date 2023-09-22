@@ -4188,9 +4188,11 @@ class UserController extends OrderAbstractController
     public function encryptPassword( $user, $originalPassword, $newUser=false ) {
         //return; //testing
 
-        echo "originalPassword=".$originalPassword."<br>";
-        echo "getPassword=".$user->getPassword()."<br>";
-        echo "getPlainPassword=".$user->getPlainPassword()."<br>";
+        $authUtil = $this->container->get('authenticator_utility');
+
+        echo "originalPassword=".$originalPassword."<br>";          //encoded $2y$13...
+        echo "getPassword=".$user->getPassword()."<br>";            //encoded $2y$13...
+        echo "getPlainPassword=".$user->getPlainPassword()."<br>";  //empty
 
 //        if( !$originalPassword ) {
 //            exit('no original password');
@@ -4206,32 +4208,30 @@ class UserController extends OrderAbstractController
         if( !$user ) {
             return false;
         }
-        
-        if( !$user->getPassword() || $user->getPassword() == '' ) {
-            return false;
+
+        //password is the same as original one
+        if( !$newUser && $originalPassword && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
+            //exit('password exists and is the same');
+            if( $this->isEncodedPassword($user->getPassword()) ) {
+                exit('password is already encoded and it is the same');
+                return false;
+            }
         }
 
-        $authUtil = $this->container->get('authenticator_utility');
         $encoded = $authUtil->getEncodedPassword($user, $user->getPassword());
+        $equals = hash_equals($originalPassword, $encoded);
 
-        if( $encoded ) {
-            exit('update password: encoded='.$encoded);
-            $user->setPassword($encoded);
-            return true;
+        if( !$equals && $user->getPassword() ) {
+            if ($encoded) {
+                exit('update password: encoded=' . $encoded);
+                $user->setPassword($encoded);
+                return true;
+            }
         }
 
+        exit('end of encryptPassword');
         return false;
 
-//        //password is the same as original one
-//        if( !$newUser && $originalPassword && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
-//            //exit('password exists and is the same');
-//            return null;
-//            //if( $this->isEncodedPassword($user->getPassword()) ) {
-//                //exit('password is already encoded and it is the same');
-//                //return;
-//            //}
-//        }
-//
 //        //echo "compare: $originalPassword == $encoded <br>";
 //        $equals = hash_equals($originalPassword, $encoded);
 //
