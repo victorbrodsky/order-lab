@@ -1264,16 +1264,16 @@ class DataBackupManagementController extends OrderAbstractController
 
         //echo "networkDrivePath=$networkDrivePath <br>";
 
-        $files = scandir($networkDrivePath); //with dots
-        //$files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
-        dump($files);
-        exit('111');
+        //$files = scandir($networkDrivePath); //with dots
+        $files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
+        //dump($files);
+        //exit('111');
 
         $backupFiles = array();
         if( $files && is_array($files) ) {
             $files = array_diff($files, array('..', '.'));
             foreach( $files as $file ) {
-                echo "file=$file <br>";
+                //echo "file=$file <br>";
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if( $ext && $ext != 'log' && $ext != 'txt' ) {
                     $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $file;
@@ -1287,7 +1287,8 @@ class DataBackupManagementController extends OrderAbstractController
                 }
             }
         }
-
+        //dump($files);
+        //exit('111');
         return $backupFiles;
     }
     public function formatSizeUnits($bytes)
@@ -1320,20 +1321,24 @@ class DataBackupManagementController extends OrderAbstractController
         return $bytes;
     }
     //https://stackoverflow.com/questions/11923235/scandir-to-sort-by-date-modified
-    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING, $files=array()) {
+    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING) {
 
         /****************************************************************************/
         // Roll through the scandir values.
-        //$files = array();
-        foreach (scandir($dir, $sorting_order) as $file) {
-            if( is_dir($file) ) {
-                $this->better_scandir($file,$sorting_order,$files);
-            }
-            if ($file[0] === '.') {
-                continue;
-            }
-            $files[$file] = filemtime($dir . '/' . $file);
-        } // foreach
+        $files = array();
+//        foreach (scandir($dir, $sorting_order) as $file) {
+//            if ($file[0] === '.') {
+//                continue;
+//            }
+//            if( is_dir($file) ) {
+//                $this->better_scandir($file,$sorting_order,$ret);
+//            }
+//            $files[$file] = filemtime($dir . '/' . $file);
+//        } // foreach
+        $files = $this->getFiles( $dir, $sorting_order );
+        //$files = $this->getAllFilesRecursive($dir,$sorting_order,$files);
+        //dump($files);
+        //exit('111');
 
         /****************************************************************************/
         // Sort the files array.
@@ -1353,6 +1358,49 @@ class DataBackupManagementController extends OrderAbstractController
         return $ret;
 
     } // better_scandir
+    public function scanAllDir( $dir, $sorting_order ) {
+        $result = [];
+        foreach(scandir($dir,$sorting_order) as $filename) {
+            if ($filename[0] === '.') continue;
+            $filePath = $dir . '/' . $filename;
+            if (is_dir($filePath)) {
+                foreach ($this->scanAllDir($filePath,$sorting_order) as $childFilename) {
+                    $result[] = $filename . '/' . $childFilename;
+                }
+            } else {
+                $result[] = $filename;
+            }
+        }
+        return $result;
+    }
+    function getAllFilesRecursive($dir, $sorting_order, &$results = array()) {
+        $files = scandir($dir,$sorting_order);
+
+        foreach ($files as $key => $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                $results[] = $path;
+            } else if ($value != "." && $value != "..") {
+                $this->getAllFilesRecursive($path, $sorting_order, $results);
+                //$results[] = $path;
+            }
+        }
+
+        return $results;
+    }
+    public function getFiles( $dir, $sorting_order ) {
+        /****************************************************************************/
+        // Roll through the scandir values.
+        $files = array();
+        foreach (scandir($dir, $sorting_order) as $file) {
+            if ($file[0] === '.') {
+                continue;
+            }
+            $files[$file] = filemtime($dir . '/' . $file);
+        } // foreach
+
+        return $files;
+    }
 
 
     public function runProcess($script) {
