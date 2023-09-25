@@ -274,7 +274,10 @@ class DataBackupManagementController extends OrderAbstractController
 
         //Original site settings
         $origVersion = $userSecUtil->getSiteSettingParameter('version');
-        $version = $origVersion . "; Restored $backupFileName by $userStr on " . $date = date('Y-m-d H-i-s');
+        $version = "Restored $backupFileName by $userStr on " . $date = date('Y-m-d H-i-s');
+        if( $origVersion ) {
+            $version = $origVersion . "\n\r" . $version;
+        }
 
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( !$siteEmail ) {
