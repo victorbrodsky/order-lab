@@ -376,21 +376,22 @@ class DataBackupManagementController extends OrderAbstractController
                 ///////////// EOF Update site parameters for newly restored DB /////////////////
 
                 //try to restart postgres sudo systemctl restart postgresql-14
-                if( $postgreVersionStr ) {
-                    $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
-                    $logger->notice("restore DBWrapper: before dbRestartCommand=$dbRestartCommand");
+                if(0) {
+                    if ($postgreVersionStr) {
+                        $dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
+                        $logger->notice("restore DBWrapper: before dbRestartCommand=$dbRestartCommand");
 
-                    $res = $userServiceUtil->runCommandByPython( $dbRestartCommand );
-                    $logger->notice("restore DBWrapper: after dbRestartCommand: res=".$res);
+                        $res = $userServiceUtil->runCommandByPython($dbRestartCommand);
+                        $logger->notice("restore DBWrapper: after dbRestartCommand: res=" . $res);
 
-                    $resApache = $userServiceUtil->restartApache();
-                    $logger->notice("restore DBWrapper: after restartApache: resApache=".$resApache);
+                        $resApache = $userServiceUtil->restartApache();
+                        $logger->notice("restore DBWrapper: after restartApache: resApache=" . $resApache);
 
-                    //test
-                    //$testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
-                    //$logger->notice("restore DBWrapper: testParam=$testParam");
+                        //test
+                        //$testParam = $userSecUtil->getSiteSettingParameter('connectionChannel');
+                        //$logger->notice("restore DBWrapper: testParam=$testParam");
 
-                    ///////////// Update site parameters for newly restored DB /////////////////
+                        ///////////// Update site parameters for newly restored DB /////////////////
 //                    $logger->notice("restore DBWrapper: before em");
 //                    $em = $this->getDoctrine()->getManager();
 //                    $param = $userSecUtil->getSingleSiteSettingsParam();
@@ -405,7 +406,8 @@ class DataBackupManagementController extends OrderAbstractController
 //                    $logger->notice("restore DBWrapper: before flush param");
 //                    $em->flush();
 //                    $logger->notice("restore DBWrapper: after flush param");
-                    ///////////// EOF Update site parameters for newly restored DB /////////////////
+                        ///////////// EOF Update site parameters for newly restored DB /////////////////
+                    }
                 }
 
 //                //INSERT INTO table_name (column1, column2, column3, ...)
