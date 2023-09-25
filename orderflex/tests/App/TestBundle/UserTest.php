@@ -22,14 +22,15 @@ class UserTest extends WebTestBase
 
         //$this->client->followRedirects();
 
-        $crawler = $this->client->request(
-            'GET',
-            '/directory/login/'
-            //[],
-            //['_username' => 'lexik', '_password' => 'dummy'],
-            //[],
-            //['CONTENT_TYPE' => 'application/json']
-        );
+//        $crawler = $this->client->request(
+//            'GET',
+//            '/directory/login/'
+//            //[],
+//            //['_username' => 'lexik', '_password' => 'dummy'],
+//            //[],
+//            //['CONTENT_TYPE' => 'application/json']
+//        );
+        $crawler = $client->request('GET', '/directory/login');
 
         //$client = static::createClient();
         //$crawler = $client->request('GET', '/directory/login');
