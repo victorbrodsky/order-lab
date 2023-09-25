@@ -231,11 +231,11 @@ security:
                   authenticator: custom_guard_authenticator
               form_login:
                   # "login" is the name of the route created previously
-                  login_path: /directory/login
-                  check_path: /directory/login
+                  login_path: /directory/login/
+                  check_path: /directory/login/
               logout:
-                  path:   /directory/logout
-                  target: /directory/login
+                  path:   /directory/logout/
+                  target: /directory/login/
               lazy:  true
               access_denied_url: /directory/access-requests/new/create
               remember_me:
