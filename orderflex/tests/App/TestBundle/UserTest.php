@@ -25,8 +25,8 @@ class UserTest extends WebTestBase
         //$client = static::createClient();
         //$crawler = $client->request('GET', '/directory/login');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
 
         $this->assertGreaterThan(
             0,
