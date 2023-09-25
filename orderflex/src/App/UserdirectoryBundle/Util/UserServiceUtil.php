@@ -1806,7 +1806,7 @@ Pathology and Laboratory Medicine",
         //restart DB sudo systemctl restart postgresql-14
         //$postgreVersionStr = $this->getDBVersionStr(); //postgresql-14
         //$dbRestartCommand = "sudo systemctl restart $postgreVersionStr";
-        echo "command=$command <br>";
+        //echo "command=$command <br>";
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $projectRoot = str_replace('order-lab', '', $projectRoot);
@@ -1818,12 +1818,12 @@ Pathology and Laboratory Medicine",
             DIRECTORY_SEPARATOR . "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
-        echo "managePackagePath=$managePackagePath <br>";
+        //echo "managePackagePath=$managePackagePath <br>";
 
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "restart_db.py";
 
         $pyCommand = "python '$pythonScriptPath' --command  '$command'";
-        echo "pyCommand=$pyCommand <br>";
+        //echo "pyCommand=$pyCommand <br>";
 
         $res = $this->runProcess($pyCommand);
 

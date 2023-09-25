@@ -612,6 +612,8 @@ class DataBackupManagementController extends OrderAbstractController
                 }
             }//if $param
 
+            $logger->notice("restore DBWrapper: after param if");
+
             $resStr =
                 "Restored database " . $backupFileName . " by " . $userStr . "<br>" .
                 $resStr .
@@ -629,6 +631,7 @@ class DataBackupManagementController extends OrderAbstractController
                 'notice',
                 $resStr
             );
+            $logger->notice("restore DBWrapper: after addFlash");
 
             //$logger->notice("After restore DB: resStr=".$resStr);
 
@@ -637,6 +640,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $emailUtil = $this->container->get('user_mailer_utility');
                 //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+                $logger->notice("restore DBWrapper: after send email");
             }
 
             //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
