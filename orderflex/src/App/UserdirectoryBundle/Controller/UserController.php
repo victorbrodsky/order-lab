@@ -624,9 +624,11 @@ class UserController extends OrderAbstractController
         //echo "all=".$all."<br>";
 
         //clean $search
-        $search = str_replace("'","",$search);
-        $search = str_replace('"','',$search);
-        $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+        if( $search ) {
+            $search = str_replace("'", "", $search);
+            $search = str_replace('"', '', $search);
+            $search = preg_replace('/[^A-Za-z0-9\-]/', '', $search); // Removes special chars.
+        }
 
         //$request = $this->container->get('request');
         $postData = $request->query->all();
