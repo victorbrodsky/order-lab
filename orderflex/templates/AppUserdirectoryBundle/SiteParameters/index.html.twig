@@ -97,7 +97,7 @@
             </tr>
             <tr>
                 <td>Version</td>
-                <td>{{ entity.version }}</td>
+                <td>{{ entity.version|raw }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'version'}) }}">Edit</a></td>
             </tr>
             <tr>
