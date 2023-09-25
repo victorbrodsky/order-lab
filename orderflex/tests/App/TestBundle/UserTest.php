@@ -24,11 +24,11 @@ class UserTest extends WebTestBase
 
         $crawler = $this->client->request(
             'GET',
-            '/directory/login/',
-            [],
+            '/directory/login/'
+            //[],
             //['_username' => 'lexik', '_password' => 'dummy'],
-            [],
-            ['CONTENT_TYPE' => 'application/json']
+            //[],
+            //['CONTENT_TYPE' => 'application/json']
         );
 
         //$client = static::createClient();
