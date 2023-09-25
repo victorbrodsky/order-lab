@@ -21,15 +21,7 @@ class UserTest extends WebTestBase
         echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
         //$this->client->followRedirects();
-
-//        $crawler = $this->client->request(
-//            'GET',
-//            '/directory/login/'
-//            //[],
-//            //['_username' => 'lexik', '_password' => 'dummy'],
-//            //[],
-//            //['CONTENT_TYPE' => 'application/json']
-//        );
+        
         $crawler = $this->client->request('GET', '/directory/login');
 
         //$client = static::createClient();

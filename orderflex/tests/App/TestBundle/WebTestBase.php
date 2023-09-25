@@ -168,7 +168,7 @@ class WebTestBase extends WebTestCase
     }
 
     public function getTestClient(array $options = array(), array $server = array()) {
-        //TODO: detect if HTTP or HTTPS used by url
+        //TODO: detect if HTTP or HTTPS used
 //        $httpsChannel = null;
 //        $client = static::createClient();
 //        $connectionChannel = $client->getKernel()->getContainer()->getParameter('connection_channel');
