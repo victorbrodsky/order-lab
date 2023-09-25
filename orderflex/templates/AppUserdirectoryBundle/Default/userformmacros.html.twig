@@ -784,10 +784,13 @@
                         {% set termStyle = "" %}
                     {% endif %}
 
-                    <h2 style="{{ termStyle }}">
-                        {#{{ user.getUsernameOptimal }}#}
-                        {{ user.getUserNameStr }}
+                    <h2>
+                        {{ user.getUsernameOptimal }}
                     </h2>
+                    <h5>
+                        {{ user.getPrimaryUseridKeytypeStr }}
+                    </h5>
+
 
                     {#head/cheaf#}
                     {#Chief, Eyebrow Pathology, Assistant Professor of Pathology and Laboratory Medicine#}
