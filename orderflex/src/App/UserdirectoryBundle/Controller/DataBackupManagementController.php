@@ -645,14 +645,14 @@ class DataBackupManagementController extends OrderAbstractController
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
         $logger->notice("postRestoreEventLogAction: after event log");
 
-        //sendEmail uses DB => don't do call it here
-        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        if( $siteEmail ) {
-            $subject = $type." restored by " . $userStr;
-            //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
-            $emailUtil->sendEmail($siteEmail, $subject, $resStr);
-            $logger->notice("postRestoreEventLogAction: after send email");
-        }
+//        //sendEmail uses DB => don't do call it here
+//        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+//        if( $siteEmail ) {
+//            $subject = $type." restored by " . $userStr;
+//            //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+//            $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+//            $logger->notice("postRestoreEventLogAction: after send email");
+//        }
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
