@@ -170,7 +170,7 @@ class WebTestBase extends WebTestCase
         //To specify http channel run it as: HTTP=1 ./bin/phpunit
         //To specify https channel (default) run it as: ./bin/phpunit
         $channel = getenv('HTTP');
-        //echo "channel=[".$httpsChannel."]<br>";
+        echo "channel=[".$httpsChannel."]<br>";
         if( $channel ) {
             //echo "HTTP";
             $httpsChannel = false;

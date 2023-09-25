@@ -20,7 +20,7 @@ class UserTest extends WebTestBase
         $userServiceUtil = $this->testContainer->get('user_service_utility');
         echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
-        $this->client->followRedirects();
+        //$this->client->followRedirects();
 
         $crawler = $this->client->request(
             'GET',
