@@ -30,7 +30,7 @@ class UserTest extends WebTestBase
 //            //[],
 //            //['CONTENT_TYPE' => 'application/json']
 //        );
-        $crawler = $client->request('GET', '/directory/login');
+        $crawler = $this->client->request('GET', '/directory/login');
 
         //$client = static::createClient();
         //$crawler = $client->request('GET', '/directory/login');
