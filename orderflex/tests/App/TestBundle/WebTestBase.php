@@ -167,17 +167,66 @@ class WebTestBase extends WebTestCase
     public function getTestClient(array $options = array(), array $server = array()) {
         //TODO: detect if HTTP or HTTPS used by url
 
+//        $client = static::createClient([], [
+//            'HTTP_HOST' => '127.0.0.1',
+//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+//            'HTTPS' => false
+//        ]);
+//        $userSecUtil = $client->getContainer()->get('user_security_utility');
+//        //$userSecUtil = $this->testContainer->get('user_security_utility');
+//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+//        if( !$connectionChannel ) {
+//            $connectionChannel = 'http';
+//        }
+//
+//        $httpsChannel = null;
+//        if( $connectionChannel == 'https' ) {
+//            $httpsChannel = true;
+//        }
+//        if( $connectionChannel == 'http' ) {
+//            $httpsChannel = false;
+//        }
+
+        $client = static::createClient();
+        $connectionChannel = $client->getKernel()->getContainer()->getParameter('connection_channel');
+        //echo "connection_channel=$connectionChannel; ";
+        //exit('connectionChannel='.$connectionChannel);
+
+        $httpsChannel = null;
+        if( $connectionChannel === 'https' ) {
+            $httpsChannel = true;
+            //echo "0 httpsChannel=true; ";
+        }
+        if( $connectionChannel === 'http' ) {
+            $httpsChannel = false;
+            //echo "0 httpsChannel=false; ";
+        }
+        //echo '1 httpsChannel='.$httpsChannel . "; ";
+        //exit('1 httpsChannel='.$httpsChannel);
+
         //To specify http channel run it as: HTTP=1 ./bin/phpunit
         //To specify https channel (default) run it as: ./bin/phpunit
-        $channel = getenv('HTTP');
-        echo "channel=[".$channel."]<br>";
-        if( $channel ) {
-            //echo "HTTP";
-            $httpsChannel = false;
-        } else {
-            //echo "HTTPS";
-            $httpsChannel = true;
+        $envchannel = getenv('HTTP');
+        //echo "envchannel=[".$envchannel."]<br>";
+        if( $envchannel === '1' || $envchannel === '0' ) {
+            //echo "Overwrite httpsChannel; ";
+            if( $envchannel === '1' ) {
+                //echo "HTTP; ";
+                $httpsChannel = false;
+            } else {
+                //echo "HTTPS; ";
+                $httpsChannel = true;
+            }
         }
+
+//        //testing
+//        if( $httpsChannel === true ) {
+//            echo "HTTPS; ";
+//        }
+//        if( $httpsChannel === false ) {
+//            echo "HTTP; ";
+//        }
+//        exit('2 httpsChannel='.$httpsChannel);
 
 //        $client = static::createClient();
 //        $userUtil = $client->getContainer()->get('user_utility');
