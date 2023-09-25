@@ -6,6 +6,9 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+!/.env.test
+!/.envsample
+
 /public/bundles/
 
 
