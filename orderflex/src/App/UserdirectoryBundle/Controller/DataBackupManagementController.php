@@ -250,171 +250,6 @@ class DataBackupManagementController extends OrderAbstractController
         $response = new Response();
         $response->setContent(json_encode($output));
         return $response;
-
-        ///////////////////// RESTORE DB /////////////////////
-        if(0) {
-            if ($backupFileName) {
-
-//            ini_set('max_execution_time', 0);
-//            ini_set('max_input_time', 0);
-//            ini_set("default_socket_timeout", 6000); //sec
-
-                //Original site settings
-                $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-                if (!$siteEmail) {
-                    $siteEmail = "myemail@example.com";
-                }
-                //$exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
-                //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-                $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig');
-                if ($filesBackupConfig) {
-                    $filesBackupConfig = str_replace("'", "''", $filesBackupConfig);
-                }
-                $monitorScript = $userSecUtil->getSiteSettingParameter('monitorScript');
-                if ($monitorScript) {
-                    $monitorScript = str_replace("'", "''", $monitorScript);
-                }
-                $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-                if (!$connectionChannel) {
-                    $connectionChannel = 'http';
-                }
-
-                //if(0) {
-                //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-                //$environment = $userSecUtil->getSiteSettingParameter('environment');
-                //$liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
-                //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-                //}
-
-                //exit('Under construction: backupFilePath='.$backupFileName);
-                //create backup
-
-                $networkDrivePathOrig = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-                $networkDrivePath = realpath($networkDrivePathOrig);
-                //$backupFilePath = $networkDrivePath. DIRECTORY_SEPARATOR . $backupFilePath;
-
-                $logger->notice("Before dbManagePython: networkDrivePath=$networkDrivePath");
-
-                //$res = $this->restoringBackupSQLFull($backupFilePath);
-                //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-                $res = $this->dbManagePython($networkDrivePath, 'restore', $backupFileName); //Use python script pg_restore
-                //exit($res);
-
-                $logger->notice("After dbManagePython");
-
-                $resStatus = $res['status'];
-                $resStr = $res['message'];
-
-                $logger->notice("After dbManagePython: status=$resStatus, resStr=$resStr");
-
-                if ($resStatus == 'OK') {
-
-                    $param = $userSecUtil->getSingleSiteSettingsParam();
-                    $logger->notice("After get settings parameters. paramId=" . $param->getId());
-
-                    if ($param && $param->getId()) {
-
-                        $logger->notice("before getConnection");
-                        $conn = $this->getConnection();
-                        $logger->notice("after getConnection");
-
-//                    if( $env == 'live' ) {
-//                        $siteEmail == '';
-//                    }
-
-                        //filesBackupConfig - json file with backup config (server dependents: /srv/order-lab/orderflex/public)
-                        //monitorScript - json file with health monitor config (server dependents: /srv/order-lab/webmonitor/webmonitor.py, /srv/order-lab/orderflex/var/log/webmonitor.log )
-
-                        //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
-                        $sql = "UPDATE user_siteparameters" .
-                            " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='1'" .
-                            ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
-                            ", connectionChannel='$connectionChannel'" .
-                            ", networkDrivePath='$networkDrivePathOrig'" .
-                            " WHERE id=" . $param->getId();
-                        //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
-                        $logger->notice("sql=" . $sql);
-
-                        $stmt = $conn->prepare($sql);
-                        $logger->notice("after prepare");
-
-                        $results = $stmt->executeQuery();
-                        $logger->notice("after executeQuery");
-
-                        //$resStr = print_r($results->fetchAll());
-                        //$logger->notice("after executeQuery. res=".$resStr);
-
-//                    //re-deploy
-//                    $projectRoot = $this->container->get('kernel')->getProjectDir();
-//                    //$projectRoot = C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-//                    $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-
-                        //Generate cron jobs only for live server
-                        if ($env == 'live') {
-                            //Generate cron jobs:
-                            //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
-                            // - directory/admin/list/generate-cron-jobs/
-                            $userServiceUtil->createCrons();
-
-                            //2) Create status cron job (check if the system in the maintenance mode):
-                            // - directory/admin/list/generate-cron-jobs/status
-                            //$userServiceUtil->createStatusCronLinux(); //included in $userServiceUtil->createCrons();
-
-                            //3) Create useradstatus cron job (update users AD status)
-                            // - directory/admin/list/generate-useradstatus-cron/
-                            $userServiceUtil->createUserADStatusCron('6h');
-
-                            //4) Create backup cron jobs based on the JSON file
-                            // - /directory/admin/list/update-cron-job/uploads-live-HOURLY/filesBackupConfig
-                            // - /directory/admin/list/update-cron-job/db-mount-HOURLY/filesBackupConfig
-                        }
-                    }//if $param
-
-                    $resStr =
-                        "Restored database " . $backupFileName . "<br>" .
-                        $resStr .
-                        "<br>The next steps would be:" .
-                        " <br>- Make sure that the local administrator user and associated password" .
-                        " is set if the backup is used outside the institutional intranet network" .
-                        " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB." .
-                        " <br>- Verify the site settings." .
-                        " Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail" .
-                        " <br>- Verify cron jobs." .
-                        " <br>- It might be necessary to run the deploy_prod.sh script.";
-
-                    //$logger->notice("After restore DB: resStr=".$resStr);
-
-                    //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
-                    //Event Log
-                    //$user = $this->getUser();
-                    //$sitename = $this->getParameter('employees.sitename');
-                    //$userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
-
-                    $output = array(
-                        'status' => 'OK',
-                        'message' => $resStr
-                    );
-                } else {
-                    $output = array(
-                        'status' => 'NOTOK',
-                        'message' => $resStr
-                    );
-                }
-
-                $logger->notice("Before sending response");
-                $response = new Response();
-                $response->setContent(json_encode($output));
-                return $response;
-            }
-        } //if 0
-
-        $output = array(
-            'status' => 'NOTOK',
-            'message' => 'Backup file is not provided'
-        );
-        $response = new Response();
-        $response->setContent(json_encode($output));
-        return $response;
     }
     public function restoreDBWrapper( $backupFileName, $env ) {
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -635,13 +470,14 @@ class DataBackupManagementController extends OrderAbstractController
 
             //$logger->notice("After restore DB: resStr=".$resStr);
 
-            if( $siteEmail ) {
-                $subject = "Warning: Database restored by ".$userStr;
-                $emailUtil = $this->container->get('user_mailer_utility');
-                //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
-                $emailUtil->sendEmail($siteEmail, $subject, $resStr);
-                $logger->notice("restore DBWrapper: after send email");
-            }
+//            if( $siteEmail ) {
+//                //sendEmail uses DB => don't do call it here
+//                $emailUtil = $this->container->get('user_mailer_utility');
+//                $subject = "Warning: Database restored by ".$userStr;
+//                //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+//                $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+//                $logger->notice("restore DBWrapper: after send email");
+//            }
 
             //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
             //Event Log
