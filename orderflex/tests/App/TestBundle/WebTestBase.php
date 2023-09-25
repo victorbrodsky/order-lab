@@ -169,8 +169,7 @@ class WebTestBase extends WebTestCase
 
     public function getTestClient(array $options = array(), array $server = array()) {
         //TODO: detect if HTTP or HTTPS used by url
-        $httpsChannel = null;
-
+//        $httpsChannel = null;
 //        $client = static::createClient();
 //        $connectionChannel = $client->getKernel()->getContainer()->getParameter('connection_channel');
 //        //$this->tearDown();
@@ -190,21 +189,14 @@ class WebTestBase extends WebTestCase
 
         //To specify http channel run it as: HTTP=1 ./bin/phpunit
         //To specify https channel (default) run it as: ./bin/phpunit
-        $envchannel = getenv('HTTP');
-        //echo "envchannel=[".$envchannel."]<br>";
-        if( $envchannel === '1' || $envchannel === '0' ) {
-            //echo "Overwrite httpsChannel; ";
-            if( $envchannel === '1' ) {
-                //echo "HTTP; ";
-                $httpsChannel = false;
-            } else {
-                //echo "HTTPS; ";
-                $httpsChannel = true;
-            }
-        }
-
-        if( $httpsChannel === null ) {
+        $channel = getenv('HTTP');
+        //echo "channel=[".$httpsChannel."]<br>";
+        if( $channel ) {
+            //echo "HTTP";
             $httpsChannel = false;
+        } else {
+            //echo "HTTPS";
+            $httpsChannel = true;
         }
 
 //        //testing
