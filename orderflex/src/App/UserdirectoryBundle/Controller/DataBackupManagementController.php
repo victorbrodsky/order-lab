@@ -618,11 +618,18 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
         $user = $this->getUser();
         $userStr = $user."";
 
-        //$type = $request->get('type');
-        //$msg = $request->get('msg');
+        $type = $request->get('type'); //db or files
+        $msg = $request->get('msg');
+
+        if( $type ) {
+            $type = strtoupper($type);
+        }
 
         if( $msg == 'timeout' ) {
             $msg = "Restored with Gateway Timeout";
@@ -632,10 +639,18 @@ class DataBackupManagementController extends OrderAbstractController
         $logger->notice("postRestoreEventLogAction: before event log: $resStr");
 
         //Event Log
-        $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('employees.sitename');
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Restore Backup Database');
         $logger->notice("postRestoreEventLogAction: after event log");
+
+        //sendEmail uses DB => don't do call it here
+        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        if( $siteEmail ) {
+            $subject = $type." restored by " . $userStr;
+            //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+            $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+            $logger->notice("postRestoreEventLogAction: after send email");
+        }
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
