@@ -1817,7 +1817,7 @@ class User extends UserBase {
         return $this->getPrimaryPublicUserId();
     }
 
-    public function getPrimaryUseridKeytypeStr( $delimeter = " " ) : ?string
+    public function getPrimaryUseridKeytypeStr( string $delimeter = " " ) : ?string
     {
         //Exception in twig: UsernameType was already present for the same ID (example dev user id=12: $this->getKeytype() -> this error)
         if( $this->getKeytype() && $this->getKeytype()->getName() ) {
