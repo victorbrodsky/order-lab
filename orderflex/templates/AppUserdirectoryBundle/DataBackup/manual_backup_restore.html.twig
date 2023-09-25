@@ -441,7 +441,7 @@
                     url: url,
                     timeout: _backupAjaxTimeout,
                     type: "POST",
-                    async: false, //true,
+                    async: true,
                     data: {token: token}
                 }).success(function(data) {
                     //console.log("data="+data);
@@ -512,7 +512,8 @@
                 url: url,
                 timeout: _backupAjaxTimeout,
                 type: "POST",
-                async: false, //true,
+                //async: false, //true,
+                async: true, //true,
                 data: {fileId: fileId, env: env},
                 dataType: 'json'
             }).success(function(data) {
@@ -563,6 +564,7 @@
             });
         }
 
+        //NOT USED
         function userPostRestoreAjax(btn,lbtn,type) {
 
             if( type != 'db' ) {
@@ -609,6 +611,7 @@
             });
         }
 
+        //NOT USED
         function userPostRestoreEventLogAjax(btn,lbtn,type,msg) {
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
