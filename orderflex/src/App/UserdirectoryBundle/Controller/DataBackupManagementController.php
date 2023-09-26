@@ -1301,6 +1301,35 @@ class DataBackupManagementController extends OrderAbstractController
         $response = new BinaryFileResponse($filePath);
         $response->send();
     }
+
+    #[Route(path: '/delete-file/{filename}', name: 'employees_delete_file', methods: ['GET'], options: ['expose' => true])]
+    public function deleteFileAction( Request $request, $filename=null )
+    {
+        //exit('downloadBackupFileAction');
+        if( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        $networkDrivePath = realpath($networkDrivePath);
+
+        $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $filename;
+        $filePath = realpath($filePath);
+        //exit('$filePath='.$filePath);
+
+        //rmdir(dirname($filePath));
+        unlink($filePath);
+
+        $this->addFlash(
+            'notice',
+            "File $filename has been deleted"
+        );
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+    }
     
     //https://symfony.com/doc/current/controller/upload_file.html
     #[Route(path: '/upload-backup-file/', name: 'employees_upload_backup_file', methods: ['POST'])]

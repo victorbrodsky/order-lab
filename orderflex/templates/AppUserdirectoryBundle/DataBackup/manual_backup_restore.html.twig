@@ -108,7 +108,7 @@
                         </select>
                     </p>
                 </div>
-                <div class="col-xs-2" align="left">
+                <div class="col-xs-2" align="right">
                     {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
                     <a  id="btn-download-backup-href"
                         target="_blank"
@@ -127,6 +127,12 @@
                     {#</span>#}
                 </div>
                 <div class="col-xs-2" align="left">
+                    <a  id="btn-delete-file-href"
+                        general-data-confirm="Are you sure you want to delete selected file?"
+                        disabled
+                        class="btn btn-warning"
+                        href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
+                    >Deleted selected file</a>
                 </div>
             </div>
 
@@ -270,6 +276,7 @@
 
                 //var origHref = $('#btn-download-backup-href').attr('href');
                 var origHref = Routing.generate('employees_download_backup_file');
+                var origDeleteHref = Routing.generate('employees_delete_file');
 
                 if( fileId && env ) {
                     console.log('fileId=' + fileId + '; env=' + env);
@@ -290,6 +297,11 @@
                     $('#btn-download-backup-href').removeAttr('disabled');
                     $('#btn-download-backup-href').attr("href", href);
 
+                    //btn-delete-file-href
+                    href = origDeleteHref + "/" + fileId;
+                    $('#btn-delete-file-href').removeAttr('disabled');
+                    $('#btn-delete-file-href').attr("href", href);
+
                     if( fileId.includes('backupfiles') && fileId.includes('.tar.gz') ) {
                         $('#btn-restore-files-backup').removeAttr('disabled');
                     } else {
@@ -298,6 +310,9 @@
                 } else {
                     $('#btn-download-backup-href').attr('disabled', true);
                     $('#btn-download-backup-href').attr("href", origHref);
+
+                    $('#btn-delete-file-href').attr('disabled', true);
+                    $('#btn-delete-file-href').attr("href", origDeleteHref);
 
                     $('#btn-restore-files-backup').attr('disabled', true);
                 }
@@ -396,6 +411,7 @@
             $('#btn-create-backup').attr('disabled', true);
             $('#btn-create-backup-upload').attr('disabled', true);
             $('#btn-download-backup-href').attr('disabled', true);
+            $('#btn-delete-file-href').attr('disabled', true);
 
             var typeStr = type.toUpperCase();
 
@@ -418,6 +434,7 @@
                 $('#btn-create-backup').removeAttr('disabled');
                 $('#btn-create-backup-upload').removeAttr('disabled');
                 $('#btn-download-backup-href').removeAttr('disabled');
+                $('#btn-delete-file-href').removeAttr('disabled');
 
             }, 1000);
         }
