@@ -1446,7 +1446,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //https://github.com/t12ung/php-traditional-server/blob/master/endpoint.php
-    #[Route(path: '/upload-chunk-file/{uuid}', name: 'employees_upload_chunk_file', methods: ['POST','DELETE'], options: ['expose' => true])]
+    #[Route(path: '/upload-chunk-file/{uuid}', name: 'employees_upload_chunk_file', methods: ['GET','POST','DELETE'], options: ['expose' => true])]
     public function uploadChunkFileAction(Request $request, $uuid=null)
     {
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
