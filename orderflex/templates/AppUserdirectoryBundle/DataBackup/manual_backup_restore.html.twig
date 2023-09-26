@@ -542,7 +542,7 @@
             })
             .fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                var failMsg = "restore might fail. textStatus="+textStatus+", error="+error;
+                var failMsg = "restore might fail. jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
                 if( error == 'Gateway Timeout' ) {
                     var timeoutMsg = "Restore completed. Reloading ...";

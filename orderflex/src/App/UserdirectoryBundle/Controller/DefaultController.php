@@ -313,26 +313,17 @@ class DefaultController extends OrderAbstractController
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "./vendor/bin/phpunit.bat";
 
-        $prefix = "";
-//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-//        if( !$connectionChannel ) {
-//            $connectionChannel = 'http';
-//        }
-//        if( $connectionChannel == 'http' ) {
-//            $prefix = "HTTP=1 ";
-//        }
-
         $envArr = array();
 
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
             //Windows
-            $testCmd = $prefix."./vendor/bin/phpunit.bat";
+            $testCmd = "./vendor/bin/phpunit.bat";
             //$envArr = array('HTTP' => 1);
             $commandArr = array($testCmd, '-d', 'memory_limit=-1', $testFilePath);
         } else {
             //Linux
-            $testCmd = $prefix."vendor/bin/phpunit";
+            $testCmd = "vendor/bin/phpunit";
             //$envArr = array();
             $commandArr = array($testCmd,$testFilePath);
         }

@@ -111,9 +111,12 @@
                     //_testFailed = _testFailed + 1; //testing
                     data = '<div class="alert alert-success" role="alert">'+data+'</div>';
                 }
+
                 $('#result').append(data);
                 console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
+
                 if( _testCompleted == totalCount ) {
+                    console.log("Finished all tests");
 //                    $('#message').text("All "+totalCount+" tests are completed");
 //                    $('#message').removeClass('alert-primary').addClass('alert-success');
                     if( _testFailed == 0 ) {
@@ -125,10 +128,10 @@
                     }
 
                 }
-            }).fail(function(jqXHR, exception) {
+            }).fail(function(jqXHR, textStatus, error) {
 //                $('#message').text("Error: test suite failed to start for "+testFile);
 //                $('#message').removeClass('alert-primary').addClass('alert-danger');
-                $('#pleasewait').text("Error: test suite failed to start the "+testFile+" with jqXHR.status="+jqXHR.status+" and exception="+exception);
+                $('#pleasewait').text("Error: test suite failed to start the "+testFile+" with jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", error="+error);
                 $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
                 //$('#result').append("Error: test suite failed to start");
             }).always(function() {
