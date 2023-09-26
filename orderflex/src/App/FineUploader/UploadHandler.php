@@ -103,13 +103,13 @@ class UploadHandler {
         }
 
         //Move file from uuid to final destination
-        $this->moveToFinalTargetPath($targetPath,$finalTargetDir,$uuid);
+        $this->moveToFinalTargetPath($targetPath,$finalTargetDir,$uuid,$logger);
 
         return array("success" => true, "uuid" => $uuid);
     }
 
-    public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid ) {
-        $logger->notice('moveToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
+    public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid, $logger=null ) {
+        if($logger) $logger->notice('moveToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
         $finalFileName = $finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME);
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\edd1fe1c-63a1-40a0-8358-f927f8e8e8a0_fox.jpg
@@ -117,11 +117,11 @@ class UploadHandler {
 
         //Moving files with rename()
         rename($targetPath, $finalFileName);//$finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME));
-        $logger->notice('moveToFinalTargetPath: after move by rename');
+        if($logger) $logger->notice('moveToFinalTargetPath: after move by rename');
 
         //Delete original file
         rmdir(dirname($targetPath));
-        $logger->notice('moveToFinalTargetPath: after rmdir');
+        if($logger) $logger->notice('moveToFinalTargetPath: after rmdir');
     }
 
     public function getTargetFilePath($uploadDirectory) {
