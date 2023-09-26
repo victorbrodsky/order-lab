@@ -80,6 +80,15 @@ class GoogleFormConfigController extends OrderAbstractController
         //add new line before ",{"
         //$configFileContent = str_replace("},","},<br>",$configFileContent);
 
+        if( !$configFileContent ) {
+            $this->addFlash(
+                'warning',
+                "Google configuration file can not be retrieved from Google Drive.".
+                " Please verify if the 'Full path to the credential authentication JSON file for Google'".
+                " parameter in the site settings has been provided"
+            );
+        }
+
         return array(
             'form' => $form->createView(),
             'entity' => $entity,

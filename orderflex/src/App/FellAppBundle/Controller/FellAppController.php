@@ -619,6 +619,13 @@ class FellAppController extends OrderAbstractController {
                 if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
                     $acceptingApplication = "Now accepting applications";
                 }
+            } else {
+                $this->addFlash(
+                    'warning',
+                    "Google configuration file can not be retrieved from Google Drive.".
+                    " Please verify if the 'Full path to the credential authentication JSON file for Google'".
+                    " parameter in the site settings has been provided"
+                );
             }
             $acceptingApplication = "- ".$acceptingApplication;
         }

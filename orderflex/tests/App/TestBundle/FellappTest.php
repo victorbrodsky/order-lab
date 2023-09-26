@@ -81,7 +81,7 @@ class FellappTest extends WebTestBase
                 $fileContentsCount
             );
         } else {
-            echo "Skip testFileDownloadAction; Google service is not set up";
+            echo "Skip testFileDownloadAction: Google service is not set up";
             return null;
         }
     }
