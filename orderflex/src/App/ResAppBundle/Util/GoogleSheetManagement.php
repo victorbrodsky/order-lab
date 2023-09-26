@@ -1083,8 +1083,10 @@ class GoogleSheetManagement {
         $service = $googlesheetmanagement->getGoogleService();
 
         if( !$service ) {
-            $event = "Google API service failed!";
-            exit($event);
+            $event = "get ConfigOnGoogleDrive: Google API service failed!";
+            $logger->warning($event);
+            //exit($event);
+            return null;
         }
 
         //echo "service ok <br>";
