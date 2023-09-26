@@ -1489,12 +1489,12 @@ class DataBackupManagementController extends OrderAbstractController
             // Assumes you have a chunking.success.endpoint set to point here with a query parameter of "done".
             // For example: /myserver/handlers/endpoint.php?done
             if (isset($_GET["done"])) {
-                $result = $uploader->combineChunks($uploadDir,$networkDrivePath,null,$logger);
+                $result = $uploader->combineChunks($uploadDir,$networkDrivePath,null,null); //,null,$logger
             }
             // Handles upload requests
             else {
                 // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
-                $result = $uploader->handleUpload($uploadDir,$networkDrivePath,null,$logger);
+                $result = $uploader->handleUpload($uploadDir,$networkDrivePath,null,null); //,null,$logger
 
                 // To return a name used for uploaded file you can use the following line.
                 $result["uploadName"] = $uploader->getUploadName();
