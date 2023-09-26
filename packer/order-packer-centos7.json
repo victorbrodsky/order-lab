@@ -19,7 +19,8 @@
         "type": "shell",
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
-			"bashdbpass=bash_dbpass"
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol"
 		],
         "script": "centos7_install.sh"
     },

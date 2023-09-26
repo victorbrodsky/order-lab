@@ -11,8 +11,13 @@ if [ -z "$bashdbpass" ]
   then 	
     bashdbpass=$2
 fi
+if [ -z "$bashprotocol" ]
+  then 	
+    bashprotocol=$3
+fi
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
+echo bashprotocol=$bashprotocol
 
 #WHITE='\033[1;37m'
 COLOR='\033[1;36m'
@@ -362,8 +367,13 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
-	echo -e ${COLOR} Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
-	cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
+	if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
+		then 
+			echo -e ${COLOR} HTTPS protocol=$protocol: Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+			cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
+		else
+			echo -e ${COLOR} HTTP protocol=$protocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+	fi	
 	
 	echo -e ${COLOR} Copy env ${NC}
 	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
