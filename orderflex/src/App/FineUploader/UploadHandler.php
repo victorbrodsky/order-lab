@@ -112,6 +112,12 @@ class UploadHandler {
 
     public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid, $logger=null ) {
         if($logger) $logger->notice('move ToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
+
+        if( !file_exists($finalTargetDir) ){
+            mkdir($finalTargetDir, 0777, true);
+            if($logger) $logger->notice('move ToFinalTargetPath: create $finalTargetDir='.$finalTargetDir);
+        }
+
         $finalFileName = $finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME);
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\edd1fe1c-63a1-40a0-8358-f927f8e8e8a0_fox.jpg
@@ -120,6 +126,11 @@ class UploadHandler {
         //Moving files with rename()
         rename($targetPath, $finalFileName);//$finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME));
         if($logger) $logger->notice('move ToFinalTargetPath: after move by rename');
+        if( !file_exists($finalFileName) ){
+            if($logger) $logger->notice('move ToFinalTargetPath: after move $finalFileName does not exist');
+        } else {
+            if($logger) $logger->notice('move ToFinalTargetPath: after move $finalFileName exist');
+        }
 
         //Delete original file
         rmdir(dirname($targetPath));
