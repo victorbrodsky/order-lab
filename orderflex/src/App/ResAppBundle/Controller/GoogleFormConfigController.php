@@ -257,7 +257,9 @@ class GoogleFormConfigController extends OrderAbstractController
 
         if( !$service ) {
             $event = "Google API service failed!";
-            exit($event);
+            //exit($event);
+            $logger->warning("GoogleFormConfigUpdateDriveAction: deleteRowInListFeed: ".$event);
+            return NULL;
         }
 
         $configFileFolderIdResApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdResApp');

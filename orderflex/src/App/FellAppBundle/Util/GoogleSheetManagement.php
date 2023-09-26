@@ -95,7 +95,7 @@ class GoogleSheetManagement {
             $event = "Google API service failed!";
             //exit($event);
             $logger->warning("deleteRowInListFeed: ".$event);
-            return false;
+            return NULL;
         }
 
         $deletedRows = 0;
