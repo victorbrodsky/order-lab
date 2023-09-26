@@ -1474,7 +1474,7 @@ class DataBackupManagementController extends OrderAbstractController
         $uploader->inputName = "qqfile"; // matches Fine Uploader's default inputName value by default
 
         //temp folder to keep uploaded file
-        $uploadDir = 'Uploaded' . DIRECTORY_SEPARATOR . $this->getParameter('employees.uploadpath');
+        $uploadDir = 'Uploaded' . DIRECTORY_SEPARATOR . "temp"; $this->getParameter('employees.uploadpath');
 
         // If you want to use the chunking/resume feature, specify the folder to temporarily save parts.
         $uploader->chunksFolder = $uploadDir.DIRECTORY_SEPARATOR."chunks";
