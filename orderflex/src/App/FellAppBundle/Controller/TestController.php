@@ -133,7 +133,9 @@ class TestController extends OrderAbstractController
 
         if( !$service ) {
             $event = "Google API service failed!";
-            exit($event);
+            //exit($event);
+            $logger->warning("testGoogleAction: deleteRowInListFeed: ".$event);
+            return false;
         }
 
         $fileId = '1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ'; //1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ json
