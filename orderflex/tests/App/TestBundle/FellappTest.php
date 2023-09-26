@@ -72,12 +72,18 @@ class FellappTest extends WebTestBase
         echo "[Fellapp,testFileDownloadAction]";
         
         $googlesheetmanagement = $this->testContainer->get('fellapp_googlesheetmanagement');
-        $fileContentsCount = $googlesheetmanagement->testFileDownload();
+        $googleService = $googlesheetmanagement->getGoogleService();
+        if( $googleService ) {
+            $fileContentsCount = $googlesheetmanagement->testFileDownload();
 
-        $this->assertGreaterThan(
-            0,
-            $fileContentsCount
-        );
+            $this->assertGreaterThan(
+                0,
+                $fileContentsCount
+            );
+        } else {
+            echo "Skip testFileDownloadAction; Google service is not set up";
+            return null;
+        }
     }
 
     public function testEventLogAction() {
