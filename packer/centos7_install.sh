@@ -367,12 +367,12 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	
-	if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
+	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
-			echo -e ${COLOR} HTTPS protocol=$protocol: Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+			echo -e ${COLOR} HTTPS protocol=$bashprotocol: Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
 			cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
 		else
-			echo -e ${COLOR} HTTP protocol=$protocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+			echo -e ${COLOR} HTTP protocol=$bashprotocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
 	fi	
 	
 	echo -e ${COLOR} Copy env ${NC}
