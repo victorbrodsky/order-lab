@@ -83,8 +83,10 @@ class UploadHandler {
 
         for ($i=0; $i<$totalParts; $i++){
             $chunk = fopen($targetFolder.DIRECTORY_SEPARATOR.$i, "rb");
-            stream_copy_to_stream($chunk, $target);
-            fclose($chunk);
+            if( $chunk !== false ) {
+                stream_copy_to_stream($chunk, $target);
+                fclose($chunk);
+            }
         }
 
         // Success
