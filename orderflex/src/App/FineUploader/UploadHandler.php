@@ -111,7 +111,7 @@ class UploadHandler {
     }
 
     public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid, $logger=null ) {
-        if($logger) $logger->notice('moveToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
+        if($logger) $logger->notice('move ToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
         $finalFileName = $finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME);
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\edd1fe1c-63a1-40a0-8358-f927f8e8e8a0_fox.jpg
@@ -119,11 +119,11 @@ class UploadHandler {
 
         //Moving files with rename()
         rename($targetPath, $finalFileName);//$finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME));
-        if($logger) $logger->notice('moveToFinalTargetPath: after move by rename');
+        if($logger) $logger->notice('move ToFinalTargetPath: after move by rename');
 
         //Delete original file
         rmdir(dirname($targetPath));
-        if($logger) $logger->notice('moveToFinalTargetPath: after rmdir');
+        if($logger) $logger->notice('move ToFinalTargetPath: after rmdir');
     }
 
     public function getTargetFilePath($uploadDirectory) {
@@ -137,7 +137,7 @@ class UploadHandler {
      * @param string $uploadDirectory Target directory.
      * @param string $name Overwrites the name of the file.
      */
-    public function handleUpload($uploadDirectory, $finalTargetDir, $name = null){
+    public function handleUpload($uploadDirectory, $finalTargetDir, $name = null, $logger=null){
 
         if (is_writable($this->chunksFolder) &&
             1 == mt_rand(1, 1/$this->chunksCleanupProbability)){
@@ -214,6 +214,7 @@ class UploadHandler {
         $uuid = $_REQUEST['qquuid'];
         if ($totalParts > 1){
             # chunked upload
+            if($logger) $logger->notice('chunked upload. $totalParts='.$totalParts);
 
             $chunksFolder = $this->chunksFolder;
             $partIndex = (int)$_REQUEST['qqpartindex'];
@@ -236,6 +237,7 @@ class UploadHandler {
         }
         else {
             # non-chunked upload
+            if($logger) $logger->notice('non-chunked upload');
 
             $target = join(DIRECTORY_SEPARATOR, array($uploadDirectory, $uuid, $name));
 
@@ -248,7 +250,7 @@ class UploadHandler {
                 if (move_uploaded_file($file['tmp_name'], $target)){
 
                     //Move file from uuid to final destination
-                    $this->moveToFinalTargetPath($target,$finalTargetDir,$uuid);
+                    $this->moveToFinalTargetPath($target,$finalTargetDir,$uuid,$logger);
 
                     return array('success'=> true, "uuid" => $uuid);
                 }

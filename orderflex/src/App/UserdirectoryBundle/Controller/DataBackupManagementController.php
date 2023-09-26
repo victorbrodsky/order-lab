@@ -1494,7 +1494,7 @@ class DataBackupManagementController extends OrderAbstractController
             // Handles upload requests
             else {
                 // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
-                $result = $uploader->handleUpload($uploadDir,$networkDrivePath);
+                $result = $uploader->handleUpload($uploadDir,$networkDrivePath,null,$logger);
 
                 // To return a name used for uploaded file you can use the following line.
                 $result["uploadName"] = $uploader->getUploadName();
