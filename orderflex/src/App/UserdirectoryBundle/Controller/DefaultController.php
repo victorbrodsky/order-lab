@@ -244,7 +244,9 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$testFilesStr will be passed to show-run-test.html.twig.
+        // Then the test file will be passe to employees_run_test_ajax by ajax.
+        // The result will be displayd on the web page show-run-test.html.twig
 
         $projectDir = $this->container->get('kernel')->getProjectDir() ;
         //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
@@ -311,14 +313,14 @@ class DefaultController extends OrderAbstractController
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "./vendor/bin/phpunit.bat";
 
-        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        if( !$connectionChannel ) {
-            $connectionChannel = 'http';
-        }
         $prefix = "";
-        if( $connectionChannel == 'http' ) {
-            $prefix = "HTTP=1 ";
-        }
+//        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+//        if( !$connectionChannel ) {
+//            $connectionChannel = 'http';
+//        }
+//        if( $connectionChannel == 'http' ) {
+//            $prefix = "HTTP=1 ";
+//        }
 
         $envArr = array();
 
@@ -327,7 +329,7 @@ class DefaultController extends OrderAbstractController
             //Windows
             $testCmd = $prefix."./vendor/bin/phpunit.bat";
             //$envArr = array('HTTP' => 1);
-            $commandArr = array($testCmd,'-d', 'memory_limit=-1',$testFilePath);
+            $commandArr = array($testCmd, '-d', 'memory_limit=-1', $testFilePath);
         } else {
             //Linux
             $testCmd = $prefix."vendor/bin/phpunit";
