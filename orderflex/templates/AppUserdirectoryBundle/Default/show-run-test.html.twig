@@ -116,13 +116,15 @@
                 console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
 
                 if( _testCompleted == totalCount ) {
-                    console.log("Finished all tests");
+                    console.log("Finished all tests: _testFailed="+_testFailed);
 //                    $('#message').text("All "+totalCount+" tests are completed");
 //                    $('#message').removeClass('alert-primary').addClass('alert-success');
                     if( _testFailed == 0 ) {
+                        console.log("Finished all tests: OK");
                         $('.infomessage').removeClass('alert-primary').addClass('alert-success');
                         $('#pleasewait').text('All tests has been successfully completed');
                     } else {
+                        console.log("Finished all tests: FAILED");
                         $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
                         $('#pleasewait').text("All tests has been completed with "+_testFailed + ' test(s) failed');
                     }
