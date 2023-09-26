@@ -38,7 +38,14 @@ class UploadHandler {
         $initialFiles = array();
 
         for ($i = 0; $i < 5000; $i++) {
-            array_push($initialFiles, array("name" => "name" + $i, uuid => "uuid" + $i, thumbnailUrl => "/test/dev/handlers/vendor/fineuploader/php-traditional-server/fu.png"));
+            array_push(
+                $initialFiles,
+                array(
+                    "name" => "name" + $i,
+                    uuid => "uuid" + $i,
+                    thumbnailUrl => "/test/dev/handlers/vendor/fineuploader/php-traditional-server/fu.png"
+                )
+            );
         }
 
         return $initialFiles;
@@ -51,7 +58,7 @@ class UploadHandler {
         return $this->uploadName;
     }
 
-    public function combineChunks($uploadDirectory, $finalTargetDir, $name = null) {
+    public function combineChunks($uploadDirectory, $finalTargetDir, $name = null, $logger=null) {
         $uuid = $_POST['qquuid'];
         if ($name === null){
             $name = $this->getName();
@@ -102,13 +109,19 @@ class UploadHandler {
     }
 
     public function moveToFinalTargetPath( $targetPath, $finalTargetDir, $uuid ) {
+        $logger->notice('moveToFinalTargetPath: $targetPath='.$targetPath.', $finalTargetDir='.$finalTargetDir);
         $finalFileName = $finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME);
 
         //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\edd1fe1c-63a1-40a0-8358-f927f8e8e8a0_fox.jpg
         //echo "set finalFileName=".$this->finalFileName."<br>";
 
+        //Moving files with rename()
         rename($targetPath, $finalFileName);//$finalTargetDir . DIRECTORY_SEPARATOR . $uuid."_".pathinfo($targetPath, PATHINFO_BASENAME));
+        $logger->notice('moveToFinalTargetPath: after move by rename');
+
+        //Delete original file
         rmdir(dirname($targetPath));
+        $logger->notice('moveToFinalTargetPath: after rmdir');
     }
 
     public function getTargetFilePath($uploadDirectory) {

@@ -1489,7 +1489,7 @@ class DataBackupManagementController extends OrderAbstractController
             // Assumes you have a chunking.success.endpoint set to point here with a query parameter of "done".
             // For example: /myserver/handlers/endpoint.php?done
             if (isset($_GET["done"])) {
-                $result = $uploader->combineChunks($uploadDir,$networkDrivePath);
+                $result = $uploader->combineChunks($uploadDir,$networkDrivePath,null,$logger);
             }
             // Handles upload requests
             else {
