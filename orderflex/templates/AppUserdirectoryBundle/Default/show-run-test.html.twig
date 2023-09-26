@@ -47,15 +47,15 @@
 
     {#<div id="message" class="alert alert-primary" role="alert">Please Wait ...</div>#}
 
-    {#<br>#}
-    {#<div class="infomessage alert alert-primary" role="alert">#}
-        {#<p id="pleasewait">#}
-            {#Please wait ...#}
-        {#</p>#}
-        {#<p>#}
-            {#Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>#}
-        {#</p>#}
-    {#</div>#}
+    <br>
+    <div class="infomessage alert alert-primary" role="alert">
+        <p id="pleasewait" class="pleasewait">
+            Please wait ...
+        </p>
+        <p>
+            Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>
+        </p>
+    </div>
 
 {% endblock %}
 
@@ -122,18 +122,18 @@
                     if( _testFailed == 0 ) {
                         console.log("Finished all tests: OK");
                         $('.infomessage').removeClass('alert-primary').addClass('alert-success');
-                        $('#pleasewait').text('All tests has been successfully completed');
+                        $('.pleasewait').text('All tests has been successfully completed');
                     } else {
                         console.log("Finished all tests: FAILED");
                         $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
-                        $('#pleasewait').text("All tests has been completed with "+_testFailed + ' test(s) failed');
+                        $('.pleasewait').text("All tests has been completed with "+_testFailed + ' test(s) failed');
                     }
 
                 }
             }).fail(function(jqXHR, textStatus, error) {
 //                $('#message').text("Error: test suite failed to start for "+testFile);
 //                $('#message').removeClass('alert-primary').addClass('alert-danger');
-                $('#pleasewait').text(
+                $('.pleasewait').text(
                         "Logical Error: test suite failed to start the "+
                         testFile+" with jqXHR.status="+jqXHR.status+
                         ", textStatus="+textStatus+", error="+error
