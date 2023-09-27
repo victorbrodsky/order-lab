@@ -148,6 +148,27 @@ class DataBackupManagementController extends OrderAbstractController
 
         }
 
+        //estimate upload backup time based on the size of Uploaded folder
+        $uploadFilesBackupTime = null;
+        if( $userServiceUtil->isWindows() ) {
+            //
+        } else {
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+            $io = popen('sudo /usr/bin/du -sk ' . $folder, 'r');
+            $size = fgets($io, 4096);
+            //echo "1 size=$size <br>";
+            $size = substr($size, 0, strpos($size, "\t"));
+            pclose($io);
+            if( $size ) {
+                $size = round($size / (1024 * 1000)); //GB
+                //echo 'Directory: ' . $f . ' => Size: ' . $size;
+                //Assume 1 min for 1 GB
+                $uploadFilesBackupTime = "; Uploaded files backup should take about " . $size . " min.";
+            }
+
+        }
+
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
@@ -156,7 +177,8 @@ class DataBackupManagementController extends OrderAbstractController
             'backupFiles' => $backupFiles,
             'environments' => $environments,
             'form' => $form,
-            'dbBackupTime' => $dbBackupTime
+            'dbBackupTime' => $dbBackupTime,
+            'uploadFilesBackupTime' => $uploadFilesBackupTime
         );
     }
 
