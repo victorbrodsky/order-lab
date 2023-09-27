@@ -141,6 +141,7 @@ class DataBackupManagementController extends OrderAbstractController
             echo "1 size=$size <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
+            $size = round($size/(1024*1000)); //GB
             echo 'Directory: ' . $f . ' => Size: ' . $size;
             //Assume 1 min for 1 GB
             $dbBackupTime = "Backup/Restore should take about ".$size." min.";
