@@ -133,7 +133,7 @@ class DataBackupManagementController extends OrderAbstractController
             $dbBackupTime = null;
         } else {
             $f = '/var/lib/pgsql';
-            $io = popen('/usr/bin/du -sk ' . $f, 'r');
+            $io = popen('sudo /usr/bin/du -sk ' . $f, 'r');
             echo "1 io=$io <br>";
             $io = $this->runProcess("/usr/bin/du -sk $f");
             echo "2 io=$io <br>";
