@@ -157,12 +157,12 @@ class DataBackupManagementController extends OrderAbstractController
             $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             $io = popen('sudo /usr/bin/du -sk ' . $folder, 'r');
             $size = fgets($io, 4096);
-            echo "1 size=$size, folder=$folder <br>";
+            //echo "1 size=$size, folder=$folder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
-                echo 'Directory: ' . $f . ' => Size: ' . $size;
+                //echo 'Directory: ' . $folder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
                 $uploadFilesBackupTime = "; Uploaded files backup should take about " . $size . " min.";
             }
