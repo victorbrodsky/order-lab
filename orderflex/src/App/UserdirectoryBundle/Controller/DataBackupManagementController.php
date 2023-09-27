@@ -166,7 +166,13 @@ class DataBackupManagementController extends OrderAbstractController
                 //Assume 1 min for 1 GB
                 $uploadFilesBackupTime = "; Uploaded files backup should take about " . $size . " min.";
             }
-
+        }
+        $estimateTimeMsg = null;
+        if( $dbBackupTime && $uploadFilesBackupTime ) {
+            //Depending on the amount of data, database back up or restore should complete in under 5 minutes;
+            // back up or restore of the uploaded files should complete in under 10 minutes.
+            $estimateTimeMsg = "Depending on the amount of data, database back up or restore should complete in under $dbBackupTime minutes;" .
+                " back up or restore of the uploaded files should complete in under $uploadFilesBackupTime minutes.";
         }
 
         return array(
@@ -178,7 +184,8 @@ class DataBackupManagementController extends OrderAbstractController
             'environments' => $environments,
             'form' => $form,
             'dbBackupTime' => $dbBackupTime,
-            'uploadFilesBackupTime' => $uploadFilesBackupTime
+            'uploadFilesBackupTime' => $uploadFilesBackupTime,
+            'estimateTimeMsg' => $estimateTimeMsg
         );
     }
 
