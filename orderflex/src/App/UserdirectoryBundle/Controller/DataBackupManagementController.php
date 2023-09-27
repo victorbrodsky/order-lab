@@ -143,7 +143,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $f . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $dbBackupTime = "; DB backup should take about " . $size . " min.";
+                $dbBackupTime = $size; //"; DB backup should take about " . $size . " min.";
             }
 
         }
@@ -164,7 +164,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $folder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $uploadFilesBackupTime = "; Uploaded files backup should take about " . $size . " min.";
+                $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
             }
         }
         $estimateTimeMsg = null;
@@ -183,8 +183,8 @@ class DataBackupManagementController extends OrderAbstractController
             'backupFiles' => $backupFiles,
             'environments' => $environments,
             'form' => $form,
-            'dbBackupTime' => $dbBackupTime,
-            'uploadFilesBackupTime' => $uploadFilesBackupTime,
+            //'dbBackupTime' => $dbBackupTime,
+            //'uploadFilesBackupTime' => $uploadFilesBackupTime,
             'estimateTimeMsg' => $estimateTimeMsg
         );
     }
