@@ -128,6 +128,21 @@ class DataBackupManagementController extends OrderAbstractController
 //            exit('manualBackupRestoreManagementAction uploadFile');
 //        }
 
+        //estimate DB backup time based on the size of /var/lib/pgsql
+        if( $userServiceUtil->isWindows() ) {
+            $dbBackupTime = null;
+        } else {
+            $f = '/var/lib/pgsql';
+            $io = popen('/usr/bin/du -sk ' . $f, 'r');
+            $size = fgets($io, 4096);
+            $size = substr($size, 0, strpos($size, "\t"));
+            pclose($io);
+            echo 'Directory: ' . $f . ' => Size: ' . $size;
+            //Assume 1 min for 1 GB
+            $dbBackupTime = "Backup/Restore should take about ".$size." min.";
+
+        }
+
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
@@ -135,7 +150,8 @@ class DataBackupManagementController extends OrderAbstractController
             'networkDrivePath' => $networkDrivePath,
             'backupFiles' => $backupFiles,
             'environments' => $environments,
-            'form' => $form
+            'form' => $form,
+            'dbBackupTime' => $dbBackupTime
         );
     }
 
