@@ -134,15 +134,15 @@ class DataBackupManagementController extends OrderAbstractController
         } else {
             $f = '/var/lib/pgsql/';
             $io = popen('sudo /usr/bin/du -sk ' . $f, 'r');
-            echo "1 io=$io <br>";
+            //echo "1 io=$io <br>";
             //$io = $this->runProcess("/usr/bin/du -sk $f");
             //echo "2 io=$io <br>";
             $size = fgets($io, 4096);
-            echo "1 size=$size <br>";
+            //echo "1 size=$size <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             $size = round($size/(1024*1000)); //GB
-            echo 'Directory: ' . $f . ' => Size: ' . $size;
+            //echo 'Directory: ' . $f . ' => Size: ' . $size;
             //Assume 1 min for 1 GB
             $dbBackupTime = "Backup/Restore should take about ".$size." min.";
 
