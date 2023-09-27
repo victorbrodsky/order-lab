@@ -171,7 +171,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $dbBackupTime && $uploadFilesBackupTime ) {
             //Depending on the amount of data, database back up or restore should complete in under 5 minutes;
             // back up or restore of the uploaded files should complete in under 10 minutes.
-            $estimateTimeMsg = "Depending on the amount of data, database back up or restore should complete in under $dbBackupTime minutes;" .
+            $estimateTimeMsg = "Depending on the amount of data, database back up or restore should complete in under $dbBackupTime minutes;<br>" .
                 " back up or restore of the uploaded files should complete in under $uploadFilesBackupTime minutes.";
         }
 
