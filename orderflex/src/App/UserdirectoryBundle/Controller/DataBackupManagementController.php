@@ -129,19 +129,20 @@ class DataBackupManagementController extends OrderAbstractController
 //        }
 
         //estimate DB backup time based on the size of /var/lib/pgsql
+        $dbFolder = null;
         $dbBackupTime = null;
         if( $userServiceUtil->isWindows() ) {
             //
         } else {
-            $f = '/var/lib/pgsql/';
-            $io = popen('sudo /usr/bin/du -sk ' . $f, 'r');
+            $dbFolder = '/var/lib/pgsql/';
+            $io = popen('sudo /usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
             //echo "1 size=$size <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
-                //echo 'Directory: ' . $f . ' => Size: ' . $size;
+                //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
                 $dbBackupTime = $size; //"; DB backup should take about " . $size . " min.";
             }
@@ -149,20 +150,21 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         //estimate upload backup time based on the size of Uploaded folder
+        $uploadFilesFolder = null;
         $uploadFilesBackupTime = null;
         if( $userServiceUtil->isWindows() ) {
             //
         } else {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
-            $io = popen('sudo /usr/bin/du -sk ' . $folder, 'r');
+            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+            $io = popen('sudo /usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "1 size=$size, folder=$folder <br>";
+            //echo "1 size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
-                //echo 'Directory: ' . $folder . ' => Size: ' . $size;
+                //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
                 $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
             }
@@ -176,6 +178,16 @@ class DataBackupManagementController extends OrderAbstractController
                 " back up or restore of the uploaded files should complete in under $uploadFilesBackupTime minutes.";
         }
 
+        //get free disk space for Upload and DB
+        $this->getFreeSpace($uploadFilesFolder);
+//        $bytes = disk_free_space($uploadFilesFolder);
+//        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
+//        $base = 1024;
+//        $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
+//        echo $bytes . '<br />';
+//        echo sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
+
+
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
@@ -188,6 +200,15 @@ class DataBackupManagementController extends OrderAbstractController
             //'uploadFilesBackupTime' => $uploadFilesBackupTime,
             'estimateTimeMsg' => $estimateTimeMsg
         );
+    }
+    public function getFreeSpace( $folder ) {
+        //get free disk space for Upload and DB
+        $bytes = disk_free_space($folder);
+        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
+        $base = 1024;
+        $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
+        echo $bytes . '<br />';
+        echo sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
     }
 
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
