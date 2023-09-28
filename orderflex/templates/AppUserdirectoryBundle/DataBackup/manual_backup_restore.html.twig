@@ -33,12 +33,17 @@
     <input type="hidden" id="fileId" value="" />
     <input type="hidden" id="disableIdleTimeout" value="1" />
 
+
+    <input type="hidden" id="dbFreeSpaceBytes" value="{{ dbFreeSpaceBytes }}" />
+    <input type="hidden" id="uploadFreeSpaceBytes" value="{{ uploadFreeSpaceBytes }}" />
+
     <h4 class="text-info" align="center">{{ title }}</h4>
     <p>Backup files location: <strong>{{ networkDrivePath }}</strong><br>
         DB backup files will have the format: <strong>backupdb-***.dump.gz</strong><br>
         Upload folder backup file will have the format: <strong>backupfiles-***.tar.gz</strong>
     </p>
     <p>{{ estimateTimeMsg }}</p>
+    <p>{{ freeSpace }}</p>
     <p>Refresh this page to see the uploaded files in the select box below.</p>
 
     {#Backup panel#}

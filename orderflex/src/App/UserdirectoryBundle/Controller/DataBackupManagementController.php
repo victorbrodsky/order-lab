@@ -179,7 +179,12 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         //get free disk space for Upload and DB
-        $this->getFreeSpace($uploadFilesFolder);
+        $now = new \DateTime();
+        $now = $now->format('m/d/Y \a\t m:i:s');
+        $dbFreeSpace = $this->getFreeSpace($uploadFilesFolder);
+        $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
+        $freeSpace = "Available Free Storage Space Now ($now): ".$dbFreeSpace[1];
+        $freeSpace = $freeSpace . "Available Free Storage Space Now ($now): " . $uploadFreeSpace[1];
 //        $bytes = disk_free_space($uploadFilesFolder);
 //        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
 //        $base = 1024;
@@ -198,7 +203,10 @@ class DataBackupManagementController extends OrderAbstractController
             'form' => $form,
             //'dbBackupTime' => $dbBackupTime,
             //'uploadFilesBackupTime' => $uploadFilesBackupTime,
-            'estimateTimeMsg' => $estimateTimeMsg
+            'estimateTimeMsg' => $estimateTimeMsg,
+            'dbFreeSpaceBytes' => $dbFreeSpace[0],
+            'uploadFreeSpaceBytes' => $uploadFreeSpace[0],
+            'freeSpace' => $freeSpace
         );
     }
     public function getFreeSpace( $folder ) {
@@ -208,7 +216,8 @@ class DataBackupManagementController extends OrderAbstractController
         $base = 1024;
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
         echo $bytes . '<br />';
-        echo sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
+        $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
+        return array($base,$res);
     }
 
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
