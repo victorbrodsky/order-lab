@@ -2,6 +2,4 @@
 //https://stackoverflow.com/questions/76863441/show-message-about-server-error-to-user-after-file-upload-in-symfony-v6-3-with
 {#//1) Install by node, then use something like <script src="node_modules/blueimp-file-upload/js/jquery.fileupload.js"></script>#}
 
-
-
-yarn add @uppy/core
+yarn add @uppy/core @uppy/dashboard @uppy/tus

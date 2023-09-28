@@ -268,16 +268,12 @@
     {% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.map.js') }}"></script>#}
-
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/js/jquery.fileupload.js') }}"></script>#}
 
-    <script type="module">
-        import { Uppy, Dashboard, Tus } from "https://releases.transloadit.com/uppy/v3.16.0/uppy.min.mjs"
+    {#Uppy#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-uppy.js') }}"></script>#}
+    {{ encore_entry_script_tags('user-uppy') }}
 
-        const uppy = new Uppy()
-        uppy.use(Dashboard, { target: '#files-drag-drop' })
-        uppy.use(Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
-    </script>
 
     <script language="Javascript">
 

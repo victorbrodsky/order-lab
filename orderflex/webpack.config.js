@@ -1,3 +1,5 @@
+//After modifing this, run: yarn watch
+
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -43,6 +45,8 @@ Encore
 
     .addEntry('transresjs', './assets/transres/js/project.jsx')
     .addEntry('transresjs-edit', './assets/transres/js/project-edit.jsx')
+
+    .addEntry('user-uppy', './assets/uppy/js/user-uppy.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
