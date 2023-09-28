@@ -42,8 +42,8 @@
         DB backup files will have the format: <strong>backupdb-***.dump.gz</strong><br>
         Upload folder backup file will have the format: <strong>backupfiles-***.tar.gz</strong>
     </p>
-    <p>{{ estimateTimeMsg }}</p>
-    <p>{{ freeSpace }}</p>
+    <p>{{ estimateTimeMsg|raw }}</p>
+    <p>{{ freeSpace|raw }}</p>
     <p>Refresh this page to see the uploaded files in the select box below.</p>
 
     {#Backup panel#}
