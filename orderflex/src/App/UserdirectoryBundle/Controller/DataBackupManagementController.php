@@ -183,8 +183,8 @@ class DataBackupManagementController extends OrderAbstractController
         $now = $now->format('m/d/Y \a\t m:i:s');
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
-        $freeSpace = "<p>Available Free Storage Space for Db Now ($now): ".$dbFreeSpace[1]."</p>";
-        $freeSpace = $freeSpace . "<p>Available Free Storage Space for Uploaded Files Now ($now): " . $uploadFreeSpace[1]."</p>";
+        $freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
+            ", and for Uploaded Files: ".$uploadFreeSpace[1];
 
         return array(
             'sitename' => $sitename,
