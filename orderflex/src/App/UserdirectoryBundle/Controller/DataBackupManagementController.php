@@ -209,7 +209,7 @@ class DataBackupManagementController extends OrderAbstractController
         $base = 1024;
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
         //echo $folder.": ".$bytes . '<br />';
-        $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
+        $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
         return array($base,$res);
     }
 
