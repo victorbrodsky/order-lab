@@ -181,7 +181,7 @@ class DataBackupManagementController extends OrderAbstractController
         //get free disk space for Upload and DB
         $now = new \DateTime();
         $now = $now->format('m/d/Y \a\t m:i:s');
-        $dbFreeSpace = $this->getFreeSpace($uploadFilesFolder);
+        $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
         $freeSpace = "Available Free Storage Space Now ($now): ".$dbFreeSpace[1];
         $freeSpace = $freeSpace . "Available Free Storage Space Now ($now): " . $uploadFreeSpace[1];
