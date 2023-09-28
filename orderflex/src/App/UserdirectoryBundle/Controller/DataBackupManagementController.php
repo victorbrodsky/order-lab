@@ -183,15 +183,8 @@ class DataBackupManagementController extends OrderAbstractController
         $now = $now->format('m/d/Y \a\t m:i:s');
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
-        $freeSpace = "Available Free Storage Space for Db Now ($now): ".$dbFreeSpace[1];
-        $freeSpace = $freeSpace . "<br>Available Free Storage Space for uplaoded files Now ($now): " . $uploadFreeSpace[1];
-//        $bytes = disk_free_space($uploadFilesFolder);
-//        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
-//        $base = 1024;
-//        $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
-//        echo $bytes . '<br />';
-//        echo sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
-
+        $freeSpace = "<p>Available Free Storage Space for Db Now ($now): ".$dbFreeSpace[1]."</p>";
+        $freeSpace = $freeSpace . "<p>Available Free Storage Space for Uploaded Files Now ($now): " . $uploadFreeSpace[1]."</p>";
 
         return array(
             'sitename' => $sitename,
@@ -215,7 +208,7 @@ class DataBackupManagementController extends OrderAbstractController
         $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
         $base = 1024;
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
-        echo $folder.": ".$bytes . '<br />';
+        //echo $folder.": ".$bytes . '<br />';
         $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class] . '<br />';
         return array($base,$res);
     }
