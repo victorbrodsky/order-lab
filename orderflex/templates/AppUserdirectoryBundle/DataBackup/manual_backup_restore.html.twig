@@ -244,6 +244,7 @@
     <div id="backup-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
     <div id="backup-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
 
+    <div id="files-drag-drop"></div>
 
 {% endblock %}
 
@@ -252,6 +253,9 @@
     {#FineUploader#}
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />
+
+    {#Uppy#}
+    <link href="https://releases.transloadit.com/uppy/v3.16.0/uppy.min.css" rel="stylesheet">
 
     {#jQuery File Upload#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/css/jquery.fileupload.css') }}" />#}
@@ -266,6 +270,14 @@
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.map.js') }}"></script>#}
 
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/js/jquery.fileupload.js') }}"></script>#}
+
+    <script type="module">
+        import { Uppy, Dashboard, Tus } from "https://releases.transloadit.com/uppy/v3.16.0/uppy.min.mjs"
+
+        const uppy = new Uppy()
+        uppy.use(Dashboard, { target: '#files-drag-drop' })
+        uppy.use(Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
+    </script>
 
     <script language="Javascript">
 
