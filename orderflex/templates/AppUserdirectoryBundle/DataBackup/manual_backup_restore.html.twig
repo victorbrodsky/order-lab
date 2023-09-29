@@ -255,7 +255,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />
 
     {#Uppy#}
-    <link href="https://releases.transloadit.com/uppy/v3.16.0/uppy.min.css" rel="stylesheet">
+    {#<link href="https://releases.transloadit.com/uppy/v3.16.0/uppy.min.css" rel="stylesheet">#}
+    {{ encore_entry_link_tags('user-uppy-css') }}
 
     {#jQuery File Upload#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/css/jquery.fileupload.css') }}" />#}

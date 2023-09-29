@@ -47,6 +47,7 @@ Encore
     .addEntry('transresjs-edit', './assets/transres/js/project-edit.jsx')
 
     .addEntry('user-uppy', './assets/uppy/js/user-uppy.jsx')
+    .addEntry('user-uppy-css', './assets/uppy/css/user-uppy-style.scss')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

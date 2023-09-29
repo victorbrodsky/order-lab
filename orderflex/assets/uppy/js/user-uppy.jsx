@@ -9,6 +9,10 @@ import Tus from '@uppy/tus'
 import Webcam from '@uppy/webcam'
 import XHRUpload from '@uppy/xhr-upload'
 
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+import '@uppy/webcam/dist/style.css'
+
 
 console.log("before new Uppy");
 
