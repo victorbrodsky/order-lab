@@ -77,7 +77,9 @@
                     {#</form>#}
 
                     {#https://github.com/1up-lab/OneupUploaderBundle/blob/master/doc/frontend_plupload.md#}
-                    <div id="fine-uploader"></div>
+                    {#<div id="fine-uploader"></div>#}
+
+                    <div id="files-drag-drop"></div>
 
                 </div>
                 {#<div class="col-xs-2"></div>#}
@@ -244,8 +246,6 @@
     <div id="backup-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
     <div id="backup-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
 
-    <div id="files-drag-drop"></div>
-
 {% endblock %}
 
 
@@ -281,7 +281,7 @@
 
         $(document).ready(function () {
 
-            userFineUploader();
+            //userFineUploader();
             //userJqueryFileUploader();
 
             //uppy.io
