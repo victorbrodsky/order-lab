@@ -1645,13 +1645,48 @@ class DataBackupManagementController extends OrderAbstractController
         return $_SERVER["REQUEST_METHOD"];
     }
 
+    //methods: ['GET','POST','DELETE','PATCH'],
     //https://github.com/ankitpokhrel/tus-php
-    #[Route(path: '/upload-uppy-file/', name: 'employees_upload_uppy_file', methods: ['GET','POST','DELETE'], options: ['expose' => true])]
-    public function uploadUppyAction(Request $request)
+    #[Route(path: '/upload-uppy-file/{uuid}', name: 'employees_upload_uppy_file', options: ['expose' => true])]
+    public function uploadUppyAction(Request $request, $uuid=null)
     {
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+
+        //https://processwire.com/talk/topic/22212-uppy-tusphp-and-processwire-for-large-file-uploads/
+        // Create TusPhp server
+        $server = new \TusPhp\Tus\Server();
+        // Set path to endpoint - no trailing slash here
+        $apiPath = $this->generateUrl('employees_upload_uppy_file');
+        $server->setApiPath($apiPath);
+        // Set upload directory
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        $server->setUploadDir($networkDrivePath);
+
+        // Listener function for when an upload is completed
+        $server->event()->addListener('tus-server.upload.complete', function(\TusPhp\Events\TusEvent $event) {
+
+            // Get path of uploaded file
+            $file_path = $event->getFile()->getFilePath();
+
+            // Add uploaded file to "files" field on Home page
+            $p = wire('pages')->get(1);
+            $p->of(false);
+            $p->files->add($file_path);
+            $p->save('files');
+
+        });
+
+        // Send response
+        $response = $server->serve();
+        $response->send();
+
+        // Exit from current PHP process
+        // Could probably use PW halt here as an alternative
+        // return $this->halt();
+        exit(0);
 
         $server   = new \TusPhp\Tus\Server('file');
         $response = $server->serve();

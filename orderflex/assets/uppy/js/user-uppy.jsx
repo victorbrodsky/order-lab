@@ -46,7 +46,8 @@ uppy.use(Dashboard, {
 // })
 uppy.use(Tus, {
     endpoint: endpointUrl,
-    resume: true,
+    limit:10,
+    //resume: true,
     //autoRetry: true,
     retryDelays: [0, 1000, 3000, 5000]
 });
