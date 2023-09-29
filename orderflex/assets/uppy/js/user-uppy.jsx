@@ -26,6 +26,9 @@ console.log("before new Uppy");
 //     console.log('Upload result:', result)
 // })
 
+//var endpointUrl = Routing.generate('employees_upload_chunk_file');
+var endpointUrl = Routing.generate('employees_upload_uppy_file');
+
 const uppy = new Uppy({
     debug: true,
     autoProceed: false,
@@ -38,9 +41,15 @@ uppy.use(Dashboard, {
     target: '#files-drag-drop',
     plugins: ['Webcam'],
 })
-uppy.use(XHRUpload, {
-    endpoint: 'http://localhost:3020/upload.php',
-})
+// uppy.use(XHRUpload, {
+//    endpoint: endpointUrl, //'http://localhost:3020/upload.php',
+// })
+uppy.use(Tus, {
+    endpoint: endpointUrl,
+    resume: true,
+    //autoRetry: true,
+    retryDelays: [0, 1000, 3000, 5000]
+});
 
 
 console.log("after Uppy");

@@ -5,6 +5,7 @@
         "php": "^7.4 || ^8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ankitpokhrel/tus-php": "^2.3",
         "asimlqt/php-google-spreadsheet-client": "^3.0",
         "azuyalabs/yasumi": "^2.5",
         "beberlei/doctrineextensions": "^1.3",

@@ -1645,6 +1645,69 @@ class DataBackupManagementController extends OrderAbstractController
         return $_SERVER["REQUEST_METHOD"];
     }
 
+    //https://github.com/ankitpokhrel/tus-php
+    #[Route(path: '/upload-uppy-file/', name: 'employees_upload_uppy_file', methods: ['GET','POST','DELETE'], options: ['expose' => true])]
+    public function uploadUppyAction(Request $request)
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $server   = new \TusPhp\Tus\Server('file');
+        $response = $server->serve();
+        dump($response);
+        exit('111');
+        $response->send();
+        exit(0); // Exit from current PHP process.
+
+        $logger = $this->container->get('logger');
+
+        $baseUrl = 'http://tus-php-server';
+
+        $client = new \TusPhp\Tus\Client($baseUrl);
+
+        dump($_SERVER);
+        dump($_FILES);
+        exit('111');
+
+        // Alert: Sanitize all inputs properly in production code
+        if( ! empty($_FILES) ) {
+            echo "files";
+            $fileMeta  = $_FILES['tus_file'];
+            $uploadKey = hash_file('md5', $fileMeta['tmp_name']);
+
+            try {
+                $client->setKey($uploadKey)->file($fileMeta['tmp_name'], 'chunk_a');
+
+                // Upload 50MB starting from 10MB
+                $bytesUploaded = $client->seek(10000000)->upload(50000000);
+                $partialKey1   = $client->getKey();
+                $checksum      = $client->getChecksum();
+
+                // Upload first 10MB
+                $bytesUploaded = $client->setFileName('chunk_b')->seek(0)->upload(10000000);
+                $partialKey2   = $client->getKey();
+
+                // Upload remaining bytes starting from 60,000,000 bytes (60MB => 50000000 + 10000000)
+                $bytesUploaded = $client->setFileName('chunk_c')->seek(60000000)->upload();
+                $partialKey3   = $client->getKey();
+
+                $client->setFileName($fileMeta['name'])->concat($uploadKey, $partialKey2, $partialKey1, $partialKey3);
+
+                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=uploaded');
+            } catch (ConnectionException | FileException | TusException $e) {
+                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=failed');
+            }
+        } else {
+            echo "no files";
+        }
+
+        $result = array("res");
+        $response = new Response();
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
     ///////////////// NOT USED, OLD /////////////////////
     /**
      * Manual backup/restore using a user's local folder
