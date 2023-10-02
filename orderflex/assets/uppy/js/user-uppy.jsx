@@ -27,7 +27,9 @@ console.log("before new Uppy");
 // })
 
 //var endpointUrl = Routing.generate('employees_upload_chunk_file');
-var endpointUrl = Routing.generate('employees_upload_uppy_file');
+//var endpointUrl = Routing.generate('employees_upload_uppy_file');
+var endpointUrl = Routing.generate('tus');
+
 
 const uppy = new Uppy({
     debug: true,

@@ -43,6 +43,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+use TusPhp\Exception\TusException;
+//use TusPhp\Exception\FileException;
+use TusPhp\Exception\ConnectionException;
+
+
 class DataBackupManagementController extends OrderAbstractController
 {
     /**
@@ -1647,12 +1652,50 @@ class DataBackupManagementController extends OrderAbstractController
 
     //methods: ['GET','POST','DELETE','PATCH'],
     //https://github.com/ankitpokhrel/tus-php
-    #[Route(path: '/upload-uppy-file/{uuid}', name: 'employees_upload_uppy_file', options: ['expose' => true])]
-    public function uploadUppyAction(Request $request, $uuid=null)
+    #[Route(path: '/upload-uppy-file/{key}', name: 'employees_upload_uppy_file', options: ['expose' => true])]
+    public function uploadUppyAction(Request $request, $key=null)
     {
         if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+
+        //exit('key='.$key);
+
+        if(0) {
+            $client = new \TusPhp\Tus\Client('http://tus-php-server');
+
+            // Alert: Sanitize all inputs properly in production code
+            if (!empty($_FILES)) {
+                $fileMeta = $_FILES['tus_file'];
+                $uploadKey = hash_file('md5', $fileMeta['tmp_name']);
+
+                try {
+                    $client->setKey($uploadKey)->file($fileMeta['tmp_name'], 'chunk_a');
+
+                    // Upload 50MB starting from 10MB
+                    $bytesUploaded = $client->seek(10000000)->upload(50000000);
+                    $partialKey1 = $client->getKey();
+                    $checksum = $client->getChecksum();
+
+                    // Upload first 10MB
+                    $bytesUploaded = $client->setFileName('chunk_b')->seek(0)->upload(10000000);
+                    $partialKey2 = $client->getKey();
+
+                    // Upload remaining bytes starting from 60,000,000 bytes (60MB => 50000000 + 10000000)
+                    $bytesUploaded = $client->setFileName('chunk_c')->seek(60000000)->upload();
+                    $partialKey3 = $client->getKey();
+
+                    $client->setFileName($fileMeta['name'])->concat($uploadKey, $partialKey2, $partialKey1, $partialKey3);
+
+                    header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=uploaded');
+                } catch (ConnectionException | TusPhp\Exception\FileException | TusException $e) {
+                    header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=failed');
+                }
+        }
+
+            exit(0);
+        }
+
 
         //https://processwire.com/talk/topic/22212-uppy-tusphp-and-processwire-for-large-file-uploads/
         // Create TusPhp server
