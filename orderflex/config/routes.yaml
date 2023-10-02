@@ -111,6 +111,13 @@ fellapp_instructions:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
 
+app_fineuploader:
+    resource: "../src/App/FineUploader/Controller/"
+    type:     attribute
+    prefix:   /directory
+    schemes:  ['%connection_channel%']
+
+
 #login and logout routes
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
@@ -224,9 +231,9 @@ oneup_uploader:
 #    type: 'cmf_tree'
 
 #FOSJsRoutingBundle
-fos_js_routing:
+#fos_js_routing:
 #    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
+#    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 
 #kernel:
 #    resource: App\Kernel

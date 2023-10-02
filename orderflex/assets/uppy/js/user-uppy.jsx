@@ -34,6 +34,21 @@ var endpointUrl = Routing.generate('tus');
 const uppy = new Uppy({
     debug: true,
     autoProceed: false,
+    onBeforeFileAdded: (file, files) => {
+        console.log("File "+file.name);
+        if( Object.hasOwn(files, file.id) ) {
+            console.log("Duplicate file "+file.name);
+            const name = Date.now() + '_' + file.name
+            Object.defineProperty(file.data, 'name', {
+                writable: true,
+                value: name
+            });
+            return { ...file, name, meta: { ...file.meta, name } }
+        } else {
+            console.log("New file "+file.name);
+        }
+        return file
+    },
 })
 
 uppy.use(Webcam)
@@ -42,6 +57,8 @@ uppy.use(Dashboard, {
     //target: 'body',
     target: '#files-drag-drop',
     plugins: ['Webcam'],
+    //width: 300,
+    height: 300,
 })
 // uppy.use(XHRUpload, {
 //    endpoint: endpointUrl, //'http://localhost:3020/upload.php',
@@ -51,7 +68,8 @@ uppy.use(Tus, {
     limit:10,
     //resume: true,
     //autoRetry: true,
-    retryDelays: [0, 1000, 3000, 5000]
+    retryDelays: [0, 1000, 3000, 5000],
+    //removeFingerprintOnSuccess: true
 });
 
 

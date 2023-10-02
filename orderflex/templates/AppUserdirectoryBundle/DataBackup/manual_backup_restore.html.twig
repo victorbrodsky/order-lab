@@ -251,11 +251,10 @@
 
 {% block additionalcss %}
     {#FineUploader#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />#}
 
     {#Uppy#}
-    {#<link href="https://releases.transloadit.com/uppy/v3.16.0/uppy.min.css" rel="stylesheet">#}
     {{ encore_entry_link_tags('user-uppy-css') }}
 
     {#jQuery File Upload#}
@@ -266,13 +265,10 @@
     {#FineUploader#}
     {#https://docs.fineuploader.com/quickstart/01-getting-started.html#}
     {#https://docs.fineuploader.com/branch/master/quickstart/02-setting_options.html#}
-    {% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.map.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/js/jquery.fileupload.js') }}"></script>#}
+    {#{% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>#}
 
     {#Uppy#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-uppy.js') }}"></script>#}
     {{ encore_entry_script_tags('user-uppy') }}
 
 
@@ -283,12 +279,6 @@
         $(document).ready(function () {
 
             //userFineUploader();
-            //userJqueryFileUploader();
-
-            //uppy.io
-            //https://github.com/transloadit/uppy/tree/main/examples/php-xhr
-            //https://stackoverflow.com/questions/76863441/show-message-about-server-error-to-user-after-file-upload-in-symfony-v6-3-with
-            {#//1) Install by node, then use something like <script src="node_modules/blueimp-file-upload/js/jquery.fileupload.js"></script>#}
 
             {#$('#backup-file-id')#}
             $('.backup-required').on("change", function(e) {
@@ -345,19 +335,6 @@
 
         });
 
-        function userJqueryFileUploader() {
-            console.log("userJqueryFileUploader start");
-//            $('#fine-uploader').fileupload();
-            $('#fine-uploader').fileupload({
-                dataType: 'json',
-                done: function (e, data) {
-                    $.each(data.result.files, function (index, file) {
-                        $('<p></p>').text(file.name).appendTo(document.body);
-                    });
-                }
-            });
-        }
-
         //https://github.com/FineUploader/server-examples/tree/3.8.0/php
         //Use this:
         //FineUploader/server-examples: 4.0.0 (t12ung/php-traditional-server https://github.com/t12ung/php-traditional-server/tree/master)
@@ -367,7 +344,8 @@
         // /src/App/UploadBundle/endpoint.php
         //src/App/UploadBundle/endpoint.php
         function userFineUploader() {
-            var endpointUrl = Routing.generate('employees_upload_chunk_file');
+            //var endpointUrl = Routing.generate('employees_upload_chunk_file');
+            var endpointUrl = Routing.generate('fineuploader_upload_chunk_file');
 
             var uploader = new qq.FineUploader({
                 //debug: true,

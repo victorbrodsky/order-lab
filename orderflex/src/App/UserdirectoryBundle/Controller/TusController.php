@@ -23,25 +23,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+//https://github.com/ankitpokhrel/tus-php/wiki/Symfony-Integration
+
 class TusController extends OrderAbstractController
 {
     // ...
-
-//    /**
-//     * Create tus server. Route matches /tus/, /tus and /tus/* endpoints.
-//     *
-//     * @Route("/tus/", name="tus_post")
-//     * @Route("/tus/{token?}", name="tus", requirements={"token"=".+"})
-//     *
-//     * @param TusService $tusService
-//     *
-//     * @return Response
-//     */
 
     #[Route(path: '/tus/', name: 'tus_post', options: ['expose' => true])]
     #[Route(path: '/tus/{token?}', name: 'tus', requirements: ['token' => '.+'], options: ['expose' => true])]
     public function server(TusServer $server)
     {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $uploadDir = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //$uploadDir = '%kernel.project_dir%/public/Uploaded/temp';
+        $server->setUploadDir($uploadDir);
+
+        $apiPath = '/directory/tus';
+        $server->setApiPath($apiPath);
+
         return $server->serve();
     }
 
