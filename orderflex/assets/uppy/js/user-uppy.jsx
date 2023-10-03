@@ -51,12 +51,11 @@ const uppy = new Uppy({
     },
 })
 
-uppy.use(Webcam)
+//uppy.use(Webcam)
 uppy.use(Dashboard, {
     inline: true,
-    //target: 'body',
     target: '#files-drag-drop',
-    plugins: ['Webcam'],
+    //plugins: ['Webcam'],
     //width: 300,
     height: 300,
 })
