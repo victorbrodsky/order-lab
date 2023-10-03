@@ -164,6 +164,10 @@ class UserSecurityUtil {
 
     public function isCurrentUser( $id ) {
 
+        if( !$id ) {
+            return false;
+        }
+
         if( !$this->security ) {
             return false;
         }

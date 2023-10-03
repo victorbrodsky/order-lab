@@ -4847,10 +4847,12 @@ class UserController extends OrderAbstractController
         //echo "file=".$file." <br>";
         //echo "userid1=".$userid." <br>";
 
-        $secUtil = $this->container->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($userid) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
-            //echo "employees-nopermission<br>";
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        if( $userid ) {
+            $secUtil = $this->container->get('user_security_utility');
+            if( !$secUtil->isCurrentUser($userid) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+                //echo "employees-nopermission<br>";
+                return $this->redirect($this->generateUrl('employees-nopermission'));
+            }
         }
 
         $uploadPath = "Uploaded/".$this->getParameter('employees.avataruploadpath');
