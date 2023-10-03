@@ -39,7 +39,7 @@ const uppy = new Uppy({
         if( Object.hasOwn(files, file.id) ) {
             console.log("Duplicate file "+file.name);
             const name = Date.now() + '_' + file.name
-            Object.defineProperty(file.data, 'name', {
+                Object.defineProperty(file.data, 'name', {
                 writable: true,
                 value: name
             });
@@ -69,7 +69,7 @@ uppy.use(Tus, {
     //resume: true,
     //autoRetry: true,
     retryDelays: [0, 1000, 3000, 5000],
-    //removeFingerprintOnSuccess: true
+    removeFingerprintOnSuccess: true
 });
 
 
