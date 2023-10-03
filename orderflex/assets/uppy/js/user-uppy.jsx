@@ -36,18 +36,32 @@ const uppy = new Uppy({
     autoProceed: false,
     onBeforeFileAdded: (file, files) => {
         console.log("File "+file.name);
-        if( Object.hasOwn(files, file.id) ) {
-            console.log("Duplicate file "+file.name);
-            const name = Date.now() + '_' + file.name
-                Object.defineProperty(file.data, 'name', {
-                writable: true,
-                value: name
-            });
-            return { ...file, name, meta: { ...file.meta, name } }
-        } else {
-            console.log("New file "+file.name);
-        }
-        return file
+
+        // if( Object.hasOwn(files, file.id) ) {
+        //     console.log("Duplicate file "+file.name);
+        //     const name = Date.now() + '_' + file.name
+        //         Object.defineProperty(file.data, 'name', {
+        //         writable: true,
+        //         value: name
+        //     });
+        //     return { ...file, name, meta: { ...file.meta, name } }
+        // } else {
+        //     console.log("New file "+file.name);
+        // }
+        // return file
+
+        //Rename file: append the timestamp Date.now().toString()
+       // var d = new Date();
+        //var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + "_" +
+        //    d.getHours() + "-" + d.getMinutes() + "-" + d.getSeconds();
+        //var datestring = convertNowDateToString();
+        //const name = datestring + '_' + file.name
+        const name = getReNamedFileName(file.name);
+        Object.defineProperty(file.data, 'name', {
+            writable: true,
+            value: name
+        });
+        return { ...file, name, meta: { ...file.meta, name } }
     },
 })
 
@@ -73,3 +87,39 @@ uppy.use(Tus, {
 
 
 console.log("after Uppy");
+
+function convertNowDateToString() {
+    var d = new Date();
+
+    var datestring = ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" +
+        d.getFullYear() + "_" +
+        ("0" + d.getHours()).slice(-2) + "-" +
+        ("0" + d.getMinutes()).slice(-2) + "-" +
+        ("0" + d.getSeconds()).slice(-2)
+
+    return datestring;
+}
+
+function getReNamedFileName( filename ) {
+    var extArr = ["dump.gz", "tar.gz", "tgz", "gz", "zip"];
+    for( let i = 0; i < extArr.length; i++ ) {
+        let ext = extArr[i];
+        if( filename.indexOf(ext) !== -1 ) {
+            //let thisExt = filename.split('.').pop();
+            filename = addDateStringToFilename(filename,ext);
+            return filename;
+        }
+    }
+    filename = addDateStringToFilename(filename,null);
+    return filename;
+}
+
+function addDateStringToFilename( filename, ext ) {
+    if( ext == null ) {
+        ext = filename.split('.').pop();
+    }
+    var prefix = convertNowDateToString();
+    filename = filename.replace('.' + ext, "");
+    filename = filename + '_' + prefix + '.' + ext;
+    return filename;
+}
