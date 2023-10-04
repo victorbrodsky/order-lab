@@ -154,7 +154,7 @@ class DataBackupManagementController extends OrderAbstractController
             $dbFolder = '/var/lib/pgsql/';
             $io = popen('sudo /usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
-            echo "DB size=$size <br>";
+            echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
