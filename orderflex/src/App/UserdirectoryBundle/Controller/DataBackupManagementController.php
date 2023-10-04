@@ -150,9 +150,7 @@ class DataBackupManagementController extends OrderAbstractController
         //estimate DB backup time based on the size of /var/lib/pgsql
         $dbFolder = null;
         $dbBackupTime = null;
-        if( $userServiceUtil->isWindows() ) {
-            //
-        } else {
+        if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/';
             $io = popen('sudo /usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
@@ -171,9 +169,7 @@ class DataBackupManagementController extends OrderAbstractController
         //estimate upload backup time based on the size of Uploaded folder
         $uploadFilesFolder = null;
         $uploadFilesBackupTime = null;
-        if( $userServiceUtil->isWindows() ) {
-            //
-        } else {
+        if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             $io = popen('sudo /usr/bin/du -sk ' . $uploadFilesFolder, 'r');
@@ -188,6 +184,8 @@ class DataBackupManagementController extends OrderAbstractController
                 $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
             }
         }
+
+        echo "dbBackupTime=$dbBackupTime, uploadFilesBackupTime=$uploadFilesBackupTime <br>";
         $estimateTimeMsg = null;
         if( $dbBackupTime && $uploadFilesBackupTime ) {
             //Depending on the amount of data, database back up or restore should complete in under 5 minutes;
