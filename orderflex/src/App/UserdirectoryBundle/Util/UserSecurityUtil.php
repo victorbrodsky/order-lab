@@ -145,7 +145,7 @@ class UserSecurityUtil {
 
             if (count($params) > 1) {
                 $logger = $this->container->get('logger');
-                $msg = 'Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
+                $msg = 'getSingleSiteSettingsParam: Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
                 $logger->error($msg);
                 exit($msg);
                 //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
@@ -1621,7 +1621,7 @@ class UserSecurityUtil {
 
         if( count($params) > 1 ) {
             $logger = $this->container->get('logger');
-            $msg = 'Must have only one parameter object. Found '.count($params).' object(s). Please follow the initialization instructions.';
+            $msg = 'getSiteSettingParameter_ORIG: Must have only one parameter object. Found '.count($params).' object(s). Please follow the initialization instructions.';
             $logger->error($msg);
             exit($msg);
             //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
