@@ -158,10 +158,10 @@ class DataBackupManagementController extends OrderAbstractController
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size = $this->folderSize($dbFolder);
-            if( $size ) {
-                $size = round($size/1024);
-                echo "DB 2size=$size, dbFolder=$dbFolder <br>";
+            $size2 = $this->folderSize($dbFolder);
+            if( $size2 ) {
+                $size2 = round($size2/1024);
+                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
             }
 
             if( $size ) {
@@ -185,10 +185,10 @@ class DataBackupManagementController extends OrderAbstractController
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size = $this->folderSize($uploadFilesFolder);
-            if( $size ) {
-                $size = round($size/1024);
-                echo "Uploaded 2size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            $size2 = $this->folderSize($uploadFilesFolder);
+            if( $size2 ) {
+                $size2 = round($size2/1024);
+                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
             }
 
             if( $size ) {
