@@ -154,7 +154,7 @@ class DataBackupManagementController extends OrderAbstractController
             $dbFolder = '/var/lib/pgsql/';
             $io = popen('sudo /usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "1 size=$size <br>";
+            echo "DB size=$size <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
@@ -174,7 +174,7 @@ class DataBackupManagementController extends OrderAbstractController
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             $io = popen('sudo /usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "1 size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
             if( $size ) {
