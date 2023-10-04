@@ -152,7 +152,7 @@ class DataBackupManagementController extends OrderAbstractController
         $dbBackupTime = null;
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/';
-            $io = popen('sudo /usr/bin/du -sk ' . $dbFolder, 'r');
+            $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
             echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
@@ -179,7 +179,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
-            $io = popen('sudo /usr/bin/du -sk ' . $uploadFilesFolder, 'r');
+            $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
             echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
@@ -243,14 +243,13 @@ class DataBackupManagementController extends OrderAbstractController
         $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
         return array($base,$res);
     }
+    //https://gist.github.com/eusonlito/5099936
     public function folderSize($dir)
     {
         $size = 0;
-
         foreach (glob(rtrim($dir, '/').'/*', GLOB_NOSORT) as $each) {
             $size += is_file($each) ? filesize($each) : $this->folderSize($each);
         }
-
         return $size;
     }
 
