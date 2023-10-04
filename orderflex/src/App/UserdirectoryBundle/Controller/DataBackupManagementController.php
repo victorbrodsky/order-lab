@@ -242,7 +242,7 @@ class DataBackupManagementController extends OrderAbstractController
         $size = 0;
 
         foreach (glob(rtrim($dir, '/').'/*', GLOB_NOSORT) as $each) {
-            $size += is_file($each) ? filesize($each) : folderSize($each);
+            $size += is_file($each) ? filesize($each) : $this->folderSize($each);
         }
 
         return $size;
