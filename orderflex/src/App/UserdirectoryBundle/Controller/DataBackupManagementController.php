@@ -154,15 +154,15 @@ class DataBackupManagementController extends OrderAbstractController
             $dbFolder = '/var/lib/pgsql/';
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
-            echo "DB size=$size, dbFolder=$dbFolder <br>";
+            //echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->folderSize($dbFolder);
-            if( $size2 ) {
-                $size2 = round($size2/1024);
-                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
-            }
+//            $size2 = $this->folderSize($dbFolder);
+//            if( $size2 ) {
+//                $size2 = round($size2/1024);
+//                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
+//            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
@@ -181,15 +181,15 @@ class DataBackupManagementController extends OrderAbstractController
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            //echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->folderSize($uploadFilesFolder);
-            if( $size2 ) {
-                $size2 = round($size2/1024);
-                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
-            }
+//            $size2 = $this->folderSize($uploadFilesFolder);
+//            if( $size2 ) {
+//                $size2 = round($size2/1024);
+//                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+//            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
@@ -199,13 +199,21 @@ class DataBackupManagementController extends OrderAbstractController
             }
         }
 
-        echo "dbBackupTime=$dbBackupTime, uploadFilesBackupTime=$uploadFilesBackupTime <br>";
+        //echo "dbBackupTime=$dbBackupTime, uploadFilesBackupTime=$uploadFilesBackupTime <br>";
         $estimateTimeMsg = null;
         if( $dbBackupTime && $uploadFilesBackupTime ) {
             //Depending on the amount of data, database back up or restore should complete in under 5 minutes;
             // back up or restore of the uploaded files should complete in under 10 minutes.
             $estimateTimeMsg = "Depending on the amount of data,".
                 " database back up or restore should complete in under $dbBackupTime minutes;" .
+                " back up or restore of the uploaded files should complete in under $uploadFilesBackupTime minutes.";
+        }
+        if( $dbBackupTime && !$uploadFilesBackupTime ) {
+            $estimateTimeMsg = "Depending on the amount of data,".
+                " database back up or restore should complete in under $dbBackupTime minutes;";
+        }
+        if( !$dbBackupTime && $uploadFilesBackupTime ) {
+            $estimateTimeMsg = "Depending on the amount of data,".
                 " back up or restore of the uploaded files should complete in under $uploadFilesBackupTime minutes.";
         }
 
