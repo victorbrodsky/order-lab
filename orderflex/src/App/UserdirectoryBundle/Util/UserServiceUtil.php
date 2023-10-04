@@ -795,7 +795,7 @@ class UserServiceUtil {
         }
 
         if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
+            throw new \Exception( 'getSingleSiteSettingParameter: Must have only one parameter object. Found '.count($entities).' object(s)' );
         }
 
         return $entities[0];
@@ -1207,7 +1207,13 @@ class UserServiceUtil {
             //$types[''] = "";
         }
 
-        $params = new SiteParameters();
+        $siteParameters = $this->em->getRepository(SiteParameters::class)->findAll();
+
+        if( count($siteParameters) == 0 ) {
+            $params = new SiteParameters();
+        } else {
+            $params = $siteParameters[0];
+        }
 
         $count = 0;
         foreach( $types as $key => $value ) {

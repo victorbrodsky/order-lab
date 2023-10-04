@@ -868,7 +868,7 @@ class UserUtil {
         $siteParameters = $this->em->getRepository(SiteParameters::class)->findAll();
 
         if( count($siteParameters) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($siteParameters).'object(s)' );
+            throw new \Exception( 'populateDefaultUserFields: Must have only one parameter object. Found '.count($siteParameters).'object(s)' );
         }
 
         $siteParameter = $siteParameters[0];
