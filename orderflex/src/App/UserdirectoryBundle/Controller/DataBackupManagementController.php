@@ -157,6 +157,10 @@ class DataBackupManagementController extends OrderAbstractController
             echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
+
+            $size = $this->folderSize($dbFolder);
+            echo "DB 2size=$size, dbFolder=$dbFolder <br>";
+
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
@@ -177,6 +181,10 @@ class DataBackupManagementController extends OrderAbstractController
             echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
+
+            $size = $this->folderSize($uploadFilesFolder);
+            echo "Uploaded 2size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
@@ -228,6 +236,16 @@ class DataBackupManagementController extends OrderAbstractController
         //echo $folder.": ".$bytes . '<br />';
         $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
         return array($base,$res);
+    }
+    public function folderSize($dir)
+    {
+        $size = 0;
+
+        foreach (glob(rtrim($dir, '/').'/*', GLOB_NOSORT) as $each) {
+            $size += is_file($each) ? filesize($each) : folderSize($each);
+        }
+
+        return $size;
     }
 
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
