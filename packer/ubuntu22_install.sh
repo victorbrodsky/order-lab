@@ -27,8 +27,8 @@ f_update_os () {
 	sleep 1
 
 	echo -e ${COLOR} Ubuntu 22 update ${NC}
-    sudo apt update
-	#sudo apt-get update && apt-get install -y apt-transport-https
+    #sudo apt update
+	sudo apt-get update && apt-get install -y apt-transport-https
 	
 	#echo -e ${COLOR} sudo apt -y full-upgrade ${NC}
 	#sudo apt -y full-upgrade
