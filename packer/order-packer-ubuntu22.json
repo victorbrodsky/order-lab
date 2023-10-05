@@ -76,7 +76,7 @@
 		   "sudo yarn install --frozen-lockfile",	
 
 		   "echo @### Install additional.sh. env for python ###",
-		   "bash /usr/local/bin/order-lab/packer/additional.sh",
+		   "bash /usr/local/bin/order-lab/packer/additional-ubuntu.sh",
 		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
