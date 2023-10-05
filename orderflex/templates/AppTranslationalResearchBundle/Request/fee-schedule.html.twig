@@ -247,6 +247,14 @@
         {{ knp_pagination_render(fees) }}
     </div>
 
+    {% if adminUser %}
+        <p>
+            <a href="{{ path('translationalresearchfeesschedule_new_translationalresearch') }}">
+                Create a new entry
+            </a>
+        </p>
+    {% endif %}
+
 {% endblock %}
 
 

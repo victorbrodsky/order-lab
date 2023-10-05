@@ -3458,6 +3458,19 @@ class RequestController extends OrderAbstractController
         );
     }
 
+    #[Route(path: '/request/fee-schedule/new', name: 'translationalresearchfeesschedule_new_translationalresearch', methods: ['GET'])]
+    public function newFeeScheduleAction(Request $request)
+    {
+        if(
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        return $this->redirect($this->generateUrl('transresrequestcategorytypes_new'));
+    }
+
 
     /**
      * Deletes a request entity.
