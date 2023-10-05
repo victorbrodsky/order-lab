@@ -28,6 +28,8 @@ f_update_os () {
 
 	echo -e ${COLOR} Ubuntu 22 update ${NC}
     sudo apt update
+	
+	#echo -e ${COLOR} sudo apt -y full-upgrade ${NC}
 	#sudo apt -y full-upgrade
 	
 	#echo -e ${COLOR} Ubuntu 22 system reboot  ${NC}
