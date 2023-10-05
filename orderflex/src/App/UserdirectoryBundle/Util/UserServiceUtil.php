@@ -825,7 +825,7 @@ class UserServiceUtil {
         $types = array(
             "connectionChannel" => "http",
 
-            "maxIdleTime" => "30",
+            "maxIdleTime" => "60",
             "environment" => "dev",
             "siteEmail" => "", //"email@email.com",
             "loginInstruction" => 'Please use your <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a> to log in.',
