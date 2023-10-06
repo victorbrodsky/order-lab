@@ -1222,7 +1222,8 @@ class DataBackupManagementController extends OrderAbstractController
                     $extractionTime = round( ($filesize/1024*1024) / 10 ); //kB,MB / 10 ~ min
                 }
 
-                $process = $this->runAsyncProcess($command);
+                $commandArr = explode(" ",$command);
+                $process = $this->runAsyncProcess($commandArr);
                 $logger->notice("restore BackupFilesAjaxAction: after tar async");
 
                 $msg = "Uploaded folder backup $archiveFile has been started asynchronously.".
