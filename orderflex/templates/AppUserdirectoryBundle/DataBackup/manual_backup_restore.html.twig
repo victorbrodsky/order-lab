@@ -77,9 +77,10 @@
                     {#</form>#}
 
                     {#https://github.com/1up-lab/OneupUploaderBundle/blob/master/doc/frontend_plupload.md#}
-                    {#<div id="fine-uploader"></div>#}
-
-                    <div id="files-drag-drop"></div>
+                    {#FineUploader#}
+                    <div id="fine-uploader"></div>
+                    {#Uppu.io#}
+                    {#<div id="files-drag-drop"></div>#}
 
                 </div>
                 {#<div class="col-xs-2"></div>#}
@@ -251,11 +252,11 @@
 
 {% block additionalcss %}
     {#FineUploader#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-new.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader-gallery.css') }}" />
 
     {#Uppy#}
-    {{ encore_entry_link_tags('user-uppy-css') }}
+    {#{{ encore_entry_link_tags('user-uppy-css') }}#}
 
     {#jQuery File Upload#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-file-upload/css/jquery.fileupload.css') }}" />#}
@@ -265,11 +266,11 @@
     {#FineUploader#}
     {#https://docs.fineuploader.com/quickstart/01-getting-started.html#}
     {#https://docs.fineuploader.com/branch/master/quickstart/02-setting_options.html#}
-    {#{% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>#}
+    {% include 'AppUserdirectoryBundle/DataBackup/gallery.html' %}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/fine-uploader/fine-uploader.js') }}"></script>
 
     {#Uppy#}
-    {{ encore_entry_script_tags('user-uppy') }}
+    {#{{ encore_entry_script_tags('user-uppy') }}#}
 
 
     <script language="Javascript">
@@ -278,7 +279,7 @@
 
         $(document).ready(function () {
 
-            //userFineUploader();
+            userFineUploader();
 
             {#$('#backup-file-id')#}
             $('.backup-required').on("change", function(e) {
@@ -548,8 +549,13 @@
                     //userPostRestoreAjax(btn,lbtn,type);
                     //userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
 
-                    var redirectUrl = Routing.generate('employees_post_restore_eventlog',{type: type, msg: "restored"});
-                    window.location.replace(redirectUrl);
+                    if( type == 'db' ) {
+                        var redirectUrl = Routing.generate('employees_post_restore_eventlog', {
+                            type: type,
+                            msg: "restored"
+                        });
+                        window.location.replace(redirectUrl);
+                    }
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);

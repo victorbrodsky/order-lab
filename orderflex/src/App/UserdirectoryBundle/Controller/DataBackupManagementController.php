@@ -1194,25 +1194,52 @@ class DataBackupManagementController extends OrderAbstractController
             $command = "tar -xf $archiveFile -C $folder";
             //echo "tar command=".$command."<br>";
             $logger->notice("restore BackupFilesAjaxAction tar command=".$command);
-            $res = $this->runProcess($command);
-            //exit("res=".$res);
-            $logger->notice("restore BackupFilesAjaxAction: after tar");
 
-            $msg = "Uploaded folder backup $archiveFile has been successfully created.".
-                " As a precaution, the original $targetFolder folder has been moved to " .
-                $targetFolder."_".$date . " and can be deleted later";
+            if(0) {
+                $res = $this->runProcess($command);
+                //exit("res=".$res);
+                $logger->notice("restore BackupFilesAjaxAction: after tar");
 
-            if( !$res ) {
-                //$logger->notice("restore res is empty");
+                $msg = "Uploaded folder backup $archiveFile has been successfully created.".
+                    " As a precaution, the original $targetFolder folder has been moved to " .
+                    $targetFolder."_".$date . " and can be deleted later";
+
+                if( !$res ) {
+                    //$logger->notice("restore res is empty");
+                } else {
+                    //$logger->notice("restore res is not empty. res=".$res);
+                    $msg = $msg . "; res=".$res;
+                }
+
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
             } else {
-                //$logger->notice("restore res is not empty. res=".$res);
-                $msg = $msg . "; res=".$res;
-            }
+                $extractionTime = null;
+                $filesize = filesize($archiveFile);
+                if( $filesize ) {
+                    $extractionTime = round( ($filesize/1024*1024) / 10 ); //kB,MB / 10 ~ min
+                }
 
-            //Event Log
-            $user = $this->getUser();
-            $sitename = $this->getParameter('employees.sitename');
-            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+                $process = $this->runAsyncProcess($command);
+                $logger->notice("restore BackupFilesAjaxAction: after tar async");
+
+                $msg = "Uploaded folder backup $archiveFile has been started asynchronously.".
+                    " It might take up to $extractionTime minutes.".
+                    " As a precaution, the original $targetFolder folder has been moved to " .
+                    $targetFolder."_".$date . " and can be deleted later";
+
+                $process->wait();
+                // ... do things after the process has finished
+                $msg = "Uploaded folder backup $archiveFile has been successfully created.".
+                    " As a precaution, the original $targetFolder folder has been moved to " .
+                    $targetFolder."_".$date . " and can be deleted later";
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+            }
 
             $output = array(
                 'status' => 'OK',
@@ -1395,6 +1422,18 @@ class DataBackupManagementController extends OrderAbstractController
             throw new ProcessFailedException($process);
         }
         return $process->getOutput();
+    }
+    public function runAsyncProcess($script) {
+        $process = new Process($script);
+        //$process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(7200); //7200 sec => 2 hours
+        $process->start();
+        return $process;
+
+        //while ($process->isRunning()) {
+            // waiting for process to finish
+        //}
+        //return $process->getOutput();
     }
 
 
