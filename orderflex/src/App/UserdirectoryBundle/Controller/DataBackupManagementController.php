@@ -1229,6 +1229,10 @@ class DataBackupManagementController extends OrderAbstractController
                     " It might take up to $extractionTime minutes.".
                     " As a precaution, the original $targetFolder folder has been moved to " .
                     $targetFolder."_".$date . " and can be deleted later";
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
 
                 $process->wait();
                 // ... do things after the process has finished
