@@ -1236,6 +1236,7 @@ class DataBackupManagementController extends OrderAbstractController
 
                 $process->wait();
                 // ... do things after the process has finished
+                $logger->notice("restore BackupFilesAjaxAction: after wait");
                 $msg = "Uploaded folder backup $archiveFile has been successfully created.".
                     " As a precaution, the original $targetFolder folder has been moved to " .
                     $targetFolder."_".$date . " and can be deleted later";
@@ -1257,6 +1258,7 @@ class DataBackupManagementController extends OrderAbstractController
             );
         }
 
+        $logger->notice("restore BackupFilesAjaxAction: sending response");
         $response = new Response();
         $response->setContent(json_encode($output));
         return $response;
