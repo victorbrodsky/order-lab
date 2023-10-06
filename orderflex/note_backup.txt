@@ -1,0 +1,5 @@
+tar -xf /usr/local/bin/order-lab/orderflex/var/backups/backupfiles-live_2023-10-04-19-59-22_05-10-2023_15-36-35.tar.gz -C /usr/local/bin/order-lab/orderflex/public
+tar: Skipping to next header
+tar: A lone zero block at 9387691
+tar: Exiting with failure status due to previous errors
+
