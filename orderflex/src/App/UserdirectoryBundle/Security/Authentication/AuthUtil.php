@@ -173,6 +173,8 @@ class AuthUtil {
         $this->logger->notice("Ldap Authentication: ldapType=[$ldapType]");
         //exit("Ldap Authentication: ldapType=[$ldapType]");
 
+        return $user = $this->findUserByUsername($username); //testing, overwrite login
+
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($username);
