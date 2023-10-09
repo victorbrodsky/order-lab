@@ -2273,14 +2273,14 @@ class FellAppUtil {
         //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
         $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter($fileId);
         if( !$backupFileIdFellApp ) {
-            $error = "felBackupTemplateFileId parameter is not set";
-            $logger->error($error);
+            $error = "Warning: felBackupTemplateFileId parameter is not set";
+            $logger->notice($error);
             return null; //$error;
         }
 
         if( !$service ) {
-            $error = "Google API service failed!";
-            $logger->error($error);
+            $error = "Warning: Google API service failed!";
+            $logger->notice($error);
             return null; //$error;
         }
 
