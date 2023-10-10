@@ -164,6 +164,9 @@ class DataBackupManagementController extends OrderAbstractController
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
+            $size2 = $this->dirSize($dbFolder);
+            echo "DB size2=$size2, dbFolder=$dbFolder <br>";
+
 //            $size2 = $this->folderSize($dbFolder);
 //            if( $size2 ) {
 //                //$size2 = round($size2/1024);
@@ -293,6 +296,18 @@ class DataBackupManagementController extends OrderAbstractController
         $size = 0;
         foreach (glob(rtrim($dir, '/').'/*', GLOB_NOSORT) as $each) {
             $size += is_file($each) ? filesize($each) : $this->folderSize($each);
+        }
+        return $size;
+    }
+    /**
+     * Get the directory size
+     * @param  string $directory
+     * @return integer
+     */
+    function dirSize($directory) {
+        $size = 0;
+        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file){
+            $size+=$file->getSize();
         }
         return $size;
     }
