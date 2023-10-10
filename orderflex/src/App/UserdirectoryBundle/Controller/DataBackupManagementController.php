@@ -151,7 +151,11 @@ class DataBackupManagementController extends OrderAbstractController
         $dbFolder = null;
         $dbBackupTime = null;
         if( $userServiceUtil->isWindows() == false ) {
-            $dbFolder = '/var/lib/pgsql/';
+            $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
+            if( !file_exists($dbFolder) ) {
+                $dbFolder = '/var/lib'; //Ubuntu 22
+            } 
+
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
             //echo "DB size=$size, dbFolder=$dbFolder <br>";
