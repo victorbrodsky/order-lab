@@ -217,11 +217,11 @@ class DataBackupManagementController extends OrderAbstractController
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
 
-            $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
-            $size = fgets($io, 4096);
-            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
-            $size = substr($size, 0, strpos($size, "\t"));
-            pclose($io);
+//            $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
+//            $size = fgets($io, 4096);
+//            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+//            $size = substr($size, 0, strpos($size, "\t"));
+//            pclose($io);
 
             //$size = $this->folderSize($uploadFilesFolder);
             //$size2 = $this->dirSize($uploadFilesFolder);
@@ -233,13 +233,13 @@ class DataBackupManagementController extends OrderAbstractController
 //            }
 
             if( $size ) {
-                $size = round($size / (1024 * 1000)); //GB
+                $sizeGb = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                if( $size ) {
-                    $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                if( $sizeGb ) {
+                    $uploadFilesBackupTime = $sizeGb; //"; Uploaded files backup should take about " . $size . " min.";
                 }
-                $uploadFilesBackupSize = $this->convertBytesToReadable($size2);
+                $uploadFilesBackupSize = $this->convertBytesToReadable($size);
             }
         }
 
