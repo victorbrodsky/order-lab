@@ -223,12 +223,18 @@ class DataBackupManagementController extends OrderAbstractController
 
         //get free disk space for Upload and DB
         $now = new \DateTime();
-        $now = $now->format('m/d/Y \a\t m:i:s');
+        $now = $now->format('m/d/Y \a\t m:i:s A');
         //echo "dbFolder=$dbFolder <br>";
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
+
         $freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
             ", and for Uploaded Files: ".$uploadFreeSpace[1];
+        //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB.
+        //Current database size is: YY GB. Size of the folder with uploaded files used by the system is: 26.70 GB
+        $freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace[1] for database restoration".
+            " and $uploadFreeSpace[1] for upload files restoration";
+
 
         return array(
             'sitename' => $sitename,
