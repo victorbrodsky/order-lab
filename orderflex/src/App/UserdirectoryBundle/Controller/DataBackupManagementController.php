@@ -585,7 +585,7 @@ class DataBackupManagementController extends OrderAbstractController
                 " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
                 " <br>- Verify the site settings.".
                 " Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
-                " <br>- Verify cron jobs.".
+                " <br>- Verify cron jobs. Replace the working paths if the server is different".
                 " <br>- It might be necessary to run the deploy_prod.sh script."
             ;
 
