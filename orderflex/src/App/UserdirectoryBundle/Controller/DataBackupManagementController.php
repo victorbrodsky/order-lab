@@ -149,7 +149,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //estimate DB backup time based on the size of /var/lib/pgsql
         $dbFolder = null;
-        $dbBackupTime = null;
+        $dbBackupTime = $dbBackupSize = null;
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
             if( !file_exists($dbFolder) ) {
@@ -172,14 +172,14 @@ class DataBackupManagementController extends OrderAbstractController
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $dbBackupTime = $size; //"; DB backup should take about " . $size . " min.";
+                $dbBackupSize = $dbBackupTime = $size; //"; DB backup should take about " . $size . " min.";
             }
 
         }
 
         //estimate upload backup time based on the size of Uploaded folder
         $uploadFilesFolder = null;
-        $uploadFilesBackupTime = null;
+        $uploadFilesBackupSize = $uploadFilesBackupTime = null;
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
@@ -199,7 +199,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                $uploadFilesBackupSize = $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
             }
         }
 
@@ -228,12 +228,25 @@ class DataBackupManagementController extends OrderAbstractController
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
 
-        $freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
-            ", and for Uploaded Files: ".$uploadFreeSpace[1];
+        if( $dbFreeSpace == $uploadFreeSpace ) {
+            //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB.
+            //Current database size is: YY GB. Current size of the folder with uploaded files used by the system is: 26.70 GB
+            $freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace.".
+                " Current database size is: $dbBackupSize.".
+                " Current size of the folder with uploaded files used by the system is: $uploadFilesBackupSize";
+        } else {
+            //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB for the database (partition "A") and NN GB for the files (partition "B").
+            //Current database size is: YY GB. Current size of the folder with uploaded files used by the system is: 26.70 GB
+            $freeSpace = "Available free storage space on this server now ($now)".
+                " is $dbBackupSize for the database (partition 'A') and $uploadFreeSpace for the files (partition 'B')";
+        }
+
+        //$freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
+        //    ", and for Uploaded Files: ".$uploadFreeSpace[1];
         //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB.
         //Current database size is: YY GB. Size of the folder with uploaded files used by the system is: 26.70 GB
-        $freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace[1] for database restoration".
-            " and $uploadFreeSpace[1] for upload files restoration";
+        //$freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace[1] for database".
+        //    " and $uploadFreeSpace[1] for upload files.";
 
 
         return array(
