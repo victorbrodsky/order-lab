@@ -149,7 +149,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         //estimate DB backup time based on the size of /var/lib/pgsql
         $dbFolder = null;
-        $dbBackupTime = $dbBackupSize = null;
+        $dbBackupTime = 1; //min time
+        $dbBackupSize = null;
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
             if( !file_exists($dbFolder) ) {
@@ -187,7 +188,9 @@ class DataBackupManagementController extends OrderAbstractController
                 $sizeGb = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                if( $sizeGb ) {
+                    $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                }
                 $dbBackupSize = $this->convertBytesToReadable($size);
             }
         } else {
@@ -198,7 +201,9 @@ class DataBackupManagementController extends OrderAbstractController
                 $sizeGb = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                if( $sizeGb ) {
+                    $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                }
                 $dbBackupSize = $this->convertBytesToReadable($size);
                 //echo "dbBackupTime=$dbBackupTime, dbBackupSize=$dbBackupSize <br>";
             }
@@ -231,7 +236,9 @@ class DataBackupManagementController extends OrderAbstractController
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                if( $size ) {
+                    $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                }
                 $uploadFilesBackupSize = $this->convertBytesToReadable($size2);
             }
         }
