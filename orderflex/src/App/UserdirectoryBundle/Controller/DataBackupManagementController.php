@@ -212,16 +212,16 @@ class DataBackupManagementController extends OrderAbstractController
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->folderSize($uploadFilesFolder);
-            if( $size2 ) {
-                //$size2 = round($size2/1024);
-                $size2 = $this->convertBytesToReadable($size2);
-                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
-            }
+//            $size2 = $this->folderSize($uploadFilesFolder);
+//            if( $size2 ) {
+//                //$size2 = round($size2/1024);
+//                $size2 = $this->convertBytesToReadable($size2);
+//                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+//            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
@@ -266,7 +266,8 @@ class DataBackupManagementController extends OrderAbstractController
             //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB for the database (partition "A") and NN GB for the files (partition "B").
             //Current database size is: YY GB. Current size of the folder with uploaded files used by the system is: 26.70 GB
             $freeSpace = "Available free storage space on this server now ($now)".
-                " is $dbFreeSpace[1] for the database (partition $dbFolder) and $uploadFreeSpace[1] for the files (partition $uploadFilesFolder)";
+                " is $dbFreeSpace[1] for the database (partition $dbFolder)".
+                " and $uploadFreeSpace[1] for the files (partition $uploadFilesFolder)";
         }
 
         //$freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
