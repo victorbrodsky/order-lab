@@ -228,17 +228,17 @@ class DataBackupManagementController extends OrderAbstractController
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
 
-        if( $dbFreeSpace == $uploadFreeSpace ) {
+        if( $dbFreeSpace[1] == $uploadFreeSpace[1] ) {
             //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB.
             //Current database size is: YY GB. Current size of the folder with uploaded files used by the system is: 26.70 GB
-            $freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace.".
+            $freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace[1].".
                 " Current database size is: $dbBackupSize.".
                 " Current size of the folder with uploaded files used by the system is: $uploadFilesBackupSize";
         } else {
             //Available free storage space on this server now (10/10/2023 at 10:07:15 PM EST) is XX GB for the database (partition "A") and NN GB for the files (partition "B").
             //Current database size is: YY GB. Current size of the folder with uploaded files used by the system is: 26.70 GB
             $freeSpace = "Available free storage space on this server now ($now)".
-                " is $dbBackupSize for the database (partition 'A') and $uploadFreeSpace for the files (partition 'B')";
+                " is $dbFreeSpace[1] for the database (partition 'A') and $uploadFreeSpace[1] for the files (partition 'B')";
         }
 
         //$freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
