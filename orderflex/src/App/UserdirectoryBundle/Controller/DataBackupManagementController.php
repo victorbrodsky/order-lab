@@ -407,10 +407,6 @@ class DataBackupManagementController extends OrderAbstractController
         }
         //$exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
         //$mailerDeliveryAddresses = (string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses');
-        $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig');
-        if( $filesBackupConfig ) {
-            $filesBackupConfig = str_replace("'","''",$filesBackupConfig);
-        }
         $monitorScript = $userSecUtil->getSiteSettingParameter('monitorScript');
         if( $monitorScript ) {
             $monitorScript = str_replace("'","''",$monitorScript);
@@ -419,6 +415,13 @@ class DataBackupManagementController extends OrderAbstractController
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
+
+        $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig');
+        $logger->notice("restore DBWrapper: filesBackupConfig=$filesBackupConfig");
+        if( $filesBackupConfig ) {
+            $filesBackupConfig = str_replace("'","''",$filesBackupConfig);
+        }
+        $logger->notice("restore DBWrapper: modified filesBackupConfig=$filesBackupConfig");
 
         //Get restart db version for 'sudo systemctl restart postgresql-14'
         $postgreVersionStr = $userServiceUtil->getDBVersionStr(); //postgresql-14
@@ -531,22 +534,6 @@ class DataBackupManagementController extends OrderAbstractController
                         ///////////// EOF Update site parameters for newly restored DB /////////////////
                     }
                 }
-
-//                //INSERT INTO table_name (column1, column2, column3, ...)
-//                //VALUES (value1, value2, value3, ...);
-//                $event = "UPDATE user_siteparameters by $userStr";
-//                $sql = "INSERT INTO user_logger (sitename, username, event)" .
-//                    " VALUES ('employees', '".$userStr."', '".$event."')"
-//                ;
-//                $logger->notice("insert sql=" . $sql);
-//                $conn = $this->getConnection();
-//                $stmt = $conn->prepare($sql);
-//                $logger->notice("after insert prepare");
-//                $results = $stmt->executeQuery();
-//                $logger->notice("after insert executeQuery");
-
-                //$resStr = print_r($results->fetchAll());
-                //$logger->notice("after executeQuery. res=".$resStr);
 
 //                    //re-deploy
 //                    $projectRoot = $this->container->get('kernel')->getProjectDir();
