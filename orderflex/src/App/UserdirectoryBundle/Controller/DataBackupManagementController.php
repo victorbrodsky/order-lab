@@ -158,15 +158,16 @@ class DataBackupManagementController extends OrderAbstractController
 
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "DB size=$size, dbFolder=$dbFolder <br>";
+            echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-//            $size2 = $this->folderSize($dbFolder);
-//            if( $size2 ) {
-//                $size2 = round($size2/1024);
-//                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
-//            }
+            $size2 = $this->folderSize($dbFolder);
+            if( $size2 ) {
+                //$size2 = round($size2/1024);
+                $size2 = $this->convertBytesToReadable($size2);
+                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
+            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
@@ -189,11 +190,12 @@ class DataBackupManagementController extends OrderAbstractController
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-//            $size2 = $this->folderSize($uploadFilesFolder);
-//            if( $size2 ) {
-//                $size2 = round($size2/1024);
-//                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
-//            }
+            $size2 = $this->folderSize($uploadFilesFolder);
+            if( $size2 ) {
+                //$size2 = round($size2/1024);
+                $size2 = $this->convertBytesToReadable($size2);
+                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
@@ -268,6 +270,14 @@ class DataBackupManagementController extends OrderAbstractController
     public function getFreeSpace( $folder ) {
         //get free disk space for Upload and DB
         $bytes = disk_free_space($folder);
+        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
+        $base = 1024;
+        $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
+        //echo $folder.": ".$bytes . '<br />';
+        $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
+        return array($base,$res);
+    }
+    public function convertBytesToReadable( $bytes ) {
         $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
         $base = 1024;
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
