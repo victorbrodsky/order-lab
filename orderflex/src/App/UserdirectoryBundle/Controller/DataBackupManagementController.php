@@ -153,7 +153,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
             if( !file_exists($dbFolder) ) {
-                $dbFolder = '/var/lib/postgresql/'; //Ubuntu 22
+                $dbFolder = '/var/lib/postgresql/16/'; //Ubuntu 22
             }
 
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
