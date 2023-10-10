@@ -219,7 +219,7 @@ class DataBackupManagementController extends OrderAbstractController
 
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            //echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
