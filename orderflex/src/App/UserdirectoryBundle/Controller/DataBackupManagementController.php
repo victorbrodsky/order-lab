@@ -213,13 +213,13 @@ class DataBackupManagementController extends OrderAbstractController
 
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
-            echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
+            //echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
             //$size = $this->folderSize($uploadFilesFolder);
-            $size2 = $this->dirSize($uploadFilesFolder);
-            echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+            //$size2 = $this->dirSize($uploadFilesFolder);
+            //echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
 //            if( $size2 ) {
 //                //$size2 = round($size2/1024);
 //                $size2 = $this->convertBytesToReadable($size2);
