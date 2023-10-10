@@ -153,7 +153,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
             if( !file_exists($dbFolder) ) {
-                $dbFolder = '/var/lib/postgresql/16/'; //Ubuntu 22
+                $dbFolder = '/var/lib/postgresql/'; //Ubuntu 22
             }
 
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
@@ -224,7 +224,7 @@ class DataBackupManagementController extends OrderAbstractController
         //get free disk space for Upload and DB
         $now = new \DateTime();
         $now = $now->format('m/d/Y \a\t m:i:s');
-        echo "dbFolder=$dbFolder <br>";
+        //echo "dbFolder=$dbFolder <br>";
         $dbFreeSpace = $this->getFreeSpace($dbFolder);
         $uploadFreeSpace = $this->getFreeSpace($uploadFilesFolder);
         $freeSpace = "Available Free Storage Space Now ($now) for DB: ".$dbFreeSpace[1].
