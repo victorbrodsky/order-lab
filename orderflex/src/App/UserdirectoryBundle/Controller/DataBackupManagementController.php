@@ -210,25 +210,28 @@ class DataBackupManagementController extends OrderAbstractController
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
             echo "Uploaded size=$size, uploadFilesFolder=$uploadFilesFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->folderSize($uploadFilesFolder);
+            //$size = $this->folderSize($uploadFilesFolder);
             $size2 = $this->dirSize($uploadFilesFolder);
-            if( $size2 ) {
-                //$size2 = round($size2/1024);
-                $size2 = $this->convertBytesToReadable($size2);
-                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
-            }
+            echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+//            if( $size2 ) {
+//                //$size2 = round($size2/1024);
+//                $size2 = $this->convertBytesToReadable($size2);
+//                echo "Uploaded size2=$size2, uploadFilesFolder=$uploadFilesFolder <br>";
+//            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $uploadFilesFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $uploadFilesBackupSize = $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                $uploadFilesBackupTime = $size; //"; Uploaded files backup should take about " . $size . " min.";
+                $uploadFilesBackupSize = $this->convertBytesToReadable($size2);
             }
         }
 
