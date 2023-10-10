@@ -164,7 +164,10 @@ class DataBackupManagementController extends OrderAbstractController
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->dirSize($dbFolder);
+            //$size2 = $this->dirSize($dbFolder);
+            $size2 = $this->runProcess('/usr/bin/du -sk ' . $dbFolder);
+            dump($size2);
+            exit('111');
             echo "DB size2=$size2, dbFolder=$dbFolder <br>";
 
 //            $size2 = $this->folderSize($dbFolder);
