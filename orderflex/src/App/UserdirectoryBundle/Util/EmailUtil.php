@@ -383,7 +383,7 @@ class EmailUtil {
         }
         catch( TransportExceptionInterface $e ){
             $emailRes = $e->getMessage() ;
-            $logger->error("sendEmail: error sending email=".$emailRes);
+            $logger->error("sendEmail:  Can not sent email: ".$emailRes);
         }
 
         $msg = "sendEmail: From:".$fromEmail.
