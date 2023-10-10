@@ -151,24 +151,27 @@ class DataBackupManagementController extends OrderAbstractController
         $dbFolder = null;
         $dbBackupTime = $dbBackupSize = null;
         if( $userServiceUtil->isWindows() == false ) {
-            $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
-            if( !file_exists($dbFolder) ) {
-                $dbFolder = '/var/lib/postgresql/'; //Ubuntu 22
-            }
-
-            $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
-            $size = fgets($io);
-            echo "DB 0size=$size, dbFolder=$dbFolder <br>";
-            $size = fgets($io, 4096);
-            echo "DB size=$size, dbFolder=$dbFolder <br>";
-            $size = substr($size, 0, strpos($size, "\t"));
-            pclose($io);
-
-            //$size2 = $this->dirSize($dbFolder);
-            $size2 = $this->runProcess('/usr/bin/du -sk ' . $dbFolder);
-            dump($size2);
-            exit('111');
-            echo "DB size2=$size2, dbFolder=$dbFolder <br>";
+//            $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
+//            if( !file_exists($dbFolder) ) {
+//                $dbFolder = '/var/lib/postgresql/'; //Ubuntu 22
+//            }
+//
+//            $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
+//            $size = fgets($io);
+//            echo "DB 0size=$size, dbFolder=$dbFolder <br>";
+//            $size = fgets($io, 4096);
+//            echo "DB size=$size, dbFolder=$dbFolder <br>";
+//            $size = substr($size, 0, strpos($size, "\t"));
+//            pclose($io);
+//
+//            //SELECT pg_size_pretty( pg_database_size('dbname') );
+//            $dbname = $this->getParameter('database_name');
+//            $sql = "SELECT pg_size_pretty( pg_database_size('$dbname') );";
+//            $logger->notice("sql=" . $sql);
+//            $conn = $this->getConnection();
+//            $stmt = $conn->prepare($sql);
+//            $results = $stmt->executeQuery();
+//            echo "DB results=$results<br>";
 
 //            $size2 = $this->folderSize($dbFolder);
 //            if( $size2 ) {
@@ -177,13 +180,28 @@ class DataBackupManagementController extends OrderAbstractController
 //                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
 //            }
 
+            $size = $this->getDbSize(); //bytes
+            //echo "getDbSize=$size <br>";
+            //exit('111');
             if( $size ) {
-                $size = round($size / (1024 * 1000)); //GB
+                $sizeGb = round($size / (1024 * 1000)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
                 //Assume 1 min for 1 GB
-                $dbBackupSize = $dbBackupTime = $size; //"; DB backup should take about " . $size . " min.";
+                $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                $dbBackupSize = $this->convertBytesToReadable($size);
             }
-
+        } else {
+            $size = $this->getDbSize(); //bytes
+            //echo "getDbSize=$size <br>";
+            //exit('111');
+            if( $size ) {
+                $sizeGb = round($size / (1024 * 1000)); //GB
+                //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
+                //Assume 1 min for 1 GB
+                $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
+                $dbBackupSize = $this->convertBytesToReadable($size);
+                //echo "dbBackupTime=$dbBackupTime, dbBackupSize=$dbBackupSize <br>";
+            }
         }
 
         //estimate upload backup time based on the size of Uploaded folder
@@ -291,7 +309,7 @@ class DataBackupManagementController extends OrderAbstractController
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
         //echo $folder.": ".$bytes . '<br />';
         $res = sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
-        return array($base,$res);
+        return $res; //array($base,$res);
     }
     //https://gist.github.com/eusonlito/5099936
     public function folderSize($dir)
@@ -313,6 +331,22 @@ class DataBackupManagementController extends OrderAbstractController
             $size+=$file->getSize();
         }
         return $size;
+    }
+    function getDbSize() {
+        $dbname = $this->getParameter('database_name');
+        //SELECT pg_size_pretty( pg_database_size('dbname') );
+        //$sql = "SELECT pg_size_pretty(pg_database_size('$dbname'));";
+        $sql = "SELECT pg_database_size('$dbname');";
+        //echo "sql=" . $sql . "<br>";
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare($sql);
+        $results = $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
+        if( $results && count($results) > 0 ) {
+            return $results[0];
+        }
+        return null;
+        //dump($results);
+        //exit('111');
     }
 
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
