@@ -157,17 +157,19 @@ class DataBackupManagementController extends OrderAbstractController
             }
 
             $io = popen('/usr/bin/du -sk ' . $dbFolder, 'r');
+            $size = fgets($io);
+            echo "DB 0size=$size, dbFolder=$dbFolder <br>";
             $size = fgets($io, 4096);
             echo "DB size=$size, dbFolder=$dbFolder <br>";
             $size = substr($size, 0, strpos($size, "\t"));
             pclose($io);
 
-            $size2 = $this->folderSize($dbFolder);
-            if( $size2 ) {
-                //$size2 = round($size2/1024);
-                $size2 = $this->convertBytesToReadable($size2);
-                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
-            }
+//            $size2 = $this->folderSize($dbFolder);
+//            if( $size2 ) {
+//                //$size2 = round($size2/1024);
+//                $size2 = $this->convertBytesToReadable($size2);
+//                echo "DB size2=$size2, dbFolder=$dbFolder <br>";
+//            }
 
             if( $size ) {
                 $size = round($size / (1024 * 1000)); //GB
