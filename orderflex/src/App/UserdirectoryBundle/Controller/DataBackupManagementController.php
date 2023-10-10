@@ -487,12 +487,43 @@ class DataBackupManagementController extends OrderAbstractController
 
                 ///////////// Update site parameters for newly restored DB /////////////////
                 if(1) {
+//                    //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
+//                    $sql = "UPDATE user_siteparameters" .
+//                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
+//                        //", filesBackupConfig='$filesBackupConfig'".
+//                        ", monitorScript='$monitorScript'" .
+//                        ", connectionChannel='$connectionChannel'" .
+//                        ", networkDrivePath='$networkDrivePathOrig'" .
+//                        " WHERE id=" . $param->getId();
+//                    //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
+//                    $logger->notice("sql=" . $sql);
+//
+//                    $stmt = $conn->prepare($sql);
+//                    $logger->notice("restore DBWrapper: after prepare");
+//
+//                    $results = $stmt->executeQuery();
+//                    $logger->notice("restore DBWrapper: after executeQuery");
+
+                    $setparams =
+                        "mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
+                        //", filesBackupConfig='$filesBackupConfig'".
+                        ", monitorScript='$monitorScript'" .
+                        ", connectionChannel='$connectionChannel'" .
+                        ", networkDrivePath='$networkDrivePathOrig'"
+                    ;
+
+                    if( $filesBackupConfig ) {
+                        $setparams = $setparams . ", filesBackupConfig='$filesBackupConfig'";
+                    }
+
                     //App\\UserdirectoryBundle\\Entity\\SiteParameters (user_siteparameters)
                     $sql = "UPDATE user_siteparameters" .
-                        " SET mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
-                        ", filesBackupConfig='$filesBackupConfig', monitorScript='$monitorScript'" .
-                        ", connectionChannel='$connectionChannel'" .
-                        ", networkDrivePath='$networkDrivePathOrig'" .
+                        " SET " . $setparams .
+//                        "mailerdeliveryaddresses='$siteEmail', environment='$env', version='$version'" .
+//                        ", filesBackupConfig='$filesBackupConfig'".
+//                        ", monitorScript='$monitorScript'" .
+//                        ", connectionChannel='$connectionChannel'" .
+//                        ", networkDrivePath='$networkDrivePathOrig'" .
                         " WHERE id=" . $param->getId();
                     //$sql = "SELECT id, mailerdeliveryaddresses FROM user_siteparameters";
                     $logger->notice("sql=" . $sql);
