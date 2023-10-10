@@ -206,7 +206,8 @@ class DataBackupManagementController extends OrderAbstractController
 
         //estimate upload backup time based on the size of Uploaded folder
         $uploadFilesFolder = null;
-        $uploadFilesBackupSize = $uploadFilesBackupTime = null;
+        $uploadFilesBackupTime = 1; //min time 1 min
+        $uploadFilesBackupSize = null;
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
