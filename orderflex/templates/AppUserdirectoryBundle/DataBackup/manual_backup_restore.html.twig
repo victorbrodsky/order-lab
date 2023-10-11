@@ -75,34 +75,32 @@
 
             <br>
             <div class="row">
+                <div class="col-xs-2" align="left"></div>
                 <div class="col-xs-8" align="left">
-                    <p>
-                        <select id="create-backup-file-id" class="combobox-backup create-backup-required" style="width: 30%;">
-                            <option value=""></option>
-                            {% for  backupFile in backupFiles %}
-                                <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </p>
+                    <select id="create-backup-file-id" class="combobox-backup create-backup-required" style="width: 30%;">
+                        <option value=""></option>
+                        {% for  backupFile in backupFiles %}
+                            <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+                <div class="col-xs-2" align="left"></div>
+            </div>
 
-                <div class="col-xs-2" align="left">
-                    <a  id="btn-download-backup-href"
-                        target="_blank"
-                        disabled
-                        class="btn btn-info"
-                        href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
-                    >Download selected backup</a>
-                </div>
-                <div class="col-xs-2" align="left">
-                    <a  id="btn-delete-file-href"
-                        general-data-confirm="Are you sure you want to delete selected file?"
-                        disabled
-                        class="btn btn-warning"
-                        href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
-                    >Delete selected file</a>
-                </div>
+            <div class="row" style="margin-top: 3px;">
+                <a  id="btn-download-backup-href"
+                    target="_blank"
+                    disabled
+                    class="btn btn-info"
+                    href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
+                >Download selected backup</a>
 
+                <a  id="btn-delete-file-href"
+                    general-data-confirm="Are you sure you want to delete selected file?"
+                    disabled
+                    class="btn btn-warning"
+                    href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
+                >Delete selected file</a>
             </div>
 
         </div>
