@@ -48,35 +48,29 @@
 
     {#Backup panel#}
     <div class="panel panel-default">
-        <div class="panel-heading">Create Backups</div>
+        <div class="panel-heading">Generate backup files</div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-xs-1"></div>
-                <div class="col-xs-2" align="right">
+                {#<div class="col-xs-1"></div>#}
+                {#<div class="col-xs-2" align="right">#}
                     <a  id="btn-create-backup"
                         general-data-confirm="Are you sure you want to create a database backup?"
                         class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
                     >Create DB Backup</a>
-                </div>
-                <div class="col-xs-2" align="left">
+                {#</div>#}
+                {#<div class="col-xs-2" align="left">#}
                     <a  id="btn-create-backup-upload"
                         general-data-confirm="Are you sure you want to create a upload folder backup?"
                         class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
                     >Create Upload Folder Backup</a>
-                </div>
-
-                <div class="col-xs-7" align="left">
-                    {#FineUploader#}
-                    <div id="fine-uploader"></div>
-                    {#Uppu.io#}
-                    {#<div id="files-drag-drop"></div>#}
-                </div>
+                {#</div>#}
             </div>
 
             <br>
             <div class="row">
                 <div class="col-xs-2" align="left"></div>
                 <div class="col-xs-8" align="left">
+                    Generated and uploaded backup files:
                     <select id="create-backup-file-id" class="combobox-backup create-backup-required" style="width: 30%;">
                         <option value=""></option>
                         {% for  backupFile in backupFiles %}
@@ -106,11 +100,21 @@
         </div>
     </div>
 
+    {#Upload panel#}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Upload backup files (backupdb-***.dump.gz and backupfiles-***.tar.gz)
+        </div>
+
+        <div class="panel-body">
+            <div id="fine-uploader"></div>
+        </div>
+    </div>
     <br>
 
     {#Restore panel#}
     <div class="panel panel-default">
-        <div class="panel-heading">Restore</div>
+        <div class="panel-heading">Restore from backup</div>
 
         <div class="panel-body">
 
@@ -118,6 +122,7 @@
                 {#<div class="col-xs-1" align="left"></div>#}
                 <div class="col-xs-8" align="left">
                     <p>
+                        Available backup files for restoration:
                         <select id="backup-file-id" class="combobox-backup backup-required" style="width: 30%;">
                             <option value=""></option>
                             {% for  backupFile in backupFiles %}
@@ -128,6 +133,7 @@
                 </div>
                 <div class="col-xs-4" align="left">
                     <p>
+                        After restoration from back up, set server environment of this server to:
                         <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
                             <option value=""></option>
                             {% for  environment in environments %}
@@ -190,8 +196,8 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-3"></div>
-                <div class="col-lg-6" align="left">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8" align="left">
                     <p>
                     <div class="input-group">
                         <input
@@ -211,7 +217,7 @@
                                     type="button"
                                     {{ disabledFalg }}
                                     onclick="userVerifyRestoreBackup(this,'db')"
-                            >Restore DB Backup</button>
+                            >Restore database from the selected backup file</button>
                         </span>
                         <span class="input-group-btn" style="padding-left: 3px;">
                             <button
@@ -220,12 +226,12 @@
                                     type="button"
                                     {{ disabledFalg }}
                                     onclick="userVerifyRestoreBackup(this,'files')"
-                            >Restore Upload Files Backup</button>
+                            >Restore uploaded files from the selected backup file</button>
                         </span>
                     </div><!-- /input-group -->
                     </p>
                 </div>
-                <div class="col-lg-3"></div>
+                <div class="col-lg-2"></div>
             </div>
 
             {#<div class="row">#}
@@ -414,6 +420,10 @@
                 request: {
                     endpoint: endpointUrl
                 },
+                //validation: {
+                    //allowedExtensions: ['dump.gz', 'tar.gz', 'json'],
+                    //sizeLimit: 51200 // 50 kB = 50 * 1024 bytes
+                //},
                 deleteFile: {
                     //enabled: true,
                     endpoint: endpointUrl
