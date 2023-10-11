@@ -44,7 +44,7 @@
     </p>
     <p>{{ estimateTimeMsg|raw }}</p>
     <p>{{ freeSpace|raw }}</p>
-    <p>Refresh this page to see the uploaded files in the select box below.</p>
+    {#<p>Refresh this page to see the uploaded files in the select box below.</p>#}
 
     {#Backup panel#}
     <div class="panel panel-default">
@@ -415,7 +415,7 @@
                     endpoint: endpointUrl
                 },
                 deleteFile: {
-                    enabled: true,
+                    //enabled: true,
                     endpoint: endpointUrl
                 },
                 chunking: {
@@ -432,6 +432,21 @@
                 },
                 retry: {
                     enableAuto: true
+                },
+                callbacks: {
+//                    onDelete: function(id) {
+//                        // ...
+//                    },
+//                    onDeleteComplete: function(id, xhr, isError) {
+//                        //...
+//                    },
+                    onAllComplete: function(succeeded, failed) {
+                        if( failed.length > 0 ) {
+                            alert("Error: Some files were not uploaded");
+                        } else {
+                            window.location.reload();
+                        }
+                    },
                 }
             });
 

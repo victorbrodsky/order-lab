@@ -185,9 +185,9 @@ class DataBackupManagementController extends OrderAbstractController
             //echo "getDbSize=$size <br>";
             //exit('111');
             if( $size ) {
-                $sizeGb = round($size / (1024 * 1000)); //GB
+                $sizeGb = round($size / (1024 * 1000 * 2)); //GB
                 //echo 'Directory: ' . $dbFolder . ' => Size: ' . $size;
-                //Assume 1 min for 1 GB
+                //Assume 1 min for 2 GB
                 if( $sizeGb ) {
                     $dbBackupTime = $sizeGb; //"; DB backup should take about " . $size . " min.";
                 }
