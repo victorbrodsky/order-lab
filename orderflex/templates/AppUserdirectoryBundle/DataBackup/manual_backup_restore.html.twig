@@ -51,7 +51,7 @@
         <div class="panel-heading">Create Backups</div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-xs-2"></div>
+                <div class="col-xs-1"></div>
                 <div class="col-xs-2" align="right">
                     <a  id="btn-create-backup"
                         general-data-confirm="Are you sure you want to create a database backup?"
@@ -65,47 +65,46 @@
                     >Create Upload Folder Backup</a>
                 </div>
 
-                <div class="col-xs-6" align="left" style="height: 215px;">
+                <div class="col-xs-7" align="left">
                     {#FineUploader#}
                     <div id="fine-uploader"></div>
                     {#Uppu.io#}
                     {#<div id="files-drag-drop"></div>#}
+                </div>
+            </div>
 
+            <br>
+            <div class="row">
+                <div class="col-xs-8" align="left">
+                    <p>
+                        <select id="create-backup-file-id" class="combobox create-backup-required" style="width: 30%;">
+                            <option value=""></option>
+                            {% for  backupFile in backupFiles %}
+                                <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
                 </div>
 
-                <div class="row">
-                    <div class="col-xs-1" align="left"></div>
-                    <div class="col-xs-7" align="left">
-                        <p>
-                            <select id="create-backup-file-id" class="combobox create-backup-required" style="width: 30%;">
-                                <option value=""></option>
-                                {% for  backupFile in backupFiles %}
-                                    <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </p>
-                    </div>
-
-                    <div class="col-xs-2" align="right">
-                        <a  id="btn-download-backup-href"
-                            target="_blank"
-                            disabled
-                            class="btn btn-info"
-                            href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
-                        >Download selected backup</a>
-                    </div>
-                    <div class="col-xs-2" align="left">
-                        <a  id="btn-delete-file-href"
-                            general-data-confirm="Are you sure you want to delete selected file?"
-                            disabled
-                            class="btn btn-warning"
-                            href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
-                        >Delete selected file</a>
-                    </div>
-
+                <div class="col-xs-2" align="left">
+                    <a  id="btn-download-backup-href"
+                        target="_blank"
+                        disabled
+                        class="btn btn-info"
+                        href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
+                    >Download selected backup</a>
+                </div>
+                <div class="col-xs-2" align="left">
+                    <a  id="btn-delete-file-href"
+                        general-data-confirm="Are you sure you want to delete selected file?"
+                        disabled
+                        class="btn btn-warning"
+                        href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
+                    >Delete selected file</a>
                 </div>
 
             </div>
+
         </div>
     </div>
 
@@ -119,17 +118,7 @@
 
             <div class="row">
                 {#<div class="col-xs-1" align="left"></div>#}
-                <div class="col-xs-2" align="left">
-                    <p>
-                        <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
-                            <option value=""></option>
-                            {% for  environment in environments %}
-                                <option value="{{ environment.id }}">{{ environment.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </p></div>
-                <div class="col-xs-10" align="left">
-                    {#{{ formmacros.field(backupFiles) }}#}
+                <div class="col-xs-8" align="left">
                     <p>
                         <select id="backup-file-id" class="combobox backup-required" style="width: 30%;">
                             <option value=""></option>
@@ -139,6 +128,17 @@
                         </select>
                     </p>
                 </div>
+                <div class="col-xs-4" align="left">
+                    <p>
+                        <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
+                            <option value=""></option>
+                            {% for  environment in environments %}
+                                <option value="{{ environment.id }}">{{ environment.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                </div>
+
                 {#<div class="col-xs-2" align="right">#}
                     {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
                     {#<a  id="btn-download-backup-href"#}
