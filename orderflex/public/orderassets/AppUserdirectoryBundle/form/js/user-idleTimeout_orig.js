@@ -54,7 +54,7 @@ $(document).ready(function() {
 
     //console.log('idleTimeout cycle=('+cycle+')');
     if( cycle !== 'download' ) {
-        //console.log('init idleTimeout');
+        console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
 
         idleTimeout.init();
