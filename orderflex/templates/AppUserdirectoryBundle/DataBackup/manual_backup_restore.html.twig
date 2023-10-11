@@ -65,25 +65,46 @@
                     >Create Upload Folder Backup</a>
                 </div>
 
-                <div class="col-xs-6" align="left">
-                    {#{{ form_start(form,{action:path('employees_upload_backup_file')}) }}#}
-                        {#<p>{{ form_row(form.uploadfile) }}</p>#}
-                        {#{{ form_row(form.submit, { 'label': 'Upload backup' }) }}#}
-                    {#{{ form_end(form) }}#}
-
-                    {#<form>#}
-                        {#<div id="list"></div>#}
-                        {#<input type="button" id="pick" value="Upload">#}
-                    {#</form>#}
-
-                    {#https://github.com/1up-lab/OneupUploaderBundle/blob/master/doc/frontend_plupload.md#}
+                <div class="col-xs-6" align="left" style="height: 215px;">
                     {#FineUploader#}
                     <div id="fine-uploader"></div>
                     {#Uppu.io#}
                     {#<div id="files-drag-drop"></div>#}
 
                 </div>
-                {#<div class="col-xs-2"></div>#}
+
+                <div class="row">
+                    <div class="col-xs-1" align="left"></div>
+                    <div class="col-xs-7" align="left">
+                        <p>
+                            <select id="create-backup-file-id" class="combobox create-backup-required" style="width: 30%;">
+                                <option value=""></option>
+                                {% for  backupFile in backupFiles %}
+                                    <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </p>
+                    </div>
+
+                    <div class="col-xs-2" align="right">
+                        <a  id="btn-download-backup-href"
+                            target="_blank"
+                            disabled
+                            class="btn btn-info"
+                            href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
+                        >Download selected backup</a>
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        <a  id="btn-delete-file-href"
+                            general-data-confirm="Are you sure you want to delete selected file?"
+                            disabled
+                            class="btn btn-warning"
+                            href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
+                        >Delete selected file</a>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -97,7 +118,7 @@
         <div class="panel-body">
 
             <div class="row">
-                {#<div class="col-xs-3"></div>#}
+                {#<div class="col-xs-1" align="left"></div>#}
                 <div class="col-xs-2" align="left">
                     <p>
                         <select id="backup-env-id" class="combobox backup-required" style="width: 30%;">
@@ -107,7 +128,7 @@
                             {% endfor %}
                         </select>
                     </p></div>
-                <div class="col-xs-6" align="left">
+                <div class="col-xs-10" align="left">
                     {#{{ formmacros.field(backupFiles) }}#}
                     <p>
                         <select id="backup-file-id" class="combobox backup-required" style="width: 30%;">
@@ -118,14 +139,14 @@
                         </select>
                     </p>
                 </div>
-                <div class="col-xs-2" align="right">
+                {#<div class="col-xs-2" align="right">#}
                     {#Download selected file /order/index_dev.php/directory/download/printable-lab-directory#}
-                    <a  id="btn-download-backup-href"
-                        target="_blank"
-                        disabled
-                        class="btn btn-info"
-                        href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"
-                    >Download selected backup</a>
+                    {#<a  id="btn-download-backup-href"#}
+                        {#target="_blank"#}
+                        {#disabled#}
+                        {#class="btn btn-info"#}
+                        {#href="{{ path(employees_sitename~'_download_backup_file', {'filename': null}) }}"#}
+                    {#>Download selected backup</a>#}
                     {#<button#}
                             {#id="btn-download-backup"#}
                             {#class="btn"#}
@@ -135,15 +156,15 @@
                             {#onclick="return userDownloadBackup()"#}
                     {#>Download selected backup file</button>#}
                     {#</span>#}
-                </div>
-                <div class="col-xs-2" align="left">
-                    <a  id="btn-delete-file-href"
-                        general-data-confirm="Are you sure you want to delete selected file?"
-                        disabled
-                        class="btn btn-warning"
-                        href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"
-                    >Delete selected file</a>
-                </div>
+                {#</div>#}
+                {#<div class="col-xs-2" align="left">#}
+                    {#<a  id="btn-delete-file-href"#}
+                        {#general-data-confirm="Are you sure you want to delete selected file?"#}
+                        {#disabled#}
+                        {#class="btn btn-warning"#}
+                        {#href="{{ path(employees_sitename~'_delete_file', {'filename': null}) }}"#}
+                    {#>Delete selected file</a>#}
+                {#</div>#}
             </div>
 
             <br>
@@ -281,14 +302,39 @@
 
             userFineUploader();
 
-            {#$('#backup-file-id')#}
+            $('.create-backup-required').on("change", function(e) {
+                var fileId = $('#create-backup-file-id').select2('val'); //$(this).select2('val');
+
+                //var origHref = $('#btn-download-backup-href').attr('href');
+                var origHref = Routing.generate('employees_download_backup_file');
+                var origDeleteHref = Routing.generate('employees_delete_file');
+
+                if( fileId ) {
+                    //var href = $('#btn-download-backup-href').attr('href');
+                    href = origHref + "/" + fileId;
+                    $('#btn-download-backup-href').removeAttr('disabled');
+                    $('#btn-download-backup-href').attr("href", href);
+
+                    //btn-delete-file-href
+                    href = origDeleteHref + "/" + fileId;
+                    $('#btn-delete-file-href').removeAttr('disabled');
+                    $('#btn-delete-file-href').attr("href", href);
+                } else {
+                    $('#btn-download-backup-href').attr('disabled', true);
+                    $('#btn-download-backup-href').attr("href", origHref);
+
+                    $('#btn-delete-file-href').attr('disabled', true);
+                    $('#btn-delete-file-href').attr("href", origDeleteHref);
+                }
+            });
+
             $('.backup-required').on("change", function(e) {
                 var fileId = $('#backup-file-id').select2('val'); //$(this).select2('val');
                 var env = $('#backup-env-id').select2('val');
 
                 //var origHref = $('#btn-download-backup-href').attr('href');
-                var origHref = Routing.generate('employees_download_backup_file');
-                var origDeleteHref = Routing.generate('employees_delete_file');
+                //var origHref = Routing.generate('employees_download_backup_file');
+                //var origDeleteHref = Routing.generate('employees_delete_file');
 
                 if( fileId && env ) {
                     console.log('fileId=' + fileId + '; env=' + env);
@@ -305,14 +351,14 @@
 
                 if( fileId ) {
                     //var href = $('#btn-download-backup-href').attr('href');
-                    href = origHref + "/" + fileId;
-                    $('#btn-download-backup-href').removeAttr('disabled');
-                    $('#btn-download-backup-href').attr("href", href);
+                    //href = origHref + "/" + fileId;
+                    //$('#btn-download-backup-href').removeAttr('disabled');
+                    //$('#btn-download-backup-href').attr("href", href);
 
                     //btn-delete-file-href
-                    href = origDeleteHref + "/" + fileId;
-                    $('#btn-delete-file-href').removeAttr('disabled');
-                    $('#btn-delete-file-href').attr("href", href);
+                    //href = origDeleteHref + "/" + fileId;
+                    //$('#btn-delete-file-href').removeAttr('disabled');
+                    //$('#btn-delete-file-href').attr("href", href);
 
                     if( fileId.includes('backupfiles') && fileId.includes('.tar.gz') ) {
                         $('#btn-restore-files-backup').removeAttr('disabled');
@@ -320,19 +366,19 @@
                         $('#btn-restore-files-backup').attr('disabled', true);
                     }
                 } else {
-                    $('#btn-download-backup-href').attr('disabled', true);
-                    $('#btn-download-backup-href').attr("href", origHref);
+                    //$('#btn-download-backup-href').attr('disabled', true);
+                    //$('#btn-download-backup-href').attr("href", origHref);
 
-                    $('#btn-delete-file-href').attr('disabled', true);
-                    $('#btn-delete-file-href').attr("href", origDeleteHref);
+                    //$('#btn-delete-file-href').attr('disabled', true);
+                    //$('#btn-delete-file-href').attr("href", origDeleteHref);
 
                     $('#btn-restore-files-backup').attr('disabled', true);
                 }
             });
 
-            $('#upload_single_file_submit').click(function(e) {
-                $(this).text("Please wait...").attr('disabled', true);
-            });
+//            $('#upload_single_file_submit').click(function(e) {
+//                $(this).text("Please wait...").attr('disabled', true);
+//            });
 
         });
 
