@@ -291,6 +291,24 @@ class DataBackupManagementController extends OrderAbstractController
 
         //Logged in users
         $loggedInUsers = $userSecUtil->getLoggedInUserEntities();
+        $maintenanceStatus = $userSecUtil->getSiteSettingParameter('maintenance');
+        if( $maintenanceStatus ) {
+            $maintenanceStatus = "Enabled";
+            $pathMaintenanceStop = $this->generateUrl('employees_change_maintenance_status',['status'=>'disable']);
+            $maintenanceAction = "<a".
+                        " general-data-confirm='Are you sure you want to Stop Maintenance Mode (Enable users to log in)?'".
+                        " class='btn btn-info' href='".$pathMaintenanceStop."'".
+                        ">Stop Maintenance Mode (Enable users to log in)</a>";
+        } else {
+            $maintenanceStatus = "Disabled";
+            $pathMaintenanceStart = $this->generateUrl('employees_change_maintenance_status',['status'=>'enable']);
+            $maintenanceAction = "<a".
+                " general-data-confirm='Start Maintenance Mode (Log out users, prevent logins,".
+                " and show maintenance mode message on the login page)?'".
+                " class='btn btn-info' href='".$pathMaintenanceStart."'".
+                ">Start Maintenance Mode (Log out users, prevent logins, and show maintenance mode message on the login page)</a>";
+        }
+        
 
         return array(
             'sitename' => $sitename,
@@ -306,7 +324,9 @@ class DataBackupManagementController extends OrderAbstractController
             'dbFreeSpaceBytes' => $dbFreeSpace[0],
             'uploadFreeSpaceBytes' => $uploadFreeSpace[0],
             'freeSpace' => $freeSpace,
-            'loggedInUsers' => $loggedInUsers
+            'loggedInUsers' => $loggedInUsers,
+            'maintenanceStatus' => $maintenanceStatus,
+            'maintenanceAction' => $maintenanceAction
         );
     }
     public function getFreeSpace( $folder ) {
@@ -363,6 +383,35 @@ class DataBackupManagementController extends OrderAbstractController
         return null;
         //dump($results);
         //exit('111');
+    }
+
+    #[Route(path: '/change-maintenance-status/{status}', name: 'employees_change_maintenance_status', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/DataBackup/manual_backup_restore.html.twig')]
+    public function changeMaintenanceStatusAction(Request $request, $status) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $param = $this->getSingleSiteSettingsParam();
+
+        if( $status == 'enable' ) {
+            $param->setMaintenance(true);
+            $this->addFlash(
+                'notice',
+                "Maintenance enabled"
+            );
+        }
+        elseif ( $status == 'disable' ) {
+            $param->setMaintenance(false);
+            $this->addFlash(
+                'notice',
+                "Maintenance disabled"
+            );
+        } else {
+
+        }
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]

@@ -51,15 +51,21 @@
         <div class="panel-heading">Maintenance Mode</div>
 
         <div class="panel-body">
-            Recently logged in users:
-            {#select users loggedInUsers#}
-            <select class="combobox" style="width: 30%;">
-                {#<option value=""></option>#}
-                {% for  loggedInUser in loggedInUsers %}
-                    <option value="{{ loggedInUser.id }}">{{ loggedInUser }}</option>
-                {% endfor %}
-            </select>
 
+            <p>
+                Recently logged in users:
+                {#select users loggedInUsers#}
+                <select class="combobox" style="width: 30%;">
+                    {#<option value=""></option>#}
+                    {% for  loggedInUser in loggedInUsers %}
+                        <option value="{{ loggedInUser.id }}">{{ loggedInUser }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <p>
+                Current maintenance mode status: {{ maintenanceStatus }} {{ maintenanceAction }}
+            </p>
             {#Current maintenance mode status: [Enabled/Disabled]#}
             {#If Disabled => [Start Maintenance Mode (Log out users, prevent logins, and show maintenance mode message on the login page)]#}
 
