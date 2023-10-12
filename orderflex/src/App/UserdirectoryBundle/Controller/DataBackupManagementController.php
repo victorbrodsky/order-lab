@@ -293,14 +293,14 @@ class DataBackupManagementController extends OrderAbstractController
         $loggedInUsers = $userSecUtil->getLoggedInUserEntities();
         $maintenanceStatus = $userSecUtil->getSiteSettingParameter('maintenance');
         if( $maintenanceStatus ) {
-            $maintenanceStatus = "Enabled";
+            $maintenanceStatus = "<span class='text-danger'>Enabled</span>";
             $pathMaintenanceStop = $this->generateUrl('employees_change_maintenance_status',['status'=>'disable']);
             $maintenanceAction = "<a".
                         " general-data-confirm='Are you sure you want to Stop Maintenance Mode (Enable users to log in)?'".
                         " class='btn btn-info' href='".$pathMaintenanceStop."'".
                         ">Stop Maintenance Mode (Enable users to log in)</a>";
         } else {
-            $maintenanceStatus = "Disabled";
+            $maintenanceStatus = "<span class='text-success'>Disabled</span>";
             $pathMaintenanceStart = $this->generateUrl('employees_change_maintenance_status',['status'=>'enable']);
             $maintenanceAction = "<a".
                 " general-data-confirm='Start Maintenance Mode (Log out users, prevent logins,".
@@ -392,23 +392,30 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $param = $this->getSingleSiteSettingsParam();
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $param = $userSecUtil->getSingleSiteSettingsParam();
 
         if( $status == 'enable' ) {
             $param->setMaintenance(true);
             $this->addFlash(
                 'notice',
-                "Maintenance enabled"
+                "Maintenance mode enabled"
             );
+            $em->flush();
         }
         elseif ( $status == 'disable' ) {
             $param->setMaintenance(false);
             $this->addFlash(
                 'notice',
-                "Maintenance disabled"
+                "Maintenance mode disabled"
             );
+            $em->flush();
         } else {
-
+            $this->addFlash(
+                'notice',
+                "Invalid status. Maintenance mode is unchanged"
+            );
         }
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));

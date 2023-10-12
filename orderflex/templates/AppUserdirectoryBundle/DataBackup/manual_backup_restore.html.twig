@@ -64,7 +64,7 @@
             </p>
 
             <p>
-                Current maintenance mode status: {{ maintenanceStatus }} {{ maintenanceAction }}
+                Current maintenance mode status: {{ maintenanceStatus|raw }} {{ maintenanceAction|raw }}
             </p>
             {#Current maintenance mode status: [Enabled/Disabled]#}
             {#If Disabled => [Start Maintenance Mode (Log out users, prevent logins, and show maintenance mode message on the login page)]#}
