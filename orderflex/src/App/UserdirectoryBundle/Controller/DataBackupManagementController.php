@@ -289,6 +289,8 @@ class DataBackupManagementController extends OrderAbstractController
         //$freeSpace = "Available free storage space on this server now ($now) is $dbFreeSpace[1] for database".
         //    " and $uploadFreeSpace[1] for upload files.";
 
+        //Logged in users
+        $loggedInUsers = $userSecUtil->getLoggedInUserEntities();
 
         return array(
             'sitename' => $sitename,
@@ -303,7 +305,8 @@ class DataBackupManagementController extends OrderAbstractController
             'estimateTimeMsg' => $estimateTimeMsg,
             'dbFreeSpaceBytes' => $dbFreeSpace[0],
             'uploadFreeSpaceBytes' => $uploadFreeSpace[0],
-            'freeSpace' => $freeSpace
+            'freeSpace' => $freeSpace,
+            'loggedInUsers' => $loggedInUsers
         );
     }
     public function getFreeSpace( $folder ) {

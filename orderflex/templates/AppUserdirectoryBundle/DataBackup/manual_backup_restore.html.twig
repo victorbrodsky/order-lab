@@ -46,6 +46,28 @@
     <p>{{ freeSpace|raw }}</p>
     {#<p>Refresh this page to see the uploaded files in the select box below.</p>#}
 
+    {#Maintenance Mode#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Maintenance Mode</div>
+
+        <div class="panel-body">
+            Recently logged in users:
+            {#select users loggedInUsers#}
+            <select class="combobox" style="width: 30%;">
+                {#<option value=""></option>#}
+                {% for  loggedInUser in loggedInUsers %}
+                    <option value="{{ loggedInUser.id }}">{{ loggedInUser }}</option>
+                {% endfor %}
+            </select>
+
+            {#Current maintenance mode status: [Enabled/Disabled]#}
+            {#If Disabled => [Start Maintenance Mode (Log out users, prevent logins, and show maintenance mode message on the login page)]#}
+
+            {#If Enabled => [Stop Maintenance Mode (Enable users to log in)] button.#}
+
+        </div>
+    </div>
+
     {#Backup panel#}
     <div class="panel panel-default">
         <div class="panel-heading">Generate backup files</div>

@@ -499,6 +499,48 @@ class UserSecurityUtil {
         return $pagination;
     }
 
+    function getLoggedInUserEntities() {
+        //to list logged in users we can search for users with following:
+        //delay = now - maxIdleTime
+        //if( lastActive > (delay) ) => user is active
+
+        $res = $this->getMaxIdleTimeAndMaintenance();
+        $maxIdleTime = $res['maxIdleTime']; //sec
+        //$maintenance = $res['maintenance'];
+        //echo "maxIdleTime=".$maxIdleTime."<br>";
+
+        //$delay = new \DateTime() - $maxIdleTime;
+        //$delay = time() - $maxIdleTime;
+        $delay = new \DateTime();
+        $delay->modify("-".$maxIdleTime." second");
+
+        $repository = $this->em->getRepository(User::class);
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        //$dql->leftJoin('user.keytype','keytype');
+        //$dql->leftJoin('user.infos','infos');
+
+        //use lastActivity > delay (now - $maxIdleTime)
+        $dql->where("user.lastActivity > :delay");
+
+        //and logout > lastActivity
+        //This might provide inaccurate result: if user logged in in two different browser
+        // and then logout in only one of them, the second browser will still have user logged in,
+        // but the page will show that user is logged out
+        //The most accurate way is set lastActivity on every user request, but it might be heavy,
+        // because it will query and modify DB on each request
+        //$dql->where("list.lastActivity > :delay");
+
+        $query = $dql->getQuery();
+        $query->setParameters(array('delay'=>$delay));
+        $users = $query->getResult();
+
+        //dump($users);
+        //exit('111');
+
+        return $users;
+    }
+
     function constructEventLog( $sitename, $user, $request ) {
 
         //get abbreviation from sitename:
