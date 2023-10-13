@@ -772,7 +772,9 @@ class DataBackupManagementController extends OrderAbstractController
                 " is set if the backup is used outside the institutional intranet network".
                 " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
                 " <br>- Verify the site settings.".
-                " Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
+                //" Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
+                " The following site settings parameters were preserved from the original DB:".
+                " mailerdeliveryaddresses, monitorScript, connectionChannel, networkDrivePath, filesBackupConfig".
                 " <br>- Verify cron jobs. Replace the working paths if the server is different".
                 " <br>- It might be necessary to run the deploy_prod.sh script."
             ;
