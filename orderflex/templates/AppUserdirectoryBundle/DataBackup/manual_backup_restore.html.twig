@@ -56,7 +56,7 @@
                 Recently logged in users:
                 {#select users loggedInUsers#}
                 <select id="combobox-loggedin-user" class="combobox-loggedin-user" style="width: 30%;">
-                    <option value="2" data-url="{{ path(employees_sitename~'_showuser', {id: 2}) }}">Test user 2</option>
+                    {#<option value="2" data-url="{{ path(employees_sitename~'_showuser', {id: 2}) }}">Test user 2</option>#}
                     {% for  loggedInUser in loggedInUsers %}
                         <option value="{{ loggedInUser.id }}" data-url="{{ path(employees_sitename~'_showuser', {id: loggedInUser.id}) }}">{{ loggedInUser }}</option>
                     {% endfor %}
