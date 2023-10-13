@@ -347,54 +347,81 @@
                 //matcher: null
             });
 
+            //Logged in user select
+            //https://stackoverflow.com/questions/72708615/how-do-i-make-a-link-open-in-an-option
             var select2 = $(".combobox-loggedin-user").select2({
-                //formatResult: format,
+                formatResult: formatUserSelect2,
                 allowClear: true,
                 dropdownAutoWidth: true,
                 selectOnBlur: false,
                 dataType: 'json',
                 quietMillis: 100,
             }).data('select2');
-//            select2.onSelect = (function(fn) {
-//                console.log("select!");
-//                return function(data, options) {
-//                    console.log("function select!");
-//                }
-//            })(select2.onSelect);
             select2.onSelect = (function(fn) {
-                console.log("select!");
+                //console.log("select!");
                 return function(data, options) {
-                    console.log("function select! data:",data);
+                    //console.log("function select! data:",data);
                     var target;
 
                     if (options != null) {
-                        console.log("options="+options);
+                        //console.log("options=",options);
                         target = $(options.target);
                     }
 
                     if (target && target.hasClass('link')) {
                         var target_url = $(data.element).data('url');
                         //alert(target_url);
-                        console.log("target_url="+target_url);
+                        //console.log("target_url="+target_url);
                         var win = window.open(target_url, '_blank');
                         if (win) {
                             //Browser has allowed it to be opened
                             win.focus();
                         } else {
                             //Browser has blocked it
-                            alert('Please allow popup to preview demoboards');
+                            alert('Please allow popup to preview selected option');
                         }
                     } else {
                         return fn.apply(this, arguments);
                     }
                 }
             })(select2.onSelect);
+            function formatUserSelect2(option) {
+                if (!option.id) {
+                    return option.text; // optgroup
+                } else {
+                    var $option_text = '';
+                    var $option_details = '';
+                    var $option_url = '';
 
-//            $('#combobox-loggedin-user').on('select2:select', function (e) {
-//                var data = e.params.data;
-//                console.log(data);
-//            });
+                    $option_head = $(
+                            '<div style="display: flex; flex-direction: column; flex-wrap: wrap; justify-content: space-between;">'
+                    );
 
+                    $option_text = $(
+                            '<div style="font-size: 14px; min-width: 70%; height: 100%;">' + option.text + '</div>'
+                    );
+
+                    if ($(option.element).data('details')) {
+                        $option_details = $(
+                                '<div style="font-size: 10px; min-width: 70%; height: 100%;">'
+                                + $(option.element).data('details') + '</div>'
+                        );
+                    }
+
+                    if ($(option.element).data('url')) {
+                        $option_url = $(
+                                '<div style="font-size: 9px; height: 100%; width: 30%;"><a class="link" href="'
+                                + $(option.element).data('url') + '">Preview</a></div>'
+                        );
+                    }
+
+                    $option_foot = $(
+                            '</div>'
+                    );
+
+                    return $option_head.append($option_text).append($option_details).append($option_url).append($option_foot);
+                }
+            }
 
             userFineUploader();
 
