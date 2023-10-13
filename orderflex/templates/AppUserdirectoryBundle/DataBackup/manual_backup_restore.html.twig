@@ -55,10 +55,10 @@
             <p>
                 Recently logged in users:
                 {#select users loggedInUsers#}
-                <select class="combobox" style="width: 30%;">
-                    {#<option value=""></option>#}
+                <select id="combobox-loggedin-user" class="combobox-loggedin-user" style="width: 30%;">
+                    <option value="2" data-url="{{ path(employees_sitename~'_showuser', {id: 2}) }}">Test user 2</option>
                     {% for  loggedInUser in loggedInUsers %}
-                        <option value="{{ loggedInUser.id }}">{{ loggedInUser }}</option>
+                        <option value="{{ loggedInUser.id }}" data-url="{{ path(employees_sitename~'_showuser', {id: loggedInUser.id}) }}">{{ loggedInUser }}</option>
                     {% endfor %}
                 </select>
             </p>
@@ -346,6 +346,54 @@
                 //createSearchChoice: null,
                 //matcher: null
             });
+
+            var select2 = $(".combobox-loggedin-user").select2({
+                //formatResult: format,
+                allowClear: true,
+                dropdownAutoWidth: true,
+                selectOnBlur: false,
+                dataType: 'json',
+                quietMillis: 100,
+            }).data('select2');
+//            select2.onSelect = (function(fn) {
+//                console.log("select!");
+//                return function(data, options) {
+//                    console.log("function select!");
+//                }
+//            })(select2.onSelect);
+            select2.onSelect = (function(fn) {
+                console.log("select!");
+                return function(data, options) {
+                    console.log("function select! data:",data);
+                    var target;
+
+                    if (options != null) {
+                        console.log("options="+options);
+                        target = $(options.target);
+                    }
+
+                    if (target && target.hasClass('link')) {
+                        var target_url = $(data.element).data('url');
+                        //alert(target_url);
+                        console.log("target_url="+target_url);
+                        var win = window.open(target_url, '_blank');
+                        if (win) {
+                            //Browser has allowed it to be opened
+                            win.focus();
+                        } else {
+                            //Browser has blocked it
+                            alert('Please allow popup to preview demoboards');
+                        }
+                    } else {
+                        return fn.apply(this, arguments);
+                    }
+                }
+            })(select2.onSelect);
+
+//            $('#combobox-loggedin-user').on('select2:select', function (e) {
+//                var data = e.params.data;
+//                console.log(data);
+//            });
 
 
             userFineUploader();

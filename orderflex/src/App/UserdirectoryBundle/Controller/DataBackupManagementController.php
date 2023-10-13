@@ -291,6 +291,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //Logged in users
         $loggedInUsers = $userSecUtil->getLoggedInUserEntities();
+        
         $maintenanceStatus = $userSecUtil->getSiteSettingParameter('maintenance');
         if( $maintenanceStatus ) {
             $maintenanceStatus = "<span class='text-danger'>Enabled</span>";
