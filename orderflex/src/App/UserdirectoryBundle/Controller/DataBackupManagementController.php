@@ -997,14 +997,6 @@ class DataBackupManagementController extends OrderAbstractController
 
             $output = $this->restoreDBWrapper($backupFilePath,$env='test');
 
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-//            $networkDrivePath = realpath($networkDrivePath);
-//
-//            $res = $this->dbManagePython($networkDrivePath,'restore',$backupFilePath); //Use python script pg_restore
-//
-//            $resStr = $res['message'];
-
             if( $output['status'] == 'OK' ) {
                 $this->addFlash(
                     'notice',
