@@ -112,6 +112,15 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees_home'));
         }
 
+        $param = $userSecUtil->getSingleSiteSettingsParam();
+        if( !$param ) {
+            $this->addFlash(
+                'pnotify-error',
+                "Cannot continue with Backup: Please initialize the system with Miscellaneous on the Site Settings page"
+            );
+            return $this->redirect($this->generateUrl('employees_home'));
+        }
+
         if( file_exists($networkDrivePath) == false ) {
             $this->createBackupPath($networkDrivePath);
             $this->addFlash(
