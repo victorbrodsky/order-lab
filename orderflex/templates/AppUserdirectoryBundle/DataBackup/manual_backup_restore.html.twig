@@ -413,8 +413,11 @@
 
                     if ($(option.element).data('url')) {
                         $option_url = $(
-                                '<div style="font-size: 9px; height: 100%; width: 30%;"><a class="link" href="'
-                                + $(option.element).data('url') + '">Preview</a></div>'
+                                '<div style="font-size: 9px; height: 100%; width: 30%;">' +
+                                '<a ' +
+                                    'class="link" href="' + $(option.element).data('url') + '"' +
+                                    ' style="color: #f4b836;"' +
+                                '>Preview</a></div>'
                         );
                     }
 
