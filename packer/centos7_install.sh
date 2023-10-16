@@ -448,7 +448,7 @@ f_install_prepare () {
 }	
 
 f_install_post() {
-	if [ ! -z "$bashdomainname" ]
+	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Install certbot on Centos ${NC}
 			bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
