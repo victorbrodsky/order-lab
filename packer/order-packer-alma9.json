@@ -113,6 +113,9 @@
 		   "echo @### Install additional.sh. env for python ###",
 		   "bash /usr/local/bin/order-lab/packer/additional.sh",
 		   
+		   "echo @### Install certbot on Alma ###",
+		   "bash /usr/local/bin/order-lab/packer/install-certbot-alma.sh",
+		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 		   "echo @### Check OS Info before deploy_prod.sh ###",
 		   "sudo hostnamectl",

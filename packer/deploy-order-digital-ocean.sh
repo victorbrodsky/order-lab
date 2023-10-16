@@ -232,7 +232,7 @@ else
 fi
 
 
-echo "*** Pre processing json file ***"
+echo "*** Pre processing json file: replace and provide parameters ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" "$ORDERPACKERJSON"
 sed -i -e "s/parameters_bash_file/$parameters/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_dbuser/$dbuser/g" "$ORDERPACKERJSON"

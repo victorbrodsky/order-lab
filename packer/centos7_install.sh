@@ -15,9 +15,15 @@ if [ -z "$bashprotocol" ]
   then 	
     bashprotocol=$3
 fi
+if [ -z "$bashdomainname" ]
+  then 	
+    bashdomainname=$4
+fi
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
+echo bashdomainname=$bashdomainname
 
 #WHITE='\033[1;37m'
 COLOR='\033[1;36m'
@@ -441,6 +447,19 @@ f_install_prepare () {
     sleep 1
 }	
 
+f_install_post() {
+	if [ ! -z "$bashdomainname" ]
+		then 
+			echo -e ${COLOR} Install certbot on Centos ${NC}
+			bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
+		else
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot on Centos ${NC}
+	fi	
+	
+	echo ""
+	sleep 1
+}
+
 f_update_os
 f_install_apache
 f_install_postgresql15
@@ -450,6 +469,7 @@ f_install_util
 f_install_python3
 f_install_order
 f_install_prepare
+f_install_post
 		   
 #https://www.digitalocean.com/community/tutorials/apache-configuration-error-ah00558-could-not-reliably-determine-the-server-s-fully-qualified-domain-name
 #sudo apachectl configtest		   

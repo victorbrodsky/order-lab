@@ -20,7 +20,8 @@
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass",
-			"bashprotocol=bash_protocol"
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname"
 		],
         "script": "centos7_install.sh"
     },
@@ -91,6 +92,10 @@
 	  
 	  {
         "type": "shell",
+		"environment_vars": [		
+			"bashdomainname=bash_domainname",
+			"bashprotocol=bash_protocol"
+		],
         "inline": [ 		   
 		   "echo @### Composer and deploy using orderflex###",
            "cd /usr/local/bin/order-lab/orderflex",					   
@@ -111,7 +116,7 @@
 		   "echo @### Check OS Info after yarn ###",
 		   "sudo hostnamectl",	
 
-			"echo @### Install additional.sh. env for python ###",
+		   "echo @### Install additional.sh. env for python ###",
 		   "bash /usr/local/bin/order-lab/packer/additional.sh",
 		   		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
@@ -125,7 +130,7 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      } 
+      }  
       
    ]
 
