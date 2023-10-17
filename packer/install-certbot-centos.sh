@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#https://certbot.eff.org/instructions?ws=apache&os=centosrhel7
+
 if [ -z "$bashdomainname" ]
   then 	
     bashdomainname=$1
@@ -29,6 +31,15 @@ sleep 3
 
 echo -e ${COLOR} install-cerbot bash script: Install Certbot ${NC}
 sudo snap install --classic certbot
+
+echo ""
+sleep 3
+
+#sudo snap install --classic certbot => error: too early for operation, device not yet seeded or device model not acknowledged
+echo -e ${COLOR} install-cerbot bash script: Install Certbot second attempt ${NC}
+sudo snap install --classic certbot
+
+echo -e ${COLOR} install-cerbot bash script: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo -e ${COLOR} install-cerbot bash script: Get a certificate and have Certbot edit your apache configuration automatically to serve it, turning on HTTPS access in a single step ${NC}
