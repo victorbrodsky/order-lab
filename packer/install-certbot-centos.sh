@@ -32,7 +32,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 echo -e ${COLOR} Get a certificate and have Certbot edit your apache configuration automatically to serve it, turning on HTTPS access in a single step ${NC}
 sudo certbot -n --apache --agree-tos --email oli2002@med.cornell.edu --domains "$bashdomainname"
 
-#Result: 
+#Result: success
 #Successfully received certificate.
 #Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
 #Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
@@ -41,6 +41,21 @@ sudo certbot -n --apache --agree-tos --email oli2002@med.cornell.edu --domains "
 #Certbot has set up a scheduled task to automatically renew this certificate in the background.
 #Deploying certificate
 #Successfully deployed certificate for view.online to /etc/httpd/conf.d/000-default-le-ssl.conf
+
+#Result: error
+#[root@packer-1697489156 ~]# sudo certbot -n --apache --agree-tos --email oli2002@med.cornell.edu --domains view.online
+#Saving debug log to /var/log/letsencrypt/letsencrypt.log
+#Requesting a certificate for view.online
+#
+#Certbot failed to authenticate some domains (authenticator: apache). The Certificate Authority reported these problems:
+#  Domain: view.online
+#  Type:   unauthorized
+#  Detail: 161.35.176.72: Invalid response from https://view.online/.well-known/acme-challenge/905jWgQcz1L8L1QDFCGDbjOHMa9MvIBVABQDZzsvUR4: 404
+#
+#Hint: The Certificate Authority failed to verify the temporary Apache configuration changes made by Certbot. Ensure that the listed domains point to this Apache server and that it is accessible from the internet.
+
+Some challenges have failed.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
 
 echo -e ${COLOR} Test automatic renewal ${NC}
 sudo certbot renew --dry-run
