@@ -1262,6 +1262,29 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        //////// fields for DUO/Dual Authentication connection ////////
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userGroupList' ) {
+            $builder->add('userGroupList', null, array(
+                'label' => 'User Group:',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'serverNetworkList' ) {
+            $builder->add('serverNetworkList', null, array(
+                'label' => 'Server Network Accessibility and Role:',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'tandemPartnerServerList' ) {
+            $builder->add('tandemPartnerServerList', null, array(
+                'label' => 'Tandem Partner Server URL:',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+        //////// EOF fields for DUO/Dual Authentication connection ////////
+
     }
 
 

@@ -20,6 +20,9 @@ if [ ! -z "$bashdomainname" ]
 		exit
 fi	
 
+echo -e ${COLOR} install-cerbot bash script: Disable the original ssl configuration default-ssl.conf  ${NC}
+sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+
 echo -e ${COLOR} install-cerbot bash script: Install Snapd ${NC}
 cd /usr/local/bin/order-lab/orderflex/
 sudo yum install -y snapd
@@ -67,14 +70,11 @@ sudo certbot -n --apache --agree-tos --email oli2002@med.cornell.edu --domains "
 #
 #Hint: The Certificate Authority failed to verify the temporary Apache configuration changes made by Certbot. Ensure that the listed domains point to this Apache server and that it is accessible from the internet.
 
-Some challenges have failed.
-Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+#Some challenges have failed.
+#Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
 
 echo -e ${COLOR} install-cerbot bash script: Test automatic renewal ${NC}
 sudo certbot renew --dry-run
-
-echo -e ${COLOR} install-cerbot bash script: Disable the original ssl configuration default-ssl.conf  ${NC}
-sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
 
 echo -e ${COLOR} install-cerbot bash script: Restart apache server after installing Certbot ${NC}
 sudo systemctl restart httpd.service

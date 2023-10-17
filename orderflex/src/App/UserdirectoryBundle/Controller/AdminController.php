@@ -1076,6 +1076,10 @@ class AdminController extends OrderAbstractController
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
         $logger->notice("Finished populateClassUrl");
 
+        $count_generateUserGroupList = $this->generateUserGroupList();
+        $count_generateServerNetworkList = $this->generateServerNetworkList();
+        $count_generateTandemPartnerServerList = $this->generateTandemPartnerServerList();
+
         //exit('testing generateAll()');
 
         $msg =

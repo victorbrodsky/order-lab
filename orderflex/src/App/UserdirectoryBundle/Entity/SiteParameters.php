@@ -1017,6 +1017,17 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $filesBackupConfig;
 
+    //////// fields for DUO/Dual Authentication connection ////////
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserGroupList')]
+    private $userGroupList;
+
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\ServerNetworkList')]
+    private $serverNetworkList;
+
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\TandemPartnerServerList')]
+    private $tandemPartnerServerList;
+    //////// EOF fields for DUO/Dual Authentication connection ////////
+
 
     function __construct( $addobjects=true )
     {
@@ -4221,6 +4232,54 @@ class SiteParameters {
     public function setFilesBackupConfig($filesBackupConfig)
     {
         $this->filesBackupConfig = $filesBackupConfig;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserGroupList()
+    {
+        return $this->userGroupList;
+    }
+
+    /**
+     * @param mixed $userGroupList
+     */
+    public function setUserGroupList($userGroupList)
+    {
+        $this->userGroupList = $userGroupList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServerNetworkList()
+    {
+        return $this->serverNetworkList;
+    }
+
+    /**
+     * @param mixed $serverNetworkList
+     */
+    public function setServerNetworkList($serverNetworkList)
+    {
+        $this->serverNetworkList = $serverNetworkList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTandemPartnerServerList()
+    {
+        return $this->tandemPartnerServerList;
+    }
+
+    /**
+     * @param mixed $tandemPartnerServerList
+     */
+    public function setTandemPartnerServerList($tandemPartnerServerList)
+    {
+        $this->tandemPartnerServerList = $tandemPartnerServerList;
     }
 
 
