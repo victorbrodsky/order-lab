@@ -22,6 +22,9 @@ sudo yum install -y snapd
 sudo systemctl enable --now snapd.socket
 sudo ln -s /var/lib/snapd/snap /snap
 
+echo ""
+sleep 3
+
 echo -e ${COLOR} Install Certbot ${NC}
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
