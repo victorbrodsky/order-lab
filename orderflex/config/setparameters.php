@@ -342,7 +342,7 @@ if( $conn ) {
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
                 $connection_channel = 'http'; //testing
-                //echo "connection_channel=[".$connection_channel."]\n"; //testing
+                echo "connection_channel=[".$connection_channel."]\n"; //testing
 
 //                /////////////////// mailer_dsn ///////////////////
 //                //Moved to the EmailUtil->getSmtpTransport()
