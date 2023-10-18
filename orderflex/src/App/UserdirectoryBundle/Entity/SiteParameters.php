@@ -1017,7 +1017,7 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $filesBackupConfig;
 
-    //////// fields for DUO/Dual Authentication connection ////////
+    //////// fields for Server Instance connection ////////
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthUserGroupList')]
     private $authUserGroup;
 
@@ -1026,7 +1026,7 @@ class SiteParameters {
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthPartnerServerList')]
     private $authPartnerServer;
-    //////// EOF fields for DUO/Dual Authentication connection ////////
+    //////// EOF fields for Server Instance connection ////////
 
 
     function __construct( $addobjects=true )
@@ -4282,7 +4282,7 @@ class SiteParameters {
         $this->authPartnerServer = $authPartnerServer;
     }
 
-    
+
 
     
 

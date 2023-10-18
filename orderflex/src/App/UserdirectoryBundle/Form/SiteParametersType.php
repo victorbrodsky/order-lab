@@ -1262,11 +1262,11 @@ class SiteParametersType extends AbstractType
             ));
         }
 
-        //////// fields for DUO/Dual Authentication connection ////////
+        //////// fields for Server Instance connection ////////
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authUserGroup' ) {
             $builder->add('authUserGroup', EntityType::class, array(
                 'class' => 'App\UserdirectoryBundle\Entity\AuthUserGroupList',
-                'label' => 'Dual Authentication User Group:',
+                'label' => 'User Group:',
                 'required' => true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -1285,7 +1285,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authServerNetwork' ) {
             $builder->add('authServerNetwork', EntityType::class, array(
                 'class' => 'App\UserdirectoryBundle\Entity\AuthServerNetworkList',
-                'label' => 'Dual Authentication Server Network Accessibility and Role:',
+                'label' => 'Server Network Accessibility and Role:',
                 'required' => true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -1304,7 +1304,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authPartnerServer' ) {
             $builder->add('authPartnerServer', EntityType::class, array(
                 'class' => 'App\UserdirectoryBundle\Entity\AuthPartnerServerList',
-                'label' => 'Dual Authentication Tandem Partner Server URL:',
+                'label' => 'Tandem Partner Server URL:',
                 'required' => true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -1319,7 +1319,7 @@ class SiteParametersType extends AbstractType
                 },
             ));
         }
-        //////// EOF fields for DUO/Dual Authentication connection ////////
+        //////// EOF fields for Server Instance connection ////////
 
     }
 

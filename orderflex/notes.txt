@@ -1795,3 +1795,17 @@ This probably means the server terminated abnormally\n\tbefore or while processi
 terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
 This probably means the server terminated abnormally\n\tbefore or while processing the request. at
 /usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/PDO/Statement.php:121)"} []
+
+
+Certbot
+2023-10-18 15:29:01,068:DEBUG:urllib3.connectionpool:http://localhost:None "GET /v2/connections?snap=certbot&interface=content HTTP/1.1" 200 97
+2023-10-18 15:29:01,266:DEBUG:certbot._internal.main:certbot version: 2.7.1
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Location of certbot entry point: /snap/certbot/3390/bin/certbot
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Arguments: ['--dry-run', '--preconfigured-renewal']
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#apache,PluginEntryPoint#manual,PluginEntryPoint#nginx,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
+2023-10-18 15:29:01,287:DEBUG:certbot._internal.log:Root logging level set at 30
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: No simulated renewals were attempted.
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.renewal:no renewal failures
