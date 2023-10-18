@@ -1809,3 +1809,26 @@ Certbot
 2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: No simulated renewals were attempted.
 2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 2023-10-18 15:29:01,289:DEBUG:certbot._internal.renewal:no renewal failures
+
+[root@packer-1697647546 ~]# sudo certbot -n -v --apache --agree-tos --email oli2002@med.cornell.edu --domains view.online
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator apache, Installer apache
+Requesting a certificate for view.online
+Performing the following challenges:
+http-01 challenge for view.online
+Waiting for verification...
+Challenge failed for domain view.online
+http-01 challenge for view.online
+
+Certbot failed to authenticate some domains (authenticator: apache). The Certificate Authority reported these problems:
+  Domain: view.online
+  Type:   dns
+  Detail: no valid A records found for view.online; no valid AAAA records found for view.online
+
+Hint: The Certificate Authority failed to verify the temporary Apache configuration changes made by Certbot. Ensure that the listed domains point to this Apache server and that it is accessible from the internet.
+
+Cleaning up challenges
+Some challenges have failed.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+[root@packer-1697647546 ~]#
+
