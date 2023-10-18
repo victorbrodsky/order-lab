@@ -8019,7 +8019,7 @@ class AdminController extends OrderAbstractController
 
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
-            "authtandempartnerserver" => array('AuthTandemPartnerServerList','authtandempartnerserver-list','Dual Authentication Tandem Partner Server URL'),
+            "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
 
         );
 

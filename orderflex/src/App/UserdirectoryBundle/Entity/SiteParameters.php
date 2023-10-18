@@ -1024,8 +1024,8 @@ class SiteParameters {
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthServerNetworkList')]
     private $authServerNetwork;
 
-    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthTandemPartnerServerList')]
-    private $authTandemPartnerServer;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthPartnerServerList')]
+    private $authPartnerServer;
     //////// EOF fields for DUO/Dual Authentication connection ////////
 
 
@@ -4269,18 +4269,20 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getAuthTandemPartnerServer()
+    public function getAuthPartnerServer()
     {
-        return $this->authTandemPartnerServer;
+        return $this->authPartnerServer;
     }
 
     /**
-     * @param mixed $authTandemPartnerServer
+     * @param mixed $authPartnerServer
      */
-    public function setAuthTandemPartnerServer($authTandemPartnerServer)
+    public function setAuthPartnerServer($authPartnerServer)
     {
-        $this->authTandemPartnerServer = $authTandemPartnerServer;
+        $this->authPartnerServer = $authPartnerServer;
     }
+
+    
 
     
 

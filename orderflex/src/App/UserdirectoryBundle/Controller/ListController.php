@@ -302,6 +302,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/', name: 'chartvisualizations-list', methods: ['GET'])]
     #[Route(path: '/list/vacreqholidays/', name: 'vacreqholidays-list', methods: ['GET'])]
     #[Route(path: '/list/vacreqobservedholidays/', name: 'vacreqobservedholidays-list', methods: ['GET'])]
+    #[Route(path: '/list/authusergroup/', name: 'authusergroup-list', methods: ['GET'])]
+    #[Route(path: '/list/authservernetwork/', name: 'authservernetwork-list', methods: ['GET'])]
+    #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -990,6 +993,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/', name: 'chartvisualizations_create', methods: ['POST'])]
     #[Route(path: '/list/vacreqholidays/', name: 'vacreqholidays_create', methods: ['POST'])]
     #[Route(path: '/list/vacreqobservedholidays/', name: 'vacreqobservedholidays_create', methods: ['POST'])]
+    #[Route(path: '/list/authusergroup/', name: 'authusergroup_create', methods: ['POST'])]
+    #[Route(path: '/list/authservernetwork/', name: 'authservernetwork_create', methods: ['POST'])]
+    #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1351,6 +1357,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/new', name: 'chartvisualizations_new', methods: ['GET'])]
     #[Route(path: '/list/vacreqholidays/new', name: 'vacreqholidays_new', methods: ['GET'])]
     #[Route(path: '/list/vacreqobservedholidays/new', name: 'vacreqobservedholidays_new', methods: ['GET'])]
+    #[Route(path: '/list/authusergroup/new', name: 'authusergroup_new', methods: ['GET'])]
+    #[Route(path: '/list/authservernetwork/new', name: 'authservernetwork_new', methods: ['GET'])]
+    #[Route(path: '/list/authpartnerserver/new', name: 'authpartnerserver_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1660,6 +1669,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_show', methods: ['GET'])]
     #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_show', methods: ['GET'])]
     #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_show', methods: ['GET'])]
+    #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_show', methods: ['GET'])]
+    #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_show', methods: ['GET'])]
+    #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -1962,6 +1974,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/{id}/edit', name: 'chartvisualizations_edit', methods: ['GET'])]
     #[Route(path: '/list/vacreqholidays/{id}/edit', name: 'vacreqholidays_edit', methods: ['GET'])]
     #[Route(path: '/list/vacreqobservedholidays/{id}/edit', name: 'vacreqobservedholidays_edit', methods: ['GET'])]
+    #[Route(path: '/list/authusergroup/{id}/edit', name: 'authusergroup_edit', methods: ['GET'])]
+    #[Route(path: '/list/authservernetwork/{id}/edit', name: 'authservernetwork_edit', methods: ['GET'])]
+    #[Route(path: '/list/authpartnerserver/{id}/edit', name: 'authpartnerserver_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2314,6 +2329,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_update', methods: ['PUT'])]
     #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_update', methods: ['PUT'])]
     #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_update', methods: ['PUT'])]
+    #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_update', methods: ['PUT'])]
+    #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_update', methods: ['PUT'])]
+    #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3157,6 +3175,19 @@ class ListController extends OrderAbstractController
                 $bundleName = "VacReqBundle";
                 break;
 
+            case "authusergroup":
+                $className = "AuthUserGroupList";
+                $displayName = "Dual Authentication User Group List";
+                break;
+            case "authservernetwork":
+                $className = "AuthServerNetworkList";
+                $displayName = "Dual Authentication Server Network Accessibility and Role";
+                break;
+            case "authpartnerserver":
+                $className = "AuthPartnerServerList";
+                $displayName = "Dual Authentication Tandem Partner Server URL";
+                break;
+
             case "healthcareproviderspecialty":
                 $className = "HealthcareProviderSpecialtiesList";
                 $displayName = "Healthcare Provider Specialties";
@@ -3415,8 +3446,6 @@ class ListController extends OrderAbstractController
                 $displayName = "Chart Visualization List";
                 $bundleName = "DashboardBundle";
                 break;
-
-            //TODO: add list authusergroup, authservernetwork, authtandempartnerserver
 
             case "custom000":
                 $className = "Custom000List";
@@ -4143,6 +4172,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/chartvisualizations/{id}', name: 'chartvisualizations_delete', methods: ['DELETE'])]
     #[Route(path: '/list/vacreqholidays/{id}', name: 'vacreqholidays_delete', methods: ['DELETE'])]
     #[Route(path: '/list/vacreqobservedholidays/{id}', name: 'vacreqobservedholidays_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -4152,6 +4184,7 @@ class ListController extends OrderAbstractController
         return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         //return $this->deleteList($request, $id);
     }
+
     public function deleteList($request, $id) {
 
         $routeName = $request->get('_route');

@@ -22,15 +22,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 //Dual Authentication Tandem Partner Server URL: [https://view.med.cornell.edu]
 
-#[ORM\Table(name: 'user_authtandempartnerserverlist')]
+#[ORM\Table(name: 'user_authpartnerserverlist')]
 #[ORM\Entity]
-class AuthTandemPartnerServerList extends ListAbstract
+class AuthPartnerServerList extends ListAbstract
 {
 
-    #[ORM\OneToMany(targetEntity: 'AuthTandemPartnerServerList', mappedBy: 'original')]
+    #[ORM\OneToMany(targetEntity: 'AuthPartnerServerList', mappedBy: 'original')]
     protected $synonyms;
 
-    #[ORM\ManyToOne(targetEntity: 'AuthTandemPartnerServerList', inversedBy: 'synonyms')]
+    #[ORM\ManyToOne(targetEntity: 'AuthPartnerServerList', inversedBy: 'synonyms')]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 

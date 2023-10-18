@@ -1277,8 +1277,8 @@ class SiteParametersType extends AbstractType
             ));
         }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authTandemPartnerServer' ) {
-            $builder->add('authTandemPartnerServer', null, array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authPartnerServer' ) {
+            $builder->add('authPartnerServer', null, array(
                 'label' => 'Dual Authentication Tandem Partner Server URL:',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
