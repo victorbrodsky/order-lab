@@ -20,8 +20,8 @@ if [ ! -z "$bashdomainname" ]
 		exit
 fi	
 
-echo -e ${COLOR} install-cerbot bash script: Disable the original ssl configuration default-ssl.conf  ${NC}
-sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+#echo -e ${COLOR} install-cerbot bash script: Disable the original ssl configuration default-ssl.conf  ${NC}
+#sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
 
 echo -e ${COLOR} install-cerbot bash script: Install Snapd ${NC}
 cd /usr/local/bin/order-lab/orderflex/
