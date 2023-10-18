@@ -1263,23 +1263,23 @@ class SiteParametersType extends AbstractType
         }
 
         //////// fields for DUO/Dual Authentication connection ////////
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userGroupList' ) {
-            $builder->add('userGroupList', null, array(
-                'label' => 'User Group:',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authUserGroup' ) {
+            $builder->add('authUserGroup', null, array(
+                'label' => 'Dual Authentication User Group:',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'serverNetworkList' ) {
-            $builder->add('serverNetworkList', null, array(
-                'label' => 'Server Network Accessibility and Role:',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authServerNetwork' ) {
+            $builder->add('authServerNetwork', null, array(
+                'label' => 'Dual Authentication Server Network Accessibility and Role:',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'tandemPartnerServerList' ) {
-            $builder->add('tandemPartnerServerList', null, array(
-                'label' => 'Tandem Partner Server URL:',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authTandemPartnerServer' ) {
+            $builder->add('authTandemPartnerServer', null, array(
+                'label' => 'Dual Authentication Tandem Partner Server URL:',
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }

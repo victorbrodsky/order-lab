@@ -20,6 +20,9 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
+use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
+use App\UserdirectoryBundle\Entity\AuthTandemPartnerServerList;
+use App\UserdirectoryBundle\Entity\AuthUserGroupList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
 use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
@@ -1076,9 +1079,9 @@ class AdminController extends OrderAbstractController
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
         $logger->notice("Finished populateClassUrl");
 
-        $count_generateUserGroupList = $this->generateUserGroupList();
-        $count_generateServerNetworkList = $this->generateServerNetworkList();
-        $count_generateTandemPartnerServerList = $this->generateTandemPartnerServerList();
+        $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
+        $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
+        $count_generateAuthTandemPartnerServerList = $this->generateAuthTandemPartnerServerList();
 
         //exit('testing generateAll()');
 
@@ -1219,6 +1222,10 @@ class AdminController extends OrderAbstractController
             'generateChartUpdateFrequencyList='.$count_generateChartUpdateFrequencyList.', '.
             'generateChartVisualizationList='.$count_generateChartVisualizationList.', '.
             'generateChartsList='.$count_generateChartsList.', '.
+
+            'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
+            'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
+            'generateAuthTandemPartnerServerList='.$count_generateAuthTandemPartnerServerList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8009,6 +8016,11 @@ class AdminController extends OrderAbstractController
             "vacreqapprovaltypes" => array('VacReqApprovalTypeList','vacreqapprovaltypes-list','Vacation Request Approval Type List'),
             "vacreqholidays" => array('VacReqHolidayList','vacreqholidays-list','Vacation Request Holidays List'),
             "vacreqobservedholidays" => array('VacReqObservedHolidayList','vacreqobservedholidays-list','Vacation Request Observed Holidays List'),
+
+            "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
+            "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
+            "authtandempartnerserver" => array('AuthTandemPartnerServerList','authtandempartnerserver-list','Dual Authentication Tandem Partner Server URL'),
+
         );
 
         if( $withcustom ) {
@@ -11658,6 +11670,92 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+
+    public function generateAuthUserGroupList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "WCM Department of Pathology and Laboratory Medicine",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(AuthUserGroupList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AuthUserGroupList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateAuthServerNetworkList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Intranet (Solo)",
+            "Intranet (Tandem)",
+            "Internet (Solo) ",
+            "Internet (Tandem)",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(AuthServerNetworkList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AuthServerNetworkList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateAuthTandemPartnerServerList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "https://view.med.cornell.edu",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(AuthTandemPartnerServerList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AuthTandemPartnerServerList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
     //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
     public function generateTransResRequestCategoryType() {

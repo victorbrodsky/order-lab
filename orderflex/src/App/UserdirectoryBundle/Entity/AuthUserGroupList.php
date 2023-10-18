@@ -20,17 +20,17 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//Server Network Accessibility and Role: [Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)]
+//Dual Authentication User Group: [WCM Department of Pathology and Laboratory Medicine]
 
-#[ORM\Table(name: 'user_servernetworklist')]
+#[ORM\Table(name: 'user_authusergrouplist')]
 #[ORM\Entity]
-class ServerNetworkList extends ListAbstract
+class AuthUserGroupList extends ListAbstract
 {
 
-    #[ORM\OneToMany(targetEntity: 'ServerNetworkList', mappedBy: 'original')]
+    #[ORM\OneToMany(targetEntity: 'AuthUserGroupList', mappedBy: 'original')]
     protected $synonyms;
 
-    #[ORM\ManyToOne(targetEntity: 'ServerNetworkList', inversedBy: 'synonyms')]
+    #[ORM\ManyToOne(targetEntity: 'AuthUserGroupList', inversedBy: 'synonyms')]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 

@@ -3416,6 +3416,8 @@ class ListController extends OrderAbstractController
                 $bundleName = "DashboardBundle";
                 break;
 
+            //TODO: add list authusergroup, authservernetwork, authtandempartnerserver
+
             case "custom000":
                 $className = "Custom000List";
                 $displayName = "Custom000 List";

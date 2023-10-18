@@ -1018,14 +1018,14 @@ class SiteParameters {
     private $filesBackupConfig;
 
     //////// fields for DUO/Dual Authentication connection ////////
-    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\UserGroupList')]
-    private $userGroupList;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthUserGroupList')]
+    private $authUserGroup;
 
-    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\ServerNetworkList')]
-    private $serverNetworkList;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthServerNetworkList')]
+    private $authServerNetwork;
 
-    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\TandemPartnerServerList')]
-    private $tandemPartnerServerList;
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthTandemPartnerServerList')]
+    private $authTandemPartnerServer;
     //////// EOF fields for DUO/Dual Authentication connection ////////
 
 
@@ -4237,50 +4237,54 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getUserGroupList()
+    public function getAuthUserGroup()
     {
-        return $this->userGroupList;
+        return $this->authUserGroup;
     }
 
     /**
-     * @param mixed $userGroupList
+     * @param mixed $authUserGroup
      */
-    public function setUserGroupList($userGroupList)
+    public function setAuthUserGroup($authUserGroup)
     {
-        $this->userGroupList = $userGroupList;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServerNetworkList()
-    {
-        return $this->serverNetworkList;
-    }
-
-    /**
-     * @param mixed $serverNetworkList
-     */
-    public function setServerNetworkList($serverNetworkList)
-    {
-        $this->serverNetworkList = $serverNetworkList;
+        $this->authUserGroup = $authUserGroup;
     }
 
     /**
      * @return mixed
      */
-    public function getTandemPartnerServerList()
+    public function getAuthServerNetwork()
     {
-        return $this->tandemPartnerServerList;
+        return $this->authServerNetwork;
     }
 
     /**
-     * @param mixed $tandemPartnerServerList
+     * @param mixed $authServerNetwork
      */
-    public function setTandemPartnerServerList($tandemPartnerServerList)
+    public function setAuthServerNetwork($authServerNetwork)
     {
-        $this->tandemPartnerServerList = $tandemPartnerServerList;
+        $this->authServerNetwork = $authServerNetwork;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthTandemPartnerServer()
+    {
+        return $this->authTandemPartnerServer;
+    }
+
+    /**
+     * @param mixed $authTandemPartnerServer
+     */
+    public function setAuthTandemPartnerServer($authTandemPartnerServer)
+    {
+        $this->authTandemPartnerServer = $authTandemPartnerServer;
+    }
+
+    
+
+
 
 
 

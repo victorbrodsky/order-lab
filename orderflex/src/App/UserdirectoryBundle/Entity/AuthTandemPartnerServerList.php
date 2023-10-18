@@ -20,17 +20,17 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//User Group: [WCM Department of Pathology and Laboratory Medicine]
+//Dual Authentication Tandem Partner Server URL: [https://view.med.cornell.edu]
 
-#[ORM\Table(name: 'user_usergrouplist')]
+#[ORM\Table(name: 'user_authtandempartnerserverlist')]
 #[ORM\Entity]
-class UserGroupList extends ListAbstract
+class AuthTandemPartnerServerList extends ListAbstract
 {
 
-    #[ORM\OneToMany(targetEntity: 'UserGroupList', mappedBy: 'original')]
+    #[ORM\OneToMany(targetEntity: 'AuthTandemPartnerServerList', mappedBy: 'original')]
     protected $synonyms;
 
-    #[ORM\ManyToOne(targetEntity: 'UserGroupList', inversedBy: 'synonyms')]
+    #[ORM\ManyToOne(targetEntity: 'AuthTandemPartnerServerList', inversedBy: 'synonyms')]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
