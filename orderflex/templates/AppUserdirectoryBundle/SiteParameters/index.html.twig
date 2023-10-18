@@ -204,6 +204,29 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'remoteAccessUrl'}) }}">Edit</a></td>
             </tr>
 
+            {#fields for DUO/Dual Authentication connection#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>DUO/Dual Authentication:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Dual Authentication User Group</td>
+                <td>{{ entity.authUserGroup }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authUserGroup'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Dual Authentication Server Network Accessibility and Role</td>
+                <td>{{ entity.authServerNetwork }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authServerNetwork'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Dual Authentication Tandem Partner Server URL</td>
+                <td>{{ entity.authPartnerServer }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authPartnerServer'}) }}">Edit</a></td>
+            </tr>
+
+
             {#Maintenance#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

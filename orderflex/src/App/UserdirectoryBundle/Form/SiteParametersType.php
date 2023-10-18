@@ -1264,23 +1264,71 @@ class SiteParametersType extends AbstractType
 
         //////// fields for DUO/Dual Authentication connection ////////
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authUserGroup' ) {
-            $builder->add('authUserGroup', null, array(
+//            $builder->add('authUserGroup', null, array(
+//                'label' => 'Dual Authentication User Group:',
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+            $builder->add('authUserGroup', EntityType::class, array(
+                'class' => 'App\UserdirectoryBundle\Entity\AuthUserGroupList',
                 'label' => 'Dual Authentication User Group:',
-                'attr' => array('class' => 'combobox combobox-width')
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authServerNetwork' ) {
-            $builder->add('authServerNetwork', null, array(
+//            $builder->add('authServerNetwork', null, array(
+//                'label' => 'Dual Authentication Server Network Accessibility and Role:',
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+            $builder->add('authServerNetwork', EntityType::class, array(
+                'class' => 'App\UserdirectoryBundle\Entity\AuthServerNetworkList',
                 'label' => 'Dual Authentication Server Network Accessibility and Role:',
-                'attr' => array('class' => 'combobox combobox-width')
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authPartnerServer' ) {
-            $builder->add('authPartnerServer', null, array(
+//            $builder->add('authPartnerServer', null, array(
+//                'label' => 'Dual Authentication Tandem Partner Server URL:',
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+            $builder->add('authPartnerServer', EntityType::class, array(
+                'class' => 'App\UserdirectoryBundle\Entity\AuthPartnerServerList',
                 'label' => 'Dual Authentication Tandem Partner Server URL:',
-                'attr' => array('class' => 'combobox combobox-width')
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
         //////// EOF fields for DUO/Dual Authentication connection ////////

@@ -21,7 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
-use App\UserdirectoryBundle\Entity\AuthTandemPartnerServerList;
+use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
@@ -1081,7 +1081,7 @@ class AdminController extends OrderAbstractController
 
         $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
         $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
-        $count_generateAuthTandemPartnerServerList = $this->generateAuthTandemPartnerServerList();
+        $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
 
         //exit('testing generateAll()');
 
@@ -1225,7 +1225,7 @@ class AdminController extends OrderAbstractController
 
             'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
-            'generateAuthTandemPartnerServerList='.$count_generateAuthTandemPartnerServerList.', '.
+            'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -11728,7 +11728,7 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-    public function generateAuthTandemPartnerServerList() {
+    public function generateAuthPartnerServerList() {
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -11739,12 +11739,12 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository(AuthTandemPartnerServerList::class)->findOneByName($name);
+            $listEntity = $em->getRepository(AuthPartnerServerList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
-            $listEntity = new AuthTandemPartnerServerList();
+            $listEntity = new AuthPartnerServerList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
