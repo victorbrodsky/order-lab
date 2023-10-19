@@ -339,7 +339,8 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
   
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
-	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
+	#DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name www --record-data $DROPLETIP -v)
+	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
 	DROPLETIP="www.$domainname"
   else

@@ -1832,3 +1832,5 @@ Some challenges have failed.
 Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
 [root@packer-1697647546 ~]#
 
+TODO: Try to --record-name www and then remove prefix www from sudo certbot -n -v --apache
+
