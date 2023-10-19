@@ -87,11 +87,11 @@ class ImportFromOldSystem {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $this->path = $projectRoot . DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
-        if( file_exists($this->path) ) {
-            //echo $row.": The file exists: $inputFilePath <br>";
-        } else {
-            exit("Source folder does not exist. path=[".$this->path."]<br>");
-        }
+//        if( file_exists($this->path) ) {
+//            //echo $row.": The file exists: $inputFilePath <br>";
+//        } else {
+//            exit("Source folder does not exist. path=[".$this->path."]<br>");
+//        }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
@@ -101,6 +101,12 @@ class ImportFromOldSystem {
 
     //http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
     public function importApplicationsFilesInterview($max) {
+
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("importApplicationsFilesInterview: Source folder does not exist. path=[".$this->path."]<br>");
+        }
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -412,6 +418,11 @@ class ImportFromOldSystem {
         $em = $this->em;
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("importApplicationsFiles: Source folder does not exist. path=[".$this->path."]<br>");
+        }
 
         try {
             //$inputFileName = $this->path . "/DB_file1/" . "PRA_APPLICANT_CV_INFO.csv";
@@ -681,6 +692,12 @@ class ImportFromOldSystem {
         dump($this->enrolmentYearArr);
 
         //exit('111');
+
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("importApplications: Source folder does not exist. path=[".$this->path."]<br>");
+        }
 
         try {
             $inputFileName = $this->path . "/DB/" . "PRA_APPLICANT_INFO.csv";
@@ -1386,6 +1403,12 @@ class ImportFromOldSystem {
 
         $logger = $this->container->get('logger');
 
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("getEnrolmentYear: Source folder does not exist. path=[".$this->path."]<br>");
+        }
+
         $inputFileName = $this->path . "/DB/"."PRA_ENROLLMENT_INFO.csv";
 
         try {
@@ -1512,6 +1535,12 @@ class ImportFromOldSystem {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $authUtil = $this->container->get('authenticator_utility');
+
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("getFacultyResident: Source folder does not exist. path=[".$this->path."]<br>");
+        }
 
         $inputFileName = $this->path . "/DB/"."PRA_FACULTY_RESIDENT_INFO.csv";
 
