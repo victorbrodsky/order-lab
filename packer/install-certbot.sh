@@ -80,26 +80,26 @@ echo -e ${COLOR} Script install-cerbot.sh: Install Snapd according to OS ${NC}
 
 #https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script
 YUM_PACKAGE_NAME="snapd"
-if ["$OSNAME" = "CentOS"] 
+if [ "$OSNAME" = "CentOS" ] 
 then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on CentOS"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Red"] 
+elif [ "$OSNAME" = "Red" ] 
 then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on RedHat"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Ubuntu"] 
+elif [ "$OSNAME" = "Ubuntu" ] 
 then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Ubuntu"
     echo "==============================================="
     #sudo apt-get update
     sudo apt-get install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Alma"] 
+elif [ "$OSNAME" = "Alma" ] 
 then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Alma"
@@ -164,7 +164,7 @@ echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
 sudo certbot renew --dry-run
 
 echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
-if ["$OSNAME" = "Ubuntu"] 
+if [ "$OSNAME" = "Ubuntu" ] 
 	then
 		echo "==============================================="
 		echo "Restart Apache on Ubuntu $OSNAME"
