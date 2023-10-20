@@ -86,18 +86,21 @@ then
     echo "Installing packages $YUM_PACKAGE_NAME on CentOS"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Red"] then
+elif ["$OSNAME" = "Red"] 
+then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on RedHat"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Ubuntu"] then
+elif ["$OSNAME" = "Ubuntu"] 
+then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Ubuntu"
     echo "==============================================="
     #sudo apt-get update
     sudo apt-get install -y "$YUM_PACKAGE_NAME"
-elif ["$OSNAME" = "Alma"] then
+elif ["$OSNAME" = "Alma"] 
+then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Alma"
     echo "==============================================="
