@@ -324,9 +324,9 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 			echo "Created domain DOMAINRES=$DOMAINRES"
 	fi	
   
-	#check and delete existing domain DNS records www
+	#check and delete existing domain DNS records www or @
 	#1) doctl compute domain records list $domainname
-	LIST=$(doctl compute domain records list $domainname | grep www | awk '{print $1}')
+	LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | awk '{print $1}')
 	#listinfo=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
@@ -338,6 +338,8 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	done
   
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
+	#'--record-name www' will create domain name with www prefix, i.e. www.view.online
+	#'--record-name @' will create domain name without prefix, i.e. view.online
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
 	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
