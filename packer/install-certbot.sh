@@ -42,7 +42,7 @@ sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
 
 echo -e ${COLOR} Script install-cerbot.sh: Restart apache server before installing Certbot ${NC}
 #Ubuntu: sudo systemctl restart apache2.service
-if "$OSNAME" == "Ubuntu" 
+if ["$OSNAME" == "Ubuntu"]; 
 	then
 		echo "==============================================="
 		echo "Restart Apache on Ubuntu $OSNAME"
