@@ -20,15 +20,15 @@ if [ ! -z "$bashdomainname" ]
 		exit
 fi	
 
-OSNAME = ''
+OSNAME=""
 if cat /etc/*release | grep ^NAME | grep CentOS; then
-    OSNAME = 'CentOS'
+    OSNAME="CentOS"
  elif cat /etc/*release | grep ^NAME | grep Red; then
-    OSNAME = 'Red'
+    OSNAME="Red"
  elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
-    OSNAME = 'Ubuntu'
+    OSNAME="Ubuntu"
  elif cat /etc/*release | grep ^NAME | grep Alma; then
-    OSNAME = 'Alma'
+    OSNAME="Alma"
  else
     echo "OS NOT DETECTED, couldn't install packages"
     exit 1;
