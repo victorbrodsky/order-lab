@@ -324,9 +324,9 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 			echo "Created domain DOMAINRES=$DOMAINRES"
 	fi	
   
-	#check and delete existing domain DNS records www or @
+	#check and delete existing domain DNS's A records with record 'www' or '@'
 	#1) doctl compute domain records list $domainname
-	LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | awk '{print $1}')
+	LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | grep -w A | awk '{print $1}')
 	#listinfo=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	

@@ -450,10 +450,11 @@ f_install_prepare () {
 f_install_post() {
 	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
-			echo -e ${COLOR} Install certbot on Centos ${NC}
-			bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
+			echo -e ${COLOR} Install certbot on all OS ${NC}
+			#bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
+			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname"
 		else
-			echo -e ${COLOR} Domain name is not provided: Do not install certbot on Centos ${NC}
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi	
 	
 	echo ""
