@@ -20,8 +20,36 @@ if [ ! -z "$bashdomainname" ]
 		exit
 fi	
 
+OSNAME = ''
+if cat /etc/*release | grep ^NAME | grep CentOS; then
+    OSNAME = 'CentOS'
+ elif cat /etc/*release | grep ^NAME | grep Red; then
+    OSNAME = 'Red'
+ elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+    OSNAME = 'Ubuntu'
+ elif cat /etc/*release | grep ^NAME | grep Alma; then
+    OSNAME = 'Alma'
+ else
+    echo "OS NOT DETECTED, couldn't install packages"
+    exit 1;
+ fi
+ echo "==============================================="
+ echo "Installing packages on $OSNAME"
+ echo "==============================================="
+
 echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf  ${NC}
 sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+
+echo -e ${COLOR} Script install-cerbot.sh: Restart apache server before installing Certbot ${NC}
+#Ubuntu: sudo systemctl restart apache2.service
+if ["$OSNAME" == "Ubuntu"]; then
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
+else	
+	sudo systemctl restart httpd.service
+	sudo systemctl status httpd.service
+fi
+
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd ${NC}
 cd /usr/local/bin/order-lab/orderflex/
@@ -45,29 +73,29 @@ echo -e ${COLOR} Script install-cerbot.sh: Install Snapd according to OS ${NC}
 
 #https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script
 YUM_PACKAGE_NAME = "snapd"
- if cat /etc/*release | grep ^NAME | grep CentOS; then
+ if ["$OSNAME" == "CentOS"]; then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on CentOS"
 	echo "==============================================="
     sudo yum install -y $YUM_PACKAGE_NAME
- elif cat /etc/*release | grep ^NAME | grep Red; then
+ elif ["$OSNAME" == "Red"]; then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on RedHat"
 	echo "==============================================="
     sudo yum install -y $YUM_PACKAGE_NAME
- elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+ elif ["$OSNAME" == "Ubuntu"]; then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Ubuntu"
     echo "==============================================="
     #sudo apt-get update
     sudo apt-get install -y $YUM_PACKAGE_NAME
- elif cat /etc/*release | grep ^NAME | grep Alma; then
+ elif ["$OSNAME" == "Alma"]; then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Alma"
     echo "==============================================="
     sudo dnf install -y $YUM_PACKAGE_NAME
  else
-    echo "OS NOT DETECTED, couldn't install package $PACKAGE"
+    echo "OS NOT DETECTED, couldn't install package $YUM_PACKAGE_NAME"
     exit 1;
  fi
 
@@ -125,7 +153,12 @@ echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
 sudo certbot renew --dry-run
 
 echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
-sudo systemctl restart httpd.service
-sudo systemctl status httpd.service
+if ["$OSNAME" == "Ubuntu"]; then
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
+else	
+	sudo systemctl restart httpd.service
+	sudo systemctl status httpd.service
+fi
 
 
