@@ -444,11 +444,3 @@ else
         # Unknown.
 		echo "open a web browser manually and go to $DROPLETIPWEB"
 fi
-
-
-#if TESTING
-#else
-# echo "Testing"
-#fi #if TESTING
-
-
