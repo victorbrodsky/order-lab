@@ -225,7 +225,7 @@ class AdminController extends OrderAbstractController
             $sslcertificate.", email=".$email
         );
 
-        if( 1 || count($users) == 0 ) {
+        if( count($users) == 0 ) {
             //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
             //$domainname = "domainname"; //get from url
 
