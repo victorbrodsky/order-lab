@@ -285,12 +285,12 @@ sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 
-
+############ Run packer json file ############
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 #PACKEROUT=$(packer build "$ORDERPACKERJSON" | tail -1)
 #echo "*** PACKEROUT=$PACKEROUT ***"
 packer build "$ORDERPACKERJSON" | tee buildpacker.log
-
+############ EOF Run packer json file ############
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 #Use Packer v1.7.0 or later
