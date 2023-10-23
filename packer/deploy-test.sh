@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#deploy-test.sh https view.online
+#bash deploy-test.sh https view.online installcertbot oli2002@med.cornell.edu 159.203.164.243
 
 if [ -z "$protocol" ]
   then
@@ -33,7 +33,7 @@ COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
 #ip = "159.203.164.243"
-DROPLETIP = "$domainname" #"view.online"
+DROPLETIP="$domainname" #"view.online"
 
 f_install_certbot() {
   if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
@@ -48,7 +48,8 @@ f_install_certbot() {
 			echo -e ${COLOR} Install certbot on the Apache server ${NC}
 			#bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
 			#https://www.digitalocean.com/community/questions/run-shell-script-on-droplet-using-api
-			ssh root@ip 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
+			echo -e ${COLOR} ssh root@ip 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh ${NC}
+			ssh root@"$ip" 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi
