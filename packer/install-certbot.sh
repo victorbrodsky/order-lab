@@ -7,10 +7,34 @@ if [ -z "$bashdomainname" ]
     bashdomainname=$1
 fi
 
+if [ -z "$bashsslcertificate" ]
+  then
+    bashsslcertificate=$2
+fi
+
+if [ -z "$bashemail" ]
+  then
+    bashemail=$3
+fi
+
 echo Script install-cerbot.sh: bashdomainname=$bashdomainname
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
+
+if [ "$bashsslcertificate" != "installcertbot" ]
+  then
+    echo "Abort certbot installation: sslcertificate option is not 'installcertbot'"
+    exit 0
+fi
+
+if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
+  then
+    #email='myemail@myemail.com'
+    echo "Error: email is not provided for installcertbot option"
+    echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
+    exit 0
+fi
 
 if [ ! -z "$bashdomainname" ]
 	then 

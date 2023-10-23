@@ -470,7 +470,7 @@ f_install_post() {
 		then 
 			echo -e ${COLOR} Install certbot ${NC}
 			#bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
-			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$email"
+			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$email"
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot ${NC}
 	fi	
