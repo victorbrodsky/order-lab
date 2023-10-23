@@ -411,6 +411,7 @@ if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
 	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/$email"
 	    else
 	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	  fi
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
