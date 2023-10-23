@@ -156,8 +156,8 @@ echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
-echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email oli2002@med.cornell.edu --domains "$bashdomainname" ${NC}
-sudo certbot -n -v --apache --agree-tos --email oli2002@med.cornell.edu --domains "$bashdomainname"
+echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$bashemail" --domains "$bashdomainname" ${NC}
+sudo certbot -n -v --apache --agree-tos --email "$bashemail" --domains "$bashdomainname"
 
 #Result: success
 #Successfully received certificate.
