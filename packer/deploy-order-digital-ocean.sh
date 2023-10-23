@@ -321,7 +321,6 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 #IMAGENAME=${vars[1]}
 #echo "image ID=$IMAGEID; name=$IMAGENAME"
 
-
 echo "*** Post processing json file ***"
 sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
 sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
@@ -399,14 +398,16 @@ fi
 
 #We must install certbot after domain is created on the DigitalOcean.
 #Run install-cerbot
-echo "Install certbot"
-f_install_certbot
-echo "*** Sleep for 30 sec after certbot ***"
-sleep 30
+#echo "Install certbot"
+#f_install_certbot
+#echo "*** Sleep for 60 sec after certbot ***"
+echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
+sleep 60
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	
-	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	  #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
@@ -415,23 +416,26 @@ echo "Trying to open a web browser in OS $OSTYPE... You can try to open a web br
 
 #xdg-open "$DROPLETIPWEB"
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        # ...
+    echo -e ${COLOR} Run browser in linux-gnu ${NC}
 		xdg-open "$DROPLETIPWEB"
 elif [[ "$OSTYPE" == "darwin" ]]; then
-        # Mac OSX
+    # Mac OSX
 		echo "open a web browser manually and go to $DROPLETIPWEB"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
-        # POSIX compatibility layer and Linux environment emulation for Windows
-		xdg-open "$DROPLETIPWEB"
+    # POSIX compatibility layer and Linux environment emulation for Windows
+    echo -e ${COLOR} Run browser in cygwin ${NC}
+		xdg-open Chrome --incognito "$DROPLETIPWEB"
 elif [[ "$OSTYPE" == "msys" ]]; then
-        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-		start "$DROPLETIPWEB";
+    # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+		echo -e ${COLOR} Run browser in msys ${NC}
+		start Chrome --incognito "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "win32" ]]; then
-        # Windows
-		start "$DROPLETIPWEB";
+    # Windows
+		echo -e ${COLOR} Run browser in win32 ${NC}
+		start Chrome --incognito "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
-        # ...
-		xdg-open "$DROPLETIPWEB"
+    echo -e ${COLOR} Run browser in freebsd ${NC}
+		xdg-open Chrome --incognito "$DROPLETIPWEB"
 else
         # Unknown.
 		echo "open a web browser manually and go to $DROPLETIPWEB"

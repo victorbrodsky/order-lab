@@ -79,9 +79,11 @@ elif [[ "$OSTYPE" == "cygwin" ]]; then
 		xdg-open "$DROPLETIPWEB"
 elif [[ "$OSTYPE" == "msys" ]]; then
         # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-		start "$DROPLETIPWEB";
+    echo -e ${COLOR} Run browser in msys ${NC}
+		start Chrome --incognito "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "win32" ]]; then
         # Windows
+    echo -e ${COLOR} Run browser in win32 ${NC}
 		start Chrome --incognito "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
         # ...

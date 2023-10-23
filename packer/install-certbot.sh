@@ -2,37 +2,37 @@
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
 
-if [ -z "$bashdomainname" ]
+if [ -z "$domainname" ]
   then 	
-    bashdomainname=$1
+    domainname=$1
 fi
 
-if [ -z "$bashsslcertificate" ]
+if [ -z "$sslcertificate" ]
   then
-    bashsslcertificate=$2
+    sslcertificate=$2
 fi
 
-if [ -z "$bashemail" ]
+if [ -z "$email" ]
   then
-    bashemail=$3
+    email=$3
 fi
 
-echo bashdomainname=$bashdomainname
-echo bashsslcertificate=$bashsslcertificate
-echo bashemail=$bashemail
+echo domainname=$domainname
+echo sslcertificate=$sslcertificate
+echo email=$email
 
-echo Script install-cerbot.sh: bashdomainname=$bashdomainname
+echo Script install-cerbot.sh: domainname=$domainname
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-if [ "$bashsslcertificate" != "installcertbot" ]
+if [ "$sslcertificate" != "installcertbot" ]
   then
     echo "Abort certbot installation: sslcertificate option is not 'installcertbot'"
     exit 0
 fi
 
-if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
+if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
   then
     #email='myemail@myemail.com'
     echo "Error: email is not provided for installcertbot option"
@@ -40,9 +40,9 @@ if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
     exit 0
 fi
 
-if [ ! -z "$bashdomainname" ]
+if [ ! -z "$domainname" ]
 	then 
-		echo -e ${COLOR} Script install-cerbot.sh: Install cerbot for domain: "$bashdomainname" ${NC}
+		echo -e ${COLOR} Script install-cerbot.sh: Install cerbot for domain: "$domainname" ${NC}
 	else
 		echo -e ${COLOR} Script install-cerbot.sh: Domain name is not provided: Do not install certbot on all OS ${NC}
 		exit
@@ -159,8 +159,8 @@ echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
-echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$bashemail" --domains "$bashdomainname" ${NC}
-sudo certbot -n -v --apache --agree-tos --email "$bashemail" --domains "$bashdomainname"
+echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
+sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
 
 #Result: success
 #Successfully received certificate.

@@ -198,6 +198,52 @@ class AdminController extends OrderAbstractController
 {
 
     /**
+     * run: http://localhost/order/directory/admin/install-certbot/https
+     */
+    #[Route(path: '/install-certbot/{email}', name: 'user_install_certbot')]
+    public function installCertbotAction(Request $request, $email)
+    {
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $users = $roles = $em->getRepository(User::class)->findAll();
+        $logger->notice('installCertbotAction: users='.count($users));
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."packer".DIRECTORY_SEPARATOR;
+        $script = $path."install-certbot.sh";
+
+        $domainname = $request->getHost();
+        $sslcertificate = "installcertbot";
+
+        $command = "bash $script $domainname $sslcertificate $email";
+        echo "command=$command <br>";
+        echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
+
+        if( 1 || count($users) == 0 ) {
+            //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
+            //$domainname = "domainname"; //get from url
+
+            $this->runProcess($command);
+
+            $adminRes = 'Certbot installed.';
+        } else {
+//            if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+//                return $this->redirect($this->generateUrl('employees-nopermission'));
+//            }
+            $adminRes = 'System is not clean. Certbot is not installed.';
+            //exit('users already exists');
+            $logger->notice('Finished initialization. users already exists');
+        }
+
+        $this->addFlash(
+            'notice',
+            $adminRes
+        );
+
+        return $this->redirect($this->generateUrl('first-time-login-generation-init-https'));
+    }
+
+    /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
      */
