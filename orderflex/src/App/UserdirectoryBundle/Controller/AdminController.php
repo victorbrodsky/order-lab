@@ -216,8 +216,8 @@ class AdminController extends OrderAbstractController
         $sslcertificate = "installcertbot";
 
         $command = "bash $script $domainname $sslcertificate $email";
-        echo "command=$command <br>";
-        echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
+        //echo "command=$command <br>";
+        //echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
         $logger->notice('installCertbotAction: command='.$command);
         $logger->notice(
             'installCertbotAction: '."path=".$path.
