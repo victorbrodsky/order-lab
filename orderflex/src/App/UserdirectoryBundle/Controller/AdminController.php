@@ -218,14 +218,22 @@ class AdminController extends OrderAbstractController
         $command = "bash $script $domainname $sslcertificate $email";
         echo "command=$command <br>";
         echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
+        $logger->notice('installCertbotAction: command='.$command);
+        $logger->notice(
+            'installCertbotAction: '."path=".$path.
+            ", domainname=".$domainname.", sslcertificate=".
+            $sslcertificate.", email=".$email
+        );
 
         if( 1 || count($users) == 0 ) {
             //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
             //$domainname = "domainname"; //get from url
 
+            $logger->notice('installCertbotAction: before command='.$command);
             $this->runProcess($command);
+            $logger->notice('installCertbotAction: after command='.$command);
 
-            $adminRes = 'Certbot installed.';
+            $adminRes = 'Certbot installed with command '.$command;
         } else {
 //            if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
 //                return $this->redirect($this->generateUrl('employees-nopermission'));

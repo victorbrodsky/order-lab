@@ -405,9 +405,12 @@ echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 sleep 60
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
-  then 	
-	  #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
-	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/"
+  then
+    if [ "$sslcertificate" = "installcertbot" && ! -z "$email" && ! -z "$domainname" ]
+      then
+	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/$email"
+	    else
+	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
