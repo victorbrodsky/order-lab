@@ -535,7 +535,7 @@ f_install_post() {
 	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Install certbot on all OS ${NC}
-			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$email"
+			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi	
@@ -552,7 +552,7 @@ f_install_util
 f_install_python3
 f_install_order
 f_install_prepare
-f_install_post
+#f_install_post
 		   
 
 #Log: /var/log/apache2

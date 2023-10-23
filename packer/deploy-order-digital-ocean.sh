@@ -369,6 +369,10 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	echo "Do not create domain domainname=$domainname"
 fi
 
+echo "Install certbot"
+f_install_certbot
+
+
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	
 	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
@@ -409,4 +413,23 @@ else
 fi #if TESTING
 
 
+f_install_certbot() {
+  if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
+      then
+        #email='myemail@myemail.com'
+        echo "Error: email is not provided for installcertbot option"
+        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
+        exit 0
+  fi
+	if [ ! -z "$domainname" ] && [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
+		then
+			echo -e ${COLOR} Install certbot on all OS ${NC}
+			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
+		else
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
+	fi
+
+	echo ""
+	sleep 1
+}
 

@@ -470,7 +470,7 @@ f_install_post() {
 		then 
 			echo -e ${COLOR} Install certbot ${NC}
 			#bash /usr/local/bin/order-lab/packer/install-certbot-centos.sh "$bashdomainname"
-			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$email"
+			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot ${NC}
 	fi	
@@ -488,7 +488,7 @@ f_install_util
 f_install_python3
 f_install_order
 f_install_prepare
-f_install_post
+#f_install_post
 		   
 #https://www.digitalocean.com/community/tutorials/apache-configuration-error-ah00558-could-not-reliably-determine-the-server-s-fully-qualified-domain-name
 #sudo apachectl configtest		   
