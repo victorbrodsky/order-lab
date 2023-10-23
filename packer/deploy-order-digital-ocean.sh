@@ -36,6 +36,9 @@
 #$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --os alma9 --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
 #$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --os alma9 --dbuser symfony --dbpass symfony --protocol https --domainname domainname --sslcertificate installcertbot --email email@example.com
 
+COLOR='\033[1;36m'
+NC='\033[0m' # No Color
+
 f_install_certbot() {
   if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
       then
@@ -46,7 +49,7 @@ f_install_certbot() {
   fi
 	if [ ! -z "$domainname" ] && [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
 		then
-			echo -e ${COLOR} Install certbot on all OS ${NC}
+			echo -e ${COLOR} Install certbot on the Apache server ${NC}
 			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
@@ -389,9 +392,11 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	echo "Do not create domain domainname=$domainname"
 fi
 
-echo "Install certbot"
-f_install_certbot
-echo "*** Sleep for 300 sec after certbot ***"
+#We must install certbot after domain is created on the DigitalOcean.
+#Run install-cerbot
+#echo "Install certbot"
+#f_install_certbot
+#echo "*** Sleep for 300 sec after certbot ***"
 sleep 300
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
@@ -401,7 +406,7 @@ if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 
-echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
+echo "Trying to open a web browser in OS $OSTYPE... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
 #xdg-open "$DROPLETIPWEB"
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -429,8 +434,8 @@ fi
 
 
 #if TESTING
-else
- echo "Testing"
-fi #if TESTING
+#else
+# echo "Testing"
+#fi #if TESTING
 
 

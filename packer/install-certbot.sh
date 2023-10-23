@@ -17,6 +17,10 @@ if [ -z "$bashemail" ]
     bashemail=$3
 fi
 
+echo bashdomainname=$bashdomainname
+echo bashsslcertificate=$bashsslcertificate
+echo bashemail=$bashemail
+
 echo Script install-cerbot.sh: bashdomainname=$bashdomainname
 
 COLOR='\033[1;36m'
@@ -80,7 +84,6 @@ if [ "$OSNAME" = "Ubuntu" ];
 		sudo systemctl restart httpd.service
 		sudo systemctl status httpd.service
 fi
-
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd ${NC}
 cd /usr/local/bin/order-lab/orderflex/
