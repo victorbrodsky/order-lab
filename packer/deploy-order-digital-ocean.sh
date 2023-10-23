@@ -169,7 +169,7 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
+if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ]
   then
     #email='myemail@myemail.com'
     echo "Error: email is not provided for installcertbot option"
