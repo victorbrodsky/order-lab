@@ -15,7 +15,8 @@
 #-protocol - optional (default http)
 #--domainname domain_name.tld - optional
 #--sslcertificate ssl_certificate.crt - optional
-#--sslprivatekey intermediate_certificate.ca-crt 
+#--sslprivatekey intermediate_certificate.ca-crt
+#--email - optional if sslcertificate=installcertbot
 
 
 #os - centos or ubuntu
@@ -32,7 +33,8 @@
 #Available images: https://do-community.github.io/available-images/
 
 
-#$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
+#$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --os alma9 --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
+#$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --os alma9 --dbuser symfony --dbpass symfony --protocol https --domainname domainname --sslcertificate installcertbot --email email@example.com
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
@@ -75,6 +77,11 @@ case $key in
 		shift # past argument
 		shift # past value
     ;;
+  -e|--email)
+		email="$2"
+		shift # past argument
+		shift # past value
+    ;;
 	-c|--sslcertificate)
 		sslcertificate="$2"
 		shift # past argument
@@ -99,7 +106,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -z "$os" ]
   then 	
-    os='alma8'
+    os='alma9'
 fi
 
 if [ -z "$dbuser" ]
@@ -147,6 +154,7 @@ echo "protocol=$protocol"
 echo "domainname=$domainname"
 echo "sslcertificate=$sslcertificate"
 echo "sslprivatekey=$sslprivatekey"
+echo "email=$email"
 
 echo "*** Verifying files presence ***"
 if [ -z "$apitoken" ]
@@ -158,6 +166,14 @@ fi
 if [ -z "$parameters" ]
   then 	
     echo "Error: no parameter file is provided"
+    exit 0
+fi
+
+if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
+  then
+    #email='myemail@myemail.com'
+    echo "Error: email is not provided for installcertbot option"
+    echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
     exit 0
 fi
 
@@ -241,6 +257,7 @@ sed -i -e "s/bash_protocol/$protocol/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_dbuser/$dbuser/g" parameters.yml
 sed -i -e "s/bash_dbpass/$dbpass/g" parameters.yml
 
+sed -i -e "s/bash_email/$email/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
@@ -285,6 +302,7 @@ sed -i -e "s/$protocol/bash_protocol/g" "$ORDERPACKERJSON"
 sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
 sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
 
+sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
 sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"

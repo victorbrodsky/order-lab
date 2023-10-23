@@ -21,7 +21,9 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass",
 			"bashprotocol=bash_protocol",
-			"bashdomainname=bash_domainname"
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email"
 		],
         "script": "centos7_install.sh"
     },

@@ -19,7 +19,11 @@
         "type": "shell",
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
-			"bashdbpass=bash_dbpass"
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email"
 		],
         "script": "alma9_install.sh"
     },

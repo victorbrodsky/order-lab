@@ -1,18 +1,38 @@
 #!/bin/bash
 # alma8 installation script (alma8, PHP, Postgresql)
-echo @### Get bash_dbuser bash_dbpass ###
-#bashdbuser=$1
-#bashdbpass=$2
+echo @### Get bash parameters ###
+
 if [ -z "$bashdbuser" ]
-  then 	
+  then
     bashdbuser=$1
 fi
 if [ -z "$bashdbpass" ]
-  then 	
+  then
     bashdbpass=$2
 fi
+if [ -z "$bashprotocol" ]
+  then
+    bashprotocol=$3
+fi
+if [ -z "$bashdomainname" ]
+  then
+    bashdomainname=$4
+fi
+if [ -z "$bashsslcertificate" ]
+  then
+    bashsslcertificate=$5
+fi
+if [ -z "$bashemail" ]
+  then
+    bashemail=$6
+fi
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
+echo bashprotocol=$bashprotocol
+echo bashdomainname=$bashdomainname
+echo bashsslcertificate=$bashsslcertificate
+echo bashemail=$bashemail
 
 #WHITE='\033[1;37m'
 COLOR='\033[1;36m'
@@ -318,9 +338,14 @@ f_install_prepare () {
 
 	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
-	
-	echo -e ${COLOR} Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
-	cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
+
+	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
+		then
+			echo -e ${COLOR} HTTPS protocol=$bashprotocol, bashsslcertificate=$bashsslcertificate: Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+			cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
+		else
+			echo -e ${COLOR} HTTP protocol=$bashprotocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+	fi
 	
 	echo -e ${COLOR} Copy env ${NC}
 	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
@@ -366,12 +391,19 @@ f_install_prepare () {
 }	
 
 f_install_post() {
+  if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
+      then
+        #email='myemail@myemail.com'
+        echo "Error: email is not provided for installcertbot option"
+        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
+        exit 0
+  fi
 	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
-			echo -e ${COLOR} Install certbot on all OS ${NC}
+			echo -e ${COLOR} Install certbot ${NC}
 			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname"
 		else
-			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot ${NC}
 	fi	
 	
 	echo ""
