@@ -371,10 +371,10 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	#listinfo=( $LIST )
 	#RECORDID="${listinfo[0]}"
 	
-	#2) doctl compute domain records delete $domainname record_id
+	#2) doctl compute domain records delete $domainname record_id. --force - Delete record without confirmation prompt
 	for recordid in $LIST; do
 		echo "Delete old DNS record ID=$recordid"
-		DELETERES=$(doctl compute domain records delete $domainname $recordid -v)
+		DELETERES=$(doctl compute domain records delete $domainname $recordid --force -v)
 		#echo "DELETERES=$DELETERES"
 	done
   
@@ -391,10 +391,12 @@ fi
 
 echo "Install certbot"
 f_install_certbot
+echo "*** Sleep for 300 sec after certbot ***"
+sleep 300
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	
-	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
