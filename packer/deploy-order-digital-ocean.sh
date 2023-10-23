@@ -50,7 +50,10 @@ f_install_certbot() {
 	if [ ! -z "$domainname" ] && [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
 		then
 			echo -e ${COLOR} Install certbot on the Apache server ${NC}
-			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
+			#bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
+			#https://www.digitalocean.com/community/questions/run-shell-script-on-droplet-using-api
+			echo -e ${COLOR} ssh root@ip 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh ${NC}
+			ssh root@"$ORIGDROPLETIP" 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi
@@ -348,6 +351,8 @@ echo "*** Starting firefox browser and creating admin user ***"
 dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
 echo "droplet IP=$DROPLETIP"
+ORIGDROPLETIP="$DROPLETIP"
+echo "original droplet IP=$ORIGDROPLETIP"
 
 echo "*** Sleep for 120 sec ***"
 sleep 120
@@ -394,10 +399,10 @@ fi
 
 #We must install certbot after domain is created on the DigitalOcean.
 #Run install-cerbot
-#echo "Install certbot"
-#f_install_certbot
-#echo "*** Sleep for 300 sec after certbot ***"
-sleep 300
+echo "Install certbot"
+f_install_certbot
+echo "*** Sleep for 30 sec after certbot ***"
+sleep 30
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	

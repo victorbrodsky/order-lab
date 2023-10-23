@@ -18,16 +18,16 @@ if [ -z "$email" ]
   then
     email=$4
 fi
-if [ -z "$ip" ]
+if [ -z "$ORIGDROPLETIP" ]
   then
-    ip=$5
+    ORIGDROPLETIP=$5
 fi
 
 echo protocol=$protocol
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
-echo ip=$ip
+echo ORIGDROPLETIP=$ORIGDROPLETIP
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -49,7 +49,7 @@ f_install_certbot() {
 			#bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
 			#https://www.digitalocean.com/community/questions/run-shell-script-on-droplet-using-api
 			echo -e ${COLOR} ssh root@ip 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh ${NC}
-			ssh root@"$ip" 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
+			ssh root@"$ORIGDROPLETIP" 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi
@@ -60,7 +60,7 @@ f_install_certbot() {
 
 echo "Install certbot"
 #f_install_certbot
-echo "*** Sleep for 300 sec after certbot ***"
+echo "*** Sleep for 30 sec after certbot ***"
 sleep 30
 
 DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
