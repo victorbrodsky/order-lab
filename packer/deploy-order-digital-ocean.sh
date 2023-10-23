@@ -177,6 +177,9 @@ if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
     exit 0
 fi
 
+echo "Testing parameters: exit"
+exit 0
+
 TESTING=true
 
 if [ "$os" = "alma8" ]
