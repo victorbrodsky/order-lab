@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
-#bash install-certbot.sh view.online installcertbot oli2002@med.cornell.edu
+#bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu
 
 if [ -z "$domainname" ]
   then 	
