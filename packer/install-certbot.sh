@@ -6,28 +6,6 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-#########
-echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
-echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
-LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
-echo "LASTLINE=$LASTLINE"
-
-LASTLINEINFO=( $LASTLINE )
-
-echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
-IMAGEID="${LASTLINEINFO[0]}"
-IMAGENAME="${LASTLINEINFO[1]}"
-echo -e ${COLOR} IMAGEID="$IMAGEID", IMAGENAME="$IMAGENAME" ${NC}
-
-echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
-DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
-
-dropletinfos=( $DROPLET )
-DROPLETIP="${dropletinfos[2]}"
-echo "droplet IP=$DROPLETIP"
-exit 0
-#######
-
 #sudo snap install doctl
 
 if [ -z "$domainname" ]
@@ -174,9 +152,11 @@ echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
 LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
 echo "LASTLINE=$LASTLINE"
 
+LASTLINEINFO=( $LASTLINE )
+
 echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
-IMAGEID=$(LASTLINE | awk '{print $1;}')
-IMAGENAME=$(LASTLINE | awk '{print $2;}')
+IMAGEID="${LASTLINEINFO[0]}"
+IMAGENAME="${LASTLINEINFO[1]}"
 echo -e ${COLOR} IMAGEID="$IMAGEID", IMAGENAME="$IMAGENAME" ${NC}
 
 echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
@@ -229,8 +209,8 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	  echo "Do not create domain domainname=$domainname"
 fi
 
-echo -e ${COLOR} Sleep 120 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
-sleep 120
+echo -e ${COLOR} Sleep 180 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
+sleep 180
 ########## EOF Create domain ###########
 
 echo -e ${COLOR} Script install-cerbot.sh: Enable and create symlink for Snapd ${NC}

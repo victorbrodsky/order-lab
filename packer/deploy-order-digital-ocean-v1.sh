@@ -342,8 +342,11 @@ DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --
 #TESTING=true
 #TESTING=false
 echo "TESTING=$TESTING"
-if [ "$TESTING" = false ] ; then 
-#not testing
+if [ "$TESTING" = true ]
+  then
+    echo -e ${COLOR} Testing="$TESTING" => Exit ${NC}
+    exit 0
+fi
 
 echo "*** Starting firefox browser and creating admin user ***"
 dropletinfos=( $DROPLET )
@@ -450,3 +453,4 @@ else
     # Unknown.
 		echo "open a web browser manually and go to $DROPLETIPWEB"
 fi #deploy-order-digital-ocean.sh: line 447: syntax error: unexpected end of file
+

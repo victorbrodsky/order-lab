@@ -300,12 +300,12 @@ packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 #Use Packer v1.7.0 or later
-echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
-LASTLINE=$(tail -1 buildpacker.log)
-echo "*** Packer LASTLINE=$LASTLINE ***"
-IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
-IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
-echo "image ID=$IMAGEID; name=$IMAGENAME"
+#echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
+#LASTLINE=$(tail -1 buildpacker.log)
+#echo "*** Packer LASTLINE=$LASTLINE ***"
+#IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
+#IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
+#echo "image ID=$IMAGEID; name=$IMAGENAME"
 
 echo "*** Sleep for 120 sec ***"
 sleep 120
@@ -336,9 +336,6 @@ sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 
 
-echo "*** Creating droplet ... ***"
-DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
-
 #TESTING=true
 #TESTING=false
 echo "TESTING=$TESTING"
@@ -349,76 +346,19 @@ if [ "$TESTING" = true ]
 fi
 #not testing
 
-echo "*** Starting firefox browser and creating admin user ***"
-dropletinfos=( $DROPLET )
-DROPLETIP="${dropletinfos[2]}"
-echo "droplet IP=$DROPLETIP"
-ORIGDROPLETIP="$DROPLETIP"
-echo "original droplet IP=$ORIGDROPLETIP"
-
-echo "*** Sleep for 120 sec ***"
-sleep 120
-
-#DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
-
-echo "Before creating domainname=$domainname"
-if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
-  then 	
-	#0) check and create domain and DNS 
-	echo "Create domain domainname=$domainname"
-	DOMAINCHECK=$(doctl compute domain get $domainname)
-	echo "Check if domain $domainname exists: $DOMAINCHECK"
-	if [ -z "$DOMAINCHECK" ]
-		then
-			echo "Create domain domainname=$domainname"
-			DOMAINRES=$(doctl compute domain create $domainname --ip-address $DROPLETIP)
-			echo "Created domain DOMAINRES=$DOMAINRES"
-	fi	
-  
-	#check and delete existing domain DNS's A records with record 'www' or '@'
-	#1) doctl compute domain records list $domainname
-	LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | grep -w A | awk '{print $1}')
-	#listinfo=( $LIST )
-	#RECORDID="${listinfo[0]}"
-	
-	#2) doctl compute domain records delete $domainname record_id. --force - Delete record without confirmation prompt
-	for recordid in $LIST; do
-		echo "Delete old DNS record ID=$recordid"
-		DELETERES=$(doctl compute domain records delete $domainname $recordid --force -v)
-		#echo "DELETERES=$DELETERES"
-	done
-  
-	#doctl compute domain create domain_name --ip-address droplet_ip_address
-	#'--record-name www' will create domain name with www prefix, i.e. www.view.online
-	#'--record-name @' will create domain name without prefix, i.e. view.online
-	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP --record-ttl 30 -v
-	#https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/update/
-	#'doctl compute domain records create' or 'doctl compute domain records update': --record-ttl 	The record’s Time To Live value, in seconds, default: 1800
-	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v)
-	echo "DOMAIN=$DOMAIN"
-	DROPLETIP="$domainname"
-  else
-	echo "Do not create domain domainname=$domainname"
-fi
-
-#We must install certbot after domain is created on the DigitalOcean.
-#Run install-cerbot
-#echo "Install certbot"
-#f_install_certbot
 #echo "*** Sleep for 60 sec after certbot ***"
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 sleep 60
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then
-    #if [ "$sslcertificate" = "installcertbot" && ! -z "$email" && ! -z "$domainname" ]
-    #  then
-	  #    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/$email"
-	  #  else
-	  #    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
-	  #fi
-	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+    if [ "$sslcertificate" = "installcertbot" ] && [ ! -z "$domainname" ]
+      then
+	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
+	  fi
+	  #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
+    DROPLETIP="unknown" #TODO: get droplet ID from packer or by the last line: LASTLINE=$(doctl compute image list --public | tail -n1)
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 
