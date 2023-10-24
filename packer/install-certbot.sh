@@ -3,6 +3,9 @@
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
 #bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu apitoken
 
+COLOR='\033[1;36m'
+NC='\033[0m' # No Color
+
 DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
@@ -40,9 +43,6 @@ echo email=$email
 echo apitoken=$apitoken
 
 echo Script install-cerbot.sh: domainname=$domainname
-
-COLOR='\033[1;36m'
-NC='\033[0m' # No Color
 
 if [ "$sslcertificate" != "installcertbot" ]
   then
