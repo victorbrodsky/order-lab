@@ -12,7 +12,7 @@ echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
 LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
 echo "LASTLINE=$LASTLINE"
 
-LASTLINEINFO=( LASTLINE )
+LASTLINEINFO=( $LASTLINE )
 
 echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
 IMAGEID="${LASTLINEINFO[0]}"
