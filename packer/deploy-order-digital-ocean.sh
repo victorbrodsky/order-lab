@@ -339,7 +339,6 @@ sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 echo "*** Creating droplet ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
-
 #TESTING=true
 #TESTING=false
 echo "TESTING=$TESTING"
@@ -388,8 +387,10 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	#doctl compute domain create domain_name --ip-address droplet_ip_address
 	#'--record-name www' will create domain name with www prefix, i.e. www.view.online
 	#'--record-name @' will create domain name without prefix, i.e. view.online
-	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP -v
-	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-data $DROPLETIP -v)
+	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP --record-ttl 30 -v
+	#https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/update/
+	#'doctl compute domain records create' or 'doctl compute domain records update': --record-ttl 	The record’s Time To Live value, in seconds, default: 1800
+	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ -record-ttl 60 --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
 	DROPLETIP="$domainname"
   else
@@ -428,19 +429,23 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     # POSIX compatibility layer and Linux environment emulation for Windows
     echo -e ${COLOR} Run browser in cygwin ${NC}
-		xdg-open Chrome --incognito "$DROPLETIPWEB"
+		#xdg-open Chrome --incognito "$DROPLETIPWEB"
+		xdg-open "$DROPLETIPWEB"
 elif [[ "$OSTYPE" == "msys" ]]; then
     # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
 		echo -e ${COLOR} Run browser in msys ${NC}
-		start Chrome --incognito "$DROPLETIPWEB";
+		#start Chrome --incognito "$DROPLETIPWEB";
+		start "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "win32" ]]; then
     # Windows
 		echo -e ${COLOR} Run browser in win32 ${NC}
-		start Chrome --incognito "$DROPLETIPWEB";
+		#start Chrome --incognito "$DROPLETIPWEB";
+		start "$DROPLETIPWEB";
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
     echo -e ${COLOR} Run browser in freebsd ${NC}
-		xdg-open Chrome --incognito "$DROPLETIPWEB"
+		#xdg-open Chrome --incognito "$DROPLETIPWEB"
+		xdg-open "$DROPLETIPWEB"
 else
-        # Unknown.
+    # Unknown.
 		echo "open a web browser manually and go to $DROPLETIPWEB"
-fi
+fi #deploy-order-digital-ocean.sh: line 447: syntax error: unexpected end of file

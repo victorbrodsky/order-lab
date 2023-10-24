@@ -90,21 +90,6 @@ cd /usr/local/bin/order-lab/orderflex/
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd according to OS ${NC}
 #Centos yum, Alma dnf, Ubuntu apt
-
-#OSNAME = 'grep -E '^(NAME)=' /etc/os-release'
-#if [ "$OSNAME" =~ ^CentOS ]
-#	then
-#		sudo yum install -y snapd
-#if	
-#if [ "$OSNAME" =~ ^Alma ]
-#	then
-#		sudo dnf install -y snapd
-#if
-#if [ "$OSNAME" =~ ^Ubuntu ]
-#	then
-#		sudo apt install -y snapd
-#if
-
 #https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script
 YUM_PACKAGE_NAME="snapd"
 if [ "$OSNAME" = "CentOS" ] 
@@ -113,12 +98,14 @@ then
     echo "Installing packages $YUM_PACKAGE_NAME on CentOS"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
+    sudo yum install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Red" ] 
 then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on RedHat"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
+    sudo yum install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Ubuntu" ] 
 then
     echo "==============================================="
@@ -126,12 +113,14 @@ then
     echo "==============================================="
     #sudo apt-get update
     sudo apt-get install -y "$YUM_PACKAGE_NAME"
+    sudo apt install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Alma" ] 
 then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Alma"
     echo "==============================================="
     sudo dnf install -y "$YUM_PACKAGE_NAME"
+    sudo dnf install -y python3-certbot-dns-digitalocean
 else
     echo "OS NOT DETECTED, couldn't install package $YUM_PACKAGE_NAME"
     exit 1;
@@ -160,7 +149,8 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
 echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
-sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
+#sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
+sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
 
 #Result: success
 #Successfully received certificate.

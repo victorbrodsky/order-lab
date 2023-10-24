@@ -198,7 +198,7 @@ class AdminController extends OrderAbstractController
 {
 
     /**
-     * run: http://localhost/order/directory/admin/install-certbot/https
+     * run: http://localhost/order/directory/admin/install-certbot/oli2002@med.cornell.edu
      */
     #[Route(path: '/install-certbot/{email}', name: 'user_install_certbot')]
     public function installCertbotAction(Request $request, $email)
