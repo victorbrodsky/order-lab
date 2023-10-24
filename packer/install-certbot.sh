@@ -143,7 +143,7 @@ doctl auth init --access-token $apitoken
 #doctl compute domain records create view.online --record-type A --record-name @ --record-ttl 60 --record-data 142.93.65.236 -v
 DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 
-doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
+#doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
 ########## Create domain ###########
 echo "Before creating domainname=$domainname"
 if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
