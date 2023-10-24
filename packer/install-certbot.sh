@@ -144,6 +144,12 @@ doctl auth init --access-token $apitoken
 DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
+#IMAGENAME='packer-1698102450' IMAGEID=142936498
+IMAGEID=$(curl http://"$DROPLETIP"/metadata/v1/id)
+IMAGENAME="nnn"
+echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
+DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+
 #doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
 ########## Create domain ###########
 echo "Before creating domainname=$domainname"
