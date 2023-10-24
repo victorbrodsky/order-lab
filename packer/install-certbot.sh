@@ -15,8 +15,8 @@ echo "LASTLINE=$LASTLINE"
 LASTLINEINFO=( LASTLINE )
 
 echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
-IMAGEID="${LASTLINEINFO | awk '{print $1;}'}"
-IMAGENAME="${LASTLINEINFO | awk '{print $2;}'}"
+IMAGEID="${LASTLINEINFO[0]}"
+IMAGENAME="${LASTLINEINFO[1]}"
 echo -e ${COLOR} IMAGEID="$IMAGEID", IMAGENAME="$IMAGENAME" ${NC}
 
 echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
