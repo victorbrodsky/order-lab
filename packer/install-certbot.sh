@@ -107,14 +107,14 @@ then
     echo "Installing packages $YUM_PACKAGE_NAME on CentOS"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-    sudo yum install -y python3-certbot-dns-digitalocean
+    #sudo yum install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Red" ] 
 then
 	echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on RedHat"
 	echo "==============================================="
     sudo yum install -y "$YUM_PACKAGE_NAME"
-    sudo yum install -y python3-certbot-dns-digitalocean
+    #sudo yum install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Ubuntu" ] 
 then
     echo "==============================================="
@@ -122,14 +122,14 @@ then
     echo "==============================================="
     #sudo apt-get update
     sudo apt-get install -y "$YUM_PACKAGE_NAME"
-    sudo apt install -y python3-certbot-dns-digitalocean
+    #sudo apt install -y python3-certbot-dns-digitalocean
 elif [ "$OSNAME" = "Alma" ] 
 then
     echo "==============================================="
     echo "Installing packages $YUM_PACKAGE_NAME on Alma"
     echo "==============================================="
     sudo dnf install -y "$YUM_PACKAGE_NAME"
-    sudo dnf install -y python3-certbot-dns-digitalocean
+    #sudo dnf install -y python3-certbot-dns-digitalocean
 else
     echo "OS NOT DETECTED, couldn't install package $YUM_PACKAGE_NAME"
     exit 1;
@@ -142,7 +142,49 @@ doctl auth init --access-token $apitoken
 #2) doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v
 #doctl compute domain records create view.online --record-type A --record-name @ --record-ttl 60 --record-data 142.93.65.236 -v
 DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+
 doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
+########## Create domain ###########
+echo "Before creating domainname=$domainname"
+if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
+  then
+    #0) check and create domain and DNS
+    echo "Create domain domainname=$domainname"
+    DOMAINCHECK=$(doctl compute domain get $domainname)
+    echo "Check if domain $domainname exists: $DOMAINCHECK"
+    if [ -z "$DOMAINCHECK" ]
+      then
+        echo "Create domain domainname=$domainname"
+        DOMAINRES=$(doctl compute domain create $domainname --ip-address $DROPLETIP)
+        echo "Created domain DOMAINRES=$DOMAINRES"
+    fi
+
+    #check and delete existing domain DNS's A records with record 'www' or '@'
+    #1) doctl compute domain records list $domainname
+    LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | grep -w A | awk '{print $1}')
+    #listinfo=( $LIST )
+    #RECORDID="${listinfo[0]}"
+
+    #2) doctl compute domain records delete $domainname record_id. --force - Delete record without confirmation prompt
+    for recordid in $LIST; do
+      echo "Delete old DNS record ID=$recordid"
+      DELETERES=$(doctl compute domain records delete $domainname $recordid --force -v)
+      #echo "DELETERES=$DELETERES"
+    done
+
+    #doctl compute domain create domain_name --ip-address droplet_ip_address
+    #'--record-name www' will create domain name with www prefix, i.e. www.view.online
+    #'--record-name @' will create domain name without prefix, i.e. view.online
+    #doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP --record-ttl 30 -v
+    #https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/update/
+    #'doctl compute domain records create' or 'doctl compute domain records update': --record-ttl 	The record’s Time To Live value, in seconds, default: 1800
+    DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v)
+    echo "DOMAIN=$DOMAIN"
+    DROPLETIP="$domainname"
+  else
+	  echo "Do not create domain domainname=$domainname"
+fi
+###################################
 
 echo -e ${COLOR} Script install-cerbot.sh: Enable and create symlink for Snapd ${NC}
 sudo systemctl enable --now snapd.socket
