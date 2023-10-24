@@ -10,8 +10,8 @@ DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
 #IMAGENAME='packer-1698102450' IMAGEID=142936498
-#IMAGEID=$(curl http://"$DROPLETIP"/metadata/v1/id)
-IMAGEID=$(curl https://api.digitalocean.com/v2/droplets/"$DROPLETIP")
+IMAGEID=$(curl http://$DROPLETIP/metadata/v1/id)
+#IMAGEID=$(curl https://api.digitalocean.com/v2/droplets/"$DROPLETIP")
 IMAGENAME="nnn"
 echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
 exit 0
