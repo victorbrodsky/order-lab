@@ -6,18 +6,25 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
-echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
+#########
+echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
+echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
+LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
+echo "LASTLINE=$LASTLINE"
 
-#IMAGENAME='packer-1698102450' IMAGEID=142936498
-IMAGEID="mmm"#$(curl http://$DROPLETIP/metadata/v1/id)
-#IMAGEID=$(curl https://api.digitalocean.com/v2/droplets/"$DROPLETIP")
-#droplet_id=$(curl http://142.93.65.236/metadata/v1/id)
-droplet_id=$(curl https://api.digitalocean.com/v2/droplets/142.93.65.236)
-echo "droplet id: $droplet_id"
-IMAGENAME="nnn"
+echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
+IMAGEID=$(LASTLINE | awk '{print $1;}')
+IMAGENAME=$(LASTLINE | awk '{print $2;}')
+echo -e ${COLOR} IMAGEID="$IMAGEID", IMAGENAME="$IMAGENAME" ${NC}
+
 echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
+DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+
+dropletinfos=( $DROPLET )
+DROPLETIP="${dropletinfos[2]}"
+echo "droplet IP=$DROPLETIP"
 exit 0
+#######
 
 #sudo snap install doctl
 
