@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
+#bash install-certbot.sh view.online installcertbot oli2002@med.cornell.edu
 
 if [ -z "$domainname" ]
   then 	
@@ -149,8 +150,8 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
 echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
-#sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
-sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
+sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
+#sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
 
 #Result: success
 #Successfully received certificate.
