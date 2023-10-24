@@ -128,8 +128,18 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      } 
-      
-   ]
+      },
+
+	  {
+        "type": "shell",
+		"environment_vars": [
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+			"apitoken=api_token_bash_value"
+		],
+        "script": "install-certbot.sh"
+    }
+  ]
 
 }

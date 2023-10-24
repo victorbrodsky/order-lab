@@ -148,20 +148,35 @@ else
     exit 1;
 fi
 
+############### Install doctl and create droplet from image ###############
 echo -e ${COLOR} Script install-cerbot.sh: Install doctl ${NC}
 sudo snap install doctl
 #1) doctl auth init --access-token $apitoken
 doctl auth init --access-token $apitoken
+
 #2) doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v
 #doctl compute domain records create view.online --record-type A --record-name @ --record-ttl 60 --record-data 142.93.65.236 -v
-DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
-echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
+#DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+#echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
 #IMAGENAME='packer-1698102450' IMAGEID=142936498
-IMAGEID=$(curl http://"$DROPLETIP"/metadata/v1/id)
-IMAGENAME="nnn"
+echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
+echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
+LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
+echo "LASTLINE=$LASTLINE"
+
+echo -e ${COLOR} *** Getting the first IMAGEID and the second IMAGENAME elements from LASTLINE *** ${NC}
+IMAGEID=$(LASTLINE | awk '{print $1;}')
+IMAGENAME=$(LASTLINE | awk '{print $2;}')
+echo -e ${COLOR} IMAGEID="$IMAGEID", IMAGENAME="$IMAGENAME" ${NC}
+
 echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+
+dropletinfos=( $DROPLET )
+DROPLETIP="${dropletinfos[2]}"
+echo "droplet IP=$DROPLETIP"
+############### EOF Install doctl and create droplet from image ###############
 
 #doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
 ########## Create domain ###########
@@ -207,7 +222,7 @@ fi
 
 echo -e ${COLOR} Sleep 120 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
 sleep 120
-###################################
+########## EOF Create domain ###########
 
 echo -e ${COLOR} Script install-cerbot.sh: Enable and create symlink for Snapd ${NC}
 sudo systemctl enable --now snapd.socket
