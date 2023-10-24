@@ -184,6 +184,9 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
   else
 	  echo "Do not create domain domainname=$domainname"
 fi
+
+echo -e ${COLOR} Sleep 120 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
+sleep 120
 ###################################
 
 echo -e ${COLOR} Script install-cerbot.sh: Enable and create symlink for Snapd ${NC}
