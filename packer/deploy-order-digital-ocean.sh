@@ -390,7 +390,7 @@ if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
 	#doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP --record-ttl 30 -v
 	#https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/update/
 	#'doctl compute domain records create' or 'doctl compute domain records update': --record-ttl 	The record’s Time To Live value, in seconds, default: 1800
-	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ -record-ttl 60 --record-data $DROPLETIP -v)
+	DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v)
 	echo "DOMAIN=$DOMAIN"
 	DROPLETIP="$domainname"
   else
@@ -407,12 +407,13 @@ sleep 60
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then
-    if [ "$sslcertificate" = "installcertbot" && ! -z "$email" && ! -z "$domainname" ]
-      then
-	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/$email"
-	    else
-	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
-	  fi
+    #if [ "$sslcertificate" = "installcertbot" && ! -z "$email" && ! -z "$domainname" ]
+    #  then
+	  #    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/install-certbot/$email"
+	  #  else
+	  #    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	  #fi
+	  DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi

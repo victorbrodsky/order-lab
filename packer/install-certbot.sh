@@ -1,7 +1,9 @@
 #!/bin/bash
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
-#bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu
+#bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu apitoken
+
+#sudo snap install doctl
 
 if [ -z "$domainname" ]
   then 	
@@ -18,9 +20,15 @@ if [ -z "$email" ]
     email=$3
 fi
 
+if [ -z "$apitoken" ]
+  then
+    apitoken=$4
+fi
+
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
+echo apitoken=$apitoken
 
 echo Script install-cerbot.sh: domainname=$domainname
 
@@ -127,6 +135,14 @@ else
     exit 1;
 fi
 
+echo -e ${COLOR} Script install-cerbot.sh: Install doctl ${NC}
+sudo snap install doctl
+#1) doctl auth init --access-token $apitoken
+doctl auth init --access-token $apitoken
+#2) doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v
+#doctl compute domain records create view.online --record-type A --record-name @ --record-ttl 60 --record-data 142.93.65.236 -v
+DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
 
 echo -e ${COLOR} Script install-cerbot.sh: Enable and create symlink for Snapd ${NC}
 sudo systemctl enable --now snapd.socket
