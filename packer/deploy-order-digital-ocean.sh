@@ -359,6 +359,7 @@ if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
 	  #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
     DROPLETIP="unknown" #TODO: get droplet ID from packer or by the last line: LASTLINE=$(doctl compute image list --public | tail -n1)
+    #Maybe use the line in buildpacker.log 'droplet IP=xxxxxx'
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 
