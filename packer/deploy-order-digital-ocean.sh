@@ -342,7 +342,11 @@ DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --
 #TESTING=true
 #TESTING=false
 echo "TESTING=$TESTING"
-if [ "$TESTING" = false ] ; then 
+if [ "$TESTING" = true ]
+  then
+    echo -e ${COLOR} Testing="$TESTING" => Exit ${NC}
+    exit 0
+fi
 #not testing
 
 echo "*** Starting firefox browser and creating admin user ***"

@@ -3,6 +3,15 @@
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
 #bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu apitoken
 
+DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
+
+#IMAGENAME='packer-1698102450' IMAGEID=142936498
+IMAGEID=$(curl http://"$DROPLETIP"/metadata/v1/id)
+IMAGENAME="nnn"
+echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
+exit 0
+
 #sudo snap install doctl
 
 if [ -z "$domainname" ]
