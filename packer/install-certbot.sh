@@ -136,8 +136,14 @@ else
 fi
 
 ############### Install doctl and create droplet from image ###############
+#TODO: https://docs.digitalocean.com/reference/doctl/how-to/install/
 echo -e ${COLOR} Script install-cerbot.sh: Install doctl ${NC}
-sudo snap install doctl
+#sudo snap install doctl
+cd ~
+wget https://github.com/digitalocean/doctl/releases/download/v1.100.0/doctl-1.100.0-linux-amd64.tar.gz
+tar xf ~/doctl-1.100.0-linux-amd64.tar.gz
+sudo mv ~/doctl /usr/local/bin
+
 #1) doctl auth init --access-token $apitoken
 doctl auth init --access-token $apitoken
 
@@ -147,7 +153,6 @@ doctl auth init --access-token $apitoken
 #echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
 #IMAGENAME='packer-1698102450' IMAGEID=142936498
-echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
 LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
 echo "LASTLINE=$LASTLINE"
