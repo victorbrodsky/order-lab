@@ -103,7 +103,7 @@ app_userdirectory_http:
     resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     attribute
     prefix:   /directory/http
-    //schemes:  ['%connection_channel%']
+#    schemes:  ['%connection_channel%']
 
 app_testpage:
     path: /directory/testpage
