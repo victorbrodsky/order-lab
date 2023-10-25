@@ -279,7 +279,7 @@ fi
 #Create snapshot_name_bash_value unique name
 snapshot_name_bash_value=packer-$os-`date '+%Y-%m-%d-%H-%M-%S'`
 echo snapshot_name_bash_value=$snapshot_name_bash_value
-exit 0
+#exit 0
 
 echo "*** Pre processing json file: replace and provide parameters ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" "$ORDERPACKERJSON"
@@ -294,6 +294,8 @@ sed -i -e "s/bash_email/$email/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
+
+sed -i -e "s/snapshot_name_bash_value/$snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
 ############ Run packer json file ############
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
@@ -341,6 +343,8 @@ sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
 sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
+
+sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
 
 #TESTING=true

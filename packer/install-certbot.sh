@@ -2,6 +2,7 @@
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
 #bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu apitoken
+#run script from local PC: ssh root@159.203.85.84 'bash -s' < ./install-certbot.sh need to enter root password
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -28,10 +29,16 @@ if [ -z "$apitoken" ]
     apitoken=$4
 fi
 
+if [ -z "$snapshot_name" ]
+  then
+    snapshot_name=$5
+fi
+
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
 echo apitoken=$apitoken
+echo snapshot_name=$snapshot_name
 
 echo Script install-cerbot.sh: domainname=$domainname
 
@@ -155,7 +162,8 @@ doctl auth init --access-token $apitoken
 
 #IMAGENAME='packer-1698102450' IMAGEID=142936498
 echo -e ${COLOR} *** Building VM droplet from image *** ${NC}
-LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
+#LASTLINE=$(doctl compute image list --public | tail -n1) #get the last line of the public images
+LASTLINE=$(doctl compute snapshot list | grep "$snapshot_name")
 echo "LASTLINE=$LASTLINE"
 
 LASTLINEINFO=( $LASTLINE )

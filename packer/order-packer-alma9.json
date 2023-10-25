@@ -137,7 +137,8 @@
 			"domainname=bash_domainname",
 			"sslcertificate=bash_sslcertificate",
 			"email=bash_email",
-			"apitoken=api_token_bash_value"
+			"apitoken=api_token_bash_value",
+			"snapshot_name=snapshot_name_bash_value"
 		],
         "script": "install-certbot.sh"
     }
