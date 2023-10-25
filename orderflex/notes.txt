@@ -1836,3 +1836,5 @@ TODO: Try to --record-name www and then remove prefix www from sudo certbot -n -
 
 Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours:
 view.online, retry after 2023-10-26T22:26:55Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/
+
+sudo certbot certonly --webroot --agree-tos --email cinava@yahoo.com address -d tincry.com -w /var/www/your-domain.com/
