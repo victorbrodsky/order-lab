@@ -300,26 +300,29 @@ packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 #Use Packer v1.7.0 or later
-#echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
-#LASTLINE=$(tail -1 buildpacker.log)
-#echo "*** Packer LASTLINE=$LASTLINE ***"
-#IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
-#IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
-#echo "image ID=$IMAGEID; name=$IMAGENAME"
+echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
+LASTLINE=$(tail -1 buildpacker.log)
+echo "*** Packer LASTLINE=$LASTLINE ***"
+IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
+IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
+echo "image ID=$IMAGEID; name=$IMAGENAME"
 
-echo "*** Sleep for 120 sec ***"
-sleep 120
-
-echo "*** Getting image ID ***"
+#echo "*** Getting image ID ***"
 echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
 echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
-
+LASTLINE=$(doctl compute droplet list --format="Public IPv4" | tail -1)
+lastlinevars=( $LASTLINE )
+DROPLETIP=${lastlinevars[0]}
+echo "droplet IP=[$DROPLETIP]"
 #LASTLINE=$(doctl compute image list | tail -1)
 #echo "LASTLINE=$LASTLINE"
 #vars=( $LASTLINE )
 #IMAGEID=${vars[0]}
 #IMAGENAME=${vars[1]}
 #echo "image ID=$IMAGEID; name=$IMAGENAME"
+
+echo "*** Sleep for 120 sec ***"
+sleep 120
 
 echo "*** Post processing json file ***"
 sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
@@ -350,16 +353,20 @@ fi
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 sleep 60
 
+#/order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
+# because will set scheme (connection-channel) to https and run deploy script.
+# Therefore url order/directory/admin/first-time-login-generation-init/ is safer to run.
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then
     if [ "$sslcertificate" = "installcertbot" ] && [ ! -z "$domainname" ]
       then
-	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
+	      #DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
+	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/"
+	    else
+	      #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 	  fi
-	  #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
   else
-    DROPLETIP="unknown" #TODO: get droplet ID from packer or by the last line: LASTLINE=$(doctl compute image list --public | tail -n1)
-    #Maybe use the line in buildpacker.log 'droplet IP=xxxxxx'
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 fi
 
