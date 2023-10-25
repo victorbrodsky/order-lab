@@ -271,6 +271,26 @@ sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
 #Some challenges have failed.
 #Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
 
+#Success:
+#Certificate is saved at: /etc/letsencrypt/live/tincry.com/fullchain.pem
+#Key is saved at:         /etc/letsencrypt/live/tincry.com/privkey.pem
+#Log:                     /var/log/letsencrypt/letsencrypt.log
+#[root@packer-1698242454 letsencrypt]# sudo certbot -n --apache --agree-tos --email oli2002@med.cornell.edu --domains tincry.com
+#Saving debug log to /var/log/letsencrypt/letsencrypt.log
+#Requesting a certificate for tincry.com
+#
+#Successfully received certificate.
+#Certificate is saved at: /etc/letsencrypt/live/tincry.com/fullchain.pem
+#Key is saved at:         /etc/letsencrypt/live/tincry.com/privkey.pem
+#This certificate expires on 2024-01-23.
+#These files will be updated when the certificate renews.
+#Certbot has set up a scheduled task to automatically renew this certificate in the background.
+#
+#Deploying certificate
+#Successfully deployed certificate for tincry.com to /etc/httpd/conf.d/000-default-le-ssl.conf
+#Added an HTTP->HTTPS rewrite in addition to other RewriteRules; you may wish to check for overall consistency.
+#Congratulations! You have successfully enabled HTTPS on https://tincry.com
+
 echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
 sudo certbot renew --dry-run
 
