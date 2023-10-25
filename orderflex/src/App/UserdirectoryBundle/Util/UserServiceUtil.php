@@ -1629,6 +1629,10 @@ Pathology and Laboratory Medicine",
         }
         $res = $res . "<br>" . "IP: " . $ip;
 
+        //connection_channel
+        $connection_channel = $this->container->getParameter('connection_channel');
+        $res = $res . "<br>" . "Connection channel: " . $connection_channel;
+
         return $res;
     }
 
