@@ -278,6 +278,7 @@ fi
 
 #Create snapshot_name_bash_value unique name
 snapshot_name_bash_value="date '+%Y-%m-%d-%H-%M'"
+snapshot_name_bash_value="date '+%Y-%m-%d-%H-%M'"-"uuidgen -t | head -c 5"
 echo snapshot_name_bash_value=$snapshot_name_bash_value
 exit 0
 
