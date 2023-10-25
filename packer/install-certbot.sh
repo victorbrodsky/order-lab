@@ -238,6 +238,9 @@ sudo snap install --classic certbot
 echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
+echo -e ${COLOR} Sleep 180 seconds before installing certbot on Apache ${NC}
+sleep 180
+
 echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
 echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
 sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
