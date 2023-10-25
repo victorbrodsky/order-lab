@@ -320,3 +320,18 @@ if [ "$OSNAME" = "Ubuntu" ]
 fi
 
 
+########### Notes #############
+#https://www.digitalocean.com/blog/automating-application-deployments-with-user-data
+#https://github.com/daveworth/sample_app_rails_4/blob/master/deploy_to_do.sh
+#{
+#        "type": "shell",
+#		"environment_vars": [
+#			"domainname=bash_domainname",
+#			"sslcertificate=bash_sslcertificate",
+#			"email=bash_email",
+#			"apitoken=api_token_bash_value",
+#			"snapshot_name=snapshot_name_bash_value"
+#		],
+#        "script": "install-certbot.sh"
+#	  }
+
