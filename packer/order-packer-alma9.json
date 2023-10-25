@@ -10,6 +10,7 @@
     "region": "nyc3",
     "size": "2gb",
     "image": "almalinux-9-x64",
+	"snapshot_name": "snapshot_name_bash_value",
     "ssh_username": "{{user `ssh_name`}}"	
   }],
 

@@ -145,6 +145,7 @@ tar xf ~/doctl-1.100.0-linux-amd64.tar.gz
 sudo mv ~/doctl /usr/local/bin
 
 #1) doctl auth init --access-token $apitoken
+echo -e ${COLOR} Script install-cerbot.sh: init doctl ${NC}
 doctl auth init --access-token $apitoken
 
 #2) doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v

@@ -1,0 +1,3421 @@
+[
+  {
+    "id": "23041094",
+    "name": "packer-1487865170",
+    "resource_id": "40563764",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 0.98,
+    "created_at": "2017-02-23T15:53:40Z"
+  },
+  {
+    "id": "23066496",
+    "name": "packer-1487969444",
+    "resource_id": "40679004",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.03,
+    "created_at": "2017-02-24T20:52:57Z"
+  },
+  {
+    "id": "23071141",
+    "name": "packer-1487981430",
+    "resource_id": "40691858",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.09,
+    "created_at": "2017-02-25T00:14:04Z"
+  },
+  {
+    "id": "23071530",
+    "name": "packer-1487982149",
+    "resource_id": "40692997",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.42,
+    "created_at": "2017-02-25T00:25:56Z"
+  },
+  {
+    "id": "23152083",
+    "name": "packer-1488296576",
+    "resource_id": "40974668",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.1,
+    "created_at": "2017-02-28T15:46:43Z"
+  },
+  {
+    "id": "23152115",
+    "name": "packer-1488296922",
+    "resource_id": "40975257",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.1,
+    "created_at": "2017-02-28T15:52:09Z"
+  },
+  {
+    "id": "23152331",
+    "name": "packer-1488298788",
+    "resource_id": "40978559",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.43,
+    "created_at": "2017-02-28T16:25:02Z"
+  },
+  {
+    "id": "23153294",
+    "name": "packer-1488310911",
+    "resource_id": "40993155",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.43,
+    "created_at": "2017-02-28T19:45:57Z"
+  },
+  {
+    "id": "23157017",
+    "name": "packer-1488319918",
+    "resource_id": "41004717",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.02,
+    "created_at": "2017-02-28T22:13:35Z"
+  },
+  {
+    "id": "23157187",
+    "name": "packer-1488320179",
+    "resource_id": "41005105",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.43,
+    "created_at": "2017-02-28T22:21:11Z"
+  },
+  {
+    "id": "23180145",
+    "name": "packer-1488407636",
+    "resource_id": "41110960",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.82,
+    "created_at": "2017-03-01T22:41:01Z"
+  },
+  {
+    "id": "23181246",
+    "name": "packer-1488410654",
+    "resource_id": "41113862",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-01T23:31:25Z"
+  },
+  {
+    "id": "23196611",
+    "name": "packer-1488466213",
+    "resource_id": "41168993",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T14:58:59Z"
+  },
+  {
+    "id": "23196950",
+    "name": "packer-1488469675",
+    "resource_id": "41173967",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T15:54:33Z"
+  },
+  {
+    "id": "23197184",
+    "name": "packer-1488471682",
+    "resource_id": "41176952",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T16:29:25Z"
+  },
+  {
+    "id": "23199341",
+    "name": "packer-1488486902",
+    "resource_id": "41195648",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T20:41:59Z"
+  },
+  {
+    "id": "23200013",
+    "name": "packer-1488488028",
+    "resource_id": "41196847",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T20:59:42Z"
+  },
+  {
+    "id": "23202759",
+    "name": "packer-1488495148",
+    "resource_id": "41205597",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T22:58:25Z"
+  },
+  {
+    "id": "23203717",
+    "name": "packer-1488497686",
+    "resource_id": "41209162",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-02T23:40:45Z"
+  },
+  {
+    "id": "23221166",
+    "name": "packer-1488571038",
+    "resource_id": "41279711",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.83,
+    "created_at": "2017-03-03T20:04:10Z"
+  },
+  {
+    "id": "23621309",
+    "name": "packer-1490123469",
+    "resource_id": "43148833",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-21T19:18:03Z"
+  },
+  {
+    "id": "23642215",
+    "name": "packer-1490190905",
+    "resource_id": "43247888",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-22T14:01:25Z"
+  },
+  {
+    "id": "23642456",
+    "name": "packer-1490193057",
+    "resource_id": "43251389",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-22T14:38:30Z"
+  },
+  {
+    "id": "23643798",
+    "name": "packer-1490204682",
+    "resource_id": "43270658",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-22T17:51:41Z"
+  },
+  {
+    "id": "23643916",
+    "name": "packer-1490205693",
+    "resource_id": "43272227",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-22T18:08:54Z"
+  },
+  {
+    "id": "23647757",
+    "name": "packer-1490220154",
+    "resource_id": "43295365",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-22T22:09:11Z"
+  },
+  {
+    "id": "23664987",
+    "name": "packer-1490277123",
+    "resource_id": "43383593",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-23T13:58:31Z"
+  },
+  {
+    "id": "23665283",
+    "name": "packer-1490280190",
+    "resource_id": "43389384",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-23T14:50:00Z"
+  },
+  {
+    "id": "23665394",
+    "name": "packer-1490281255",
+    "resource_id": "43391434",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-23T15:08:03Z"
+  },
+  {
+    "id": "23665744",
+    "name": "packer-1490284580",
+    "resource_id": "43397142",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.84,
+    "created_at": "2017-03-23T16:03:42Z"
+  },
+  {
+    "id": "24976140",
+    "name": "packer-1495220895",
+    "resource_id": "49347452",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.85,
+    "created_at": "2017-05-19T19:16:40Z"
+  },
+  {
+    "id": "33804972",
+    "name": "packer-1495220895-1524780077988",
+    "resource_id": "49348051",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 30,
+    "size_gigabytes": 6.42,
+    "created_at": "2018-04-26T22:01:26Z"
+  },
+  {
+    "id": "33946820",
+    "name": "packer-1525179535",
+    "resource_id": "91814566",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.93,
+    "created_at": "2018-05-01T13:04:51Z"
+  },
+  {
+    "id": "33947216",
+    "name": "packer-1525182689",
+    "resource_id": "91820996",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.93,
+    "created_at": "2018-05-01T13:57:34Z"
+  },
+  {
+    "id": "33947844",
+    "name": "packer-1525187228",
+    "resource_id": "91829293",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.93,
+    "created_at": "2018-05-01T15:13:40Z"
+  },
+  {
+    "id": "33948458",
+    "name": "packer-1525190814",
+    "resource_id": "91836028",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-01T16:18:45Z"
+  },
+  {
+    "id": "33949189",
+    "name": "packer-1525195845",
+    "resource_id": "91844818",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.93,
+    "created_at": "2018-05-01T17:37:10Z"
+  },
+  {
+    "id": "34225198",
+    "name": "packer-1525989152",
+    "resource_id": "93175827",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.93,
+    "created_at": "2018-05-10T21:58:10Z"
+  },
+  {
+    "id": "34798774",
+    "name": "packer-1527617641",
+    "resource_id": "95553575",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-29T18:20:58Z"
+  },
+  {
+    "id": "34827016",
+    "name": "packer-1527688262",
+    "resource_id": "95653558",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-30T13:57:22Z"
+  },
+  {
+    "id": "34828080",
+    "name": "packer-1527692555",
+    "resource_id": "95661009",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-30T15:08:44Z"
+  },
+  {
+    "id": "34828329",
+    "name": "packer-1527695605",
+    "resource_id": "95665099",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-30T15:59:52Z"
+  },
+  {
+    "id": "34829329",
+    "name": "packer-1527703705",
+    "resource_id": "95677604",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-30T18:15:13Z"
+  },
+  {
+    "id": "34829680",
+    "name": "packer-1527705621",
+    "resource_id": "95680550",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-05-30T18:46:57Z"
+  },
+  {
+    "id": "34890303",
+    "name": "packer-1527867747",
+    "resource_id": "95934856",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.94,
+    "created_at": "2018-06-01T15:49:54Z"
+  },
+  {
+    "id": "35267643",
+    "name": "packer-1528935055",
+    "resource_id": "97717993",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.95,
+    "created_at": "2018-06-14T00:18:20Z"
+  },
+  {
+    "id": "35285321",
+    "name": "packer-1528983238",
+    "resource_id": "97798718",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.95,
+    "created_at": "2018-06-14T13:40:16Z"
+  },
+  {
+    "id": "35285794",
+    "name": "packer-1528983905",
+    "resource_id": "97799847",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.95,
+    "created_at": "2018-06-14T13:55:14Z"
+  },
+  {
+    "id": "35356750",
+    "name": "packer-1529186405",
+    "resource_id": "98111295",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.95,
+    "created_at": "2018-06-16T22:07:28Z"
+  },
+  {
+    "id": "35408114",
+    "name": "packer-1529335021",
+    "resource_id": "98343570",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.95,
+    "created_at": "2018-06-18T15:23:45Z"
+  },
+  {
+    "id": "35501407",
+    "name": "packer-1529592849",
+    "resource_id": "98798271",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-06-21T15:03:42Z"
+  },
+  {
+    "id": "35844105",
+    "name": "packer-1530548853",
+    "resource_id": "100171997",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-02T16:37:32Z"
+  },
+  {
+    "id": "35875490",
+    "name": "packer-1530638258",
+    "resource_id": "100308278",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-03T17:28:05Z"
+  },
+  {
+    "id": "36124025",
+    "name": "packer-1531318481",
+    "resource_id": "101292500",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.11,
+    "created_at": "2018-07-11T14:42:30Z"
+  },
+  {
+    "id": "36124450",
+    "name": "packer-1531321230",
+    "resource_id": "101296848",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-11T15:08:43Z"
+  },
+  {
+    "id": "36342614",
+    "name": "packer-1531902372",
+    "resource_id": "102224453",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-18T08:34:20Z"
+  },
+  {
+    "id": "36344625",
+    "name": "packer-1531921643",
+    "resource_id": "102260265",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-18T13:55:23Z"
+  },
+  {
+    "id": "36345919",
+    "name": "packer-1531925675",
+    "resource_id": "102267708",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.12,
+    "created_at": "2018-07-18T15:19:51Z"
+  },
+  {
+    "id": "36346386",
+    "name": "packer-1531930821",
+    "resource_id": "102277024",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-18T16:28:27Z"
+  },
+  {
+    "id": "36346559",
+    "name": "packer-1531934678",
+    "resource_id": "102283484",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.1,
+    "created_at": "2018-07-18T17:32:33Z"
+  },
+  {
+    "id": "36346943",
+    "name": "packer-1531936189",
+    "resource_id": "102286069",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.12,
+    "created_at": "2018-07-18T18:15:41Z"
+  },
+  {
+    "id": "36539680",
+    "name": "packer-1532461850",
+    "resource_id": "103196601",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.16,
+    "created_at": "2018-07-24T20:16:49Z"
+  },
+  {
+    "id": "36728174",
+    "name": "packer-1532977263",
+    "resource_id": "104024250",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.14,
+    "created_at": "2018-07-30T19:10:10Z"
+  },
+  {
+    "id": "36737348",
+    "name": "packer-1532992897",
+    "resource_id": "104046432",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.14,
+    "created_at": "2018-07-30T23:35:07Z"
+  },
+  {
+    "id": "36829462",
+    "name": "packer-1533242321",
+    "resource_id": "104437809",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.17,
+    "created_at": "2018-08-02T21:04:32Z"
+  },
+  {
+    "id": "37278735",
+    "name": "packer-1534456583",
+    "resource_id": "106396802",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.18,
+    "created_at": "2018-08-16T22:06:39Z"
+  },
+  {
+    "id": "38581816",
+    "name": "packer-1537906386",
+    "resource_id": "111837424",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.18,
+    "created_at": "2018-09-25T20:20:56Z"
+  },
+  {
+    "id": "38678986",
+    "name": "packer-1538152666",
+    "resource_id": "112387955",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 3.18,
+    "created_at": "2018-09-28T16:46:03Z"
+  },
+  {
+    "id": "42842686",
+    "name": "packer-1548361324",
+    "resource_id": "130182649",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 1.68,
+    "created_at": "2019-01-24T20:27:18Z"
+  },
+  {
+    "id": "42845107",
+    "name": "packer-1548364231",
+    "resource_id": "130187683",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 20,
+    "size_gigabytes": 2.83,
+    "created_at": "2019-01-24T21:17:54Z"
+  },
+  {
+    "id": "43023151",
+    "name": "packer-1548791083",
+    "resource_id": "130812991",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 60,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-29T19:55:32Z"
+  },
+  {
+    "id": "43025978",
+    "name": "packer-1548794947",
+    "resource_id": "130819221",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 30,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-29T20:56:51Z"
+  },
+  {
+    "id": "43028205",
+    "name": "packer-1548797553",
+    "resource_id": "130824663",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-29T21:40:46Z"
+  },
+  {
+    "id": "43094202",
+    "name": "packer-1548951485",
+    "resource_id": "131083470",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-31T16:29:54Z"
+  },
+  {
+    "id": "43094437",
+    "name": "packer-1548954257",
+    "resource_id": "131089047",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-31T17:14:24Z"
+  },
+  {
+    "id": "43097260",
+    "name": "packer-1548963346",
+    "resource_id": "131103994",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2019-01-31T19:44:15Z"
+  },
+  {
+    "id": "44161946",
+    "name": "packer-1551385486",
+    "resource_id": "134681827",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.83,
+    "created_at": "2019-02-28T20:31:32Z"
+  },
+  {
+    "id": "44166923",
+    "name": "packer-1551390772",
+    "resource_id": "134688512",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.28,
+    "created_at": "2019-02-28T22:06:15Z"
+  },
+  {
+    "id": "44312508",
+    "name": "packer-1551723396",
+    "resource_id": "135099373",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.28,
+    "created_at": "2019-03-04T18:26:34Z"
+  },
+  {
+    "id": "44313081",
+    "name": "packer-1551725312",
+    "resource_id": "135101371",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.28,
+    "created_at": "2019-03-04T18:57:05Z"
+  },
+  {
+    "id": "47548566",
+    "name": "packer-1558730488",
+    "resource_id": "145105882",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-24T20:50:33Z"
+  },
+  {
+    "id": "47548657",
+    "name": "packer-1558730637",
+    "resource_id": "145106076",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-24T20:51:58Z"
+  },
+  {
+    "id": "47549739",
+    "name": "packer-1558732068",
+    "resource_id": "145107974",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-24T21:17:19Z"
+  },
+  {
+    "id": "47622066",
+    "name": "packer-1558893191",
+    "resource_id": "145283067",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-26T18:01:44Z"
+  },
+  {
+    "id": "47698152",
+    "name": "packer-1559052563",
+    "resource_id": "145474411",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-28T14:20:54Z"
+  },
+  {
+    "id": "47700009",
+    "name": "packer-1559059281",
+    "resource_id": "145482948",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-28T16:13:24Z"
+  },
+  {
+    "id": "47739000",
+    "name": "packer-1559143212",
+    "resource_id": "145595273",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-29T15:29:26Z"
+  },
+  {
+    "id": "47740844",
+    "name": "packer-1559150248",
+    "resource_id": "145605735",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-29T17:25:06Z"
+  },
+  {
+    "id": "47741165",
+    "name": "packer-1559153500",
+    "resource_id": "145610762",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-29T18:22:36Z"
+  },
+  {
+    "id": "47744629",
+    "name": "packer-1559160266",
+    "resource_id": "145619522",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-29T20:13:42Z"
+  },
+  {
+    "id": "47822180",
+    "name": "packer-1559312928",
+    "resource_id": "145833456",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-31T14:44:27Z"
+  },
+  {
+    "id": "47827319",
+    "name": "packer-1559332978",
+    "resource_id": "145858163",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-05-31T20:11:59Z"
+  },
+  {
+    "id": "47944389",
+    "name": "packer-1559572386",
+    "resource_id": "146167235",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.27,
+    "created_at": "2019-06-03T14:44:14Z"
+  },
+  {
+    "id": "47945736",
+    "name": "packer-1559577298",
+    "resource_id": "146175760",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-03T16:03:41Z"
+  },
+  {
+    "id": "47947312",
+    "name": "packer-1559585070",
+    "resource_id": "146188630",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.19,
+    "created_at": "2019-06-03T18:13:53Z"
+  },
+  {
+    "id": "47950419",
+    "name": "packer-1559593357",
+    "resource_id": "146201333",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.19,
+    "created_at": "2019-06-03T20:32:01Z"
+  },
+  {
+    "id": "47984842",
+    "name": "packer-1559658544",
+    "resource_id": "146291495",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-04T14:39:06Z"
+  },
+  {
+    "id": "47986099",
+    "name": "packer-1559663665",
+    "resource_id": "146299295",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-04T16:03:37Z"
+  },
+  {
+    "id": "47989301",
+    "name": "packer-1559676167",
+    "resource_id": "146317074",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-04T19:30:40Z"
+  },
+  {
+    "id": "47989796",
+    "name": "packer-1559677446",
+    "resource_id": "146318702",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-04T19:54:09Z"
+  },
+  {
+    "id": "47990693",
+    "name": "packer-1559678907",
+    "resource_id": "146320481",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-04T20:17:52Z"
+  },
+  {
+    "id": "48027394",
+    "name": "packer-1559754336",
+    "resource_id": "146420235",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.19,
+    "created_at": "2019-06-05T17:16:09Z"
+  },
+  {
+    "id": "48070048",
+    "name": "packer-1559849638",
+    "resource_id": "146554939",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-06T19:42:24Z"
+  },
+  {
+    "id": "48072861",
+    "name": "packer-1559854223",
+    "resource_id": "146562492",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-06T20:58:16Z"
+  },
+  {
+    "id": "48106245",
+    "name": "packer-1559916942",
+    "resource_id": "146661343",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-07T14:26:39Z"
+  },
+  {
+    "id": "48269022",
+    "name": "packer-1560268735",
+    "resource_id": "147126957",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-06-11T16:07:55Z"
+  },
+  {
+    "id": "49657098",
+    "name": "packer-1563218384",
+    "resource_id": "151102731",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-07-15T19:28:06Z"
+  },
+  {
+    "id": "50270552",
+    "name": "packer-1564497976",
+    "resource_id": "153004983",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-07-30T14:54:23Z"
+  },
+  {
+    "id": "50861291",
+    "name": "packer-1565719062",
+    "resource_id": "154790913",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-13T18:07:26Z"
+  },
+  {
+    "id": "50862570",
+    "name": "packer-1565724357",
+    "resource_id": "154800337",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-13T19:32:59Z"
+  },
+  {
+    "id": "50866662",
+    "name": "packer-1565730433",
+    "resource_id": "154810225",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-13T21:15:17Z"
+  },
+  {
+    "id": "50901790",
+    "name": "packer-1565796785",
+    "resource_id": "154909876",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-14T15:40:25Z"
+  },
+  {
+    "id": "50903502",
+    "name": "packer-1565802562",
+    "resource_id": "154918182",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-14T17:18:05Z"
+  },
+  {
+    "id": "50903876",
+    "name": "packer-1565805167",
+    "resource_id": "154922793",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-14T18:00:57Z"
+  },
+  {
+    "id": "51158181",
+    "name": "packer-1566320440",
+    "resource_id": "155647666",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-20T17:08:09Z"
+  },
+  {
+    "id": "51158436",
+    "name": "packer-1566322364",
+    "resource_id": "155650305",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.2,
+    "created_at": "2019-08-20T17:39:40Z"
+  },
+  {
+    "id": "53034683",
+    "name": "packer-1570046198",
+    "resource_id": "161415729",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.21,
+    "created_at": "2019-10-02T20:06:52Z"
+  },
+  {
+    "id": "53074616",
+    "name": "packer-1570118265",
+    "resource_id": "161533915",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.03,
+    "created_at": "2019-10-03T15:59:23Z"
+  },
+  {
+    "id": "53074780",
+    "name": "packer-1570118630",
+    "resource_id": "161535119",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.03,
+    "created_at": "2019-10-03T16:04:57Z"
+  },
+  {
+    "id": "53121034",
+    "name": "packer-1570212173",
+    "resource_id": "161691882",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 0.88,
+    "created_at": "2019-10-04T18:03:52Z"
+  },
+  {
+    "id": "53295297",
+    "name": "packer-1570551763",
+    "resource_id": "162192397",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.21,
+    "created_at": "2019-10-08T16:29:48Z"
+  },
+  {
+    "id": "53295905",
+    "name": "packer-1570554240",
+    "resource_id": "162196646",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.21,
+    "created_at": "2019-10-08T17:12:12Z"
+  },
+  {
+    "id": "53298462",
+    "name": "packer-1570563098",
+    "resource_id": "162211047",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.21,
+    "created_at": "2019-10-08T19:38:47Z"
+  },
+  {
+    "id": "53390552",
+    "name": "packer-1570739886",
+    "resource_id": "162491486",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.24,
+    "created_at": "2019-10-10T20:45:37Z"
+  },
+  {
+    "id": "53699988",
+    "name": "packer-1571341929",
+    "resource_id": "163360977",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.55,
+    "created_at": "2019-10-17T20:02:19Z"
+  },
+  {
+    "id": "53742251",
+    "name": "packer-1571420184",
+    "resource_id": "163470514",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.55,
+    "created_at": "2019-10-18T17:56:06Z"
+  },
+  {
+    "id": "53742747",
+    "name": "packer-1571421940",
+    "resource_id": "163473320",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.54,
+    "created_at": "2019-10-18T18:16:49Z"
+  },
+  {
+    "id": "53743312",
+    "name": "packer-1571423863",
+    "resource_id": "163475644",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.55,
+    "created_at": "2019-10-18T18:53:18Z"
+  },
+  {
+    "id": "53744826",
+    "name": "packer-1571426951",
+    "resource_id": "163480014",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.55,
+    "created_at": "2019-10-18T19:40:50Z"
+  },
+  {
+    "id": "54012239",
+    "name": "packer-1571940224",
+    "resource_id": "164224686",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.06,
+    "created_at": "2019-10-24T18:18:03Z"
+  },
+  {
+    "id": "54065424",
+    "name": "packer-1572039239",
+    "resource_id": "164375343",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.86,
+    "created_at": "2019-10-25T21:45:40Z"
+  },
+  {
+    "id": "54192267",
+    "name": "packer-1572288437",
+    "resource_id": "164728142",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.06,
+    "created_at": "2019-10-28T18:59:33Z"
+  },
+  {
+    "id": "58091400",
+    "name": "packer-1579632974",
+    "resource_id": "176619281",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.05,
+    "created_at": "2020-01-21T19:07:44Z"
+  },
+  {
+    "id": "58092373",
+    "name": "packer-1579635806",
+    "resource_id": "176625316",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.14,
+    "created_at": "2020-01-21T19:56:10Z"
+  },
+  {
+    "id": "58093679",
+    "name": "packer-1579637424",
+    "resource_id": "176628816",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.13,
+    "created_at": "2020-01-21T20:25:25Z"
+  },
+  {
+    "id": "58097942",
+    "name": "packer-1579644322",
+    "resource_id": "176642497",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.12,
+    "created_at": "2020-01-21T22:18:13Z"
+  },
+  {
+    "id": "59079499",
+    "name": "packer-1581448851",
+    "resource_id": "179988661",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.05,
+    "created_at": "2020-02-11T19:38:18Z"
+  },
+  {
+    "id": "59082175",
+    "name": "packer-1581453566",
+    "resource_id": "179996740",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.05,
+    "created_at": "2020-02-11T20:55:08Z"
+  },
+  {
+    "id": "59085021",
+    "name": "packer-1581458130",
+    "resource_id": "180005134",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.05,
+    "created_at": "2020-02-11T22:10:19Z"
+  },
+  {
+    "id": "59169752",
+    "name": "packer-1581609904",
+    "resource_id": "180313094",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.14,
+    "created_at": "2020-02-13T16:18:00Z"
+  },
+  {
+    "id": "59171722",
+    "name": "packer-1581616219",
+    "resource_id": "180329924",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.13,
+    "created_at": "2020-02-13T18:09:16Z"
+  },
+  {
+    "id": "59176156",
+    "name": "packer-1581625731",
+    "resource_id": "180353093",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.13,
+    "created_at": "2020-02-13T20:40:36Z"
+  },
+  {
+    "id": "62819490",
+    "name": "packer-1588080665",
+    "resource_id": "190266286",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.1,
+    "created_at": "2020-04-28T13:46:13Z"
+  },
+  {
+    "id": "71687180",
+    "name": "packer-1602620153",
+    "resource_id": "211977690",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-13T20:27:54Z"
+  },
+  {
+    "id": "71688886",
+    "name": "packer-1602621941",
+    "resource_id": "211980430",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-13T20:58:15Z"
+  },
+  {
+    "id": "71736683",
+    "name": "packer-1602694778",
+    "resource_id": "212109660",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-14T17:10:59Z"
+  },
+  {
+    "id": "71744254",
+    "name": "packer-1602708516",
+    "resource_id": "212136409",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-14T21:00:25Z"
+  },
+  {
+    "id": "71745842",
+    "name": "packer-1602710080",
+    "resource_id": "212140077",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-14T21:27:08Z"
+  },
+  {
+    "id": "71748674",
+    "name": "packer-1602712701",
+    "resource_id": "212145097",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.94,
+    "created_at": "2020-10-14T22:10:52Z"
+  },
+  {
+    "id": "71792005",
+    "name": "packer-1602780855",
+    "resource_id": "212271064",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-15T17:05:57Z"
+  },
+  {
+    "id": "71792518",
+    "name": "packer-1602783794",
+    "resource_id": "212277218",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 3.93,
+    "created_at": "2020-10-15T17:54:11Z"
+  },
+  {
+    "id": "71808081",
+    "name": "packer-1602803547",
+    "resource_id": "212313526",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.06,
+    "created_at": "2020-10-15T23:23:25Z"
+  },
+  {
+    "id": "100303414",
+    "name": "packer-1642715644",
+    "resource_id": "283031675",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-20T21:56:09Z"
+  },
+  {
+    "id": "100306319",
+    "name": "packer-1642718930",
+    "resource_id": "283037000",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-20T22:50:31Z"
+  },
+  {
+    "id": "100307770",
+    "name": "packer-1642720485",
+    "resource_id": "283039177",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-20T23:16:20Z"
+  },
+  {
+    "id": "100308147",
+    "name": "packer-1642721454",
+    "resource_id": "283040419",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-20T23:32:31Z"
+  },
+  {
+    "id": "100353988",
+    "name": "packer-1642782038",
+    "resource_id": "283140362",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T16:22:22Z"
+  },
+  {
+    "id": "100357910",
+    "name": "packer-1642790122",
+    "resource_id": "283155037",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T18:37:09Z"
+  },
+  {
+    "id": "100360095",
+    "name": "packer-1642792446",
+    "resource_id": "283160820",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T19:16:08Z"
+  },
+  {
+    "id": "100361259",
+    "name": "packer-1642793670",
+    "resource_id": "283162661",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T19:36:18Z"
+  },
+  {
+    "id": "100362378",
+    "name": "packer-1642794822",
+    "resource_id": "283164065",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T19:55:29Z"
+  },
+  {
+    "id": "100367880",
+    "name": "packer-1642798587",
+    "resource_id": "283170986",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.54,
+    "created_at": "2022-01-21T20:58:06Z"
+  },
+  {
+    "id": "100374500",
+    "name": "packer-1642803422",
+    "resource_id": "283179210",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.33,
+    "created_at": "2022-01-21T22:30:26Z"
+  },
+  {
+    "id": "100567755",
+    "name": "packer-1643053612",
+    "resource_id": "283574297",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.34,
+    "created_at": "2022-01-24T19:59:33Z"
+  },
+  {
+    "id": "100697136",
+    "name": "packer-1643214039",
+    "resource_id": "283864649",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.33,
+    "created_at": "2022-01-26T16:33:34Z"
+  },
+  {
+    "id": "100700903",
+    "name": "packer-1643223027",
+    "resource_id": "283881802",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 0.9,
+    "created_at": "2022-01-26T18:51:26Z"
+  },
+  {
+    "id": "100765003",
+    "name": "packer-1643297380",
+    "resource_id": "284008325",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.94,
+    "created_at": "2022-01-27T15:35:59Z"
+  },
+  {
+    "id": "100766585",
+    "name": "packer-1643301931",
+    "resource_id": "284016445",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.93,
+    "created_at": "2022-01-27T16:53:39Z"
+  },
+  {
+    "id": "100767307",
+    "name": "packer-1643303312",
+    "resource_id": "284018888",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.94,
+    "created_at": "2022-01-27T17:15:02Z"
+  },
+  {
+    "id": "100775396",
+    "name": "packer-1643313444",
+    "resource_id": "284036487",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.34,
+    "created_at": "2022-01-27T20:13:31Z"
+  },
+  {
+    "id": "104530312",
+    "name": "packer-1647976894",
+    "resource_id": "291808820",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.12,
+    "created_at": "2022-03-22T19:29:32Z"
+  },
+  {
+    "id": "104531924",
+    "name": "packer-1647978652",
+    "resource_id": "291811687",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.12,
+    "created_at": "2022-03-22T19:57:30Z"
+  },
+  {
+    "id": "104602403",
+    "name": "packer-1648065085",
+    "resource_id": "291975066",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.5,
+    "created_at": "2022-03-23T20:04:26Z"
+  },
+  {
+    "id": "104936175",
+    "name": "packer-1648471927",
+    "resource_id": "292722339",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.51,
+    "created_at": "2022-03-28T13:14:01Z"
+  },
+  {
+    "id": "106558991",
+    "name": "packer-1650472438",
+    "resource_id": "296250784",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.48,
+    "created_at": "2022-04-20T16:54:18Z"
+  },
+  {
+    "id": "106574885",
+    "name": "packer-1650488681",
+    "resource_id": "296292715",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.53,
+    "created_at": "2022-04-20T21:21:02Z"
+  },
+  {
+    "id": "106593819",
+    "name": "packer-1650503209",
+    "resource_id": "296317939",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.53,
+    "created_at": "2022-04-21T01:28:30Z"
+  },
+  {
+    "id": "106911871",
+    "name": "packer-1650903228",
+    "resource_id": "297025646",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.53,
+    "created_at": "2022-04-25T16:31:57Z"
+  },
+  {
+    "id": "106980529",
+    "name": "packer-1650983968",
+    "resource_id": "297208867",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.54,
+    "created_at": "2022-04-26T14:55:00Z"
+  },
+  {
+    "id": "107051294",
+    "name": "packer-1651070816",
+    "resource_id": "297366850",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.54,
+    "created_at": "2022-04-27T15:14:07Z"
+  },
+  {
+    "id": "107077553",
+    "name": "packer-1651101056",
+    "resource_id": "297425488",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.53,
+    "created_at": "2022-04-27T23:30:34Z"
+  },
+  {
+    "id": "108411848",
+    "name": "packer-1652734994",
+    "resource_id": "300057943",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.6,
+    "created_at": "2022-05-16T21:24:12Z"
+  },
+  {
+    "id": "108894336",
+    "name": "packer-1653328626",
+    "resource_id": "301003417",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.62,
+    "created_at": "2022-05-23T18:13:52Z"
+  },
+  {
+    "id": "108895788",
+    "name": "packer-1653330641",
+    "resource_id": "301006861",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.62,
+    "created_at": "2022-05-23T18:50:00Z"
+  },
+  {
+    "id": "111491174",
+    "name": "packer-1656426856",
+    "resource_id": "306246893",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.62,
+    "created_at": "2022-06-28T14:57:49Z"
+  },
+  {
+    "id": "111495713",
+    "name": "packer-1656437455",
+    "resource_id": "306267767",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.61,
+    "created_at": "2022-06-28T17:54:25Z"
+  },
+  {
+    "id": "114543486",
+    "name": "packer-1660147267",
+    "resource_id": "312071142",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.69,
+    "created_at": "2022-08-10T16:17:24Z"
+  },
+  {
+    "id": "114551167",
+    "name": "packer-1660165083",
+    "resource_id": "312104032",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.69,
+    "created_at": "2022-08-10T21:24:29Z"
+  },
+  {
+    "id": "116344423",
+    "name": "packer-1662480217",
+    "resource_id": "315576256",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2022-09-06T16:24:20Z"
+  },
+  {
+    "id": "116407017",
+    "name": "packer-1662554660",
+    "resource_id": "315689664",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.56,
+    "created_at": "2022-09-07T13:04:54Z"
+  },
+  {
+    "id": "134236414",
+    "name": "packer-1686244698",
+    "resource_id": "359596447",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.87,
+    "created_at": "2023-06-08T17:43:27Z"
+  },
+  {
+    "id": "134296028",
+    "name": "packer-1686315783",
+    "resource_id": "359741805",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.88,
+    "created_at": "2023-06-09T13:20:14Z"
+  },
+  {
+    "id": "135512567",
+    "name": "packer-1687987088",
+    "resource_id": "362733695",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.89,
+    "created_at": "2023-06-28T21:38:49Z"
+  },
+  {
+    "id": "135560459",
+    "name": "packer-1688047680",
+    "resource_id": "362842191",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.8,
+    "created_at": "2023-06-29T14:28:51Z"
+  },
+  {
+    "id": "135563036",
+    "name": "packer-1688055021",
+    "resource_id": "362854789",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.89,
+    "created_at": "2023-06-29T16:32:14Z"
+  },
+  {
+    "id": "136002190",
+    "name": "packer-1688659190",
+    "resource_id": "363913209",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.13,
+    "created_at": "2023-07-06T16:00:39Z"
+  },
+  {
+    "id": "136002783",
+    "name": "packer-1688660314",
+    "resource_id": "363915532",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.13,
+    "created_at": "2023-07-06T16:19:40Z"
+  },
+  {
+    "id": "136003221",
+    "name": "packer-1688661186",
+    "resource_id": "363917594",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.2,
+    "created_at": "2023-07-06T16:40:13Z"
+  },
+  {
+    "id": "136004075",
+    "name": "packer-1688662922",
+    "resource_id": "363920616",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.35,
+    "created_at": "2023-07-06T17:11:02Z"
+  },
+  {
+    "id": "136250930",
+    "name": "packer-1689002624",
+    "resource_id": "364520985",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.46,
+    "created_at": "2023-07-10T15:39:26Z"
+  },
+  {
+    "id": "136255340",
+    "name": "packer-1689016537",
+    "resource_id": "364549355",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.27,
+    "created_at": "2023-07-10T19:32:10Z"
+  },
+  {
+    "id": "136313094",
+    "name": "packer-1689084820",
+    "resource_id": "364679428",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.12,
+    "created_at": "2023-07-11T14:14:39Z"
+  },
+  {
+    "id": "136325460",
+    "name": "AlmaLinux-9-GenericCloud-9.2-20230513.x86_64.qcow2",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 10,
+    "size_gigabytes": 0.54,
+    "created_at": "2023-07-11T21:44:36Z"
+  },
+  {
+    "id": "136439212",
+    "name": "packer-1689257480",
+    "resource_id": "365006746",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 0.83,
+    "created_at": "2023-07-13T14:12:22Z"
+  },
+  {
+    "id": "136439739",
+    "name": "packer-1689258622",
+    "resource_id": "365008951",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.09,
+    "created_at": "2023-07-13T14:41:44Z"
+  },
+  {
+    "id": "136443437",
+    "name": "packer-1689269923",
+    "resource_id": "365033850",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.27,
+    "created_at": "2023-07-13T17:59:24Z"
+  },
+  {
+    "id": "136501342",
+    "name": "packer-1689343719",
+    "resource_id": "365178172",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.13,
+    "created_at": "2023-07-14T14:12:30Z"
+  },
+  {
+    "id": "136501769",
+    "name": "packer-1689345094",
+    "resource_id": "365181008",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.13,
+    "created_at": "2023-07-14T14:34:48Z"
+  },
+  {
+    "id": "136502838",
+    "name": "packer-1689348646",
+    "resource_id": "365188493",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.13,
+    "created_at": "2023-07-14T15:33:42Z"
+  },
+  {
+    "id": "136503926",
+    "name": "packer-1689351576",
+    "resource_id": "365194058",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.13,
+    "created_at": "2023-07-14T16:23:10Z"
+  },
+  {
+    "id": "136504601",
+    "name": "packer-1689353393",
+    "resource_id": "365196866",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.13,
+    "created_at": "2023-07-14T16:53:43Z"
+  },
+  {
+    "id": "136504917",
+    "name": "packer-1689353866",
+    "resource_id": "365197610",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 1.71,
+    "created_at": "2023-07-14T17:03:54Z"
+  },
+  {
+    "id": "136505115",
+    "name": "packer-1689354420",
+    "resource_id": "365198630",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.05,
+    "created_at": "2023-07-14T17:10:23Z"
+  },
+  {
+    "id": "136505836",
+    "name": "packer-1689355585",
+    "resource_id": "365200118",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.09,
+    "created_at": "2023-07-14T17:43:12Z"
+  },
+  {
+    "id": "136505866",
+    "name": "packer-1689355623",
+    "resource_id": "365200159",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.92,
+    "created_at": "2023-07-14T17:44:52Z"
+  },
+  {
+    "id": "136506735",
+    "name": "packer-1689358002",
+    "resource_id": "365204820",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.93,
+    "created_at": "2023-07-14T18:27:42Z"
+  },
+  {
+    "id": "136515901",
+    "name": "packer-1689370591",
+    "resource_id": "365233196",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.89,
+    "created_at": "2023-07-14T21:53:28Z"
+  },
+  {
+    "id": "136688419",
+    "name": "packer-1689600892",
+    "resource_id": "365646961",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 2.36,
+    "created_at": "2023-07-17T13:39:42Z"
+  },
+  {
+    "id": "136695853",
+    "name": "packer-1689623801",
+    "resource_id": "365689081",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.09,
+    "created_at": "2023-07-17T20:05:54Z"
+  },
+  {
+    "id": "136755304",
+    "name": "packer-1689702404",
+    "resource_id": "365841106",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.89,
+    "created_at": "2023-07-18T17:59:31Z"
+  },
+  {
+    "id": "136756725",
+    "name": "packer-1689706649",
+    "resource_id": "365849550",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.88,
+    "created_at": "2023-07-18T19:07:11Z"
+  },
+  {
+    "id": "136757140",
+    "name": "packer-1689708869",
+    "resource_id": "365854541",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.88,
+    "created_at": "2023-07-18T19:46:28Z"
+  },
+  {
+    "id": "136758743",
+    "name": "packer-1689711663",
+    "resource_id": "365859244",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.88,
+    "created_at": "2023-07-18T20:32:12Z"
+  },
+  {
+    "id": "137132182",
+    "name": "packer-1690217736",
+    "resource_id": "366765730",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.29,
+    "created_at": "2023-07-24T17:11:08Z"
+  },
+  {
+    "id": "137143907",
+    "name": "packer-1690238235",
+    "resource_id": "366801096",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.29,
+    "created_at": "2023-07-24T22:55:22Z"
+  },
+  {
+    "id": "137195733",
+    "name": "packer-1690304274",
+    "resource_id": "366925769",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.3,
+    "created_at": "2023-07-25T17:18:20Z"
+  },
+  {
+    "id": "137196652",
+    "name": "packer-1690308794",
+    "resource_id": "366934412",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.9,
+    "created_at": "2023-07-25T18:36:32Z"
+  },
+  {
+    "id": "137221286",
+    "name": "packer-1690330529",
+    "resource_id": "366972082",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.89,
+    "created_at": "2023-07-26T00:29:49Z"
+  },
+  {
+    "id": "137253046",
+    "name": "packer-1690373280",
+    "resource_id": "367045233",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.79,
+    "created_at": "2023-07-26T12:20:04Z"
+  },
+  {
+    "id": "137317868",
+    "name": "packer-1690465905",
+    "resource_id": "367213984",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.9,
+    "created_at": "2023-07-27T14:09:20Z"
+  },
+  {
+    "id": "137320390",
+    "name": "packer-1690473931",
+    "resource_id": "367229578",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.8,
+    "created_at": "2023-07-27T16:24:30Z"
+  },
+  {
+    "id": "137321426",
+    "name": "packer-1690476956",
+    "resource_id": "367235160",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.89,
+    "created_at": "2023-07-27T17:12:39Z"
+  },
+  {
+    "id": "137322540",
+    "name": "packer-1690484569",
+    "resource_id": "367249807",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.3,
+    "created_at": "2023-07-27T19:19:54Z"
+  },
+  {
+    "id": "137323404",
+    "name": "packer-1690487800",
+    "resource_id": "367254937",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.08,
+    "created_at": "2023-07-27T20:09:09Z"
+  },
+  {
+    "id": "137325578",
+    "name": "packer-1690490682",
+    "resource_id": "367259538",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.87,
+    "created_at": "2023-07-27T20:56:14Z"
+  },
+  {
+    "id": "137381957",
+    "name": "packer-1690554039",
+    "resource_id": "367375633",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.87,
+    "created_at": "2023-07-28T14:33:01Z"
+  },
+  {
+    "id": "137384313",
+    "name": "packer-1690560587",
+    "resource_id": "367386736",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.88,
+    "created_at": "2023-07-28T16:23:56Z"
+  },
+  {
+    "id": "137387870",
+    "name": "packer-1690574868",
+    "resource_id": "367410628",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.88,
+    "created_at": "2023-07-28T20:23:05Z"
+  },
+  {
+    "id": "137573175",
+    "name": "packer-1690826991",
+    "resource_id": "367809472",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.09,
+    "created_at": "2023-07-31T18:20:04Z"
+  },
+  {
+    "id": "137573832",
+    "name": "packer-1690831327",
+    "resource_id": "367817511",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.09,
+    "created_at": "2023-07-31T19:32:10Z"
+  },
+  {
+    "id": "137636056",
+    "name": "packer-1690909074",
+    "resource_id": "367972415",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.5,
+    "created_at": "2023-08-01T17:10:23Z"
+  },
+  {
+    "id": "137638143",
+    "name": "packer-1690918864",
+    "resource_id": "367993768",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.61,
+    "created_at": "2023-08-01T19:51:31Z"
+  },
+  {
+    "id": "137640497",
+    "name": "packer-1690921336",
+    "resource_id": "367998473",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.91,
+    "created_at": "2023-08-01T20:33:26Z"
+  },
+  {
+    "id": "137696014",
+    "name": "packer-1690982123",
+    "resource_id": "368113491",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.08,
+    "created_at": "2023-08-02T13:30:51Z"
+  },
+  {
+    "id": "140508640",
+    "name": "packer-1694809052",
+    "resource_id": "374932797",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.18,
+    "created_at": "2023-09-15T20:32:31Z"
+  },
+  {
+    "id": "140688160",
+    "name": "packer-1695055751",
+    "resource_id": "375332251",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.16,
+    "created_at": "2023-09-18T17:01:30Z"
+  },
+  {
+    "id": "140751282",
+    "name": "packer-1695139248",
+    "resource_id": "375496004",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.3,
+    "created_at": "2023-09-19T16:16:13Z"
+  },
+  {
+    "id": "141132533",
+    "name": "packer-1695665744",
+    "resource_id": "376456180",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.31,
+    "created_at": "2023-09-25T18:33:17Z"
+  },
+  {
+    "id": "141194564",
+    "name": "packer-1695742685",
+    "resource_id": "376626722",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.39,
+    "created_at": "2023-09-26T16:01:55Z"
+  },
+  {
+    "id": "141195244",
+    "name": "packer-1695747765",
+    "resource_id": "376637830",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.49,
+    "created_at": "2023-09-26T17:20:40Z"
+  },
+  {
+    "id": "141196400",
+    "name": "packer-1695753892",
+    "resource_id": "376650931",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.12,
+    "created_at": "2023-09-26T19:05:36Z"
+  },
+  {
+    "id": "141713676",
+    "name": "packer-1696423424",
+    "resource_id": "377959077",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.35,
+    "created_at": "2023-10-04T12:57:10Z"
+  },
+  {
+    "id": "141714905",
+    "name": "packer-1696433095",
+    "resource_id": "377984947",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.21,
+    "created_at": "2023-10-04T15:37:23Z"
+  },
+  {
+    "id": "141720370",
+    "name": "packer-1696435406",
+    "resource_id": "377990576",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.35,
+    "created_at": "2023-10-04T16:23:29Z"
+  },
+  {
+    "id": "141788500",
+    "name": "packer-1696529433",
+    "resource_id": "378199114",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.75,
+    "created_at": "2023-10-05T18:25:42Z"
+  },
+  {
+    "id": "142033463",
+    "name": "packer-1696856617",
+    "resource_id": "378803014",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.87,
+    "created_at": "2023-10-09T13:18:08Z"
+  },
+  {
+    "id": "142288290",
+    "name": "packer-1697209708",
+    "resource_id": "379533638",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.35,
+    "created_at": "2023-10-13T15:30:27Z"
+  },
+  {
+    "id": "142296131",
+    "name": "packer-1697213488",
+    "resource_id": "379541328",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-13T16:24:19Z"
+  },
+  {
+    "id": "142297875",
+    "name": "packer-1697223912",
+    "resource_id": "379559802",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.35,
+    "created_at": "2023-10-13T19:24:11Z"
+  },
+  {
+    "id": "142475896",
+    "name": "packer-1697464766",
+    "resource_id": "379978190",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-16T14:13:37Z"
+  },
+  {
+    "id": "142494263",
+    "name": "packer-1697489156",
+    "resource_id": "380033942",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.16,
+    "created_at": "2023-10-16T21:03:59Z"
+  },
+  {
+    "id": "142547972",
+    "name": "packer-1697563261",
+    "resource_id": "380176342",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.15,
+    "created_at": "2023-10-17T17:38:36Z"
+  },
+  {
+    "id": "142548454",
+    "name": "packer-1697566600",
+    "resource_id": "380184587",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.21,
+    "created_at": "2023-10-17T18:34:44Z"
+  },
+  {
+    "id": "142555014",
+    "name": "packer-1697572405",
+    "resource_id": "380196631",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-17T20:13:45Z"
+  },
+  {
+    "id": "142557518",
+    "name": "packer-1697578579",
+    "resource_id": "380209556",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-17T21:54:45Z"
+  },
+  {
+    "id": "142602486",
+    "name": "packer-1697642086",
+    "resource_id": "380339790",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-18T15:32:42Z"
+  },
+  {
+    "id": "142610950",
+    "name": "packer-1697647546",
+    "resource_id": "380351208",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-18T17:03:58Z"
+  },
+  {
+    "id": "142620513",
+    "name": "packer-1697659700",
+    "resource_id": "380380572",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-18T20:29:09Z"
+  },
+  {
+    "id": "142665283",
+    "name": "packer-1697722309",
+    "resource_id": "380506215",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-19T13:48:34Z"
+  },
+  {
+    "id": "142665551",
+    "name": "packer-1697724664",
+    "resource_id": "380512075",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-19T14:32:11Z"
+  },
+  {
+    "id": "142728780",
+    "name": "packer-1697813457",
+    "resource_id": "380695683",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 5.37,
+    "created_at": "2023-10-20T15:10:55Z"
+  },
+  {
+    "id": "142750530",
+    "name": "packer-1697845705",
+    "resource_id": "380759796",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2023-10-21T00:04:13Z"
+  },
+  {
+    "id": "142916944",
+    "name": "packer-1698074819",
+    "resource_id": "381183596",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.58,
+    "created_at": "2023-10-23T15:43:15Z"
+  },
+  {
+    "id": "142925651",
+    "name": "packer-1698081606",
+    "resource_id": "381198977",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-23T17:33:17Z"
+  },
+  {
+    "id": "142926256",
+    "name": "packer-1698085333",
+    "resource_id": "381207320",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-23T18:41:37Z"
+  },
+  {
+    "id": "142935229",
+    "name": "packer-1698097532",
+    "resource_id": "381232829",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2023-10-23T21:59:42Z"
+  },
+  {
+    "id": "142935823",
+    "name": "packer-1698099616",
+    "resource_id": "381236220",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.36,
+    "created_at": "2023-10-23T22:35:15Z"
+  },
+  {
+    "id": "142936498",
+    "name": "packer-1698102450",
+    "resource_id": "381240710",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-23T23:19:44Z"
+  },
+  {
+    "id": "142998238",
+    "name": "packer-1698183700",
+    "resource_id": "381416289",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.22,
+    "created_at": "2023-10-24T21:52:32Z"
+  },
+  {
+    "id": "142998827",
+    "name": "packer-1698185448",
+    "resource_id": "381419030",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.58,
+    "created_at": "2023-10-24T22:27:57Z"
+  },
+  {
+    "id": "142999630",
+    "name": "packer-1698189214",
+    "resource_id": "381425800",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2023-10-24T23:38:27Z"
+  },
+  {
+    "id": "143042698",
+    "name": "packer-1698242454",
+    "resource_id": "381532952",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2023-10-25T14:22:13Z"
+  },
+  {
+    "id": "143043143",
+    "name": "packer-1698246445",
+    "resource_id": "381540761",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2023-10-25T15:30:10Z"
+  },
+  {
+    "id": "143052147",
+    "name": "packer-1698255597",
+    "resource_id": "381560994",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2023-10-25T18:01:29Z"
+  },
+  {
+    "id": "143052771",
+    "name": "packer-1698260028",
+    "resource_id": "381571369",
+    "resource_type": "droplet",
+    "regions": [
+      "nyc3"
+    ],
+    "min_disk_size": 40,
+    "size_gigabytes": 4.63,
+    "created_at": "2023-10-25T19:16:43Z"
+  }
+]

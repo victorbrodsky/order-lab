@@ -276,6 +276,10 @@ else
 	exit 0;
 fi
 
+#Create snapshot_name_bash_value unique name
+snapshot_name_bash_value="date '+%Y-%m-%d-%H-%M'"
+echo snapshot_name_bash_value=$snapshot_name_bash_value
+exit 0
 
 echo "*** Pre processing json file: replace and provide parameters ***"
 sed -i -e "s/api_token_bash_value/$apitoken/g" "$ORDERPACKERJSON"
@@ -295,7 +299,7 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 #PACKEROUT=$(packer build "$ORDERPACKERJSON" | tail -1)
 #echo "*** PACKEROUT=$PACKEROUT ***"
-packer build "$ORDERPACKERJSON" | tee buildpacker.log
+packer build -debug "$ORDERPACKERJSON" | tee buildpacker.log
 ############ EOF Run packer json file ############
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
