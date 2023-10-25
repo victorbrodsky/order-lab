@@ -353,7 +353,7 @@ fi
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 sleep 60
 
-#/order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
+# url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.
 # Therefore url order/directory/admin/first-time-login-generation-init/ is safer to run.
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
