@@ -314,7 +314,7 @@ DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --
 
 dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
-echo "droplet IP=$DROPLETIP"
+echo "Create droplet IP=$DROPLETIP"
 ############### EOF Install doctl and create droplet from image ###############
 
 echo "*** Post processing json file (Not important and can be removed) ***"
