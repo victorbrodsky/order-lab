@@ -95,6 +95,11 @@ case $key in
 		shift # past argument
 		shift # past value
     ;;
+  -f|--sshfingerprint)
+		sshfingerprint="$2"
+		shift # past argument
+		shift # past value
+    ;;
     --default)
 		DEFAULT=YES
 		shift # past argument
@@ -324,8 +329,16 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 #echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
 echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... ***"
-DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+#DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 #??? Error: POST https://api.digitalocean.com/v2/droplets: 422 The image for this droplet does not use root passwords, please use an SSH key.
+#Therefore, specify ssh key's fingerprint:
+# doctl compute droplet create packer-1698339421 --size 2gb --image 143115012 --region nyc3 --wait --ssh-keys 4d:54:62:****
+if [ -z "$sshfingerprint" ]
+  then
+    DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+  else
+    DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait --ssh-keys $sshfingerprint | tail -1)
+fi
 
 dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
