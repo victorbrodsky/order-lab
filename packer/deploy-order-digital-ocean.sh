@@ -325,7 +325,7 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 #DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 #echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
-echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
+echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 dropletinfos=( $DROPLET )
@@ -395,6 +395,7 @@ echo -e ${COLOR} Use doctl to compute certificate ${NC}
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 CERTRES=$(doctl compute certificate create --type lets_encrypt --name mycert --dns-names $domainname)
 sleep 60
+#Might need to reboot droplet: doctl compute droplet-action reboot droplet_id 	Reboot a Droplet
 
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.

@@ -7,11 +7,12 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-if true
+#if true
   #disable this script
-  then
-    exit 0
-fi
+#  then
+#    echo Script install-cerbot.sh: Disabled
+#    exit 0
+#fi
 
 #sudo snap install doctl
 
