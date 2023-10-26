@@ -293,22 +293,6 @@ echo "image ID=$IMAGEID; name=$IMAGENAME"
 echo "*** Sleep for 120 sec ***"
 sleep 120
 
-echo "*** Post processing json file ***"
-sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
-sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbuser/bash_dbuser/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbpass/bash_dbpass/g" "$ORDERPACKERJSON"
-sed -i -e "s/$protocol/bash_protocol/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
-sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
-
-sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
-sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
-sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
-sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
-
-sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
-
 #https://docs.digitalocean.com/reference/doctl/reference/compute/certificate/create/
 #doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
 #$ doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
@@ -332,6 +316,20 @@ dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
 echo "droplet IP=$DROPLETIP"
 ############### EOF Install doctl and create droplet from image ###############
+
+echo "*** Post processing json file (Not important and can be removed) ***"
+sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
+sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbuser/bash_dbuser/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbpass/bash_dbpass/g" "$ORDERPACKERJSON"
+sed -i -e "s/$protocol/bash_protocol/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
+sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
+sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
+sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
+sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
 #TESTING=true
 #TESTING=false
