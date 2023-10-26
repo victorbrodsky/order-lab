@@ -357,6 +357,13 @@ if [ "$TESTING" = true ]
 fi
 #not testing
 
+#https://docs.digitalocean.com/reference/doctl/reference/compute/certificate/create/
+#doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
+#$ doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
+#ID                                      Name      DNS Names     SHA-1 Fingerprint    Expiration Date         Created At              Type            State
+#99aba0bf-5366-4892-8b62-eac67d3e884a    mycert    tincry.com                         0001-01-01T00:00:00Z    2023-10-26T15:25:45Z    lets_encrypt    pending
+
+
 #echo "*** Sleep for 60 sec after certbot ***"
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
 sleep 60

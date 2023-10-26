@@ -1837,4 +1837,39 @@ TODO: Try to --record-name www and then remove prefix www from sudo certbot -n -
 Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours:
 view.online, retry after 2023-10-26T22:26:55Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/
 
-sudo certbot certonly --webroot --agree-tos --email cinava@yahoo.com address -d tincry.com -w /var/www/your-domain.com/
+https://www.linuxbabe.com/security/letsencrypt-webroot-tls-certificate
+sudo certbot certonly --webroot --agree-tos --email cinava@yahoo.com -d tincry.com -w /usr/local/bin/order-lab/orderflex/public/
+
+Error:
+Account registered.
+Requesting a certificate for tincry.com
+Certbot failed to authenticate some domains (authenticator: webroot). The Certificate Authority reported these problems:
+  Domain: tincry.com
+  Type:   dns
+  Detail: no valid A records found for tincry.com; no valid AAAA records found for tincry.com
+Hint: The Certificate Authority failed to download the temporary challenge files created by Certbot.
+Ensure that the listed domains serve their content from the provided --webroot-path/-w and that files created there
+can be downloaded from the internet.
+Some challenges have failed.
+Ask for help or search for solutions at https://community.letsencrypt.org.
+See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+
+Success:
+certbot certonly --webroot --agree-tos --email cinava@yahoo.com -d tincry.com -w /usr/local/bin/order-lab/orderflex/public/
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for tincry.com
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/tincry.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/tincry.com/privkey.pem
+This certificate expires on 2024-01-23.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
