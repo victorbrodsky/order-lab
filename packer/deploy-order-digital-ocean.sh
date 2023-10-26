@@ -281,6 +281,20 @@ echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 packer build "$ORDERPACKERJSON" | tee buildpacker.log
 ############ EOF Run packer json file ############
 
+echo "*** Post processing json file (Not important and can be removed) ***"
+sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
+sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbuser/bash_dbuser/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbpass/bash_dbpass/g" "$ORDERPACKERJSON"
+sed -i -e "s/$protocol/bash_protocol/g" "$ORDERPACKERJSON"
+sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
+sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
+sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
+sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
+sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
+
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 #Use Packer v1.7.0 or later
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
@@ -311,25 +325,12 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 
 echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+#??? Error: POST https://api.digitalocean.com/v2/droplets: 422 The image for this droplet does not use root passwords, please use an SSH key.
 
 dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
 echo "Create droplet IP=$DROPLETIP"
 ############### EOF Install doctl and create droplet from image ###############
-
-echo "*** Post processing json file (Not important and can be removed) ***"
-sed -i -e "s/$apitoken/api_token_bash_value/g" "$ORDERPACKERJSON"
-sed -i -e "s/$parameters/parameters_bash_file/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbuser/bash_dbuser/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbpass/bash_dbpass/g" "$ORDERPACKERJSON"
-sed -i -e "s/$protocol/bash_protocol/g" "$ORDERPACKERJSON"
-sed -i -e "s/$dbuser/bash_dbuser/g" parameters.yml
-sed -i -e "s/$dbpass/bash_dbpass/g" parameters.yml
-sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
-sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
-sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
-sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
-sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
 #TESTING=true
 #TESTING=false
@@ -387,12 +388,12 @@ echo -e ${COLOR} Sleep 180 seconds after creating domain "$domainname" with IP "
 sleep 180
 ########## EOF Create domain ###########
 
-echo -e ${COLOR} Use doctl to compute certificate ${NC}
-
+#this certificate only for Some product features, like load balancer SSL termination and custom Spaces CDN endpoints, require SSL certificates
+#echo -e ${COLOR} Use doctl to compute certificate ${NC}
 #echo "*** Sleep for 60 sec after certbot ***"
-echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
-CERTRES=$(doctl compute certificate create --type lets_encrypt --name mycert --dns-names $domainname)
-sleep 60
+#echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
+#CERTRES=$(doctl compute certificate create --type lets_encrypt --name mycert --dns-names $domainname)
+#sleep 60
 #Might need to reboot droplet: doctl compute droplet-action reboot droplet_id 	Reboot a Droplet
 
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
