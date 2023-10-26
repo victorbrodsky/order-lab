@@ -10,9 +10,7 @@
     "region": "nyc3",
     "size": "2gb",
     "image": "almalinux-9-x64",
-	"snapshot_name": "snapshot_name_bash_value",
-    "ssh_username": "{{user `ssh_name`}}",
-	"user_data": "#cloud-config          runcmd:         - bash install-certbot.sh bash_domainname bash_sslcertificate bash_email api_token_bash_value snapshot_name_bash_value"
+    "ssh_username": "{{user `ssh_name`}}"
   }],
 
   "provisioners": [
@@ -130,7 +128,19 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      }
+      },
+
+	  {
+        "type": "shell",
+		"environment_vars": [
+			"domainname=bash_domainname",
+			"sslcertificate=bash_sslcertificate",
+			"email=bash_email",
+			"apitoken=api_token_bash_value",
+			"snapshot_name=snapshot_name_bash_value"
+		],
+        "script": "install-certbot.sh"
+	  }
   ]
 
 }

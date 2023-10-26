@@ -39,29 +39,6 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-f_install_certbot() {
-  if [ -z "$email" ] && [ "$sslcertificate" = "installcertbot" ] ]
-      then
-        #email='myemail@myemail.com'
-        echo "Error: email is not provided for installcertbot option"
-        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
-        exit 0
-  fi
-	if [ ! -z "$domainname" ] && [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
-		then
-			echo -e ${COLOR} Install certbot on the Apache server ${NC}
-			#bash /usr/local/bin/order-lab/packer/install-certbot.sh "$domainname" "$sslcertificate" "$email"
-			#https://www.digitalocean.com/community/questions/run-shell-script-on-droplet-using-api
-			echo -e ${COLOR} ssh root@ip 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh ${NC}
-			ssh root@"$ORIGDROPLETIP" 'bash -s' < ./usr/local/bin/order-lab/packer/install-certbot.sh
-		else
-			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
-	fi
-
-	echo ""
-	sleep 1
-}
-
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -276,7 +253,7 @@ else
 	exit 0;
 fi
 
-#Create snapshot_name_bash_value unique name
+#Create snapshot_name_bash_value unique name: use in packer: "snapshot_name": "snapshot_name_bash_value",
 snapshot_name_bash_value=packer-$os-`date '+%Y-%m-%d-%H-%M-%S'`
 echo snapshot_name_bash_value=$snapshot_name_bash_value
 #exit 0
@@ -313,20 +290,6 @@ IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
 IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
 echo "image ID=$IMAGEID; name=$IMAGENAME"
 
-#echo "*** Getting image ID ***"
-echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
-echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
-LASTLINE=$(doctl compute droplet list --format="Public IPv4" | tail -1)
-lastlinevars=( $LASTLINE )
-DROPLETIP=${lastlinevars[0]}
-echo "droplet IP=[$DROPLETIP]"
-#LASTLINE=$(doctl compute image list | tail -1)
-#echo "LASTLINE=$LASTLINE"
-#vars=( $LASTLINE )
-#IMAGEID=${vars[0]}
-#IMAGENAME=${vars[1]}
-#echo "image ID=$IMAGEID; name=$IMAGENAME"
-
 echo "*** Sleep for 120 sec ***"
 sleep 120
 
@@ -346,6 +309,29 @@ sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 
 sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
+#https://docs.digitalocean.com/reference/doctl/reference/compute/certificate/create/
+#doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
+#$ doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
+#ID                                      Name      DNS Names     SHA-1 Fingerprint    Expiration Date         Created At              Type            State
+#99aba0bf-5366-4892-8b62-eac67d3e884a    mycert    tincry.com                         0001-01-01T00:00:00Z    2023-10-26T15:25:45Z    lets_encrypt    pending
+
+############### Install doctl and create droplet from image ###############
+echo "*** Getting image ID ***"
+echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
+echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
+
+#2) doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v
+#doctl compute domain records create view.online --record-type A --record-name @ --record-ttl 60 --record-data 142.93.65.236 -v
+#DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+#echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
+
+echo -e ${COLOR} *** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... *** ${NC}
+DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
+
+dropletinfos=( $DROPLET )
+DROPLETIP="${dropletinfos[2]}"
+echo "droplet IP=$DROPLETIP"
+############### EOF Install doctl and create droplet from image ###############
 
 #TESTING=true
 #TESTING=false
@@ -357,15 +343,57 @@ if [ "$TESTING" = true ]
 fi
 #not testing
 
-#https://docs.digitalocean.com/reference/doctl/reference/compute/certificate/create/
-#doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
-#$ doctl compute certificate create --type lets_encrypt --name mycert --dns-names tincry.com
-#ID                                      Name      DNS Names     SHA-1 Fingerprint    Expiration Date         Created At              Type            State
-#99aba0bf-5366-4892-8b62-eac67d3e884a    mycert    tincry.com                         0001-01-01T00:00:00Z    2023-10-26T15:25:45Z    lets_encrypt    pending
+#doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
+########## Create domain ###########
+echo "Before creating domainname=$domainname"
+if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
+  then
+    #0) check and create domain and DNS
+    echo "Create domain domainname=$domainname"
+    DOMAINCHECK=$(doctl compute domain get $domainname)
+    echo "Check if domain $domainname exists: $DOMAINCHECK"
+    if [ -z "$DOMAINCHECK" ]
+      then
+        echo "Create domain domainname=$domainname"
+        DOMAINRES=$(doctl compute domain create $domainname --ip-address $DROPLETIP)
+        echo "Created domain DOMAINRES=$DOMAINRES"
+    fi
 
+    #check and delete existing domain DNS's A records with record 'www' or '@'
+    #1) doctl compute domain records list $domainname
+    LIST=$(doctl compute domain records list $domainname | grep -e '@' -e 'www' | grep -w A | awk '{print $1}')
+    #listinfo=( $LIST )
+    #RECORDID="${listinfo[0]}"
+
+    #2) doctl compute domain records delete $domainname record_id. --force - Delete record without confirmation prompt
+    for recordid in $LIST; do
+      echo "Delete old DNS record ID=$recordid"
+      DELETERES=$(doctl compute domain records delete $domainname $recordid --force -v)
+      #echo "DELETERES=$DELETERES"
+    done
+
+    #doctl compute domain create domain_name --ip-address droplet_ip_address
+    #'--record-name www' will create domain name with www prefix, i.e. www.view.online
+    #'--record-name @' will create domain name without prefix, i.e. view.online
+    #doctl compute domain records create $domainname --record-type A --record-name www --record data $DROPLETIP --record-ttl 30 -v
+    #https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/update/
+    #'doctl compute domain records create' or 'doctl compute domain records update': --record-ttl 	The record’s Time To Live value, in seconds, default: 1800
+    DOMAIN=$(doctl compute domain records create $domainname --record-type A --record-name @ --record-ttl 60 --record-data $DROPLETIP -v)
+    echo "DOMAIN=$DOMAIN"
+    DROPLETIP="$domainname"
+  else
+	  echo "Do not create domain domainname=$domainname"
+fi
+
+echo -e ${COLOR} Sleep 180 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
+sleep 180
+########## EOF Create domain ###########
+
+echo -e ${COLOR} Use doctl to compute certificate ${NC}
 
 #echo "*** Sleep for 60 sec after certbot ***"
 echo -e ${COLOR} Sleep for 60 sec before open init web page ${NC}
+CERTRES=$(doctl compute certificate create --type lets_encrypt --name mycert --dns-names $domainname)
 sleep 60
 
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
@@ -417,3 +445,10 @@ else
     # Unknown.
 		echo "open a web browser manually and go to $DROPLETIPWEB"
 fi #deploy-order-digital-ocean.sh: line 447: syntax error: unexpected end of file
+
+
+#Notes:
+#user-data in packer
+#	"user_data": "#cloud-config          runcmd:         - bash install-certbot.sh bash_domainname bash_sslcertificate bash_email api_token_bash_value snapshot_name_bash_value"
+
+
