@@ -38,13 +38,19 @@ echo Use userpass=$userpass
 #chmod 600 /root/.ssh/authorized_keys
 
 #Make sure /home/adminuser/.ssh/authorized_keys exist
-sudo su - adminuser
-mkdir .ssh
-chmod 700 .ssh
-cd .ssh
-touch authorized_keys
-chmod 600 authorized_keys
-cat >> authorized_keys
+mkdir /home/adminuser/.ssh
+chmod 700 /home/adminuser/.ssh
+
+cp /root/.ssh/authorized_keys /home/adminuser/.ssh/authorized_keys
+chmod 600 /home/adminuser/.ssh/authorized_keys
+
+sudo chown adminuser: /home/adminuser/.ssh
+sudo chmod 700 /home/adminuser/.ssh
+#Result: drwxr-xr-x  2 adminuser adminuser  29 Oct 27 17:04 .ssh
+
+sudo chown adminuser: /home/adminuser/.ssh/authorized_keys
+sudo chmod 600 /home/adminuser/.ssh/authorized_keys
+
 exit 0
 ####### EOF Testing ###########
 
@@ -96,16 +102,20 @@ fi
 
 #https://www.fis.gatech.edu/how-to-add-linux-ssh-key-user/
 #Make sure /home/adminuser/.ssh/authorized_keys exist
-sudo su - adminuser
-mkdir .ssh
-chmod 700 .ssh
-cd .ssh
-touch authorized_keys
-chmod 600 authorized_keys
-ls -a /home/adminuser/.ssh
+#sudo su - adminuser
+mkdir /home/adminuser/.ssh
+chmod 700 /home/adminuser/.ssh
+
 cp /root/.ssh/authorized_keys /home/adminuser/.ssh/authorized_keys
-chmod 600 authorized_keys
-exit
+chmod 600 /home/adminuser/.ssh/authorized_keys
+
+sudo chown adminuser: /home/adminuser/.ssh
+sudo chmod 700 /home/adminuser/.ssh
+#Result: drwxr-xr-x  2 adminuser adminuser  29 Oct 27 17:04 .ssh
+
+sudo chown adminuser: /home/adminuser/.ssh/authorized_keys
+sudo chmod 600 /home/adminuser/.ssh/authorized_keys
+
 
 echo -e ${COLOR} Edit /etc/ssh/sshd_config to allow adminuser to ssh  ${NC}
 find="PasswordAuthentication no"
@@ -114,8 +124,6 @@ sed "s/$find/$replace/g" /etc/ssh/sshd_config
 echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
 echo 'AllowUsers adminuser' >> /etc/ssh/sshd_config
 #echo 'GSSAPICleanupCredentials yes' >> /etc/ssh/sshd_config
-chmod 700 /root/.ssh
-chmod 600 /root/.ssh/authorized_keys
 sudo systemctl restart sshd
 
 echo -e ${COLOR} Testing sudo user by  ${NC}
