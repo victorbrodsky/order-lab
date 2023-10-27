@@ -57,6 +57,8 @@ if( $useDb ) {
 //$dtz = $this->container->getParameter('default_time_zone');
 //echo "dtz=".$dtz."<br>";
 
+echo "*** Runing siteparameters.php ***\n"; //testing
+
 $host = $container->getParameter('database_host');
 $driver = $container->getParameter('database_driver');
 $dbname = $container->getParameter('database_name');
