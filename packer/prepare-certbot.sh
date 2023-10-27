@@ -24,7 +24,7 @@ fi
 
 echo Use userpass=$userpass
 
-echo "$userpass" | su adminuser -c ls -la /root
+echo "$userpass" | su adminuser -c ls /root
 exit 0
 
 OSNAME=""
