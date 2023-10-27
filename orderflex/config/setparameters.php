@@ -184,6 +184,7 @@ if( $conn ) {
         //if( $params && is_array($params) && count($params) >= 1 ) {
         if ($continue) {
 
+            echo "*** DB is not empty. Overwrite container's parameters ***\n";
             //exit('111');
 
 //        $aDLDAPServerAddress = null;
@@ -534,6 +535,7 @@ if( $conn ) {
 //            $container->setParameter('database_password',$database_password);
 
         } else {
+            echo "*** DB is empty. Do not overwrite container's parameters ***\n";
             //var_dump($params);
             //exit("params are not valid<br>");
         }//if param
