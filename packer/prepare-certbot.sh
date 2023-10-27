@@ -71,11 +71,33 @@ fi
 echo -e ${COLOR} Init sudo user. The first time you use sudo in a session, you will be prompted for the password of that user account. ${NC}
 su - adminuser
 
-echo -e ${COLOR} Testing sudo user ${NC}
-$echo "$userpass" | sudo ls -la /root
+echo -e ${COLOR} Testing sudo user by  ${NC}
+$echo "$userpass" | su - adminuser #sudo ls -la /root
+
+#check sudo access for a specific user
+#sudo -l -U adminuser
 
 #To gain root shell, enter
 #sudo -s
 
 #use the -S switch which reads the password from STDIN:
 #$echo <password> | sudo -S <command>
+
+#Swicth to root
+#sudo su -
+
+#List of All Users
+#less /etc/passwd
+
+#check sudo access for a specific user
+#sudo -l -U sk
+
+#Delete user
+#userdel adminuser
+
+#Delete user force
+#userdel -r adminuser
+#userdel -f adminuser
+
+#log out the user and kill all user’s running processes
+#sudo killall -u adminuser
