@@ -37,13 +37,14 @@ echo Use userpass=$userpass
 #chmod 700 /root/.ssh
 #chmod 600 /root/.ssh/authorized_keys
 
+#Make sure /home/adminuser/.ssh/authorized_keys exist
 sudo su - adminuser
 mkdir .ssh
 chmod 700 .ssh
 cd .ssh
-~/.ssh$ touch authorized_keys
-~/.ssh$ chmod 600 authorized_keys
-~/.ssh$ cat >> authorized_keys
+touch authorized_keys
+chmod 600 authorized_keys
+cat >> authorized_keys
 exit 0
 ####### EOF Testing ###########
 
@@ -94,13 +95,14 @@ fi
 #su - adminuser
 
 #https://www.fis.gatech.edu/how-to-add-linux-ssh-key-user/
+#Make sure /home/adminuser/.ssh/authorized_keys exist
 sudo su - adminuser
 mkdir .ssh
 chmod 700 .ssh
 cd .ssh
-~/.ssh$ touch authorized_keys
-~/.ssh$ chmod 600 authorized_keys
-~/.ssh$ cat >> authorized_keys
+touch authorized_keys
+chmod 600 authorized_keys
+cat >> authorized_keys
 
 echo -e ${COLOR} Edit /etc/ssh/sshd_config to allow adminuser to ssh  ${NC}
 find="PasswordAuthentication no"
