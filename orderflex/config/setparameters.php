@@ -69,6 +69,7 @@ $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
     $connection_channel = 'http';
 }
+echo "*** Initial connection_channel=[".$connection_channel."] ***\n"; //testing
 
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
