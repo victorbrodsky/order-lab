@@ -28,6 +28,9 @@ echo Use userpass=$userpass
 find="PasswordAuthentication no"
 replace="PasswordAuthentication yes"
 sed "s/$find/$replace/g" /etc/ssh/sshd_config
+
+echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
+
 sudo systemctl restart sshd
 
 #echo "$userpass" | su adminuser -c ls /root
