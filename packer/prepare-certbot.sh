@@ -25,15 +25,17 @@ fi
 echo Use userpass=$userpass
 
 #Testing
-find="PasswordAuthentication no"
-replace="PasswordAuthentication yes"
-sed "s/$find/$replace/g" /etc/ssh/sshd_config
-
-echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
-
-sudo systemctl restart sshd
+#find="PasswordAuthentication no"
+#replace="PasswordAuthentication yes"
+#sed "s/$find/$replace/g" /etc/ssh/sshd_config
+#echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
+#echo 'AllowUsers adminuser' >> /etc/ssh/sshd_config
+#sudo systemctl restart sshd
 
 #echo "$userpass" | su adminuser -c ls /root
+
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
 exit 0
 
 OSNAME=""
@@ -67,18 +69,31 @@ if [ "$OSNAME" = "Ubuntu" ]
       echo "==============================================="
       #usermod -aG sudo adminuser
       useradd -p $(openssl passwd -1 "$userpass") adminuser -s /bin/bash -G sudo
+      usermod -aG sudo adminuser
   else
       echo "==============================================="
       echo "Use Centos, Alma"
       echo "==============================================="
       #usermod -aG wheel adminuser
       useradd -p $(openssl passwd -1 "$userpass") adminuser -s /bin/bash -G wheel
+      usermod -aG wheel adminuser
 fi
 
 #Testing:
 #The first time you use sudo in a session, you will be prompted for the password of that user’s account.
 #echo -e ${COLOR} Init sudo user. The first time you use sudo in a session, you will be prompted for the password of that user account. ${NC}
 #su - adminuser
+
+echo -e ${COLOR} Edit /etc/ssh/sshd_config to allow adminuser to ssh  ${NC}
+find="PasswordAuthentication no"
+replace="PasswordAuthentication yes"
+sed "s/$find/$replace/g" /etc/ssh/sshd_config
+echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
+echo 'AllowUsers adminuser' >> /etc/ssh/sshd_config
+#echo 'GSSAPICleanupCredentials yes' >> /etc/ssh/sshd_config
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
+sudo systemctl restart sshd
 
 echo -e ${COLOR} Testing sudo user by  ${NC}
 $echo "$userpass" | su - adminuser ls -la /root #sudo ls -la /root
