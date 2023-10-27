@@ -24,8 +24,14 @@ fi
 
 echo Use userpass=$userpass
 
+#Testing
+find="PasswordAuthentication no"
+replace="PasswordAuthentication yes"
+sed "s/$find/$replace/g" /etc/ssh/sshd_config
+sudo systemctl restart sshd
+
 #echo "$userpass" | su adminuser -c ls /root
-#exit 0
+exit 0
 
 OSNAME=""
 if cat /etc/*release | grep ^NAME | grep CentOS; then
