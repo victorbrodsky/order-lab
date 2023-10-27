@@ -24,8 +24,8 @@ fi
 
 echo Use userpass=$userpass
 
-echo "$userpass" | su adminuser -c ls /root
-exit 0
+#echo "$userpass" | su adminuser -c ls /root
+#exit 0
 
 OSNAME=""
 if cat /etc/*release | grep ^NAME | grep CentOS; then
@@ -68,8 +68,8 @@ fi
 
 #Testing:
 #The first time you use sudo in a session, you will be prompted for the password of that user’s account.
-echo -e ${COLOR} Init sudo user. The first time you use sudo in a session, you will be prompted for the password of that user account. ${NC}
-su - adminuser
+#echo -e ${COLOR} Init sudo user. The first time you use sudo in a session, you will be prompted for the password of that user account. ${NC}
+#su - adminuser
 
 echo -e ${COLOR} Testing sudo user by  ${NC}
 $echo "$userpass" | su - adminuser ls -la /root #sudo ls -la /root
