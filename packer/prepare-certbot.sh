@@ -24,8 +24,8 @@ fi
 
 echo Use userpass=$userpass
 
-#$echo "$userpass" | sudo ls -la /root
-#exit 0
+$echo "$userpass" | sudo ls -la /root
+exit 0
 
 OSNAME=""
 if cat /etc/*release | grep ^NAME | grep CentOS; then
