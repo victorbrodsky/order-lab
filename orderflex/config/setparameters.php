@@ -137,6 +137,8 @@ if( $useDb ) {
 
 if( $conn ) {
 
+    echo "*** Connection to DB established ***\n";
+
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
 
@@ -543,5 +545,8 @@ if( $conn ) {
     } //if $conn && $schemaManager
 
 }//if $conn
+else {
+    echo "*** No connection to DB ***\n";
+}
 
 
