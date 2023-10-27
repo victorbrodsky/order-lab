@@ -128,7 +128,12 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      }
+      },
+
+	  {
+        "type": "shell",
+        "script": "prepare_certbot.sh"
+    }
   ]
 
 }

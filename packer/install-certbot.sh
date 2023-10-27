@@ -31,23 +31,17 @@ if [ -z "$email" ]
     email=$3
 fi
 
-#not used
-if [ -z "$apitoken" ]
-  then
-    apitoken=$4
-fi
+#if [ -z "$userpass" ]
+#  then
+#    userpass=$4
+#fi
 
-#not used
-if [ -z "$snapshot_name" ]
-  then
-    snapshot_name=$5
-fi
 
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
-echo apitoken=$apitoken #not used
-echo snapshot_name=$snapshot_name #not used
+#echo userpass=$userpass
+
 
 echo Script install-cerbot.sh: domainname=$domainname
 
@@ -94,9 +88,9 @@ echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuratio
 sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
 
 ######## Copy the ssl config file for lets encrypt ########
-echo -e ${COLOR} Script install-cerbot.sh: Copy the ssl config file for lets encrypt ${NC}
-sudo cp /usr/local/bin/order-lab/packer/000-default-le-ssl.conf /etc/httpd/conf.d/000-default-le-ssl.conf
-sed -i -e "s/bash_domainname/$domainname/g" /etc/httpd/conf.d/000-default-le-ssl.conf
+#echo -e ${COLOR} Script install-cerbot.sh: Copy the ssl config file for lets encrypt ${NC}
+#sudo cp /usr/local/bin/order-lab/packer/000-default-le-ssl.conf /etc/httpd/conf.d/000-default-le-ssl.conf
+#sed -i -e "s/bash_domainname/$domainname/g" /etc/httpd/conf.d/000-default-le-ssl.conf
 ######## EOF Copy the ssl config file for lets encrypt ########
 
 echo -e ${COLOR} Script install-cerbot.sh: Restart apache server before installing Certbot ${NC}
@@ -176,6 +170,21 @@ sudo snap install --classic certbot
 
 echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+###### Creating a Sudo-Enabled User ######
+echo -e ${COLOR} Creating a Sudo-Enabled User ${NC}
+adduser adminuser
+
+echo -e ${COLOR} Sudo-Enabled User: create password ${NC}
+passwd adminuser
+
+echo -e ${COLOR} Sudo-Enabled User: add the user to the wheel group. All members of the wheel group have full sudo access ${NC}
+usermod -aG wheel adminuser
+
+#Testing user
+#su - adminuser
+#sudo ls -la /root
+###### EOF Creating a Sudo-Enabled User ######
 
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
 if true
