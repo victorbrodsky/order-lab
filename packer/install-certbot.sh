@@ -31,11 +31,13 @@ if [ -z "$email" ]
     email=$3
 fi
 
+#not used
 if [ -z "$apitoken" ]
   then
     apitoken=$4
 fi
 
+#not used
 if [ -z "$snapshot_name" ]
   then
     snapshot_name=$5
@@ -44,8 +46,8 @@ fi
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
-echo apitoken=$apitoken
-echo snapshot_name=$snapshot_name
+echo apitoken=$apitoken #not used
+echo snapshot_name=$snapshot_name #not used
 
 echo Script install-cerbot.sh: domainname=$domainname
 
@@ -176,7 +178,7 @@ echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
-if false
+if true
   then
     echo -e ${COLOR} Sleep 180 seconds before installing certbot on Apache ${NC}
     sleep 180

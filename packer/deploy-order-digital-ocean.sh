@@ -408,6 +408,7 @@ sleep 180
 #CERTRES=$(doctl compute certificate create --type lets_encrypt --name mycert --dns-names $domainname)
 #sleep 60
 #Might need to reboot droplet: doctl compute droplet-action reboot droplet_id 	Reboot a Droplet
+#TODO: use ssh key or custom admin username/password to run install-certbot.sh
 
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.
