@@ -102,7 +102,10 @@ chmod 700 .ssh
 cd .ssh
 touch authorized_keys
 chmod 600 authorized_keys
-cat >> authorized_keys
+ls -a /home/adminuser/.ssh
+cp /root/.ssh/authorized_keys /root/adminuser/authorized_keys
+chmod 600 authorized_keys
+exit
 
 echo -e ${COLOR} Edit /etc/ssh/sshd_config to allow adminuser to ssh  ${NC}
 find="PasswordAuthentication no"
