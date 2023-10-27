@@ -19,6 +19,8 @@ $useDb = true;
 //$useDb = false; //use when new fields are added to the "SiteParameters" entity
 //exit('start user_siteparameters');
 
+echo "*** Run siteparameters.php ***\n"; //testing
+
 if( $useDb ) {
 
     if (!function_exists('getDBParameter')) {
