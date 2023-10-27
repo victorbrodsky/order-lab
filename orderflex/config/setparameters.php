@@ -57,7 +57,7 @@ if( $useDb ) {
 //$dtz = $this->container->getParameter('default_time_zone');
 //echo "dtz=".$dtz."<br>";
 
-echo "*** Runing siteparameters.php ***\n"; //testing
+echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 
 $host = $container->getParameter('database_host');
 $driver = $container->getParameter('database_driver');
@@ -69,7 +69,7 @@ $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
     $connection_channel = 'http';
 }
-echo "*** Initial connection_channel=[".$connection_channel."] ***\n"; //testing
+echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
 
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
@@ -137,7 +137,7 @@ if( $useDb ) {
 
 if( $conn ) {
 
-    echo "*** Connection to DB established ***\n";
+    echo "*** siteparameters.php: Connection to DB established ***\n";
 
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
@@ -184,7 +184,7 @@ if( $conn ) {
         //if( $params && is_array($params) && count($params) >= 1 ) {
         if ($continue) {
 
-            echo "*** DB is not empty. Overwrite container's parameters ***\n";
+            echo "*** siteparameters.php: DB is not empty. Overwrite container's parameters ***\n";
             //exit('111');
 
 //        $aDLDAPServerAddress = null;
@@ -350,7 +350,7 @@ if( $conn ) {
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
                 $connection_channel = 'http'; //testing
-                echo "*** connection_channel=[".$connection_channel."] ***\n"; //testing
+                echo "*** siteparameters.php: connection_channel=[".$connection_channel."] ***\n"; //testing
 
 //                /////////////////// mailer_dsn ///////////////////
 //                //Moved to the EmailUtil->getSmtpTransport()
@@ -535,7 +535,7 @@ if( $conn ) {
 //            $container->setParameter('database_password',$database_password);
 
         } else {
-            echo "*** DB is empty. Do not overwrite container's parameters ***\n";
+            echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";
             //var_dump($params);
             //exit("params are not valid<br>");
         }//if param
@@ -548,7 +548,7 @@ if( $conn ) {
 
 }//if $conn
 else {
-    echo "*** No connection to DB ***\n";
+    echo "*** siteparameters.php: No connection to DB ***\n";
 }
 
 
