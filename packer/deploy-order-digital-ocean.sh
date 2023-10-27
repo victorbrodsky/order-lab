@@ -409,6 +409,10 @@ sleep 180
 #sleep 60
 #Might need to reboot droplet: doctl compute droplet-action reboot droplet_id 	Reboot a Droplet
 #TODO: use ssh key or custom admin username/password to run install-certbot.sh
+#Need create private/public keys. Add public key to DigitalOcean, and use:
+#doctl compute ssh 381798128 --ssh-key-path 'pathto\.ssh\id_rsa'
+#Enter passphrase
+#exit
 
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.

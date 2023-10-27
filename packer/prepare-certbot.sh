@@ -101,7 +101,7 @@ fi
 #su - adminuser
 
 #https://www.fis.gatech.edu/how-to-add-linux-ssh-key-user/
-#Make sure /home/adminuser/.ssh/authorized_keys exist
+##### Make sure /home/adminuser/.ssh/authorized_keys exist ####
 #sudo su - adminuser
 mkdir /home/adminuser/.ssh
 chmod 700 /home/adminuser/.ssh
@@ -115,7 +115,7 @@ sudo chmod 700 /home/adminuser/.ssh
 
 sudo chown adminuser: /home/adminuser/.ssh/authorized_keys
 sudo chmod 600 /home/adminuser/.ssh/authorized_keys
-
+##### EOF Make sure /home/adminuser/.ssh/authorized_keys exist ####
 
 echo -e ${COLOR} Edit /etc/ssh/sshd_config to allow adminuser to ssh  ${NC}
 find="PasswordAuthentication no"
@@ -124,6 +124,7 @@ sed "s/$find/$replace/g" /etc/ssh/sshd_config
 echo 'ChallengeResponseAuthentication no' >> /etc/ssh/sshd_config
 echo 'AllowUsers adminuser' >> /etc/ssh/sshd_config
 #echo 'GSSAPICleanupCredentials yes' >> /etc/ssh/sshd_config
+echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
 sudo systemctl restart sshd
 
 echo -e ${COLOR} Testing sudo user by  ${NC}

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #https://certbot.eff.org/instructions?ws=apache&os=centosrhel8
-#bash /usr/local/bin/order-lab/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu apitoken
+#bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot oli2002@med.cornell.edu apitoken
 #run script from local PC: ssh root@159.203.85.84 'bash -s' < ./install-certbot.sh need to enter root password
 
 COLOR='\033[1;36m'
@@ -171,20 +171,20 @@ sudo snap install --classic certbot
 echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-###### Creating a Sudo-Enabled User ######
-echo -e ${COLOR} Creating a Sudo-Enabled User ${NC}
-adduser adminuser
-
-echo -e ${COLOR} Sudo-Enabled User: create password ${NC}
-passwd adminuser
-
-echo -e ${COLOR} Sudo-Enabled User: add the user to the wheel group. All members of the wheel group have full sudo access ${NC}
-usermod -aG wheel adminuser
-
-#Testing user
-#su - adminuser
-#sudo ls -la /root
-###### EOF Creating a Sudo-Enabled User ######
+####### Creating a Sudo-Enabled User ######
+#echo -e ${COLOR} Creating a Sudo-Enabled User ${NC}
+#adduser adminuser
+#
+#echo -e ${COLOR} Sudo-Enabled User: create password ${NC}
+#passwd adminuser
+#
+#echo -e ${COLOR} Sudo-Enabled User: add the user to the wheel group. All members of the wheel group have full sudo access ${NC}
+#usermod -aG wheel adminuser
+#
+##Testing user
+##su - adminuser
+##sudo ls -la /root
+####### EOF Creating a Sudo-Enabled User ######
 
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
 if true
