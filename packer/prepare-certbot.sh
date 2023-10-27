@@ -16,13 +16,16 @@ echo userpass=$userpass
 
 echo Script prepare_certbot.sh: Start ...
 
-if [ ! -z "$userpass" ]
+if [ -z "$userpass" ]
   then
     #Make sure to change the default password after installation
     userpass='1234567890'
 fi
 
 echo Use userpass=$userpass
+
+$echo "$userpass" | sudo ls -la /root
+exit 0
 
 OSNAME=""
 if cat /etc/*release | grep ^NAME | grep CentOS; then
@@ -69,7 +72,7 @@ echo -e ${COLOR} Init sudo user. The first time you use sudo in a session, you w
 su - adminuser
 
 echo -e ${COLOR} Testing sudo user ${NC}
-echo sudo ls -la /root
+$echo "$userpass" | sudo ls -la /root
 
 #To gain root shell, enter
 #sudo -s
