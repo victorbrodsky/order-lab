@@ -103,7 +103,7 @@ cd .ssh
 touch authorized_keys
 chmod 600 authorized_keys
 ls -a /home/adminuser/.ssh
-cp /root/.ssh/authorized_keys /root/adminuser/authorized_keys
+cp /root/.ssh/authorized_keys /home/adminuser/.ssh/authorized_keys
 chmod 600 authorized_keys
 exit
 
