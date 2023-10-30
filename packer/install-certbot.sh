@@ -42,8 +42,11 @@ echo sslcertificate=$sslcertificate
 echo email=$email
 #echo userpass=$userpass
 
-
 echo Script install-cerbot.sh: domainname=$domainname
+
+#Testing
+echo -e ${COLOR} End of install-certbot.sh script ${NC}
+exit 0
 
 if [ "$sslcertificate" != "installcertbot" ]
   then
@@ -190,8 +193,8 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 if true
   then
 
-    echo -e ${COLOR} Sleep 180 seconds before installing certbot on Apache ${NC}
-    sleep 180
+    echo -e ${COLOR} Sleep 120 seconds before installing certbot on Apache ${NC}
+    sleep 120
     echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
     echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
     sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
@@ -217,6 +220,9 @@ if true
     fi
 fi
 ###### EOF Run certbot and create certificate ######
+
+echo -e ${COLOR} End of install-certbot.sh script ${NC}
+exit 0
 
 #Success:
 #Certificate is saved at: /etc/letsencrypt/live/tincry.com/fullchain.pem

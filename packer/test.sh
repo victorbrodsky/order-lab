@@ -13,8 +13,8 @@ echo snapshot_name=$snapshot_name
 #testpar="MYTESTPAR"
 #echo -e "1234567890\n" doctl compute ssh packer-1698358964 --ssh-key-path 'C:\Users\ch3\.ssh\id_rsa_2' --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $testpar"
 
-echo "Exit test.sh"
-exit 0
+#echo "Exit test.sh"
+#exit 0
 
 IMAGENAME="packer-1698358964"
 domainname="tincry.com"
@@ -23,6 +23,8 @@ email="cinava@yahoo.com"
 #echo -e "\n" doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "whoami" #"bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
 echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
 exit
+
+echo "Exit test.sh"
 exit 0
 
 echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
