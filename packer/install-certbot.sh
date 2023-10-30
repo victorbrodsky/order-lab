@@ -202,6 +202,10 @@ if true
     echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
     sudo certbot renew --dry-run
 
+    echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
+    cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
+    cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+
     echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
     if [ "$OSNAME" = "Ubuntu" ]
       then

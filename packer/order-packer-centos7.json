@@ -132,7 +132,27 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      }  
+      },
+
+	  {
+		"type": "file",
+		"source": "sshkey.pub",
+		"destination": "/root/.ssh/sshkey.pub"
+	   },
+
+	  {
+        "type": "shell",
+        "inline": [
+            "echo @### Copy public key to authorized_keys: cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys ###",
+		    "cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys",
+			"chmod 700 /root/.ssh",
+			"chmod 600 /root/.ssh/authorized_keys",
+			"echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config",
+			"echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config",
+			"echo @### Restart ssh ###",
+		    "sudo systemctl restart sshd"
+         ]
+	   }
       
    ]
 
