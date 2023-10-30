@@ -28,7 +28,7 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
   then
     echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
     #echo | doctl ... - press enter
-    echo '\n yes\n' | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+    echo -e '\n yes\n' | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
   else
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
