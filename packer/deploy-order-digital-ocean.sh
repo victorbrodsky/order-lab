@@ -436,11 +436,23 @@ sleep 180
 #--ssh-key-path 	Path to SSH private key
 if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$email" ]
   then
-    echo -e ${COLOR} Run bash script install-certbot.sh vi ssh ${NC}
-    echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+    echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
+    echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
   else
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
+
+#Result:
+#Run bash script install-certbot.sh vi ssh
+#The authenticity of host '138.197.124.240 (138.197.124.240)' can't be established.
+#ED25519 key fingerprint is SHA256:hIVlx+Y76XIEbTBj9CZ/lWOCHynsCgqR/HpW5sm2bcQ.
+#This key is not known by any other names
+#Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+#Warning: Permanently added '138.197.124.240' (ED25519) to the list of known hosts.
+#Connection closed by 138.197.124.240 port 22
+#Error: exit status 255
+#root@138.197.36.209: Permission denied (publickey,gssapi-keyex,gssapi-with-mic)
+
 #exit
 ###### EOF Run install-certbot.sh on the droplet ######
 

@@ -16,13 +16,21 @@ echo snapshot_name=$snapshot_name
 #echo "Exit test.sh"
 #exit 0
 
-IMAGENAME="packer-1698358964"
+IMAGENAME="packer-1698678154"
 domainname="tincry.com"
 sslcertificate="installcertbot"
 email="cinava@yahoo.com"
 #echo -e "\n" doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "whoami" #"bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
-echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+#echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
 #exit
+
+if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$email" ]
+  then
+    echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
+    echo | doctl compute ssh "$IMAGENAME" -v --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+  else
+    echo -e ${COLOR} Skip certbot installation ${NC}
+fi
 
 echo "Exit test.sh"
 exit 0
