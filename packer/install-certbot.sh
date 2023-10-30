@@ -45,8 +45,8 @@ echo email=$email
 echo Script install-cerbot.sh: domainname=$domainname
 
 #Testing
-echo -e ${COLOR} End of install-certbot.sh script ${NC}
-exit 0
+#echo -e ${COLOR} End of install-certbot.sh script ${NC}
+#exit 0
 
 if [ "$sslcertificate" != "installcertbot" ]
   then
@@ -192,7 +192,6 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
 if true
   then
-
     echo -e ${COLOR} Sleep 120 seconds before installing certbot on Apache ${NC}
     sleep 120
     echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}

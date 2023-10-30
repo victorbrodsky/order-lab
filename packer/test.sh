@@ -22,7 +22,7 @@ sslcertificate="installcertbot"
 email="cinava@yahoo.com"
 #echo -e "\n" doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "whoami" #"bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
 echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
-exit
+#exit
 
 echo "Exit test.sh"
 exit 0

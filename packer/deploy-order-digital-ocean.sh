@@ -434,9 +434,14 @@ sleep 180
 ###### Run install-certbot.sh on the droplet using ssh keys ######
 #keys: sshkey-private key, sshkey.pub-public key
 #--ssh-key-path 	Path to SSH private key
-echo -e ${COLOR} Run bash script install-certbot.sh vi ssh ${NC}
-echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
-exit
+if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$email" ]
+  then
+    echo -e ${COLOR} Run bash script install-certbot.sh vi ssh ${NC}
+    echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+  else
+    echo -e ${COLOR} Skip certbot installation ${NC}
+fi
+#exit
 ###### EOF Run install-certbot.sh on the droplet ######
 
 
