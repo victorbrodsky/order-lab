@@ -452,12 +452,12 @@ f_install_prepare () {
 	#cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-enabled
 
-	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
+	if [ -n "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
 		then
-			echo -e ${COLOR} HTTPS protocol=$bashprotocol, bashsslcertificate=$bashsslcertificate: Copy default-ssl.conf to the server ${NC}
+			echo -e ${COLOR} HTTPS protocol=$bashprotocol, bashsslcertificate=$bashsslcertificate: Copy default-ssl.conf to the server /etc/apache2/sites-enabled ${NC}
 			cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-enabled
 		else
-			echo -e ${COLOR} HTTP protocol=$bashprotocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
+			echo -e ${COLOR} HTTP protocol=$bashprotocol: Do not copy default-ssl.conf to the server ${NC}
 	fi
 	
 	echo -e ${COLOR} Copy env ${NC}

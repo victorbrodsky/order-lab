@@ -1321,6 +1321,32 @@ class SiteParametersType extends AbstractType
         }
         //////// EOF fields for Server Instance connection ////////
 
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'hostedUserGroups' ) {
+//            $builder->add('hostedUserGroups', EntityType::class, array(
+//                'class' => 'App\UserdirectoryBundle\Entity\HostedUserGroupList',
+//                'label' => 'Hosted User Groups:',
+//                'required' => true,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+//        }
+        
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'tenantPrefixUrlSlug' ) {
+            $builder->add('tenantPrefixUrlSlug', null, array(
+                'label' => 'Tenant prefix URL Slug:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        
     }
 
 

@@ -305,6 +305,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/', name: 'authusergroup-list', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork-list', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver-list', methods: ['GET'])]
+    #[Route(path: '/list/hostedusergroup/', name: 'hostedusergroup-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -996,6 +997,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/', name: 'authusergroup_create', methods: ['POST'])]
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork_create', methods: ['POST'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver_create', methods: ['POST'])]
+    #[Route(path: '/list/hostedusergroup/', name: 'hostedusergroup_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1360,6 +1362,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/new', name: 'authusergroup_new', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/new', name: 'authservernetwork_new', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/new', name: 'authpartnerserver_new', methods: ['GET'])]
+    #[Route(path: '/list/hostedusergroup/new', name: 'hostedusergroup_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1672,6 +1675,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_show', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_show', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_show', methods: ['GET'])]
+    #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -1977,6 +1981,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}/edit', name: 'authusergroup_edit', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/{id}/edit', name: 'authservernetwork_edit', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}/edit', name: 'authpartnerserver_edit', methods: ['GET'])]
+    #[Route(path: '/list/hostedusergroup/{id}/edit', name: 'hostedusergroup_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2332,6 +2337,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_update', methods: ['PUT'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_update', methods: ['PUT'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_update', methods: ['PUT'])]
+    #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3187,6 +3193,10 @@ class ListController extends OrderAbstractController
                 $className = "AuthPartnerServerList";
                 $displayName = "Dual Authentication Tandem Partner Server URL";
                 break;
+//            case "hostedusergroup":
+//                $className = "HostedUserGroupList";
+//                $displayName = "Hosted User Groups";
+//                break;
 
             case "healthcareproviderspecialty":
                 $className = "HealthcareProviderSpecialtiesList";
@@ -4175,6 +4185,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_delete', methods: ['DELETE'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_delete', methods: ['DELETE'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

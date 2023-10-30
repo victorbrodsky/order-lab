@@ -23,6 +23,7 @@ use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace 
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
+use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
 use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
@@ -1136,6 +1137,7 @@ class AdminController extends OrderAbstractController
         $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
         $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
         $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
+        $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
 
         //exit('testing generateAll()');
 
@@ -1280,6 +1282,7 @@ class AdminController extends OrderAbstractController
             'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
             'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
+            'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8074,6 +8077,7 @@ class AdminController extends OrderAbstractController
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
             "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
+//            "hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
 
         );
 
@@ -11731,6 +11735,7 @@ class AdminController extends OrderAbstractController
 
         $types = array(
             "WCM Department of Pathology and Laboratory Medicine",
+            "Multi-tenant"
         );
 
         $count = 10;
@@ -11761,6 +11766,7 @@ class AdminController extends OrderAbstractController
             "Intranet (Tandem)",
             "Internet (Solo) ",
             "Internet (Tandem)",
+            "Internet (Hub)"
         );
 
         $count = 10;
@@ -11803,6 +11809,40 @@ class AdminController extends OrderAbstractController
 
             $em->persist($listEntity);
             $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateHostedUserGroupList() {
+        return 0; //temporary
+
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Test Institution" => "test-institution",
+            "Test Department" => "test-department", //Parent list item ID = 1 {Test Institution}
+            "Demo Institution" => "demo-institution",
+            "Demo Department" => "demo-department", //Parent list item ID = 3 {Demo Institution}
+            "Weill Cornell Medicine" => "wcm",
+            "WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item ID = 5 {Weill Cornell Medicine}
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(HostedUserGroupList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            //$listEntity = new HostedUserGroupList();
+            //$this->setDefaultList($listEntity,$count,$username,$name);
+
+            //$em->persist($listEntity);
+            //$em->flush();
 
             $count = $count + 10;
         }

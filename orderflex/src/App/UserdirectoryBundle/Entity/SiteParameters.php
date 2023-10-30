@@ -1028,11 +1028,22 @@ class SiteParameters {
     private $authPartnerServer;
     //////// EOF fields for Server Instance connection ////////
 
+//    #[ORM\JoinTable(name: 'user_siteparameter_hostedusergroup')]
+//    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\InverseJoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['createdate' => 'DESC'])]
+//    private $hostedUserGroups;
+
+    //Tenant prefix URL Slug
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $tenantPrefixUrlSlug;
 
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
         $this->platformLogos = new ArrayCollection();
+        //$this->hostedUserGroups = new ArrayCollection();
         $this->setMaintenance(false);
         $this->setShowCopyrightOnFooter(true);
         $this->setLdapAll(true);
@@ -4282,6 +4293,40 @@ class SiteParameters {
         $this->authPartnerServer = $authPartnerServer;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTenantPrefixUrlSlug()
+    {
+        return $this->tenantPrefixUrlSlug;
+    }
+
+    /**
+     * @param mixed $tenantPrefixUrlSlug
+     */
+    public function setTenantPrefixUrlSlug($tenantPrefixUrlSlug)
+    {
+        $this->tenantPrefixUrlSlug = $tenantPrefixUrlSlug;
+    }
+
+    
+
+    public function addHostedUserGroup($item)
+    {
+        if( $item && !$this->hostedUserGroups->contains($item) ) {
+            $this->hostedUserGroups->add($item);
+        }
+
+        return $this;
+    }
+    public function removeHostedUserGroup($item)
+    {
+        $this->hostedUserGroups->removeElement($item);
+    }
+    public function getHostedUserGroups()
+    {
+        return $this->hostedUserGroups;
+    }
 
 
     
