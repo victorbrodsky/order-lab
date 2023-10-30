@@ -87,8 +87,20 @@ if cat /etc/*release | grep ^NAME | grep CentOS; then
  echo "Installing packages on $OSNAME"
  echo "==============================================="
 
-echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf  ${NC}
-sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+if [ "$OSNAME" = "Ubuntu" ];
+	then
+		echo "==============================================="
+		echo "Use Ubuntu OS $OSNAME"
+		echo "==============================================="
+		echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf on Ubuntu ${NC}
+    sudo mv /etc/apache2/sites-enabled/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.orig
+	else
+		echo "==============================================="
+		echo "Use all others OS $OSNAME"
+		echo "==============================================="
+		echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf  ${NC}
+    sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+fi
 
 ######## Copy the ssl config file for lets encrypt ########
 #echo -e ${COLOR} Script install-cerbot.sh: Copy the ssl config file for lets encrypt ${NC}
@@ -202,9 +214,22 @@ if true
     echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
     sudo certbot renew --dry-run
 
-    echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
-    cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
-    cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+    if [ "$OSNAME" = "Ubuntu" ]
+      then
+        echo "==============================================="
+        echo "Use Ubuntu OS $OSNAME"
+        echo "==============================================="
+        echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
+        cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf_orig
+        cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+      else
+        echo "==============================================="
+        echo "Use on all others OS $OSNAME"
+        echo "==============================================="
+        echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
+        cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
+        cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+    fi
 
     echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
     if [ "$OSNAME" = "Ubuntu" ]
