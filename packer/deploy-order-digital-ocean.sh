@@ -465,11 +465,11 @@ if [ -n "$protocol" ] && [ "$protocol" = "https" ]
   then
     if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ]
       then
-	      #DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
-	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/"
+	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
+	      #DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/"
 	    else
-	      #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
-	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	      #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 	  fi
   else
     DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"

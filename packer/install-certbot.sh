@@ -199,8 +199,8 @@ if true
     sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
     ##sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
 
-    echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
-    sudo certbot renew --dry-run
+    #echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
+    #sudo certbot renew --dry-run
 
     echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
     if [ "$OSNAME" = "Ubuntu" ]
