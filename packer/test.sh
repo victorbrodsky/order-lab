@@ -9,6 +9,22 @@ echo apitoken=$apitoken
 snapshot_name=$2
 echo snapshot_name=$snapshot_name
 
+#ssh-keygen -t rsa -b 4096 -N "" -f ./sshkey
+#testpar="MYTESTPAR"
+#echo -e "1234567890\n" doctl compute ssh packer-1698358964 --ssh-key-path 'C:\Users\ch3\.ssh\id_rsa_2' --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $testpar"
+
+echo "Exit test.sh"
+exit 0
+
+IMAGENAME="packer-1698358964"
+domainname="tincry.com"
+sslcertificate="installcertbot"
+email="cinava@yahoo.com"
+#echo -e "\n" doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "whoami" #"bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey  --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+exit
+exit 0
+
 echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
 echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
 LASTLINE=$(doctl compute droplet list --format="Public IPv4" | tail -1)

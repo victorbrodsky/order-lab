@@ -128,7 +128,23 @@
 		   "sudo hostnamectl",		   
 		   "psql --version"
          ]    
-      }
+      },
+
+	  {
+		"type": "file",
+		"source": "sshkey.pub",
+		"destination": "/root/.ssh/sshkey.pub"
+	   },
+
+	  {
+        "type": "shell",
+        "inline": [
+            "echo @### Copy public key to authorized_keys ###",
+		    "cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys",
+			"echo @### Restart ssh ###",
+		    "sudo systemctl restart sshd"
+         ]
+	   }
   ]
 
 }

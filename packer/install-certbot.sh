@@ -189,6 +189,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
 if true
   then
+
     echo -e ${COLOR} Sleep 180 seconds before installing certbot on Apache ${NC}
     sleep 180
     echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}

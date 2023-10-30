@@ -258,6 +258,16 @@ else
 	exit 0;
 fi
 
+###### Create ssh keys ######
+echo "*** Create ssh keys ***"
+#https://stackoverflow.com/questions/3659602/automating-enter-keypresses-for-bash-script-generating-ssh-keys
+#-N "" tells it to use an empty passphrase (the same as two of the enters in an interactive script)
+#-f my.key tells it to store the key into my.key (change as you see fit).
+#o send enters to an interactive script: echo -e "\n\n\n" | ssh-keygen -t rsa
+#It will generate two files in the current folder: sshkey and sshkey.pub
+ssh-keygen -t rsa -b 4096 -N "" -f ./sshkey
+###### Create ssh keys ######
+
 #Create snapshot_name_bash_value unique name: use in packer: "snapshot_name": "snapshot_name_bash_value",
 snapshot_name_bash_value=packer-$os-`date '+%Y-%m-%d-%H-%M-%S'`
 echo snapshot_name_bash_value=$snapshot_name_bash_value
@@ -345,6 +355,12 @@ DROPLETIP="${dropletinfos[2]}"
 echo "Create droplet IP=$DROPLETIP"
 ############### EOF Install doctl and create droplet from image ###############
 
+if [ -z $DROPLETIP ]
+  then
+    echo "Droplet IP is empty. Exit installation. DROPLETIP=$DROPLETIP"
+    exit 0
+fi
+
 #TESTING=true
 #TESTING=false
 echo "TESTING=$TESTING"
@@ -358,7 +374,7 @@ fi
 #doctl compute domain records create "$domainname" --record-type A --record-name @ --record-ttl 60 --record-data "$DROPLETIP" -v
 ########## Create domain ###########
 echo "Before creating domainname=$domainname"
-if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
+if [ -n "$domainname" ] && [ "$domainname" != "domainname" ]
   then
     #0) check and create domain and DNS
     echo "Create domain domainname=$domainname"
@@ -415,12 +431,22 @@ sleep 180
 #Enter passphrase
 #exit
 
+###### Run install-certbot.sh on the droplet using ssh keys ######
+#keys: sshkey-private key, sshkey.pub-public key
+#--ssh-key-path 	Path to SSH private key
+echo -e ${COLOR} Run bash script install-certbot.sh vi ssh ${NC}
+echo | doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email"
+exit
+###### EOF Run install-certbot.sh on the droplet ######
+
+
+# '! -z' === '-n': -n has value; -z - is empty
 # url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.
 # Therefore url order/directory/admin/first-time-login-generation-init/ is safer to run.
-if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
+if [ -n "$protocol" ] && [ "$protocol" = "https" ]
   then
-    if [ "$sslcertificate" = "installcertbot" ] && [ ! -z "$domainname" ]
+    if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ]
       then
 	      #DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
 	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/"
