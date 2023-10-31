@@ -50,6 +50,15 @@
 
         {{ formmacros.field(form.liveSiteRootUrl) }}
 
+        {#Server Auth, Server Instance#}
+        <div class="panel panel-default">
+            <div class="panel-heading">Server Instance</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.authServerNetwork) }}
+                {{ formmacros.field(form.authUserGroup) }}
+            </div>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">E-Mail Server (to enable notifications by email)</div>
             <div class="panel-body">
