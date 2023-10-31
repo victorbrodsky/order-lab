@@ -1035,9 +1035,10 @@ class SiteParameters {
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
 
-    //Tenant prefix URL Slug
     #[ORM\Column(type: 'text', nullable: true)]
     private $tenantPrefixUrlSlug;
+
+
 
     function __construct( $addobjects=true )
     {
@@ -4309,24 +4310,24 @@ class SiteParameters {
         $this->tenantPrefixUrlSlug = $tenantPrefixUrlSlug;
     }
 
-    
 
-    public function addHostedUserGroup($item)
-    {
-        if( $item && !$this->hostedUserGroups->contains($item) ) {
-            $this->hostedUserGroups->add($item);
-        }
 
-        return $this;
-    }
-    public function removeHostedUserGroup($item)
-    {
-        $this->hostedUserGroups->removeElement($item);
-    }
-    public function getHostedUserGroups()
-    {
-        return $this->hostedUserGroups;
-    }
+//    public function addHostedUserGroup($item)
+//    {
+//        if( $item && !$this->hostedUserGroups->contains($item) ) {
+//            $this->hostedUserGroups->add($item);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeHostedUserGroup($item)
+//    {
+//        $this->hostedUserGroups->removeElement($item);
+//    }
+//    public function getHostedUserGroups()
+//    {
+//        return $this->hostedUserGroups;
+//    }
 
 
     

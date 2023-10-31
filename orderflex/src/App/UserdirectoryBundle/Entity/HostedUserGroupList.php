@@ -21,22 +21,87 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 //#[Gedmo\Tree(type: 'nested')]
-//#[ORM\Table(name: 'user_institution')]
-//#[ORM\Index(name: 'institution_name_idx', columns: ['name'])]
-//#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
-
 //#[ORM\Table(name: 'user_hostedusergrouplist')]
+//#[ORM\Index(name: 'hostedusergroup_name_idx', columns: ['name'])]
 //#[ORM\Entity]
-
-class HostedUserGroupList extends ListAbstract
+class HostedUserGroupList extends BaseCompositeNode
 {
 
-    //#[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'original')]
+//    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'original')]
     protected $synonyms;
 
-    //#[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'synonyms')]
-    //#[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
+//    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'synonyms')]
+//    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
+//    #[Gedmo\TreeParent]
+//    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
+//    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
+    protected $parent;
+
+//    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['lft' => 'ASC'])]
+    protected $children;
+
+    /**
+     * Organizational Group Types
+     * level int in OrganizationalGroupType corresponds to this level integer: 1-Comment Category, 2-Comment Name
+     * For example, OrganizationalGroupType with level=1, set this level to 1.
+     */
+//    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
+    private $organizationalGroupType;
+
+
+    public function __construct($author=null) {
+        parent::__construct($author);
+    }
+
+
+    /**
+     * @param mixed $organizationalGroupType
+     */
+    public function setOrganizationalGroupType($organizationalGroupType)
+    {
+        $this->organizationalGroupType = $organizationalGroupType;
+        $this->setLevel($organizationalGroupType->getLevel());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationalGroupType()
+    {
+        return $this->organizationalGroupType;
+    }
+
+    /**
+     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
+     * @param mixed $parent
+     */
+    public function setParent(CompositeNodeInterface $parent = null)
+    {
+        $this->parent = $parent;
+
+        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
+        if( $parent && count($parent->getChildren()) > 0 ) {
+            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+        }
+    }
+
+
+    public function __toString()
+    {
+        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+            return $this->getAbbreviation()."";
+        }
+
+        return $this->getName()."";
+    }
+
+    public function getClassName()
+    {
+        return "HostedUserGroupList";
+    }
 
 }

@@ -8077,7 +8077,7 @@ class AdminController extends OrderAbstractController
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
             "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
-//            "hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
+            //"hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
 
         );
 
@@ -11816,7 +11816,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
     public function generateHostedUserGroupList() {
-        return 0; //temporary
+        return 0;
 
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -11831,7 +11831,7 @@ class AdminController extends OrderAbstractController
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name => $urlSlug ) {
 
             $listEntity = $em->getRepository(HostedUserGroupList::class)->findOneByName($name);
             if( $listEntity ) {
@@ -11840,6 +11840,8 @@ class AdminController extends OrderAbstractController
 
             //$listEntity = new HostedUserGroupList();
             //$this->setDefaultList($listEntity,$count,$username,$name);
+
+            //$listEntity->setUrlSlug($urlSlug);
 
             //$em->persist($listEntity);
             //$em->flush();
