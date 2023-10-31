@@ -1340,12 +1340,12 @@ class SiteParametersType extends AbstractType
 //            ));
 //        }
         
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'tenantPrefixUrlSlug' ) {
-            $builder->add('tenantPrefixUrlSlug', null, array(
-                'label' => 'Tenant prefix URL Slug:',
-                'attr' => array('class' => 'form-control')
-            ));
-        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'tenantPrefixUrlSlug' ) {
+//            $builder->add('tenantPrefixUrlSlug', null, array(
+//                'label' => 'Tenant prefix URL Slug:',
+//                'attr' => array('class' => 'form-control')
+//            ));
+//        }
         
     }
 

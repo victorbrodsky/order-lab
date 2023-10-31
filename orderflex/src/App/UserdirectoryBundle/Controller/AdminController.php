@@ -198,59 +198,59 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class AdminController extends OrderAbstractController
 {
 
-    /**
-     * run: http://localhost/order/directory/admin/install-certbot/oli2002@med.cornell.edu
-     */
-    #[Route(path: '/install-certbot/{email}', name: 'user_install_certbot')]
-    public function installCertbotAction(Request $request, $email)
-    {
-        $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
-        $users = $roles = $em->getRepository(User::class)->findAll();
-        $logger->notice('installCertbotAction: users='.count($users));
-
-        $projectDir = $this->container->get('kernel')->getProjectDir();
-        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."packer".DIRECTORY_SEPARATOR;
-        $script = $path."install-certbot.sh";
-
-        $domainname = $request->getHost();
-        $sslcertificate = "installcertbot";
-
-        $command = "bash $script $domainname $sslcertificate $email";
-        //echo "command=$command <br>";
-        //echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
-        $logger->notice('installCertbotAction: command='.$command);
-        $logger->notice(
-            'installCertbotAction: '."path=".$path.
-            ", domainname=".$domainname.", sslcertificate=".
-            $sslcertificate.", email=".$email
-        );
-
-        if( count($users) == 0 ) {
-            //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
-            //$domainname = "domainname"; //get from url
-
-            $logger->notice('installCertbotAction: before command='.$command);
-            $this->runProcess($command);
-            $logger->notice('installCertbotAction: after command='.$command);
-
-            $adminRes = 'Certbot installed with command '.$command;
-        } else {
-//            if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-//                return $this->redirect($this->generateUrl('employees-nopermission'));
-//            }
-            $adminRes = 'System is not clean. Certbot is not installed.';
-            //exit('users already exists');
-            $logger->notice('Finished initialization. users already exists');
-        }
-
-        $this->addFlash(
-            'notice',
-            $adminRes
-        );
-
-        return $this->redirect($this->generateUrl('first-time-login-generation-init-https'));
-    }
+//    /**
+//     * run: http://localhost/order/directory/admin/install-certbot/oli2002@med.cornell.edu
+//     */
+//    #[Route(path: '/install-certbot/{email}', name: 'user_install_certbot')]
+//    public function installCertbotAction(Request $request, $email)
+//    {
+//        $logger = $this->container->get('logger');
+//        $em = $this->getDoctrine()->getManager();
+//        $users = $roles = $em->getRepository(User::class)->findAll();
+//        $logger->notice('installCertbotAction: users='.count($users));
+//
+//        $projectDir = $this->container->get('kernel')->getProjectDir();
+//        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."packer".DIRECTORY_SEPARATOR;
+//        $script = $path."install-certbot.sh";
+//
+//        $domainname = $request->getHost();
+//        $sslcertificate = "installcertbot";
+//
+//        $command = "bash $script $domainname $sslcertificate $email";
+//        //echo "command=$command <br>";
+//        //echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
+//        $logger->notice('installCertbotAction: command='.$command);
+//        $logger->notice(
+//            'installCertbotAction: '."path=".$path.
+//            ", domainname=".$domainname.", sslcertificate=".
+//            $sslcertificate.", email=".$email
+//        );
+//
+//        if( count($users) == 0 ) {
+//            //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
+//            //$domainname = "domainname"; //get from url
+//
+//            $logger->notice('installCertbotAction: before command='.$command);
+//            $this->runProcess($command);
+//            $logger->notice('installCertbotAction: after command='.$command);
+//
+//            $adminRes = 'Certbot installed with command '.$command;
+//        } else {
+////            if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+////                return $this->redirect($this->generateUrl('employees-nopermission'));
+////            }
+//            $adminRes = 'System is not clean. Certbot is not installed.';
+//            //exit('users already exists');
+//            $logger->notice('Finished initialization. users already exists');
+//        }
+//
+//        $this->addFlash(
+//            'notice',
+//            $adminRes
+//        );
+//
+//        return $this->redirect($this->generateUrl('first-time-login-generation-init-https'));
+//    }
 
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
@@ -11822,12 +11822,13 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
+            "All Hosted User Groups" => "c", //Parent list item ID = NULL
             "Test Institution" => "test-institution",
-            "Test Department" => "test-department", //Parent list item ID = 1 {Test Institution}
+            "Test Department" => "test-department", //Parent list item {Test Institution}
             "Demo Institution" => "demo-institution",
-            "Demo Department" => "demo-department", //Parent list item ID = 3 {Demo Institution}
+            "Demo Department" => "demo-department", //Parent list item {Demo Institution}
             "Weill Cornell Medicine" => "wcm",
-            "WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item ID = 5 {Weill Cornell Medicine}
+            "WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item {Weill Cornell Medicine}
         );
 
         $count = 10;

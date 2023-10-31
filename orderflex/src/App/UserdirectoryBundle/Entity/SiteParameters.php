@@ -1035,8 +1035,8 @@ class SiteParameters {
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $tenantPrefixUrlSlug;
+//    #[ORM\Column(type: 'text', nullable: true)]
+//    private $tenantPrefixUrlSlug;
 
 
 
@@ -4294,21 +4294,21 @@ class SiteParameters {
         $this->authPartnerServer = $authPartnerServer;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTenantPrefixUrlSlug()
-    {
-        return $this->tenantPrefixUrlSlug;
-    }
-
-    /**
-     * @param mixed $tenantPrefixUrlSlug
-     */
-    public function setTenantPrefixUrlSlug($tenantPrefixUrlSlug)
-    {
-        $this->tenantPrefixUrlSlug = $tenantPrefixUrlSlug;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTenantPrefixUrlSlug()
+//    {
+//        return $this->tenantPrefixUrlSlug;
+//    }
+//
+//    /**
+//     * @param mixed $tenantPrefixUrlSlug
+//     */
+//    public function setTenantPrefixUrlSlug($tenantPrefixUrlSlug)
+//    {
+//        $this->tenantPrefixUrlSlug = $tenantPrefixUrlSlug;
+//    }
 
 
 

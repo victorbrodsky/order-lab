@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Form;
 
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -231,6 +232,45 @@ class InitialConfigurationType extends AbstractType
 //            'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
 //            'attr' => array('class'=>'form-control')
 //        ));
+
+        //Add
+        //“Server Role and Network Access”  - authServerNetwork
+        $builder->add('authServerNetwork', EntityType::class, array(
+            'class' => 'App\UserdirectoryBundle\Entity\AuthServerNetworkList',
+            'label' => 'Server Network Accessibility and Role:',
+            'required' => true,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+        //“User Group”                      - authUserGroup
+        $builder->add('authUserGroup', EntityType::class, array(
+            'class' => 'App\UserdirectoryBundle\Entity\AuthUserGroupList',
+            'label' => 'User Group:',
+            'required' => true,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        //“Hosted User Groups”              - hostedUserGroups
+        //“Tandem Partner Server URL“       - REMOVED
 
 
 

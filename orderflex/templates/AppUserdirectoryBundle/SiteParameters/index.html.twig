@@ -214,11 +214,11 @@
                 <td>{{ entity.authUserGroup }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authUserGroup'}) }}">Edit</a></td>
             </tr>
-            <tr>
-                <td>Tenant prefix URL Slug</td>
-                <td>{{ entity.tenantPrefixUrlSlug }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'tenantPrefixUrlSlug'}) }}">Edit</a></td>
-            </tr>
+            {#<tr>#}
+                {#<td>Tenant prefix URL Slug</td>#}
+                {#<td>{{ entity.tenantPrefixUrlSlug }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'tenantPrefixUrlSlug'}) }}">Edit</a></td>#}
+            {#</tr>#}
             {#<tr>#}
                 {#<td>Hosted User Groups</td>#}
                 {#<td>{{ entity.hostedUserGroups }}</td>#}
