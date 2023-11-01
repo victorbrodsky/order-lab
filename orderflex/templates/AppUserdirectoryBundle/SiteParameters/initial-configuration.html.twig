@@ -27,37 +27,51 @@
 
     {{ form_start(form) }}
 
-        {{ formmacros.field(form.environment) }}
-        {{ formmacros.field(form.connectionChannel) }}
-
-        {{ formmacros.field(form.institutionname) }}
-        {{ formmacros.field(form.institutionurl) }}
-
-        {{ formmacros.field(form.subinstitutionname) }}
-        {{ formmacros.field(form.subinstitutionurl) }}
-
-        {{ formmacros.field(form.departmentname) }}
-        {{ formmacros.field(form.departmenturl) }}
-
-        {{ formmacros.field(form.showCopyrightOnFooter) }}
-
-        <div id="user-password-box" class="well well-sm">
-            {{ formmacros.field(form.password.first) }}
-            {{ formmacros.field(form.password.second) }}
-        </div>
-
-        {{ formmacros.field(form.siteEmail) }}
-
-        {{ formmacros.field(form.liveSiteRootUrl) }}
-
-        {#Server Auth, Server Instance#}
         <div class="panel panel-default">
             <div class="panel-heading">Server Instance</div>
             <div class="panel-body">
+                {{ formmacros.field(form.environment) }}
+                {{ formmacros.field(form.connectionChannel) }}
+                {#{{ formmacros.field(form.siteEmail) }}#}
+                {{ formmacros.field(form.liveSiteRootUrl) }}
+
                 {{ formmacros.field(form.authServerNetwork) }}
                 {{ formmacros.field(form.authUserGroup) }}
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Institution Settings</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.institutionname) }}
+                {{ formmacros.field(form.institutionurl) }}
+
+                {{ formmacros.field(form.subinstitutionname) }}
+                {{ formmacros.field(form.subinstitutionurl) }}
+
+                {{ formmacros.field(form.departmentname) }}
+                {{ formmacros.field(form.departmenturl) }}
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Admin Password</div>
+            <div class="panel-body">
+                {#<div id="user-password-box" class="well well-sm">#}
+                    {{ formmacros.field(form.password.first) }}
+                    {{ formmacros.field(form.password.second) }}
+                {#</div>#}
+            </div>
+        </div>
+
+        {#<div class="panel panel-default">#}
+            {#<div class="panel-heading">Other Settings</div>#}
+            {#<div class="panel-body">#}
+                {#{{ formmacros.field(form.showCopyrightOnFooter) }}#}
+                {#{{ formmacros.field(form.siteEmail) }}#}
+                {#{{ formmacros.field(form.liveSiteRootUrl) }}#}
+            {#</div>#}
+        {#</div>#}
 
         <div class="panel panel-default">
             <div class="panel-heading">E-Mail Server (to enable notifications by email)</div>
@@ -70,6 +84,7 @@
                 {{ formmacros.field(form.mailerPassword) }}
                 {{ formmacros.field(form.mailerSpool) }}
                 {{ formmacros.field(form.mailerFlushQueueFrequency) }}
+                {{ formmacros.field(form.siteEmail) }}
                 {{ formmacros.field(form.mailerDeliveryAddresses) }}
             </div>
         </div>

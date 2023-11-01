@@ -17,6 +17,13 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
+//Attach to: AuthServerNetworkList or SiteParameters?
+//IF "Server Role and Network Access:" = "Internet (Hub)” serve ORDER home page from "/c/wcm/pathology"
+//How to redirect:
+// 1) Route Aliasing
+// 2) Route Groups and Prefixes https://symfony.com/doc/current/routing.html#route-groups-and-prefixes
+// 3) Custom routing
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 

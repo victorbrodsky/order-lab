@@ -588,6 +588,7 @@ class SiteParametersController extends OrderAbstractController
 
 
     /**
+     * http://127.0.0.1/order/index_dev.php/directory/settings/initial-configuration
      * Initial Configuration Completed
      */
     #[Route(path: '/initial-configuration', name: 'employees_initial_configuration', methods: ['GET', 'POST'])]
