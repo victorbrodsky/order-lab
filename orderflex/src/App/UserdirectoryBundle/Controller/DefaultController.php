@@ -56,6 +56,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends OrderAbstractController
 {
 
+    //https://symfony.com/doc/current/routing/custom_route_loader.html#what-is-a-custom-route-loader
+    #[Route(path: '/test-url')]
+    public function testUrlAction( Request $request )
+    {
+        //exit('not allowed');
+        $param = "Test Url Param";
+        return $this->render('AppUserdirectoryBundle/Default/test-url.html.twig', ['param' => $param]);
+    }
+
     #[Route(path: '/user-thanks-for-downloading/{id}/{sitename}', name: 'employees_thankfordownloading', methods: ['GET'])]
     #[Route(path: '/thanks-for-downloading/{id}/{sitename}', name: 'common_thankfordownloading', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
@@ -1204,5 +1213,7 @@ class DefaultController extends OrderAbstractController
 
         exit('exit: show-users-without-phi');
     }
+
+
 
 }

@@ -1,0 +1,14 @@
+#Create a new branch
+#Maybe use Custom Routing, Listnere, or look at Dynamic Router, ChainRouter (Symfony Content Management Framework (CMF))
+#Maybe use Listener to switch DBs and URLs
+#Reorganise the yml config files to adopt to /c/ entry point for all bundles.
+
+Goal:
+1) Separate DBs (preferable)
+view.online/c/wcm/pathology - use DB_wcm
+view.online/c/hss/pathology - use DB_hss
+
+2) Single DB: wcm and hss use the sam DB but all entities/tables will have a new Hosted User Group ID
+Disadvantage: lots of changes to update CRUD logic, difficult separation of the records between wcm and hss
+
+
