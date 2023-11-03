@@ -3,6 +3,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
 use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
@@ -3085,11 +3086,42 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    #[Route(path: '/multi-level-test/', name: 'translationalresearch_multi-level-test', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Default/multi-level-test.html.twig')]
-    public function multiLevelMenuTestAction( Request $request ) {
+//    #[Route(path: '/multi-level-test/', name: 'translationalresearch_multi-level-test', methods: ['GET'])]
+//    #[Template('AppTranslationalResearchBundle/Default/multi-level-test.html.twig')]
+//    public function multiLevelMenuTestAction( Request $request ) {
+//
+//        return array();
+//    }
 
-        return array();
+    #[Route(path: '/antibody-category-manage/', name: 'translationalresearch_antibody-category-manage', methods: ['GET'])]
+    public function antibodyCategoryManageAction( Request $request ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody.category');
+
+        $dql->distinct('antibody.category');
+        //$dql->groupBy('antibody.category');
+        //$dql->addGroupBy('antibody.id');
+
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $antibodys = $query->getResult();
+        echo "antibodys=".count($antibodys)."<br>";
+
+        foreach($antibodys as $antibody) {
+            echo "category=".$antibody['category'] . "<br>";
+            //dump($antibody);
+            //exit('222');
+        }
+
+        exit('111');
     }
 
 }
