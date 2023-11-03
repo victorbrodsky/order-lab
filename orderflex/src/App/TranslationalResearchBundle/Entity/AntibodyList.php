@@ -216,7 +216,9 @@ class AntibodyList extends ListAbstract
     #[ORM\OrderBy(['orderinlist' => 'ASC', 'updatedate' => 'DESC'])]
     private $visualInfos;
 
-
+    #[ORM\JoinTable(name: 'transres_antibody_categorytag')]
+    #[ORM\ManyToMany(targetEntity: AntibodyCategoryTagList::class, inversedBy: 'antibodies')]
+    private $categoryTags;
 
 
     public function __construct($author=null) {
@@ -225,6 +227,7 @@ class AntibodyList extends ListAbstract
 
         $this->documents = new ArrayCollection();
         $this->visualInfos = new ArrayCollection();
+        $this->categoryTags = new ArrayCollection();
     }
 
 
@@ -639,7 +642,26 @@ class AntibodyList extends ListAbstract
         $this->tissueType = $tissueType;
     }
 
-    
+    public function getCategoryTags()
+    {
+        return $this->categoryTags;
+    }
+    public function addCategoryTag( $item )
+    {
+        if( !$this->categoryTags->contains($item) ) {
+            $this->categoryTags->add($item);
+        }
+
+        return $this;
+    }
+    public function removeCategoryTag($item)
+    {
+        if( $this->categoryTags->contains($item) ) {
+            $this->categoryTags->removeElement($item);
+        }
+
+        return $this;
+    }
 
     
     public function getAllComments($separator="\r\n") {
