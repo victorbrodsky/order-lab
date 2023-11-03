@@ -442,6 +442,12 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
 
+echo -e ${COLOR} You can install certbot later manually running install-certbot.sh:  ${NC}
+echo -e ${COLOR} doctl compute ssh "dropletname" --ssh-key-path ./sshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com"  ${NC}
+
+echo -e ${COLOR} You can login to the droplet by running:  ${NC}
+echo -e ${COLOR} doctl compute ssh "dropletname" --ssh-key-path ./sshkey  ${NC}
+
 #Result:
 #Run bash script install-certbot.sh vi ssh
 #The authenticity of host '138.197.124.240 (138.197.124.240)' can't be established.
@@ -452,6 +458,16 @@ fi
 #Connection closed by 138.197.124.240 port 22
 #Error: exit status 255
 #root@138.197.36.209: Permission denied (publickey,gssapi-keyex,gssapi-with-mic)
+
+#Result on Ubuntu:
+#Run bash script install-certbot.sh via ssh. IMAGENAME=packer-1699040312, domainname=tincry.com, sslcertificate=installcertbot, email=oli2002@med.cornell.edu
+#The authenticity of host '161.35.182.201 (161.35.182.201)' can't be established.
+#ED25519 key fingerprint is SHA256:4nx0hixk58KdfJVVex7dpQLEXLwV6FKM41gkeG7knN0.
+#This key is not known by any other names
+#Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+#Warning: Permanently added '161.35.182.201' (ED25519) to the list of known hosts.
+#Connection closed by 161.35.182.201 port 22
+#Error: exit status 255
 
 #exit
 ###### EOF Run install-certbot.sh on the droplet ######

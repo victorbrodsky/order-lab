@@ -94,6 +94,7 @@ if [ "$OSNAME" = "Ubuntu" ];
 		echo "==============================================="
 		echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf on Ubuntu ${NC}
     sudo mv /etc/apache2/sites-enabled/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.orig
+    sudo mv /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.orig
 	else
 		echo "==============================================="
 		echo "Use all others OS $OSNAME"

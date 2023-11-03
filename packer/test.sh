@@ -16,7 +16,7 @@ echo snapshot_name=$snapshot_name
 #echo "Exit test.sh"
 #exit 0
 
-IMAGENAME="packer-1698694689"
+IMAGENAME="packer-1699040312"
 domainname="tincry.com"
 sslcertificate="installcertbot"
 email="cinava@yahoo.com"
