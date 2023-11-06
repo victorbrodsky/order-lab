@@ -3133,10 +3133,10 @@ class DefaultController extends OrderAbstractController
             //exit('222');
             //Split by "-" and "/"
 
-            $namesArr = $this->stringToArray($name,array("-","/"));
+            $namesArr = $this->stringToArray($name,array("-","/",","));
             foreach($namesArr as $category) {
                 //Capitalize
-                $categoryLower = strtolower($category);
+                $categoryLower = trim(strtolower($category));
                 if( $categoryLower == "test" || $categoryLower == "red" || $categoryLower == "pig" || $categoryLower == "new" ) {
                     $category = ucwords($categoryLower);
                 } else {
@@ -3152,7 +3152,7 @@ class DefaultController extends OrderAbstractController
 
         $count = 0;
         $categoryArr = array_unique($categoryArr);
-        echo "categoryArr=".count($categoryArr)."<br>";
+        echo "<br><br>categoryArr=".count($categoryArr)."<br>";
         foreach($categoryArr as $category) {
             $count++;
             echo $count.": category=[".$category . "]<br>";
