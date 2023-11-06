@@ -3143,10 +3143,12 @@ class DefaultController extends OrderAbstractController
                     $category = strtoupper($category);
                 }
 
-                echo $count.": single category=[".$category . "]<br>";
-                $categoryArr[] = $category;
-                //$this->antibodyCategoryTagCreate($piece,$count);
-                $count = $count + 10;
+                if( $category ) {
+                    echo $count . ": single category=[" . $category . "]<br>";
+                    $categoryArr[] = $category;
+                    //$this->antibodyCategoryTagCreate($piece,$count);
+                    $count = $count + 10;
+                }
             }
         }
 
@@ -3188,10 +3190,11 @@ class DefaultController extends OrderAbstractController
 
         return $antobodyCategoryTag;
     }
-    #[Route(path: '/antibody-category-tag/', name: 'translationalresearch_antibody-category-tag', methods: ['GET'])]
-    public function antibodyCategoryTagAction( Request $request ) {
 
-        exit("antibodyCategoryTagAction not allowed");
+    #[Route(path: '/antibody-add-category-tag/', name: 'translationalresearch_antibody-add-category-tag', methods: ['GET'])]
+    public function antibodyAddCategoryTagAction( Request $request ) {
+
+        exit("antibodyAddCategoryTagAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
