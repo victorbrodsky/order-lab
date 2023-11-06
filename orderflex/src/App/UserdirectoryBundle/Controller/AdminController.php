@@ -8033,6 +8033,7 @@ class AdminController extends OrderAbstractController
             "transresirbstatus" => array('IrbStatusList','transresirbstatus-list','Translational Research Irb Approval Status List'),
             "transresrequestergroup" => array('RequesterGroupList','transresrequestergroup-list','Translational Research Requester Group List'),
             "transrescomptypes" => array('CompCategoryList','transrescomptypes-list','Translational Research Computational Categories List'),
+            "antibodycategorytag" => array('AntibodyCategoryTagList','antibodycategorytag-list','Translational Research Antibody Category Tag List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),

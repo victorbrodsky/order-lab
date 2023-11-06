@@ -306,6 +306,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork-list', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver-list', methods: ['GET'])]
     #[Route(path: '/list/hostedusergroup/', name: 'hostedusergroup-list', methods: ['GET'])]
+    #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -998,6 +999,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork_create', methods: ['POST'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver_create', methods: ['POST'])]
     #[Route(path: '/list/hostedusergroup/', name: 'hostedusergroup_create', methods: ['POST'])]
+    #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1363,6 +1365,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/new', name: 'authservernetwork_new', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/new', name: 'authpartnerserver_new', methods: ['GET'])]
     #[Route(path: '/list/hostedusergroup/new', name: 'hostedusergroup_new', methods: ['GET'])]
+    #[Route(path: '/list/antibodycategorytag/new', name: 'antibodycategorytag_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1676,6 +1679,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_show', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_show', methods: ['GET'])]
     #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_show', methods: ['GET'])]
+    #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -1982,6 +1986,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/{id}/edit', name: 'authservernetwork_edit', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}/edit', name: 'authpartnerserver_edit', methods: ['GET'])]
     #[Route(path: '/list/hostedusergroup/{id}/edit', name: 'hostedusergroup_edit', methods: ['GET'])]
+    #[Route(path: '/list/antibodycategorytag/{id}/edit', name: 'antibodycategorytag_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2338,6 +2343,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_update', methods: ['PUT'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_update', methods: ['PUT'])]
     #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_update', methods: ['PUT'])]
+    #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3397,6 +3403,11 @@ class ListController extends OrderAbstractController
                 $displayName = "Translational Research Computational Categories List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "antibodycategorytag":
+                $className = "AntibodyCategoryTagList";
+                $displayName = "Translational Research Antibody Category Tag List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "workqueuetypes":
                 $className = "WorkQueueList";
@@ -4186,6 +4197,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_delete', methods: ['DELETE'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_delete', methods: ['DELETE'])]
     #[Route(path: '/list/hostedusergroup/{id}', name: 'hostedusergroup_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

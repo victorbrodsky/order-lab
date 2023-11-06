@@ -3,6 +3,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
@@ -3093,13 +3094,22 @@ class DefaultController extends OrderAbstractController
 //        return array();
 //    }
 
+    //Populate and replace $category by $categoryTags
     #[Route(path: '/antibody-category-manage/', name: 'translationalresearch_antibody-category-manage', methods: ['GET'])]
     public function antibodyCategoryManageAction( Request $request ) {
+
+        //exit("antibodyCategoryManageAction not allowed");
+
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $user = $this->getUser();
+        $count = 1;
+
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody.category');
@@ -3116,12 +3126,88 @@ class DefaultController extends OrderAbstractController
         echo "antibodys=".count($antibodys)."<br>";
 
         foreach($antibodys as $antibody) {
-            echo "category=".$antibody['category'] . "<br>";
+            $name = trim($antibody['category']);
+            echo $count.": category=[".$name . "]<br>";
             //dump($antibody);
             //exit('222');
+
+            if( !$name ) {
+                continue;
+            }
+
+            $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
+            if( $listEntity ) {
+                echo "Skip category $name<br>";
+                continue;
+            }
+
+            echo $count.": add category<br>";
+
+            if(0) {
+                $antobodyCategoryTag = new AntibodyCategoryTagList();
+                $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
+                $antobodyCategoryTag->setType('default');
+
+                $em->persist($antobodyCategoryTag);
+                $em->flush();
+            }
+
+            $count = $count + 10;
         }
 
         exit('111');
     }
+    #[Route(path: '/antibody-category-tag/', name: 'translationalresearch_antibody-category-tag', methods: ['GET'])]
+    public function antibodyCategoryTagAction( Request $request ) {
 
+        //exit("antibodyCategoryTagAction not allowed");
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $user = $this->getUser();
+        $count = 1;
+
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+
+        //$dql->distinct('antibody.category');
+        //$dql->groupBy('antibody.category');
+        //$dql->addGroupBy('antibody.id');
+
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $antibodys = $query->getResult();
+        echo "antibodys=".count($antibodys)."<br>";
+
+
+        $categoryTags = $em->getRepository(AntibodyCategoryTagList::class)->findAll();
+        echo "categoryTags=".count($categoryTags)."<br>";
+
+        foreach($antibodys as $antibody) {
+            //echo $count.": antibody=[".$antibody . "]<br>";
+            $category = $antibody->getCategory()."";
+            echo "### ".$count.": antibody ID=".$antibody->getId()." category=[$category]:<br>";
+
+            foreach($categoryTags as $categoryTag) {
+                $categoryTagName = $categoryTag->getName()."";
+                if( $categoryTagName == $category ) {
+                    $antibody->addCategoryTag($categoryTag);
+                    echo "Added antibody category tag $categoryTagName to category ID ".$antibody->getId()." <br>";
+                }
+            }
+
+            $count++;
+        }
+
+        exit('111');
+    }
+    
 }

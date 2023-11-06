@@ -216,6 +216,7 @@ class AntibodyList extends ListAbstract
     #[ORM\OrderBy(['orderinlist' => 'ASC', 'updatedate' => 'DESC'])]
     private $visualInfos;
 
+    //Populate and replace $category by $categoryTags
     #[ORM\JoinTable(name: 'transres_antibody_categorytag')]
     #[ORM\ManyToMany(targetEntity: AntibodyCategoryTagList::class, inversedBy: 'antibodies')]
     private $categoryTags;
