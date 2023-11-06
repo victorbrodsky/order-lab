@@ -3095,17 +3095,16 @@ class DefaultController extends OrderAbstractController
 //    }
 
     //Populate and replace $category by $categoryTags
-    #[Route(path: '/antibody-category-manage/', name: 'translationalresearch_antibody-category-manage', methods: ['GET'])]
-    public function antibodyCategoryManageAction( Request $request ) {
+    #[Route(path: '/antibody-category-tag-create/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
+    public function antibodyCategoryTagsCreateAction( Request $request ) {
 
-        //exit("antibodyCategoryManageAction not allowed");
+        //exit("antibodyCategoryTagsCreateAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
         $count = 1;
@@ -3130,39 +3129,115 @@ class DefaultController extends OrderAbstractController
             echo $count.": category=[".$name . "]<br>";
             //dump($antibody);
             //exit('222');
+            //Split by "-" and "/"
 
-            if( !$name ) {
-                continue;
+            $categoryArr = $this->string_to_array($name,array("-","/"));
+            foreach($categoryArr as $category) {
+                echo $count.": category=[".$name . "]<br>";
+                //$this->antibodyCategoryTagCreate($piece,$count);
+                $count = $count + 10;
             }
 
-            $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
-            if( $listEntity ) {
-                echo "Skip category $name<br>";
-                continue;
+            if( str_contains($name,"-") ) {
+                $pieces = explode("-", $name);
+                foreach($pieces as $piece) {
+                    if( str_contains($name,"/") ) {
+                        $pieces2 = explode("/", $piece);
+                        foreach($pieces2 as $piece2) {
+                            echo $count.": adding [".$piece2 . "]<br>";
+                            //$this->antibodyCategoryTagCreate($piece2,$count);
+                            $count = $count + 10;
+                        }
+                    } else {
+                        echo $count.": adding [".$piece . "]<br>";
+                        //$this->antibodyCategoryTagCreate($piece,$count);
+                        $count = $count + 10;
+                    }
+                }
+            } else {
+                echo $count.": adding [".$name . "]<br>";
+                //$this->antibodyCategoryTagCreate($piece,$count);
+                $count = $count + 10;
             }
 
-            //echo $count.": add category<br>";
+            if( str_contains($name,"/") ) {
+                $pieces = explode("/", $name);
+                foreach($pieces as $piece) {
+                    if( str_contains($name,"-") ) {
+                        $pieces2 = explode("-", $piece);
+                        foreach($pieces2 as $piece2) {
+                            echo $count.": adding [".$piece2 . "]<br>";
+                            //$this->antibodyCategoryTagCreate($piece2,$count);
+                            $count = $count + 10;
+                        }
+                    } else {
+                        echo $count.": adding [".$piece . "]<br>";
+                        //$this->antibodyCategoryTagCreate($piece,$count);
+                        $count = $count + 10;
+                    }
+                }
+            } else {
+                echo $count.": adding [".$name . "]<br>";
+                //$this->antibodyCategoryTagCreate($piece,$count);
+                $count = $count + 10;
+            }
 
             if(0) {
-                $antobodyCategoryTag = new AntibodyCategoryTagList();
-                $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
-                $antobodyCategoryTag->setType('default');
-
-                $em->persist($antobodyCategoryTag);
-                $em->flush();
+                //$this->antibodyCategoryTagCreate($name,$count);
                 $count = $count + 10;
             } else {
                 $count++;
             }
 
+//            $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
+//            if( $listEntity ) {
+//                echo "Skip category $name<br>";
+//                continue;
+//            }
+//            $antobodyCategoryTag = new AntibodyCategoryTagList();
+//            $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
+//            $antobodyCategoryTag->setType('default');
+//
+//            $em->persist($antobodyCategoryTag);
+//            $em->flush();
+//            $count = $count + 10;
+
         }
 
         exit('111');
     }
+    public function string_to_array($string, $delimiters) {
+        $delimiter_regex = '/[' . preg_quote(implode('', $delimiters), '/') . ']/';
+        return preg_split($delimiter_regex, $string);
+    }
+    public function antibodyCategoryTagCreate( $name, $count=1 ) {
+        return null; //testing
+        if( !$name ) {
+            return null;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->getUser();
+
+        $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
+        if( $listEntity ) {
+            echo "Skip category $name<br>";
+            return null;
+        }
+
+        $antobodyCategoryTag = new AntibodyCategoryTagList();
+        $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
+        $antobodyCategoryTag->setType('default');
+
+        $em->persist($antobodyCategoryTag);
+        $em->flush();
+
+        return $antobodyCategoryTag;
+    }
     #[Route(path: '/antibody-category-tag/', name: 'translationalresearch_antibody-category-tag', methods: ['GET'])]
     public function antibodyCategoryTagAction( Request $request ) {
 
-        //exit("antibodyCategoryTagAction not allowed");
+        exit("antibodyCategoryTagAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
