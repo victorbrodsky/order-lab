@@ -3150,9 +3150,11 @@ class DefaultController extends OrderAbstractController
 
                 $em->persist($antobodyCategoryTag);
                 $em->flush();
+                $count = $count + 10;
+            } else {
+                $count++;
             }
-
-            $count = $count + 10;
+            
         }
 
         exit('111');
