@@ -3124,89 +3124,43 @@ class DefaultController extends OrderAbstractController
         $antibodys = $query->getResult();
         echo "antibodys=".count($antibodys)."<br>";
 
+        $categoryArr = array();
+
         foreach($antibodys as $antibody) {
             $name = trim($antibody['category']);
-            echo $count.": category=[".$name . "]<br>";
+            echo $count.": original category=[".$name . "]<br>";
             //dump($antibody);
             //exit('222');
             //Split by "-" and "/"
 
-            $categoryArr = $this->string_to_array($name,array("-","/"));
-            foreach($categoryArr as $category) {
-                echo $count.": category=[".$name . "]<br>";
-                //$this->antibodyCategoryTagCreate($piece,$count);
-                $count = $count + 10;
-            }
-
-            if( str_contains($name,"-") ) {
-                $pieces = explode("-", $name);
-                foreach($pieces as $piece) {
-                    if( str_contains($name,"/") ) {
-                        $pieces2 = explode("/", $piece);
-                        foreach($pieces2 as $piece2) {
-                            echo $count.": adding [".$piece2 . "]<br>";
-                            //$this->antibodyCategoryTagCreate($piece2,$count);
-                            $count = $count + 10;
-                        }
-                    } else {
-                        echo $count.": adding [".$piece . "]<br>";
-                        //$this->antibodyCategoryTagCreate($piece,$count);
-                        $count = $count + 10;
-                    }
+            $namesArr = $this->stringToArray($name,array("-","/"));
+            foreach($namesArr as $category) {
+                //Capitalize
+                $categoryLower = strtolower($category);
+                if( $categoryLower == "test" || $categoryLower == "red" || $categoryLower == "pig" || $categoryLower == "new" ) {
+                    $category = ucwords($categoryLower);
+                } else {
+                    $category = strtoupper($category);
                 }
-            } else {
-                echo $count.": adding [".$name . "]<br>";
+
+                echo $count.": single category=[".$category . "]<br>";
+                $categoryArr[] = $category;
                 //$this->antibodyCategoryTagCreate($piece,$count);
                 $count = $count + 10;
             }
+        }
 
-            if( str_contains($name,"/") ) {
-                $pieces = explode("/", $name);
-                foreach($pieces as $piece) {
-                    if( str_contains($name,"-") ) {
-                        $pieces2 = explode("-", $piece);
-                        foreach($pieces2 as $piece2) {
-                            echo $count.": adding [".$piece2 . "]<br>";
-                            //$this->antibodyCategoryTagCreate($piece2,$count);
-                            $count = $count + 10;
-                        }
-                    } else {
-                        echo $count.": adding [".$piece . "]<br>";
-                        //$this->antibodyCategoryTagCreate($piece,$count);
-                        $count = $count + 10;
-                    }
-                }
-            } else {
-                echo $count.": adding [".$name . "]<br>";
-                //$this->antibodyCategoryTagCreate($piece,$count);
-                $count = $count + 10;
-            }
-
-            if(0) {
-                //$this->antibodyCategoryTagCreate($name,$count);
-                $count = $count + 10;
-            } else {
-                $count++;
-            }
-
-//            $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
-//            if( $listEntity ) {
-//                echo "Skip category $name<br>";
-//                continue;
-//            }
-//            $antobodyCategoryTag = new AntibodyCategoryTagList();
-//            $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
-//            $antobodyCategoryTag->setType('default');
-//
-//            $em->persist($antobodyCategoryTag);
-//            $em->flush();
-//            $count = $count + 10;
-
+        $count = 0;
+        $categoryArr = array_unique($categoryArr);
+        echo "categoryArr=".count($categoryArr)."<br>";
+        foreach($categoryArr as $category) {
+            $count++;
+            echo $count.": category=[".$category . "]<br>";
         }
 
         exit('111');
     }
-    public function string_to_array($string, $delimiters) {
+    public function stringToArray($string, $delimiters) {
         $delimiter_regex = '/[' . preg_quote(implode('', $delimiters), '/') . ']/';
         return preg_split($delimiter_regex, $string);
     }
