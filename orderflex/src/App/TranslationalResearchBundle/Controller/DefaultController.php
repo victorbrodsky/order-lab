@@ -3141,7 +3141,7 @@ class DefaultController extends OrderAbstractController
                 continue;
             }
 
-            echo $count.": add category<br>";
+            //echo $count.": add category<br>";
 
             if(0) {
                 $antobodyCategoryTag = new AntibodyCategoryTagList();
@@ -3154,7 +3154,7 @@ class DefaultController extends OrderAbstractController
             } else {
                 $count++;
             }
-            
+
         }
 
         exit('111');
