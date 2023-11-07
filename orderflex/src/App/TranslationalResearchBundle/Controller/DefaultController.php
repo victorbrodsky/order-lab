@@ -3252,32 +3252,84 @@ class DefaultController extends OrderAbstractController
         exit('111');
     }
     public function antibodyCategoryMap() {
+        //antibodys=38
+        //R-red
+        //R (DO NOT USE)
+        //mT
+        //T-US
+        //R-M
+        //D-T
+        //D-M
+        //M-red
+        //M (?)
+        //C-New
+        //R/T
+        //TUS
+        //R-H, M
+        //R
+        //RTU
+        //DO NOT USE
+        //        C
+        //R-H, Pig
+        //D-R
+        //M
+        //VP_IHC-H
+        //test
+        //R-RED
+        //VP_IHC-Human
+        //R-ISH
+        //TUS-R
+        //C-NEW
+        //R-H/M
+        //R-M,H
+        //TUS-M
+        //R-M/H
+        //T
+        //R-H
+        //R-H only
+        //VP_IHC-mouse
+        //VP_IHC-human
+        //M/R
         array(
             "M" => "Mouse",
             "R-RED" => "Human",
             "R-red" => "Human",
             "mT" => "FAILED",
+            "R (DO NOT USE)" => "FAILED",
+            "T-US" => "FAILED",
+            "R-M" => "Mouse",
+            "D-T" => null,
+            "D-M" => null,
+            "M-red" => "Mouse",
+            "M (?)" => "Mouse",
+            "C-New" => "Human",
+            "R/T" => "FAILED",
+            "TUS" => "FAILED",
+            "R-H, M" => array("Human","Mouse"),
+            "R" => "Human",
+            "RTU" => "Human",
+            "DO NOT USE" => "FAILED",
+            "C" => "Human",
+            "R-H, Pig" => "Human",
+            "D-R" => null,
+            "VP_IHC-H" => "Human",
+            "VP_IHC-Human" => "Human",
+            "R-ISH" => "In situ hybridization",
+            "TUS-R" => "FAILED",
+            "C-NEW" => "Human",
+            "R-H/M" => array("Human","Mouse"),
+            "R-M,H" => array("Human","Mouse"),
+            "TUS-M" => "FAILED",
+            "R-M/H" => array("Human","Mouse"),
+            "T" => "FAILED",
+            "R-H" => "Human",
+            "R-H only" => "Human",
+            "VP_IHC-mouse" => "Mouse",
+            "VP_IHC-human" => "Human",
+            "M/R" => "Mouse",
         );
-//R-ISH
-//TUS-R
-//C-NEW
-//R-H/M
-//R-M
-//D-T
-//D-M
-//TUS-M
-//R-M/H
-//T
-//M-red
-//R-H
-//C-New
-//R/T
-//TUS
-//R
-//RTU
-//M/R
-//C
-//D-R"
+
+
     }
     
 }
