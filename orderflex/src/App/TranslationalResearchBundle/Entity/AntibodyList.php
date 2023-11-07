@@ -221,6 +221,9 @@ class AntibodyList extends ListAbstract
     #[ORM\ManyToMany(targetEntity: AntibodyCategoryTagList::class, inversedBy: 'antibodies')]
     private $categoryTags;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $openToPublic;
+
 
     public function __construct($author=null) {
 
@@ -663,6 +666,24 @@ class AntibodyList extends ListAbstract
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOpenToPublic()
+    {
+        return $this->openToPublic;
+    }
+
+    /**
+     * @param mixed $openToPublic
+     */
+    public function setOpenToPublic($openToPublic)
+    {
+        $this->openToPublic = $openToPublic;
+    }
+    
+    
 
     
     public function getAllComments($separator="\r\n") {

@@ -343,6 +343,7 @@ class ListController extends OrderAbstractController
         $dql->addGroupBy('updatedby.username');
 
         $entityClass = $mapper['fullClassName'];   //"App\\OrderformBundle\\Entity\\".$mapper['className'];
+        $className = $mapper['className'];
 
         //synonyms and original
         $dql->leftJoin("ent.synonyms", "synonyms");
@@ -524,7 +525,11 @@ class ListController extends OrderAbstractController
             }
 
             //AntibodyList
-            if( method_exists($entityClass, 'getDatasheet') ) {
+            //if( method_exists($entityClass, 'getDatasheet') ) {
+            if( $className == 'AntibodyList' ) {
+                $dql->leftJoin("ent.categoryTags", "categoryTags");
+                $dql->addGroupBy('categoryTags');
+                
                 $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";

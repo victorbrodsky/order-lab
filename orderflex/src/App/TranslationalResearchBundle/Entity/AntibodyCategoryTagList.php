@@ -38,6 +38,9 @@ class AntibodyCategoryTagList extends ListAbstract
     #[ORM\ManyToMany(targetEntity: AntibodyList::class, mappedBy: 'categoryTags')]
     private $antibodies;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $openToPublic;
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -70,5 +73,23 @@ class AntibodyCategoryTagList extends ListAbstract
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOpenToPublic()
+    {
+        return $this->openToPublic;
+    }
+
+    /**
+     * @param mixed $openToPublic
+     */
+    public function setOpenToPublic($openToPublic)
+    {
+        $this->openToPublic = $openToPublic;
+    }
+    
+    
 
 }

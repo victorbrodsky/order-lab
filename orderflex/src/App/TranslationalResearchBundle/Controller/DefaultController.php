@@ -3098,7 +3098,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-category-tag-create/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
     public function antibodyCategoryTagsCreateAction( Request $request ) {
 
-        //exit("antibodyCategoryTagsCreateAction not allowed");
+        exit("antibodyCategoryTagsCreateAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -3145,7 +3145,8 @@ class DefaultController extends OrderAbstractController
 
                 if( $category ) {
                     echo $count . ": single category=[" . $category . "]<br>";
-                    $categoryArr[] = $category;
+                    $categoryArr[] = trim($category);
+                    //$categoryArr[trim($category)] = $name;
                     //$this->antibodyCategoryTagCreate($piece,$count);
                     $count = $count + 10;
                 }
@@ -3157,8 +3158,12 @@ class DefaultController extends OrderAbstractController
         echo "<br><br>categoryArr=".count($categoryArr)."<br>";
         foreach($categoryArr as $category) {
             $count++;
-            echo $count.": category=[".$category . "]<br>";
+            echo $count.": $category<br>";
         }
+//        foreach($categoryArr as $category=>$name) {
+//            $count++;
+//            echo $count.": $name => $category<br>";
+//        }
 
         exit('111');
     }

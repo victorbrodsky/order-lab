@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
+use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
@@ -1108,6 +1109,7 @@ class AdminController extends OrderAbstractController
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_OrderableStatusList = $this->generateOrderableStatusList();
+        $count_generateAntibodyCategoryTagList = $this->generateAntibodyCategoryTagList();
         $logger->notice("Finished generateBusinessPurposes");
         //return "Finished generateBusinessPurposes";
 
@@ -1283,6 +1285,7 @@ class AdminController extends OrderAbstractController
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
             'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
             'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
+            'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -10892,6 +10895,41 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateAntibodyCategoryTagList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "READY FOR HUMAN"       => true, //"public",
+            "READY FOR MOUSE"       => true, //"public",
+            "ISH"                   => true, //"public",
+            "PENDING VALIDATION"    => false,
+            "FAILED"                => false
+        );
+
+        $count = 10;
+        foreach( $types as $name => $openToPublic ) {
+
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OtherRequestedServiceList'] by [OtherRequestedServiceList::class]
+            $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AntibodyCategoryTagList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setOpenToPublic($openToPublic);
+
             $em->persist($listEntity);
             $em->flush();
 
