@@ -531,6 +531,7 @@ class ListController extends OrderAbstractController
                 $dql->addGroupBy('categoryTags');
                 
                 $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";

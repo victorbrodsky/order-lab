@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
 
 
@@ -1077,6 +1078,32 @@ class GenericListType extends AbstractType
                 'label' => "Category:",
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'maxlength'=>"255"),
+            ));
+
+//            $builder->add('categoryTags', EntityType::class, array(
+//                'class' => AntibodyCategoryTagList::class,
+//                //'choice_label' => 'Antibody Category Tag(s)',
+//                'label'=>'Antibody Category Tag(s):',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+            $builder->add( 'categoryTags', EntityType::class, array(
+                'class' => AntibodyCategoryTagList::class,
+                //'choice_label' => 'getTreeName',
+                'label'=>'Antibody Category Tag(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
 
             $builder->add('altname',null,array(

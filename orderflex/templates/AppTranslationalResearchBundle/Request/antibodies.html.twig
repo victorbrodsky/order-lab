@@ -47,7 +47,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
@@ -83,9 +83,9 @@
                     {{ ent.id }}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.category }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.category }}
+                </td>
                 <td>
                     {% for category in ent.categoryTags %}
                         {{ ent.category }}<br>
