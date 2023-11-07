@@ -1134,6 +1134,11 @@
         {{ formmacros.field(form.tagTypes) }}
     {% endif %}
 
+    {#AntibodyList and AntibodyCategoryTagList#}
+    {% if form.openToPublic is defined %}
+        {{ formmacros.field(form.openToPublic) }}
+    {% endif %}
+
     {#AntibodyList#}
     {% if form.igconcentration is defined %}
         {#additionalRelationships#}

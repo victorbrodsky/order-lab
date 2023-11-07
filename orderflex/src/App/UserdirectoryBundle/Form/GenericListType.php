@@ -1088,7 +1088,7 @@ class GenericListType extends AbstractType
 //                'multiple' => true,
 //                'attr' => array('class' => 'combobox combobox-width')
 //            ));
-            $builder->add( 'categoryTags', EntityType::class, array(
+            $builder->add('categoryTags', EntityType::class, array(
                 'class' => AntibodyCategoryTagList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Antibody Category Tag(s):',
@@ -1250,7 +1250,19 @@ class GenericListType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__visualinfos__',
             ));
+            $builder->add('openToPublic', null, array(
+                'label' => "Open to public:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+        }
 
+        if( strtolower($this->mapper['className']) == strtolower("AntibodyCategoryTagList") ) {
+            $builder->add('openToPublic', null, array(
+                'label' => "Open to public:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
         }
 
         if( method_exists($this->params['entity'],'getTagTypes') ) {

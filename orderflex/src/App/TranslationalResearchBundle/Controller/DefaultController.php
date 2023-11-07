@@ -3098,7 +3098,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-category-tag-create/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
     public function antibodyCategoryTagsCreateAction( Request $request ) {
 
-        exit("antibodyCategoryTagsCreateAction not allowed");
+        //exit("antibodyCategoryTagsCreateAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -3128,38 +3128,41 @@ class DefaultController extends OrderAbstractController
 
         foreach($antibodys as $antibody) {
             $name = trim($antibody['category']);
-            echo $count.": original category=[".$name . "]<br>";
+            if( $name ) {
+                //echo $count.": original category=[".$name . "]<br>";
+                echo $name . "<br>";
+            }
             //dump($antibody);
             //exit('222');
             //Split by "-" and "/"
 
-            $namesArr = $this->stringToArray($name,array("-","/",","));
-            foreach($namesArr as $category) {
-                //Capitalize
-                $categoryLower = trim(strtolower($category));
-                if( $categoryLower == "test" || $categoryLower == "red" || $categoryLower == "pig" || $categoryLower == "new" ) {
-                    $category = ucwords($categoryLower);
-                } else {
-                    $category = strtoupper($category);
-                }
-
-                if( $category ) {
-                    echo $count . ": single category=[" . $category . "]<br>";
-                    $categoryArr[] = trim($category);
-                    //$categoryArr[trim($category)] = $name;
-                    //$this->antibodyCategoryTagCreate($piece,$count);
-                    $count = $count + 10;
-                }
-            }
+//            $namesArr = $this->stringToArray($name,array("-","/",","));
+//            foreach($namesArr as $category) {
+//                //Capitalize
+//                $categoryLower = trim(strtolower($category));
+//                if( $categoryLower == "test" || $categoryLower == "red" || $categoryLower == "pig" || $categoryLower == "new" ) {
+//                    $category = ucwords($categoryLower);
+//                } else {
+//                    $category = strtoupper($category);
+//                }
+//
+//                if( $category ) {
+//                    echo $count . ": single category=[" . $category . "]<br>";
+//                    $categoryArr[] = trim($category);
+//                    //$categoryArr[trim($category)] = $name;
+//                    //$this->antibodyCategoryTagCreate($piece,$count);
+//                    $count = $count + 10;
+//                }
+//            }
         }
 
-        $count = 0;
-        $categoryArr = array_unique($categoryArr);
-        echo "<br><br>categoryArr=".count($categoryArr)."<br>";
-        foreach($categoryArr as $category) {
-            $count++;
-            echo $count.": $category<br>";
-        }
+//        $count = 0;
+//        $categoryArr = array_unique($categoryArr);
+//        echo "<br><br>categoryArr=".count($categoryArr)."<br>";
+//        foreach($categoryArr as $category) {
+//            $count++;
+//            echo $count.": $category<br>";
+//        }
 //        foreach($categoryArr as $category=>$name) {
 //            $count++;
 //            echo $count.": $name => $category<br>";
@@ -3199,7 +3202,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-add-category-tag/', name: 'translationalresearch_antibody-add-category-tag', methods: ['GET'])]
     public function antibodyAddCategoryTagAction( Request $request ) {
 
-        exit("antibodyAddCategoryTagAction not allowed");
+        //exit("antibodyAddCategoryTagAction not allowed");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -3238,7 +3241,7 @@ class DefaultController extends OrderAbstractController
             foreach($categoryTags as $categoryTag) {
                 $categoryTagName = $categoryTag->getName()."";
                 if( $categoryTagName == $category ) {
-                    $antibody->addCategoryTag($categoryTag);
+                    //$antibody->addCategoryTag($categoryTag);
                     echo "Added antibody category tag $categoryTagName to category ID ".$antibody->getId()." <br>";
                 }
             }
@@ -3247,6 +3250,34 @@ class DefaultController extends OrderAbstractController
         }
 
         exit('111');
+    }
+    public function antibodyCategoryMap() {
+        array(
+            "M" => "Mouse",
+            "R-RED" => "Human",
+            "R-red" => "Human",
+            "mT" => "FAILED",
+        );
+//R-ISH
+//TUS-R
+//C-NEW
+//R-H/M
+//R-M
+//D-T
+//D-M
+//TUS-M
+//R-M/H
+//T
+//M-red
+//R-H
+//C-New
+//R/T
+//TUS
+//R
+//RTU
+//M/R
+//C
+//D-R"
     }
     
 }

@@ -10909,9 +10909,9 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "Human"                 => array(true,null), //"public",
-            "Mouse"                 => array(true,null), //"public",
-            "Pig"                   => array(true,null),
+            "Human"                 => array(true,null),  //"public",
+            "Mouse"                 => array(true,null),  //"public",
+            "Pig"                   => array(true,null),  //"public",
             "In situ hybridization" => array(true,"ISH"), //"public",
             "PENDING VALIDATION"    => array(false,null),
             "FAILED"                => array(false,null),
