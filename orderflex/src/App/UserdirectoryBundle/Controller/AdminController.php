@@ -10909,15 +10909,19 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "READY FOR HUMAN"       => true, //"public",
-            "READY FOR MOUSE"       => true, //"public",
-            "ISH"                   => true, //"public",
-            "PENDING VALIDATION"    => false,
-            "FAILED"                => false
+            "Human"                 => array(true,null), //"public",
+            "Mouse"                 => array(true,null), //"public",
+            "Pig"                   => array(true,null),
+            "In situ hybridization" => array(true,"ISH"), //"public",
+            "PENDING VALIDATION"    => array(false,null),
+            "FAILED"                => array(false,null),
         );
 
         $count = 10;
-        foreach( $types as $name => $openToPublic ) {
+        foreach( $types as $name => $infoArr ) {
+
+            $openToPublic = $infoArr[0];
+            $abbreviation = $infoArr[1];
 
             //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OtherRequestedServiceList'] by [OtherRequestedServiceList::class]
             $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
@@ -10928,6 +10932,7 @@ class AdminController extends OrderAbstractController
             $listEntity = new AntibodyCategoryTagList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
+            $listEntity->setAbbreviation($abbreviation);
             $listEntity->setOpenToPublic($openToPublic);
 
             $em->persist($listEntity);
