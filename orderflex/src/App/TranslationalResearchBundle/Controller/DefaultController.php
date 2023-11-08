@@ -3097,9 +3097,7 @@ class DefaultController extends OrderAbstractController
     //Populate and replace $category by $categoryTags
     #[Route(path: '/antibody-category-tag-create/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
     public function antibodyCategoryTagsCreateAction( Request $request ) {
-
-        //exit("antibodyCategoryTagsCreateAction not allowed");
-
+        exit("antibodyCategoryTagsCreateAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
@@ -3132,48 +3130,15 @@ class DefaultController extends OrderAbstractController
                 //echo $count.": original category=[".$name . "]<br>";
                 echo $name . "<br>";
             }
-            //dump($antibody);
-            //exit('222');
-            //Split by "-" and "/"
-
-//            $namesArr = $this->stringToArray($name,array("-","/",","));
-//            foreach($namesArr as $category) {
-//                //Capitalize
-//                $categoryLower = trim(strtolower($category));
-//                if( $categoryLower == "test" || $categoryLower == "red" || $categoryLower == "pig" || $categoryLower == "new" ) {
-//                    $category = ucwords($categoryLower);
-//                } else {
-//                    $category = strtoupper($category);
-//                }
-//
-//                if( $category ) {
-//                    echo $count . ": single category=[" . $category . "]<br>";
-//                    $categoryArr[] = trim($category);
-//                    //$categoryArr[trim($category)] = $name;
-//                    //$this->antibodyCategoryTagCreate($piece,$count);
-//                    $count = $count + 10;
-//                }
-//            }
         }
-
-//        $count = 0;
-//        $categoryArr = array_unique($categoryArr);
-//        echo "<br><br>categoryArr=".count($categoryArr)."<br>";
-//        foreach($categoryArr as $category) {
-//            $count++;
-//            echo $count.": $category<br>";
-//        }
-//        foreach($categoryArr as $category=>$name) {
-//            $count++;
-//            echo $count.": $name => $category<br>";
-//        }
 
         exit('111');
     }
-    public function stringToArray($string, $delimiters) {
-        $delimiter_regex = '/[' . preg_quote(implode('', $delimiters), '/') . ']/';
-        return preg_split($delimiter_regex, $string);
-    }
+//    public function stringToArray($string, $delimiters) {
+//        //return array of string parts separated by arra of delimeters
+//        $delimiter_regex = '/[' . preg_quote(implode('', $delimiters), '/') . ']/';
+//        return preg_split($delimiter_regex, $string);
+//    }
     public function antibodyCategoryTagCreate( $name, $count=1 ) {
         return null; //testing
         if( !$name ) {
@@ -3201,9 +3166,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/antibody-add-category-tag/', name: 'translationalresearch_antibody-add-category-tag', methods: ['GET'])]
     public function antibodyAddCategoryTagAction( Request $request ) {
-
-        //exit("antibodyAddCategoryTagAction not allowed");
-
+        exit("antibodyAddCategoryTagAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
@@ -3260,15 +3223,6 @@ class DefaultController extends OrderAbstractController
                 //$count++;
             }
 
-
-//            foreach($categoryTags as $categoryTag) {
-//                $categoryTagName = $categoryTag->getName()."";
-//                if( $categoryTagName == $category ) {
-//                    //$antibody->addCategoryTag($categoryTag);
-//                    echo "Added antibody category tag $categoryTagName to category ID ".$antibody->getId()." <br>";
-//                }
-//            }
-//            $count++;
         }
 
         exit('added '.$count." category tags");
