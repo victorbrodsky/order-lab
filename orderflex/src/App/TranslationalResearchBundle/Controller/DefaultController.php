@@ -3247,10 +3247,12 @@ class DefaultController extends OrderAbstractController
                 if (is_array($categoryTag)) {
                     foreach ($categoryTag as $singleCategoryTag) {
                         echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
+                        $this->addSingleCategoryTag($antibody,$singleCategoryTag);
                         $count++;
                     }
                 } else {
                     echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
+                    $this->addSingleCategoryTag($antibody,$categoryTag);
                     $count++;
                 }
             } else {
@@ -3272,9 +3274,15 @@ class DefaultController extends OrderAbstractController
         exit('111');
     }
     public function addSingleCategoryTag( $antibody, $categoryTag ) {
+        $em = $this->getDoctrine()->getManager();
         $categoryTagEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($categoryTag);
         if( $categoryTagEntity ) {
-            $antibody->addCategoryTag($categoryTagEntity);
+            if( !$antibody->getCategoryTag()->contains($categoryTagEntity) ) {
+                $antibody->addCategoryTag($categoryTagEntity);
+            } else {
+                echo "Category tag $categoryTag already exists";
+            }
+
         }
     }
     public function antibodyCategoryMap() {
@@ -3320,34 +3328,34 @@ class DefaultController extends OrderAbstractController
             "M" => "Mouse",
             "R-RED" => "Human",
             "R-red" => "Human",
-            "mT" => "FAILED",
-            "R (DO NOT USE)" => "FAILED",
-            "T-US" => "FAILED",
+            "mT" => "Failed",
+            "R (DO NOT USE)" => "Failed",
+            "T-US" => "Failed",
             "R-M" => "Mouse",
             "D-T" => null,
             "D-M" => null,
             "M-red" => "Mouse",
             "M (?)" => "Mouse",
             "C-New" => "Human",
-            "R/T" => "FAILED",
-            "TUS" => "FAILED",
+            "R/T" => "Failed",
+            "TUS" => "Failed",
             "R-H, M" => array("Human","Mouse"),
             "R" => "Human",
             "RTU" => "Human",
-            "DO NOT USE" => "FAILED",
+            "DO NOT USE" => "Failed",
             "C" => "Human",
             "R-H, Pig" => array("Human","Pig"),
             "D-R" => null,
             "VP_IHC-H" => "Human",
             "VP_IHC-Human" => "Human",
             "R-ISH" => "In situ hybridization",
-            "TUS-R" => "FAILED",
+            "TUS-R" => "Failed",
             "C-NEW" => "Human",
             "R-H/M" => array("Human","Mouse"),
             "R-M,H" => array("Human","Mouse"),
-            "TUS-M" => "FAILED",
+            "TUS-M" => "Failed",
             "R-M/H" => array("Human","Mouse"),
-            "T" => "FAILED",
+            "T" => "Failed",
             "R-H" => "Human",
             "R-H only" => "Human",
             "VP_IHC-mouse" => "Mouse",
