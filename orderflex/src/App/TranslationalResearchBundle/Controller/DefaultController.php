@@ -3212,7 +3212,7 @@ class DefaultController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
-        $count = 1;
+        $count = 0;
 
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
@@ -3246,18 +3246,18 @@ class DefaultController extends OrderAbstractController
             if( $categoryTag ) {
                 if (is_array($categoryTag)) {
                     foreach ($categoryTag as $singleCategoryTag) {
-                        echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
+                        //echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
                         $this->addSingleCategoryTag($antibody,$singleCategoryTag);
                         $count++;
                     }
                 } else {
-                    echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
+                    //echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
                     $this->addSingleCategoryTag($antibody,$categoryTag);
                     $count++;
                 }
             } else {
-                echo "### " . $count . " category=[$category] == [NOT DEFINED]<br>";
-                $count++;
+                echo "### category=[$category] == [NOT DEFINED]<br>";
+                //$count++;
             }
 
 
@@ -3271,7 +3271,7 @@ class DefaultController extends OrderAbstractController
 //            $count++;
         }
 
-        exit('111');
+        exit('added '.$count." category tags");
     }
     public function addSingleCategoryTag( $antibody, $categoryTag ) {
         $em = $this->getDoctrine()->getManager();
@@ -3279,9 +3279,10 @@ class DefaultController extends OrderAbstractController
         if( $categoryTagEntity ) {
             if( !$antibody->getCategoryTags()->contains($categoryTagEntity) ) {
                 $antibody->addCategoryTag($categoryTagEntity);
-                //$em->flush();
+                $em->flush();
+                echo "ID#".$antibody->getId().": Add category tag $categoryTag <br>";
             } else {
-                echo "Category tag $categoryTag already exists";
+                echo "Category tag $categoryTag already exists <br>";
             }
         }
     }
