@@ -3284,6 +3284,8 @@ class DefaultController extends OrderAbstractController
             } else {
                 echo "Category tag $categoryTag already exists <br>";
             }
+        } else {
+            echo "Category tag not found by name  $categoryTag<br>";
         }
     }
     public function antibodyCategoryMap() {
