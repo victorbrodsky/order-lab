@@ -3217,39 +3217,65 @@ class DefaultController extends OrderAbstractController
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
-
-        //$dql->distinct('antibody.category');
-        //$dql->groupBy('antibody.category');
-        //$dql->addGroupBy('antibody.id');
-
-        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        //$query->setParameters($params);
-        //echo "query=".$query->getSql()."<br>";
-
+        $query = $dql->getQuery();
         $antibodys = $query->getResult();
         echo "antibodys=".count($antibodys)."<br>";
 
+        //$categoryTags = $em->getRepository(AntibodyCategoryTagList::class)->findAll();
+        //echo "categoryTags=".count($categoryTags)."<br>";
 
-        $categoryTags = $em->getRepository(AntibodyCategoryTagList::class)->findAll();
-        echo "categoryTags=".count($categoryTags)."<br>";
+        $antibodyMap = $this->antibodyCategoryMap();
 
         foreach($antibodys as $antibody) {
             //echo $count.": antibody=[".$antibody . "]<br>";
             $category = $antibody->getCategory()."";
-            echo "### ".$count.": antibody ID=".$antibody->getId()." category=[$category]:<br>";
+            //echo "### ".$count.": antibody ID=".$antibody->getId().", category=[$category]<br>";
 
-            foreach($categoryTags as $categoryTag) {
-                $categoryTagName = $categoryTag->getName()."";
-                if( $categoryTagName == $category ) {
-                    //$antibody->addCategoryTag($categoryTag);
-                    echo "Added antibody category tag $categoryTagName to category ID ".$antibody->getId()." <br>";
-                }
+            if( !$category ) {
+                continue;
             }
 
-            $count++;
+            $category = trim($category);
+
+            //echo "### ".$count.": antibody ID=".$antibody->getId().", category=[$category]<br>";
+            $categoryTag = NULL;
+            if( isset($antibodyMap[$category]) ) {
+                $categoryTag = $antibodyMap[$category];
+            }
+
+            if( $categoryTag ) {
+                if (is_array($categoryTag)) {
+                    foreach ($categoryTag as $singleCategoryTag) {
+                        echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
+                        $count++;
+                    }
+                } else {
+                    echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
+                    $count++;
+                }
+            } else {
+                echo "### " . $count . " category=[$category] == [NOT DEFINED]<br>";
+                $count++;
+            }
+
+
+//            foreach($categoryTags as $categoryTag) {
+//                $categoryTagName = $categoryTag->getName()."";
+//                if( $categoryTagName == $category ) {
+//                    //$antibody->addCategoryTag($categoryTag);
+//                    echo "Added antibody category tag $categoryTagName to category ID ".$antibody->getId()." <br>";
+//                }
+//            }
+//            $count++;
         }
 
         exit('111');
+    }
+    public function addSingleCategoryTag( $antibody, $categoryTag ) {
+        $categoryTagEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($categoryTag);
+        if( $categoryTagEntity ) {
+            $antibody->addCategoryTag($categoryTagEntity);
+        }
     }
     public function antibodyCategoryMap() {
         //antibodys=38
@@ -3290,7 +3316,7 @@ class DefaultController extends OrderAbstractController
         //VP_IHC-mouse
         //VP_IHC-human
         //M/R
-        array(
+        return array(
             "M" => "Mouse",
             "R-RED" => "Human",
             "R-red" => "Human",
@@ -3310,7 +3336,7 @@ class DefaultController extends OrderAbstractController
             "RTU" => "Human",
             "DO NOT USE" => "FAILED",
             "C" => "Human",
-            "R-H, Pig" => "Human",
+            "R-H, Pig" => array("Human","Pig"),
             "D-R" => null,
             "VP_IHC-H" => "Human",
             "VP_IHC-Human" => "Human",
@@ -3328,8 +3354,6 @@ class DefaultController extends OrderAbstractController
             "VP_IHC-human" => "Human",
             "M/R" => "Mouse",
         );
-
-
     }
     
 }

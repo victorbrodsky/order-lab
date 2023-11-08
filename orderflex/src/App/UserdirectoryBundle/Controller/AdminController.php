@@ -10913,8 +10913,8 @@ class AdminController extends OrderAbstractController
             "Mouse"                 => array(true,null),  //"public",
             "Pig"                   => array(true,null),  //"public",
             "In situ hybridization" => array(true,"ISH"), //"public",
-            "PENDING VALIDATION"    => array(false,null),
-            "FAILED"                => array(false,null),
+            "Pending validation"    => array(false,null),
+            "Failed"                => array(false,null),
         );
 
         $count = 10;
