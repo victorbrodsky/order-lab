@@ -3246,12 +3246,12 @@ class DefaultController extends OrderAbstractController
             if( $categoryTag ) {
                 if (is_array($categoryTag)) {
                     foreach ($categoryTag as $singleCategoryTag) {
-                        echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
+                        //echo "### " . $count . " category=[$category] == [$singleCategoryTag]<br>";
                         $this->addSingleCategoryTag($antibody,$singleCategoryTag);
                         $count++;
                     }
                 } else {
-                    echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
+                    //echo "### " . $count . " category=[$category] == [$categoryTag]<br>";
                     $this->addSingleCategoryTag($antibody,$categoryTag);
                     $count++;
                 }
