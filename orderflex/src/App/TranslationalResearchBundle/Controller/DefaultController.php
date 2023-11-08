@@ -3277,12 +3277,12 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $categoryTagEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($categoryTag);
         if( $categoryTagEntity ) {
-            if( !$antibody->getCategoryTag()->contains($categoryTagEntity) ) {
+            if( !$antibody->getCategoryTags()->contains($categoryTagEntity) ) {
                 $antibody->addCategoryTag($categoryTagEntity);
+                //$em->flush();
             } else {
                 echo "Category tag $categoryTag already exists";
             }
-
         }
     }
     public function antibodyCategoryMap() {
