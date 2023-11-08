@@ -3279,7 +3279,7 @@ class DefaultController extends OrderAbstractController
         if( $categoryTagEntity ) {
             if( !$antibody->getCategoryTags()->contains($categoryTagEntity) ) {
                 $antibody->addCategoryTag($categoryTagEntity);
-                $em->flush();
+                //$em->flush();
                 echo "ID#".$antibody->getId().": Add category tag $categoryTag <br>";
             } else {
                 echo "Category tag $categoryTag already exists <br>";
