@@ -3320,5 +3320,43 @@ class DefaultController extends OrderAbstractController
             "M/R" => "Mouse",
         );
     }
+
+    //set antibody's openToPublic according to the categoryTags' openToPublic
+    #[Route(path: '/antibody-category-set-public/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
+    public function antibodyCategorySetPublicAction( Request $request ) {
+        exit("antibodyCategoryTagsCreateAction not allowed");
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        $count = 1;
+
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+
+        $dql->leftJoin('antibody.categoryTags','categoryTags');
+        $dql->andWhere("categoryTags.openToPublic = TRUE");
+
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+
+        $antibodys = $query->getResult();
+        echo "antibodys=".count($antibodys)."<br>";
+
+        $categoryArr = array();
+
+        foreach($antibodys as $antibody) {
+            $name = trim($antibody['category']);
+            if( $name ) {
+                //echo $count.": original category=[".$name . "]<br>";
+                echo $name . "<br>";
+            }
+        }
+
+        exit('111');
+    }
     
 }

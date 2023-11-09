@@ -49,6 +49,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
@@ -92,6 +93,14 @@
                     {% for category in ent.categoryTags %}
                         {{ category }}<br>
                     {% endfor %}
+                </td>
+
+                <td>
+                    {% if ent.openToPublic == true %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
                 </td>
 
                 <td>
