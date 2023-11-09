@@ -59,7 +59,7 @@ class ListFilterType extends AbstractType
             $className = NULL;
         }
 
-        if( $className && $className == "AntibodyList" ) {
+//        if( $className && $className == "AntibodyList" ) {
             $types = array(
                 "default" => "default",
                 "user-added" => "user-added",
@@ -68,6 +68,7 @@ class ListFilterType extends AbstractType
                 "hidden" => "hidden"
             );
             $builder->add('type', ChoiceType::class, array(
+                'label' => false,
                 'choices' => $types,
                 'data' => array('default','user-added'),
                 //'choices_as_values' => true,
@@ -75,7 +76,7 @@ class ListFilterType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
             ));
-        }
+//        }
     }
 
     /**
