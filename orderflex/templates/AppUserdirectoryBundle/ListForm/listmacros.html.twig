@@ -162,6 +162,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Site', 'sites.name') }}</th>
             {% endif %}
 
+            {% if entities|first.openToPublic is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Open to public', 'ent.openToPublic') }}</th>
+            {% endif %}
+
             <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Display Order', 'ent.orderinlist') }}</th>
 
@@ -429,6 +433,16 @@
                         {% for site in entity.sites %}
                             <p>{{ site.name }}</p>
                         {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.openToPublic is defined %}
+                    <td>
+                        {% if entity.openToPublic == true %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
                     </td>
                 {% endif %}
 

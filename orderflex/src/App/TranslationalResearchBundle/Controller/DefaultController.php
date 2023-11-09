@@ -3324,7 +3324,7 @@ class DefaultController extends OrderAbstractController
     //set antibody's openToPublic according to the categoryTags' openToPublic
     #[Route(path: '/antibody-category-set-public/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
     public function antibodyCategorySetPublicAction( Request $request ) {
-        exit("antibodyCategoryTagsCreateAction not allowed");
+        //exit("antibodyCategorySetPublicAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
@@ -3340,6 +3340,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.categoryTags','categoryTags');
         $dql->andWhere("categoryTags.openToPublic = TRUE");
+        $dql->orderBy("antibody.id","ASC");
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
@@ -3349,10 +3350,10 @@ class DefaultController extends OrderAbstractController
         $categoryArr = array();
 
         foreach($antibodys as $antibody) {
-            $name = trim($antibody['category']);
-            if( $name ) {
-                //echo $count.": original category=[".$name . "]<br>";
-                echo $name . "<br>";
+            //echo $antibody . "<br>";
+            $categoryTags = $antibody->getCategoryTags();
+            foreach($categoryTags as $categoryTag) {
+                echo $antibody->getId()." (".$antibody->getName().": ".$categoryTag . "<br>";
             }
         }
 
