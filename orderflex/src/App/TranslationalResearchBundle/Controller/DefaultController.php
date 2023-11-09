@@ -3352,9 +3352,12 @@ class DefaultController extends OrderAbstractController
         foreach($antibodys as $antibody) {
             //echo $antibody . "<br>";
             $categoryTags = $antibody->getCategoryTags();
-            foreach($categoryTags as $categoryTag) {
-                echo $antibody->getId()." (".$antibody->getName().": ".$categoryTag . "<br>";
-            }
+//            foreach($categoryTags as $categoryTag) {
+//                echo $antibody->getId()." (".$antibody->getName()."): ".$categoryTag . "<br>";
+//            }
+            echo $antibody->getId().": ".$antibody->getName(). "<br>";
+            $antibody->setOpenToPublic(true);
+            $em->flush();
         }
 
         exit('111');
