@@ -73,14 +73,16 @@
                 {% endif %}
             </tr>
         </thead>
-        <tbody>
 
-        {#{% set count = 0 %}#}
+        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
         {% for ent in entities %}
 
             <tr>
                 <td>
-                    {{ ent.id }}
+                    {#{{ ent.id }}#}
+                    <a class="list-row-mainlink"
+                       href="{{ path('antibodies_show_translationalresearch', { 'id': ent.id }) }}"
+                       target="_blank">{{ ent.id }}</a>
                 </td>
 
                 {#<td>#}
@@ -191,6 +193,12 @@
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-right">
+
+                                <li>
+                                    <a href="{{ path('antibodies_show_translationalresearch', { 'id': ent.id }) }}"
+                                       target="_blank"
+                                    >Show</a>
+                                </li>
 
                                 <li>
                                     <a href="{{ path('antibodies_edit_translationalresearch', { 'id': ent.id }) }}"
