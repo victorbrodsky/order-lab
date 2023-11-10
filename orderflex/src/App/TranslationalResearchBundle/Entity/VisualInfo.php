@@ -88,6 +88,14 @@ class VisualInfo {
     #[ORM\Column(type: 'string', nullable: true)]
     private $catalog;
 
+    //Add: Region of Interest Image(s) [Up to 10 images, up to 10MB each]
+    //Add: Whole Slide Image(s) [Up to 2 images, up to 2GB each]
+    //This is why we need three separate fields.
+    // The only alternative would be to allow the user to specify
+    // the uploaded file type (document, region of interest,
+    // whole slide image) in a user-friendly way and then show
+    // the upload type next to the uploaded file
+
 
     public function __construct( $author=null ) {
         $this->documents = new ArrayCollection();

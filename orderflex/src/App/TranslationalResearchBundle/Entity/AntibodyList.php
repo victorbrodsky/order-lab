@@ -224,6 +224,23 @@ class AntibodyList extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $openToPublic;
 
+//    //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
+//    #[ORM\JoinTable(name: 'transres_antibody_regioninterestimage')]
+//    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\InverseJoinColumn(name: 'regioninterestimage_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['createdate' => 'DESC'])]
+//    private $regionInterestImage;
+//
+//    //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
+//    #[ORM\JoinTable(name: 'transres_antibody_wholeslideimage')]
+//    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\InverseJoinColumn(name: 'wholeslideimage_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['createdate' => 'DESC'])]
+//    private $wholeSlideImage;
+
+
 
     public function __construct($author=null) {
 
