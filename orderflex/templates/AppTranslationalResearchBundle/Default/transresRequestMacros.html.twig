@@ -713,7 +713,33 @@
                         <strong>Attached Antibody Photo:</strong>
                     </div>
                     <div class="col-xs-6" align="left">
-                        {{ usermacros.documentsContainer(formfield,formfield.documents,cycle,prototype,1,'default','Antibody Photo') }}
+                        {#{{ usermacros.documentsContainer(formfield,formfield.documents,cycle,prototype,1,'default','Antibody Photo') }}#}
+                        {#{{ usermacros.documentsContainer(#}
+                            {#formfield,#}
+                            {#formfield.documents,#}
+                            {#cycle,#}
+                            {#prototype,#}
+                            {#1,#}
+                            {#'default',#}
+                            {#'Antibody Photo'#}
+                            {#)#}
+                        {#}}#}
+
+                        {#container,documents,cycle,prototype,maxFiles,maxFilesize,dropzoneInit,documentType,asFormOrEntity,formRest#}
+                        {% set documentsContainerData = {
+                            'container': formfield,
+                            'documents': formfield.documents,
+                            'cycle': cycle,
+                            'prototype': prototype,
+                            'maxFiles': 1,
+                            'maxFilesize': 2048,
+                            'dropzoneInit': 'default',
+                            'documentType': 'Antibody Photo',
+                            'asFormOrEntity': null,
+                            'formRest': null,
+                            }
+                        %}
+                        {{ usermacros.documentsContainerWrapper(documentsContainerData) }}
                     </div>
                 </div>
                 </p>

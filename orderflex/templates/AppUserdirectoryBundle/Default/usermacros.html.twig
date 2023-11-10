@@ -148,18 +148,58 @@
 
 {% endmacro %}
 
+{% macro documentsContainerWrapper(documentsContainerData) %}
+
+    {% set container = documentsContainerData.container %}
+    {% set documents = documentsContainerData.documents %}
+    {% set cycle = documentsContainerData.cycle %}
+    {% set prototype = documentsContainerData.prototype %}
+    {% set maxFiles = documentsContainerData.maxFiles %}
+    {% set maxFilesize = documentsContainerData.maxFilesize %}
+    {% set dropzoneInit = documentsContainerData.dropzoneInit %}
+    {% set documentType = documentsContainerData.documentType %}
+    {% set asFormOrEntity = documentsContainerData.asFormOrEntity %}
+    {% set formRest = documentsContainerData.formRest %}
+
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {{ usermacros.documentsContainer(
+        container,
+        documents,
+        cycle,
+        prototype,
+        maxFiles,
+        dropzoneInit,
+        documentType,
+        asFormOrEntity,
+        formRest,
+        maxFilesize
+        )
+    }}
+{% endmacro %}
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,maxFiles,dropzoneInit,documentType,asFormOrEntity,formRest) %}
+{% macro documentsContainer(container,documents,cycle,prototype,maxFiles,dropzoneInit,documentType,asFormOrEntity,formRest,maxFilesize) %}
+{#{% macro documentsContainer(documentsContainerData) %}#}
+
+    {#{% set container = documentsContainerData.container %}#}
+    {#{% set documents = documentsContainerData.documents %}#}
+    {#{% set cycle = documentsContainerData.cycle %}#}
+    {#{% set prototype = documentsContainerData.prototype %}#}
+    {#{% set maxFiles = documentsContainerData.maxFiles %}#}
+    {#{% set maxFilesize = documentsContainerData.maxFilesize %}#}
+    {#{% set dropzoneInit = documentsContainerData.dropzoneInit %}#}
+    {#{% set documentType = documentsContainerData.documentType %}#}
+    {#{% set asFormOrEntity = documentsContainerData.asFormOrEntity %}#}
+    {#{% set formRest = documentsContainerData.formRest %}#}
 
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    {% if formRest is not defined %}
+    {% if formRest is not defined or formRest is null %}
         {% set formRest = true %}
     {% endif %}
 
-    {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
+    {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" or asFormOrEntity is null %}
         {% set asFormOrEntity = "asForm" %}
     {% endif %}
 
@@ -171,12 +211,19 @@
             {% set showFlag = false %}
         {% endif %}
 
-        {% if maxFiles is not defined or maxFiles == "" or maxFiles == 0 %}
+        {% if maxFiles is not defined or maxFiles == "" or maxFiles == 0 or maxFiles is null %}
             {% set dz_maxFiles = 6 %}
         {% else %}
             {% set dz_maxFiles = maxFiles %}
         {% endif %}
         {#maxFiles:{{ maxFiles }}#}
+
+        {% if maxFilesize is not defined or maxFilesize == "" or maxFilesize == 0 or maxFilesize is null %}
+            {#Default max file size 64 MB#}
+            {% set dz_maxFilesize = 64 %}
+        {% else %}
+            {% set dz_maxFilesize = maxFilesize %}
+        {% endif %}
 
         {% if documentType is not defined %}
             {% set dz_documentType = "" %}
@@ -199,7 +246,7 @@
             {#dropzoneInit == false<br>#}
             {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
             {% set addRemoveLink = true %}
-        {% elseif dropzoneInit == 'default' %}
+        {% elseif dropzoneInit == 'default' or dropzoneInit is null %}
             {#dropzoneInit == 'default'<br>#}
             {% if showFlag %}
                 {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
@@ -225,9 +272,10 @@
             {% if not showFlag %}
 
                 <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
+                <input type="hidden" id="documentcontainer-documentmaxfilesize" value="{{ dz_maxFilesize }}">
                 <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
                 <div class="dz-message" style="padding-bottom:5px;">
-                    <span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span>
+                    <span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, {{ dz_maxFilesize }} MB each)</span>
                 </div>
 
             {% else %}
@@ -406,6 +454,8 @@
         {% endif %}
 
         {% set dz_maxFiles = 1 %}
+        {#Default max file size 64 MB#}
+        {% set dz_maxFilesize = 64 %}
 
         {% if documentType is not defined %}
             {% set dz_documentType = "" %}
@@ -454,8 +504,9 @@
             {% if not showFlag %}
 
                 <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
+                <input type="hidden" id="documentcontainer-documentmaxfilesize" value="{{ dz_maxFilesize }}">
                 <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
-                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
+                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, {{ dz_maxFilesize }} MB each)</span></div>
 
             {% else %}
 

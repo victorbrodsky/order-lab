@@ -111,6 +111,13 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     }
     //console.log('_dz_maxFiles='+_dz_maxFiles);
 
+
+    var documentmaxfilesize = $(targetid).find('#documentcontainer-documentmaxfilesize').val();
+    if( documentmaxfilesize && documentmaxfilesize != "undefined" ) {
+        _dz_maxFilesize = documentmaxfilesize;
+    }
+    console.log('_dz_maxFilesize='+_dz_maxFilesize);
+
     //var documentType = $(targetid).find('#documentcontainer-document-type').val();
     //console.log('documentType='+documentType);
     //if( documentType && documentType != "undefined" ) {
