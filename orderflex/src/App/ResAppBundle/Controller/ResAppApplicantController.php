@@ -329,6 +329,7 @@ class ResAppApplicantController extends OrderAbstractController {
         $emailResArr = array();
         $logger = $this->container->get('logger');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
         $resapp = $interview->getResapp();
         $applicant = $resapp->getUser();
@@ -405,6 +406,13 @@ class ResAppApplicantController extends OrderAbstractController {
         $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $applicationFormLink . $break.$break;
 
         $text .= "The ITINERARY and COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
+
+        $remoteAccessUrl = $userSecUtil->getSiteSettingParameter('remoteAccessUrl');
+        if( $remoteAccessUrl ) {
+            $remoteAccessUrl = "(".$remoteAccessUrl.")";
+        }
+        $text .= "If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
+        $text .= $break.$break;
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 

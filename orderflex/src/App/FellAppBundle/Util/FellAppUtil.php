@@ -674,6 +674,7 @@ class FellAppUtil {
     public function sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $applicant ) {
         $fellappUtil = $this->container->get('fellapp_util');
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellowshipApplication);
         $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellowshipApplication);
@@ -686,7 +687,6 @@ class FellAppUtil {
         /////////////// Configuring the Request Context per Command ///////////////
         // http://symfony.com/doc/current/cookbook/console/request_context.html
         //replace by $router = $userSecUtil->getRequestContextRouter();
-        $userSecUtil = $this->container->get('user_security_utility');
         $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
         $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
         //echo "liveSiteHost=".$liveSiteHost."; ";
@@ -754,8 +754,11 @@ class FellAppUtil {
         $populatedBodyFellApp .= $linkToList;
 
         //If you are off site, please connect via VPN first ( https://its.weill.cornell.edu/services/wifi-networks/vpn ) and then follow the links above.
-        $remoteAccessUrl = $userSecUtil->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
-        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first ($remoteAccessUrl) and then follow the links above.";
+        $remoteAccessUrl = $userSecUtil->getSiteSettingParameter('remoteAccessUrl');
+        if( $remoteAccessUrl ) {
+            $remoteAccessUrl = "(".$remoteAccessUrl.")";
+        }
+        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );

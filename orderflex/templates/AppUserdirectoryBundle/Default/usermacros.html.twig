@@ -151,7 +151,7 @@
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asFormOrEntity,formRest) %}
+{% macro documentsContainer(container,documents,cycle,prototype,maxFiles,dropzoneInit,documentType,asFormOrEntity,formRest) %}
 
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
@@ -171,12 +171,12 @@
             {% set showFlag = false %}
         {% endif %}
 
-        {% if documentspercontainer is not defined or documentspercontainer == "" or documentspercontainer == 0 %}
+        {% if maxFiles is not defined or maxFiles == "" or maxFiles == 0 %}
             {% set dz_maxFiles = 6 %}
         {% else %}
-            {% set dz_maxFiles = documentspercontainer %}
+            {% set dz_maxFiles = maxFiles %}
         {% endif %}
-        {#documentspercontainer:{{ documentspercontainer }}#}
+        {#maxFiles:{{ maxFiles }}#}
 
         {% if documentType is not defined %}
             {% set dz_documentType = "" %}
@@ -226,7 +226,9 @@
 
                 <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
                 <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
-                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
+                <div class="dz-message" style="padding-bottom:5px;">
+                    <span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span>
+                </div>
 
             {% else %}
 

@@ -59,7 +59,8 @@ class ListFilterType extends AbstractType
             $className = NULL;
         }
 
-//        if( $className && $className == "AntibodyList" ) {
+        //if( $className && $className == "AntibodyList" ) {
+            //Show list type filter
             $types = array(
                 "default" => "default",
                 "user-added" => "user-added",
@@ -76,7 +77,7 @@ class ListFilterType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
             ));
-//        }
+        //}
     }
 
     /**

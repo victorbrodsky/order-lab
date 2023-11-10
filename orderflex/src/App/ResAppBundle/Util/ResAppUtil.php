@@ -675,6 +675,7 @@ class ResAppUtil {
     public function sendConfirmationEmailsOnApplicationPopulation( $residencyApplication, $applicant ) {
         $resappUtil = $this->container->get('resapp_util');
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $directorEmails = $resappUtil->getDirectorsOfResAppEmails($residencyApplication);
         $coordinatorEmails = $resappUtil->getCoordinatorsOfResAppEmails($residencyApplication);
@@ -687,7 +688,6 @@ class ResAppUtil {
         /////////////// Configuring the Request Context per Command ///////////////
         // http://symfony.com/doc/current/cookbook/console/request_context.html
         //replace by $router = $userSecUtil->getRequestContextRouter();
-        $userSecUtil = $this->container->get('user_security_utility');
         $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
         $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
         //echo "liveSiteHost=".$liveSiteHost."; ";
@@ -755,8 +755,11 @@ class ResAppUtil {
         $populatedBodyResApp .= $linkToList;
 
         //If you are off site, please connect via VPN first ( https://its.weill.cornell.edu/services/wifi-networks/vpn ) and then follow the links above.
-        $remoteAccessUrl = $userSecUtil->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
-        $populatedBodyResApp .= $break.$break."If you are off site, please connect via VPN first ($remoteAccessUrl) and then follow the links above.";
+        $remoteAccessUrl = $userSecUtil->getSiteSettingParameter('remoteAccessUrl');
+        if( $remoteAccessUrl ) {
+            $remoteAccessUrl = "(".$remoteAccessUrl.")";
+        }
+        $populatedBodyResApp .= $break.$break."If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectResApp, $populatedBodyResApp );
