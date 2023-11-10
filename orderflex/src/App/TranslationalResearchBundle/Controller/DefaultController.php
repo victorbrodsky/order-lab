@@ -3139,30 +3139,6 @@ class DefaultController extends OrderAbstractController
 //        $delimiter_regex = '/[' . preg_quote(implode('', $delimiters), '/') . ']/';
 //        return preg_split($delimiter_regex, $string);
 //    }
-    public function antibodyCategoryTagCreate( $name, $count=1 ) {
-        return null; //testing
-        if( !$name ) {
-            return null;
-        }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->getUser();
-
-        $listEntity = $em->getRepository(AntibodyCategoryTagList::class)->findOneByName($name);
-        if( $listEntity ) {
-            echo "Skip category $name<br>";
-            return null;
-        }
-
-        $antobodyCategoryTag = new AntibodyCategoryTagList();
-        $antobodyCategoryTag = $userSecUtil->setDefaultList($antobodyCategoryTag, $count, $user, $name);
-        $antobodyCategoryTag->setType('default');
-
-        $em->persist($antobodyCategoryTag);
-        $em->flush();
-
-        return $antobodyCategoryTag;
-    }
 
     #[Route(path: '/antibody-add-category-tag/', name: 'translationalresearch_antibody-add-category-tag', methods: ['GET'])]
     public function antibodyAddCategoryTagAction( Request $request ) {

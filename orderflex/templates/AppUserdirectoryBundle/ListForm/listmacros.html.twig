@@ -439,9 +439,21 @@
                 {% if entity.openToPublic is defined %}
                     <td>
                         {% if entity.openToPublic == true %}
-                            Yes
+                            {#Yes#}
+                            <input
+                                    type="checkbox"
+                                    id="openToPublic"
+                                    name="openToPublic"
+                                    value="true"
+                                    checked disabled
+                            >
                         {% else %}
-                            No
+                            <input
+                                    type="checkbox"
+                                    id="openToPublic"
+                                    name="openToPublic"
+                                    value="false" disabled
+                            >
                         {% endif %}
                     </td>
                 {% endif %}

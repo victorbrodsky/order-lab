@@ -97,9 +97,22 @@
 
                 <td>
                     {% if ent.openToPublic == true %}
-                        Yes
+                        {#Yes#}
+                        <input
+                                type="checkbox"
+                                id="openToPublic"
+                                name="openToPublic"
+                                value="true"
+                                checked disabled
+                        >
                     {% else %}
-                        No
+                        {#No#}
+                        <input
+                                type="checkbox"
+                                id="openToPublic"
+                                name="openToPublic"
+                                value="false" disabled
+                        >
                     {% endif %}
                 </td>
 
