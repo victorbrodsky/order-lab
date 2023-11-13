@@ -1242,17 +1242,8 @@
 
     {#Antibody's visualInfos#}
     {% if form.visualInfos is defined %}
-        {#<div class="transres-visualinfos-holder">#}
-            {#{% for visualInfo in form.visualInfos %}#}
-                {#{{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}#}
-                {#{{ transresRequestMacros.visualInfoForm(visualInfo, cycle, 'transres-visualinfos', 'noprototype', sitename, 1) }}#}
-            {#{% endfor %}#}
-            {#{{ usermacros.addNewObjectBtn(cycle,'transres-visualinfos','Add Photo') }}#}
-        {#</div>#}
-
         {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
         {{ transresRequestMacros.visualInfoSections(form,cycle) }}
-        {#{{ transresRequestMacros.visualInfoSimpleSections(form,cycle) }}#}
     {% endif %}
 
     {#ResidencyTrackList->duration#}
