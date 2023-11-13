@@ -4,6 +4,7 @@
 {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import _self as antibodymacros %}
 
 {% block title %}
     {{ title }}
@@ -189,11 +190,77 @@
 
         {#Antibody's visualInfos#}
         {% if form.visualInfos is defined %}
-            {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
-            {{ transresRequestMacros.visualInfoSections(form,cycle) }}
+            {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+            {#{{ transresRequestMacros.visualInfoSections(form,cycle) }}#}
+            {{ antibodymacros.antibodyVisualInfoSections(form,cycle) }}
         {% endif %}
 
     {{ form_end(form) }}
 
 {% endblock %}
 
+
+{% macro antibodyVisualInfoSections(form, cycle, sitename) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    {#cycle={{ cycle }}<br>#}
+    {#TODO: fix counter, remove delete for ROI and WSI#}
+
+    {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype') %}
+    <div id="form-prototype-data2"
+         data-prototype-user-visualinfos = "{{ visualInfosPrototype|e }}"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
+    {% for visualInfo in form.visualInfos %}
+        {% set uploadedType = visualInfo.vars.value.uploadedType %}
+        uploadedType={{ uploadedType }}<br>
+        {% if uploadedType == 'Region Of Interest' or uploadedType == 'Whole Slide Image' %}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-left">
+                        <a data-toggle="collapse" href="#{{ uploadedType|replace({' ': '-'}) }}">
+                            {{ uploadedType }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ uploadedType|replace({' ': '-'}) }}" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype') }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+
+        {% endif %}
+    {% endfor %}
+
+
+    {#Visual Infos#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#visualinfo">
+                    Visual Info(s)
+                </a>
+            </h4>
+        </div>
+        <div id="visualinfo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="user-visualinfos-holder">
+                    {% for visualInfo in form.visualInfos %}
+                        {% set uploadedType = visualInfo.vars.value.uploadedType %}
+                        {% if uploadedType != 'Region Of Interest' and uploadedType != 'Whole Slide Image' %}
+                            {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype') }}
+                        {% endif %}
+                    {% endfor %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
