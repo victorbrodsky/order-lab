@@ -1,0 +1,198 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {{ form_start(form) }}
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+
+    {% if form.list is defined %}
+        {% if form.list.name is defined %}
+            {{ formmacros.field(form.list.name) }}
+        {% endif %}
+        {% if form.list.shortname is defined %}
+            {{ formmacros.field(form.list.shortname) }}
+        {% endif %}
+        {% if form.list.abbreviation is defined %}
+            {{ formmacros.field(form.list.abbreviation) }}
+        {% endif %}
+    {% endif %}
+
+    {% if form.level is defined %}
+        {{ formmacros.field(form.level) }}
+    {% endif %}
+
+    {% if form.organizationalGroupType is defined %}
+        {{ formmacros.field(form.organizationalGroupType) }}
+    {% endif %}
+
+    {% if form.nativeName is defined %}
+        {{ formmacros.field(form.nativeName) }}
+    {% endif %}
+
+    {% if form.parent is defined and entity.level is not defined and form.vars.value.parent is defined %}
+        {% if not form.parent.rendered %}
+            {{ formmacros.field(form.parent) }}
+        {% endif %}
+    {% endif %}
+
+    {% if form.attributes is defined and form.vars.value.attributes is defined %}
+        {{ formmacros.field(form.attributes) }}
+    {% endif %}
+
+    {% if form.value is defined %}
+        {{ formmacros.field(form.value) }}
+    {% endif %}
+
+    {% if form.list.original is defined %}
+        {{ formmacros.field(form.list.original) }}
+    {% endif %}
+
+    {% if form.list.synonyms is defined %}
+        {{ formmacros.field(form.list.synonyms) }}
+    {% endif %}
+
+    {% if form.action is defined %}
+        {{ formmacros.field(form.action) }}
+    {% endif %}
+
+    {% if form.alias is defined %}
+        {{ formmacros.field(form.alias) }}
+    {% endif %}
+
+    {% if form.list.description is defined %}
+        {{ formmacros.field(form.list.description) }}
+    {% endif %}
+
+    {{ formmacros.field(form.list.type) }}
+
+    {{ formmacros.field(form.list.creator) }}
+
+    {% if form.list.createdate is defined %}
+        {{ formmacros.field(form.list.createdate) }}
+    {% endif %}
+
+    {% if form.list.version is defined %}
+        {{ formmacros.field(form.list.version) }}
+    {% endif %}
+
+    {% if form.list.textAttribute is defined %}
+        {{ formmacros.field(form.list.textAttribute) }}
+    {% endif %}
+
+    {% if form.list.urlSlug is defined %}
+        {{ formmacros.field(form.list.urlSlug) }}
+    {% endif %}
+
+    {% if form.list is defined %}
+        {% if form.list.orderinlist is defined %}
+            {{ formmacros.field(form.list.orderinlist) }}
+        {% endif %}
+        {% if form.list.objectType is defined %}
+            {{ formmacros.field(form.list.objectType) }}
+        {% endif %}
+        {% if form.list.entityNamespace is defined %}
+            {{ formmacros.field(form.list.entityNamespace) }}
+        {% endif %}
+        {% if form.list.entityName is defined %}
+            {{ formmacros.field(form.list.entityName) }}
+        {% endif %}
+        {% if form.list.entityId is defined %}
+            {{ formmacros.field(form.list.entityId) }}
+        {% endif %}
+        {% if form.list.linkToListId is defined %}
+            {{ formmacros.field(form.list.linkToListId) }}
+        {% endif %}
+    {% endif %}
+
+        {#{{ formmacros.field(form.invoiceFrom) }}#}
+
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+        {{ formmacros.field(form.category) }}
+        {{ formmacros.field(form.categoryTags) }}
+        {{ formmacros.field(form.altname) }}
+        {{ formmacros.field(form.company) }}
+        {{ formmacros.field(form.catalog) }}
+        {{ formmacros.field(form.lot) }}
+        {{ formmacros.field(form.igconcentration) }}
+        {{ formmacros.field(form.clone) }}
+        {{ formmacros.field(form.host) }}
+        {{ formmacros.field(form.reactivity) }}
+        {{ formmacros.field(form.control) }}
+        {{ formmacros.field(form.protocol) }}
+        {{ formmacros.field(form.retrieval) }}
+        {{ formmacros.field(form.dilution) }}
+        {{ formmacros.field(form.storage) }}
+
+        {{ formmacros.field(form.comment) }}
+        {{ formmacros.field(form.comment1) }}
+        {{ formmacros.field(form.comment2) }}
+        {{ formmacros.field(form.datasheet) }}
+
+        {% if form.documents is defined %}
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            {% set docLabel = "Document(s)" %}
+            {% set docObjectType = "Document" %}
+            {% set docLabel = "Document(s)" %}
+            {% set docObjectType = "AntiBody Document" %}
+            <p>
+            <div class="well form-element-holder user-documents">
+                <label class="col-xs-12 control-label">{{ docLabel }}</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default',docObjectType,'asForm',false) }}
+                    </div>
+                </div>
+            </div>
+            </p>
+
+        {% endif %}
+
+        {% if form.inventory is defined %}
+            {{ formmacros.field(form.inventory) }}
+        {% endif %}
+        {% if form.unitPrice is defined %}
+            {{ formmacros.field(form.unitPrice) }}
+        {% endif %}
+        {% if form.tissueType is defined %}
+            {{ formmacros.field(form.tissueType) }}
+        {% endif %}
+
+        {#Antibody's visualInfos#}
+        {% if form.visualInfos is defined %}
+            {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+            {{ transresRequestMacros.visualInfoSections(form,cycle) }}
+        {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

@@ -116,7 +116,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     if( documentmaxfilesize && documentmaxfilesize != "undefined" ) {
         _dz_maxFilesize = documentmaxfilesize;
     }
-    console.log('_dz_maxFilesize='+_dz_maxFilesize);
+    //console.log('_dz_maxFilesize='+_dz_maxFilesize);
 
     //var documentType = $(targetid).find('#documentcontainer-document-type').val();
     //console.log('documentType='+documentType);

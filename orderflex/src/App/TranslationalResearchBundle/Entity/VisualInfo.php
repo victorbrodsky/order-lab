@@ -95,6 +95,12 @@ class VisualInfo {
     // the uploaded file type (document, region of interest,
     // whole slide image) in a user-friendly way and then show
     // the upload type next to the uploaded file
+    //#[ORM\ManyToOne(targetEntity: 'VisualInfoUploadTypeList')]
+    //#[ORM\JoinColumn(name: 'uploadedtype', referencedColumnName: 'id', nullable: true)]
+    //private $uploadedType;
+    //uploadedType: document, region of interest, whole slide image
+    //#[ORM\Column(type: 'string', nullable: true)]
+    //private $uploadedType;
 
 
     public function __construct( $author=null ) {
