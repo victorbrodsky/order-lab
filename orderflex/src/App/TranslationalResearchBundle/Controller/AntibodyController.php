@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\VisualInfo;
 use App\TranslationalResearchBundle\Form\AntibodyType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -57,13 +58,37 @@ class AntibodyController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
-        $user = $this->getUser();
+        //$user = $this->getUser();
         $cycle = "new";
 
-        $antibody = new AntibodyList($user);
+//        $antibody = new AntibodyList($user);
+//
+//        $antibody->setCreatedate(new \DateTime());
+//        $antibody->setType('user-added');
+//        $antibody->setCreator($user);
+//
+//        $fullClassName = "App\\"."TranslationalResearchBundle"."\\Entity\\"."AntibodyList";
+//        $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$fullClassName.' c');
+//        $nextorder = $query->getSingleResult()['maxorderinlist']+10;
+//        $antibody->setOrderinlist($nextorder);
+//
+//        //Add default VisualInfo (we know the three types of uploads ahead of time):
+//        //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
+//        //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
+//        $visualInfos = $antibody->getVisualInfos();
+//        if( count($visualInfos) == 0 ) {
+//            $visualInfo = new VisualInfo($user);
+//            $visualInfo->setUploadedType('Region Of Interest');
+//            $antibody->addVisualInfo($visualInfo);
+//
+//            $visualInfo = new VisualInfo($user);
+//            $visualInfo->setUploadedType('Whole Slide Image');
+//            $antibody->addVisualInfo($visualInfo);
+//        }
+        $antibody = $this->createEditAntibody();
 
         $form = $this->createAntibodyForm($antibody,$cycle); //new
 
@@ -103,6 +128,8 @@ class AntibodyController extends OrderAbstractController
         }
 
         $cycle = "edit";
+
+        $antibody = $this->createEditAntibody($antibody);
 
         $form = $this->createAntibodyForm($antibody,$cycle); //new
 
@@ -189,5 +216,42 @@ class AntibodyController extends OrderAbstractController
         ));
 
         return $form;
+    }
+
+    public function createEditAntibody( $antibody=null, $user=null ) {
+
+        if( !$user ) {
+            $user = $this->getUser();
+        }
+
+        if( !$antibody ) {
+            $antibody = new AntibodyList($user);
+
+            $antibody->setCreatedate(new \DateTime());
+            $antibody->setType('user-added');
+            $antibody->setCreator($user);
+
+            $fullClassName = "App\\" . "TranslationalResearchBundle" . "\\Entity\\" . "AntibodyList";
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM ' . $fullClassName . ' c');
+            $nextorder = $query->getSingleResult()['maxorderinlist'] + 10;
+            $antibody->setOrderinlist($nextorder);
+        }
+
+        //Add default VisualInfo (we know the three types of uploads ahead of time):
+        //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
+        //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
+        $visualInfos = $antibody->getVisualInfos();
+        if( count($visualInfos) == 0 ) {
+            $visualInfo = new VisualInfo($user);
+            $visualInfo->setUploadedType('Region Of Interest');
+            $antibody->addVisualInfo($visualInfo);
+
+            $visualInfo = new VisualInfo($user);
+            $visualInfo->setUploadedType('Whole Slide Image');
+            $antibody->addVisualInfo($visualInfo);
+        }
+
+        return $antibody;
     }
 }

@@ -98,9 +98,12 @@ class VisualInfo {
     //#[ORM\ManyToOne(targetEntity: 'VisualInfoUploadTypeList')]
     //#[ORM\JoinColumn(name: 'uploadedtype', referencedColumnName: 'id', nullable: true)]
     //private $uploadedType;
+
     //uploadedType: document, region of interest, whole slide image
-    //#[ORM\Column(type: 'string', nullable: true)]
-    //private $uploadedType;
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $uploadedType;
+
+
 
 
     public function __construct( $author=null ) {
@@ -294,6 +297,22 @@ class VisualInfo {
     public function setCatalog($catalog)
     {
         $this->catalog = $catalog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUploadedType()
+    {
+        return $this->uploadedType;
+    }
+
+    /**
+     * @param mixed $uploadedType
+     */
+    public function setUploadedType($uploadedType)
+    {
+        $this->uploadedType = $uploadedType;
     }
 
 

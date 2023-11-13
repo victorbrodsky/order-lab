@@ -703,6 +703,7 @@
 
             {{ formmacros.field(formfield.comment) }}
             {{ formmacros.field(formfield.catalog) }}
+            {{ formmacros.field(formfield.uploadedType) }}
 
             {% if formfield.documents is defined or prototype == 'prototype' %}
                 {#{{ usermacros.fileuploadLabelField( formfield, formfield.documents, cycle, classname, prototype ) }}#}

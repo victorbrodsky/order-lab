@@ -20,6 +20,7 @@ namespace App\TranslationalResearchBundle\Form;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,6 +58,21 @@ class VisualInfoType extends AbstractType
             'label' => "Catalog:",
             'required' => false,
             'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('uploadedType',null,array(
+            'label' => "Upload Type:",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+        $builder->add('uploadedType', ChoiceType::class, array(
+            'label' => "Upload Type:",
+            'choices' => array(
+                'Region Of Interest' => 'Region Of Interest',
+                'Whole Slide Image' => 'Whole Slide Image'
+            ),
+            'required' => false,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Upload Type")
         ));
 
     }
