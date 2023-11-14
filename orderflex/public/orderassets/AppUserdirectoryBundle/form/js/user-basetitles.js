@@ -38,8 +38,10 @@ function addNewObject(btn,classname,callback) {
     var lastcollHolder = titles.last();
 
     if( titles.length == 0 ) {
+        console.log("prepend to:"+'.'+classname+'-holder');
         var addedInst = $('.'+classname+'-holder').prepend(newForm);
     } else {
+        console.log("add after lastcollHolder");
         var addedInst = lastcollHolder.after(newForm);
     }
 
