@@ -38,10 +38,10 @@ function addNewObject(btn,classname,callback) {
     var lastcollHolder = titles.last();
 
     if( titles.length == 0 ) {
-        console.log("prepend to:"+'.'+classname+'-holder');
+        //console.log("prepend to:"+'.'+classname+'-holder');
         var addedInst = $('.'+classname+'-holder').prepend(newForm);
     } else {
-        console.log("add after lastcollHolder");
+        //console.log("add after lastcollHolder");
         var addedInst = lastcollHolder.after(newForm);
     }
 
@@ -330,7 +330,7 @@ function collapseObject( button ) {
 
 function getNextElementCount( holder, elclass ) {
     //console.log(holder);
-    console.log('elclass='+elclass);
+    //console.log('elclass='+elclass);
 
     var elements = holder.find('.'+elclass);
     //console.log('elements count='+elements.length);

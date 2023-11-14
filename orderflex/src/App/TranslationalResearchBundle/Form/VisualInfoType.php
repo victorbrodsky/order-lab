@@ -60,11 +60,6 @@ class VisualInfoType extends AbstractType
             'attr' => array('class'=>'form-control'),
         ));
 
-        $builder->add('uploadedType',null,array(
-            'label' => "Upload Type:",
-            'required' => false,
-            'attr' => array('class'=>'form-control'),
-        ));
         $builder->add('uploadedType', ChoiceType::class, array(
             'label' => "Upload Type:",
             'choices' => array(

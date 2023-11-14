@@ -695,7 +695,7 @@
         <div class="user-collection-holder alert {{classname}} {{wellclass}} well">
 
             {% if field.vars.value.uploadedType is defined %}
-                <b>{{ field.vars.value.uploadedType }}</b>
+                <h3>{{ field.vars.value.uploadedType }}</h3>
             {% endif %}
 
             {% if not showFlag and removable == true %}
@@ -712,7 +712,9 @@
 
             {{ formmacros.field(formfield.comment) }}
             {{ formmacros.field(formfield.catalog) }}
-            {{ formmacros.field(formfield.uploadedType) }}
+
+            {#{{ formmacros.field(formfield.uploadedType) }}#}
+            {% do formfield.uploadedType.setRendered() %}
 
             {% if formfield.documents is defined or prototype == 'prototype' %}
                 {#{{ usermacros.fileuploadLabelField( formfield, formfield.documents, cycle, classname, prototype ) }}#}

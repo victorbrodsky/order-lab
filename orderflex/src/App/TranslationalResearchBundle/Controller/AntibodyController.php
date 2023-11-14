@@ -169,7 +169,7 @@ class AntibodyController extends OrderAbstractController
 
         $cycle = "show";
 
-        $form = $this->createAntibodyForm($project, $cycle, $request); //show
+        $form = $this->createAntibodyForm($antibody, $cycle); //show
 
         return array(
             'antibody' => $antibody,
