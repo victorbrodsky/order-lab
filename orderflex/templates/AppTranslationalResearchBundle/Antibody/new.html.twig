@@ -215,6 +215,8 @@
          data-userid = "{{ app.user.id }}"
     ></div>
 
+<div class="user-visualinfos-holder">
+
     <div id="visualinfo-default" class="panel-collapse collapse in">
     {% for visualInfo in form.visualInfos %}
         {% set uploadedType = visualInfo.vars.value.uploadedType %}
@@ -230,7 +232,7 @@
                 </div>
                 <div id="{{ uploadedType|replace({' ': '-'}) }}" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos-default','noprototype',false) }}
+                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',false) }}
                     </div>
                 </div>
             </div>
@@ -252,7 +254,7 @@
         </div>
         <div id="visualinfo" class="panel-collapse collapse in">
             <div class="panel-body">
-                <div class="user-visualinfos-holder">
+                {#<div class="user-visualinfos-holder">#}
                     {% for visualInfo in form.visualInfos %}
                         {% set uploadedType = visualInfo.vars.value.uploadedType %}
                         {% if uploadedType != 'Region Of Interest' and uploadedType != 'Whole Slide Image' %}
@@ -260,9 +262,11 @@
                         {% endif %}
                     {% endfor %}
                     {{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}
-                </div>
+                {#</div>#}
             </div>
         </div>
     </div>
+
+</div>
 
 {% endmacro %}
