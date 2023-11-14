@@ -242,15 +242,38 @@ class AntibodyController extends OrderAbstractController
         //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
         //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
         $visualInfos = $antibody->getVisualInfos();
-        if( count($visualInfos) == 0 ) {
+        $visualInfoROI = false;
+        $visualInfoWSI = false;
+        foreach($visualInfos as $visualInfo) {
+            if( $visualInfo->getUploadedType() == 'Region Of Interest' ) {
+                $visualInfoROI = true;
+            }
+            if( $visualInfo->getUploadedType() == 'Whole Slide Image' ) {
+                $visualInfoWSI = true;
+            }
+        }
+
+        if( !$visualInfoROI ) {
             $visualInfo = new VisualInfo($user);
             $visualInfo->setUploadedType('Region Of Interest');
             $antibody->addVisualInfo($visualInfo);
+        }
 
+        if( !$visualInfoWSI ) {
             $visualInfo = new VisualInfo($user);
             $visualInfo->setUploadedType('Whole Slide Image');
             $antibody->addVisualInfo($visualInfo);
         }
+
+//        if( count($visualInfos) == 0 ) {
+//            $visualInfo = new VisualInfo($user);
+//            $visualInfo->setUploadedType('Region Of Interest');
+//            $antibody->addVisualInfo($visualInfo);
+//
+//            $visualInfo = new VisualInfo($user);
+//            $visualInfo->setUploadedType('Whole Slide Image');
+//            $antibody->addVisualInfo($visualInfo);
+//        }
 
         return $antibody;
     }

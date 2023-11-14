@@ -662,7 +662,7 @@
     </div>
 {% endmacro %}
                        {#visualInfo, cycle, classname, prototype, sitename, showAddDeleteBtn#}
-{% macro visualInfoForm( field, cycle, classname, prototype ) %}
+{% macro visualInfoForm( field, cycle, classname, prototype, removable ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
@@ -678,6 +678,10 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {% if removable is not defined %}
+        {% set removable = true %}
+    {% endif %}
+
     {% if formfield.comment.vars.value != "" or not showFlag %}
 
         {#{% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}#}
@@ -689,7 +693,7 @@
         {#alert style="padding-bottom:120px;"#}
         <div class="user-collection-holder alert {{classname}} {{wellclass}}">
 
-            {% if not showFlag %}
+            {% if not showFlag and removable == true %}
                 <div class="text-right" style="padding-bottom: 10px">
                     <button
                             type="button"
