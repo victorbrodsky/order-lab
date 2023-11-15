@@ -694,8 +694,21 @@
         {#<div class="well">#}
         <div class="user-collection-holder alert {{classname}} {{wellclass}} well">
 
+            {% set maxFiles = 1 %}
+            {% set maxFilesize = 64 %}
             {% if field.vars.value.uploadedType is defined %}
-                <h3>{{ field.vars.value.uploadedType }}</h3>
+                {% set uploadedType = field.vars.value.uploadedType %}
+                {% if uploadedType == 'Region Of Interest' %}
+                    {#Region of Interest Image(s) [Up to 10 images, up to 10MB each#}
+                    {% set maxFiles = 10 %}
+                    {% set maxFilesize = 10 %}
+                {% endif %}
+                {% if uploadedType == 'Whole Slide Image' %}
+                    {#Whole Slide Image(s) [Up to 2 images, up to 2GB each]#}
+                    {% set maxFiles = 2 %}
+                    {% set maxFilesize = 2048 %}
+                {% endif %}
+                <h3>{{ uploadedType }}</h3>
             {% endif %}
 
             {% if not showFlag and removable == true %}
@@ -722,7 +735,7 @@
                 <p>
                 <div class="row files-upload-holder">
                     <div class="col-xs-6" align="right">
-                        <strong>Attached Antibody Photo:</strong>
+                        <strong>Attached Image:</strong>
                     </div>
                     <div class="col-xs-6" align="left">
                         {#{{ usermacros.documentsContainer(formfield,formfield.documents,cycle,prototype,1,'default','Antibody Photo') }}#}
@@ -732,10 +745,10 @@
                             'documents': formfield.documents,
                             'cycle': cycle,
                             'prototype': prototype,
-                            'maxFiles': 1,
-                            'maxFilesize': 2048,
+                            'maxFiles': maxFiles,
+                            'maxFilesize': maxFilesize,
                             'dropzoneInit': 'default',
-                            'documentType': 'Antibody Photo',
+                            'documentType': 'Antibody Image',
                             'asFormOrEntity': null,
                             'formRest': null,
                             }

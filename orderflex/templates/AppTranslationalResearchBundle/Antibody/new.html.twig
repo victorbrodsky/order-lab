@@ -215,80 +215,35 @@
          data-userid = "{{ app.user.id }}"
     ></div>
 
-{#Holder of elements to add/remove. user-basetitles.js#}
+    {#Holder of elements to add/remove. user-basetitles.js#}
     {#Fix: attached to the last panlel: lastcollHolder.after(newForm)#}
-<div class="user-visualinfos-holder">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#visualinfo">
-                    Visual Info(s)
-                </a>
-            </h4>
+    <div class="user-visualinfos-holder">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#visualinfo">
+                        Visual Info(s)
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-body">
+                {% for visualInfo in form.visualInfos %}
+                    {% set uploadedType = visualInfo.vars.value.uploadedType %}
+                    {% if uploadedType == 'Region Of Interest' or uploadedType == 'Whole Slide Image' %}
+                        {% if uploadedType == 'Region Of Interest' %}
+
+                        {% endif %}
+                        {% if uploadedType == 'Whole Slide Image' %}
+                        {% endif %}
+                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',false,'') }}
+                    {% else %}
+                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',true,'') }}
+                    {% endif %}
+                {% endfor %}
+
+                {{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}
+            </div>
         </div>
-        <div class="panel-body">
-            {% for visualInfo in form.visualInfos %}
-                {% set uploadedType = visualInfo.vars.value.uploadedType %}
-                {% if uploadedType == 'Region Of Interest' or uploadedType == 'Whole Slide Image' %}
-                    {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',false,'') }}
-                {% else %}
-                    {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',true,'') }}
-                {% endif %}
-            {% endfor %}
-
-            {{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}
-        </div>
-
-    {#<div id="visualinfo-default" class="panel-collapse collapse in">#}
-    {#{% for visualInfo in form.visualInfos %}#}
-        {#{% set uploadedType = visualInfo.vars.value.uploadedType %}#}
-        {#uploadedType={{ uploadedType }}<br>#}
-        {#{% if uploadedType == 'Region Of Interest' or uploadedType == 'Whole Slide Image' %}#}
-            {#<div class="panel panel-info">#}
-                {#<div class="panel-heading">#}
-                    {#<h4 class="panel-title text-left">#}
-                        {#<a data-toggle="collapse" href="#{{ uploadedType|replace({' ': '-'}) }}">#}
-                            {#{{ uploadedType }}#}
-                        {#</a>#}
-                    {#</h4>#}
-                {#</div>#}
-                {#<div id="{{ uploadedType|replace({' ': '-'}) }}" class="panel-collapse collapse in">#}
-                    {#<div class="panel-body">#}
-                        {#{{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',false) }}#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
-        {#{% else %}#}
-
-        {#{% endif %}#}
-    {#{% endfor %}#}
-    {#</div>#}
-
-
-    {#Visual Infos#}
-    {#<div class="panel panel-info">#}
-        {#<div class="panel-heading">#}
-            {#<h4 class="panel-title text-left">#}
-                {#<a data-toggle="collapse" href="#visualinfo">#}
-                    {#Visual Info(s)#}
-                {#</a>#}
-            {#</h4>#}
-        {#</div>#}
-        {#<div id="visualinfo" class="panel-collapse collapse in">#}
-            {#<div class="panel-body">#}
-                {#<div class="user-visualinfos-holder">#}
-                    {#{% for visualInfo in form.visualInfos %}#}
-                        {#{% set uploadedType = visualInfo.vars.value.uploadedType %}#}
-                        {#{% if uploadedType != 'Region Of Interest' and uploadedType != 'Whole Slide Image' %}#}
-                            {#{{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',true) }}#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
-                    {#{{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
-</div>
+    </div>
 
 {% endmacro %}
