@@ -259,7 +259,7 @@ class AntibodyController extends OrderAbstractController
             //$em->persist($antibody);
             //$em->flush();
 
-            $msg = "Create new antibody";
+            $msg = "Created new antibody";
 
             $this->addFlash(
                 'notice',
@@ -304,7 +304,7 @@ class AntibodyController extends OrderAbstractController
 
             //$em->flush();
 
-            $msg = "Update antibody ".$antibody;
+            $msg = "Updated antibody ".$antibody;
 
             $this->addFlash(
                 'notice',
@@ -450,12 +450,20 @@ class AntibodyController extends OrderAbstractController
 
     public function removeEmptyVisualInfo( $antibody ) {
         $visualInfos = $antibody->getVisualInfos();
+        echo "visualInfos=".count($visualInfos)."<br>";
         foreach($visualInfos as $visualInfo) {
             if( $visualInfo->isEmpty() ) {
+                //echo "visualInfo is empty<br>";
                 $antibody->removeVisualInfo($visualInfo);
                 $this->addFlash(
                     'notice',
                     "Removed empty Visual Info"
+                );
+            } else {
+                //echo "visualInfo is not empty<br>";
+                $this->addFlash(
+                    'notice',
+                    "visualInfo is not empty"
                 );
             }
         }
