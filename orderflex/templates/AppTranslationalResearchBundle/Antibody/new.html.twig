@@ -36,22 +36,16 @@
             {% endif %}
         {% endif %}
 
-        {% if form.level is defined %}
-            {{ formmacros.field(form.level) }}
-        {% endif %}
+        {#{% if form.level is defined %}#}
+            {#{{ formmacros.field(form.level) }}#}
+        {#{% endif %}#}
 
-        {% if form.organizationalGroupType is defined %}
-            {{ formmacros.field(form.organizationalGroupType) }}
-        {% endif %}
+        {#{% if form.organizationalGroupType is defined %}#}
+            {#{{ formmacros.field(form.organizationalGroupType) }}#}
+        {#{% endif %}#}
 
         {% if form.nativeName is defined %}
             {{ formmacros.field(form.nativeName) }}
-        {% endif %}
-
-        {% if form.parent is defined and entity.level is not defined and form.vars.value.parent is defined %}
-            {% if not form.parent.rendered %}
-                {{ formmacros.field(form.parent) }}
-            {% endif %}
         {% endif %}
 
         {% if form.attributes is defined and form.vars.value.attributes is defined %}
@@ -195,7 +189,47 @@
             {{ antibodymacros.antibodyVisualInfoSections(form,cycle) }}
         {% endif %}
 
+        <p>
+            {% if form.save is defined %}
+                {{ form_widget(form.save) }}
+            {% endif %}
+            {% if form.edit is defined %}
+                {{ form_widget(form.edit) }}
+            {% endif %}
+        </p>
+
+        {#{% if cycle == 'new' %}#}
+            {#<p>#}
+                {#<a class="btn btn-primary" href="{{ path('translationalresearch_antibody_new') }}">Save</a>#}
+            {#</p>#}
+        {#{% endif %}#}
+
+        {#{% if cycle == 'edit' %}#}
+            {#<p>#}
+                {#<a class="btn btn-primary" href="{{ path('translationalresearch_antibody_edit',{'id':entity.id}) }}">Update</a>#}
+            {#</p>#}
+        {#{% endif %}#}
+
     {{ form_end(form) }}
+
+    {% if cycle == 'show' %}
+        <p>
+            <a class="btn btn-default" href="{{ path('translationalresearch_antibody_edit',{'id':antibody.id}) }}"
+            >Edit antibody</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == 'edit' %}
+        <p>
+            <a class="btn btn-default" href="{{ path('translationalresearch_antibody_show',{'id': antibody.id }) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+    {% if cycle == 'new' %}
+        <p>
+            <a class="btn btn-default" href="{{ path('translationalresearch_antibodies') }}">Cancel</a>
+        </p>
+    {% endif %}
 
 {% endblock %}
 

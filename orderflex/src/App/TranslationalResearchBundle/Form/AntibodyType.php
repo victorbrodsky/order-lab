@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -227,6 +228,20 @@ class AntibodyType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
+
+        //Buttons
+        if( $this->params['cycle'] === "new" ) {
+            $builder->add('save', SubmitType::class, array(
+                'label' => 'Save',
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+        }
+        if( $this->params['cycle'] === "edit" ) {
+            $builder->add('edit', SubmitType::class, array(
+                'label' => 'Update',
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+        }
     }
     
     /**

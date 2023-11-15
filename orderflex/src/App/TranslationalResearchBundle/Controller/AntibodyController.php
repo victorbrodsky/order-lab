@@ -91,100 +91,11 @@ class AntibodyController extends OrderAbstractController
             $dql->addGroupBy('objectType.name');
         }
 
-//        if( method_exists($entityClass,'getResearchlab') ) {
-//            $dql->leftJoin("ent.researchlab", "researchlab");
-//            $dql->leftJoin("researchlab.user", "user");
-//            $dql->addSelect('COUNT(user) AS HIDDEN usercount');
-//        }
-
-        if( method_exists($entityClass,'getParent') ) {
-            $dql->leftJoin("ent.parent", "parent");
-            $dql->addGroupBy('parent.name');
-        }
-
-        if( method_exists($entityClass,'getOrganizationalGroupType') ) {
-            $dql->leftJoin("ent.organizationalGroupType", "organizationalGroupType");
-            $dql->addGroupBy('organizationalGroupType.name');
-        }
-
-        if( method_exists($entityClass,'getRoles') ) {
-            $dql->leftJoin("ent.roles", "roles");
-            $dql->addGroupBy('roles.name');
-        }
-
-        if( method_exists($entityClass,'getAttributes') ) {
-            $dql->leftJoin("ent.attributes", "attributes");
-            $dql->addGroupBy('attributes');
-        }
-
-        if( method_exists($entityClass,'getPermissionObjectList') ) {
-            $dql->leftJoin("ent.permissionObjectList", "permissionObjectList");
-            $dql->addGroupBy('permissionObjectList');
-        }
-        if( method_exists($entityClass,'getPermissionActionList') ) {
-            $dql->leftJoin("ent.permissionActionList", "permissionActionList");
-            $dql->addGroupBy('permissionActionList');
-        }
-
-        if( method_exists($entityClass,'getInstitution') ) {
-            $dql->leftJoin("ent.institution", "institution");
-            $dql->addGroupBy('institution');
-        }
-
-        if( method_exists($entityClass,'getInstitutions') ) {
-            $dql->leftJoin("ent.institutions", "institutions");
-            $dql->addGroupBy('institutions');
-            $useWalker = true;
-        }
-
-        if( method_exists($entityClass,'getCollaborationType') ) {
-            $dql->leftJoin("ent.collaborationType", "collaborationType");
-            $dql->addGroupBy('collaborationType');
-        }
-
-        if( method_exists($entityClass,'getSites') ) {
-            $dql->leftJoin("ent.sites", "sites");
-            $dql->addGroupBy('sites.name');
-            $useWalker = true;
-        }
-
-        if( method_exists($entityClass,'getFellowshipSubspecialty') ) {
-            $dql->leftJoin("ent.fellowshipSubspecialty", "fellowshipSubspecialty");
-            $dql->addGroupBy('fellowshipSubspecialty.name');
-        }
-
-        if( method_exists($entityClass,'getWorkQueues') ) {
-            //echo "getWorkQueues <br>";
-            $dql->leftJoin("ent.workQueues", "workQueues");
-            $dql->addGroupBy('workQueues');
-            $useWalker = true;
-        }
-
-        if( 0 && method_exists($entityClass,'getProjectSpecialties') ) {
-            //exit('123');
-            $useWalker = true;
-            $dql->leftJoin("ent.projectSpecialties", "projectSpecialties");
-            //$dql->addGroupBy('ent.projectSpecialties');
-            //$dql->addGroupBy('projectSpecialties');
-            $dql->addGroupBy('projectSpecialties.name'); //This causes 201 matching items in RequestCategoryTypeList, however it has only 67 items
-            //$dql->addGroupBy('projectSpecialties.id');
-        }
-
-//        if( method_exists($entityClass,'getPatients') ) {
-//            $dql->leftJoin("ent.patients", "patients");
-//            //$dql->addGroupBy('patients.name');
-//        }
-
-        //$dql->orderBy("ent.createdate","DESC");
-
         //Pass sorting parameters directly to query; Somehow, knp_paginator does not sort correctly according to sorting parameters
         $postData = $request->query->all();
         if (isset($postData['sort'])) {
-            //$dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-            //$dql->orderBy("ent.createdate","DESC");
             $dql->orderBy($postData['sort'], $postData['direction']);
         } else {
-            //$dql = $dql . " ORDER BY ent.orderinlist ASC";
             $dql->orderBy("ent.orderinlist", "ASC");
         }
 
@@ -226,61 +137,29 @@ class AntibodyController extends OrderAbstractController
                 OR LOWER(ent.description) LIKE LOWER(:search)
                 ";
 
-//            //search location: phone, building, room
-//            if( method_exists($entityClass,'getPhone') ) {
-//                $searchStr = $searchStr . " OR ent.phone LIKE :search";
-//            }
-//            if( method_exists($entityClass,'getBuilding') ) {
-//                $dql->leftJoin("ent.building", "building");
-//                $searchStr = $searchStr . " OR building.name LIKE :search";
-//            }
-//            if( method_exists($entityClass,'getRoom') ) {
-//                $dql->leftJoin("ent.room", "room");
-//                $searchStr = $searchStr . " OR room.name LIKE :search";
-//            }
-
-            if (method_exists($entityClass, 'getSection')) {
-                $searchStr = $searchStr . " OR LOWER(ent.section) LIKE LOWER(:search)";
-            }
-
-            if (method_exists($entityClass, 'getProductId')) {
-                $searchStr = $searchStr . " OR LOWER(ent.productId) LIKE LOWER(:search)";
-            }
-
-            if (method_exists($entityClass, 'getFeeUnit')) {
-                $searchStr = $searchStr . " OR LOWER(ent.feeUnit) LIKE LOWER(:search)";
-            }
-
-            if (method_exists($entityClass, 'getFee')) {
-                $searchStr = $searchStr . " OR LOWER(ent.fee) LIKE LOWER(:search)";
-            }
-
             //AntibodyList
-            //if( method_exists($entityClass, 'getDatasheet') ) {
-            if( $className == 'AntibodyList' ) {
-                $dql->leftJoin("ent.categoryTags", "categoryTags");
-                $dql->addGroupBy('categoryTags');
+            $dql->leftJoin("ent.categoryTags", "categoryTags");
+            $dql->addGroupBy('categoryTags');
 
-                $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.lot) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.igconcentration) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.clone) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.host) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.reactivity) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.control) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.protocol) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.retrieval) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.dilution) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.storage) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.comment) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.comment1) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.comment2) LIKE LOWER(:search)";
-                $searchStr = $searchStr . " OR LOWER(ent.datasheet) LIKE LOWER(:search)";
-            }
+            $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.lot) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.igconcentration) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.clone) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.host) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.reactivity) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.control) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.protocol) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.retrieval) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.dilution) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.storage) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.comment) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.comment1) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.comment2) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(ent.datasheet) LIKE LOWER(:search)";
 
             //echo "searchStr=$searchStr <br>";
             $dql->andWhere($searchStr);
@@ -303,7 +182,6 @@ class AntibodyController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
-        //TODO: check why showing 201 matching fees when only 67 is in DB
         if( $useWalker ) {
             $walker = array('wrap-queries'=>true);
         } else {
@@ -315,10 +193,7 @@ class AntibodyController extends OrderAbstractController
             $query,
             $request->query->get('page', 1), /*page number*/
             $limit                          /*limit per page*/
-            ,$walker//,array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
-        //,array('distinct'=>true)
-        //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
-        //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
+            ,$walker
         );
         //echo "list count=".count($entities)."<br>";
         //echo "getTotalItemCount=".$entities->getTotalItemCount()."<br>";
@@ -370,30 +245,6 @@ class AntibodyController extends OrderAbstractController
         //$user = $this->getUser();
         $cycle = "new";
 
-//        $antibody = new AntibodyList($user);
-//
-//        $antibody->setCreatedate(new \DateTime());
-//        $antibody->setType('user-added');
-//        $antibody->setCreator($user);
-//
-//        $fullClassName = "App\\"."TranslationalResearchBundle"."\\Entity\\"."AntibodyList";
-//        $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$fullClassName.' c');
-//        $nextorder = $query->getSingleResult()['maxorderinlist']+10;
-//        $antibody->setOrderinlist($nextorder);
-//
-//        //Add default VisualInfo (we know the three types of uploads ahead of time):
-//        //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
-//        //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
-//        $visualInfos = $antibody->getVisualInfos();
-//        if( count($visualInfos) == 0 ) {
-//            $visualInfo = new VisualInfo($user);
-//            $visualInfo->setUploadedType('Region Of Interest');
-//            $antibody->addVisualInfo($visualInfo);
-//
-//            $visualInfo = new VisualInfo($user);
-//            $visualInfo->setUploadedType('Whole Slide Image');
-//            $antibody->addVisualInfo($visualInfo);
-//        }
         $antibody = $this->createEditAntibody();
 
         $form = $this->createAntibodyForm($antibody,$cycle); //new
@@ -401,7 +252,12 @@ class AntibodyController extends OrderAbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            exit('antibody new');
+            //exit('antibody new');
+
+            $antibody = $this->removeEmptyVisualInfo($antibody);
+
+            //$em->persist($antibody);
+            //$em->flush();
 
             $msg = "Create new antibody";
 
@@ -416,7 +272,7 @@ class AntibodyController extends OrderAbstractController
         return array(
             'antibody' => $antibody,
             'form' => $form->createView(),
-            'title' => "New Antibody",
+            'title' => "Create New Antibody",
             'cycle' => $cycle
         );
     }
@@ -442,9 +298,13 @@ class AntibodyController extends OrderAbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            exit('antibody edit');
+            //exit('antibody edit');
 
-            $msg = "Create new antibody";
+            $antibody = $this->removeEmptyVisualInfo($antibody);
+
+            //$em->flush();
+
+            $msg = "Update antibody ".$antibody;
 
             $this->addFlash(
                 'notice',
@@ -457,7 +317,7 @@ class AntibodyController extends OrderAbstractController
         return array(
             'antibody' => $antibody,
             'form' => $form->createView(),
-            'title' => "New Antibody",
+            'title' => "Edit Antibody ".$antibody,
             'cycle' => $cycle
         );
     }
@@ -480,7 +340,7 @@ class AntibodyController extends OrderAbstractController
         return array(
             'antibody' => $antibody,
             'form' => $form->createView(),
-            'title' => "New Antibody",
+            'title' => "Show Antibody ".$antibody,
             'cycle' => $cycle
         );
     }
@@ -585,6 +445,20 @@ class AntibodyController extends OrderAbstractController
 //            $antibody->addVisualInfo($visualInfo);
 //        }
 
+        return $antibody;
+    }
+
+    public function removeEmptyVisualInfo( $antibody ) {
+        $visualInfos = $antibody->getVisualInfos();
+        foreach($visualInfos as $visualInfo) {
+            if( $visualInfo->isEmpty() ) {
+                $antibody->removeVisualInfo($visualInfo);
+                $this->addFlash(
+                    'notice',
+                    "Removed empty Visual Info"
+                );
+            }
+        }
         return $antibody;
     }
 

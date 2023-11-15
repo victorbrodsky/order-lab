@@ -316,6 +316,18 @@ class VisualInfo {
     }
 
 
+    public function isEmpty() {
+        if( $this->getComment() ) {
+            return false;
+        }
+        if( $this->getCatalog() ) {
+            return false;
+        }
+        if( count($this->getDocuments()) == 0 ) {
+            return false;
+        }
+        return true;
+    }
 
 
     public function __toString() {
