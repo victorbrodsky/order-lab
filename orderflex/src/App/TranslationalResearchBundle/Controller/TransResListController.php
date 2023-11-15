@@ -48,6 +48,7 @@ class TransResListController extends ListController
         return $this->getList($request);
     }
 
+    //NOT USED: replaced by AntibodyController::indexAntibodiesAction
     //Custom Antibody list
     #[Route(path: '/list/antibodies/', name: 'antibodies-list_translationalresearch', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Request/antibodies.html.twig')]

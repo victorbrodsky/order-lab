@@ -25,17 +25,16 @@ class AntibodyType extends AbstractType
     {
         $this->params = $params;
 
-        $bundleName = "TranslationalResearchBundle";
-        $className = "AntibodyList";
-        $displayName = "Antibody List";
-
-        $mapper = array();
-        $mapper['className'] = $className;
-        $mapper['fullClassName'] = "App\\".$bundleName."\\Entity\\".$className;
-        $mapper['entityNamespace'] = "App\\".$bundleName."\\Entity";
-        $mapper['bundleName'] = $bundleName;
-        $mapper['displayName'] = $displayName . ", class: [" . $className . "]";
-        $this->mapper = $mapper;
+//        $bundleName = "TranslationalResearchBundle";
+//        $className = "AntibodyList";
+//        $displayName = "Antibody List";
+//        $mapper = array();
+//        $mapper['className'] = $className;
+//        $mapper['fullClassName'] = "App\\".$bundleName."\\Entity\\".$className;
+//        $mapper['entityNamespace'] = "App\\".$bundleName."\\Entity";
+//        $mapper['bundleName'] = $bundleName;
+//        $mapper['displayName'] = $displayName . ", class: [" . $className . "]";
+        $this->mapper = $params['mapper'];
     }
 
     /**
