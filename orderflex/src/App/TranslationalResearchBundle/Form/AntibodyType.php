@@ -54,11 +54,11 @@ class AntibodyType extends AbstractType
         ));
 
 
-        $builder->add('category',null,array(
-            'label' => "Category:",
-            'required' => false,
-            'attr' => array('class'=>'form-control', 'maxlength'=>"255"),
-        ));
+//        $builder->add('category',null,array(
+//            'label' => "Category:",
+//            'required' => false,
+//            'attr' => array('class'=>'form-control', 'maxlength'=>"255"),
+//        ));
 
         $builder->add('categoryTags', EntityType::class, array(
             'class' => AntibodyCategoryTagList::class,
