@@ -10,6 +10,7 @@ use App\UserdirectoryBundle\Form\ListType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -222,10 +223,15 @@ class AntibodyType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__visualinfos__',
         ));
-        $builder->add('openToPublic', null, array(
-            'label' => "Open to public:",
+//        $builder->add('openToPublic', null, array(
+//            'label' => "Open to public:",
+//            'required' => false,
+//            'attr' => array('class' => 'form-control'),
+//        ));
+        $builder->add('openToPublic', CheckboxType::class, array(
+            'label' => 'Open to public:',
             'required' => false,
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('style' => 'width: 20px; height: 20px;')
         ));
 
 

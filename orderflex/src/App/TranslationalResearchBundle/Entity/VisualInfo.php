@@ -318,12 +318,15 @@ class VisualInfo {
 
     public function isEmpty() {
         if( $this->getComment() ) {
+            //echo "comment=[".$this->getComment()."]<br>";
             return false;
         }
         if( $this->getCatalog() ) {
+            //echo "catalog=[".$this->getCatalog()."]<br>";
             return false;
         }
-        if( count($this->getDocuments()) == 0 ) {
+        if( count($this->getDocuments()) != 0 ) {
+            //echo "documents=[".count($this->getDocuments())."]<br>";
             return false;
         }
         return true;

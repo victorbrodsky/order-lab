@@ -60,15 +60,15 @@ class VisualInfoType extends AbstractType
             'attr' => array('class'=>'form-control'),
         ));
 
-        $builder->add('uploadedType', ChoiceType::class, array(
-            'label' => "Upload Type:",
-            'choices' => array(
-                'Region Of Interest' => 'Region Of Interest',
-                'Whole Slide Image' => 'Whole Slide Image'
-            ),
-            'required' => false,
-            'attr' => array('class' => 'combobox', 'placeholder' => "Upload Type")
-        ));
+//        $builder->add('uploadedType', ChoiceType::class, array(
+//            'label' => "Upload Type:",
+//            'choices' => array(
+//                'Region Of Interest' => 'Region Of Interest',
+//                'Whole Slide Image' => 'Whole Slide Image'
+//            ),
+//            'required' => false,
+//            'attr' => array('class' => 'combobox', 'placeholder' => "Upload Type")
+//        ));
 
     }
 

@@ -52,7 +52,8 @@
     {{ formmacros.field(form.host) }}
     {{ formmacros.field(form.reactivity) }}
     {{ formmacros.field(form.storage) }}
-    {{ formmacros.field(form.openToPublic) }}
+    {#{{ formmacros.field(form.openToPublic) }}#}
+    {{ formmacros.checkbox(form.openToPublic) }}
 
     {% if form.documents is defined %}
         <div id="form-prototype-data"
@@ -83,7 +84,7 @@
     {% if form.visualInfos is defined %}
         {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
         {#{{ transresRequestMacros.visualInfoSections(form,cycle) }}#}
-        {{ antibodymacros.antibodyVisualInfoSections(form,cycle) }}
+        {{ antibodymacros.antibodyVisualInfoSections(antibody,form,cycle) }}
     {% endif %}
 
 
@@ -286,7 +287,7 @@
 {% endblock %}
 
 
-{% macro antibodyVisualInfoSections(form, cycle, sitename) %}
+{% macro antibodyVisualInfoSections(antibody, form, cycle) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 

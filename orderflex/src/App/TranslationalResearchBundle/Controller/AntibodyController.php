@@ -256,8 +256,8 @@ class AntibodyController extends OrderAbstractController
 
             $antibody = $this->removeEmptyVisualInfo($antibody);
 
-            //$em->persist($antibody);
-            //$em->flush();
+            $em->persist($antibody);
+            $em->flush();
 
             $msg = "Created new antibody";
 
@@ -289,6 +289,8 @@ class AntibodyController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $cycle = "edit";
 
         $antibody = $this->createEditAntibody($antibody);
@@ -302,7 +304,7 @@ class AntibodyController extends OrderAbstractController
 
             $antibody = $this->removeEmptyVisualInfo($antibody);
 
-            //$em->flush();
+            $em->flush();
 
             $msg = "Updated antibody ".$antibody;
 
@@ -450,23 +452,28 @@ class AntibodyController extends OrderAbstractController
 
     public function removeEmptyVisualInfo( $antibody ) {
         $visualInfos = $antibody->getVisualInfos();
-        echo "visualInfos=".count($visualInfos)."<br>";
+        //echo "visualInfos=".count($visualInfos)."<br>";
         foreach($visualInfos as $visualInfo) {
             if( $visualInfo->isEmpty() ) {
                 //echo "visualInfo is empty<br>";
                 $antibody->removeVisualInfo($visualInfo);
-                $this->addFlash(
-                    'notice',
-                    "Removed empty Visual Info"
-                );
+//                $this->addFlash(
+//                    'notice',
+//                    "Removed empty Visual Info"
+//                );
             } else {
                 //echo "visualInfo is not empty<br>";
-                $this->addFlash(
-                    'notice',
-                    "visualInfo is not empty"
-                );
+//                $this->addFlash(
+//                    'notice',
+//                    "visualInfo is not empty"
+//                );
             }
         }
+
+        //$visualInfos = $antibody->getVisualInfos();
+        //echo "visualInfos=".count($visualInfos)."<br>";
+        //exit('111');
+
         return $antibody;
     }
 
