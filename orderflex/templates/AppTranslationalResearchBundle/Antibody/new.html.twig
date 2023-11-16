@@ -11,6 +11,11 @@
 {% endblock %}
 
 
+{#Bing request:
+1) Show only Name, Description, Category Tags, Clone, Host, Reactivity, Company
+2) Filter list by fields in 1
+3) Change the view siilar to https://biogenex.com/panel_markers/cervical-cancer-panel/?v=7516fd43adaa#}
+
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
@@ -23,180 +28,224 @@
              data-userid = "{{ app.user.id }}"
         ></div>
 
-
-        {% if form.list is defined %}
-            {% if form.list.name is defined %}
-                {{ formmacros.field(form.list.name) }}
-            {% endif %}
-            {% if form.list.shortname is defined %}
-                {{ formmacros.field(form.list.shortname) }}
-            {% endif %}
-            {% if form.list.abbreviation is defined %}
-                {{ formmacros.field(form.list.abbreviation) }}
-            {% endif %}
+    {#Antibody important fields#}
+    {% if form.list is defined %}
+        {% if form.list.name is defined %}
+            {{ formmacros.field(form.list.name) }}
         {% endif %}
+    {% endif %}
 
-        {#{% if form.level is defined %}#}
-            {#{{ formmacros.field(form.level) }}#}
-        {#{% endif %}#}
+    {% if form.list.description is defined %}
+        {{ formmacros.field(form.list.description) }}
+    {% endif %}
 
-        {#{% if form.organizationalGroupType is defined %}#}
-            {#{{ formmacros.field(form.organizationalGroupType) }}#}
-        {#{% endif %}#}
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
 
-        {% if form.nativeName is defined %}
-            {{ formmacros.field(form.nativeName) }}
-        {% endif %}
+    {{ formmacros.field(form.openToPublic) }}
+    {#{{ formmacros.field(form.category) }}#}
+    {{ formmacros.field(form.categoryTags) }}
+    {{ formmacros.field(form.company) }}
+    {{ formmacros.field(form.clone) }}
+    {{ formmacros.field(form.host) }}
+    {{ formmacros.field(form.reactivity) }}
+    {{ formmacros.field(form.storage) }}
+    {{ formmacros.field(form.datasheet) }}
 
-        {% if form.attributes is defined and form.vars.value.attributes is defined %}
-            {{ formmacros.field(form.attributes) }}
-        {% endif %}
-
-        {% if form.value is defined %}
-            {{ formmacros.field(form.value) }}
-        {% endif %}
-
-        {% if form.list.original is defined %}
-            {{ formmacros.field(form.list.original) }}
-        {% endif %}
-
-        {% if form.list.synonyms is defined %}
-            {{ formmacros.field(form.list.synonyms) }}
-        {% endif %}
-
-        {% if form.action is defined %}
-            {{ formmacros.field(form.action) }}
-        {% endif %}
-
-        {% if form.alias is defined %}
-            {{ formmacros.field(form.alias) }}
-        {% endif %}
-
-        {% if form.list.description is defined %}
-            {{ formmacros.field(form.list.description) }}
-        {% endif %}
-
-        {{ formmacros.field(form.list.type) }}
-
-        {{ formmacros.field(form.list.creator) }}
-
-        {% if form.list.createdate is defined %}
-            {{ formmacros.field(form.list.createdate) }}
-        {% endif %}
-
-        {% if form.list.version is defined %}
-            {{ formmacros.field(form.list.version) }}
-        {% endif %}
-
-        {% if form.list.textAttribute is defined %}
-            {{ formmacros.field(form.list.textAttribute) }}
-        {% endif %}
-
-        {% if form.list.urlSlug is defined %}
-            {{ formmacros.field(form.list.urlSlug) }}
-        {% endif %}
-
-        {% if form.list is defined %}
-            {% if form.list.orderinlist is defined %}
-                {{ formmacros.field(form.list.orderinlist) }}
-            {% endif %}
-            {% if form.list.objectType is defined %}
-                {{ formmacros.field(form.list.objectType) }}
-            {% endif %}
-            {% if form.list.entityNamespace is defined %}
-                {{ formmacros.field(form.list.entityNamespace) }}
-            {% endif %}
-            {% if form.list.entityName is defined %}
-                {{ formmacros.field(form.list.entityName) }}
-            {% endif %}
-            {% if form.list.entityId is defined %}
-                {{ formmacros.field(form.list.entityId) }}
-            {% endif %}
-            {% if form.list.linkToListId is defined %}
-                {{ formmacros.field(form.list.linkToListId) }}
-            {% endif %}
-        {% endif %}
-
-        {#{{ formmacros.field(form.invoiceFrom) }}#}
-        <hr>
-
+    {% if form.documents is defined %}
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
              data-userid = "{{ app.user.id }}"
         ></div>
 
-        {{ formmacros.field(form.openToPublic) }}
-        {{ formmacros.field(form.category) }}
-        {{ formmacros.field(form.categoryTags) }}
-        {{ formmacros.field(form.altname) }}
-        {{ formmacros.field(form.company) }}
-        {{ formmacros.field(form.catalog) }}
-        {{ formmacros.field(form.lot) }}
-        {{ formmacros.field(form.igconcentration) }}
-        {{ formmacros.field(form.clone) }}
-        {{ formmacros.field(form.host) }}
-        {{ formmacros.field(form.reactivity) }}
-        {{ formmacros.field(form.control) }}
-        {{ formmacros.field(form.protocol) }}
-        {{ formmacros.field(form.retrieval) }}
-        {{ formmacros.field(form.dilution) }}
-        {{ formmacros.field(form.storage) }}
-
-        {{ formmacros.field(form.comment) }}
-        {{ formmacros.field(form.comment1) }}
-        {{ formmacros.field(form.comment2) }}
-        {{ formmacros.field(form.datasheet) }}
-
-        {% if form.documents is defined %}
-            <div id="form-prototype-data"
-                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-                 data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-                 data-userid = "{{ app.user.id }}"
-            ></div>
-
-            {% set docLabel = "Document(s)" %}
-            {% set docObjectType = "Document" %}
-            {% set docLabel = "Document(s)" %}
-            {% set docObjectType = "AntiBody Document" %}
-            <p>
-            <div class="well form-element-holder user-documents">
-                <label class="col-xs-12 control-label">{{ docLabel }}</label>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default',docObjectType,'asForm',false) }}
-                    </div>
+        {% set docLabel = "Document(s)" %}
+        {% set docObjectType = "Document" %}
+        {% set docLabel = "Document(s)" %}
+        {% set docObjectType = "AntiBody Document" %}
+        <p>
+        <div class="well form-element-holder user-documents">
+            <label class="col-xs-12 control-label">{{ docLabel }}</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default',docObjectType,'asForm',false) }}
                 </div>
             </div>
-            </p>
-
-        {% endif %}
-
-        {% if form.inventory is defined %}
-            {{ formmacros.field(form.inventory) }}
-        {% endif %}
-        {% if form.unitPrice is defined %}
-            {{ formmacros.field(form.unitPrice) }}
-        {% endif %}
-        {% if form.tissueType is defined %}
-            {{ formmacros.field(form.tissueType) }}
-        {% endif %}
-
-        {#Antibody's visualInfos#}
-        {% if form.visualInfos is defined %}
-            {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
-            {#{{ transresRequestMacros.visualInfoSections(form,cycle) }}#}
-            {{ antibodymacros.antibodyVisualInfoSections(form,cycle) }}
-        {% endif %}
-
-        <p>
-            {% if form.save is defined %}
-                {{ form_widget(form.save) }}
-            {% endif %}
-            {% if form.edit is defined %}
-                {{ form_widget(form.edit) }}
-            {% endif %}
+        </div>
         </p>
+
+    {% endif %}
+
+    {% if form.inventory is defined %}
+        {{ formmacros.field(form.inventory) }}
+    {% endif %}
+    {% if form.unitPrice is defined %}
+        {{ formmacros.field(form.unitPrice) }}
+    {% endif %}
+    {% if form.tissueType is defined %}
+        {{ formmacros.field(form.tissueType) }}
+    {% endif %}
+
+    {#Antibody's visualInfos#}
+    {% if form.visualInfos is defined %}
+        {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+        {#{{ transresRequestMacros.visualInfoSections(form,cycle) }}#}
+        {{ antibodymacros.antibodyVisualInfoSections(form,cycle) }}
+    {% endif %}
+
+
+    {#Secondary antibody fields#}
+    <div class="user-visualinfos-holder">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#antibody-secondary">
+                        Secondary Antibody's Fields
+                    </a>
+                </h4>
+            </div>
+            <div id="antibody-secondary" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    {{ formmacros.field(form.altname) }}
+                    {{ formmacros.field(form.catalog) }}
+                    {{ formmacros.field(form.lot) }}
+                    {{ formmacros.field(form.igconcentration) }}
+                    {{ formmacros.field(form.control) }}
+                    {{ formmacros.field(form.protocol) }}
+                    {{ formmacros.field(form.retrieval) }}
+                    {{ formmacros.field(form.dilution) }}
+                    {{ formmacros.field(form.comment) }}
+                    {{ formmacros.field(form.comment1) }}
+                    {{ formmacros.field(form.comment2) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="user-visualinfos-holder">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#antibody-list">
+                        Generic List Fields
+                    </a>
+                </h4>
+            </div>
+            <div id="antibody-list" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {% if form.list is defined %}
+                        {#{% if form.list.name is defined %}#}
+                        {#{{ formmacros.field(form.list.name) }}#}
+                        {#{% endif %}#}
+                        {% if form.list.shortname is defined %}
+                            {{ formmacros.field(form.list.shortname) }}
+                        {% endif %}
+                        {% if form.list.abbreviation is defined %}
+                            {{ formmacros.field(form.list.abbreviation) }}
+                        {% endif %}
+                    {% endif %}
+
+                    {#{% if form.level is defined %}#}
+                    {#{{ formmacros.field(form.level) }}#}
+                    {#{% endif %}#}
+
+                    {#{% if form.organizationalGroupType is defined %}#}
+                    {#{{ formmacros.field(form.organizationalGroupType) }}#}
+                    {#{% endif %}#}
+
+                    {% if form.nativeName is defined %}
+                        {{ formmacros.field(form.nativeName) }}
+                    {% endif %}
+
+                    {% if form.attributes is defined and form.vars.value.attributes is defined %}
+                        {{ formmacros.field(form.attributes) }}
+                    {% endif %}
+
+                    {% if form.value is defined %}
+                        {{ formmacros.field(form.value) }}
+                    {% endif %}
+
+                    {% if form.list.original is defined %}
+                        {{ formmacros.field(form.list.original) }}
+                    {% endif %}
+
+                    {% if form.list.synonyms is defined %}
+                        {{ formmacros.field(form.list.synonyms) }}
+                    {% endif %}
+
+                    {% if form.action is defined %}
+                        {{ formmacros.field(form.action) }}
+                    {% endif %}
+
+                    {% if form.alias is defined %}
+                        {{ formmacros.field(form.alias) }}
+                    {% endif %}
+
+
+
+                    {{ formmacros.field(form.list.type) }}
+
+                    {{ formmacros.field(form.list.creator) }}
+
+                    {% if form.list.createdate is defined %}
+                        {{ formmacros.field(form.list.createdate) }}
+                    {% endif %}
+
+                    {% if form.list.version is defined %}
+                        {{ formmacros.field(form.list.version) }}
+                    {% endif %}
+
+                    {% if form.list.textAttribute is defined %}
+                        {{ formmacros.field(form.list.textAttribute) }}
+                    {% endif %}
+
+                    {% if form.list.urlSlug is defined %}
+                        {{ formmacros.field(form.list.urlSlug) }}
+                    {% endif %}
+
+                    {% if form.list is defined %}
+                        {% if form.list.orderinlist is defined %}
+                            {{ formmacros.field(form.list.orderinlist) }}
+                        {% endif %}
+                        {% if form.list.objectType is defined %}
+                            {{ formmacros.field(form.list.objectType) }}
+                        {% endif %}
+                        {% if form.list.entityNamespace is defined %}
+                            {{ formmacros.field(form.list.entityNamespace) }}
+                        {% endif %}
+                        {% if form.list.entityName is defined %}
+                            {{ formmacros.field(form.list.entityName) }}
+                        {% endif %}
+                        {% if form.list.entityId is defined %}
+                            {{ formmacros.field(form.list.entityId) }}
+                        {% endif %}
+                        {% if form.list.linkToListId is defined %}
+                            {{ formmacros.field(form.list.linkToListId) }}
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {#{{ formmacros.field(form.invoiceFrom) }}#}
+    <hr>
+
+    <p>
+        {% if form.save is defined %}
+            {{ form_widget(form.save) }}
+        {% endif %}
+        {% if form.edit is defined %}
+            {{ form_widget(form.edit) }}
+        {% endif %}
+    </p>
 
         {#{% if cycle == 'new' %}#}
             {#<p>#}
