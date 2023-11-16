@@ -45,7 +45,6 @@
          data-userid = "{{ app.user.id }}"
     ></div>
 
-    {{ formmacros.field(form.openToPublic) }}
     {#{{ formmacros.field(form.category) }}#}
     {{ formmacros.field(form.categoryTags) }}
     {{ formmacros.field(form.company) }}
@@ -53,7 +52,7 @@
     {{ formmacros.field(form.host) }}
     {{ formmacros.field(form.reactivity) }}
     {{ formmacros.field(form.storage) }}
-    {{ formmacros.field(form.datasheet) }}
+    {{ formmacros.field(form.openToPublic) }}
 
     {% if form.documents is defined %}
         <div id="form-prototype-data"
@@ -79,15 +78,6 @@
 
     {% endif %}
 
-    {% if form.inventory is defined %}
-        {{ formmacros.field(form.inventory) }}
-    {% endif %}
-    {% if form.unitPrice is defined %}
-        {{ formmacros.field(form.unitPrice) }}
-    {% endif %}
-    {% if form.tissueType is defined %}
-        {{ formmacros.field(form.tissueType) }}
-    {% endif %}
 
     {#Antibody's visualInfos#}
     {% if form.visualInfos is defined %}
@@ -109,6 +99,19 @@
             </div>
             <div id="antibody-secondary" class="panel-collapse collapse">
                 <div class="panel-body">
+
+                    {{ formmacros.field(form.datasheet) }}
+
+                    {% if form.inventory is defined %}
+                        {{ formmacros.field(form.inventory) }}
+                    {% endif %}
+                    {% if form.unitPrice is defined %}
+                        {{ formmacros.field(form.unitPrice) }}
+                    {% endif %}
+                    {% if form.tissueType is defined %}
+                        {{ formmacros.field(form.tissueType) }}
+                    {% endif %}
+
                     {{ formmacros.field(form.altname) }}
                     {{ formmacros.field(form.catalog) }}
                     {{ formmacros.field(form.lot) }}
