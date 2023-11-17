@@ -240,7 +240,7 @@ class AntibodyList extends ListAbstract
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $wholeSlideImages;
 
-
+    // “Associated Antibodies” multi-select Select2
 
     public function __construct($author=null) {
 

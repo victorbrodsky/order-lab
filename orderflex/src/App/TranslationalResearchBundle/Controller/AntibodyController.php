@@ -193,11 +193,13 @@ class AntibodyController extends OrderAbstractController
             $dql->andWhere("LOWER(ent.name) LIKE LOWER(:name)");
             $dqlParameters['name'] = '%'.$name.'%';
         }
+
         if( $description ) {
             //echo "description=".$description."<br>";
             $dql->andWhere("LOWER(ent.description) LIKE LOWER(:description)");
             $dqlParameters['description'] = '%'.$description.'%';
         }
+
         if( $categorytags && count($categorytags) > 0 ) {
             //echo "categorytags=".count($categorytags)."<br>";
             //$dql->andWhere("LOWER(categoryTags.name) LIKE LOWER(:categorytags)");
@@ -207,6 +209,15 @@ class AntibodyController extends OrderAbstractController
 //            }
             $dql->andWhere("categoryTags.id IN (:categoryTags)");
             $dqlParameters['categoryTags'] = $categorytags;
+        }
+
+        if( $public ) {
+            echo "public=".$public."<br>";
+            if( $public == 'Public' ) {
+                $dql->andWhere("ent.openToPublic = TRUE");
+            } else {
+                $dql->andWhere("ent.openToPublic IS NULL OR ent.openToPublic = FALSE");
+            }
         }
 
         //Secondary filter

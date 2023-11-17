@@ -21,6 +21,7 @@ use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -74,11 +75,30 @@ class AntibodyFilterType extends AbstractType
             'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Description"),
         ));
 
-        $builder->add('public', TextType::class, array(
-            'required' => false,
+        ///// Open to Public ////
+//        $builder->add('public', CheckboxType::class, array(
+//            'label' => 'Open to public:',
+//            'required' => false,
+//            'attr' => array('style' => 'width: 20px; height: 20px;')
+//        ));
+        $publicTypes = array(
+            "Public" => "Public",
+            "Private" => "Private",
+        );
+        $builder->add('public', ChoiceType::class, array(
             'label' => false,
-            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Open to Public"),
+            'choices' => $publicTypes,
+            //'data' => array('default','user-added'),
+            //'choices_as_values' => true,
+            //'multiple' => true,
+            'required' => false,
+            'attr' => array(
+                'class' => 'combobox',
+                'placeholder'=>"Public/Private",
+                //'style' => 'width: 20px; height: 20px;'
+            )
         ));
+        ///// EOF Open to Public ////
 
 //        $builder->add('categorytags', ChoiceType::class, array(
 //            'label' => false, //"Category Tags:",

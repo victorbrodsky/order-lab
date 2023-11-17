@@ -1,6 +1,6 @@
 
 {% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
-
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     {{ title|raw }}
@@ -40,6 +40,7 @@
 
                     <div class="col-xs-2">
                         {{ form_widget(filterform.public) }}
+                        {#{{ formmacros.checkbox(filterform.public) }}#}
                     </div>
 
                     {#<div class="col-xs-1">#}
@@ -53,6 +54,7 @@
                                         href="#transres-AdvancedSearch"
                                         class="btn btn-default btn-sm toggle-btn-state"
                                         data-active-class="advance-search-wrench"
+                                        style="height: 30px;"
                                 >
                                         <span class="glyphicon glyphicon-wrench"></span>
                                 </div>
