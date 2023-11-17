@@ -82,9 +82,13 @@ class AntibodyController extends OrderAbstractController
         $dql->addGroupBy('synonyms.name');
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
+        $dql->leftJoin("ent.categoryTags", "categoryTags");
+        $dql->addGroupBy('categoryTags.name');
 
         $useWalker = false;
         //$useWalker = true;
+
+        $advancedFilter = 0;
 
         //$dql->leftJoin("ent.objectType", "objectType");
         if( method_exists($entityClass,'getObjectType') ) {
@@ -111,6 +115,15 @@ class AntibodyController extends OrderAbstractController
         //$filterform->submit($request);
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
+        $name = $filterform['name']->getData();
+        $description = $filterform['description']->getData();
+        $categorytags = $filterform['categorytags']->getData();
+        //secondary filter
+        $clone = $filterform['clone']->getData();
+        $host = $filterform['host']->getData();
+        $reactivity = $filterform['reactivity']->getData();
+        $company = $filterform['company']->getData();
+
         //echo "search=".$search."<br>";
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
@@ -139,8 +152,8 @@ class AntibodyController extends OrderAbstractController
                 ";
 
             //AntibodyList
-            $dql->leftJoin("ent.categoryTags", "categoryTags");
-            $dql->addGroupBy('categoryTags');
+            //$dql->leftJoin("ent.categoryTags", "categoryTags");
+            //$dql->addGroupBy('categoryTags');
 
             $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
@@ -171,6 +184,42 @@ class AntibodyController extends OrderAbstractController
             $dql->andWhere("ent.type IN (:filterTypes)");
             $dqlParameters['filterTypes'] = $filterTypes;
         }
+
+        if( $name ) {
+            $dql->andWhere("LOWER(ent.name) LIKE LOWER(:name)");
+            $dqlParameters['name'] = '%'.$name.'%';
+        }
+        if( $description ) {
+            $dql->andWhere("LOWER(ent.description) LIKE LOWER(:description)");
+            $dqlParameters['description'] = '%'.$description.'%';
+        }
+        if( $categorytags ) {
+            $dql->andWhere("LOWER(categoryTags.name) LIKE LOWER(:categorytags)");
+            $dqlParameters['categorytags'] = '%'.$categorytags.'%';
+        }
+
+        //Secondary filter
+        if( $clone ) {
+            $dql->andWhere("LOWER(ent.clone) LIKE LOWER(:clone)");
+            $dqlParameters['clone'] = '%'.$clone.'%';
+            $advancedFilter++;
+        }
+        if( $host ) {
+            $dql->andWhere("LOWER(ent.host) LIKE LOWER(:host)");
+            $dqlParameters['host'] = '%'.$host.'%';
+            $advancedFilter++;
+        }
+        if( $reactivity ) {
+            $dql->andWhere("LOWER(ent.reactivity) LIKE LOWER(:reactivity)");
+            $dqlParameters['reactivity'] = '%'.$reactivity.'%';
+            $advancedFilter++;
+        }
+        if( $company ) {
+            $dql->andWhere("LOWER(ent.company) LIKE LOWER(:company)");
+            $dqlParameters['company'] = '%'.$company.'%';
+            $advancedFilter++;
+        }
+
 
         //echo "dql=".$dql."<br>";
 
@@ -225,7 +274,8 @@ class AntibodyController extends OrderAbstractController
             'filterform' => $filterform->createView(),
             'routename' => $routeName,
             //'sitename' => $this->sitename,
-            'cycle' => 'show'
+            'cycle' => 'show',
+            'advancedFilter' => $advancedFilter
         );
     }
 

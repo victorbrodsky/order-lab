@@ -51,7 +51,10 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>"Global search"),
+            'attr' => array(
+                'class' => 'form-control form-control-modif limit-font-size submit-on-enter-field',
+                'placeholder'=>"Search by all fields"
+            ),
         ));
 
         //Filter by Name, Description, Category Tags, Clone, Host, Reactivity, Company
@@ -60,7 +63,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control submit-on-enter-field'),
+            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Name"),
         ));
 
         $builder->add('description', TextType::class, array(
@@ -68,7 +71,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control submit-on-enter-field'),
+            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Description"),
         ));
 
 //        $builder->add('categorytags', ChoiceType::class, array(
@@ -105,7 +108,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Clone'),
         ));
 
         $builder->add('host', TextType::class, array(
@@ -113,7 +116,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Host'),
         ));
 
         $builder->add('reactivity', TextType::class, array(
@@ -121,7 +124,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Reactivity'),
         ));
 
         $builder->add('company', TextType::class, array(
@@ -129,7 +132,7 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Company'),
         ));
 
 
