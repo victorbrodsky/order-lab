@@ -17,7 +17,9 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -49,34 +51,105 @@ class AntibodyFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>"Global search"),
+        ));
+
+        //Filter by Name, Description, Category Tags, Clone, Host, Reactivity, Company
+        $builder->add('name', TextType::class, array(
+            //'placeholder' => 'Search',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control submit-on-enter-field'),
+        ));
+
+        $builder->add('description', TextType::class, array(
+            //'placeholder' => 'description',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control submit-on-enter-field'),
+        ));
+
+//        $builder->add('categorytags', ChoiceType::class, array(
+//            'label' => false, //"Category Tags:",
+//            'placeholder' => 'Category Tags',
+//            'choices' => array(
+//                'Region Of Interest' => 'Region Of Interest',
+//                'Whole Slide Image' => 'Whole Slide Image'
+//            ),
+//            'multiple' => true,
+//            'required' => false,
+//            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Category Tags")
+//        ));
+        $builder->add('categorytags', EntityType::class, array(
+            'class' => AntibodyCategoryTagList::class,
+            //'choice_label' => 'getTreeName',
+            'label'=>'Antibody Category Tag(s):',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('clone', TextType::class, array(
+            //'placeholder' => 'Search',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        if( isset($this->params['className']) ) {
-            $className = $this->params['className'];
-        } else {
-            $className = NULL;
-        }
+        $builder->add('host', TextType::class, array(
+            //'placeholder' => 'Search',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
 
-        //if( $className && $className == "AntibodyList" ) {
-            //Show list type filter
-            $types = array(
-                "default" => "default",
-                "user-added" => "user-added",
-                "disabled" => "disabled",
-                "draft" => "draft",
-                "hidden" => "hidden"
-            );
-            $builder->add('type', ChoiceType::class, array(
-                'label' => false,
-                'choices' => $types,
-                'data' => array('default','user-added'),
-                //'choices_as_values' => true,
-                'multiple' => true,
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
-            ));
-        //}
+        $builder->add('reactivity', TextType::class, array(
+            //'placeholder' => 'Search',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
+
+        $builder->add('company', TextType::class, array(
+            //'placeholder' => 'Search',
+            //'max_length' => 200,
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
+
+
+        //Show list type filter
+        $types = array(
+            "default" => "default",
+            "user-added" => "user-added",
+            "disabled" => "disabled",
+            "draft" => "draft",
+            "hidden" => "hidden"
+        );
+        $builder->add('type', ChoiceType::class, array(
+            'label' => false,
+            'choices' => $types,
+            'data' => array('default','user-added'),
+            //'choices_as_values' => true,
+            'multiple' => true,
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
+        ));
     }
 
     /**

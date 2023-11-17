@@ -11,10 +11,10 @@
 {% endblock %}
 
 
-{#Bing request:
-1) Show only Name, Description, Category Tags, Clone, Host, Reactivity, Company
-2) Filter list by fields in 1
-3) Change the public view for customer oriented with images with only important info
+{#Bing request:#}
+{#1) Show only Name, Description, Category Tags, Clone, Host, Reactivity, Company#}
+{#2) Filter list by fields in 1#}
+{#3) Change the public view for customer oriented with images with only important info#}
 
 {% block content %}
 
@@ -22,11 +22,11 @@
 
     {{ form_start(form) }}
 
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-        ></div>
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
 
     {#Antibody important fields#}
     {% if form.list is defined %}
@@ -290,9 +290,6 @@
 {% macro antibodyVisualInfoSections(antibody, form, cycle) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
-
-    {#cycle={{ cycle }}<br>#}
-    {#TODO: fix counter, remove delete for ROI and WSI#}
 
     {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype',true) %}
     <div id="form-prototype-data2"
