@@ -74,6 +74,12 @@ class AntibodyFilterType extends AbstractType
             'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Description"),
         ));
 
+        $builder->add('public', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>"Open to Public"),
+        ));
+
 //        $builder->add('categorytags', ChoiceType::class, array(
 //            'label' => false, //"Category Tags:",
 //            'placeholder' => 'Category Tags',
@@ -91,7 +97,7 @@ class AntibodyFilterType extends AbstractType
             'label'=>'Antibody Category Tag(s):',
             'required'=> false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Category Tag(s)"),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("(list.type = :typedef OR list.type = :typeadd)")

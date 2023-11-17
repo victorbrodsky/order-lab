@@ -118,6 +118,7 @@ class AntibodyController extends OrderAbstractController
         $name = $filterform['name']->getData();
         $description = $filterform['description']->getData();
         $categorytags = $filterform['categorytags']->getData();
+        $public = $filterform['public']->getData();
         //secondary filter
         $clone = $filterform['clone']->getData();
         $host = $filterform['host']->getData();
@@ -135,6 +136,7 @@ class AntibodyController extends OrderAbstractController
         }
 
         if( $search ) {
+            //echo "search=".$search."<br>";
             $searchStr = "";
 
             if( is_numeric($search) ) {
@@ -181,21 +183,30 @@ class AntibodyController extends OrderAbstractController
         }
 
         if( $filterTypes && count($filterTypes) > 0 ) {
+            //echo "types=".count($filterTypes)."<br>";
             $dql->andWhere("ent.type IN (:filterTypes)");
             $dqlParameters['filterTypes'] = $filterTypes;
         }
 
         if( $name ) {
+            //echo "name=".$name."<br>";
             $dql->andWhere("LOWER(ent.name) LIKE LOWER(:name)");
             $dqlParameters['name'] = '%'.$name.'%';
         }
         if( $description ) {
+            //echo "description=".$description."<br>";
             $dql->andWhere("LOWER(ent.description) LIKE LOWER(:description)");
             $dqlParameters['description'] = '%'.$description.'%';
         }
-        if( $categorytags ) {
-            $dql->andWhere("LOWER(categoryTags.name) LIKE LOWER(:categorytags)");
-            $dqlParameters['categorytags'] = '%'.$categorytags.'%';
+        if( $categorytags && count($categorytags) > 0 ) {
+            //echo "categorytags=".count($categorytags)."<br>";
+            //$dql->andWhere("LOWER(categoryTags.name) LIKE LOWER(:categorytags)");
+            //$dqlParameters['categorytags'] = '%'.$categorytags.'%';
+//            foreach ($categorytags as $categorytag) {
+//                echo "categorytag=$categorytag; ID=".$categorytag->getId()." <br>";
+//            }
+            $dql->andWhere("categoryTags.id IN (:categoryTags)");
+            $dqlParameters['categoryTags'] = $categorytags;
         }
 
         //Secondary filter

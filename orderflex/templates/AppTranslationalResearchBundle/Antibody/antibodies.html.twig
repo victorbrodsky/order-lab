@@ -38,11 +38,9 @@
                         {{ form_widget(filterform.categorytags) }}
                     </div>
 
-                    {% if filterform.type is defined %}
-                        <div class="col-xs-3">
-                            {{ form_widget(filterform.type) }}
-                        </div>
-                    {% endif %}
+                    <div class="col-xs-2">
+                        {{ form_widget(filterform.public) }}
+                    </div>
 
                     {#<div class="col-xs-1">#}
                         {#<button type="submit" class="btn btn-sm btn-default">Filter</button>#}
@@ -75,11 +73,15 @@
             <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
                 <div class="row">
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
+                        {{ form_widget(filterform.type) }}
+                    </div>
+
+                    <div class="col-xs-2">
                         {{ form_widget(filterform.clone) }}
                     </div>
 
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         {{ form_widget(filterform.host) }}
                     </div>
 
