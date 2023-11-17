@@ -2495,7 +2495,7 @@ class ListController extends OrderAbstractController
                 /////////////// EOF Process Removed Collections ///////////////
 
                 /////////////// Add event log on edit (edit or add collection) ///////////////
-                /////////////// Must run before removeVisualInfoCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                /////////////// Must run before removeVisualInfoCollection function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
                 if(0) {
                     //This caused doctrine problems to persist the VisualInfos->documents
                     $changedInfoArr = $this->setEventLogChanges($entity);
@@ -2571,9 +2571,7 @@ class ListController extends OrderAbstractController
             if( method_exists($entity, "getVisualInfos") ) {
                 foreach( $entity->getVisualInfos() as $visualInfo) {
                     //echo "<br><br>getVisualInfos ID=".$visualInfo->getId().": <br>";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
                     $em->getRepository(Document::class)->processDocuments( $visualInfo, "document" );
-                    //$em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
                 }
                 //exit('exit visualinfo');
             }

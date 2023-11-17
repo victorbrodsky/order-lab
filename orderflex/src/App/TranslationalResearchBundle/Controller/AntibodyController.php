@@ -22,6 +22,7 @@ use App\TranslationalResearchBundle\Entity\VisualInfo;
 use App\TranslationalResearchBundle\Form\AntibodyFilterType;
 use App\TranslationalResearchBundle\Form\AntibodyType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -254,12 +255,12 @@ class AntibodyController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('antibody new');
 
-            $antibody = $this->removeEmptyVisualInfo($antibody);
+            $removedInfo = $this->removeEmptyVisualInfo($antibody);
 
             $em->persist($antibody);
             $em->flush();
 
-            $msg = "Created new antibody";
+            $msg = "Created new antibody ".$antibody; //."; ".$removedInfo;
 
             $this->addFlash(
                 'notice',
@@ -295,6 +296,11 @@ class AntibodyController extends OrderAbstractController
 
         $antibody = $this->createEditAntibody($antibody);
 
+        $originalVisualInfos = array();
+        foreach( $antibody->getVisualInfos() as $visualInfo ) {
+            $originalVisualInfos[] = $visualInfo;
+        }
+
         $form = $this->createAntibodyForm($antibody,$cycle); //new
 
         $form->handleRequest($request);
@@ -302,11 +308,12 @@ class AntibodyController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('antibody edit');
 
-            $antibody = $this->removeEmptyVisualInfo($antibody);
+            $removedInfo1 = $this->removeEmptyVisualInfo($antibody);
+            $removedInfo2 = $this->removeVisualInfoCollection($originalVisualInfos,$antibody->getVisualInfos(),$antibody);
 
             $em->flush();
 
-            $msg = "Updated antibody ".$antibody;
+            $msg = "Updated antibody ".$antibody; //."; ".$removedInfo1."; ".$removedInfo2;
 
             $this->addFlash(
                 'notice',
@@ -451,12 +458,18 @@ class AntibodyController extends OrderAbstractController
     }
 
     public function removeEmptyVisualInfo( $antibody ) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
         $visualInfos = $antibody->getVisualInfos();
         //echo "visualInfos=".count($visualInfos)."<br>";
         foreach($visualInfos as $visualInfo) {
             if( $visualInfo->isEmpty() ) {
                 //echo "visualInfo is empty<br>";
+                $removeArr[] = "<strong>"."Removed empty: ".$visualInfo." ".$this->getEntityId($visualInfo)."</strong>";
                 $antibody->removeVisualInfo($visualInfo);
+                $visualInfo->setAntibody(NULL);
+                $em->persist($visualInfo);
+                $em->remove($visualInfo);
 //                $this->addFlash(
 //                    'notice',
 //                    "Removed empty Visual Info"
@@ -467,6 +480,7 @@ class AntibodyController extends OrderAbstractController
 //                    'notice',
 //                    "visualInfo is not empty"
 //                );
+                $em->getRepository(Document::class)->processDocuments( $visualInfo, "document" );
             }
         }
 
@@ -474,7 +488,30 @@ class AntibodyController extends OrderAbstractController
         //echo "visualInfos=".count($visualInfos)."<br>";
         //exit('111');
 
-        return $antibody;
+        return implode("<br>", $removeArr);;
+    }
+
+    public function removeVisualInfoCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removeVisualInfo($element);
+                $element->setAntibody(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function getEntityId($entity) {
+        if( $entity->getId() ) {
+            return "ID=".$entity->getId();
+        }
+        return "New";
     }
 
     public function classListMapper() {
