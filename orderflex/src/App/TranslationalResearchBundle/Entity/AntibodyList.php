@@ -721,19 +721,31 @@ class AntibodyList extends ListAbstract
     {
         return $this->associates;
     }
+    public function setAssociates($items)
+    {
+        foreach( $items as $item ) {
+            $this->addAssociates($item);
+        }
+    }
     public function addAssociate($item)
     {
         if( $item && !$this->associates->contains($item) ) {
             $this->associates->add($item);
-            exit("addAssociate");
-            $item->addAssociate($this);
+            //exit("addAssociate");
+            if( !$item->getAssociates()->contains($this) ) {
+                $item->addAssociate($this);
+            }
         }
         return $this;
     }
     public function removeAssociate($item)
     {
         $this->associates->removeElement($item);
-        $item->removeAssociate($this);
+        //exit("removeAssociate");
+        //$item->removeAssociate($this);
+        if( $item->getAssociates()->contains($this) ) {
+            $item->removeAssociate($this);
+        }
     }
 
 //    /**
