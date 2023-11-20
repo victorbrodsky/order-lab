@@ -52,7 +52,10 @@
     {{ formmacros.field(form.host) }}
     {{ formmacros.field(form.reactivity) }}
     {{ formmacros.field(form.storage) }}
-    {#{{ formmacros.field(form.openToPublic) }}#}
+
+    {#{{ formmacros.field(form.myAssociates) }}#}
+    {{ formmacros.field(form.associates) }}
+
     {{ formmacros.checkbox(form.openToPublic) }}
 
     {% if form.documents is defined %}

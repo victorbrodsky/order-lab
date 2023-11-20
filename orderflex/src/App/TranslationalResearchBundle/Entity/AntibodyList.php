@@ -224,23 +224,34 @@ class AntibodyList extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $openToPublic;
 
-//    //Region of Interest Image(s) [Up to 10 images, up to 10MB each]
-//    #[ORM\JoinTable(name: 'transres_antibody_regioninterestimage')]
-//    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\InverseJoinColumn(name: 'regioninterestimage_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
-//    #[ORM\OrderBy(['createdate' => 'DESC'])]
-//    private $regionInterestImages;
+    /////// “Associated Antibodies” multi-select Select2 ///////
+    // https://www.doctrine-project.org/projects/doctrine-orm/en/2.16/reference/association-mapping.html#many-to-many-self-referencing
+    // https://stackoverflow.com/questions/21244816/doctrines-many-to-many-self-referencing-and-reciprocity
+//    /**
+//     * Many Antibodies have Many Antibodies. (associatesWithMe, similar to friendsWithMe)
+//     */
+//    #[ManyToMany(targetEntity: AntibodyList::class, mappedBy: 'myAssociates')]
+//    private $associates;
 //
-//    //Whole Slide Image(s) [Up to 2 images, up to 2GB each]
-//    #[ORM\JoinTable(name: 'transres_antibody_wholeslideimage')]
-//    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\InverseJoinColumn(name: 'wholeslideimage_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
-//    #[ORM\OrderBy(['createdate' => 'DESC'])]
-//    private $wholeSlideImages;
+//    /**
+//     * Many Antibodies have many Antibodies (similar to myFriends).
+//     */
+//    #[JoinTable(name: 'transres_antibody_associate')]
+//    #[JoinColumn(name: 'antibody_id', referencedColumnName: 'id')]
+//    #[InverseJoinColumn(name: 'associate_id', referencedColumnName: 'id')]
+//    #[ManyToMany(targetEntity: AntibodyList::class, inversedBy: 'associates')]
+//    private $myAssociates;
 
-    // “Associated Antibodies” multi-select Select2
+
+    #[ORM\JoinTable(name: 'transres_antibody_associate')]
+    #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'associate_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: AntibodyList::class)]
+    private $associates;
+    /////// EOF “Associated Antibodies” multi-select Select2 ///////
+
+
+
 
     public function __construct($author=null) {
 
@@ -249,8 +260,9 @@ class AntibodyList extends ListAbstract
         $this->documents = new ArrayCollection();
         $this->visualInfos = new ArrayCollection();
         $this->categoryTags = new ArrayCollection();
-//        $this->regionInterestImages = new ArrayCollection();
-//        $this->wholeSlideImages = new ArrayCollection();
+
+        $this->associates = new ArrayCollection();
+        //$this->myAssociates = new ArrayCollection();
     }
 
 
@@ -702,43 +714,48 @@ class AntibodyList extends ListAbstract
         $this->openToPublic = $openToPublic;
     }
 
-//    //Region of Interest Image(s)
-//    public function getRegionInterestImages()
+    /**
+     * @return mixed
+     */
+    public function getAssociates()
+    {
+        return $this->associates;
+    }
+    public function addAssociate($item)
+    {
+        if( $item && !$this->associates->contains($item) ) {
+            $this->associates->add($item);
+            //exit("addAssociate");
+            $item->addAssociate($this);
+        }
+        return $this;
+    }
+    public function removeAssociate($item)
+    {
+        $this->associates->removeElement($item);
+        $item->removeAssociate($this);
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getMyAssociates()
 //    {
-//        return $this->regionInterestImages;
+//        return $this->myAssociates;
 //    }
-//    public function addRegionInterestImage($item)
+//    public function addMyAssociate($item)
 //    {
-//        if( $item && !$this->regionInterestImages->contains($item) ) {
-//            $this->regionInterestImages->add($item);
-//            $item->createUseObject($this);
+//        if( $item && !$this->myAssociates->contains($item) ) {
+//            $this->myAssociates->add($item);
+//            $item->addAssociate($this);
 //        }
 //        return $this;
 //    }
-//    public function removeRegionInterestImage($item)
+//    public function removeMyAssociate($item)
 //    {
-//        $this->regionInterestImages->removeElement($item);
-//        $item->clearUseObject();
+//        $this->myAssociates->removeElement($item);
+//        $item->removeAssociate($this);
 //    }
-//    //Whole Slide Image(s)
-//    public function getWholeSlideImages()
-//    {
-//        return $this->wholeSlideImages;
-//    }
-//    public function addWholeSlideImage($item)
-//    {
-//        if( $item && !$this->wholeSlideImages->contains($item) ) {
-//            $this->wholeSlideImages->add($item);
-//            $item->createUseObject($this);
-//        }
-//        return $this;
-//    }
-//    public function removeWholeSlideImage($item)
-//    {
-//        $this->wholeSlideImages->removeElement($item);
-//        $item->clearUseObject();
-//    }
-    
 
     
     public function getAllComments($separator="\r\n") {

@@ -4,6 +4,7 @@ namespace App\TranslationalResearchBundle\Form;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
+use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\UserdirectoryBundle\Form\DocumentType;
 use App\UserdirectoryBundle\Form\ListType;
@@ -248,6 +249,39 @@ class AntibodyType extends AbstractType
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
+
+        $builder->add('associates', EntityType::class, array(
+            'class' => AntibodyList::class,
+            'label'=>'Associated Antibodies:',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+//        $builder->add('myAssociates', EntityType::class, array(
+//            'class' => AntibodyList::class,
+//            'label' => 'Associated Antibodies:', //'My Associates:',
+//            'required'=> false,
+//            'multiple' => true,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
     }
     
     /**
