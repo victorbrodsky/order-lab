@@ -242,7 +242,7 @@ class AntibodyList extends ListAbstract
 //    #[ManyToMany(targetEntity: AntibodyList::class, inversedBy: 'associates')]
 //    private $myAssociates;
 
-
+    //, cascade: ['persist']
     #[ORM\JoinTable(name: 'transres_antibody_associate')]
     #[ORM\JoinColumn(name: 'antibody_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'associate_id', referencedColumnName: 'id')]
@@ -725,7 +725,7 @@ class AntibodyList extends ListAbstract
     {
         if( $item && !$this->associates->contains($item) ) {
             $this->associates->add($item);
-            //exit("addAssociate");
+            exit("addAssociate");
             $item->addAssociate($this);
         }
         return $this;

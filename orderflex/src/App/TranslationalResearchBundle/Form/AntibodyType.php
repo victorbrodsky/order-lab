@@ -252,9 +252,10 @@ class AntibodyType extends AbstractType
 
         $builder->add('associates', EntityType::class, array(
             'class' => AntibodyList::class,
-            'label'=>'Associated Antibodies:',
-            'required'=> false,
+            'label' =>'Associated Antibodies:',
+            'required' => false,
             'multiple' => true,
+            'by_reference' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -266,6 +267,12 @@ class AntibodyType extends AbstractType
                     ));
             },
         ));
+//        $builder->add('associates', null, array(
+//            'label' => 'Associated Antibodies:',
+//            'multiple' => true,
+//            'required' => false,
+//            'attr' => array('class'=>'combobox')
+//        ));
 //        $builder->add('myAssociates', EntityType::class, array(
 //            'class' => AntibodyList::class,
 //            'label' => 'Associated Antibodies:', //'My Associates:',
