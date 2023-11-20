@@ -257,48 +257,47 @@ class AntibodyType extends AbstractType
             ));
         }
 
-        //Exclude self
-        //if( $this->params['antibody'] ) {
-            //$selfId = $this->params['antibody']->getId();
-            if( $this->selfId ) {
-                $builder->add('associates', EntityType::class, array(
-                    'class' => AntibodyList::class,
-                    'label' =>'Associated Antibodies:',
-                    'required' => false,
-                    'multiple' => true,
-                    'by_reference' => false,
-                    'attr' => array('class'=>'combobox combobox-width'),
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("(list.type = :typedef OR list.type = :typeadd) AND list.id != :selfId")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                                'selfId' => $this->selfId
-                            ));
-                    },
-                ));
-            } else {
-                $builder->add('associates', EntityType::class, array(
-                    'class' => AntibodyList::class,
-                    'label' =>'Associated Antibodies:',
-                    'required' => false,
-                    'multiple' => true,
-                    'by_reference' => false,
-                    'attr' => array('class'=>'combobox combobox-width'),
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("(list.type = :typedef OR list.type = :typeadd)")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
-                    },
-                ));
-            }
-        //}
+        //associates
+        if( $this->selfId ) {
+            //Exclude self
+            $builder->add('associates', EntityType::class, array(
+                'class' => AntibodyList::class,
+                'label' =>'Associated Antibodies:',
+                'required' => false,
+                'multiple' => true,
+                'by_reference' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.id != :selfId")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'selfId' => $this->selfId
+                        ));
+                }
+            ));
+        } else {
+            $builder->add('associates', EntityType::class, array(
+                'class' => AntibodyList::class,
+                'label' =>'Associated Antibodies:',
+                'required' => false,
+                'multiple' => true,
+                'by_reference' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                }
+            ));
+        }
+
 
 
 
