@@ -23,6 +23,7 @@ class AntibodyType extends AbstractType
 
     protected $params;
     protected $mapper;
+    protected $selfId;
 
     public function formConstructor( $params )
     {
@@ -38,6 +39,12 @@ class AntibodyType extends AbstractType
 //        $mapper['bundleName'] = $bundleName;
 //        $mapper['displayName'] = $displayName . ", class: [" . $className . "]";
         $this->mapper = $params['mapper'];
+
+        if( $this->params['antibody'] ) {
+            $this->selfId = $this->params['antibody']->getId();
+        } else {
+            $this->selfId = null;
+        }
     }
 
     /**
@@ -250,45 +257,51 @@ class AntibodyType extends AbstractType
             ));
         }
 
-        $builder->add('associates', EntityType::class, array(
-            'class' => AntibodyList::class,
-            'label' =>'Associated Antibodies:',
-            'required' => false,
-            'multiple' => true,
-            'by_reference' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
-//        $builder->add('associates', null, array(
-//            'label' => 'Associated Antibodies:',
-//            'multiple' => true,
-//            'required' => false,
-//            'attr' => array('class'=>'combobox')
-//        ));
-//        $builder->add('myAssociates', EntityType::class, array(
-//            'class' => AntibodyList::class,
-//            'label' => 'Associated Antibodies:', //'My Associates:',
-//            'required'=> false,
-//            'multiple' => true,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
-//        ));
+        //Exclude self
+        //if( $this->params['antibody'] ) {
+            //$selfId = $this->params['antibody']->getId();
+            if( $this->selfId ) {
+                $builder->add('associates', EntityType::class, array(
+                    'class' => AntibodyList::class,
+                    'label' =>'Associated Antibodies:',
+                    'required' => false,
+                    'multiple' => true,
+                    'by_reference' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("(list.type = :typedef OR list.type = :typeadd) AND list.id != :selfId")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                                'selfId' => $this->selfId
+                            ));
+                    },
+                ));
+            } else {
+                $builder->add('associates', EntityType::class, array(
+                    'class' => AntibodyList::class,
+                    'label' =>'Associated Antibodies:',
+                    'required' => false,
+                    'multiple' => true,
+                    'by_reference' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("(list.type = :typedef OR list.type = :typeadd)")
+                            ->orderBy("list.orderinlist","ASC")
+                            ->setParameters( array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+                ));
+            }
+        //}
+
+
+
     }
     
     /**
