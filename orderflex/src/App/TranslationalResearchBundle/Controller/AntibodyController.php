@@ -71,7 +71,6 @@ class AntibodyController extends OrderAbstractController
 
         $dql->leftJoin("ent.creator", "creator");
         $dql->leftJoin("ent.updatedby", "updatedby");
-        $dql->leftJoin("ent.associates", "associates");
 
         $dql->addGroupBy('creator.username');
         $dql->addGroupBy('updatedby.username');
@@ -86,9 +85,11 @@ class AntibodyController extends OrderAbstractController
         $dql->addGroupBy('original.name');
         $dql->leftJoin("ent.categoryTags", "categoryTags");
         $dql->addGroupBy('categoryTags.name');
+        $dql->leftJoin("ent.associates", "associates");
+        $dql->addGroupBy('associates.name');
 
-        $useWalker = false;
-        //$useWalker = true;
+        //$useWalker = false;
+        $useWalker = true;
 
         $advancedFilter = 0;
 
@@ -203,12 +204,6 @@ class AntibodyController extends OrderAbstractController
         }
 
         if( $categorytags && count($categorytags) > 0 ) {
-            //echo "categorytags=".count($categorytags)."<br>";
-            //$dql->andWhere("LOWER(categoryTags.name) LIKE LOWER(:categorytags)");
-            //$dqlParameters['categorytags'] = '%'.$categorytags.'%';
-//            foreach ($categorytags as $categorytag) {
-//                echo "categorytag=$categorytag; ID=".$categorytag->getId()." <br>";
-//            }
             $dql->andWhere("categoryTags.id IN (:categoryTags)");
             $dqlParameters['categoryTags'] = $categorytags;
         }
@@ -266,8 +261,8 @@ class AntibodyController extends OrderAbstractController
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit                          /*limit per page*/
-            ,$walker
+            $limit,                          /*limit per page*/
+            $walker
         );
         //echo "list count=".count($entities)."<br>";
         //echo "getTotalItemCount=".$entities->getTotalItemCount()."<br>";
