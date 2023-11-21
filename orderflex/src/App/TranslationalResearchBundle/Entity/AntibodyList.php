@@ -860,4 +860,16 @@ class AntibodyList extends ListAbstract
         return $res;
     }
 
+    public function listName() {
+        //[ID] AntibodyTitle
+        $res = $this->getId();
+
+        $name = $this->getName();
+        if( $name ) {
+            $res = $res . " [" . $name . "]";
+        }
+        
+        return $res;
+    }
+
 }

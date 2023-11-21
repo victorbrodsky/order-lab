@@ -31,7 +31,7 @@ class AntibodyController extends OrderAbstractController
 {
     //Custom Antibody list
     #[Route(path: '/antibodies/', name: 'translationalresearch_antibodies', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies.html.twig')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_v2.html.twig')]
     public function indexAntibodiesAction(Request $request)
     {
         if(
@@ -70,6 +70,7 @@ class AntibodyController extends OrderAbstractController
 
         $dql->leftJoin("ent.creator", "creator");
         $dql->leftJoin("ent.updatedby", "updatedby");
+        $dql->leftJoin("ent.associates", "associates");
 
         $dql->addGroupBy('creator.username');
         $dql->addGroupBy('updatedby.username');

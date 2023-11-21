@@ -263,6 +263,7 @@ class AntibodyType extends AbstractType
             $builder->add('associates', EntityType::class, array(
                 'class' => AntibodyList::class,
                 'label' =>'Associated Antibodies:',
+                'choice_label' => 'listName',
                 'required' => false,
                 'multiple' => true,
                 'by_reference' => false,
@@ -282,6 +283,7 @@ class AntibodyType extends AbstractType
             $builder->add('associates', EntityType::class, array(
                 'class' => AntibodyList::class,
                 'label' =>'Associated Antibodies:',
+                'choice_label' => 'listName',
                 'required' => false,
                 'multiple' => true,
                 'by_reference' => false,
