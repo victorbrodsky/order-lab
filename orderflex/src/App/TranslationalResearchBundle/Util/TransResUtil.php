@@ -19,6 +19,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 
 
@@ -6209,6 +6210,125 @@ class TransResUtil
         return false;
     }
 
+    //Create spreadsheet by Spout
+    //http://opensource.box.com/spout/getting-started/
+    //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
+    public function createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit=null) {
+        //echo "antibodys=".count($antibodyIdsArr)."<br>";
+        $writer = WriterEntityFactory::createXLSXWriter();
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $requestStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+        //only project list fields
+        $spoutRow = WriterEntityFactory::createRowFromArray(
+            [
+                'Antibody ID',                  //0 - A
+                'Category Tags',                //1 - B
+                'Show on public list',          //2 - C
+                'Name',                         //3 - D
+                'Company',                      //4 - E
+                'Clone',                        //5 - F
+                'Host',                         //6 - G
+                'Reactivity',                   //7 - H
+                'Storage',                      //8 - I
+                'Associated Antibodies',        //9 - J
+                'Datasheet',                    //10 - K
+            ],
+            $headerStyle
+        );
+        $writer->addRow($spoutRow);
+
+        $rowCount = 2;
+        $count = 0;
+
+        foreach( $antibodyIdsArr as $antibodyId ) {
+
+            //echo "antibodyId=$antibodyId <br>";
+
+            if( $limit && ($count++ > $limit) ) {
+                break;
+            }
+
+            $antibody = $this->em->getRepository(AntibodyList::class)->find($antibodyId);
+            if( !$antibody ) {
+                continue;
+            }
+
+            $data[0] = $antibody->getId();
+
+            $tags = $antibody->getCategoryTags();
+            $tagsStr = "";
+            foreach($tags as $tag) {
+                if( $tagsStr ) {
+                    $tagsStr = $tagsStr . ", ";
+                }
+                $tagsStr = $tagsStr . $tag->getName();
+            }
+
+            $openToPublic = "No";
+            if( $antibody->getOpenToPublic() === true ) {
+                $openToPublic = "Yes";
+            }
+
+            $associatesStr = "";
+            foreach($antibody->getAssociates() as $associate) {
+                if( $associatesStr ) {
+                    $associatesStr = $associatesStr . ", ";
+                }
+                $associatesStr = $associatesStr . $associate->listName();
+            }
+
+            $data[1] = $tagsStr;
+            $data[2] = $openToPublic;
+            $data[3] = $antibody->getName();
+            $data[4] = $antibody->getCompany();
+            $data[5] = $antibody->getClone();
+            $data[6] = $antibody->getHost();
+            $data[7] = $antibody->getReactivity();
+            $data[8] = $antibody->getStorage();
+            $data[9] = $associatesStr;
+            $data[10] = $antibody->getDatasheet();
+
+            //set color light green to the last Total row
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+
+            $writer->addRow($spoutRow);
+
+            $this->em->clear();
+
+            $rowCount = $rowCount + 1;
+        }//antibody
+
+        //exit('111');
+        $writer->close();
+    }
+
 //    public function getSpecialtyRole($specialtyObject) {
 //        $role = null;
 //        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
@@ -6608,6 +6728,41 @@ class TransResUtil
     }
     public function getProjectIdsArrByDqlParameters($dql,$dqlParameters) {
         $dql->select('project.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $result = $query->getScalarResult();
+        $ids = array_map('current', $result);
+        $ids = array_unique($ids);
+
+        //print_r($ids);
+        //echo "count=".$count."<br>";
+
+        return $ids;
+    }
+
+    public function getTotalAntibodyCount() {
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(AntibodyList::class);
+        $dql = $repository->createQueryBuilder("antibody");
+        $dql->select('COUNT(antibody)');
+
+        $query = $dql->getQuery();
+
+        //$count = -1;
+        $count = $query->getSingleScalarResult();
+        //$resArr = $query->getOneOrNullResult();
+        //print_r($resArr);
+        //echo "count=".$count."<br>";
+
+        return $count;
+    }
+    public function getAntibodyIdsArrByDqlParameters($dql,$dqlParameters) {
+        $dql->select('ent.id');
 
         $query = $dql->getQuery();
 

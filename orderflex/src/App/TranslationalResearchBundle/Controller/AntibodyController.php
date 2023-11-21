@@ -43,13 +43,14 @@ class AntibodyController extends OrderAbstractController
         }
         
         $listArr = $this->getList($request);
-        $listArr['title'] = "Antibodies";
+        //$listArr['title'] = "Antibodies";
         $listArr['postPath'] = "_translationalresearch";
 
         return $listArr;
     }
     public function getList($request, $limit=50) {
 
+        $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 
         //get object name: stain-list => stain
@@ -284,6 +285,13 @@ class AntibodyController extends OrderAbstractController
         }
         ///////////// EOF check if show "create a new entity" link //////////////
 
+        $matchingAntibodyIdsArr = $transresUtil->getAntibodyIdsArrByDqlParameters($dql,$dqlParameters);
+        //$dql, $dqlParameters
+        $allGlobalAntibodys = $transresUtil->getTotalAntibodyCount();
+        //echo "matching=".count($matchingAntibodyIdsArr).", allGlobalAntibodys=$allGlobalAntibodys"."<br>";
+        $title = "Antibodies";
+        $title = $title . " (Matching " . count($matchingAntibodyIdsArr) . ", Total " . $allGlobalAntibodys . ")";
+
         //echo "pathbase=".$pathbase."<br>";
         //echo "routeName=".$routeName."<br>";
         //exit('111');
@@ -298,8 +306,52 @@ class AntibodyController extends OrderAbstractController
             'routename' => $routeName,
             //'sitename' => $this->sitename,
             'cycle' => 'show',
-            'advancedFilter' => $advancedFilter
+            'advancedFilter' => $advancedFilter,
+            'matchingAntibodyIdsArr' => $matchingAntibodyIdsArr,
+            'title' => $title,
         );
+    }
+
+    /**
+     * Download multiple filtered projects
+     */
+    #[Route(path: '/download-antibody-spreadsheet-post', methods: ['POST'], name: 'translationalresearch_download_antibody_spreadsheet')]
+    public function downloadApplicantListExcelPostAction(Request $request) {
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //$ids = $request->query->get('projectids');
+        $ids = $request->request->get('ids');
+        //exit("ids=".$ids);
+
+        $limit = null;
+        //exit("ids=".$ids);
+        //exit("limit=".$limit);
+
+        if( $ids ) {
+            if( is_array($ids) && count($ids) == 0 ) {
+                exit("No Antibodies to Export to spreadsheet");
+            }
+        }
+
+        if( !$ids ) {
+            exit("No Antibodies to Export to spreadsheet");
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Antibodies-".date('m-d-Y').".xlsx";
+
+        $antibodyIdsArr = explode(',', $ids);
+
+        //Spout uses less memory
+        $transresUtil->createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        exit();
     }
 
     #[Route(path: '/antibody/new', name: 'translationalresearch_antibody_new', methods: ['GET', 'POST'])]
