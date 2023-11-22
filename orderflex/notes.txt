@@ -343,12 +343,13 @@ git push originme
 or: git push -u -f originme main
 
 ###### git branching ######
+List all branches local and remote: git branch -a
 Create a new branch: git branch crazy-experiment
 git switch crazy-experiment
 --- make changes in crazy-experiment branch ---
 git add .
 git commit -m "make changes in crazy-experiment"
-git switch master
+git switch mastergit switch
 git merge crazy-experiment
 git push origin master
 --- finished working with branch crazy-experiment ---
