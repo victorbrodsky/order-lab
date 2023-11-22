@@ -34,7 +34,8 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
 
-echo -e ${COLOR} You can install certbot later manually by running install-certbot.sh (note: here, dropletname is the same as IMAGENAME):  ${NC}
+echo -e ${COLOR} Note: here, dropletname is the same as IMAGENAME  ${NC}
+echo -e ${COLOR} You can install certbot later manually by running install-certbot.sh note:  ${NC}
 echo -e ${COLOR} doctl compute ssh "$IMAGENAME" --ssh-key-path mysshkey --ssh-command 'bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com'  ${NC}
 
 
