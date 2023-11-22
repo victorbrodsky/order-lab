@@ -443,7 +443,7 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
 fi
 
 echo -e ${COLOR} You can install certbot later manually by running install-certbot.sh:  ${NC}
-echo -e ${COLOR} doctl compute ssh mydropletname --ssh-key-path mysshkey --ssh-command "bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com"  ${NC}
+echo -e ${COLOR} doctl compute ssh mydropletname --ssh-key-path mysshkey --ssh-command 'bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com'  ${NC}
 
 echo -e ${COLOR} You can login to the droplet by running:  ${NC}
 echo -e ${COLOR} doctl compute ssh mydropletname --ssh-key-path mysshkey  ${NC}
