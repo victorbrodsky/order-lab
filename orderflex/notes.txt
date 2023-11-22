@@ -349,7 +349,7 @@ git switch crazy-experiment
 --- make changes in crazy-experiment branch ---
 git add .
 git commit -m "make changes in crazy-experiment"
-git switch mastergit switch
+git switch mastergit
 git merge crazy-experiment
 git push origin master
 --- finished working with branch crazy-experiment ---
