@@ -92,10 +92,19 @@ class MaintenanceListener {
             strpos((string)$uri, '/admin/') === false
         ) {
             $sitename = $this->getSiteName($controller);
+
+//            if( $userSecUtil->isSiteAccessible($sitename) ) {
+//                echo $sitename.": site accessible <br>";
+//            } else {
+//                echo $sitename.": site is not accessible <br>";
+//            }
+
             if( $sitename && $userSecUtil->isSiteAccessible($sitename) === false ) {
                 $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+                //echo $sitename.": ".$siteObject." <br>";
                 if( $siteObject ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                    //exit('not accessible');
 
                     $session = $request->getSession(); //$this->container->get('session');
                     $session->getFlashBag()->add(

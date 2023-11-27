@@ -393,6 +393,12 @@ if( $conn ) {
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
 
+            //Test multi tenancy
+            $multitenancy_prefix = 'c/wcm/pathology/';
+            //$multitenancy_prefix = 'c/lmh/pathology/';
+            //$multitenancy_prefix = '';
+            $container->setParameter('multitenancy_prefix', $multitenancy_prefix);
+
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";
             //var_dump($params);

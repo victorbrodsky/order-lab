@@ -199,6 +199,7 @@ security:
                 class: 'App\UserdirectoryBundle\Entity\User'
                 property: 'username'
 
+
     firewalls:
 
         #this firewall name must be the same as in the bundle's service.yml.
@@ -284,23 +285,23 @@ security:
                 path:     /residency-applications
 
         ldap_deidentifier_firewall:
-            pattern: ^/deidentifier
+            pattern: ^/%multitenancy_prefix%deidentifier
             context: scan_auth
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: /deidentifier/login
-                check_path: /deidentifier/login
+                login_path: /%multitenancy_prefix%deidentifier/login
+                check_path: /%multitenancy_prefix%deidentifier/login
             logout:
-                path:   /deidentifier/logout
-                target: /deidentifier/login
+                path:   /%multitenancy_prefix%deidentifier/logout
+                target: /%multitenancy_prefix%deidentifier/login
             lazy:  true
-            access_denied_url: /deidentifier/access-requests/new/create
+            access_denied_url: /%multitenancy_prefix%deidentifier/access-requests/new/create
             remember_me:
-                secret:      "%secret%"
+                secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
-                path:     /deidentifier
+                path:     /%multitenancy_prefix%deidentifier
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
@@ -567,15 +568,15 @@ security:
 
 
        ############################## Deidentifier SITE SETTINGS ##############################
-       - { path: ^/deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/login, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
+       - { path: ^/%multitenancy_prefix%deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/login, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/%multitenancy_prefix%deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
 #       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
   #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
 
