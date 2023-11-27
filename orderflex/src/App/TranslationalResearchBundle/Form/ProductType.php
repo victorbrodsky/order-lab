@@ -35,6 +35,7 @@ class ProductType extends AbstractType
     public function formConstructor( $params )
     {
         $this->params = $params;
+        $this->categoryId = null;
 
 //        if( isset($params['transresUtil']) ) {
 //            $this->trpBusinessNameAbbreviation = $params['transresUtil']->getBusinessEntityAbbreviation();
@@ -80,6 +81,36 @@ class ProductType extends AbstractType
 
             $this->getForm($form);
 
+        });
+
+        //Dynamically Modify Forms Using Form Events
+        //On submit, add dynamically 'RequestCategoryTypeList' entity when change the project
+        //https://stackoverflow.com/questions/75039561/symfony-form-the-selected-choice-is-invalid
+        //https://symfony.com/doc/current/form/dynamic_form_modification.html
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event){
+            $form = $event->getForm();
+            $categoryId = $event->getData()['category']; //category ID
+
+            //dump($category);
+            //exit('111');
+
+            //$category = $this->params['em']->getRepository(RequestCategoryTypeList::class)->find($categoryId);
+
+            if( $categoryId ){
+                $this->categoryId = $categoryId;
+                //$form->add('category', ChoiceType::class, ['choices' => [$categoryId => $category]]);
+
+                $form->add('category', EntityType::class, array(
+                    'class' => RequestCategoryTypeList::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('category')
+                            ->where("category.id = :categoryId")
+                            ->setParameters(array(
+                                'categoryId' => $this->categoryId
+                            ));
+                    }
+                ));
+            }
         });
 
     }
@@ -170,13 +201,13 @@ class ProductType extends AbstractType
             }
 
             //testing
-            $productId = "";
-            if( $product ) {
-                $category = $product->getCategory();
-                if ($category) {
-                    $productId = $category->getProductId();
-                }
-            }
+//            $productId = "";
+//            if( $product ) {
+//                $category = $product->getCategory();
+//                if ($category) {
+//                    $productId = $category->getProductId();
+//                }
+//            }
 
             $action = $this->params['cycle'];
 
@@ -214,6 +245,9 @@ class ProductType extends AbstractType
             ));
         } else {
 
+            //dump($this->params['projectSpecialties']);
+            //exit('111');
+
             $builder->add('category', EntityType::class, array(
                 'class' => RequestCategoryTypeList::class,
                 'choice_label' => function (RequestCategoryTypeList $entity) {
@@ -229,6 +263,18 @@ class ProductType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
                 'choices' => $this->params['projectSpecialties']
             ));
+
+//            $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event){
+//                $form = $event->getForm();
+//                $category = $event->getData()['category'];
+//
+//                dump($category);
+//                exit('111');
+//
+//                if( $category ){
+//                    $form->add('category', ChoiceType::class, ['choices' => [$category => $category]]);
+//                }
+//            });
         }
 
         $builder->add('requested',TextType::class,array(

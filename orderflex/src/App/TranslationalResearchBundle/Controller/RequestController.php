@@ -26,6 +26,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 
 
+use App\OrderformBundle\Helper\ErrorHelper;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
 
 
@@ -198,7 +199,6 @@ class RequestController extends OrderAbstractController
             //pre-populate "Business Purpose(s)" by Project's Type:
             //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
             if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:BusinessPurposeList'] by [BusinessPurposeList::class]
                 $businessPurpose = $em->getRepository(BusinessPurposeList::class)->findOneByName("USCAP-related");
                 //echo "businessPurpose=".$businessPurpose."<br>";
                 if( $businessPurpose ) {
@@ -224,7 +224,28 @@ class RequestController extends OrderAbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//            exit("submitted and valid");
+//        } else {
+//            exit("NOT submitted and valid");
+//        }
+
+        if(0) {
+            if( $form->isValid() ) {
+                exit("valid");
+            } else {
+                $errorHelper = new ErrorHelper();
+                $errors = $errorHelper->getErrorMessages($form);
+                echo "<br>form errors:<br>";
+                dump($errors);
+
+                echo "<br>errors:<br>" . $form->getErrors() . "<br>";
+                //echo "errors as string=" . $form->getErrorsAsString() . "<br>";
+                exit("NOT valid");
+            }
+        }
+
+        if( $form->isSubmitted() && $form->isValid() ) {
 
             //exit("Request submitted"); //testing
 
@@ -265,11 +286,8 @@ class RequestController extends OrderAbstractController
 
             $transresUtil->assignMinimumRequestRoles($transresRequest);
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($transresRequest,"document");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($transresRequest,"packingSlipPdf");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $this->processTableData($transresRequest,$form,$user); //new
