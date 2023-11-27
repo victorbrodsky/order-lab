@@ -2820,9 +2820,7 @@ class UserSecurityUtil {
         }
 
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
-        //echo $sitename.": isSiteAccessible siteObject=".$siteObject." <br>";
         if( $siteObject && $siteObject->getAccessibility() === true ) {
-            //echo $sitename.": isSiteAccessible accessible <br>";
             return true;
         }
 
