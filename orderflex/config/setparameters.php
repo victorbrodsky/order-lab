@@ -19,7 +19,7 @@ $useDb = true;
 //$useDb = false; //use when new fields are added to the "SiteParameters" entity
 //exit('start user_siteparameters');
 
-echo "*** Run siteparameters.php ***\n"; //testing
+//echo "*** Run siteparameters.php ***\n"; //testing
 
 if( $useDb ) {
 
@@ -69,7 +69,7 @@ $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
     $connection_channel = 'http';
 }
-echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
+//echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
 
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
@@ -254,23 +254,6 @@ if( $conn ) {
                 //print_r($row);
                 //exit('111');
 
-//            if( array_key_exists('aDLDAPServerAddress', $row) )
-//                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
-//            if( array_key_exists('aDLDAPServerPort', $row) )
-//                $aDLDAPServerPort = $row['aDLDAPServerPort'];
-//            if( array_key_exists('aDLDAPServerOu', $row) )
-//                $aDLDAPServerOu = $row['aDLDAPServerOu'];
-//            if( array_key_exists('aDLDAPServerAccountUserName', $row) )
-//                $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
-//            if( array_key_exists('aDLDAPServerAccountPassword', $row) )
-//                $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
-//            if (array_key_exists('ldapExePath', $row)) {
-//                $ldapExePath = $row['ldapExePath'];
-//            }
-//            if (array_key_exists('ldapExeFilename', $row)) {
-//                $ldapExeFilename = $row['ldapExeFilename'];
-//            }
-
                 $smtpServerAddress = getDBParameter($row, $smtpServerAddress, 'wkhtmltopdfpath');
                 $defaultSiteEmail = getDBParameter($row, $defaultSiteEmail, 'siteEmail');
                 $institution_url = getDBParameter($row, $institution_url, 'institutionurl');
@@ -324,16 +307,6 @@ if( $conn ) {
                 $sitesettings_title = getDBParameter($row, $sitesettings_title, 'siteSettingsTitle');
                 $contentabout_page = getDBParameter($row, $contentabout_page, 'contentAboutPage');
 
-                //$underlogin_msg_user = $row['underLoginMsgUser'];
-                //$underlogin_msg_scan = $row['underLoginMsgScan'];
-                //echo "mainhome_title=".$mainhome_title."<br>";
-
-//            $maintenance = $row['maintenance'];
-//            $maintenanceenddate = $row['maintenanceenddate'];
-//            $maintenanceloginmsg = $row['maintenanceloginmsg'];
-//            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
-                //echo "department_url=".$department_url."<br>";
-
                 //Symfony DB
                 $database_host = getDBParameter($row, $database_host, 'dbServerAddress');
                 $database_port = getDBParameter($row, $database_port, 'dbServerPort');
@@ -350,46 +323,7 @@ if( $conn ) {
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
                 //$connection_channel = 'http'; //testing
-                echo "*** siteparameters.php: connection_channel=[".$connection_channel."] ***\n"; //testing
-
-//                /////////////////// mailer_dsn ///////////////////
-//                //Moved to the EmailUtil->getSmtpTransport()
-//                if(0) {
-//                    $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
-//                    $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
-//                    $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
-//                    $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
-//
-//                    if (!$mailer_port) {
-//                        $mailer_port = '25';
-//                    }
-//
-//                    $mailer_user_param = "";
-//                    if ($mailer_user && $mailer_password) {
-//                        $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
-//                    }
-//
-//                    //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-//                    //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
-//                    //$mailparams = 'verify_peer_name=0';
-//                    //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
-//                    //$mailparams = '';
-//
-//                    //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
-//                    //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
-//                    //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
-//                    $mailer_dsn = 'smtp://' . $mailer_host . ':' . $mailer_port;
-//
-//                    if ($mailer_user_param) {
-//                        $mailer_dsn = 'smtp://' . $mailer_user_param . $mailer_host . ':' . $mailer_port;
-//                    }
-//
-//                    //$mailer_dsn = 'sendmail://default';
-//                    //echo "mailer_dsn=".$mailer_dsn."<br>";
-//                    $container->setParameter('mailer_dsn', $mailer_dsn);
-//                }
-//                /////////////////// EOF mailer_dsn ///////////////////
-
+                //echo "*** siteparameters.php: connection_channel=[".$connection_channel."] ***\n"; //testing
             }//if $row
 
             //echo "connection_channel=[".$connection_channel."]\n"; //testing
@@ -458,81 +392,6 @@ if( $conn ) {
                 $contentabout_page = str_replace("%", "%%", $contentabout_page);
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
-
-//            /////////////////// mailer_dsn ///////////////////
-//            $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
-//            $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
-//            $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
-//            $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
-//
-//            if( !$mailer_port ) {
-//                $mailer_port = '25';
-//            }
-//
-//            $mailer_user_param = "";
-//            if( $mailer_user && $mailer_password ) {
-//                $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
-//            }
-//
-//            //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-//            //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
-//            //$mailparams = 'verify_peer_name=0';
-//            //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
-//            //$mailparams = '';
-//
-//            //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
-//            //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
-//            //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
-//            $mailer_dsn = 'smtp://'.$mailer_host.':'.$mailer_port;
-//
-//            //$mailer_dsn = 'sendmail://default';
-//            //echo "mailer_dsn=".$mailer_dsn."<br>";
-//            $container->setParameter('mailer_dsn', $mailer_dsn);
-//            /////////////////// EOF mailer_dsn ///////////////////
-
-            //ldap
-//        if( $aDLDAPServerAddress )
-//            $container->setParameter('ldaphost',$aDLDAPServerAddress);
-//        if( $aDLDAPServerPort )
-//            $container->setParameter('ldapport',$aDLDAPServerPort);
-//        if( $aDLDAPServerAccountUserName )
-//            $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
-//        if( $aDLDAPServerAccountPassword )
-//            $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
-//        if( $aDLDAPServerOu )
-//            $container->setParameter('ldapou',$aDLDAPServerOu);
-//        if( $ldapExePath )
-//            $container->setParameter('ldapexepath',$ldapExePath);
-//        if( $ldapExeFilename )
-//            $container->setParameter('ldapexefilename',$ldapExeFilename);
-
-            //maintenance
-//        $container->setParameter('maintenance',$maintenance);
-//        $container->setParameter('maintenanceenddate',$maintenanceenddate);
-//        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
-//        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
-            //echo "maint=".$this->container->getParameter('maintenance')."<br>";
-            //echo "department_url=".$department_url."<br>";
-            //echo "container department_url=".$this->container->getParameter('department_url')."<br>";
-
-            //TODO: assign a new parameters for DB does not work
-            //Symfony DB
-//        echo "database_host=[".$database_host."]<br>";
-//        echo "database_port=[".$database_port."]<br>";
-//        echo "database_name=[".$database_name."]<br>";
-//        echo "database_user=[".$database_user."]<br>";
-//        echo "database_password=[".$database_password."]<br>";
-
-//        if( $database_host )
-//            $container->setParameter('database_host',trim($database_host));
-//        if( $database_port )
-//            $container->setParameter('database_port',trim($database_port));
-//        if( $database_name )
-//            $container->setParameter('database_name',trim($database_name));
-//        if( $database_user )
-//            $container->setParameter('database_user',trim($database_user));
-//        if( $database_password )
-//            $container->setParameter('database_password',$database_password);
 
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";

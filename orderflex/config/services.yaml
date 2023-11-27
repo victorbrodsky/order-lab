@@ -67,20 +67,19 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     #Remove autowire for Classes using extends vendor Classes: can be done here, for example adding folder 'Query' (App\UserdirectoryBundle\Query) to exclude
     App\:
-        #resource: '../src/App/*/*'
-#        resource: '../src/App/*'
         resource: '../src/App/*/Util'
-        #resource: '../src/App/*/*/Util/'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
-#        resource: '../src/App/*/Util'
-        exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
-#        exclude:
-            #- '../src/App/Migrations'
-            #- '../src/App/*/{Entity,Cert,Tests,Query,Repository}'
+#        exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
+        exclude:
+            - '../src/App/Kernel.php'
+            - '../src/App/Migrations'
+            - '../src/App/*/Tests'
+            - '../src/App/*/DependencyInjection'
+            - '../src/App/*/{Entity,Repository,Tests,Security,Services}'
             #- '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
             #- '../src/App/*/{Security,Services}'
-            #- '../src/Kernel.php'
+
 
     App\UserdirectoryBundle\User\Model\:
         resource: '../src/App/UserdirectoryBundle/User/Model'
