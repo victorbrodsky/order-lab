@@ -96,7 +96,7 @@ class ProductType extends AbstractType
 
             //$category = $this->params['em']->getRepository(RequestCategoryTypeList::class)->find($categoryId);
 
-            if( 0 && $categoryId ){
+            if( $categoryId ){
                 $this->categoryId = $categoryId;
                 //$form->add('category', ChoiceType::class, ['choices' => [$categoryId => $category]]);
 

@@ -230,20 +230,20 @@ class RequestController extends OrderAbstractController
 //            exit("NOT submitted and valid");
 //        }
 
-        if(0) {
-            if( $form->isValid() ) {
-                exit("valid");
-            } else {
-                $errorHelper = new ErrorHelper();
-                $errors = $errorHelper->getErrorMessages($form);
-                echo "<br>form errors:<br>";
-                dump($errors);
-
-                echo "<br>errors:<br>" . $form->getErrors() . "<br>";
-                //echo "errors as string=" . $form->getErrorsAsString() . "<br>";
-                exit("NOT valid");
-            }
-        }
+//        if(0) {
+//            if( $form->isValid() ) {
+//                exit("valid");
+//            } else {
+//                $errorHelper = new ErrorHelper();
+//                $errors = $errorHelper->getErrorMessages($form);
+//                echo "<br>form errors:<br>";
+//                dump($errors);
+//
+//                echo "<br>errors:<br>" . $form->getErrors() . "<br>";
+//                //echo "errors as string=" . $form->getErrorsAsString() . "<br>";
+//                exit("NOT valid");
+//            }
+//        }
 
         if( $form->isSubmitted() ) {
 
