@@ -245,7 +245,20 @@ class RequestController extends OrderAbstractController
             }
         }
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() ) {
+
+            if( $form->isValid() ) {
+                //OK
+            } else {
+                //Error
+                $errorHelper = new ErrorHelper();
+                $errors = $errorHelper->getErrorMessages($form);
+                $errorsStr = "N/A";
+                if( is_array($errors) && count($errors) > 0 ) {
+                    $errorsStr = json_encode($errors);
+                }
+                throw new \Exception("New work request: form is not valid. Error:".$errorsStr);
+            }
 
             //exit("Request submitted"); //testing
 
