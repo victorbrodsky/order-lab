@@ -353,6 +353,7 @@ git push origin crazy-experiment
 --- finished working with branch crazy-experiment ---
 git switch master
 git merge crazy-experiment
+# make sure remote master is sync with local master
 --- delete branch crazy-experiment ---
 Delete local branch:        git branch -d crazy-experiment
 Delete a remote branch:     git push origin --delete crazy-experiment
