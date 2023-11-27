@@ -88,45 +88,13 @@ services:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
         exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
 
-#
-#    authenticator_utility:
-#            class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
-#
-#    oleg.listener.maintenance:
-#        class: App\UserdirectoryBundle\Services\MaintenanceListener
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-#
-#    oleg.listener.exception:
-#        class: App\UserdirectoryBundle\Services\ExceptionListener
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.exception }
-#
-#    twigdate.listener.request:
-#        class: App\UserdirectoryBundle\Services\TwigDateRequestListener
-#        arguments: ["@twig", '%default_time_zone%']
-#        #arguments: ["@twig", "@security.token_storage", '%default_time_zone%']
-#        tags:
-#              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-#
-#    oleg.upload_listener:
-#        class: App\UserdirectoryBundle\Services\UploadListener
-#        tags:
-#            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
-#
-#    user_formnode_utility:
-#        class: App\UserdirectoryBundle\Util\FormNodeUtil
-#
-#    user_service_utility:
-#        class: App\UserdirectoryBundle\Util\UserServiceUtil
-
 
 #If controllers are defined here as services, then util services are not available
 #in the controllers via $this->get('service_name) (i.e. $calllogUtil = $this->get('calllog_util');)
 #They should be injected via indexAction(CallLogUtil $calllogUtil)
     App\UserdirectoryBundle\Controller\:
         resource: '../src/App/UserdirectoryBundle/Controller/'
-#        tags: ['controller.service_arguments']
+#        111tags: ['controller.service_arguments']
     App\CallLogBundle\Controller\:
         resource: '../src/App/CallLogBundle/Controller/'
 #        tags: ['controller.service_arguments']
