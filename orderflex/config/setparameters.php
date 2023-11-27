@@ -395,7 +395,7 @@ if( $conn ) {
 
             //Test multi tenancy
             $multitenancy_prefix = 'c/wcm/pathology/';
-            //$multitenancy_prefix = 'c/lmh/pathology/';
+            $multitenancy_prefix = 'c/lmh/pathology/';
             //$multitenancy_prefix = '';
             $container->setParameter('multitenancy_prefix', $multitenancy_prefix);
 
