@@ -349,10 +349,11 @@ git switch crazy-experiment
 --- make changes in crazy-experiment branch ---
 git add .
 git commit -m "make changes in crazy-experiment"
-git switch mastergit
-git merge crazy-experiment
-git push origin master
+git push origin crazy-experiment
 --- finished working with branch crazy-experiment ---
+git switch master
+git merge crazy-experiment
+--- delete branch crazy-experiment ---
 Delete local branch:        git branch -d crazy-experiment
 Delete a remote branch:     git push origin --delete crazy-experiment
 ###### EOF git branching ######
