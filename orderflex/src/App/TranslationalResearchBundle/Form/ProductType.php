@@ -90,10 +90,7 @@ class ProductType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event){
             $form = $event->getForm();
             $categoryId = $event->getData()['category']; //category ID
-
-            //dump($category);
-            //exit('111');
-
+            
             //$category = $this->params['em']->getRepository(RequestCategoryTypeList::class)->find($categoryId);
 
             if( $categoryId ){

@@ -229,7 +229,6 @@ class RequestController extends OrderAbstractController
 //        } else {
 //            exit("NOT submitted and valid");
 //        }
-
 //        if(0) {
 //            if( $form->isValid() ) {
 //                exit("valid");
