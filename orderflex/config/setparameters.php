@@ -393,14 +393,18 @@ if( $conn ) {
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
 
+            ////////////// Dynamically change url prefix /////////////
             //Test multi tenancy
             //1) IF "Server Role and Network Access:" = "Internet (Hub)”
-            //2) Then: get "Tandem Partner Server URL" (authPartnerServer) or HostedUserGroupList (?)
+            //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
             //3) set $multitenancy_prefix = authPartnerServer
-            $multitenancy_prefix = 'c/wcm/pathology/';
-            $multitenancy_prefix = 'c/lmh/pathology/';
-            //$multitenancy_prefix = '';
-            $container->setParameter('multitenancy_prefix', $multitenancy_prefix);
+
+            //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
+            $tenantprefix = 'c/wcm/pathology/';
+            $tenantprefix = 'c/lmh/pathology/';
+            //$tenantprefix = '';
+            $container->setParameter('tenantprefix', $tenantprefix);
+            ////////////// EOF Dynamically change url prefix /////////////
 
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";

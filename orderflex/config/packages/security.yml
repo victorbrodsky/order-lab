@@ -225,24 +225,24 @@ security:
 #                always_remember_me: true
 
         ldap_employees_firewall:
-              pattern: ^/directory
+              pattern: ^/%tenantprefix%directory
               context: scan_auth
               switch_user: true
               custom_authenticators:
                   authenticator: custom_guard_authenticator
               form_login:
                   # "login" is the name of the route created previously
-                  login_path: /directory/login
-                  check_path: /directory/login
+                  login_path: /%tenantprefix%directory/login
+                  check_path: /%tenantprefix%directory/login
               logout:
-                  path:   /directory/logout
-                  target: /directory/login
+                  path:   /%tenantprefix%directory/logout
+                  target: /%tenantprefix%directory/login
               lazy:  true
-              access_denied_url: /directory/access-requests/new/create
+              access_denied_url: /%tenantprefix%directory/access-requests/new/create
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-                  path:     /directory
+                  path:     /%tenantprefix%directory
 
         ldap_fellapp_firewall:
             pattern: ^/fellowship-applications
@@ -285,23 +285,23 @@ security:
                 path:     /residency-applications
 
         ldap_deidentifier_firewall:
-            pattern: ^/%multitenancy_prefix%deidentifier
+            pattern: ^/%tenantprefix%deidentifier
             context: scan_auth
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: /%multitenancy_prefix%deidentifier/login
-                check_path: /%multitenancy_prefix%deidentifier/login
+                login_path: /%tenantprefix%deidentifier/login
+                check_path: /%tenantprefix%deidentifier/login
             logout:
-                path:   /%multitenancy_prefix%deidentifier/logout
-                target: /%multitenancy_prefix%deidentifier/login
+                path:   /%tenantprefix%deidentifier/logout
+                target: /%tenantprefix%deidentifier/login
             lazy:  true
-            access_denied_url: /%multitenancy_prefix%deidentifier/access-requests/new/create
+            access_denied_url: /%tenantprefix%deidentifier/access-requests/new/create
             remember_me:
                 secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
-                path:     /%multitenancy_prefix%deidentifier
+                path:     /%tenantprefix%deidentifier
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
@@ -438,62 +438,62 @@ security:
 #         requires_channel: '%connection_channel%'
 
 
-#       - { path: ^/directory/login/, role: PUBLIC_ACCESS }
+#       - { path: ^/%tenantprefix%directory/login/, role: PUBLIC_ACCESS }
 #       - { path: ^/, role: PUBLIC_ACCESS }
 
        ############################## local system user init ##############################
-       - { path: ^/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^/first-time-user-generation-init/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/admin/install-certbot/, role: PUBLIC_ACCESS }
 
        - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
        ############################## common idle time out logic ##############################
-       - { path: ^/directory/common/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/common/, role: ROLE_USER }
        ############################## common institution tree ##############################
-       - { path: ^/directory/util/common/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/util/common/, role: ROLE_USER }
        ################################# common download file ####################################
-       - { path: ^/directory/file-download/, role: ROLE_USER }
-       - { path: ^/directory/file-delete/, role: ROLE_USER }
-       - { path: ^/directory/user/only-ajax/, role: ROLE_USER }
-       - { path: ^/directory/formnode-fields/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/file-download/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/file-delete/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/user/only-ajax/, role: ROLE_USER }
+       - { path: ^/%tenantprefix%directory/formnode-fields/, role: ROLE_USER }
        ################################# common fos comment ####################################
        - { path: ^/api/threads/, role: ROLE_USER }
 
        ################################# telephony verification ####################################
-       - { path: ^/directory/verify-mobile-code, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/verify-mobile-code, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
 
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
-       - { path: ^/directory/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/login, role: PUBLIC_ACCESS }
-#       - { path: ^/directory/login, role: PUBLIC_ACCESS, requires_channel: https }
-       - { path: ^/directory/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/directory/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/directory/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/directory/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/directory/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/login, role: PUBLIC_ACCESS }
+#       - { path: ^/%tenantprefix%directory/login, role: PUBLIC_ACCESS, requires_channel: https }
+       - { path: ^/%tenantprefix%directory/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/reset-password, role: PUBLIC_ACCESS }
 
-       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
-       - { path: ^/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
-       - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
-       - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^/%tenantprefix%directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/%tenantprefix%directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/%tenantprefix%directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/%tenantprefix%directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^/%tenantprefix%directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/%tenantprefix%directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
+       - { path: ^/%tenantprefix%directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^/%tenantprefix%directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
       #tree hierarchy: need for all users for public user access request page
-       - { path: ^/directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
 
        #All other urls: make all /employees accessible only limited special roles
-  #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
-       - { path: ^/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
+  #     - { path: ^/%tenantprefix%directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+       - { path: ^/%tenantprefix%directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
        ############################## SCAN SITE SETTINGS ##############################
        - { path: ^/scan/access-requests/new/, role: PUBLIC_ACCESS }
@@ -568,15 +568,15 @@ security:
 
 
        ############################## Deidentifier SITE SETTINGS ##############################
-       - { path: ^/%multitenancy_prefix%deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/login, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^/%multitenancy_prefix%deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
+       - { path: ^/%tenantprefix%deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/login, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/%tenantprefix%deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
 #       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
   #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
 

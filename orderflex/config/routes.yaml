@@ -31,7 +31,7 @@ app_dashboard:
 app_deidentifier:
     resource: "../src/App/DeidentifierBundle/Controller/"
     type:     attribute
-    prefix:   /%multitenancy_prefix%deidentifier
+    prefix:   /%tenantprefix%deidentifier
     schemes:  ['%connection_channel%']
 
 app_fellapp:
@@ -94,11 +94,11 @@ app_utilbundles_foscomment:
 app_userdirectory:
     resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     attribute
-    prefix:   /directory
+    prefix:   /%tenantprefix%directory
     schemes:  ['%connection_channel%']
 
 app_testpage:
-    path: /directory/testpage
+    path: /%tenantprefix%directory/testpage
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
@@ -112,7 +112,7 @@ fellapp_instructions:
 app_fineuploader:
     resource: "../src/App/FineUploader/Controller/"
     type:     attribute
-    prefix:   /directory
+    prefix:   /%tenantprefix%directory
     schemes:  ['%connection_channel%']
 
 
@@ -120,20 +120,20 @@ app_fineuploader:
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
 idle-log-out:
-    path:   /directory/idle-log-out
+    path:   /%tenantprefix%directory/idle-log-out
 
 #testlogin:
-#    path:   /directory/testlogin
+#    path:   /%tenantprefix%directory/testlogin
 
 logout:
-    path:   /directory/logout
+    path:   /%tenantprefix%directory/logout
 login:
-    path:   /directory/login
+    path:   /%tenantprefix%directory/login
 
 platform_login:
-    path:   /directory/login
+    path:   /%tenantprefix%directory/login
 platform_logout:
-    path:   /directory/logout
+    path:   /%tenantprefix%directory/logout
 
 scan_login_check:
     path:   /scan/login_check
@@ -141,14 +141,14 @@ scan_logout:
     path:   /scan/logout
 
 login_check:
-    path: /directory/login_check
+    path: /%tenantprefix%directory/login_check
 #logout:
-#    path: /directory/logout
+#    path: /%tenantprefix%directory/logout
 
 employees_login_check:
-    path:   /directory/login_check
+    path:   /%tenantprefix%directory/login_check
 employees_logout:
-    path:   /directory/logout
+    path:   /%tenantprefix%directory/logout
 
 #fellapp_login:
 #    path:   /fellowship-applications/login
@@ -168,15 +168,15 @@ resapp_logout:
     path:   /residency-applications/logout
 
 deidentifier_login_check:
-    path:   /%multitenancy_prefix%deidentifier/login_check
+    path:   /%tenantprefix%deidentifier/login_check
 deidentifier_logout:
-    path:   /%multitenancy_prefix%deidentifier/logout
+    path:   /%tenantprefix%deidentifier/logout
 
 vacreq_login_check:
     path: /time-away-request/login_check
 vacreq_logout:
     path: /time-away-request/logout
-    #path:   /directory/logout
+    #path:   /%tenantprefix%directory/logout
 
 calllog_login_check:
     path:   /call-log-book/login_check
