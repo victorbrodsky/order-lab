@@ -38,7 +38,11 @@
     {#{% set pendingadminreview = "" %}#}
     {% set pendingadminreview = user_service_utility.getPendingAdminReview() %}
 
-    {% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
+    {% if app.user %}
+        {% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
+    {% else %}
+        {% set hasRoleSimpleView = false %}
+    {% endif %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -284,7 +288,10 @@
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(employees_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                                {% if app.user %}
+                                    <li><a href="{{ path(employees_sitename~'_showuser', {id:app.user.getId()}) }}"
+                                        >My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                                {% endif %}
                             {% endif %}
 
                             {% if pendinguser is not defined %}

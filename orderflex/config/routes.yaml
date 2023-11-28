@@ -25,7 +25,7 @@ main_under_construction:
 app_dashboard:
     resource: "../src/App/DashboardBundle/Controller/"
     type:     attribute
-    prefix:   /dashboards
+    prefix:   /%tenantprefix%dashboards
     schemes:  ['%connection_channel%']
 
 app_deidentifier:
@@ -37,26 +37,26 @@ app_deidentifier:
 app_fellapp:
     resource: "../src/App/FellAppBundle/Controller/"
     type:     attribute
-    prefix:   /fellowship-applications
+    prefix:   /%tenantprefix%fellowship-applications
     schemes:  ['%connection_channel%']
 
 app_resapp:
     resource: "../src/App/ResAppBundle/Controller/"
     type:     attribute
-    prefix:   /residency-applications
+    prefix:   /%tenantprefix%residency-applications
     schemes:  ['%connection_channel%']
 
 app_vacreq:
     resource: "../src/App/VacReqBundle/Controller/"
     type:     attribute
-    prefix: /time-away-request
+    prefix:   /%tenantprefix%time-away-request
     schemes:  ['%connection_channel%']
 legacy_vacreq:
-    path: /vacation-request
+    path: /%tenantprefix%vacation-request
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
     defaults:
         # this value can be an absolute path or an absolute URL
-        path: /time-away-request
+        path: /%tenantprefix%time-away-request
         #path: 'https://www.yahoo.com'
         permanent: true
         keepQueryParams: true
@@ -64,25 +64,25 @@ legacy_vacreq:
 app_calllog:
     resource: "../src/App/CallLogBundle/Controller/"
     type:     attribute
-    prefix:   /call-log-book
+    prefix:   /%tenantprefix%call-log-book
     schemes:  ['%connection_channel%']
 
 app_crn:
     resource: "../src/App/CrnBundle/Controller/"
     type:     attribute
-    prefix:   /critical-result-notifications
+    prefix:   /%tenantprefix%critical-result-notifications
     schemes:  ['%connection_channel%']
 
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"
     type:     attribute
-    prefix:   /scan
+    prefix:   /%tenantprefix%scan
     schemes:  ['%connection_channel%']
 
 app_translationalresearch:
     resource: "../src/App/TranslationalResearchBundle/Controller/"
     type:     attribute
-    prefix:   /translational-research
+    prefix:   /%tenantprefix%translational-research
     schemes:  ['%connection_channel%']
 
 app_utilbundles_foscomment:
@@ -136,9 +136,9 @@ platform_logout:
     path:   /%tenantprefix%directory/logout
 
 scan_login_check:
-    path:   /scan/login_check
+    path:   /%tenantprefix%scan/login_check
 scan_logout:
-    path:   /scan/logout
+    path:   /%tenantprefix%scan/logout
 
 login_check:
     path: /%tenantprefix%directory/login_check
@@ -153,19 +153,19 @@ employees_logout:
 #fellapp_login:
 #    path:   /fellowship-applications/login
 dashboard_login_check:
-    path:   /dashboards/login_check
+    path:   /%tenantprefix%dashboards/login_check
 dashboard_logout:
-    path:   /dashboards/logout
+    path:   /%tenantprefix%dashboards/logout
 
 fellapp_login_check:
-    path:   /fellowship-applications/login_check
+    path:   /%tenantprefix%fellowship-applications/login_check
 fellapp_logout:
-    path:   /fellowship-applications/logout
+    path:   /%tenantprefix%fellowship-applications/logout
 
 resapp_login_check:
-    path:   /residency-applications/login_check
+    path:   /%tenantprefix%residency-applications/login_check
 resapp_logout:
-    path:   /residency-applications/logout
+    path:   /%tenantprefix%residency-applications/logout
 
 deidentifier_login_check:
     path:   /%tenantprefix%deidentifier/login_check
@@ -173,25 +173,25 @@ deidentifier_logout:
     path:   /%tenantprefix%deidentifier/logout
 
 vacreq_login_check:
-    path: /time-away-request/login_check
+    path:   /%tenantprefix%time-away-request/login_check
 vacreq_logout:
-    path: /time-away-request/logout
+    path:   /%tenantprefix%time-away-request/logout
     #path:   /%tenantprefix%directory/logout
 
 calllog_login_check:
-    path:   /call-log-book/login_check
+    path:   /%tenantprefix%call-log-book/login_check
 calllog_logout:
-    path:   /call-log-book/logout
+    path:   /%tenantprefix%call-log-book/logout
 
 crn_login_check:
-    path:   /critical-result-notifications/login_check
+    path:   /%tenantprefix%critical-result-notifications/login_check
 crn_logout:
-    path:   /critical-result-notifications/logout
+    path:   /%tenantprefix%critical-result-notifications/logout
 
 translationalresearch_login_check:
-    path:   /translational-research/login_check
+    path:   /%tenantprefix%translational-research/login_check
 translationalresearch_logout:
-    path:   /translational-research/logout
+    path:   /%tenantprefix%translational-research/logout
 
 
 #OneupUploaderBundle  file uploader
