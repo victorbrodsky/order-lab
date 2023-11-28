@@ -394,6 +394,9 @@ if( $conn ) {
             }
 
             //Test multi tenancy
+            //1) IF "Server Role and Network Access:" = "Internet (Hub)”
+            //2) Then: get "Tandem Partner Server URL" (authPartnerServer) or HostedUserGroupList (?)
+            //3) set $multitenancy_prefix = authPartnerServer
             $multitenancy_prefix = 'c/wcm/pathology/';
             $multitenancy_prefix = 'c/lmh/pathology/';
             //$multitenancy_prefix = '';
