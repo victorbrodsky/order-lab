@@ -66,7 +66,7 @@ class WebTestBase extends WebTestCase
     //static protected $kernel = null;
     protected $user = null;
     protected $environment = null;
-    protected $tenantprefix = 'c/lmh/pathology/';
+    protected $tenantprefix = '';//'c/lmh/pathology/';
 
     public function getParam() {
 //        global $argv, $argc;
