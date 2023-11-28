@@ -20,7 +20,7 @@ class TrpTest extends WebTestBase
         $phpVersion = phpversion();
         echo "[Trp,PHP=".$phpVersion."]";
 
-        $crawler = $this->client->request('GET', '/translational-research/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/login');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Please use your CWID to log in")')->count()
@@ -30,7 +30,7 @@ class TrpTest extends WebTestBase
     public function testSendInvoiceEmail() {
         $this->logIn();
 
-        $crawler = $this->client->request('GET', '/translational-research/test-invoice-email');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/test-invoice-email');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -66,7 +66,7 @@ class TrpTest extends WebTestBase
 
         //http://127.0.0.1/order/index_dev.php/translational-research/
         //invoice/list/?filter%5Bversion%5D=Latest&title=Latest%20Versions%20of%20All%20Invoices
-        $crawler = $this->client->request('GET', '/translational-research/invoice/list/?filter[version]=Latest&title=Latest Versions of All Invoices');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/invoice/list/?filter[version]=Latest&title=Latest Versions of All Invoices');
 
         //link Review Project if exists
         //$linksCount = $crawler->filter('html:contains("Send the most recent invoice PDF by email to")')->count();
@@ -92,7 +92,7 @@ class TrpTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/translational-research/projects/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/projects/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -166,7 +166,7 @@ class TrpTest extends WebTestBase
 
         //echo "projectId=[$projectId]";
 
-        $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/show/'.$projectId);
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
@@ -189,7 +189,7 @@ class TrpTest extends WebTestBase
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/translational-research/project/edit/'.$projectId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/edit/'.$projectId);
 
         $this->assertGreaterThan(
             0,
@@ -228,7 +228,7 @@ class TrpTest extends WebTestBase
         }
 
         //Test Review
-        $crawler = $this->client->request('GET', '/translational-research/project/review/'.$projectId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/review/'.$projectId);
 
         $this->assertGreaterThan(
             0,
@@ -265,7 +265,7 @@ class TrpTest extends WebTestBase
         }
 
         //Test Show
-        $crawler = $this->client->request('GET', '/translational-research/work-request/show/'.$requestId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-request/show/'.$requestId);
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
@@ -288,7 +288,7 @@ class TrpTest extends WebTestBase
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/translational-research/work-request/edit/'.$requestId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-request/edit/'.$requestId);
 
         $this->assertGreaterThan(
             0,
@@ -331,7 +331,7 @@ class TrpTest extends WebTestBase
         }
 
         //Test Review
-        $crawler = $this->client->request('GET', '/translational-research/work-request/progress/review/'.$requestId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-request/progress/review/'.$requestId);
 
         $this->assertGreaterThan(
             0,
@@ -374,7 +374,7 @@ class TrpTest extends WebTestBase
         }
 
         //Test Show
-        $crawler = $this->client->request('GET', '/translational-research/invoice/show/'.$invoiceId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/invoice/show/'.$invoiceId);
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
@@ -405,7 +405,7 @@ class TrpTest extends WebTestBase
 
 
         //Test Edit
-        //$crawler = $this->client->request('GET', '/translational-research/invoice/edit/'.$invoiceId);
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/invoice/edit/'.$invoiceId);
 
         $this->assertGreaterThan(
             0,
@@ -442,7 +442,7 @@ class TrpTest extends WebTestBase
             $invoice = end($invoices);
             $invoiceId = $invoice->getId();
 
-            $crawler = $this->client->request('GET', '/translational-research/invoice/download-invoice-pdf/'.$invoiceId);
+            $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/invoice/download-invoice-pdf/'.$invoiceId);
 
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
@@ -470,7 +470,7 @@ class TrpTest extends WebTestBase
 
     public function testDefaultReviewersAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/default-reviewers/ap-cp');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/default-reviewers/ap-cp');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Default Reviewers for AP/CP")')->count()
@@ -483,7 +483,7 @@ class TrpTest extends WebTestBase
 
     public function testFeeScheduleAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/request/fee-schedule');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/request/fee-schedule');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -508,7 +508,7 @@ class TrpTest extends WebTestBase
         //https://github.com/KnpLabs/knp-components/issues/90
         //request.CRITICAL: Uncaught PHP Exception UnexpectedValueException: "There is no component aliased by [list] in the given Query" at OrderByWalker.php line 54
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/translational-research/list/antibodies/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/list/antibodies/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -530,7 +530,7 @@ class TrpTest extends WebTestBase
 //    //Translational Research Dashboard
 //    public function testDashboardAction() {
 //        $this->logIn();
-//        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
@@ -551,7 +551,7 @@ class TrpTest extends WebTestBase
 //    //http://127.0.0.1/order/translational-research/dashboard/graphs/?filter%5BstartDate%5D=12/12/2018&filter%5BendDate%5D=12/12/2019&filter%5BprojectSpecialty%5D%5B%5D=0&filter%5BchartType%5D%5B0%5D=compare-projectspecialty-pis&filter%5BchartType%5D%5B1%5D=compare-projectspecialty-projects&filter%5BchartType%5D%5B2%5D=compare-projectspecialty-projects-stack&filter%5BchartType%5D%5B3%5D=compare-projectspecialty-requests&filter%5BchartType%5D%5B4%5D=compare-projectspecialty-invoices
 //    public function testDashboardComparasionAction() {
 //        $this->logIn();
-//        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0&filter[chartType][0]=compare-projectspecialty-pis&filter[chartType][1]=compare-projectspecialty-projects&filter[chartType][2]=compare-projectspecialty-projects-stack&filter[chartType][3]=compare-projectspecialty-requests&filter[chartType][4]=compare-projectspecialty-invoices');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0&filter[chartType][0]=compare-projectspecialty-pis&filter[chartType][1]=compare-projectspecialty-projects&filter[chartType][2]=compare-projectspecialty-projects-stack&filter[chartType][3]=compare-projectspecialty-requests&filter[chartType][4]=compare-projectspecialty-invoices');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
@@ -571,7 +571,7 @@ class TrpTest extends WebTestBase
 
     public function testUnpaidInvoiceReminderAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/unpaid-invoice-reminder/show-summary');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/unpaid-invoice-reminder/show-summary');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -586,7 +586,7 @@ class TrpTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/translational-research/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -609,7 +609,7 @@ class TrpTest extends WebTestBase
 
             //TODO: check if request has a packing slip PDF
 
-            $crawler = $this->client->request('GET', '/translational-research/work-request/download-packing-slip-pdf/'.$requestId);
+            $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-request/download-packing-slip-pdf/'.$requestId);
 
             $this->assertGreaterThan(
                 0,
@@ -635,7 +635,7 @@ class TrpTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -648,14 +648,14 @@ class TrpTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
+        //$linkName = '/'.$this->tenantprefix.'translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
     }
 
     public function testNewProjectAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/project/new/ap-cp');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/new/ap-cp');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
         $this->assertGreaterThan(
@@ -669,7 +669,7 @@ class TrpTest extends WebTestBase
     }
 //    public function testNewCovid19ProjectAction() {
 //        $this->logIn();
-//        $crawler = $this->client->request('GET', '/translational-research/project/new/covid19');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/new/covid19');
 //        //$content = $this->client->getResponse()->getContent();
 //        //exit("content=$content");
 //        $this->assertGreaterThan(
@@ -683,7 +683,7 @@ class TrpTest extends WebTestBase
 //    }
     public function testNewMisiProjectAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/project/new/misi');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/new/misi');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Multiparametric In Situ Imaging Project Request")')->count()
@@ -698,7 +698,7 @@ class TrpTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/translational-research/work-requests/list/?filter[progressState][0]=All-except-Drafts-and-Canceled&title=All Work Requests');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-requests/list/?filter[progressState][0]=All-except-Drafts-and-Canceled&title=All Work Requests');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
@@ -722,7 +722,7 @@ class TrpTest extends WebTestBase
             return null;
         }
 
-        $crawler = $this->client->request('GET', '/translational-research/work-request/new/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/work-request/new/');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
         $this->assertGreaterThan(
@@ -746,7 +746,7 @@ class TrpTest extends WebTestBase
             $requestId = $request->getId();
             //echo "requestID=$requestId \n\r";
 
-            $crawler = $this->client->request('GET', '/translational-research/invoice/new/'.$requestId);
+            $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/invoice/new/'.$requestId);
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
 
@@ -766,7 +766,7 @@ class TrpTest extends WebTestBase
 
     public function testIndexQueuesAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/orderables/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/orderables/');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
         $this->assertGreaterThan(
@@ -796,7 +796,7 @@ class TrpTest extends WebTestBase
             $projectId = $project->getId();
             //echo "projectId=$projectId \n\r";
 
-            $crawler = $this->client->request('GET', '/translational-research/project/review/'.$projectId);
+            $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/project/review/'.$projectId);
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
 
@@ -824,7 +824,7 @@ class TrpTest extends WebTestBase
 //    public function testSendInvoiceEmail() {
 //        $this->logIn();
 //
-//        $crawler = $this->client->request('GET', '/translational-research/test-invoice-email');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/test-invoice-email');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Testing email sent")')->count()
@@ -841,8 +841,8 @@ class TrpTest extends WebTestBase
 //        //$client = static::createClient();
 //
 //        //http://localhost/order/directory/login
-//        //$crawler = $this->client->request('GET', '/translational-research/login');
-//        $crawler = $this->client->request('GET', '/order/directory/under-construction');
+//        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/login');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'order/directory/under-construction');
 //
 //        $uri = $this->client->getRequest()->getUri();
 //        echo "under-construction uri=$uri \r\n";
@@ -874,7 +874,7 @@ class TrpTest extends WebTestBase
 //        $_SERVER['HTTP_USER_AGENT'] = 'phpunit test';
 //
 //        // Visit user login page and login
-//        $crawler = $client->request('GET', '/order/directory/login');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.'order/directory/login');
 //
 //        echo "\n\n\nclient response:\n\n\n";
 //        //echo $crawler->html();
@@ -918,7 +918,7 @@ class TrpTest extends WebTestBase
 //            $crawler->filter('html:contains("Welcome to the Scan Order System")')->count()
 //        );
 //
-//        $crawler = $client->request('GET', '/order/directory/');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.'order/directory/');
 //
 //        $this->assertTrue($client->getResponse()->isSuccessful());
 //
@@ -936,7 +936,7 @@ class TrpTest extends WebTestBase
 //
 //
 //        //test form submit
-//        $crawler = $client->request('GET', '/order/directory/new');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.'order/directory/new');
 //
 ////        echo "client response:<br>";
 ////        var_dump($client->getResponse()->getContent());

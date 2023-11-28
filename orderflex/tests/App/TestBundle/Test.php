@@ -20,7 +20,7 @@ class Test extends WebTestBase
 
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
-        //$crawler = $this->client->request('GET', '/directory/login');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
