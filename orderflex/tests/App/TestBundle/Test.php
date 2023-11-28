@@ -19,7 +19,8 @@ class Test extends WebTestBase
         echo "[PHP=".$phpVersion."]";
 
         //$this->getTestClient();
-        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
+        $crawler = $this->client->request('GET', '/directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
