@@ -555,16 +555,24 @@ function getCommonBaseUrl(link,sitename) {
 
     var scheme = "http:";
     var url = window.location.href;
+    console.log('url='+url);
+
     var urlArr = url.split("/");
     if( urlArr.length > 0 ) {
         scheme = urlArr[0];
     }
     //console.log('scheme='+scheme);
 
+    //get tenantprefix from container
+    var tenantprefix = '';
+    //Get the tenantprefix from the URL /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
+    //Or get it using ajax call to the server to get tenantprefix from the container
+    //var tenantprefix = 'c/lmh/pathology/';
+
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        urlBase = scheme+"//" + urlBase + "/" + prefix + "/" + link;
+        urlBase = scheme+"//" + urlBase + "/" + tenantprefix + prefix + "/" + link;
     }
     //console.log("urlBase="+urlBase);
     return urlBase;
@@ -620,7 +628,7 @@ function getSitename() {
     return sitename;
 }
 
-function siteNameMapper(full) {
+function siteNameMapper() {
     var url = window.location.pathname;
 
     var sitename = 'directory';
