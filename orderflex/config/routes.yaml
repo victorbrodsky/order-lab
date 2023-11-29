@@ -104,7 +104,7 @@ app_testpage:
         template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
 
 fellapp_instructions:
-    path: /fellowship-applications/instructions-to-change-import-interval
+    path: /%tenantprefix%fellowship-applications/instructions-to-change-import-interval
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'

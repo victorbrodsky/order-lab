@@ -15,3 +15,5 @@ Disadvantage: lots of changes to update CRUD logic, difficult separation of the 
 Multi-Tenant Application: https://medium.com/@sudheer.sandu/multi-tenant-application-68c11cc68929
 Separate databases: This is the best option for clients who want safety above everything else and are willing to pay (for example, banks).
 
+Dynamic Routing Prefix:
+https://stackoverflow.com/questions/11397806/symfony2-dynamic-routing-prefix
