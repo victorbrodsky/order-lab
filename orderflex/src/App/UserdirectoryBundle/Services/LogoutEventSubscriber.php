@@ -54,7 +54,12 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
-        $user = $event->getToken()->getUser();
+        $user = NULL;
+        if( $event->getToken() ) {
+            $user = $event->getToken()->getUser();
+        }
+
+        //$user = $event->getToken()->getUser();
         //exit("logout user=".$user);
         //$this->updateUserLastLogin($user);
         //$vacreqUtil = $this->container->get('vacreq_util');

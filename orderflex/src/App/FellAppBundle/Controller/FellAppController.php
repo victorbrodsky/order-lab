@@ -343,9 +343,16 @@ class FellAppController extends OrderAbstractController {
         $dql->leftJoin("fellapp.trainings", "trainings");
         $dql->leftJoin("fellapp.rank", "rank");
 
+        $parameters = array();
+
         if( $search ) {
             //echo "<br>search=".$search."<br>";
-            $dql->andWhere("LOWER(applicantinfos.firstName) LIKE LOWER('%".$search."%') OR LOWER(applicantinfos.lastName) LIKE LOWER('%".$search."%')");
+            //$dql->andWhere("LOWER(applicantinfos.firstName) LIKE LOWER('%".$search."%') OR LOWER(applicantinfos.lastName) LIKE LOWER('%".$search."%')");
+            $dql->andWhere(
+                "LOWER(applicantinfos.firstName) LIKE LOWER(:search)".
+                " OR LOWER(applicantinfos.lastName) LIKE LOWER(:search)"
+            );
+            $parameters["search"] = '%'.$search.'%';;
             $searchFlag = true;
         }
 
@@ -512,6 +519,10 @@ class FellAppController extends OrderAbstractController {
         //$limit = 10; //testing
         $query = $dql->getQuery();
         //echo "query=".$query->getSql()."<br>";
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
 
         $paginator  = $this->container->get('knp_paginator');
         $fellApps = $paginator->paginate(
