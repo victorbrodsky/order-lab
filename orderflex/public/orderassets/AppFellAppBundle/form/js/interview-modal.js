@@ -33,11 +33,9 @@ function interviewModalCreation( btnEl, fellappId ) {
 
     //console.log('interviewModalAction fellappId='+fellappId);
 
-    var url = getCommonBaseUrl("interview-modal/"+fellappId);
-    console.log('getCommonBaseUrl url='+url);
-    var url = Routing.generate('fellapp_interview_modal', {
-        'id': fellappId
-    });
+    //var url = getCommonBaseUrl("interview-modal/"+fellappId);
+    //console.log('getCommonBaseUrl url='+url);
+    var url = Routing.generate('fellapp_interview_modal', {'id': fellappId});
     console.log('url='+url);
 
 //    $( "#interview-info-modal" ).load( url, function() {

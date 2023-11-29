@@ -63,7 +63,7 @@ class UtilController extends OrderAbstractController {
     /**
      * util/common/generic
      */
-    #[Route(path: '/common/generic/{name}', name: 'employees_get_generic_select2', methods: ['GET'])]
+    #[Route(path: '/common/generic/{name}', name: 'employees_get_generic_select2', methods: ['GET'], options: ['expose' => true])]
     public function getGenericAction( Request $request, $name ) {
 
         return $this->getGenericList($request,$name);

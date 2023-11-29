@@ -30,7 +30,8 @@ function initRankModal() {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function rankModalCreation( btnEl, resappId ) {
 
-    var url = getCommonBaseUrl("rank/edit/"+resappId);
+    //var url = getCommonBaseUrl("rank/edit/"+resappId);
+    var url = Routing.generate('resapp_rank_edit', {'resappid': resappId});
     //console.log('url='+url);
 
     var waitModal = true;
@@ -96,7 +97,8 @@ function submitRank(btn,resappId) {
 
     var rankValue = $('#oleg_resappbundle_rank_rank').val();
 
-    var url = getCommonBaseUrl("rank/update-ajax/"+resappId);
+    //var url = getCommonBaseUrl("rank/update-ajax/"+resappId);
+    var url = Routing.generate('resapp_rank_update', {'resappid': resappId});
 
     var rank_modal = $('#resapp_rank_'+resappId);
 

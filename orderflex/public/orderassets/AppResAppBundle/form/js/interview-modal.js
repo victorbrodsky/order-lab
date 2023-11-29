@@ -33,7 +33,8 @@ function interviewModalCreation( btnEl, resappId ) {
 
     //console.log('interviewModalAction resappId='+resappId);
 
-    var url = getCommonBaseUrl("interview-modal/"+resappId);
+    //var url = getCommonBaseUrl("interview-modal/"+resappId);
+    var url = Routing.generate('resapp_interview_modal', {'id': resappId});
     //console.log('url='+url);
 
 //    $( "#interview-info-modal" ).load( url, function() {

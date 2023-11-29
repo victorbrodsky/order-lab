@@ -18,7 +18,7 @@
  * Created by oli2002 on 9/3/14.
  */
 
-
+var _tenantprefix = $("#tenantprefix").val();
 var _cycleShow = false;
 var _sitename = "";
 var asyncflag = true;
@@ -264,8 +264,9 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         sitenameStr = "&sitename="+sitenameStr;
     }
 
+    //path: '/common/generic/{name}'
     var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-    //console.log('get Combobox Generic: url='+url);
+    console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -564,15 +565,17 @@ function getCommonBaseUrl(link,sitename) {
     //console.log('scheme='+scheme);
 
     //get tenantprefix from container
-    var tenantprefix = '';
-    //Get the tenantprefix from the URL /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
+    console.log("_tenantprefix="+_tenantprefix);
+    //var tenantprefix = '';
+    //Get the tenantprefix from the URL
+    // /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
     //Or get it using ajax call to the server to get tenantprefix from the container
     //var tenantprefix = 'c/lmh/pathology/';
 
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        urlBase = scheme+"//" + urlBase + "/" + tenantprefix + prefix + "/" + link;
+        urlBase = scheme+"//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
     }
     //console.log("urlBase="+urlBase);
     return urlBase;

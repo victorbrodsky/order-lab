@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResAppRankController extends OrderAbstractController {
 
-    #[Route(path: '/rank/edit/{resappid}', name: 'resapp_rank_edit', methods: ['GET'])]
+    #[Route(path: '/rank/edit/{resappid}', name: 'resapp_rank_edit', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppResAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $resappid) {
 
@@ -83,7 +83,7 @@ class ResAppRankController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/rank/update-ajax/{resappid}', name: 'resapp_rank_update', methods: ['PUT'])]
+    #[Route(path: '/rank/update-ajax/{resappid}', name: 'resapp_rank_update', methods: ['PUT'], options: ['expose' => true])]
     public function rankUpdateAjaxAction(Request $request, $resappid) {
 
         if( false == $this->isGranted("read","ResidencyApplication") ){
