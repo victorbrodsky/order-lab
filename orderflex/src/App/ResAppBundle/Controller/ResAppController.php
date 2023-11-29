@@ -364,9 +364,17 @@ class ResAppController extends OrderAbstractController {
         $dql->leftJoin("resapp.rank", "rank");
         $dql->leftJoin("resapp.postSoph", "postSoph");
 
+        $parameters = array();
+
         if( $search ) {
             //echo "<br>search=".$search."<br>";
-            $dql->andWhere("LOWER(applicantinfos.firstName) LIKE LOWER('%".$search."%') OR LOWER(applicantinfos.lastName) LIKE LOWER('%".$search."%')");
+            //$dql->andWhere("LOWER(applicantinfos.firstName) LIKE LOWER('%".$search."%') OR LOWER(applicantinfos.lastName) LIKE LOWER('%".$search."%')");
+            $dql->andWhere(
+                "LOWER(applicantinfos.firstName) LIKE LOWER(:search)".
+                " OR LOWER(applicantinfos.lastName) LIKE LOWER(:search)"
+            );
+            $parameters["search"] = '%'.$search.'%';;
+            $searchFlag = true;
             $searchFlag = true;
         }
 
@@ -567,6 +575,11 @@ class ResAppController extends OrderAbstractController {
         $limit = 200;
         //$limit = 10; //testing
         $query = $dql->getQuery();
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
         $paginator  = $this->container->get('knp_paginator');
         $resApps = $paginator->paginate(
             $query,
