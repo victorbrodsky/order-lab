@@ -30,9 +30,11 @@ function initRankModal() {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function rankModalCreation( btnEl, fellappId ) {
 
+    $('#modal_error_'+fellappId).html("");
+
     //var url = getCommonBaseUrl("rank/edit/"+fellappId);
     var url = Routing.generate('fellapp_rank_edit', {'fellappid': fellappId});
-    console.log('url='+url);
+    //console.log('url='+url);
 
     var waitModal = true;
     if( waitModal ) {
@@ -93,7 +95,7 @@ function rankModalCreation( btnEl, fellappId ) {
         }
     })
     .then( function() {
-        console.log("then: success="+success);
+        //console.log("then: success="+success);
         if(success)
         {
             $('[data-toggle="tooltip"]').tooltip({html: true});
@@ -110,7 +112,7 @@ function submitRank(btn,fellappId) {
 
     //var url = getCommonBaseUrl("rank/update-ajax/"+fellappId);
     var url = Routing.generate('fellapp_rank_update', {'fellappid': fellappId});
-    console.log('fellapp_rank_update url='+url);
+    //console.log('fellapp_rank_update url='+url);
 
     var rank_modal = $('#fellapp_rank_'+fellappId);
 
@@ -120,7 +122,7 @@ function submitRank(btn,fellappId) {
         data: {rankValue: rankValue},
         timeout: _ajaxTimeout,
         success: function(data){
-            console.log("OK submit a new rank");
+            //console.log("OK submit a new rank");
             if( data == 'ok' ) {
                 rank_modal.modal('hide');
                 rank_modal.remove();
@@ -129,8 +131,9 @@ function submitRank(btn,fellappId) {
                     window.parent.location.reload();
                 //}
             } else {
-                $('#modal_error_'+fellappId).html(data);
-                console.log("error: data="+data);
+                var errormsg = '<div class="alert alert-danger">'+data+'</div>';
+                $('#modal_error_'+fellappId).html(errormsg);
+                //console.log("error: data="+data);
             }
         },
         error: function(jqXHR, textStatus, errorThrown){

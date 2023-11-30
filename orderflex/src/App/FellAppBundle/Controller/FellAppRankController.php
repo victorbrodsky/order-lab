@@ -37,8 +37,6 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -50,21 +48,16 @@ class FellAppRankController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $fellappid) {
 
-        //This generic permission will not allow to access because
-        // this url is accessible only by interviewer for this specific application.
-        //The permission check will be permormed later by $this->isGranted("read",$fellApp)
-        if(
-            //false == $this->isGranted("read","FellowshipApplication")
-            0
-        ){
+        //Change the global rank is permitted only by a program Director
+        if( false == $this->isGranted("read","FellowshipApplication") ){
             //$res = 'Access is denied to rank the application with ID '.$fellappid;
             //exit($res);
             //throw $this->createAccessDeniedException('Access is denied to rank the application with ID '.$fellappid);
             //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
-            //throw $this->createNotFoundException('Access is denied to rank the application with ID '.$fellappid);
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             $res = array(
-                'error' => 'Access is denied to rank the application with ID '.$fellappid
+                //'error' => 'Access is denied to set a global score for the application with ID '.$fellappid
+                'error' => 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$fellappid
             );
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -117,13 +110,12 @@ class FellAppRankController extends OrderAbstractController {
     #[Route(path: '/rank/update-ajax/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'], options: ['expose' => true])]
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
-        if(
-            false == $this->isGranted("read","FellowshipApplication")
-            //0
-        ){
+        //Change the global rank is permitted only by a program Director
+        if( false == $this->isGranted("read","FellowshipApplication") ){
             //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            $res = 'Access is denied to rank the application with ID '.$fellappid;
+            //$res = 'Access is denied to set a global score for the application with ID '.$fellappid;
+            $res = 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$fellappid;
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode($res));
@@ -165,6 +157,10 @@ class FellAppRankController extends OrderAbstractController {
             $rank->setUpdateuserroles($user->getRoles());
         }
 
+        if( !$rankValue ) {
+            $rankValue = null;
+        }
+        
         //$res = 'notok';
         //$res = 'ok';
         //if( $rankValue != "" ) {

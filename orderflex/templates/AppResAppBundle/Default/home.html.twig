@@ -75,6 +75,8 @@
     {% if filter %}
         {% set resappTypeId = filter %}
     {% endif %}
+    {#{% set resappTypeId = 1 %}#}
+    {#resappTypeId={{ resappTypeId }}#}
     
     {% set resStr = "Applications matching search criteria" %}
 
@@ -804,7 +806,7 @@
                     {#rank#}
                     {% if resappTypeId > 0 %}
                         <td class="rowlink-skip">
-                            {% if entity.rank and entity.rank != 0 and entity.rank != "" %}
+                            {% if entity.rank and entity.rank.rank != 0 and entity.rank.rank != "" %}
                                 {% if entity.rank.updateuser %}
                                     {% set rankUser = entity.rank.updateuser %}
                                     {% set rankDate = entity.rank.updatedate %}

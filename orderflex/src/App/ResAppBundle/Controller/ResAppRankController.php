@@ -37,8 +37,6 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -50,8 +48,16 @@ class ResAppRankController extends OrderAbstractController {
     #[Template('AppResAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $resappid) {
 
+        //Change the global rank is permitted only by a program Director
         if( false == $this->isGranted("read","ResidencyApplication") ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
+            $res = array(
+                'error' => 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$resappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -59,7 +65,14 @@ class ResAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
         $resApp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappid);
         if( !$resApp ) {
-            throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
+            //throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
+            $res = array(
+                'error' => 'Unable to find Residency Application by id='.$resappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $user = $this->getUser();
@@ -79,6 +92,7 @@ class ResAppRankController extends OrderAbstractController {
         return array(
             'entity' => $resApp,
             'form' => $form->createView(),
+            'error' => null
         );
     }
 
@@ -86,8 +100,14 @@ class ResAppRankController extends OrderAbstractController {
     #[Route(path: '/rank/update-ajax/{resappid}', name: 'resapp_rank_update', methods: ['PUT'], options: ['expose' => true])]
     public function rankUpdateAjaxAction(Request $request, $resappid) {
 
+        //Change the global rank is permitted only by a program Director
         if( false == $this->isGranted("read","ResidencyApplication") ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
+            $res = 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$resappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $rankValue = $request->request->get('rankValue');
@@ -102,7 +122,12 @@ class ResAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
         $resApp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappid);
         if( !$resApp ) {
-            throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
+            //throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
+            $res = 'Unable to find Residency Application by id='.$resappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $user = $this->getUser();
@@ -118,6 +143,10 @@ class ResAppRankController extends OrderAbstractController {
         } else {
             $rank->setUpdateuser($user);
             $rank->setUpdateuserroles($user->getRoles());
+        }
+
+        if( !$rankValue ) {
+            $rankValue = null;
         }
 
         //$res = 'notok';
@@ -150,7 +179,7 @@ class ResAppRankController extends OrderAbstractController {
     /**
      * NOT USED
      */
-    #[Route(path: '/rank/update/{resappid}', name: 'resapp_rank_update', methods: ['PUT'])]
+    #[Route(path: '/rank/update/notused/{resappid}', name: 'resapp_rank_update_notused', methods: ['PUT'])]
     public function rankUpdateAction(Request $request, $resappid) {
 
         if( false == $this->isGranted("read","ResidencyApplication") ){
