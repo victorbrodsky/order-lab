@@ -17,3 +17,6 @@ Separate databases: This is the best option for clients who want safety above ev
 
 Dynamic Routing Prefix:
 https://stackoverflow.com/questions/11397806/symfony2-dynamic-routing-prefix
+https://stackoverflow.com/questions/48411074/symfony-4-dynamic-route-with-array
+https://symfony.com/bundles/CMFRoutingBundle/current/routing-component/dynamic.html
+
