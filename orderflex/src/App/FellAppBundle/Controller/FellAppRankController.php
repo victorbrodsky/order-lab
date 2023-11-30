@@ -50,8 +50,26 @@ class FellAppRankController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $fellappid) {
 
-        if( false == $this->isGranted("read","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        //This generic permission will not allow to access because
+        // this url is accessible only by interviewer for this specific application.
+        //The permission check will be permormed later by $this->isGranted("read",$fellApp)
+        if(
+            //false == $this->isGranted("read","FellowshipApplication")
+            0
+        ){
+            //$res = 'Access is denied to rank the application with ID '.$fellappid;
+            //exit($res);
+            //throw $this->createAccessDeniedException('Access is denied to rank the application with ID '.$fellappid);
+            //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
+            //throw $this->createNotFoundException('Access is denied to rank the application with ID '.$fellappid);
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            $res = array(
+                'error' => 'Access is denied to rank the application with ID '.$fellappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -59,8 +77,20 @@ class FellAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            //throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            $res = array(
+                'error' => 'Unable to find Fellowship Application by id='.$fellappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
+
+//        if( false == $this->isGranted("read",$fellApp) ) {
+//            //exit('fellapp read permission not ok ID:'.$entity->getId());
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
 
         $user = $this->getUser();
 
@@ -79,6 +109,7 @@ class FellAppRankController extends OrderAbstractController {
         return array(
             'entity' => $fellApp,
             'form' => $form->createView(),
+            'error' => null
         );
     }
 
@@ -86,8 +117,17 @@ class FellAppRankController extends OrderAbstractController {
     #[Route(path: '/rank/update-ajax/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'], options: ['expose' => true])]
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
-        if( false == $this->isGranted("read","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        if(
+            false == $this->isGranted("read","FellowshipApplication")
+            //0
+        ){
+            //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            $res = 'Access is denied to rank the application with ID '.$fellappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $rankValue = $request->request->get('rankValue');
@@ -102,7 +142,12 @@ class FellAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            $res = 'Unable to find Fellowship Application by id='.$fellappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $user = $this->getUser();
@@ -150,7 +195,7 @@ class FellAppRankController extends OrderAbstractController {
     /**
      * NOT USED
      */
-    #[Route(path: '/rank/update/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'])]
+    #[Route(path: '/rank/update/notused/{fellappid}', name: 'fellapp_rank_update_notused', methods: ['PUT'])]
     public function rankUpdateAction(Request $request, $fellappid) {
 
         if( false == $this->isGranted("read","FellowshipApplication") ){

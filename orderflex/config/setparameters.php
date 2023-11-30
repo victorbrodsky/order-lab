@@ -405,7 +405,7 @@ if( $conn ) {
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
             $tenantprefix = 'c/wcm/pathology/';
             $tenantprefix = 'c/lmh/pathology/';
-            //$tenantprefix = '';
+            $tenantprefix = '';
             $container->setParameter('tenantprefix', $tenantprefix);
             ////////////// EOF Dynamically change url prefix /////////////
 

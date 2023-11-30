@@ -565,8 +565,8 @@ function getCommonBaseUrl(link,sitename) {
     //console.log('scheme='+scheme);
 
     //get tenantprefix from container
+    //_tenantprefix = ''; //testing
     console.log("_tenantprefix="+_tenantprefix);
-    //var tenantprefix = '';
     //Get the tenantprefix from the URL
     // /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
     //Or get it using ajax call to the server to get tenantprefix from the container

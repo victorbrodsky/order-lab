@@ -32,7 +32,7 @@ function rankModalCreation( btnEl, fellappId ) {
 
     //var url = getCommonBaseUrl("rank/edit/"+fellappId);
     var url = Routing.generate('fellapp_rank_edit', {'fellappid': fellappId});
-    //console.log('url='+url);
+    console.log('url='+url);
 
     var waitModal = true;
     if( waitModal ) {
@@ -61,29 +61,39 @@ function rankModalCreation( btnEl, fellappId ) {
         //dataType:'json',//type of data you are returning from server
         //data: data, //better to pass it with data
         success: function(response){
-
-            //remove wait modal
-            if( waitModal ) {
-                var $modal2 = $("#wait-rank-modal").detach().modal();
-                $modal2.modal("hide");
+            //console.log(response);
+            if( response['error'] ) {
+                if( waitModal ) {
+                    $('#wait-rank-modal').find('h4').html(response['error']);
+                } else {
+                    lbtn.stop();
+                }
             } else {
-                lbtn.stop();
-            }
+                //remove wait modal
+                if (waitModal) {
+                    var $modal2 = $("#wait-rank-modal").detach().modal();
+                    $modal2.modal("hide");
+                } else {
+                    lbtn.stop();
+                }
 
-            $('body').append(response);
-            //$('#fellapp_rank_'+fellappId).replaceWith( response );
-            success = true;
+                $('body').append(response);
+                //$('#fellapp_rank_'+fellappId).replaceWith( response );
+                success = true;
+            }
         },
-        error: function(){
-            //handle error
+        error: function(jqXHR, textStatus, errorThrown){
+            //console.log(jqXHR);
+            //console.log("error: textStatus="+textStatus+"; errorThrown="+errorThrown);
             if( waitModal ) {
-                $('#wait-rank-modal').find('h4').html('Failed to load applicant information');
+                $('#wait-rank-modal').find('h4').html('Failed to load applicant information. You might not have a permission to access.');
             } else {
                 lbtn.stop();
             }
         }
     })
     .then( function() {
+        console.log("then: success="+success);
         if(success)
         {
             $('[data-toggle="tooltip"]').tooltip({html: true});
@@ -95,10 +105,12 @@ function rankModalCreation( btnEl, fellappId ) {
 
 function submitRank(btn,fellappId) {
 
+    $('#modal_error_'+fellappId).html("");
     var rankValue = $('#oleg_fellappbundle_rank_rank').val();
 
     //var url = getCommonBaseUrl("rank/update-ajax/"+fellappId);
-    var url = Routing.generate('fellapp_rank_edit', {'fellappid': fellappId});
+    var url = Routing.generate('fellapp_rank_update', {'fellappid': fellappId});
+    console.log('fellapp_rank_update url='+url);
 
     var rank_modal = $('#fellapp_rank_'+fellappId);
 
@@ -108,7 +120,7 @@ function submitRank(btn,fellappId) {
         data: {rankValue: rankValue},
         timeout: _ajaxTimeout,
         success: function(data){
-            //console.log("OK submit a new rank");
+            console.log("OK submit a new rank");
             if( data == 'ok' ) {
                 rank_modal.modal('hide');
                 rank_modal.remove();
@@ -117,11 +129,12 @@ function submitRank(btn,fellappId) {
                     window.parent.location.reload();
                 //}
             } else {
+                $('#modal_error_'+fellappId).html(data);
                 console.log("error: data="+data);
             }
         },
-        error: function(){
-            console.log("error: data="+data);
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log("error: textStatus="+textStatus+"; errorThrown="+errorThrown);
         }
     });
 }

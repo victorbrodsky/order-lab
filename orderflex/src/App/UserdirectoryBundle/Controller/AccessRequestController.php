@@ -196,7 +196,11 @@ class AccessRequestController extends OrderAbstractController
             $request->getSession()->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
-                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
+                "If you already applied for access, then try to " .
+                "<a href=".
+                $this->generateUrl($this->siteName.'_logout',array(),UrlGeneratorInterface::ABSOLUTE_URL).
+                //$this->generateUrl($this->siteName.'_logout').
+                ">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -307,7 +311,7 @@ class AccessRequestController extends OrderAbstractController
             $request->getSession()->getFlashBag()->add(
                 'warning',
                 "You were banned to visit this site."."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',array(),UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -319,7 +323,7 @@ class AccessRequestController extends OrderAbstractController
                 'warning',
                 "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
                 "Please contact site system administrator ".$this->getParameter('default_system_email')."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',array(),UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -519,7 +523,7 @@ class AccessRequestController extends OrderAbstractController
                 $request->getSession()->getFlashBag()->add(
                     'warning',
                     "The status of your request is " . $userAccessReq->getStatusStr() . ". " .
-                    "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
+                    "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',array(),UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
                 );
                 return $this->redirect( $this->generateUrl('main_common_home') );
             }
@@ -629,7 +633,7 @@ class AccessRequestController extends OrderAbstractController
 //        $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
 
         //add access request management link
-        $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        $managementLink = $this->generateUrl($sitename.'_accessrequest_management',array("id"=>$accReq->getId()),UrlGeneratorInterface::ABSOLUTE_URL);
         $managementMsg = "To review, approve, or deny " . $approveDeclineMsg . "<br>" . $managementLink;
 
         $msg = $msg . "<br>"."<br>" . $managementMsg;
