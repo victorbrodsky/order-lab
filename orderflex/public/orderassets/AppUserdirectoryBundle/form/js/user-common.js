@@ -555,7 +555,7 @@ function getCommonBaseUrl(link,sitename) {
 
     var scheme = "http:";
     var url = window.location.href;
-    console.log('url='+url);
+    //console.log('url='+url);
 
     var urlArr = url.split("/");
     if( urlArr.length > 0 ) {
