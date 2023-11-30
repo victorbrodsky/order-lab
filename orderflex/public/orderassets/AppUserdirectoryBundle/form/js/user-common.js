@@ -532,7 +532,6 @@ function initConvertEnterToTab() {
 }
 
 function getCommonBaseUrl(link,sitename) {
-
     //console.log('getCommonBaseUrl: sitename='+sitename);
 
     if( typeof sitename === 'undefined' ) {
@@ -577,6 +576,10 @@ function getCommonBaseUrl(link,sitename) {
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
         urlBase = scheme+"//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
     }
+
+    //url might be in the form of:
+    //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
+
     //console.log("urlBase="+urlBase);
     return urlBase;
 }

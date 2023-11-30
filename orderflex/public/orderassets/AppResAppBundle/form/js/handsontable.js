@@ -218,8 +218,10 @@ function getResidencytracks() {
 
     var cycle = 'new';
 
-    var url = getCommonBaseUrl("util/common/generic/"+"residencytracks","employees");
-    //console.log("getAntobodies url="+url);
+    //var url = getCommonBaseUrl("util/common/generic/"+"residencytracks","employees");
+    //console.log("get CommonBaseUrl getAntobodies url="+url);
+    var url = Routing.generate('employees_get_generic_select2', {'name': 'residencytracks'});
+    //console.log("Routing getAntobodies url="+url);
 
     if( typeof cycle === 'undefined' ) {
         cycle = 'new';
