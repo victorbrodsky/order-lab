@@ -405,8 +405,12 @@ if( $conn ) {
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
             $tenantprefix = 'c/wcm/pathology/';
             //$tenantprefix = 'c/lmh/pathology/';
-            //$tenantprefix = '';
+            $tenantprefix = '';
+            //$tenantprefix = 'pathology/';
             $container->setParameter('tenantprefix', $tenantprefix);
+
+            //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+            //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
             ////////////// EOF Dynamically change url prefix /////////////
 
         } else {

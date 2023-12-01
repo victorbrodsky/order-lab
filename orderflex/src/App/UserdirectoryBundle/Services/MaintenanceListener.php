@@ -66,11 +66,30 @@ class MaintenanceListener {
 //            return;
 //        }
 
+//        ///////// Testing tenantprefix /////////
+//        $tenantprefix = $this->container->getParameter('tenantprefix');
+//        //echo "current tenantprefix=".$tenantprefix."<br>";
+//        //$tenantprefix = 'c/lmh/pathology/';
+//        $tenantprefix = 'pathology';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        ///////// EOF Testing tenantprefix /////////
+
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
             //exit('1');
             return;
         }
+
+//        ///////// Testing tenantprefix: {tenantprefix} in config /////////
+//        $tenantprefix = $this->container->getParameter('tenantprefix');
+//        //echo "current tenantprefix=".$tenantprefix."<br>";
+//        //$tenantprefix = 'c/lmh/pathology/';
+//        $tenantprefix = 'pathology';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        ///////// EOF Testing tenantprefix /////////
+
 
         $userSecUtil = $this->container->get('user_security_utility');
 

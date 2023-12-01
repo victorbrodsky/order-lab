@@ -18,6 +18,7 @@ imports:
     - { resource: "setparameters.php" } #must run after importing services
 #    - { resource: "setparameters-test.php" } #must run after importing services
 
+
 services:
 
     # default configuration for services in *this* file
@@ -119,6 +120,10 @@ services:
     App\FineUploader\Controller\:
         resource: '../src/App/FineUploader/Controller/'
 
+    #https://symfony.com/doc/6.4/routing/custom_route_loader.html
+    App\Routing\:
+        resource: '../src/App/Routing/'
+
     ################## Commands ##################
     App\UserdirectoryBundle\Command\TestCommand:
         tags:
@@ -216,6 +221,9 @@ services:
 #                  - '/directory/tus'
 #                 #- '/files'
 
-    App\UserdirectoryBundle\Services\WebsiteNameRouteEventListener:
-        arguments: ['%router.request_context.base_url%']
+    #App\UserdirectoryBundle\Services\WebsiteNameRouteEventListener:
+    #    arguments: ['%router.request_context.base_url%']
 
+    #https://symfony.com/doc/6.4/routing/custom_route_loader.html
+    App\Routing\ExtraLoader:
+        tags: [routing.loader]

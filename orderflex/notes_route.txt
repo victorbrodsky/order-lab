@@ -43,3 +43,6 @@ Set prefix dynamically: https://stackoverflow.com/questions/19406628/dynamic-rou
 https://symfony.com/doc/current/session.html#locale-sticky-session
 
 Custom twig function {{ path('p1') }} => {{ user_path('p1') }} : https://symfony.com/doc/current/templates.html#templates-twig-extension
+
+https://symfony.com/doc/6.4/routing/custom_route_loader.html
+Try App/Routing: ExtraLoader and ExtraController
