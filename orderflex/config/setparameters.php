@@ -400,7 +400,7 @@ if( $conn ) {
             //Test multi tenancy
             //1) IF "Server Role and Network Access:" = "Internet (Hub)”
             //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
-            //3) set $tenantprefix = authPartnerServer
+            //3) set tenantid $tenantprefix = authPartnerServer
 
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
             $tenantprefix = 'c/wcm/pathology/';

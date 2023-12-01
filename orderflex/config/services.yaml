@@ -216,3 +216,6 @@ services:
 #                  - '/directory/tus'
 #                 #- '/files'
 
+    App\UserdirectoryBundle\Services\WebsiteNameRouteEventListener:
+        arguments: ['%router.request_context.base_url%']
+
