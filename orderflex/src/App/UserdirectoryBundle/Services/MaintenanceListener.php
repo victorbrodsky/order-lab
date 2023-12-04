@@ -84,15 +84,15 @@ class MaintenanceListener {
         }
 
 //        ///////// Testing tenantprefix: {tenantprefix} in config /////////
-//        $tenantprefix = $this->container->getParameter('tenantprefix');
-//        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        //$tenantprefix = $this->container->getParameter('tenantprefix');
+//        //echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
 //        $tenantprefix = 'c/lmh/pathology';
 //        #$tenantprefix = 'lmh/pathology';
-//        $tenantprefix = 'pathology';
+//        #$tenantprefix = 'pathology';
 //        //$tenantprefix = 'lmh';
 //        //$this->container->setParameter('tenantprefix', $tenantprefix);
 //        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-//        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        //echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
 //        //$this->container->setParameter('tenantprefix', $tenantprefix); //Impossible to call set() on a frozen ParameterBag.
 //        ///////// EOF Testing tenantprefix /////////
 
@@ -113,6 +113,14 @@ class MaintenanceListener {
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
         //exit('1');
+
+        //Relogin
+//        $locale = $request->getLocale();
+//        if( str_contains($uri,$locale) === false ) {
+//            $urlLogout = $this->container->get('router')->generate('logout');
+//            $response = new RedirectResponse($urlLogout);
+//            $event->setResponse($response);
+//        }
 
         //site check accessibility
         if(

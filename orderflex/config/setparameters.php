@@ -403,7 +403,7 @@ if( $conn ) {
             //3) set tenantid $tenantprefix = authPartnerServer
 
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
-            //$tenantprefix = 'c/wcm/pathology/';
+            //$tenantprefix = 'c/wcm/pathology';
             //$tenantprefix = 'c/lmh/pathology/';
             $tenantprefix = ''; //default prefix as it was in the original configuration
             //$tenantprefix = 'pathology/';

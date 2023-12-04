@@ -46,7 +46,7 @@ security:
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-                  #path:     /%tenantprefix%directory
+                  path:     /directory
 
         ldap_fellapp_firewall:
             pattern: ^.*/fellowship-applications

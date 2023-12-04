@@ -10,7 +10,8 @@ ProjectBaseBundle_localized:
     requirements:
         #_locale: en|es|de|fr
         #_locale: '[^.]+'
-        _locale: c/wcm/pathology|c/lmh/pathology|
+        _locale: c/wcm/pathology||c/lmh/pathology
+        #tenantprefix: c/wcm/pathology|c/lmh/pathology
 
 #'^$'
 #https://stackoverflow.com/questions/67644009/symfony-5-internationalized-routes-prefix-routes-with-empty-or-dynamic-local
@@ -21,3 +22,5 @@ ProjectBaseBundle_localized:
 #    #name_prefix: 'default_'
 #    defaults:
 #        _locale: ''
+
+#Locale Switcher: https://symfony.com/blog/new-in-symfony-6-1-locale-switcher
