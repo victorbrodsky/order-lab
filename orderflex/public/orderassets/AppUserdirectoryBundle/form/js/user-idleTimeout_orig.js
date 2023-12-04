@@ -227,10 +227,11 @@ idleTimeoutClass.prototype.setActive = function () {
         
         if( getLastActiveTimeDiff < timerIdleTime ) {
             //console.log("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
-            //var url = getCommonBaseUrl("common/setserveractive","employees");
+            var url = getCommonBaseUrl("common/setserveractive","employees");
+            console.log("getCommonBaseUrl url="+url);
             //var currentUrl = window.location.href;
             var url = Routing.generate('setserveractive');
-            //console.log("url="+url);
+            console.log("Routing url="+url);
             $.ajax({
                 url: url,
                 //type: 'GET',

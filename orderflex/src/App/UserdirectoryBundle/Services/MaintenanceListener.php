@@ -66,16 +66,16 @@ class MaintenanceListener {
 //            return;
 //        }
 
-        ///////// Testing tenantprefix /////////
-        echo "route=".$event->getRequest()->get('_route')."<br>";
-        $tenantprefix = $this->container->getParameter('tenantprefix');
-        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-        $tenantprefix = 'c/lmh/pathology/';
-        $tenantprefix = 'pathology';
-        //$this->container->setParameter('tenantprefix', $tenantprefix);
-        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-        ///////// EOF Testing tenantprefix /////////
+//        ///////// Testing tenantprefix /////////
+//        echo "route=".$event->getRequest()->get('_route')."<br>";
+//        $tenantprefix = $this->container->getParameter('tenantprefix');
+//        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        $tenantprefix = 'c/lmh/pathology/';
+//        $tenantprefix = 'pathology';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        ///////// EOF Testing tenantprefix /////////
 
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
@@ -83,17 +83,18 @@ class MaintenanceListener {
             return;
         }
 
-        ///////// Testing tenantprefix: {tenantprefix} in config /////////
-        $tenantprefix = $this->container->getParameter('tenantprefix');
-        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-        $tenantprefix = 'c/lmh/pathology';
-        #$tenantprefix = 'lmh/pathology';
-        $tenantprefix = 'pathology';
-        //$tenantprefix = 'lmh';
-        //$this->container->setParameter('tenantprefix', $tenantprefix);
-        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-        ///////// EOF Testing tenantprefix /////////
+//        ///////// Testing tenantprefix: {tenantprefix} in config /////////
+//        $tenantprefix = $this->container->getParameter('tenantprefix');
+//        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        $tenantprefix = 'c/lmh/pathology';
+//        #$tenantprefix = 'lmh/pathology';
+//        $tenantprefix = 'pathology';
+//        //$tenantprefix = 'lmh';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        //$this->container->setParameter('tenantprefix', $tenantprefix); //Impossible to call set() on a frozen ParameterBag.
+//        ///////// EOF Testing tenantprefix /////////
 
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -103,6 +104,11 @@ class MaintenanceListener {
 
         //get route name
         $request = $event->getRequest();
+
+        //$request->setLocale('en');
+        //$tenantprefix = 'pathology';
+        //$request->setLocale($tenantprefix);
+
         //$routeName = $request->get('_route');
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";

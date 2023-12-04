@@ -1,0 +1,184 @@
+# This file is the entry point to configure your own HTTP routes.
+# Files in the routes/ subdirectory configure the routes for your dependencies.
+
+#controllers:
+#    resource: ../src/App/*/Controller/
+#    type: annotation
+
+#annotation => attribute
+
+#main_common_home:
+#    path:      /
+#    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
+main_common_home:
+    path:      /
+    controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
+
+main_under_construction:
+    path:      /under-construction
+    defaults:  { _controller: AppUserdirectoryBundle:Home:underConstruction }
+
+#order is important: base bundle userdirectory must be the last one
+#    resource: "@AppDeidentifierBundle/Controller/"
+app_dashboard:
+    resource: "../src/App/DashboardBundle/Controller/"
+    type:     attribute
+    prefix:   /dashboards
+
+app_deidentifier:
+    resource: "../src/App/DeidentifierBundle/Controller/"
+    type:     attribute
+    prefix:   /deidentifier
+
+app_fellapp:
+    resource: "../src/App/FellAppBundle/Controller/"
+    type:     attribute
+    prefix:   /fellowship-applications
+
+app_resapp:
+    resource: "../src/App/ResAppBundle/Controller/"
+    type:     attribute
+    prefix:   /residency-applications
+
+app_vacreq:
+    resource: "../src/App/VacReqBundle/Controller/"
+    type:     attribute
+    prefix:   /time-away-request
+legacy_vacreq:
+    path: /vacation-request
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        # this value can be an absolute path or an absolute URL
+        path: /time-away-request
+        #path: 'https://www.yahoo.com'
+        permanent: true
+        keepQueryParams: true
+
+app_calllog:
+    resource: "../src/App/CallLogBundle/Controller/"
+    type:     attribute
+    prefix:   /call-log-book
+
+app_crn:
+    resource: "../src/App/CrnBundle/Controller/"
+    type:     attribute
+    prefix:   /critical-result-notifications
+
+app_orderform:
+    resource: "../src/App/OrderformBundle/Controller/"
+    type:     attribute
+    prefix:   /scan
+
+app_translationalresearch:
+    resource: "../src/App/TranslationalResearchBundle/Controller/"
+    type:     attribute
+    prefix:   /translational-research
+
+app_utilbundles_foscomment:
+    resource: "../src/App/UtilBundles/FOSCommentBundle/Controller/"
+    type:     attribute
+    prefix:   /utilbundles-foscomment
+
+app_userdirectory:
+    resource: "../src/App/UserdirectoryBundle/Controller/"
+    type:     attribute
+    #prefix:   /directory
+    prefix:   /directory
+
+#FineUploader
+app_fineuploader:
+    resource: "../src/App/FineUploader/Controller/"
+    type:     attribute
+    prefix:   /directory
+
+app_testpage:
+    path: /directory/testpage
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
+
+fellapp_instructions:
+    path: /fellowship-applications/instructions-to-change-import-interval
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
+
+#login and logout routes
+
+#logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
+idle-log-out:
+    path:   /directory/idle-log-out
+
+#testlogin:
+#    path:   /directory/testlogin
+
+logout:
+    path:   /directory/logout
+login:
+    path:   /directory/login
+
+platform_login:
+    path:   /directory/login
+platform_logout:
+    path:   /directory/logout
+
+scan_login_check:
+    path:   /scan/login_check
+scan_logout:
+    path:   /scan/logout
+
+login_check:
+    path: /directory/login_check
+
+#logout:
+#    path: /directory/logout
+
+employees_login_check:
+    path:   /directory/login_check
+employees_logout:
+    path:   /directory/logout
+
+dashboard_login_check:
+    path:   /dashboards/login_check
+dashboard_logout:
+    path:   /dashboards/logout
+
+fellapp_login_check:
+    path:   /fellowship-applications/login_check
+fellapp_logout:
+    path:   /fellowship-applications/logout
+
+resapp_login_check:
+    path:   /residency-applications/login_check
+resapp_logout:
+    path:   /residency-applications/logout
+
+deidentifier_login_check:
+    path:   /deidentifier/login_check
+deidentifier_logout:
+    path:   /deidentifier/logout
+
+vacreq_login_check:
+    path:   /time-away-request/login_check
+vacreq_logout:
+    path:   /time-away-request/logout
+
+calllog_login_check:
+    path:   /call-log-book/login_check
+calllog_logout:
+    path:   /call-log-book/logout
+
+crn_login_check:
+    path:   /critical-result-notifications/login_check
+crn_logout:
+    path:   /critical-result-notifications/logout
+
+translationalresearch_login_check:
+    path:   /translational-research/login_check
+translationalresearch_logout:
+    path:   /translational-research/logout
+
+#OneupUploaderBundle  file uploader
+oneup_uploader:
+    resource: .
+    type: uploader

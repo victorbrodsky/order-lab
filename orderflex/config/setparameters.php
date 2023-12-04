@@ -407,6 +407,7 @@ if( $conn ) {
             //$tenantprefix = 'c/lmh/pathology/';
             $tenantprefix = ''; //default prefix as it was in the original configuration
             //$tenantprefix = 'pathology/';
+            //$tenantprefix = 'en';
             $container->setParameter('tenantprefix', $tenantprefix);
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);

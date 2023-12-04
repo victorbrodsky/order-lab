@@ -46,3 +46,7 @@ Custom twig function {{ path('p1') }} => {{ user_path('p1') }} : https://symfony
 
 https://symfony.com/doc/6.4/routing/custom_route_loader.html
 Try App/Routing: ExtraLoader and ExtraController
+
+requirements restriction:
+https://symfony.com/doc/4.1/routing/slash_in_parameter.html
+

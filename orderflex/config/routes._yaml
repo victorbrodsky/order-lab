@@ -7,106 +7,139 @@
 
 #annotation => attribute
 
-###{tenantprefix}/ %tenantprefix%
-
 #main_common_home:
 #    path:      /
 #    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
 main_common_home:
     path:      /
+    #path:      /{tenantprefix}/
 #    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
     controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
+    requirements:
+        tenantprefix: '[^.]+'
+#main_common_home2:
+#    path:      /{tenantprefix}/
+#    controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
+#    requirements:
+#        tenantprefix: .*
 
 main_under_construction:
-    path:      /under-construction
+    path:      /{tenantprefix}/under-construction
     defaults:  { _controller: AppUserdirectoryBundle:Home:underConstruction }
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 #order is important: base bundle userdirectory must be the last one
 #    resource: "@AppDeidentifierBundle/Controller/"
 app_dashboard:
     resource: "../src/App/DashboardBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%dashboards
+    prefix:   /{tenantprefix}/dashboards
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_deidentifier:
     resource: "../src/App/DeidentifierBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%deidentifier
+    prefix:   /{tenantprefix}/deidentifier
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_fellapp:
     resource: "../src/App/FellAppBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%fellowship-applications
+    prefix:   /{tenantprefix}/fellowship-applications
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_resapp:
     resource: "../src/App/ResAppBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%residency-applications
+    prefix:   /{tenantprefix}/residency-applications
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_vacreq:
     resource: "../src/App/VacReqBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%time-away-request
+    prefix:   /{tenantprefix}/time-away-request
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 legacy_vacreq:
-    path: /%tenantprefix%vacation-request
+    path: /{tenantprefix}/vacation-request
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
     defaults:
         # this value can be an absolute path or an absolute URL
-        path: /%tenantprefix%time-away-request
+        path: /{tenantprefix}/time-away-request
         #path: 'https://www.yahoo.com'
         permanent: true
         keepQueryParams: true
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_calllog:
     resource: "../src/App/CallLogBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%call-log-book
+    prefix:   /{tenantprefix}/call-log-book
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_crn:
     resource: "../src/App/CrnBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%critical-result-notifications
+    prefix:   /{tenantprefix}/critical-result-notifications
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%scan
+    prefix:   /{tenantprefix}/scan
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_translationalresearch:
     resource: "../src/App/TranslationalResearchBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%translational-research
+    prefix:   /{tenantprefix}/translational-research
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+' #.*
 
 app_utilbundles_foscomment:
     resource: "../src/App/UtilBundles/FOSCommentBundle/Controller/"
     type:     attribute
     prefix:   /utilbundles-foscomment
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_userdirectory:
     resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%directory
+    prefix:   /{tenantprefix}/directory
+    #prefix:   /pathology/directory
     schemes:  ['%connection_channel%']
+    requirements:
+        tenantprefix: '[^.]+'
 
 app_testpage:
-    path: /%tenantprefix%directory/testpage
+    path: /{tenantprefix}/directory/testpage
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
 
 fellapp_instructions:
-    path: /%tenantprefix%fellowship-applications/instructions-to-change-import-interval
+    path: /{tenantprefix}/fellowship-applications/instructions-to-change-import-interval
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
@@ -114,91 +147,136 @@ fellapp_instructions:
 app_fineuploader:
     resource: "../src/App/FineUploader/Controller/"
     type:     attribute
-    prefix:   /%tenantprefix%directory
+    prefix:   /{tenantprefix}/directory
     schemes:  ['%connection_channel%']
 
-#https://symfony.com/doc/6.4/routing/custom_route_loader.html
-#app_extra:
-#    resource: "../src/App/Routing/"
-#    type: extra
-#    schemes:  ['%connection_channel%']
 
 #login and logout routes
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
 idle-log-out:
-    path:   /%tenantprefix%directory/idle-log-out
+    path:   /{tenantprefix}/directory/idle-log-out
 
 #testlogin:
-#    path:   /%tenantprefix%directory/testlogin
+#    path:   /{tenantprefix}/directory/testlogin
 
-logout:
-    path:   /%tenantprefix%directory/logout
-login:
-    path:   /%tenantprefix%directory/login
+#logout:
+#    path:   /{tenantprefix}/directory/logout
+#    requirements:
+#        tenantprefix: '[^.]+'
+#login:
+#    path:   /{tenantprefix}/directory/login
+#    requirements:
+#        tenantprefix: '[^.]+'
 
 platform_login:
-    path:   /%tenantprefix%directory/login
+    path:   /{tenantprefix}/directory/login
+    requirements:
+        tenantprefix: '[^.]+'
 platform_logout:
-    path:   /%tenantprefix%directory/logout
+    path:   /{tenantprefix}/directory/logout
+    requirements:
+          tenantprefix: '[^.]+'
 
 scan_login_check:
-    path:   /%tenantprefix%scan/login_check
+    path:   /{tenantprefix}/scan/login_check
+    requirements:
+            tenantprefix: '[^.]+'
 scan_logout:
-    path:   /%tenantprefix%scan/logout
+    path:   /{tenantprefix}/scan/logout
+    requirements:
+            tenantprefix: '[^.]+'
 
 login_check:
-    path: /%tenantprefix%directory/login_check
+    path: /{tenantprefix}/directory/login_check
+    requirements:
+            tenantprefix: '[^.]+'
 #logout:
-#    path: /%tenantprefix%directory/logout
+#    path: /{tenantprefix}/directory/logout
 
 employees_login_check:
-    path:   /%tenantprefix%directory/login_check
+    path:   /{tenantprefix}/directory/login_check
+    requirements:
+        tenantprefix: '[^.]+'
 employees_logout:
-    path:   /%tenantprefix%directory/logout
+    path:   /{tenantprefix}/directory/logout
+    requirements:
+        tenantprefix: '[^.]+'
 
 #fellapp_login:
 #    path:   /fellowship-applications/login
 dashboard_login_check:
-    path:   /%tenantprefix%dashboards/login_check
+    path:   /{tenantprefix}/dashboards/login_check
+    requirements:
+            tenantprefix: '[^.]+'
 dashboard_logout:
-    path:   /%tenantprefix%dashboards/logout
+    path:   /{tenantprefix}/dashboards/logout
+    requirements:
+            tenantprefix: '[^.]+'
 
 fellapp_login_check:
-    path:   /%tenantprefix%fellowship-applications/login_check
+    path:   /{tenantprefix}/fellowship-applications/login_check
+    requirements:
+            tenantprefix: '[^.]+'
 fellapp_logout:
-    path:   /%tenantprefix%fellowship-applications/logout
+    path:   /{tenantprefix}/fellowship-applications/logout
+    requirements:
+            tenantprefix: '[^.]+'
 
 resapp_login_check:
-    path:   /%tenantprefix%residency-applications/login_check
+    path:   /{tenantprefix}/residency-applications/login_check
+    requirements:
+            tenantprefix: '[^.]+'
 resapp_logout:
-    path:   /%tenantprefix%residency-applications/logout
+    path:   /{tenantprefix}/residency-applications/logout
+    requirements:
+            tenantprefix: '[^.]+'
 
 deidentifier_login_check:
-    path:   /%tenantprefix%deidentifier/login_check
+    path:   /{tenantprefix}/deidentifier/login_check
+    requirements:
+                tenantprefix: '[^.]+'
 deidentifier_logout:
-    path:   /%tenantprefix%deidentifier/logout
+    path:   /{tenantprefix}/deidentifier/logout
+    requirements:
+                tenantprefix: '[^.]+'
 
 vacreq_login_check:
-    path:   /%tenantprefix%time-away-request/login_check
+    path:   /{tenantprefix}/time-away-request/login_check
+    requirements:
+        tenantprefix: '[^.]+'
 vacreq_logout:
-    path:   /%tenantprefix%time-away-request/logout
-    #path:   /%tenantprefix%directory/logout
+    path:   /{tenantprefix}/time-away-request/logout
+    requirements:
+        tenantprefix: '[^.]+'
+    #path:   /{tenantprefix}/directory/logout
 
 calllog_login_check:
-    path:   /%tenantprefix%call-log-book/login_check
+    path:   /{tenantprefix}/call-log-book/login_check
+    requirements:
+          tenantprefix: '[^.]+'
 calllog_logout:
-    path:   /%tenantprefix%call-log-book/logout
+    path:   /{tenantprefix}/call-log-book/logout
+    requirements:
+          tenantprefix: '[^.]+'
 
 crn_login_check:
-    path:   /%tenantprefix%critical-result-notifications/login_check
+    path:   /{tenantprefix}/critical-result-notifications/login_check
+    requirements:
+          tenantprefix: '[^.]+'
 crn_logout:
-    path:   /%tenantprefix%critical-result-notifications/logout
+    path:   /{tenantprefix}/critical-result-notifications/logout
+    requirements:
+          tenantprefix: '[^.]+'
 
 translationalresearch_login_check:
-    path:   /%tenantprefix%translational-research/login_check
+    path:   /{tenantprefix}/translational-research/login_check
+    requirements:
+          tenantprefix: '[^.]+'
 translationalresearch_logout:
-    path:   /%tenantprefix%translational-research/logout
+    path:   /{tenantprefix}/translational-research/logout
+    requirements:
+          tenantprefix: '[^.]+'
 
 
 #OneupUploaderBundle  file uploader

@@ -196,8 +196,8 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //console.log("testing keepaliveUrl="+keepaliveUrl);
 
     //{tenantprefix} cause error: Uncaught Error: The route "setserveractive" requires the parameter "tenantprefix"
-    //var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href
-    var sessionKeepAliveUrl = Routing.generate('setserveractive',{tenantprefix: 'pathology', url: thisUrl}); //window.location.href
+    var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href
+    //var sessionKeepAliveUrl = Routing.generate('setserveractive',{tenantprefix: 'pathology', url: thisUrl}); //window.location.href
     console.log("sessionKeepAliveUrl="+sessionKeepAliveUrl);
 
     //var sessionKeepAliveUrl = getCommonBaseUrl("setserveractive"); //working, but modify to pass {setserveractive} from session
