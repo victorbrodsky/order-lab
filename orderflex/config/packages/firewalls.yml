@@ -5,7 +5,7 @@ security:
         #{tenantprefix}/ %tenantprefix%
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
-            pattern: ^/.*/scan
+            pattern: ^.*/scan
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -27,7 +27,7 @@ security:
 
         ldap_employees_firewall:
               #pattern: ^/%tenantprefix%/directory
-              pattern: ^/.*/directory
+              pattern: ^.*/directory
               context: scan_auth
               switch_user: true
               custom_authenticators:
@@ -49,7 +49,7 @@ security:
                   #path:     /%tenantprefix%directory
 
         ldap_fellapp_firewall:
-            pattern: ^/.*/fellowship-applications
+            pattern: ^.*/fellowship-applications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -70,7 +70,7 @@ security:
 #                always_remember_me: true
 
         ldap_resapp_firewall:
-            pattern: ^/.*/residency-applications
+            pattern: ^.*/residency-applications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -89,7 +89,7 @@ security:
                 path:     /residency-applications
 
         ldap_deidentifier_firewall:
-            pattern: ^/.*/deidentifier
+            pattern: ^.*/deidentifier
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -109,7 +109,7 @@ security:
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
-            pattern: ^/.*/time-away-request
+            pattern: ^.*/time-away-request
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -129,7 +129,7 @@ security:
 #                always_remember_me: true
 
         ldap_calllog_firewall:
-            pattern: ^/.*/call-log-book
+            pattern: ^.*/call-log-book
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -149,7 +149,7 @@ security:
 #                always_remember_me: true
 
         ldap_crn_firewall:
-            pattern: ^/.*/critical-result-notifications
+            pattern: ^.*/critical-result-notifications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -168,7 +168,7 @@ security:
                 path:     /critical-result-notifications
 
         ldap_translationalresearch_firewall:
-            pattern: ^/.*/translational-research
+            pattern: ^.*/translational-research
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -188,7 +188,7 @@ security:
 #                always_remember_me: true
 
         ldap_dashboard_firewall:
-            pattern: ^/.*/dashboards
+            pattern: ^.*/dashboards
             context: scan_auth
             switch_user: true
             custom_authenticators:

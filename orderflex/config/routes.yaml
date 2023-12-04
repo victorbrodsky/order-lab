@@ -1,9 +1,8 @@
 #Master routes to define prefix and requirements for all routes in one place
 #https://stackoverflow.com/questions/11781287/symfony2-route-global-locale-requirements
 
-ProjectBaseBundle_default:
+ProjectBaseBundle_localized:
     resource: 'routes-default.yaml'
-    #type:     attribute
     schemes:  ['%connection_channel%']
     prefix:   /{_locale}
     #prefix:   /{tenantprefix}
@@ -11,3 +10,11 @@ ProjectBaseBundle_default:
         #_locale: en|es|de|fr
         #_locale: '[^.]+'
         _locale: c/wcm/pathology|c/lmh/pathology
+
+
+ProjectBaseBundle_default:
+    resource: 'routes-default.yaml'
+    schemes:  ['%connection_channel%']
+    prefix: '/'
+    #defaults:
+    #  _locale: ''
