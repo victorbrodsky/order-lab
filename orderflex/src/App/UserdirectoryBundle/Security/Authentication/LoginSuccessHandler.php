@@ -77,7 +77,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
     {
-
+        //exit('onAuthenticationSuccess');
         //testing
         //return new RedirectResponse($this->router->generate('employees_initial_configuration'));
 

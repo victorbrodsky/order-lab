@@ -66,14 +66,16 @@ class MaintenanceListener {
 //            return;
 //        }
 
-//        ///////// Testing tenantprefix /////////
-//        $tenantprefix = $this->container->getParameter('tenantprefix');
-//        //echo "current tenantprefix=".$tenantprefix."<br>";
-//        //$tenantprefix = 'c/lmh/pathology/';
-//        $tenantprefix = 'pathology';
-//        //$this->container->setParameter('tenantprefix', $tenantprefix);
-//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-//        ///////// EOF Testing tenantprefix /////////
+        ///////// Testing tenantprefix /////////
+        echo "route=".$event->getRequest()->get('_route')."<br>";
+        $tenantprefix = $this->container->getParameter('tenantprefix');
+        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+        $tenantprefix = 'c/lmh/pathology/';
+        $tenantprefix = 'pathology';
+        //$this->container->setParameter('tenantprefix', $tenantprefix);
+        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+        ///////// EOF Testing tenantprefix /////////
 
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
@@ -81,14 +83,17 @@ class MaintenanceListener {
             return;
         }
 
-//        ///////// Testing tenantprefix: {tenantprefix} in config /////////
-//        $tenantprefix = $this->container->getParameter('tenantprefix');
-//        //echo "current tenantprefix=".$tenantprefix."<br>";
-//        //$tenantprefix = 'c/lmh/pathology/';
-//        $tenantprefix = 'pathology';
-//        //$this->container->setParameter('tenantprefix', $tenantprefix);
-//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-//        ///////// EOF Testing tenantprefix /////////
+        ///////// Testing tenantprefix: {tenantprefix} in config /////////
+        $tenantprefix = $this->container->getParameter('tenantprefix');
+        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+        $tenantprefix = 'c/lmh/pathology';
+        #$tenantprefix = 'lmh/pathology';
+        $tenantprefix = 'pathology';
+        //$tenantprefix = 'lmh';
+        //$this->container->setParameter('tenantprefix', $tenantprefix);
+        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+        ///////// EOF Testing tenantprefix /////////
 
 
         $userSecUtil = $this->container->get('user_security_utility');
