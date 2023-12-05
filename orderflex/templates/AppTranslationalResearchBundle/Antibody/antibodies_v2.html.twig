@@ -95,27 +95,53 @@
 
             <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.type) }}
-                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.type) }}
+                        </div>
 
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.clone) }}
-                    </div>
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.clone) }}
+                        </div>
 
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.host) }}
-                    </div>
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.host) }}
+                        </div>
 
-                    <div class="col-xs-3">
-                        {{ form_widget(filterform.reactivity) }}
-                    </div>
+                        <div class="col-xs-3">
+                            {{ form_widget(filterform.reactivity) }}
+                        </div>
 
-                    <div class="col-xs-3">
-                        {{ form_widget(filterform.company) }}
+                        <div class="col-xs-3">
+                            {{ form_widget(filterform.company) }}
+                        </div>
                     </div>
-                </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.catalog) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.control) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.protocol) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.retrieval) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.dilution) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.comment) }}
+                        </div>
+                    </div>
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
             {{ form_rest(filterform) }}
@@ -132,22 +158,22 @@
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Catalog', 'ent.catalog') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Catalog', 'ent.catalog') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Lot', 'ent.lot') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Ig Concentraton', 'ent.igconcentration') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Clone', 'ent.clone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Host', 'ent.host') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reactivity', 'ent.reactivity') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Control', 'ent.control') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Protocol', 'ent.protocol') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Retrieval', 'ent.retrieval') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Dilution', 'ent.dilution') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Control', 'ent.control') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Protocol', 'ent.protocol') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Retrieval', 'ent.retrieval') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Dilution', 'ent.dilution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Storage', 'ent.storage') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Associated Antibodies', 'associates.name') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Data sheet', 'ent.datasheet') }}</th>
                 {#<th>Docs</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                     <th>Actions</th>
@@ -205,9 +231,9 @@
                     {{ ent.company }}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.catalog }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.catalog }}
+                </td>
 
                 {#<td>#}
                     {#{{ ent.lot }}#}
@@ -229,37 +255,37 @@
                     {{ ent.reactivity }}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.control }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.control }}
+                </td>
 
-                {#<td>#}
-                    {#{{ ent.protocol }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.protocol }}
+                </td>
 
-                {#<td>#}
-                    {#{{ ent.retrieval }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.retrieval }}
+                </td>
 
-                {#<td>#}
-                    {#{{ ent.dilution }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.dilution }}
+                </td>
 
                 <td>
                     {{ ent.storage }}
                 </td>
 
-                {#<td data-toggle="tooltip" title="{{ ent.getAllComments()|raw }}">#}
-                    {#{{ transres_util.tokenTruncate(ent.comment,50) }}#}
-                    {#{% if ent.comment1 %}#}
-                        {#<br>#}
-                        {#{{ transres_util.tokenTruncate(ent.comment1,50) }}#}
-                    {#{% endif %}#}
-                    {#{% if ent.comment2 %}#}
-                        {#<br>#}
-                        {#{{ transres_util.tokenTruncate(ent.comment2,50) }}#}
-                    {#{% endif %}#}
-                {#</td>#}
+                <td data-toggle="tooltip" title="{{ ent.getAllComments()|raw }}">
+                    {{ transres_util.tokenTruncate(ent.comment,50) }}
+                    {% if ent.comment1 %}
+                        <br>
+                        {{ transres_util.tokenTruncate(ent.comment1,50) }}
+                    {% endif %}
+                    {% if ent.comment2 %}
+                        <br>
+                        {{ transres_util.tokenTruncate(ent.comment2,50) }}
+                    {% endif %}
+                </td>
 
                 <td>
                     {% for associate in ent.associates %}
@@ -286,9 +312,9 @@
                     {#{% endfor %}#}
                 {#</td>#}
 
-                {#<td>#}
-                    {#{{ ent.type }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.type }}
+                </td>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                     <td class="rowlink-skip">
@@ -310,22 +336,22 @@
                                     >Edit</a>
                                 </li>
 
-                                {#{% if ent.getType()|lower != 'disabled' %}#}
-                                    {#<li>#}
-                                        {#<a#}
-                                                {#general-data-confirm="Are you sure you would like to disable this entry?"#}
-                                                {#href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'disabled', 'postpath':postPath }) }}">Disable#}
-                                        {#</a>#}
-                                    {#</li>#}
-                                {#{% endif %}#}
-                                {#{% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}#}
-                                    {#<li>#}
-                                        {#<a#}
-                                                {#general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"#}
-                                                {#href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'default', 'postpath':postPath }) }}">Enable#}
-                                        {#</a>#}
-                                    {#</li>#}
-                                {#{% endif %}#}
+                                {% if ent.getType()|lower != 'disabled' %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you would like to disable this entry?"
+                                           href="{{ path('translationalresearch_change_antibody_type',
+                                            { 'entityId':ent.id, 'type':'disabled' }) }}">Disable
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                           href="{{ path('translationalresearch_change_antibody_type',
+                                            { 'entityId':ent.id, 'type':'default' }) }}">Enable
+                                        </a>
+                                    </li>
+                                {% endif %}
 
                             </ul>
 

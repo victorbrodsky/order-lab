@@ -128,6 +128,13 @@ class AntibodyController extends OrderAbstractController
         $reactivity = $filterform['reactivity']->getData();
         $company = $filterform['company']->getData();
 
+        $catalog = $filterform['catalog']->getData();
+        $control = $filterform['control']->getData();
+        $protocol = $filterform['protocol']->getData();
+        $retrieval = $filterform['retrieval']->getData();
+        $dilution = $filterform['dilution']->getData();
+        $comment = $filterform['comment']->getData();
+
         //echo "search=".$search."<br>";
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
@@ -236,6 +243,36 @@ class AntibodyController extends OrderAbstractController
         if( $company ) {
             $dql->andWhere("LOWER(ent.company) LIKE LOWER(:company)");
             $dqlParameters['company'] = '%'.$company.'%';
+            $advancedFilter++;
+        }
+        if( $catalog ) {
+            $dql->andWhere("LOWER(ent.catalog) LIKE LOWER(:catalog)");
+            $dqlParameters['catalog'] = '%'.$catalog.'%';
+            $advancedFilter++;
+        }
+        if( $control ) {
+            $dql->andWhere("LOWER(ent.control) LIKE LOWER(:control)");
+            $dqlParameters['control'] = '%'.$control.'%';
+            $advancedFilter++;
+        }
+        if( $protocol ) {
+            $dql->andWhere("LOWER(ent.protocol) LIKE LOWER(:protocol)");
+            $dqlParameters['protocol'] = '%'.$protocol.'%';
+            $advancedFilter++;
+        }
+        if( $retrieval ) {
+            $dql->andWhere("LOWER(ent.retrieval) LIKE LOWER(:retrieval)");
+            $dqlParameters['retrieval'] = '%'.$retrieval.'%';
+            $advancedFilter++;
+        }
+        if( $dilution ) {
+            $dql->andWhere("LOWER(ent.dilution) LIKE LOWER(:dilution)");
+            $dqlParameters['dilution'] = '%'.$dilution.'%';
+            $advancedFilter++;
+        }
+        if( $comment ) {
+            $dql->andWhere("LOWER(ent.comment) LIKE LOWER(:comment)");
+            $dqlParameters['comment'] = '%'.$comment.'%';
             $advancedFilter++;
         }
 
@@ -634,6 +671,43 @@ class AntibodyController extends OrderAbstractController
         return "New";
     }
 
+    #[Route(path: '/change-antibody-type/{type}/{entityId}', name: 'translationalresearch_change_antibody_type', methods: ['GET'])]
+    public function changeAntibodyTypeAction( Request $request, $type, $entityId ) {
+        
+        if (
+            false === $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->getUser();
+
+        $entity = $em->getRepository(AntibodyList::class)->find($entityId);
+
+        //echo "entity=".$entity."<br>";
+
+        if( $type ) {
+            $entity->setType($type);
+            //$em->flush($entity);
+            $em->flush();
+
+            $event = "Type of the antibody with ID ".$entity->getId()." has been changed to '" . $type . "'";
+
+            $this->addFlash(
+                'notice',
+                $event
+            );
+
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+        }
+
+        //exit();
+        return $this->redirect( $this->generateUrl('translationalresearch_antibodies') );
+    }
+
     public function classListMapper() {
 
         $bundleName = "TranslationalResearchBundle";
@@ -648,4 +722,6 @@ class AntibodyController extends OrderAbstractController
         $mapper['displayName'] = $displayName . ", class: [" . $className . "]";
         return $mapper;
     }
+
+
 }

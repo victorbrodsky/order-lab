@@ -52,6 +52,16 @@
     {{ formmacros.field(form.host) }}
     {{ formmacros.field(form.reactivity) }}
     {{ formmacros.field(form.storage) }}
+    {{ formmacros.field(form.catalog) }}
+    {{ formmacros.field(form.control) }}
+    {{ formmacros.field(form.protocol) }}
+    {{ formmacros.field(form.retrieval) }}
+    {{ formmacros.field(form.dilution) }}
+    {{ formmacros.field(form.comment) }}
+    {{ formmacros.field(
+        form.list.type,
+        "Type ('default' and 'user-added' will show this antibody, all other types will hide it):"
+    ) }}
 
     {#{{ formmacros.field(form.myAssociates) }}#}
     {{ formmacros.field(form.associates) }}
@@ -117,14 +127,14 @@
                     {% endif %}
 
                     {{ formmacros.field(form.altname) }}
-                    {{ formmacros.field(form.catalog) }}
+                    {#{{ formmacros.field(form.catalog) }}#}
                     {{ formmacros.field(form.lot) }}
                     {{ formmacros.field(form.igconcentration) }}
-                    {{ formmacros.field(form.control) }}
-                    {{ formmacros.field(form.protocol) }}
-                    {{ formmacros.field(form.retrieval) }}
-                    {{ formmacros.field(form.dilution) }}
-                    {{ formmacros.field(form.comment) }}
+                    {#{{ formmacros.field(form.control) }}#}
+                    {#{{ formmacros.field(form.protocol) }}#}
+                    {#{{ formmacros.field(form.retrieval) }}#}
+                    {#{{ formmacros.field(form.dilution) }}#}
+                    {#{{ formmacros.field(form.comment) }}#}
                     {{ formmacros.field(form.comment1) }}
                     {{ formmacros.field(form.comment2) }}
                 </div>
@@ -195,7 +205,7 @@
 
 
 
-                    {{ formmacros.field(form.list.type) }}
+                    {#{{ formmacros.field(form.list.type) }}#}
 
                     {{ formmacros.field(form.list.creator) }}
 

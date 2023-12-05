@@ -179,6 +179,37 @@ class AntibodyFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
         ));
+
+        $builder->add('catalog', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Catalog'),
+        ));
+        $builder->add('control', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Control'),
+        ));
+        $builder->add('protocol', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Protocol'),
+        ));
+        $builder->add('retrieval', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Retrieval'),
+        ));
+        $builder->add('dilution', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Dilution'),
+        ));
+        $builder->add('comment', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Comment'),
+        ));
     }
 
     /**
