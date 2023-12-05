@@ -15,12 +15,12 @@ ProjectBaseBundle_localized:
 
 #'^$'
 #https://stackoverflow.com/questions/67644009/symfony-5-internationalized-routes-prefix-routes-with-empty-or-dynamic-local
-#ProjectBaseBundle_default:
-#    resource: 'routes-default.yaml'
-#    schemes:  ['%connection_channel%']
-#    prefix: '/'
-#    #name_prefix: 'default_'
-#    defaults:
-#        _locale: ''
+ProjectBaseBundle_default:
+    resource: 'routes-default.yaml'
+    schemes:  ['%connection_channel%']
+    prefix: '/'
+    #name_prefix: 'default_'
+    defaults:
+        _locale: ''
 
 #Locale Switcher: https://symfony.com/blog/new-in-symfony-6-1-locale-switcher
