@@ -410,6 +410,8 @@ if( $conn ) {
             //$tenantprefix = 'en';
             $container->setParameter('tenantprefix', $tenantprefix);
 
+            $defaultLocale = 'c/wcm/pathology';
+            $container->setParameter('locale', $defaultLocale);
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
             //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
             ////////////// EOF Dynamically change url prefix /////////////
