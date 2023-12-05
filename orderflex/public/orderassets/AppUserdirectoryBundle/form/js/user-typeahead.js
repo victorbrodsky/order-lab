@@ -44,11 +44,20 @@ function initTypeaheadUserSiteSearch() {
         //console.log('Home page');
         //it's cached, so it's safe to use it on all pages
         var searchLimit = 100;
-        userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
-        institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
-        cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+searchLimit+"/prefetchmin","employees");
-        admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+searchLimit+"/prefetchmin","employees");
-        singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+searchLimit+"/prefetchmin","employees");
+        //userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
+        userDBprefetch = Routing.generate('employees_user-data-search',{type: 'user', limit: searchLimit, search: 'prefetchmin'});
+
+        //institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
+        institutionDBprefetch = Routing.generate('employees_user-data-search',{type: 'institution', limit: searchLimit, search: 'prefetchmin'});
+
+        //cwidDBprefetch = getCommonBaseUrl("util/common/user-data-search/cwid/"+searchLimit+"/prefetchmin","employees");
+        cwidDBprefetch = Routing.generate('employees_user-data-search',{type: 'cwid', limit: searchLimit, search: 'prefetchmin'});
+
+        //admintitleDBprefetch = getCommonBaseUrl("util/common/user-data-search/admintitle/"+searchLimit+"/prefetchmin","employees");
+        admintitleDBprefetch = Routing.generate('employees_user-data-search',{type: 'admintitle', limit: searchLimit, search: 'prefetchmin'});
+
+        //singleDbprefetch = getCommonBaseUrl("util/common/user-data-search/single/"+searchLimit+"/prefetchmin","employees");
+        singleDbprefetch = Routing.generate('employees_user-data-search',{type: 'single', limit: searchLimit, search: 'prefetchmin'});
     //}
 
     var complex = true; //false;
@@ -58,7 +67,8 @@ function initTypeaheadUserSiteSearch() {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: userDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/user/"+suggestions_limit+"/prefetchmin","employees"),
-            remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/user/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: Routing.generate('employees_user-data-search',{type: 'user', limit: suggestions_limit, search: '%QUERY'}),
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -69,7 +79,8 @@ function initTypeaheadUserSiteSearch() {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: institutionDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/institution/prefetchmin","employees"),
-            remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/institution/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: Routing.generate('employees_user-data-search',{type: 'institution', limit: suggestions_limit, search: '%QUERY'}),
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -80,7 +91,8 @@ function initTypeaheadUserSiteSearch() {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: cwidDBprefetch,   //getCommonBaseUrl("util/common/user-data-search/cwid/prefetchmin","employees"),
-            remote: getCommonBaseUrl("util/common/user-data-search/cwid/" + suggestions_limit + "/%QUERY", "employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/cwid/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: Routing.generate('employees_user-data-search',{type: 'cwid', limit: suggestions_limit, search: '%QUERY'}),
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -91,7 +103,8 @@ function initTypeaheadUserSiteSearch() {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: admintitleDBprefetch, //getCommonBaseUrl("util/common/user-data-search/admintitle/prefetchmin","employees"),
-            remote: getCommonBaseUrl("util/common/user-data-search/admintitle/" + suggestions_limit + "/%QUERY", "employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/admintitle/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: Routing.generate('employees_user-data-search',{type: 'admintitle', limit: suggestions_limit, search: '%QUERY'}),
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -130,7 +143,8 @@ function initTypeaheadUserSiteSearch() {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: singleDbprefetch, //getCommonBaseUrl("util/common/user-data-search/single/"+suggestions_limit+"/prefetchmin","employees"),
-            remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
+            //remote: getCommonBaseUrl("util/common/user-data-search/single/" + suggestions_limit + "/%QUERY", "employees"),
+            remote: Routing.generate('employees_user-data-search',{type: 'single', limit: suggestions_limit, search: '%QUERY'}),
             dupDetector: duplicationDetector,
             limit: suggestions_limit,
             rateLimitBy: rateLimitBy,
@@ -224,7 +238,8 @@ function initTypeaheadUserSiteSearch() {
             
             //console.log('user chosen with id='+suggestion.id);
             //var url = 'user/'+suggestion.id;
-            var url = getCommonBaseUrl('user/'+suggestion.id,"employees");
+            //var url = getCommonBaseUrl('user/'+suggestion.id,"employees");
+            var url = Routing.generate('employees_showuser',{id: suggestion.id});
             window.open(url,"_self");
                                               
             return;

@@ -265,7 +265,29 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     //path: '/common/generic/{name}'
-    var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    var url = null;
+    if( sitename == "employees" ) {
+        if (urlprefix === "generic/") {
+            url = Routing.generate('employees_get_generic_select2', {
+                name: name,
+                cycle: cycleStr,
+                sitename: sitenameStr
+            });
+        } else {
+            //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+            url = Routing.generate('employees_get_special_select2', {
+                urlprefix: urlprefix,
+                cycle: cycleStr,
+                sitename: sitenameStr
+            });
+        }
+    } else if( sitename == "scan" ) {
+        url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    } else {
+        console.log('Invalid sitename='+url);
+    }
+
     console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {

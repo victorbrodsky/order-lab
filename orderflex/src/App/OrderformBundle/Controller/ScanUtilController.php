@@ -55,7 +55,7 @@ use App\OrderformBundle\Helper\FormHelper;
 #[Route(path: '/util')]
 class ScanUtilController extends UtilController {
 
-    #[Route(path: '/common/generic/{name}', name: 'scan_get_generic_select2', methods: ['GET'])]
+    #[Route(path: '/common/generic/{name}', name: 'scan_get_generic_select2', methods: ['GET'], options: ['expose' => true])]
     public function getGenericAction( Request $request, $name ) {
 
         return $this->getGenericList($request,$name);

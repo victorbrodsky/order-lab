@@ -148,7 +148,15 @@ class UtilController extends OrderAbstractController {
 
 
 
+    #[Route(path: '/common/special/{urlprefix}', name: 'employees_get_special_select2', methods: ['GET'], options: ['expose' => true])]
+    public function getSpecialAction( Request $request, $urlprefix ) {
 
+        //return $this->getGenericList($request,$urlprefix);
+        switch ($urlprefix) {
+            case 'fellowshipsubspecialty':
+                return $this->redirectToRoute('route', ['request' => $request], 307);
+        }
+    }
 
     #[Route(path: '/common/fellowshipsubspecialty', name: 'get-fellowshipsubspecialty-by-parent', methods: ['GET', 'POST'])]
     public function getDepartmentAction(Request $request) {
