@@ -271,14 +271,19 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         if (urlprefix === "generic/") {
             url = Routing.generate('employees_get_generic_select2', {
                 name: name,
-                cycle: cycleStr,
-                sitename: sitenameStr
+                cycle: cycle
+            });
+        } else if( urlprefix === "genericusers/") {
+            url = Routing.generate('employees_get_genericusers', {
+                name: name,
+                cycle: cycle
             });
         } else {
             //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
             url = Routing.generate('employees_get_special_select2', {
-                urlprefix: urlprefix,
-                cycle: cycleStr,
+                //urlprefix: urlprefix,
+                name: name,
+                cycle: cycle,
                 sitename: sitenameStr
             });
         }

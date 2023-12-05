@@ -356,10 +356,12 @@ function userCloneListener() {
         //console.log('userid='+userid);
         if( userid && userid != "" ) {
             //reload page with userid
-            var urlCreateUser = getCommonBaseUrl("user/new/clone/"+userid,"employees");
+            //var urlCreateUser = getCommonBaseUrl("user/new/clone/"+userid,"employees");
+            var urlCreateUser = Routing.generate('employees_new_user_clone', {id: userid});
         } else {
             //reload page regular new user
-            var urlCreateUser = getCommonBaseUrl("user/new","employees");
+            //var urlCreateUser = getCommonBaseUrl("user/new","employees");
+            var urlCreateUser = Routing.generate('employees_new_user', {id: null});
         }
         window.location = urlCreateUser;
     });
@@ -609,7 +611,8 @@ function researchLabListener( holder ) {
         if( labObject ) {
             //console.log("id="+labObject.id+", text="+labObject.text+', user_id='+user_id);
 
-            var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
+            //var url = getCommonBaseUrl("util/common/researchlab/"+labObject.id+"/"+user_id,"employees");
+            var url = Routing.generate('employees_get_researchlab', {id: labObject.id, subjectUser: user_id});
 
             $.ajax({
                 url: url,
@@ -815,7 +818,8 @@ function deleteObjectFromDB(btn) {
 
     var res = false;
 
-    var url = getCommonBaseUrl("util/common/researchlab/deletefromuser/"+idfield+"/"+user_id,"employees");
+    //var url = getCommonBaseUrl("util/common/researchlab/deletefromuser/"+idfield+"/"+user_id,"employees");
+    var url = Routing.generate('employees_researchlab_deletefromuser', {id: idfield, subjectUser: user_id});
 
     $.ajax({
         url: url,
@@ -874,7 +878,8 @@ function grantListener( holder ) {
         if( grantObject ) {
             //console.log("id="+grantObject.id+", text="+grantObject.text+', user_id='+user_id);
 
-            var url = getCommonBaseUrl("util/common/grant/"+grantObject.id+"/"+user_id,"employees");
+            //var url = getCommonBaseUrl("util/common/grant/"+grantObject.id+"/"+user_id,"employees");
+            var url = Routing.generate('employees_get_grant', {id: grantObject.id, subjectUser: user_id});
 
             $.ajax({
                 url: url,
@@ -1086,7 +1091,8 @@ function deleteObjectFromDB(btn) {
 
     var res = false;
 
-    var url = getCommonBaseUrl("util/common/grant/deletefromuser/"+idfield+"/"+user_id,"employees");
+    //var url = getCommonBaseUrl("util/common/grant/deletefromuser/"+idfield+"/"+user_id,"employees");
+    var url = Routing.generate('employees_grant_deletefromuser', {id: idfield, subjectUser: user_id});
 
     $.ajax({
         url: url,

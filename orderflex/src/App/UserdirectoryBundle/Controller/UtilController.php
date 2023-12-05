@@ -151,11 +151,50 @@ class UtilController extends OrderAbstractController {
     #[Route(path: '/common/special/{urlprefix}', name: 'employees_get_special_select2', methods: ['GET'], options: ['expose' => true])]
     public function getSpecialAction( Request $request, $urlprefix ) {
 
+        //$response = null;
+
         //return $this->getGenericList($request,$urlprefix);
         switch ($urlprefix) {
             case 'fellowshipsubspecialty':
-                return $this->redirectToRoute('route', ['request' => $request], 307);
+//                $response = $this->redirectToRoute('get-fellowshipsubspecialty-by-parent', [
+//                    'request'  => $request
+//                ]);
+                return $this->redirectToRoute('get-fellowshipsubspecialty-by-parent');
+            case 'traininginstitution':
+                return $this->redirectToRoute('employees_get_traininginstitution');
+            case 'institution-all':
+                return $this->redirectToRoute('employees_get_institution-all');
+            case 'institution-old':
+                return $this->redirectToRoute('employees_get_institution');
+            case 'calllogpatientlists':
+                return $this->redirectToRoute('employees_get_calllogpatientlists');
+            case 'crnpatientlists':
+                return $this->redirectToRoute('employees_get_crnpatientlists');
+            case 'accessionlists':
+                return $this->redirectToRoute('employees_get_accessionlists');
+            case 'locationusers':
+                return $this->redirectToRoute('employees_get_locationusers');
+            case 'building':
+                return $this->redirectToRoute('employees_get_building');
+            case 'location':
+                return $this->redirectToRoute('employees_get_location');
+            case 'locationName':
+                return $this->redirectToRoute('employees_get_locationname');
+            case 'get-location-by-name':
+                return $this->redirectToRoute('employees_get_location_by_name');
+            case 'specificindividuals':
+                return $this->redirectToRoute('employees_get_specificindividuals');
+            case 'userwrapper':
+                return $this->redirectToRoute('employees_get_userwrapper');
+            default:
+                exit("COntroller not found by urlprefix=".$urlprefix);
         }
+
+//        if( $response ) {
+//            return $response;
+//        }
+
+        exit("Invalid response for urlprefix=".$urlprefix);
     }
 
     #[Route(path: '/common/fellowshipsubspecialty', name: 'get-fellowshipsubspecialty-by-parent', methods: ['GET', 'POST'])]
@@ -441,7 +480,7 @@ class UtilController extends OrderAbstractController {
     /**
      * get all users except fellowship
      */
-    #[Route(path: '/common/genericusers/{usertype}', name: 'employees_get_genericusers', methods: ['GET'])]
+    #[Route(path: '/common/genericusers/{usertype}', name: 'employees_get_genericusers', methods: ['GET'], options: ['expose' => true])]
     public function getGenericUsersAction(Request $request, $usertype=null) {
 
         $em = $this->getDoctrine()->getManager();
@@ -793,7 +832,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if location can be deleted
      */
-    #[Route(path: '/common/location/delete/{id}', name: 'employees_location_delete', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/common/location/delete/{id}', name: 'employees_location_delete', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     public function getLocationCheckDeleteAction($id) {
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
@@ -824,7 +863,7 @@ class UtilController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/common/researchlab/{id}/{subjectUser}', name: 'employees_get_researchlab', methods: ['GET'])]
+    #[Route(path: '/common/researchlab/{id}/{subjectUser}', name: 'employees_get_researchlab', methods: ['GET'], options: ['expose' => true])]
     public function getResearchlabByIdAction( $id, $subjectUser=null ) {
 
         if( !is_numeric($id) ) {
@@ -903,7 +942,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if researchlab can be deleted
      */
-    #[Route(path: '/common/researchlab/deletefromuser/{id}/{subjectUser}', name: 'employees_researchlab_deletefromuser', methods: ['DELETE'])]
+    #[Route(path: '/common/researchlab/deletefromuser/{id}/{subjectUser}', name: 'employees_researchlab_deletefromuser', methods: ['DELETE'], options: ['expose' => true])]
     public function researchLabDeleteAction($id, $subjectUser=null) {
 
         if( !$subjectUser || $subjectUser == 'undefined' ) {
@@ -949,7 +988,7 @@ class UtilController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/common/grant/{id}/{subjectUser}', name: 'employees_get_grant', methods: ['GET'])]
+    #[Route(path: '/common/grant/{id}/{subjectUser}', name: 'employees_get_grant', methods: ['GET'], options: ['expose' => true])]
     public function getGrantByIdAction( $id, $subjectUser=null ) {
        
         if( !is_numeric($id) ) {
@@ -1061,7 +1100,7 @@ class UtilController extends OrderAbstractController {
     /**
      * check if grant can be deleted
      */
-    #[Route(path: '/common/grant/deletefromuser/{id}/{subjectUser}', name: 'employees_grant_deletefromuser', methods: ['DELETE'])]
+    #[Route(path: '/common/grant/deletefromuser/{id}/{subjectUser}', name: 'employees_grant_deletefromuser', methods: ['DELETE'], options: ['expose' => true])]
     public function grantDeleteAction($id, $subjectUser=null) {
 
         if( !$subjectUser || $subjectUser == 'undefined' ) {
