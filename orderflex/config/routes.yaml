@@ -1,17 +1,17 @@
 #Master routes to define prefix and requirements for all routes in one place
 #https://stackoverflow.com/questions/11781287/symfony2-route-global-locale-requirements
 
-ProjectBaseBundle_localized:
-    resource: 'routes-default.yaml'
-    schemes:  ['%connection_channel%']
-    prefix:   /{_locale}
-    #prefix:   /{tenantprefix}
-    #name_prefix: 'localized_'
-    requirements:
-        #_locale: en|es|de|fr
-        #_locale: '[^.]+'
-        _locale: c/wcm/pathology|c/lmh/pathology
-        #tenantprefix: c/wcm/pathology|c/lmh/pathology
+#ProjectBaseBundle_localized:
+#    resource: 'routes-default.yaml'
+#    schemes:  ['%connection_channel%']
+#    prefix:   /{_locale}
+#    #prefix:   /{tenantprefix}
+#    #name_prefix: 'localized_'
+#    requirements:
+#        #_locale: en|es|de|fr
+#        #_locale: '[^.]+'
+#        _locale: c/wcm/pathology|c/lmh/pathology
+#        #tenantprefix: c/wcm/pathology|c/lmh/pathology
 
 #'^$'
 #https://stackoverflow.com/questions/67644009/symfony-5-internationalized-routes-prefix-routes-with-empty-or-dynamic-local

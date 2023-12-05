@@ -1,7 +1,7 @@
 framework:
     router:
         utf8: true
-    default_locale: c/wcm/pathology #translational.yaml
+    #default_locale: c/wcm/pathology #translational.yaml
 
 when@prod:
     framework:
