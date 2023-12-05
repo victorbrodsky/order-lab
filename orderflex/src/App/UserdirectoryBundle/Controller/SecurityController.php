@@ -401,7 +401,7 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
-    #[Route(path: '/common/getmaxidletime', name: 'getmaxidletime', methods: ['GET'])]
+    #[Route(path: '/common/getmaxidletime', name: 'getmaxidletime', methods: ['GET'], options: ['expose' => true])]
     public function getmaxidletimeAction( Request $request )
     {
 
