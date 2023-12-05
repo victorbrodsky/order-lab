@@ -18,8 +18,7 @@ ProjectBaseBundle_localized:
 ProjectBaseBundle_default:
     resource: 'routes-default.yaml'
     schemes:  ['%connection_channel%']
-    prefix: '/'
-    #name_prefix: 'default_'
+    prefix: '' #'/'
     defaults:
         _locale: ''
 
