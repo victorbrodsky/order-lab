@@ -18,8 +18,8 @@ ProjectBaseBundle_localized:
 ProjectBaseBundle_default:
     resource: 'routes-default.yaml'
     schemes:  ['%connection_channel%']
-    prefix: '' #'/'
-    defaults:
-        _locale: ''
+    #prefix: '' #'/'
+    #defaults:
+    #    _locale: ''
 
 #Locale Switcher: https://symfony.com/blog/new-in-symfony-6-1-locale-switcher
