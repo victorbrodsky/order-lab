@@ -109,6 +109,7 @@ class DashboardController extends OrderAbstractController
             }//if $defaultCharts
         }//if $initHomePage
 
+        //exit('dashboardChoicesAction: before getFilter');
 
         //if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
@@ -118,6 +119,7 @@ class DashboardController extends OrderAbstractController
         //}
 
         //$filterform = $this->getFilter();
+        //exit('dashboardChoicesAction: after getFilter');
 
         $filterform->handleRequest($request);
 
@@ -198,6 +200,9 @@ class DashboardController extends OrderAbstractController
         //set to today
         //$endDate = $endDate->modify('-3 year');
         $startDate = $startDate->modify('-1 year');//->format('m/d/Y');
+        //dump($startDate);
+        //dump($endDate);
+        //exit('111');
 
         $params = array(
             'startDate' => $startDate,
@@ -221,11 +226,14 @@ class DashboardController extends OrderAbstractController
         $params["chartType"] = true;
         $params["chartTypes"] = $dashboardUtil->getChartTypes();
 
+        //echo "before createForm <br>";
+        //$params = array();
 
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
         ));
+        //exit('after createForm');
         //////////// EOF Filter ////////////
 
         return $filterform;

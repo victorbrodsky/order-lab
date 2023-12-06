@@ -592,7 +592,7 @@ function getCommonBaseUrl(link,sitename) {
 
     //get tenantprefix from container
     //_tenantprefix = ''; //testing
-    //console.log("_tenantprefix="+_tenantprefix);
+    console.log("_tenantprefix="+_tenantprefix);
     //Get the tenantprefix from the URL
     // /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
     //Or get it using ajax call to the server to get tenantprefix from the container
@@ -607,7 +607,7 @@ function getCommonBaseUrl(link,sitename) {
     //url might be in the form of:
     //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
 
-    //console.log("urlBase="+urlBase);
+    console.log("urlBase="+urlBase);
     return urlBase;
 }
 

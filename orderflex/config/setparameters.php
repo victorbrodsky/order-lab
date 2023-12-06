@@ -410,8 +410,16 @@ if( $conn ) {
             //$tenantprefix = 'en';
             $container->setParameter('tenantprefix', $tenantprefix);
 
-            $defaultLocale = 'c/wcm/pathology';
+            //$defaultLocale = 'c/wcm/pathology';
+            $defaultLocale = '';
             $container->setParameter('locale', $defaultLocale);
+
+            //$firewallPatternPrefix = '^';
+            //$firewallPatternPrefix = '.*';
+            //$firewallPatternPrefix = '^.*/';
+            $firewallPatternPrefix = '';
+            $container->setParameter('patternprefix', $firewallPatternPrefix);
+
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
             //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
             ////////////// EOF Dynamically change url prefix /////////////
