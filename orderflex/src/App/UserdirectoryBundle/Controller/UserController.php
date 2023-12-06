@@ -1733,8 +1733,8 @@ class UserController extends OrderAbstractController
     //        return $response;
     //    }
     ////////////////////// Create New User //////////////////////
-    #[Route(path: '/user/new', name: 'employees_new_user', methods: ['GET'])]
-    #[Route(path: '/user/new/clone/{id}', name: 'employees_new_user_clone', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/user/new', name: 'employees_new_user', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/user/new/clone/{id}', name: 'employees_new_user_clone', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function newUserAction(Request $request,$id=null)
     {

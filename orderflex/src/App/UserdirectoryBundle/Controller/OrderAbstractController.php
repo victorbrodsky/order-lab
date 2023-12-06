@@ -9,7 +9,6 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\CallLogBundle\Util\CallLogUtil;
-
 use App\CallLogBundle\Util\CallLogUtilForm;
 use App\CrnBundle\Util\CrnUtil;
 use App\CrnBundle\Util\CrnUtilForm;

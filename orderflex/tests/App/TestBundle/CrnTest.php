@@ -24,7 +24,7 @@ class CrnTest extends WebTestBase
         $this->client->followRedirects();
 
         //$this->getTestClient();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -41,7 +41,7 @@ class CrnTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/about');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -58,7 +58,7 @@ class CrnTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
+        //$linkName = '/'.$this->tenantprefix.'translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
     }
@@ -74,7 +74,7 @@ class CrnTest extends WebTestBase
 
         //check if there are any entries
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/');
         $records = $crawler->filter('.crn-patient-name');
         if( count($records) == 0 ) {
             echo "List is empty, records=".count($records);
@@ -157,8 +157,8 @@ class CrnTest extends WebTestBase
         $this->logIn();
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/');
-        //$crawler = $this->client->request('GET', '/critical-result-notifications/?filter[messageStatus]=All except deleted&filter[messageCategory]=CRN Log Entry_32&filter[mrntype]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/?filter[messageStatus]=All except deleted&filter[messageCategory]=CRN Log Entry_32&filter[mrntype]=1');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -484,7 +484,7 @@ class CrnTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/critical-result-notifications/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -498,7 +498,7 @@ class CrnTest extends WebTestBase
     //TODO:
 //    public function testComplexPatientsAction() {
 //        $this->logIn();
-//        $crawler = $this->client->request('GET', '/critical-result-notifications/patient-list/15/pathology-call-complex-patients');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/patient-list/15/pathology-call-complex-patients');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Recent Patients")')->count()
@@ -515,7 +515,7 @@ class CrnTest extends WebTestBase
 
     public function testRecentPatientsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/recent-patients');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/recent-patients');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Recent Patients")')->count()
@@ -539,14 +539,14 @@ class CrnTest extends WebTestBase
 
         //check if there are any entries
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/');
         $records = $crawler->filter('.crn-patient-name');
         if( count($records) == 0 ) {
             echo "List is empty, records=".count($records);
             return;
         }
 
-        $crawler = $this->client->request('GET', '/critical-result-notifications/entry/new');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/entry/new');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("New Entry")')->count()
@@ -575,7 +575,7 @@ class CrnTest extends WebTestBase
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -592,7 +592,7 @@ class CrnTest extends WebTestBase
 
     public function testResourcesAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/resources/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/resources/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -610,7 +610,7 @@ class CrnTest extends WebTestBase
     public function testResourcesEditAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/settings/edit-resources/show');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/settings/edit-resources/show');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -633,7 +633,7 @@ class CrnTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/critical-result-notifications/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -647,7 +647,7 @@ class CrnTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -661,7 +661,7 @@ class CrnTest extends WebTestBase
     public function testTodoTasksAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/tasks/to-do');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/tasks/to-do');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Critical Result Notification Case List")')->count()
@@ -679,7 +679,7 @@ class CrnTest extends WebTestBase
     public function testDataEditPatientInfoAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/critical-result-notifications/find-and-edit-patient-record');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'critical-result-notifications/find-and-edit-patient-record');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Edit Patient Info")')->count()

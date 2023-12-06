@@ -21,7 +21,7 @@ class ResappTest extends WebTestBase
         //$this->getTestClient();
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/residency-applications/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -38,12 +38,12 @@ class ResappTest extends WebTestBase
 //        $this->client->followRedirects();
 //
 //        //?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1
-//        $crawler = $this->client->request('GET', '/residency-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
-//        //$crawler = $this->client->request('GET', '/residency-applications/?filter[startDates]=2022');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+//        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/?filter[startDates]=2022');
 //
 //
 //        //$this->client->followRedirects();
-//        //$crawler = $this->client->request('GET', '/residency-applications/');
+//        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/');
 //
 //        //$content = $this->client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -70,7 +70,7 @@ class ResappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/residency-applications/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -83,7 +83,7 @@ class ResappTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/residency-applications/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -96,14 +96,14 @@ class ResappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
+        //$linkName = '/'.$this->tenantprefix.'translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
     }
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/residency-applications/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -122,7 +122,7 @@ class ResappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/residency-applications/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -136,7 +136,7 @@ class ResappTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/residency-applications/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -149,7 +149,7 @@ class ResappTest extends WebTestBase
 
     public function testAddNewResapp() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/residency-applications/new/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/new/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Application Receipt Date:")')->count()
@@ -176,7 +176,7 @@ class ResappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/residency-applications/my-interviewees/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/my-interviewees/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
 
 //        $this->assertGreaterThan(
 //            0,
@@ -200,7 +200,7 @@ class ResappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/residency-applications/group-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/group-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -222,7 +222,7 @@ class ResappTest extends WebTestBase
     public function testResowshipSettings() {
         $this->logIn();
 
-        $crawler = $this->client->request('GET', '/residency-applications/residency-types-settings');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/residency-types-settings');
 
         $this->assertGreaterThan(
             0,
@@ -239,7 +239,7 @@ class ResappTest extends WebTestBase
 //    public function testFormConfig() {
 //        $this->logIn();
 //
-//        $crawler = $this->client->request('GET', '/residency-applications/form-status-and-appearance/edit');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/form-status-and-appearance/edit');
 //
 //        $this->assertGreaterThan(
 //            0,
@@ -274,7 +274,7 @@ class ResappTest extends WebTestBase
 
         //Test Show
         echo "resappId=$resappId";
-        $crawler = $this->client->request('GET', '/residency-applications/show/'.$resappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/show/'.$resappId);
 
 //        $this->assertGreaterThan(
 //            0,
@@ -295,7 +295,7 @@ class ResappTest extends WebTestBase
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/residency-applications/edit/'.$resappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/edit/'.$resappId);
 
         $this->assertGreaterThan(
             0,
@@ -320,7 +320,7 @@ class ResappTest extends WebTestBase
 
 
         //Test Download (generating PDF)
-        $crawler = $this->client->request('GET', '/residency-applications/download/'.$resappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'residency-applications/download/'.$resappId);
 
         $this->assertGreaterThan(
             0,

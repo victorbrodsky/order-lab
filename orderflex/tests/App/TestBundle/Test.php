@@ -19,7 +19,8 @@ class Test extends WebTestBase
         echo "[PHP=".$phpVersion."]";
 
         //$this->getTestClient();
-        $crawler = $this->client->request('GET', '/directory/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -37,7 +38,7 @@ class Test extends WebTestBase
         echo "[PHP=".$phpVersion."]";
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/directory/test/container/testbase');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/test/container/testbase');
 
         $this->assertGreaterThan(
             0,
@@ -72,7 +73,7 @@ class Test extends WebTestBase
         echo "[PHP=".$phpVersion."]";
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/directory/test/container/test');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/test/container/test');
 
         $this->assertGreaterThan(
             0,

@@ -21,7 +21,7 @@ class FellappTest extends WebTestBase
         //$this->getTestClient();
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/fellowship-applications/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -38,12 +38,12 @@ class FellappTest extends WebTestBase
 //        $this->client->followRedirects();
 //
 //        //?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1
-//        $crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
-//        //$crawler = $this->client->request('GET', '/fellowship-applications/?filter[startDates]=2022');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/?filter[startDates]=2022&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+//        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/?filter[startDates]=2022');
 //
 //
 //        //$this->client->followRedirects();
-//        //$crawler = $this->client->request('GET', '/fellowship-applications/');
+//        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/');
 //
 //        //$content = $this->client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -90,7 +90,7 @@ class FellappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/fellowship-applications/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -103,7 +103,7 @@ class FellappTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/fellowship-applications/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -116,14 +116,14 @@ class FellappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
+        //$linkName = '/'.$this->tenantprefix.'translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
     }
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/fellowship-applications/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -142,7 +142,7 @@ class FellappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/fellowship-applications/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -156,7 +156,7 @@ class FellappTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/fellowship-applications/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -169,7 +169,7 @@ class FellappTest extends WebTestBase
 
     public function testAddNewFellapp() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/fellowship-applications/new/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/new/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Application Receipt Date:")')->count()
@@ -192,7 +192,7 @@ class FellappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/fellowship-applications/my-interviewees/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/my-interviewees/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
 
         $this->assertGreaterThan(
             0,
@@ -216,7 +216,7 @@ class FellappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/fellowship-applications/send-rejection-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/send-rejection-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -238,7 +238,7 @@ class FellappTest extends WebTestBase
     public function testFellowshipSettings() {
         $this->logIn();
 
-        $crawler = $this->client->request('GET', '/fellowship-applications/fellowship-types-settings');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/fellowship-types-settings');
 
         $this->assertGreaterThan(
             0,
@@ -255,7 +255,7 @@ class FellappTest extends WebTestBase
 //    public function testFormConfig() {
 //        $this->logIn();
 //
-//        $crawler = $this->client->request('GET', '/fellowship-applications/form-status-and-appearance/edit');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/form-status-and-appearance/edit');
 //
 //        $this->assertGreaterThan(
 //            0,
@@ -291,7 +291,7 @@ class FellappTest extends WebTestBase
         }
         
         //Test Show
-        $crawler = $this->client->request('GET', '/fellowship-applications/show/'.$fellappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId);
 
 //        $this->assertGreaterThan(
 //            0,
@@ -312,7 +312,7 @@ class FellappTest extends WebTestBase
 
 
         //Test Edit
-        $crawler = $this->client->request('GET', '/fellowship-applications/edit/'.$fellappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/edit/'.$fellappId);
 
         $this->assertGreaterThan(
             0,
@@ -336,7 +336,7 @@ class FellappTest extends WebTestBase
         );
 
         //Test Download (generating PDF)
-        $crawler = $this->client->request('GET', '/fellowship-applications/download/'.$fellappId);
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/download/'.$fellappId);
 
         $this->assertGreaterThan(
             0,

@@ -30,7 +30,10 @@ function initRankModal() {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function rankModalCreation( btnEl, resappId ) {
 
-    var url = getCommonBaseUrl("rank/edit/"+resappId);
+    $('#modal_error_'+resappId).html("");
+
+    //var url = getCommonBaseUrl("rank/edit/"+resappId);
+    var url = Routing.generate('resapp_rank_edit', {'resappid': resappId});
     //console.log('url='+url);
 
     var waitModal = true;
@@ -60,18 +63,25 @@ function rankModalCreation( btnEl, resappId ) {
         //dataType:'json',//type of data you are returning from server
         //data: data, //better to pass it with data
         success: function(response){
-
-            //remove wait modal
-            if( waitModal ) {
-                var $modal2 = $("#wait-rank-modal").detach().modal();
-                $modal2.modal("hide");
+            if( response['error'] ) {
+                if( waitModal ) {
+                    $('#wait-rank-modal').find('h4').html(response['error']);
+                } else {
+                    lbtn.stop();
+                }
             } else {
-                lbtn.stop();
-            }
+                //remove wait modal
+                if (waitModal) {
+                    var $modal2 = $("#wait-rank-modal").detach().modal();
+                    $modal2.modal("hide");
+                } else {
+                    lbtn.stop();
+                }
 
-            $('body').append(response);
-            //$('#resapp_rank_'+resappId).replaceWith( response );
-            success = true;
+                $('body').append(response);
+                //$('#resapp_rank_'+resappId).replaceWith( response );
+                success = true;
+            }
         },
         error: function(){
             //handle error
@@ -92,11 +102,47 @@ function rankModalCreation( btnEl, resappId ) {
 
 }
 
+// function submitRank(btn,resappId) {
+//
+//     var rankValue = $('#oleg_resappbundle_rank_rank').val();
+//
+//     //var url = getCommonBaseUrl("rank/update-ajax/"+resappId);
+//     var url = Routing.generate('resapp_rank_update', {'resappid': resappId});
+//
+//     var rank_modal = $('#resapp_rank_'+resappId);
+//
+//     $.ajax({
+//         type: 'PUT',
+//         url: url,
+//         data: {rankValue: rankValue},
+//         timeout: _ajaxTimeout,
+//         success: function(data){
+//             //console.log("OK submit a new rank");
+//             if( data == 'ok' ) {
+//                 rank_modal.modal('hide');
+//                 rank_modal.remove();
+//                 //cleanRankModal();
+//                 //if( _reload_page_after_modal == '1' ) {
+//                     window.parent.location.reload();
+//                 //}
+//             } else {
+//                 console.log("error: data="+data);
+//             }
+//         },
+//         error: function(){
+//             console.log("error: data="+data);
+//         }
+//     });
+// }
 function submitRank(btn,resappId) {
+
+    $('#modal_error_'+resappId).html("");
 
     var rankValue = $('#oleg_resappbundle_rank_rank').val();
 
-    var url = getCommonBaseUrl("rank/update-ajax/"+resappId);
+    //var url = getCommonBaseUrl("rank/update-ajax/"+resappId);
+    var url = Routing.generate('resapp_rank_update', {'resappid': resappId});
+    //console.log('resapp_rank_update url='+url);
 
     var rank_modal = $('#resapp_rank_'+resappId);
 
@@ -112,14 +158,16 @@ function submitRank(btn,resappId) {
                 rank_modal.remove();
                 //cleanRankModal();
                 //if( _reload_page_after_modal == '1' ) {
-                    window.parent.location.reload();
+                window.parent.location.reload();
                 //}
             } else {
-                console.log("error: data="+data);
+                var errormsg = '<div class="alert alert-danger">'+data+'</div>';
+                $('#modal_error_'+resappId).html(errormsg);
+                //console.log("error: data="+data);
             }
         },
-        error: function(){
-            console.log("error: data="+data);
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log("error: textStatus="+textStatus+"; errorThrown="+errorThrown);
         }
     });
 }

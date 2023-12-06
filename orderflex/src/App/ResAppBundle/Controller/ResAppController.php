@@ -379,13 +379,14 @@ class ResAppController extends OrderAbstractController {
         }
 
         $resSubspecId = null;
+        //echo "filter=$filter <br>";
         if( $filter ) { //&& $filter != "ALL"
             $dql->andWhere("residencyTrack.id = ".$filter);
             $searchFlag = true;
             $resSubspecId = $filter;
         }
 
-        if( 0 && !$filter ) {
+        if( !$filter ) {
             $restypeArr = array();
             foreach( $residencyTypes as $residencyTypeID => $residencyTypeName ) {
                 $restypeArr[] = "residencyTrack.id = ".$residencyTypeID;

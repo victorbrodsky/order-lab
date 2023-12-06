@@ -77,7 +77,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
     {
-
+        //exit('onAuthenticationSuccess');
         //testing
         //return new RedirectResponse($this->router->generate('employees_initial_configuration'));
 
@@ -220,6 +220,11 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $referer_url = $lastRoute;
         } else {
             $referer_url = $this->router->generate($this->siteName.'_home');
+//            echo "onAuthenticationSuccess tenantprefix=".$request->get('tenantprefix')."<br>";
+//            $parameters = array(
+//                'tenantprefix' => $request->get('tenantprefix')
+//            );
+//            $referer_url = $this->router->generate($this->siteName.'_home',$parameters);
         }
 
         //echo("referer_url=".$referer_url);

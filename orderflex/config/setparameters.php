@@ -78,6 +78,9 @@ if( !$connection_channel ) {
 //echo "password=".$password."<br>";
 
 //upload paths can't be NULL
+$tenantprefix = '';
+$container->setParameter('tenantprefix', $tenantprefix);
+
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";
 $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
@@ -392,6 +395,34 @@ if( $conn ) {
                 $contentabout_page = str_replace("%", "%%", $contentabout_page);
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
+
+            ////////////// Dynamically change url prefix /////////////
+            //Test multi tenancy
+            //1) IF "Server Role and Network Access:" = "Internet (Hub)”
+            //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
+            //3) set tenantid $tenantprefix = authPartnerServer
+
+            //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
+            //$tenantprefix = 'c/wcm/pathology/';
+            //$tenantprefix = 'c/lmh/pathology/';
+            $tenantprefix = ''; //default prefix as it was in the original configuration
+            //$tenantprefix = 'pathology/';
+            //$tenantprefix = 'en';
+            $container->setParameter('tenantprefix', $tenantprefix);
+
+            //$defaultLocale = 'c/wcm/pathology';
+            $defaultLocale = '';
+            $container->setParameter('locale', $defaultLocale);
+
+            //$firewallPatternPrefix = '^';
+            //$firewallPatternPrefix = '.*';
+            //$firewallPatternPrefix = '^.*/';
+            $firewallPatternPrefix = '';
+            $container->setParameter('patternprefix', $firewallPatternPrefix);
+
+            //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+            //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
+            ////////////// EOF Dynamically change url prefix /////////////
 
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";

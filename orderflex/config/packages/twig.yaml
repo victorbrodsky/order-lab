@@ -20,6 +20,11 @@ twig:
     globals:
         #pathToWeb: "%kernel.project_dir%/public"
 
+        #check container parameter: php bin/console debug:container --parameter tenantprefix
+        #tenantprefix is used by JS getCommonBaseUrl
+        #tenantprefix: '%tenantprefix%'
+        tenantprefix: '%locale%'
+
         institution_url: '%institution_url%'
         institution_name: '%institution_name%'
         subinstitution_url: '%subinstitution_url%'

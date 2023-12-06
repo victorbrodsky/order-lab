@@ -37,8 +37,6 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -46,12 +44,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FellAppRankController extends OrderAbstractController {
 
-    #[Route(path: '/rank/edit/{fellappid}', name: 'fellapp_rank_edit', methods: ['GET'])]
+    #[Route(path: '/rank/edit/{fellappid}', name: 'fellapp_rank_edit', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppFellAppBundle/Rank/rank_modal.html.twig')]
     public function rankEditAction(Request $request, $fellappid) {
 
+        //Change the global rank is permitted only by a program Director
         if( false == $this->isGranted("read","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //$res = 'Access is denied to rank the application with ID '.$fellappid;
+            //exit($res);
+            //throw $this->createAccessDeniedException('Access is denied to rank the application with ID '.$fellappid);
+            //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            $res = array(
+                //'error' => 'Access is denied to set a global score for the application with ID '.$fellappid
+                'error' => 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$fellappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -59,8 +70,20 @@ class FellAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            //throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            $res = array(
+                'error' => 'Unable to find Fellowship Application by id='.$fellappid
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
+
+//        if( false == $this->isGranted("read",$fellApp) ) {
+//            //exit('fellapp read permission not ok ID:'.$entity->getId());
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
 
         $user = $this->getUser();
 
@@ -79,15 +102,24 @@ class FellAppRankController extends OrderAbstractController {
         return array(
             'entity' => $fellApp,
             'form' => $form->createView(),
+            'error' => null
         );
     }
 
 
-    #[Route(path: '/rank/update-ajax/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'])]
+    #[Route(path: '/rank/update-ajax/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'], options: ['expose' => true])]
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
+        //Change the global rank is permitted only by a program Director
         if( false == $this->isGranted("read","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //throw new \Exception('Access is denied to rank the application with ID '.$fellappid);
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //$res = 'Access is denied to set a global score for the application with ID '.$fellappid;
+            $res = 'Access denied. Only a program director is allowed to set the global score for the application with ID '.$fellappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $rankValue = $request->request->get('rankValue');
@@ -102,7 +134,12 @@ class FellAppRankController extends OrderAbstractController {
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+//            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
+            $res = 'Unable to find Fellowship Application by id='.$fellappid;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         $user = $this->getUser();
@@ -120,6 +157,10 @@ class FellAppRankController extends OrderAbstractController {
             $rank->setUpdateuserroles($user->getRoles());
         }
 
+        if( !$rankValue ) {
+            $rankValue = null;
+        }
+        
         //$res = 'notok';
         //$res = 'ok';
         //if( $rankValue != "" ) {
@@ -150,7 +191,7 @@ class FellAppRankController extends OrderAbstractController {
     /**
      * NOT USED
      */
-    #[Route(path: '/rank/update/{fellappid}', name: 'fellapp_rank_update', methods: ['PUT'])]
+    #[Route(path: '/rank/update/notused/{fellappid}', name: 'fellapp_rank_update_notused', methods: ['PUT'])]
     public function rankUpdateAction(Request $request, $fellappid) {
 
         if( false == $this->isGranted("read","FellowshipApplication") ){

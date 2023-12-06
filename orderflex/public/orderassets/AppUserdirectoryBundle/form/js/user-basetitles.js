@@ -213,7 +213,8 @@ function objectIsDeleteable(btn,classname) {
 
     var removable = false;
 
-    var url = getCommonBaseUrl("util/common/"+"location/delete/"+locationid,"employees");
+    //var url = getCommonBaseUrl("util/common/"+"location/delete/"+locationid,"employees");
+    var url = Routing.generate('employees_location_delete', {id: locationid});
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,

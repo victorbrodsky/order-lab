@@ -18,7 +18,7 @@
  * Created by oli2002 on 9/3/14.
  */
 
-
+var _tenantprefix = $("#tenantprefix").val();
 var _cycleShow = false;
 var _sitename = "";
 var asyncflag = true;
@@ -264,8 +264,36 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         sitenameStr = "&sitename="+sitenameStr;
     }
 
-    var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-    //console.log('get Combobox Generic: url='+url);
+    //path: '/common/generic/{name}'
+    //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    var url = null;
+    if( sitename == "employees" ) {
+        if (urlprefix === "generic/") {
+            url = Routing.generate('employees_get_generic_select2', {
+                name: name,
+                cycle: cycle
+            });
+        } else if( urlprefix === "genericusers/") {
+            url = Routing.generate('employees_get_genericusers', {
+                name: name,
+                cycle: cycle
+            });
+        } else {
+            //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+            url = Routing.generate('employees_get_special_select2', {
+                //urlprefix: urlprefix,
+                name: name,
+                cycle: cycle,
+                sitename: sitenameStr
+            });
+        }
+    } else if( sitename == "scan" ) {
+        url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    } else {
+        console.log('Invalid sitename='+url);
+    }
+
+    console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -531,7 +559,6 @@ function initConvertEnterToTab() {
 }
 
 function getCommonBaseUrl(link,sitename) {
-
     //console.log('getCommonBaseUrl: sitename='+sitename);
 
     if( typeof sitename === 'undefined' ) {
@@ -555,18 +582,32 @@ function getCommonBaseUrl(link,sitename) {
 
     var scheme = "http:";
     var url = window.location.href;
+    //console.log('url='+url);
+
     var urlArr = url.split("/");
     if( urlArr.length > 0 ) {
         scheme = urlArr[0];
     }
     //console.log('scheme='+scheme);
 
+    //get tenantprefix from container
+    //_tenantprefix = ''; //testing
+    console.log("_tenantprefix="+_tenantprefix);
+    //Get the tenantprefix from the URL
+    // /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
+    //Or get it using ajax call to the server to get tenantprefix from the container
+    //var tenantprefix = 'c/lmh/pathology/';
+
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        urlBase = scheme+"//" + urlBase + "/" + prefix + "/" + link;
+        urlBase = scheme+"//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
     }
-    //console.log("urlBase="+urlBase);
+
+    //url might be in the form of:
+    //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
+
+    console.log("urlBase="+urlBase);
     return urlBase;
 }
 
@@ -620,7 +661,7 @@ function getSitename() {
     return sitename;
 }
 
-function siteNameMapper(full) {
+function siteNameMapper() {
     var url = window.location.pathname;
 
     var sitename = 'directory';

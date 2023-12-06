@@ -66,6 +66,7 @@ class WebTestBase extends WebTestCase
     //static protected $kernel = null;
     protected $user = null;
     protected $environment = null;
+    protected $tenantprefix = '';//'c/lmh/pathology/';
 
     public function getParam() {
 //        global $argv, $argc;
@@ -95,6 +96,7 @@ class WebTestBase extends WebTestCase
         //$this->em = $this->getService('doctrine.orm.entity_manager');
         //$this->em = $this->getService('user_security_utility');
         $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
+        $this->tenantprefix = $this->testContainer->getParameter('tenantprefix');
 
         $this->user = $this->getUser();
 

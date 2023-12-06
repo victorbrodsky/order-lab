@@ -1139,7 +1139,7 @@ class AdminController extends OrderAbstractController
         $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
         $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
         $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
-        $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+        //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
 
         //exit('testing generateAll()');
 
@@ -1284,7 +1284,7 @@ class AdminController extends OrderAbstractController
             'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
             'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
-            'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
+            //'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
             'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
 
             ' (Note: -1 means that this table is already exists)';

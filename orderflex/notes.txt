@@ -1875,4 +1875,8 @@ If you like Certbot, please consider supporting our work by:
  * Donating to EFF:                    https://eff.org/donate-le
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Upgrade GIT on Centos: https://stackoverflow.com/questions/21820715/how-to-install-latest-version-of-git-on-centos-8-x-7-x-6-x
+yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm
+yum install git
+git --version
 

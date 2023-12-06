@@ -22,10 +22,10 @@ class UserTest extends WebTestBase
 
         //$this->client->followRedirects();
         
-        $crawler = $this->client->request('GET', '/directory/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$client = static::createClient();
-        //$crawler = $client->request('GET', '/directory/login');
+        //$crawler = $client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -38,7 +38,7 @@ class UserTest extends WebTestBase
 
     public function testHomeAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -53,7 +53,7 @@ class UserTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/directory/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -66,7 +66,7 @@ class UserTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -83,7 +83,7 @@ class UserTest extends WebTestBase
 
     public function testListCurrentAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/users');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/users');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("All Current Employees")')->count()
@@ -96,7 +96,7 @@ class UserTest extends WebTestBase
 
     public function testAddUserAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/user/new');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/user/new');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Create New User")')->count()
@@ -113,7 +113,7 @@ class UserTest extends WebTestBase
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -130,7 +130,7 @@ class UserTest extends WebTestBase
 
     public function testPlatformListManagerAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/admin/list-manager/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/admin/list-manager/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform List Manager")')->count()
@@ -145,7 +145,7 @@ class UserTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/directory/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -159,7 +159,7 @@ class UserTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -172,7 +172,7 @@ class UserTest extends WebTestBase
 
     public function testHierarchyManagerAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/admin/hierarchies/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/admin/hierarchies/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Hierarchy Manager")')->count()
@@ -190,7 +190,7 @@ class UserTest extends WebTestBase
 
     public function testFellappNewListManagerAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/admin/list/fellowship-subspecialties/new');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/admin/list/fellowship-subspecialties/new');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Fellowship Subspecialties")')->count()
@@ -203,7 +203,7 @@ class UserTest extends WebTestBase
 
     public function testRoleNewListManagerAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/directory/admin/list/roles/new');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/admin/list/roles/new');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Roles")')->count()
@@ -217,7 +217,7 @@ class UserTest extends WebTestBase
     public function testBackupShowAction() {
         $this->logIn();
 
-        $crawler = $this->client->request('GET', '/directory/data-backup-management');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/data-backup-management');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");

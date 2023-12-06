@@ -199,218 +199,219 @@ security:
                 class: 'App\UserdirectoryBundle\Entity\User'
                 property: 'username'
 
-    firewalls:
 
-        #this firewall name must be the same as in the bundle's service.yml.
-        external_ldap_firewall:
-            pattern: ^/scan
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                  authenticator: custom_guard_authenticator
-            form_login:
-                # "login" is the name of the route created previously
-                login_path: /scan/login
-                check_path: /scan/login
-            logout:
-                path:   /scan/logout
-                target: /scan/login
-            lazy:  true
-            access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /scan
-#                always_remember_me: true
-
-        ldap_employees_firewall:
-              pattern: ^/directory
-              context: scan_auth
-              switch_user: true
-              custom_authenticators:
-                  authenticator: custom_guard_authenticator
-              form_login:
-                  # "login" is the name of the route created previously
-                  login_path: /directory/login
-                  check_path: /directory/login
-              logout:
-                  path:   /directory/logout
-                  target: /directory/login
-              lazy:  true
-              access_denied_url: /directory/access-requests/new/create
-              remember_me:
-                  secret:      "%secret%"
-                  lifetime: 28800 # 8 hours in seconds
-                  path:     /directory
-
-        ldap_fellapp_firewall:
-            pattern: ^/fellowship-applications
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /fellowship-applications/login
-                check_path: /fellowship-applications/login
-            logout:
-                path:   /fellowship-applications/logout
-                target: /fellowship-applications/login
-            #anonymous:  true
-            lazy: true
-            access_denied_url: /fellowship-applications/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /fellowship-applications
-#                always_remember_me: true
-
-        ldap_resapp_firewall:
-            pattern: ^/residency-applications
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /residency-applications/login
-                check_path: /residency-applications/login
-            logout:
-                path:   /residency-applications/logout
-                target: /residency-applications/login
-            lazy:  true
-            access_denied_url: /residency-applications/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /residency-applications
-
-        ldap_deidentifier_firewall:
-            pattern: ^/deidentifier
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /deidentifier/login
-                check_path: /deidentifier/login
-            logout:
-                path:   /deidentifier/logout
-                target: /deidentifier/login
-            lazy:  true
-            access_denied_url: /deidentifier/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /deidentifier
-#                always_remember_me: true
-
-        ldap_vacreq_firewall:
-            pattern: ^/time-away-request
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /time-away-request/login
-                check_path: /time-away-request/login
-            logout:
-                path:   /time-away-request/logout
-                target: /time-away-request/login
-            lazy:  true
-            access_denied_url: /time-away-request/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /time-away-request
-#                always_remember_me: true
-
-        ldap_calllog_firewall:
-            pattern: ^/call-log-book
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /call-log-book/login
-                check_path: /call-log-book/login
-            logout:
-                path:   /call-log-book/logout
-                target: /call-log-book/login
-            lazy:  true
-            access_denied_url: /call-log-book/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /call-log-book
-#                always_remember_me: true
-
-        ldap_crn_firewall:
-            pattern: ^/critical-result-notifications
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /critical-result-notifications/login
-                check_path: /critical-result-notifications/login
-            logout:
-                path:   /critical-result-notifications/logout
-                target: /critical-result-notifications/login
-            lazy:  true
-            access_denied_url: /critical-result-notifications/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /critical-result-notifications
-
-        ldap_translationalresearch_firewall:
-            pattern: ^/translational-research
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /translational-research/login
-                check_path: /translational-research/login
-            logout:
-                path:   /translational-research/logout
-                target: /translational-research/login
-            lazy:  true
-            access_denied_url: /translational-research/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /translational-research
-#                always_remember_me: true
-
-        ldap_dashboard_firewall:
-            pattern: ^/dashboards
-            context: scan_auth
-            switch_user: true
-            custom_authenticators:
-                authenticator: custom_guard_authenticator
-            form_login:
-                login_path: /dashboards/login
-                check_path: /dashboards/login
-            logout:
-                path:   /dashboards/logout
-                target: /dashboards/login
-            lazy:  true
-            access_denied_url: /dashboards/access-requests/new/create
-            remember_me:
-                secret:      "%secret%"
-                lifetime: 28800 # 8 hours in seconds
-                path:     /dashboards
-
-        foscomment_api_firewall:
-            pattern: ^/api
-            #logout_on_user_change: true
-            context: scan_auth
-            lazy:  true
+#    firewalls:
+#
+#        #this firewall name must be the same as in the bundle's service.yml.
+#        external_ldap_firewall:
+#            pattern: ^/{tenantprefix}/scan
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                  authenticator: custom_guard_authenticator
+#            form_login:
+#                # "login" is the name of the route created previously
+#                login_path: /{tenantprefix}/scan/login
+#                check_path: /{tenantprefix}/scan/login
+#            logout:
+#                path:   /{tenantprefix}/scan/logout
+#                target: /{tenantprefix}/scan/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/scan/access-requests/new/create  #/scan/scan-order/no-permission
 #            remember_me:
 #                secret:      "%secret%"
-#                lifetime: 604800 # 1 week in seconds
-#                path:     /api
-#                always_remember_me: true
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/scan
+##                always_remember_me: true
+#
+#        ldap_employees_firewall:
+#              pattern: ^/{tenantprefix}/directory
+#              context: scan_auth
+#              switch_user: true
+#              custom_authenticators:
+#                  authenticator: custom_guard_authenticator
+#              form_login:
+#                  # "login" is the name of the route created previously
+#                  login_path: /{tenantprefix}/directory/login
+#                  check_path: /{tenantprefix}/directory/login
+#              logout:
+#                  path:   /{tenantprefix}/directory/logout
+#                  target: /{tenantprefix}/directory/login
+#              lazy:  true
+#              access_denied_url: /{tenantprefix}/directory/access-requests/new/create
+#              remember_me:
+#                  secret:      "%secret%"
+#                  lifetime: 28800 # 8 hours in seconds
+#                  path:     /{tenantprefix}/directory
+#
+#        ldap_fellapp_firewall:
+#            pattern: ^/{tenantprefix}/fellowship-applications
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/fellowship-applications/login
+#                check_path: /{tenantprefix}/fellowship-applications/login
+#            logout:
+#                path:   /{tenantprefix}/fellowship-applications/logout
+#                target: /{tenantprefix}/fellowship-applications/login
+#            #anonymous:  true
+#            lazy: true
+#            access_denied_url: /{tenantprefix}/fellowship-applications/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/fellowship-applications
+##                always_remember_me: true
+#
+#        ldap_resapp_firewall:
+#            pattern: ^/{tenantprefix}/residency-applications
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/residency-applications/login
+#                check_path: /{tenantprefix}/residency-applications/login
+#            logout:
+#                path:   /{tenantprefix}/residency-applications/logout
+#                target: /{tenantprefix}/residency-applications/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/residency-applications/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/residency-applications
+#
+#        ldap_deidentifier_firewall:
+#            pattern: ^/{tenantprefix}/deidentifier
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/deidentifier/login
+#                check_path: /{tenantprefix}/deidentifier/login
+#            logout:
+#                path:   /{tenantprefix}/deidentifier/logout
+#                target: /{tenantprefix}/deidentifier/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/deidentifier/access-requests/new/create
+#            remember_me:
+#                secret:      '%secret%'
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/deidentifier
+##                always_remember_me: true
+#
+#        ldap_vacreq_firewall:
+#            pattern: ^/{tenantprefix}/time-away-request
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/time-away-request/login
+#                check_path: /{tenantprefix}/time-away-request/login
+#            logout:
+#                path:   /{tenantprefix}/time-away-request/logout
+#                target: /{tenantprefix}/time-away-request/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/time-away-request/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/time-away-request
+##                always_remember_me: true
+#
+#        ldap_calllog_firewall:
+#            pattern: ^/{tenantprefix}/call-log-book
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/call-log-book/login
+#                check_path: /{tenantprefix}/call-log-book/login
+#            logout:
+#                path:   /{tenantprefix}/call-log-book/logout
+#                target: /{tenantprefix}/call-log-book/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/call-log-book/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/call-log-book
+##                always_remember_me: true
+#
+#        ldap_crn_firewall:
+#            pattern: ^/{tenantprefix}/critical-result-notifications
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/critical-result-notifications/login
+#                check_path: /{tenantprefix}/critical-result-notifications/login
+#            logout:
+#                path:   /{tenantprefix}/critical-result-notifications/logout
+#                target: /{tenantprefix}/critical-result-notifications/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/critical-result-notifications/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/critical-result-notifications
+#
+#        ldap_translationalresearch_firewall:
+#            pattern: ^/{tenantprefix}/translational-research
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/translational-research/login
+#                check_path: /{tenantprefix}/translational-research/login
+#            logout:
+#                path:   /{tenantprefix}/translational-research/logout
+#                target: /{tenantprefix}/translational-research/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/translational-research/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/translational-research
+##                always_remember_me: true
+#
+#        ldap_dashboard_firewall:
+#            pattern: ^/{tenantprefix}/dashboards
+#            context: scan_auth
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: /{tenantprefix}/dashboards/login
+#                check_path: /{tenantprefix}/dashboards/login
+#            logout:
+#                path:   /{tenantprefix}/dashboards/logout
+#                target: /{tenantprefix}/dashboards/login
+#            lazy:  true
+#            access_denied_url: /{tenantprefix}/dashboards/access-requests/new/create
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+#                path:     /{tenantprefix}/dashboards
+#
+#        foscomment_api_firewall:
+#            pattern: ^/api
+#            #logout_on_user_change: true
+#            context: scan_auth
+#            lazy:  true
+##            remember_me:
+##                secret:      "%secret%"
+##                lifetime: 604800 # 1 week in seconds
+##                path:     /api
+##                always_remember_me: true
 
 #        default:
 #            anonymous: ~
@@ -437,7 +438,7 @@ security:
 #         requires_channel: '%connection_channel%'
 
 
-#       - { path: ^/directory/login/, role: PUBLIC_ACCESS }
+#       - { path: ^/{tenantprefix}/directory/login/, role: PUBLIC_ACCESS }
 #       - { path: ^/, role: PUBLIC_ACCESS }
 
        ############################## local system user init ##############################

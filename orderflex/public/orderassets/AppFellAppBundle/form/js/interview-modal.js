@@ -33,8 +33,10 @@ function interviewModalCreation( btnEl, fellappId ) {
 
     //console.log('interviewModalAction fellappId='+fellappId);
 
-    var url = getCommonBaseUrl("interview-modal/"+fellappId);
-    //console.log('url='+url);
+    //var url = getCommonBaseUrl("interview-modal/"+fellappId);
+    //console.log('getCommonBaseUrl url='+url);
+    var url = Routing.generate('fellapp_interview_modal', {'id': fellappId});
+    console.log('url='+url);
 
 //    $( "#interview-info-modal" ).load( url, function() {
 //        console.log( "Load was performed. fellappId="+fellappId );

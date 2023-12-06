@@ -110,7 +110,8 @@ idleTimeoutClass.prototype.init = function () {
     this.employees_sitename = "employees";   //"{{ employees_sitename|escape('js') }}";
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     //this.countdownDialog = $("#dialog-countdown");
-    this.urlCommonIdleTimeout = getCommonBaseUrl("common/keepalive",this.employees_sitename);
+    //this.urlCommonIdleTimeout = getCommonBaseUrl("common/keepalive",this.employees_sitename);
+    this.urlCommonIdleTimeout = Routing.generate('keepalive');
 
     this.setMaxIdletime();
     
@@ -127,7 +128,8 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
     
     //get max idle time from server by ajax
     $.ajax({
-        url: getCommonBaseUrl("common/getmaxidletime",this.employees_sitename),
+        //url: getCommonBaseUrl("common/getmaxidletime",this.employees_sitename),
+        url: Routing.generate('getmaxidletime'),
         type: 'GET',
         //contentType: 'application/json',
         dataType: 'json',
@@ -151,7 +153,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 
 //var _idleTimeout = null;
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
-    //console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
+    console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
     var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
@@ -175,10 +177,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/
     var thisUrl = window.location.pathname; // /order/index_dev.php/directory/
+    console.log("thisUrl="+thisUrl);
     //convert url: replace '/' to '-'
     //thisUrl = thisUrl.toString().replaceAll("/","_");
     thisUrl = thisUrl.replace(/\//g,"_");
-
+    console.log("2 thisUrl="+thisUrl);
     // console.log(
     //     "checkIdleTimeout (in sec)" +
     //     ", _idleAfter="+_idleAfter+
@@ -187,7 +190,21 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //     ", thisUrl="+thisUrl
     // );
 
+    //testing
+    //var keepaliveUrl = Routing.generate('keepalive');
+    //https://stackoverflow.com/questions/29937114/how-to-pass-locale-using-fosjsroutingbundle
+    //https://stackoverflow.com/questions/25842418/symfony-fos-js-routing-and-problems-with-locale
+    //var keepaliveUrl = Routing.generate('keepalive',{tenantprefix: 'pathology'});
+    //console.log("testing keepaliveUrl="+keepaliveUrl);
+
+    //{tenantprefix} cause error: Uncaught Error: The route "setserveractive" requires the parameter "tenantprefix"
     var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href
+    //var sessionKeepAliveUrl = Routing.generate('setserveractive',{tenantprefix: 'pathology', url: thisUrl}); //window.location.href
+    console.log("sessionKeepAliveUrl="+sessionKeepAliveUrl);
+
+    //var sessionKeepAliveUrl = getCommonBaseUrl("setserveractive"); //working, but modify to pass {setserveractive} from session
+    //sessionKeepAliveUrl = sessionKeepAliveUrl + "/" + thisUrl;
+    //console.log("2 sessionKeepAliveUrl="+sessionKeepAliveUrl);
 
     var dialogText = "For security reasons, you are about to be logged out due to inactivity.";// +
         //"Please move the mouse, press any key, or press the button below to stay logged in.";

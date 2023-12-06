@@ -66,11 +66,36 @@ class MaintenanceListener {
 //            return;
 //        }
 
+//        ///////// Testing tenantprefix /////////
+//        echo "route=".$event->getRequest()->get('_route')."<br>";
+//        $tenantprefix = $this->container->getParameter('tenantprefix');
+//        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        $tenantprefix = 'c/lmh/pathology/';
+//        $tenantprefix = 'pathology';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        ///////// EOF Testing tenantprefix /////////
+
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
             //exit('1');
             return;
         }
+
+//        ///////// Testing tenantprefix: {tenantprefix} in config /////////
+//        //$tenantprefix = $this->container->getParameter('tenantprefix');
+//        //echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        $tenantprefix = 'c/lmh/pathology';
+//        #$tenantprefix = 'lmh/pathology';
+//        #$tenantprefix = 'pathology';
+//        //$tenantprefix = 'lmh';
+//        //$this->container->setParameter('tenantprefix', $tenantprefix);
+//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
+//        //echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
+//        //$this->container->setParameter('tenantprefix', $tenantprefix); //Impossible to call set() on a frozen ParameterBag.
+//        ///////// EOF Testing tenantprefix /////////
+
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -79,10 +104,25 @@ class MaintenanceListener {
 
         //get route name
         $request = $event->getRequest();
+
+        //$request->setLocale('en');
+        //$tenantprefix = 'pathology';
+        //$request->setLocale($tenantprefix);
+        //$locale = 'c/wcm/pathology';
+        //$request->setLocale($locale);
+
         //$routeName = $request->get('_route');
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
         //exit('1');
+
+        //Relogin
+//        $locale = $request->getLocale();
+//        if( str_contains($uri,$locale) === false ) {
+//            $urlLogout = $this->container->get('router')->generate('logout');
+//            $response = new RedirectResponse($urlLogout);
+//            $event->setResponse($response);
+//        }
 
         //site check accessibility
         if(
@@ -92,10 +132,19 @@ class MaintenanceListener {
             strpos((string)$uri, '/admin/') === false
         ) {
             $sitename = $this->getSiteName($controller);
+
+//            if( $userSecUtil->isSiteAccessible($sitename) ) {
+//                echo $sitename.": site accessible <br>";
+//            } else {
+//                echo $sitename.": site is not accessible <br>";
+//            }
+
             if( $sitename && $userSecUtil->isSiteAccessible($sitename) === false ) {
                 $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+                //echo $sitename.": ".$siteObject." <br>";
                 if( $siteObject ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                    //exit('not accessible');
 
                     $session = $request->getSession(); //$this->container->get('session');
                     $session->getFlashBag()->add(

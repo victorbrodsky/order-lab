@@ -20,7 +20,7 @@ class DashboardTest extends WebTestBase
         //$this->getTestClient();
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/dashboards/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -35,7 +35,7 @@ class DashboardTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/dashboards/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -48,7 +48,7 @@ class DashboardTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/dashboards/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -65,7 +65,7 @@ class DashboardTest extends WebTestBase
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/dashboards/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -84,7 +84,7 @@ class DashboardTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/dashboards/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -98,7 +98,7 @@ class DashboardTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/dashboards/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -111,8 +111,8 @@ class DashboardTest extends WebTestBase
 
     public function testHomePageAction() {
         $this->logIn();
-        //$crawler = $this->client->request('GET', '/dashboards/');
-        $crawler = $this->client->request('GET', '/dashboards/?filter[startDate]=03/15/2021&filter[endDate]=03/15/2022&title=Favorite charts');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/?filter[startDate]=03/15/2021&filter[endDate]=03/15/2022&title=Favorite charts');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Favorites")')->count()
@@ -141,7 +141,7 @@ class DashboardTest extends WebTestBase
 
     public function testAuthorizedAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/dashboards/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/authorized-users/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Authorized Users for Dashboard")')->count()

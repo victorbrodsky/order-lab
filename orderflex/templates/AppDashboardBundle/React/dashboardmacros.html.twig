@@ -130,12 +130,16 @@
 
                         {#display: none;#}
                         <div id="hidden-filter" class="row" style="margin-top: 10px;">
-                            <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
-                                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
-                            </div>
-                            <div class="col-xs-2" data-toggle="tooltip" title="End Date">
-                                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
-                            </div>
+                            {% if filterform.startDate is defined %}
+                                <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
+                                    {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                                </div>
+                            {% endif %}
+                            {% if filterform.endDate is defined %}
+                                <div class="col-xs-2" data-toggle="tooltip" title="End Date">
+                                    {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                                </div>
+                            {% endif %}
                             <div class="col-xs-2" data-toggle="tooltip" title="Specialty">
                                 {% if filterform.projectSpecialty is defined %}
                                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}

@@ -35,7 +35,7 @@ class SimpleWebTest extends WebTestBase
 //        $client->followRedirects();
 //
 //        // test e.g. the profile page
-//        //$client->request('GET', '/directory/about');
+//        //$client->request('GET', '/'.$this->tenantprefix.'directory/about');
 //
 //        //$content = $client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -44,7 +44,7 @@ class SimpleWebTest extends WebTestBase
 //        //$this->assertSelectorTextContains('p', 'Current Version for branch master');
 //
 //
-//        $crawler = $client->request('GET', '/directory/about');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.'directory/about');
 //
 //        //$content = $client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -86,10 +86,10 @@ class SimpleWebTest extends WebTestBase
         $userServiceUtil = $this->testContainer->get('user_service_utility');
         echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
-        $crawler = $this->client->request('GET', '/directory/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$client = static::createClient();
-        //$crawler = $client->request('GET', '/directory/login');
+        //$crawler = $client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -105,7 +105,7 @@ class SimpleWebTest extends WebTestBase
 //        $this->logIn();
 //        //return;
 //
-//        $crawler = $this->client->request('GET', '/directory/');
+//        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/');
 //
 //        //$content = $this->client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -119,7 +119,7 @@ class SimpleWebTest extends WebTestBase
 //    public function testLogin2PageAction() {
 //        $client = static::createClient();
 //
-//        $crawler = $client->request('GET', '/directory/login');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.'directory/login');
 //
 //        //$content = $this->client->getResponse()->getContent();
 //        //exit("content=$content");
@@ -137,7 +137,7 @@ class SimpleWebTest extends WebTestBase
 //        $client = static::createClient();
 //
 //        // Request a specific page
-//        $crawler = $client->request('GET', '/');
+//        $crawler = $client->request('GET', '/'.$this->tenantprefix.''.$this->tenantprefix.');
 //
 //        // Validate a successful response and some content
 //        $this->assertResponseIsSuccessful();

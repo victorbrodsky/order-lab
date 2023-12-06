@@ -19,7 +19,7 @@ class CalllogTest extends WebTestBase
         echo "[Calllog,PHP=".$phpVersion."]";
         
         //$this->getTestClient();
-        $crawler = $this->client->request('GET', '/call-log-book/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -36,7 +36,7 @@ class CalllogTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/about');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/about');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -53,7 +53,7 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
+        //$linkName = '/'.$this->tenantprefix.'translational-research/about';
         //$this->testGetLink($linkName,"Current Version");
         //$this->testGetLink($linkName);
     }
@@ -69,7 +69,7 @@ class CalllogTest extends WebTestBase
 
         //check if there are any entries
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/');
         $records = $crawler->filter('.calllog-patient-name');
         if( count($records) == 0 ) {
             echo "List is empty, records=".count($records);
@@ -153,8 +153,8 @@ class CalllogTest extends WebTestBase
         $this->logIn();
 
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/');
-        //$crawler = $this->client->request('GET', '/call-log-book/?filter[messageStatus]=All except deleted&filter[messageCategory]=Pathology Call Log Entry_32&filter[mrntype]=1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/?filter[messageStatus]=All except deleted&filter[messageCategory]=Pathology Call Log Entry_32&filter[mrntype]=1');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -462,7 +462,7 @@ class CalllogTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/call-log-book/event-log/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -475,7 +475,7 @@ class CalllogTest extends WebTestBase
 
     public function testComplexPatientsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/patient-list/15/pathology-call-complex-patients');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/patient-list/15/pathology-call-complex-patients');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Pathology Call Complex Patients")')->count()
@@ -495,7 +495,7 @@ class CalllogTest extends WebTestBase
 
         //check if there are any entries
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/');
         $records = $crawler->filter('.calllog-patient-name');
         if( count($records) == 0 ) {
             echo "List is empty, records=".count($records);
@@ -503,7 +503,7 @@ class CalllogTest extends WebTestBase
         }
 
         //$this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/entry/new');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/entry/new');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -532,7 +532,7 @@ class CalllogTest extends WebTestBase
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/settings/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -549,7 +549,7 @@ class CalllogTest extends WebTestBase
 
     public function testResourcesAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/resources/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/resources/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -567,8 +567,8 @@ class CalllogTest extends WebTestBase
     public function testResourcesEditAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/settings/edit-resources/show');
-        //$crawler = $this->client->request('GET', '/call-log-book/settings/1/edit?param=calllogResources');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/settings/edit-resources/show');
+        //$crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/settings/1/edit?param=calllogResources');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -591,7 +591,7 @@ class CalllogTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/call-log-book/authorized-users/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -605,7 +605,7 @@ class CalllogTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/call-log-book/user/1');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -619,7 +619,7 @@ class CalllogTest extends WebTestBase
     public function testTodoTasksAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/tasks/to-do');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/tasks/to-do');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Call Case List")')->count()
@@ -637,7 +637,7 @@ class CalllogTest extends WebTestBase
     public function testDataEditPatientInfoAction() {
         $this->logIn();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/find-and-edit-patient-record');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/find-and-edit-patient-record');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Edit Patient Info")')->count()

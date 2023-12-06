@@ -115,6 +115,10 @@ class UserServiceUtil {
             $user = $this->security->getUser();
         }
 
+        if( !$user ) {
+            return $datetime;
+        }
+
         //$user_tz = 'America/New_York';
         //$user_tz = $user->getPreferences()->getTimezone();
         $user_tz = null;

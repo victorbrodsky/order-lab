@@ -121,8 +121,9 @@ function getAntobodies(holder,force) {
 
     var cycle = 'edit';
 
-    var url = getCommonBaseUrl("util/common/generic/"+"antibody","employees");
-    //console.log("getAntobodies url="+url);
+    //var url = getCommonBaseUrl("util/common/generic/"+"antibody","employees");
+    var url = Routing.generate('employees_get_generic_select2', {'name': "antibody"});
+    console.log("Routing getAntobodies url="+url);
 
     if( typeof cycle === 'undefined' ) {
         cycle = 'new';

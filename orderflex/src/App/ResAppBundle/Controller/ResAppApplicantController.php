@@ -50,7 +50,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
 
 
-    #[Route(path: '/interview-modal/{id}', name: 'resapp_interview_modal', methods: ['GET'])]
+    #[Route(path: '/interview-modal/{id}', name: 'resapp_interview_modal', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppResAppBundle/Interview/modal.html.twig')]
     public function interviewModalAction(Request $request, $id) {
 

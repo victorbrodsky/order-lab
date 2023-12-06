@@ -50,7 +50,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
 
 
-    #[Route(path: '/interview-modal/{id}', name: 'fellapp_interview_modal', methods: ['GET'])]
+    #[Route(path: '/interview-modal/{id}', name: 'fellapp_interview_modal', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppFellAppBundle/Interview/modal.html.twig')]
     public function interviewModalAction(Request $request, $id) {
 

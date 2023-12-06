@@ -23,7 +23,7 @@ class CalllogShortTest extends WebTestBase
 
         //$this->getTestClient();
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/call-log-book/login');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
