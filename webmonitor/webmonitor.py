@@ -75,7 +75,7 @@ def get_site_status(url, sendSuccEmail=False):
     response = None
 
     try:
-        response = requests.get(url)
+        response = requests.get(url,verify=False)
     except:
         status = "Exception: requests.get("+url+")"
         #sendEmail(url, 'down')
@@ -196,6 +196,10 @@ def main(argv):
     print("\n### webmonitor.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
+
+    #response = requests.get('https://view-test.med.cornell.edu/',verify=False)
+    #print(response)
+    #sys.exit(2)
 
     urls = ''           # -l
     mailerhost = ''     # -h
