@@ -279,13 +279,13 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 cycle: cycle
             });
         } else {
-            //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-            url = Routing.generate('employees_get_special_select2', {
-                //urlprefix: urlprefix,
-                name: name,
-                cycle: cycle,
-                sitename: sitenameStr
-            });
+            url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+            // url = Routing.generate('employees_get_special_select2', {
+            //     //urlprefix: urlprefix,
+            //     name: name,
+            //     cycle: cycle,
+            //     sitename: sitenameStr
+            // });
         }
     } else if( sitename == "scan" ) {
         url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
