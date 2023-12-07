@@ -56,7 +56,11 @@ class SessionIdleHandler
     {
         //echo "maxIdleTime=".$this->maxIdleTime."<br>";exit('111');
 
-        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+//        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+//            return;
+//        }
+        if (!$event->isMainRequest()) {
+            // don't do anything if it's not the main request
             return;
         }
 

@@ -114,6 +114,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $session = $request->getSession();
 
+        //Set session locale on login
+        $locale = $request->getLocale();
+        $session->set('locale',$locale);
+
         //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
         $res = $secUtil->getMaxIdleTimeAndMaintenance();
 
@@ -294,6 +298,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $secUtil->setLoginAttempt($request,$options);
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        $request->getSession()->set('locale',null);
 
         $response = new RedirectResponse( $this->router->generate($this->siteName.'_login') );
         return $response;

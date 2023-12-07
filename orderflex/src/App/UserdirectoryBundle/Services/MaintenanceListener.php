@@ -62,21 +62,6 @@ class MaintenanceListener {
 //            exit('not auth users');
 //        }
 
-//        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
-//            return;
-//        }
-
-//        ///////// Testing tenantprefix /////////
-//        echo "route=".$event->getRequest()->get('_route')."<br>";
-//        $tenantprefix = $this->container->getParameter('tenantprefix');
-//        echo "current tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-//        $tenantprefix = 'c/lmh/pathology/';
-//        $tenantprefix = 'pathology';
-//        //$this->container->setParameter('tenantprefix', $tenantprefix);
-//        $this->container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-//        echo "after tenantprefix=".$this->container->get('router')->getContext()->getParameter('tenantprefix')."<br>";
-//        ///////// EOF Testing tenantprefix /////////
-
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
             //exit('1');
@@ -96,14 +81,13 @@ class MaintenanceListener {
 //        //$this->container->setParameter('tenantprefix', $tenantprefix); //Impossible to call set() on a frozen ParameterBag.
 //        ///////// EOF Testing tenantprefix /////////
 
-
         $userSecUtil = $this->container->get('user_security_utility');
-
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
 
         //get route name
         $request = $event->getRequest();
+        $session = $request->getSession();
 
         //$request->setLocale('en');
         //$tenantprefix = 'pathology';
@@ -129,21 +113,22 @@ class MaintenanceListener {
 //            $response = new RedirectResponse($urlLogout);
 //            $event->setResponse($response);
 //        }
+        //Relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
             //echo "multitenancy=".$multitenancy."<br>";
             if ($multitenancy == 'multitenancy') {
                 $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
-                $locale = str_replace("-", "/", $locale);
-                //echo "locale=" . $locale . "<br>";
-                echo "uri=".$uri.", locale=".$locale."<br>";
-
-                if( $locale != 'main' && str_contains($uri, $locale) === false ) {
+                $sessionLocale = $session->get('locale');
+                //$locale = str_replace("-", "/", $locale);
+                //echo "locale=" . $locale .', sessionLocale='.$sessionLocale. "<br>";
+                //echo "uri=".$uri.", locale=".$locale."<br>";
+                //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
+                if( $locale != $sessionLocale ) {
                     //$response = $this->security->logout();
                     $response = $this->security->logout(false);
                     $event->setResponse($response);
                 }
-
                 //exit('1');
             }
         }
@@ -170,7 +155,6 @@ class MaintenanceListener {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
                     //exit('not accessible');
 
-                    $session = $request->getSession(); //$this->container->get('session');
                     $session->getFlashBag()->add(
                         'warning',
                         $siteObject->getSiteName() . " site is not currently accessible. If you have any questions, please contact $systemEmail."
