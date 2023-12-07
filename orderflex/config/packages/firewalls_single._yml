@@ -1,0 +1,45 @@
+#To debug firewall:
+#https://lindevs.com/get-configured-firewalls-using-console-command-in-symfony
+#php bin/console debug:firewall
+#php bin/console debug:firewall ldap_employees_firewall
+
+security:
+
+    firewalls:
+
+        ldap_employees_firewall:
+              pattern: ^/.*
+              context: scan_auth
+              switch_user: true
+              custom_authenticators:
+                  authenticator: custom_guard_authenticator
+              form_login:
+                  # "login" is the name of the route created previously
+                  login_path: base_single_login
+                  check_path: employees_login_check
+              logout:
+                  path:   logout
+                  target: login
+              lazy:  true
+              access_denied_url: employees_access_request_new_plain
+              remember_me:
+                  secret:      "%secret%"
+                  lifetime: 28800 # 8 hours in seconds
+                  path:     /
+
+        foscomment_api_firewall:
+            pattern: ^/api
+            #logout_on_user_change: true
+            context: scan_auth
+            lazy:  true
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 604800 # 1 week in seconds
+#                path:     /api
+#                always_remember_me: true
+
+#        default:
+#            anonymous: ~
+#            guard:
+#                authenticator: custom_guard_authenticator
+

@@ -223,6 +223,8 @@ security:
 #       - { path: ^/{tenantprefix}/directory/login/, role: PUBLIC_ACCESS }
 #       - { path: ^/, role: PUBLIC_ACCESS }
 
+#       - { path: /.*/login, role: PUBLIC_ACCESS }
+
        ############################## local system user init ##############################
        - { path: ^/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^/first-time-user-generation-init/, role: PUBLIC_ACCESS }

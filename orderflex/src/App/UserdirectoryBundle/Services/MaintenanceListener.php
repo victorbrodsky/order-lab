@@ -129,6 +129,24 @@ class MaintenanceListener {
 //            $response = new RedirectResponse($urlLogout);
 //            $event->setResponse($response);
 //        }
+        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            $multitenancy = $this->container->getParameter('multitenancy');
+            //echo "multitenancy=".$multitenancy."<br>";
+            if ($multitenancy == 'multitenancy') {
+                $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
+                $locale = str_replace("-", "/", $locale);
+                //echo "locale=" . $locale . "<br>";
+                echo "uri=".$uri.", locale=".$locale."<br>";
+
+                if( $locale != 'main' && str_contains($uri, $locale) === false ) {
+                    //$response = $this->security->logout();
+                    $response = $this->security->logout(false);
+                    $event->setResponse($response);
+                }
+
+                //exit('1');
+            }
+        }
 
         //site check accessibility
         if(

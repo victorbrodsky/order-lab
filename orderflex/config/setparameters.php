@@ -414,6 +414,9 @@ if( $conn ) {
             $defaultLocale = '';
             $container->setParameter('locale', $defaultLocale);
 
+            //$locales = "c/wcm/pathology|c/lmh/pathology";
+            //$container->setParameter('locales', $locales);
+
             //$firewallPatternPrefix = '^';
             //$firewallPatternPrefix = '.*';
             //$firewallPatternPrefix = '^.*/';

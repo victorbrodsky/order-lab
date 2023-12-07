@@ -37,6 +37,7 @@ class FellAppSecurityController extends SecurityController
 
     #[Route(path: '/login', name: 'fellapp_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
+        //exit('fellapp login');
         return parent::loginAction($request,$authenticationUtils);
     }
 
