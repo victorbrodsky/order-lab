@@ -110,6 +110,9 @@ class MaintenanceListener {
         //$request->setLocale($tenantprefix);
         //$locale = 'c/wcm/pathology';
         //$request->setLocale($locale);
+        //$locale = $request->getLocale();
+        //echo "locale=".$locale."<br>"; //result=main for prefix '',
+        //exit('1');
 
         //$routeName = $request->get('_route');
         $uri = $request->getUri();

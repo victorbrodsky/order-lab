@@ -206,6 +206,7 @@ services:
         alias: 'monolog.logger'
         public: true
 
+    #TusPhp is used for file upload
     #ankitpokhrel/tus-php https://github.com/ankitpokhrel/tus-php/wiki/Symfony-Integration
     TusPhp\Cache\FileStore:
          class: TusPhp\Cache\FileStore
