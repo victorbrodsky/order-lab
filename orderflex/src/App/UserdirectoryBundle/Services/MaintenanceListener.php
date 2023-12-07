@@ -114,9 +114,12 @@ class MaintenanceListener {
         //echo "locale=".$locale."<br>"; //result=main for prefix '',
         //exit('1');
 
-        //$routeName = $request->get('_route');
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
+
+        //$routeName = $request->get('_route');
+        //$referer = $request->headers->get('referer');
+        //echo "referer=".$referer."<br>";
         //exit('1');
 
         //Relogin

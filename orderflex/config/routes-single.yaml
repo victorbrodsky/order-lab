@@ -1,0 +1,11 @@
+#Master routes to define prefix and requirements for all routes in one place
+#https://stackoverflow.com/questions/11781287/symfony2-route-global-locale-requirements
+
+#Single tenancy routes
+#https://stackoverflow.com/questions/67644009/symfony-5-internationalized-routes-prefix-routes-with-empty-or-dynamic-local
+ProjectBaseBundle_default:
+    resource: 'routes-default.yaml'
+    schemes:  ['%connection_channel%']
+    #prefix: '' #'/'
+    #defaults:
+    #    _locale: ''

@@ -126,6 +126,14 @@ services:
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #App\Routing\ExtraLoader:
     #    tags: [routing.loader]
+    custom.route_loader:
+        class: App\Routing\CustomTenancyLoader
+        #arguments:
+        #    - '%multitenancy%'
+        #arguments: ['%multitenancy%']
+        #arguments: ["@service_container"]
+        tags:
+          - { name: 'routing.loader' }
 
     ################## Commands ##################
     App\UserdirectoryBundle\Command\TestCommand:

@@ -420,6 +420,10 @@ if( $conn ) {
             $firewallPatternPrefix = '';
             $container->setParameter('patternprefix', $firewallPatternPrefix);
 
+            $multitenancy = 'singletenancy';
+            $multitenancy = 'multitenancy';
+            $container->setParameter('multitenancy', $multitenancy);
+
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
             //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
             ////////////// EOF Dynamically change url prefix /////////////

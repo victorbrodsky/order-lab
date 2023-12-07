@@ -70,8 +70,9 @@ class SecurityController extends OrderAbstractController
      *
      *
      */
-    #[Route(path: '/directory/login', name: 'directory_login')]
-    #[Route(path: '/login', name: 'employees_login')]
+
+    #[Route(path: '/directory/login/test', name: 'directory_login')]
+    #[Route(path: '/login/test', name: 'employees_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('user: loginAction');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -195,6 +196,136 @@ class SecurityController extends OrderAbstractController
             $formArr
         );
 
+    }
+
+    #[Route(path: '/login', name: 'employees_single_login')]
+    public function loginSingleAction( Request $request, AuthenticationUtils $authenticationUtils ) {
+        //exit('user: employees_single_login');
+
+        //$uri = $request->getUri();
+        //echo "uri=".$uri."<br>";
+
+        //$referer = $request->headers->get('referer');
+        //echo "referer=".$referer."<br>";
+
+//        $providerKey = 'ldap_employees_firewall';
+//        $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
+//        echo "targetPath=".$targetPath."<br>";
+
+        //exit('111');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //default
+        $sitename = $this->getParameter('employees.sitename');
+
+        if( $routename == "employees_login" ) {
+            $sitename = $this->getParameter('employees.sitename');
+        }
+        if( $routename == "fellapp_login" ) {
+            $sitename = $this->getParameter('fellapp.sitename');
+        }
+        if( $routename == "resapp_login" ) {
+            $sitename = $this->getParameter('resapp.sitename');
+        }
+        if( $routename == "deidentifier_login" ) {
+            $sitename = $this->getParameter('deidentifier.sitename');
+        }
+        if( $routename == "scan_login" ) {
+            $sitename = $this->getParameter('scan.sitename');
+        }
+        if( $routename == "vacreq_login" ) {
+            $sitename = $this->getParameter('vacreq.sitename');
+        }
+        if( $routename == "calllog_login" ) {
+            $sitename = $this->getParameter('calllog.sitename');
+        }
+        if( $routename == "crn_login" ) {
+            $sitename = $this->getParameter('crn.sitename');
+        }
+        if( $routename == "translationalresearch_login" ) {
+            $sitename = $this->getParameter('translationalresearch.sitename');
+        }
+        if( $routename == "dashboard_login" ) {
+            $sitename = $this->getParameter('dashboard.sitename');
+        }
+        //exit('sitename='.$sitename);
+
+        /////////////// set browser info ///////////////
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
+        $session = $request->getSession();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $browserInfo = $userServiceUtil->browserCheck();
+        $session->set('browserWarningInfo', $browserInfo);
+        /////////////// EOF set browser info ///////////////
+
+        //$sitename = $this->getParameter('employees.sitename');
+        $formArr = $this->loginPage($sitename,$authenticationUtils);
+
+        if( $formArr == null ) {
+            //exit('111');
+            return $this->redirect( $this->generateUrl('main_common_home') );
+            //return $this->redirect( $this->generateUrl($sitename.'_home') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $usernametypes = $em->getRepository(UsernameType::class)->findBy(
+            array(
+                'type' => array('default', 'user-added'),
+                //'abbreviation' => array('ldap-user','local-user')
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        if( count($usernametypes) == 0 ) {
+            $usernametypes = array();
+            //$option = array('abbreviation'=>'ldap-user', 'name'=>'WCM CWID');
+            //$usernametypes[] = $option;
+            $option_localuser = array('abbreviation'=>'local-user', 'name'=>'Local User');
+            $usernametypes[] = $option_localuser;
+        }
+
+        $formArr['usernametypes'] = $usernametypes;
+
+        ///////////// read cookies /////////////
+        $formArr['user_type'] = null;
+        $cookieKeytype = $request->cookies->get('userOrderSuccessCookiesKeytype');
+        if( $cookieKeytype ) {
+            $formArr['user_type'] = $cookieKeytype;
+            //echo "cookieKeytype=".$cookieKeytype."<br>";
+        } else {
+            //set default
+            $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+            if( $defaultPrimaryPublicUserIdType && is_object($defaultPrimaryPublicUserIdType) ) {
+                $formArr['user_type'] = $defaultPrimaryPublicUserIdType->getName();
+            }
+        }
+
+        $cookieUsername = $request->cookies->get('userOrderSuccessCookiesUsername');
+        if( $cookieUsername ) {
+            $formArr['last_username'] = $cookieUsername;
+            //echo "cookieUsername=".$cookieUsername."<br>";
+        }
+        ///////////// EOF read cookies /////////////
+
+        //not live warning
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        //echo "environment=$environment <br>"; //dev
+        $formArr['environment'] = $environment;
+        $formArr['inputStyle'] = "";
+        if( $environment != 'live' ) {
+            $request->getSession()->getFlashBag()->add(
+                'pnotify-error',
+                "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
+            );
+            $formArr['inputStyle'] = "background-color:#FF5050;";
+        }
+
+        return $this->render(
+            'AppUserdirectoryBundle/Security/login.html.twig',
+            $formArr
+        );
     }
 
     public function loginPage($sitename,$authenticationUtils) {
