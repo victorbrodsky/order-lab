@@ -89,15 +89,6 @@ class MaintenanceListener {
         $request = $event->getRequest();
         $session = $request->getSession();
 
-        //$request->setLocale('en');
-        //$tenantprefix = 'pathology';
-        //$request->setLocale($tenantprefix);
-        //$locale = 'c/wcm/pathology';
-        //$request->setLocale($locale);
-        //$locale = $request->getLocale();
-        //echo "locale=".$locale."<br>"; //result=main for prefix '',
-        //exit('1');
-
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
 
@@ -106,13 +97,6 @@ class MaintenanceListener {
         //echo "referer=".$referer."<br>";
         //exit('1');
 
-        //Relogin
-//        $locale = $request->getLocale();
-//        if( str_contains($uri,$locale) === false ) {
-//            $urlLogout = $this->container->get('router')->generate('logout');
-//            $response = new RedirectResponse($urlLogout);
-//            $event->setResponse($response);
-//        }
         //Relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
@@ -125,9 +109,18 @@ class MaintenanceListener {
                 //echo "uri=".$uri.", locale=".$locale."<br>";
                 //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
                 if( $locale != $sessionLocale ) {
+                    $session->getFlashBag()->add(
+                        'warning',
+                        "You can not switch between institution's sites without re-login."
+                    );
+
                     //$response = $this->security->logout();
                     $response = $this->security->logout(false);
                     $event->setResponse($response);
+
+//                    $url = $this->container->get('router')->generate('main_common_home');
+//                    $response = new RedirectResponse($url);
+//                    $event->setResponse($response);
                 }
                 //exit('1');
             }

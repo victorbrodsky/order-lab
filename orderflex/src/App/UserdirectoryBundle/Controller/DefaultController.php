@@ -57,7 +57,7 @@ class DefaultController extends OrderAbstractController
 {
 
     //https://symfony.com/doc/current/routing/custom_route_loader.html#what-is-a-custom-route-loader
-    #[Route(path: '/test-url')]
+    #[Route(path: '/test-url', name: 'employees_test_url', options: ['expose' => true])]
     public function testUrlAction( Request $request )
     {
         //exit('not allowed');

@@ -423,7 +423,7 @@ if( $conn ) {
             $firewallPatternPrefix = '';
             $container->setParameter('patternprefix', $firewallPatternPrefix);
 
-            $multitenancy = 'singletenancy';
+            //$multitenancy = 'singletenancy';
             $multitenancy = 'multitenancy';
             $container->setParameter('multitenancy', $multitenancy);
 

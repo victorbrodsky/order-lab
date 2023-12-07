@@ -27,6 +27,10 @@ function initTypeaheadUserSiteSearch() {
 
     //console.log('typeahead search');
 
+    //Testing routing
+    //var testUrl = Routing.generate('employees_test_url'); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
+    //console.log('testUrl='+testUrl);
+
     var suggestions_limit = 5;
     var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
     var rateLimitWait = 30; //The time interval in milliseconds that will be used by rateLimitBy. Defaults to 300
