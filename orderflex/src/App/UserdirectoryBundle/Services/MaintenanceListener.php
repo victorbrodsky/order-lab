@@ -100,7 +100,8 @@ class MaintenanceListener {
         //Relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
-            //echo "multitenancy=".$multitenancy."<br>";
+            echo "multitenancy=".$multitenancy."<br>";
+            exit('MaintenanceListener');
             if( $multitenancy == 'multitenancy' ) {
                 $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
                 $sessionLocale = $session->get('locale');

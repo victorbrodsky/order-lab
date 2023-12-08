@@ -105,7 +105,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         $route = $request->attributes->get('_route');
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
-        //exit('111');
+        //exit('exit support');
 
         //No need for auth on main_common_home (list of the systems)
         if( $route == 'main_common_home' ) {
@@ -164,6 +164,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         //dump($request->request);
         //exit('authenticate');
+
+        ///////// Switch DB according to the locale ////////
+        //https://stackoverflow.com/questions/53151669/symfony-change-database-dynamically
+        //https://stackoverflow.com/questions/65902878/dynamic-doctrine-database-connection
+        if( 0 ) {
+            $locale = $request->getLocale();
+            $session = $request->getSession();
+            $sessionLocale = $session->get('locale');
+            echo "locale=" . $locale . ', sessionLocale=' . $sessionLocale . "<br>";
+        }
+        ///////// EOF Switch DB according to the locale ////////
 
         $credentials = $this->getCredentials($request);
 
