@@ -413,13 +413,17 @@ if( $conn ) {
             //////// EOF tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
 
             //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
-            $defaultLocale = 'main';
-            //$defaultLocale = '';
+            //$defaultLocale = 'main';
+            $defaultLocale = '';
             $container->setParameter('defaultlocale', $defaultLocale);
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
 
+            //$default_locale = $container->getParameter('framework.default_locale');
+            //echo "default_locale=" . $default_locale . "<br>";
+            //$default_locale = $container->getParameter('framework.translator.default_locale');
+            //echo "default_locale=" . $default_locale . "<br>";
             $multitenancy = 'singletenancy';
             //$multitenancy = 'multitenancy';
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
@@ -428,7 +432,7 @@ if( $conn ) {
             if( $authServerNetwork ) {
                 //dump($authServerNetwork);
                 //dump($row);
-                //echo "authServerNetwork=$authServerNetwork<br>";
+                echo "authServerNetwork=$authServerNetwork<br>";
                 $table = 'user_authservernetworklist';
                 $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetwork";
                 $authServerNetworkParams = $conn->query($authServerNetworkSql); // Simple, but has several drawbacks
@@ -443,6 +447,8 @@ if( $conn ) {
                 //exit('111');
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
                     $multitenancy = 'multitenancy';
+                    //$container->setParameter('framework.translator.default_locale', 'main');
+                    $container->setParameter('defaultlocale', 'main');
                 }
             }
             echo "multitenancy=" . $multitenancy . "<br>";

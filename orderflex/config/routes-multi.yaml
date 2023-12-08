@@ -1,6 +1,9 @@
 #Master routes to define prefix and requirements for all routes in one place
 #https://stackoverflow.com/questions/11781287/symfony2-route-global-locale-requirements
 
+#framework:
+#    default_locale: "main"
+
 #Multi tenancy routes
 ProjectBaseBundle_localized:
     resource: 'routes-default.yaml'

@@ -53,12 +53,15 @@ class CustomTenancyLoader extends Loader {
         //echo "multitenancy=".$multitenancy."<br>";
 
         if( $multitenancy == 'multitenancy' ) {
+            //$this->container->setParameter('defaultlocale', 'main');
             $config = 'routes-multi.yaml';
         } else {
+            //$this->container->setParameter('defaultlocale', '');
             $config = 'routes-single.yaml';
         }
 
         $resource = $configDirectory.$config;
+        //echo $multitenancy.": add resource=".$resource."<br>";
 
         $type = 'yaml';
 

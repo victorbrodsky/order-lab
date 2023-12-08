@@ -1286,7 +1286,7 @@ class SiteParametersType extends AbstractType
             $builder->add('authServerNetwork', EntityType::class, array(
                 'class' => 'App\UserdirectoryBundle\Entity\AuthServerNetworkList',
                 'label' => 'Server Network Accessibility and Role:',
-                'required' => true,
+                'required' => false, //true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
