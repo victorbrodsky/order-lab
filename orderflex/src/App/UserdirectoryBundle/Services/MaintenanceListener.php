@@ -101,17 +101,18 @@ class MaintenanceListener {
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
             //echo "multitenancy=".$multitenancy."<br>";
-            if ($multitenancy == 'multitenancy') {
+            if( $multitenancy == 'multitenancy' ) {
                 $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
                 $sessionLocale = $session->get('locale');
                 //$locale = str_replace("-", "/", $locale);
                 //echo "locale=" . $locale .', sessionLocale='.$sessionLocale. "<br>";
                 //echo "uri=".$uri.", locale=".$locale."<br>";
                 //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
-                if( $locale != $sessionLocale ) {
+                if( $locale != 'main' && $sessionLocale != 'main' && $locale != $sessionLocale ) {
                     $session->getFlashBag()->add(
                         'warning',
                         "You can not switch between institution's sites without re-login."
+                        ." locale=[$locale]; sessionLocale=[$sessionLocale]"
                     );
 
                     //Redirect to the logged in url

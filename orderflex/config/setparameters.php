@@ -420,8 +420,32 @@ if( $conn ) {
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
 
-            //$multitenancy = 'singletenancy';
-            $multitenancy = 'multitenancy';
+            $multitenancy = 'singletenancy';
+            //$multitenancy = 'multitenancy';
+            //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
+            $authServerNetwork = null;
+            $authServerNetwork = getDBParameter($row, $authServerNetwork, 'authservernetwork_id');
+            if( $authServerNetwork ) {
+                //dump($authServerNetwork);
+                //dump($row);
+                //echo "authServerNetwork=$authServerNetwork<br>";
+                $table = 'user_authservernetworklist';
+                $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetwork";
+                $authServerNetworkParams = $conn->query($authServerNetworkSql); // Simple, but has several drawbacks
+                $authServerNetworkRow = $authServerNetworkParams->fetch();
+                //dump($authServerNetworkRow);
+                //echo "authServerNetworkRow=" . count($authServerNetworkRow) . "<br>";
+                if( count($authServerNetworkRow) > 0 ) {
+                    //dump($authServerNetworkRow);
+                    $authServerNetworkName = $authServerNetworkRow['name'];
+                    echo "authServerNetworkName=" . $authServerNetworkName . "<br>";
+                }
+                //exit('111');
+                if( $authServerNetworkName == 'Internet (Hub)' ) {
+                    $multitenancy = 'multitenancy';
+                }
+            }
+            echo "multitenancy=" . $multitenancy . "<br>";
             $container->setParameter('multitenancy', $multitenancy);
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
