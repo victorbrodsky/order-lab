@@ -19,3 +19,13 @@ ProjectBaseBundle_localized:
         #tenantprefix: c/wcm/pathology|c/lmh/pathology
 
 #Locale Switcher: https://symfony.com/blog/new-in-symfony-6-1-locale-switcher
+
+#set default_locale: "%defaultlocale%" to 'main'
+main_multi_home:
+    path:      /
+    controller: App\Routing\ExtraController::extra
+    schemes:  ['%connection_channel%']
+    #prefix:   /{_locale}
+    #requirements:
+    #    _locale: main|c/wcm/pathology|c/lmh/pathology
+

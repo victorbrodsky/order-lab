@@ -402,26 +402,22 @@ if( $conn ) {
             //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
             //3) set tenantid $tenantprefix = authPartnerServer
 
+            //////// tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
+            //////// and then is used in getCommonBaseUrl. Also it is used tests ////////
+            //////// It is not need if locale is used ////////
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
             //$tenantprefix = 'c/wcm/pathology/';
             //$tenantprefix = 'c/lmh/pathology/';
             $tenantprefix = ''; //default prefix as it was in the original configuration
-            //$tenantprefix = 'pathology/';
-            //$tenantprefix = 'en';
             $container->setParameter('tenantprefix', $tenantprefix);
+            //////// EOF tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
 
-            //$defaultLocale = 'c/wcm/pathology';
-            $defaultLocale = '';
-            $container->setParameter('locale', $defaultLocale);
+            //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
+            $defaultLocale = 'main';
+            $container->setParameter('defaultlocale', $defaultLocale);
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
-
-            //$firewallPatternPrefix = '^';
-            //$firewallPatternPrefix = '.*';
-            //$firewallPatternPrefix = '^.*/';
-            $firewallPatternPrefix = '';
-            $container->setParameter('patternprefix', $firewallPatternPrefix);
 
             //$multitenancy = 'singletenancy';
             $multitenancy = 'multitenancy';

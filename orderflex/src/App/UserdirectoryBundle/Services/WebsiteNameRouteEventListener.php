@@ -20,6 +20,8 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
 
 //https://github.com/symfony/symfony/blob/6.4/src/Symfony/Component/HttpKernel/EventListener/LocaleListener.php
 
+//NOT USED. NOt enabled in services.yaml
+//Replace request's context {tenantprefix} with user's tenant id
 class WebsiteNameRouteEventListener implements EventSubscriberInterface {
 
     private $router;

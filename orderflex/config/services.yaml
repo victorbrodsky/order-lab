@@ -121,8 +121,9 @@ services:
         resource: '../src/App/FineUploader/Controller/'
 
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
-#    App\Routing\:
-#        resource: '../src/App/Routing/'
+    #Enable Routing Controller for the home page
+    App\Routing\:
+        resource: '../src/App/Routing/'
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #App\Routing\ExtraLoader:
     #    tags: [routing.loader]

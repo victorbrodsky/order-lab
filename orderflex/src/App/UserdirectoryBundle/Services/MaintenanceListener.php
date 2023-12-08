@@ -114,9 +114,17 @@ class MaintenanceListener {
                         "You can not switch between institution's sites without re-login."
                     );
 
-                    //$response = $this->security->logout();
-                    $response = $this->security->logout(false);
+                    //Redirect to the logged in url
+                    $uri = str_replace($locale,$sessionLocale,$uri);
+                    //echo "uri=".$uri."<br>";
+                    //exit('111');
+                    //$url = $this->container->get('router')->generate($maintenanceRoute);
+                    $response = new RedirectResponse($uri);
                     $event->setResponse($response);
+
+                    //$response = $this->security->logout();
+                    //$response = $this->security->logout(false);
+                    //$event->setResponse($response);
 
 //                    $url = $this->container->get('router')->generate('main_common_home');
 //                    $response = new RedirectResponse($url);

@@ -13,16 +13,33 @@ namespace App\Routing;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\Request;
 
-class ExtraController extends OrderAbstractController
-//class ExtraController extends AbstractController
-{
+class ExtraController extends OrderAbstractController {
 
-    //#[Route(path: '/extra', name: 'extraRoute')]
+    #[Template('AppRouting/home.html.twig')]
+    public function extra(Request $request)
+    {
 
-    public function extra(mixed $parameter): Response
+        $title = "Welcome to the View!";
+
+        $params = array(
+            'title' => $title
+        );
+        
+        //exit('<br>extra');
+        return $params;
+        //return $this->render('AppRouting/home.html.twig', ['param' => array()]);
+        //$response = new Response();
+        //return $response;
+    }
+
+    public function extra_orig(Request $request): Response
     {
         //exit('<br>extra');
-        return new Response($parameter);
+        $response = new Response();
+        return $response;
     }
+
 }
