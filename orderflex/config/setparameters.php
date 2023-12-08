@@ -414,6 +414,7 @@ if( $conn ) {
 
             //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
             $defaultLocale = 'main';
+            //$defaultLocale = '';
             $container->setParameter('defaultlocale', $defaultLocale);
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
