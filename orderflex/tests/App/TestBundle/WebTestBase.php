@@ -97,7 +97,7 @@ class WebTestBase extends WebTestCase
         //$this->em = $this->getService('user_security_utility');
         $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
         $this->tenantprefix = $this->testContainer->getParameter('tenantprefix');
-        $this->tenantprefix = 'c/lmh/pathology/';
+        //$this->tenantprefix = 'c/lmh/pathology/';
 
         $this->user = $this->getUser();
 
