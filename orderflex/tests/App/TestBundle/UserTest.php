@@ -21,6 +21,7 @@ class UserTest extends WebTestBase
         echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
         //$this->client->followRedirects();
+        echo 'login url='.'/'.$this->tenantprefix.'directory/login'.'<br>';
         
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 

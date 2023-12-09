@@ -98,6 +98,7 @@ class WebTestBase extends WebTestCase
         $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
         $this->tenantprefix = $this->testContainer->getParameter('tenantprefix');
         //$this->tenantprefix = 'c/lmh/pathology/';
+        echo "tenantprefix=".$this->tenantprefix."<br>";
 
         $this->user = $this->getUser();
 
