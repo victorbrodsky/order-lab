@@ -1510,14 +1510,8 @@ class UtilController extends OrderAbstractController {
         }
 
         $output = $query->getResult();
-
-        if( str_contains($criteriastr,':search') ) {
-            $query->setParameters(
-                array(
-                    ':search' => '%'.$search.'%',
-                )
-            );
-        }
+        //dump($output);
+        //exit();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

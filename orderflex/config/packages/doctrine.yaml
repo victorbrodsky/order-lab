@@ -32,6 +32,7 @@ doctrine:
         default_connection: default
         connections:
             default:
+                wrapper_class: App\Routing\DBAL\MultiDbConnectionWrapper
                 driver:   '%database_driver%'
                 host:     '%database_host%'
                 port:     '%database_port%'
@@ -49,7 +50,7 @@ doctrine:
                 dbname:   '%database_name_external%'
                 user:     '%database_user_external%'
                 password: '%database_password_external%'
-                charset:  UTF8			
+                charset:  UTF8
     orm:
         #auto_generate_proxy_classes: '%kernel.debug%'
         #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony

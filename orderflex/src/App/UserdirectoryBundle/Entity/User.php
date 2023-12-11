@@ -1320,13 +1320,20 @@ class User extends UserBase {
     }
 
 
-
-    #[ORM\PrePersist]
+    //[ORM\PreUpdate]
+    //[ORM\PrePersist]
+    //Use PreFlush - always check and set display name if empty on create or update user
+    #[ORM\PreFlush]
     public function setDisplaynameIfEmpty(): void
     {
-        if( !$this->getDisplayName() || $this->getDisplayName() == "" ) {
-            $this->setDisplayname( $this->getUsernameOptimal() );
+        $originalDisplayName = $this->getOriginalDisplayName();
+        //echo "originalDisplayName=".$originalDisplayName."<br>";
+        if( !$originalDisplayName || $originalDisplayName == "" ) {
+            //$this->setDisplayname( $this->getUsernameOptimal() );
+            $this->setDisplayname( $this->getDisplayName() );
+            //exit('setDisplaynameIfEmpty='.$this->getDisplayName());
         }
+        //exit('EOF setDisplaynameIfEmpty');
     }
 
 
@@ -1581,6 +1588,16 @@ class User extends UserBase {
         }
         
         return $displayName."";
+    }
+
+    public function getOriginalDisplayName(): ?string
+    {
+        $displayName = null;
+        $infos = $this->getInfos();
+        if( $infos && count($infos) > 0 ) {
+            $displayName = $infos->first()->getDisplayName();
+        }
+        return $displayName;
     }
 
     /**

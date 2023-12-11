@@ -1619,7 +1619,8 @@ Pathology and Laboratory Medicine",
         $dbInfo = $this->getDbVersion();
         $res = $res . "<br>" . "DB: ".$dbInfo;
 
-        $dbName = $this->container->getParameter('database_name');
+        //$dbName = $this->container->getParameter('database_name');
+        $dbName = $this->em->getConnection()->getDatabase();
         $res = $res . "<br>" . "DB Name: ".$dbName;
 
         $host= gethostname();

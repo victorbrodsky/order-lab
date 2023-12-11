@@ -124,6 +124,7 @@ services:
     #Enable Routing Controller for the home page
     App\Routing\:
         resource: '../src/App/Routing/'
+        exclude: '../src/App/Routing/DBAL/*'
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #App\Routing\ExtraLoader:
     #    tags: [routing.loader]
@@ -135,6 +136,13 @@ services:
         #arguments: ["@service_container"]
         tags:
           - { name: 'routing.loader' }
+#    dynamic_connection:
+#        class: App\Routing\DBAL\MultiDbConnectionWrapper
+#        arguments:  ['@request_stack']
+#        calls:
+#            - [ setDoctrineConnection, ['@doctrine.dbal.default_connection'] ]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     ################## Commands ##################
     App\UserdirectoryBundle\Command\TestCommand:

@@ -166,6 +166,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //exit('authenticate');
 
         ///////// Switch DB according to the locale ////////
+        //Switch DB must be done on every request: MultiDbConnectionWrapper->__construct
         //https://stackoverflow.com/questions/53151669/symfony-change-database-dynamically
         //https://stackoverflow.com/questions/65902878/dynamic-doctrine-database-connection
         if( 0 ) {
@@ -173,6 +174,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $session = $request->getSession();
             $sessionLocale = $session->get('locale');
             echo "locale=" . $locale . ', sessionLocale=' . $sessionLocale . "<br>";
+            $connection = $this->em->getConnection();
+            //$connection = $this->connection;
+            //$params = $connection->getParams();
+            $connection->selectDatabase('Tenant2');
+            //dump($params);
+            //exit('111');
         }
         ///////// EOF Switch DB according to the locale ////////
 

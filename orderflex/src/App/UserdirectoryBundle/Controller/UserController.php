@@ -2693,8 +2693,8 @@ class UserController extends OrderAbstractController
             $em->getRepository(Grant::class)->processGrant($user);
 
             //process employmentstatus attachments
-            $this->processEmploymentStatus($user);
-
+            $this->processEmploymentStatus($user); //createUser
+            
             $em->persist($user);
             $em->flush();
 
@@ -3707,8 +3707,8 @@ class UserController extends OrderAbstractController
             $em->getRepository(Grant::class)->processGrant($entity); //update user
 
             //process employmentstatus attachments
-            $this->processEmploymentStatus($entity);
-
+            $this->processEmploymentStatus($entity); //update user
+            
             //process credentials attachments
             $this->processCredentials($entity);
 
