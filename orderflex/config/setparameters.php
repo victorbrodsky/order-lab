@@ -432,7 +432,7 @@ if( $conn ) {
             if( $authServerNetwork ) {
                 //dump($authServerNetwork);
                 //dump($row);
-                echo "authServerNetwork=$authServerNetwork<br>";
+                echo "authServerNetwork=".$authServerNetwork."\n";
                 $table = 'user_authservernetworklist';
                 $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetwork";
                 $authServerNetworkParams = $conn->query($authServerNetworkSql); // Simple, but has several drawbacks
@@ -442,7 +442,7 @@ if( $conn ) {
                 if( count($authServerNetworkRow) > 0 ) {
                     //dump($authServerNetworkRow);
                     $authServerNetworkName = $authServerNetworkRow['name'];
-                    echo "authServerNetworkName=" . $authServerNetworkName . "<br>";
+                    echo "authServerNetworkName=" . $authServerNetworkName . "\n";
                 }
                 //exit('111');
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
@@ -451,7 +451,7 @@ if( $conn ) {
                     $container->setParameter('defaultlocale', 'main');
                 }
             }
-            echo "multitenancy=" . $multitenancy . "<br>";
+            echo "multitenancy=" . $multitenancy . "\n";
             $container->setParameter('multitenancy', $multitenancy);
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);

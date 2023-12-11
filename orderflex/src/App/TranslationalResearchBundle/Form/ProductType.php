@@ -31,6 +31,7 @@ class ProductType extends AbstractType
     protected $params;
     protected $priceList;
     protected $disabled;
+    protected $categoryId;
 
     public function formConstructor( $params )
     {
