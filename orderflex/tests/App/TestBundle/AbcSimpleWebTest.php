@@ -89,7 +89,7 @@ class AbcSimpleWebTest extends WebTestBase
 
         $loginUrl = '/'.$this->tenantprefix.'directory/login';
         $crawler = $this->client->request('GET', $loginUrl);
-        echo 'login url='.$loginUrl.'<br>';
+        echo '[login url='.$loginUrl."]";
 
         //$client = static::createClient();
         //$crawler = $client->request('GET', '/'.$this->tenantprefix.'directory/login');
