@@ -403,7 +403,7 @@ if( $conn ) {
             //3) set tenantid $tenantprefix = authPartnerServer
 
             //////// tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
-            //////// and then is used in getCommonBaseUrl. Also it is used tests ////////
+            //////// and then is used in getCommonBaseUrl. ////////
             //////// It is not need if locale is used ////////
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
             //$tenantprefix = 'c/wcm/pathology/';

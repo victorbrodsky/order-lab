@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -66,7 +67,7 @@ class WebTestBase extends WebTestCase
     //static protected $kernel = null;
     protected $user = null;
     protected $environment = null;
-    protected $tenantprefix = '';//'c/lmh/pathology/';
+    protected $tenantprefix = ''; //'c/lmh/pathology/';
 
     public function getParam() {
 //        global $argv, $argc;
@@ -96,8 +97,14 @@ class WebTestBase extends WebTestCase
         //$this->em = $this->getService('doctrine.orm.entity_manager');
         //$this->em = $this->getService('user_security_utility');
         $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
-        $this->tenantprefix = $this->testContainer->getParameter('tenantprefix');
+
+
+        //Set tenantid in the url
+        $this->tenantprefix = $this->testContainer->getParameter('defaultlocale');
         //$this->tenantprefix = 'c/lmh/pathology/';
+        if( $this->tenantprefix ) {
+            $this->tenantprefix = $this->tenantprefix . "/";
+        }
         //echo "tenantprefix=".$this->tenantprefix."<br>";
 
         $this->user = $this->getUser();
