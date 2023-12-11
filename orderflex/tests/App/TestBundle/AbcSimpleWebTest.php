@@ -13,7 +13,7 @@ use App\UserdirectoryBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 //class SimpleWebTest extends WebTestCase
-class SimpleWebTest extends WebTestBase
+class AbcSimpleWebTest extends WebTestBase
 {
 
 //    public function testVisitingWhileLoggedIn()
@@ -81,7 +81,8 @@ class SimpleWebTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        echo "[User,PHP=".$phpVersion."]";
+        echo "[Start Testing. PHP=".$phpVersion."]";
+        //echo "[Resapp]";
 
         $userServiceUtil = $this->testContainer->get('user_service_utility');
         echo "[DB=".$userServiceUtil->getDbVersion()."]";

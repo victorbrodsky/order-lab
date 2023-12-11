@@ -15,8 +15,9 @@ class CalllogTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[Calllog,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Calllog,PHP=".$phpVersion."]";
+        echo "[Calllog]";
         
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/login');

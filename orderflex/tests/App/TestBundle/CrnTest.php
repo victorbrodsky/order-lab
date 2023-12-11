@@ -18,8 +18,9 @@ class CrnTest extends WebTestBase
         //$scheme = $userUtil->getScheme();
         //exit("scheme=$scheme");
 
-        $phpVersion = phpversion();
-        echo "[Crn,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Crn,PHP=".$phpVersion."]";
+        echo "[Crn]";
 
         $this->client->followRedirects();
 

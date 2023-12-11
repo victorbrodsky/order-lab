@@ -15,8 +15,9 @@ class ResappTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[Resapp,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Resapp,PHP=".$phpVersion."]";
+        echo "[Resapp]";
         
         //$this->getTestClient();
 

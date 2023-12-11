@@ -17,8 +17,9 @@ class TrpTest extends WebTestBase
 
     public function testHomeAction() {
 
-        $phpVersion = phpversion();
-        echo "[Trp,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Trp,PHP=".$phpVersion."]";
+        echo "[Trp]";
 
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/login');
         $this->assertGreaterThan(

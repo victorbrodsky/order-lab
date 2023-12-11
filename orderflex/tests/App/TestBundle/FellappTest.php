@@ -15,8 +15,9 @@ class FellappTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[Fellapp,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Fellapp,PHP=".$phpVersion."]";
+        echo "[Fellapp]";
         
         //$this->getTestClient();
 
@@ -69,7 +70,7 @@ class FellappTest extends WebTestBase
     public function testFileDownloadAction() {
         $this->logIn();
 
-        echo "[Fellapp,testFileDownloadAction]";
+        //echo "[Fellapp,testFileDownloadAction]";
         
         $googlesheetmanagement = $this->testContainer->get('fellapp_googlesheetmanagement');
         $googleService = $googlesheetmanagement->getGoogleService();

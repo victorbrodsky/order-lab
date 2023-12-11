@@ -104,6 +104,7 @@ class WebTestBase extends WebTestCase
         //$this->tenantprefix = 'c/lmh/pathology/';
         if( $this->tenantprefix ) {
             $this->tenantprefix = $this->tenantprefix . "/";
+            $this->client->request('GET', $this->tenantprefix);
         }
         //echo "tenantprefix=".$this->tenantprefix."<br>";
 

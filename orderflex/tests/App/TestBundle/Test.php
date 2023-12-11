@@ -15,8 +15,9 @@ class Test extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[PHP=".$phpVersion."]";
+        echo "[Test]";
 
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
@@ -34,8 +35,8 @@ class Test extends WebTestBase
     public function testBaseContainerAction() {
         $this->logIn();
 
-        $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[PHP=".$phpVersion."]";
 
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/test/container/testbase');
@@ -69,8 +70,8 @@ class Test extends WebTestBase
     public function testContainerAction() {
         $this->logIn();
 
-        $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[PHP=".$phpVersion."]";
 
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/test/container/test');

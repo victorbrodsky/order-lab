@@ -15,8 +15,9 @@ class VacationTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[Vacation,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Vacation,PHP=".$phpVersion."]";
+        echo "[Vacation]";
         
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'time-away-request/login');

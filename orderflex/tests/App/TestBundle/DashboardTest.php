@@ -14,8 +14,9 @@ class DashboardTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[Dashboard,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[Dashboard,PHP=".$phpVersion//."]";
+        echo "[Dashboard]";
         
         //$this->getTestClient();
 
