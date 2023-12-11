@@ -1320,8 +1320,8 @@ class User extends UserBase {
     }
 
 
-    //[ORM\PreUpdate]
-    //[ORM\PrePersist]
+    //[ORM\PreUpdate] - update
+    //[ORM\PrePersist] - create
     //Use PreFlush - always check and set display name if empty on create or update user
     #[ORM\PreFlush]
     public function setDisplaynameIfEmpty(): void
@@ -1331,9 +1331,7 @@ class User extends UserBase {
         if( !$originalDisplayName || $originalDisplayName == "" ) {
             //$this->setDisplayname( $this->getUsernameOptimal() );
             $this->setDisplayname( $this->getDisplayName() );
-            //exit('setDisplaynameIfEmpty='.$this->getDisplayName());
         }
-        //exit('EOF setDisplaynameIfEmpty');
     }
 
 

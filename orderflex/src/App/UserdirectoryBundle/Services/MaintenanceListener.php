@@ -97,6 +97,19 @@ class MaintenanceListener {
         //echo "referer=".$referer."<br>";
         //exit('1');
 
+        //set db
+//        $locale = $request->getLocale();
+//        $connection = $this->em->getConnection();
+//        echo 'current dbName='.$connection->getDatabase()."<br>";
+//        if( $locale == 'c/lmh/pathology' ) {
+//            $connection = $this->em->getConnection();
+//            $dbName = 'Tenant2';
+//            //echo "set connection=".$dbName.'<br>';
+//            $connection->selectDatabase($dbName);
+//            echo 'dbName='.$connection->getDatabase()."<br>";
+//            //exit('dbName='.$connection->getDatabase());
+//        }
+
         //Relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
@@ -105,6 +118,8 @@ class MaintenanceListener {
             if( $multitenancy == 'multitenancy' ) {
                 $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
                 $sessionLocale = $session->get('locale');
+                //echo "uri=".$uri.", locale=".$locale.", sessionLocale=".$sessionLocale."<br>";
+                //exit('1');
                 //$locale = str_replace("-", "/", $locale);
                 //echo "locale=" . $locale .', sessionLocale='.$sessionLocale. "<br>";
                 //echo "uri=".$uri.", locale=".$locale."<br>";

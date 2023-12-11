@@ -171,15 +171,24 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //https://stackoverflow.com/questions/65902878/dynamic-doctrine-database-connection
         if( 0 ) {
             $locale = $request->getLocale();
-            $session = $request->getSession();
-            $sessionLocale = $session->get('locale');
-            echo "locale=" . $locale . ', sessionLocale=' . $sessionLocale . "<br>";
-            $connection = $this->em->getConnection();
-            //$connection = $this->connection;
-            //$params = $connection->getParams();
-            $connection->selectDatabase('Tenant2');
-            //dump($params);
-            //exit('111');
+            if( $locale == 'c/lmh/pathology' ) {
+                $connection = $this->em->getConnection();
+                $dbName = 'Tenant2';
+                //echo "set connection=".$dbName.'<br>';
+                $connection->selectDatabase($dbName);
+                //echo 'authenticate dbName='.$connection->getDatabase()."<br>";
+                //exit('dbName='.$connection->getDatabase());
+            }
+//            $locale = $request->getLocale();
+//            $session = $request->getSession();
+//            $sessionLocale = $session->get('locale');
+//            echo "locale=" . $locale . ', sessionLocale=' . $sessionLocale . "<br>";
+//            $connection = $this->em->getConnection();
+//            //$connection = $this->connection;
+//            //$params = $connection->getParams();
+//            $connection->selectDatabase('Tenant2');
+//            //dump($params);
+//            //exit('111');
         }
         ///////// EOF Switch DB according to the locale ////////
 
