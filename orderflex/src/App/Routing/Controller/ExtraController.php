@@ -8,7 +8,7 @@
 
 //https://symfony.com/doc/6.4/routing/custom_route_loader.html
 
-namespace App\Routing;
+namespace App\Routing\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

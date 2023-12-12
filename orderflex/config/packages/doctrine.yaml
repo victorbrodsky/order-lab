@@ -62,7 +62,6 @@ doctrine:
             default:
 #                auto_mapping: true
 #                metadata_cache_driver: ~
-#                    array
 #                    type: service
 #                    id: doctrine.system_cache_provider
                 result_cache_driver: ~

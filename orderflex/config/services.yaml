@@ -122,20 +122,23 @@ services:
 
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #Enable Routing Controller for the home page
-    App\Routing\:
-        resource: '../src/App/Routing/'
-        exclude: '../src/App/Routing/DBAL/*'
+    #App\Routing\:
+    #    resource: '../src/App/Routing/'
+    #    exclude: '../src/App/Routing/DBAL/*'
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #App\Routing\ExtraLoader:
     #    tags: [routing.loader]
+    App\Routing\Controller\:
+        resource: '../src/App/Routing/Controller/'
     custom.route_loader:
         class: App\Routing\CustomTenancyLoader
-        #arguments:
-        #    - '%multitenancy%'
-        #arguments: ['%multitenancy%']
-        #arguments: ["@service_container"]
         tags:
           - { name: 'routing.loader' }
+
+    #App\Routing\DBAL\MultiDbConnectionWrapper:
+        #arguments:  ['@request_stack']
+        #autowire: true
+        #tags: {**}
 #    dynamic_connection:
 #        class: App\Routing\DBAL\MultiDbConnectionWrapper
 #        arguments:  ['@request_stack']

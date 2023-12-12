@@ -19,6 +19,8 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 
+//use Doctrine\DBAL\Driver\PDO\PgSQL\Driver;
+
 final class MultiDbConnectionWrapper extends Connection
 {
 
@@ -46,6 +48,7 @@ final class MultiDbConnectionWrapper extends Connection
              * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
              */
             $container = $refContainer->getValue($eventManager);
+            
             //dump($container);
             //exit('111');
 
@@ -53,10 +56,14 @@ final class MultiDbConnectionWrapper extends Connection
              * @var Symfony\Component\HttpFoundation\Request
              */
             $request = $container->get('request_stack')->getCurrentRequest();
+            //if( $request != null && $request->attributes->has('_company') ) {
+            //    $params['dbname'] .= $request->attributes->get('_company');
+            //}
 
-            if ($request != null && $request->attributes->has('_company')) {
-                $params['dbname'] .= $request->attributes->get('_company');
-            }
+            //$session = $request->getSession();
+            //$sessionLocale = $session->get('locale');
+            //echo "sessionLocale=".$sessionLocale."<br>";
+            //exit('1');
 
             $refContainer->setAccessible('private'); //We put in private again
             parent::__construct($params, $driver, $config, $eventManager);

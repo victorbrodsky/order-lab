@@ -100,10 +100,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request) : bool
     {
+        //$logger = $this->container->get('logger');
+
         // GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
+        //$logger->notice("supports: route=".$route);
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('exit support');
 
@@ -129,6 +132,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         if( strpos((string)$route, 'login') !== false ) {
             if( $request->isMethod('POST') ) {
                 //exit('true');
+                //$logger->notice("supports: Yes. route=".$route);
                 return true;
             }
 //            if( $request->isMethod('GET') ) {
@@ -140,9 +144,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         // then return false and skip authentication: there is no need.
         if( $this->security->getUser() ) {
             //echo 'User authenticated='.$this->security->getUser()."<br>";
+            //$logger->notice("supports: Not. User exists");
             return false;
         }
 
+        //$logger->notice("supports: Not. EOF");
         return false;
     }
 
@@ -213,11 +219,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $logger = $this->container->get('logger');
         $logger->notice("authenticate: login attempt username=[$username], usernametype=[$usernametype], sitename=[$sitename]");
 
+        //$connection = $this->em->getConnection();
+        //$currentDb = $connection->getDatabase();
+        //$logger->notice('authenticate: currentDb='.$currentDb);
+
         return new Passport(
             new UserBadge($credentials['username']),
             new CustomCredentials(
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
+                    //$logger = $this->container->get('logger');
+                    //$logger->notice('authenticate: new CustomCredentials');
                     //return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {
@@ -288,6 +300,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
     public function getAuthUser($credentials) : mixed
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("getAuthUser: Start");
+
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
@@ -317,10 +332,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
+            $logger->notice("getAuthUser: User=".$user);
             //exit('return user='.$user);
             return $user;
         }
 
+        $logger->notice("getAuthUser: User not found");
         $this->passwordToken = NULL;
         return NULL;
     }
