@@ -154,10 +154,11 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 //var _idleTimeout = null;
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
     console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
+    //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
+    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
-    //console.log("urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+    console.log("checkIdleTimeout urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     //var sessionKeepAliveTimer = Math.round(_idleAfter/3); //call server before idle timer expired
     var sessionKeepAliveTimer = 180; //180 sec => 3 min
@@ -302,7 +303,9 @@ function userCheckIfConnected() {
     // if applicable) and log in again.”
     // (c) Change the button text from “Keep me logged in” to “Ok”
 
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
+    //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
+    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
+    console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     //var idleTimeout = _idleTimeout;
 

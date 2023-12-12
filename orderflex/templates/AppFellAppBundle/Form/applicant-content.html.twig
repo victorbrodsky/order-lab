@@ -114,7 +114,8 @@
 
 {% endif %}
 
-    <input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />
+    {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
+    <input type="hidden" id="tenantprefix" value="{{user_security_utility.getSessionLocale()}}" />
     <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />

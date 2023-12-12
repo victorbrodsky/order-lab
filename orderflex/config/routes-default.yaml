@@ -106,8 +106,8 @@ fellapp_instructions:
 #login and logout routes
 
 #logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
-idle-log-out:
-    path:   /directory/idle-log-out
+#idle-log-out:
+#    path:   /directory/idle-log-out
 
 #testlogin:
 #    path:   /directory/testlogin

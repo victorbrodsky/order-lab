@@ -10,6 +10,9 @@
 //https://stackoverflow.com/questions/65902878/dynamic-doctrine-database-connection
 //Good: https://stackoverflow.com/questions/53151669/symfony-change-database-dynamically
 
+//decorator:
+//https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
+
 //declare(strict_types=1);
 
 namespace App\Routing\DBAL;
@@ -31,7 +34,11 @@ final class MultiDbConnectionWrapper extends Connection
         //$params['dbname'] = 'ScanOrder2';
         //dump($config);
         //exit('1');
-        if( 0 && !$this->isConnected() ) {
+
+        $enableMulti = false;
+        //$enableMulti = true;
+
+        if( $enableMulti && !$this->isConnected() ) {
             // Create default config and event manager if none given (case in command line)
             if (!$config) {
                 $config = new Configuration();
@@ -48,7 +55,10 @@ final class MultiDbConnectionWrapper extends Connection
              * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
              */
             $container = $refContainer->getValue($eventManager);
-            
+
+            //dump($eventManager);
+            //dump($params);
+            //dump($config);
             //dump($container);
             //exit('111');
 
@@ -56,6 +66,7 @@ final class MultiDbConnectionWrapper extends Connection
              * @var Symfony\Component\HttpFoundation\Request
              */
             $request = $container->get('request_stack')->getCurrentRequest();
+
             //if( $request != null && $request->attributes->has('_company') ) {
             //    $params['dbname'] .= $request->attributes->get('_company');
             //}
@@ -75,7 +86,9 @@ final class MultiDbConnectionWrapper extends Connection
             parent::__construct($params, $driver, $config, $eventManager);
         }
 
-        parent::__construct($params, $driver, $config, $eventManager);
+        if( $enableMulti == false ) {
+            parent::__construct($params, $driver, $config, $eventManager);
+        }
     }
 
 

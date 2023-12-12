@@ -62,6 +62,8 @@ class MaintenanceListener {
 //            exit('not auth users');
 //        }
 
+        //$this->switchDb($event);
+
         //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
         if( !$event->isMainRequest() ) {
             //exit('1');
@@ -98,27 +100,28 @@ class MaintenanceListener {
         //exit('1');
 
         //set db
-        if( 0 ) {
-            $locale = $request->getLocale();
-            $sessionLocale = $session->get('locale');
-            $connection = $this->em->getConnection();
-            $currentDb = $connection->getDatabase();
-            //echo 'current dbName=' . $connection->getDatabase() . "<br>";
-            //echo "uri=" . $uri . ", locale=" . $locale . ", sessionLocale=" . $sessionLocale . "<br>";
-            if ($locale == 'c/lmh/pathology') {
-                $connection = $this->em->getConnection();
-                $dbName = 'Tenant2';
-                //echo "set connection=".$dbName.'<br>';
-                $connection->selectDatabase($dbName);
-                //echo 'dbName=' . $connection->getDatabase() . "<br>";
-                //exit('dbName='.$connection->getDatabase());
-            }
-            $session->getFlashBag()->add(
-                'notice',
-                'Original dbName='.$currentDb.', current dbName=' . $connection->getDatabase() . "<br>".
-                "uri=" . $uri . ", locale=[" . $locale . "], sessionLocale=[" . $sessionLocale . "]<br>"
-            );
-        }
+        //$this->switchDb($event);
+//        if( 0 ) {
+//            $locale = $request->getLocale();
+//            $sessionLocale = $session->get('locale');
+//            $connection = $this->em->getConnection();
+//            $currentDb = $connection->getDatabase();
+//            //echo 'current dbName=' . $connection->getDatabase() . "<br>";
+//            //echo "uri=" . $uri . ", locale=" . $locale . ", sessionLocale=" . $sessionLocale . "<br>";
+//            if ($locale == 'c/lmh/pathology') {
+//                $connection = $this->em->getConnection();
+//                $dbName = 'Tenant2';
+//                //echo "set connection=".$dbName.'<br>';
+//                $connection->selectDatabase($dbName);
+//                //echo 'dbName=' . $connection->getDatabase() . "<br>";
+//                //exit('dbName='.$connection->getDatabase());
+//            }
+//            $session->getFlashBag()->add(
+//                'notice',
+//                'Original dbName='.$currentDb.', current dbName=' . $connection->getDatabase() . "<br>".
+//                "uri=" . $uri . ", locale=[" . $locale . "], sessionLocale=[" . $sessionLocale . "]<br>"
+//            );
+//        }
 
         //Relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
@@ -349,6 +352,32 @@ class MaintenanceListener {
         }
 
         return null;
+    }
+
+    public function switchDb( $event ) {
+        $request = $event->getRequest();
+        $session = $request->getSession();
+        $uri = $request->getUri();
+
+        $locale = $request->getLocale();
+        $sessionLocale = $session->get('locale');
+        $connection = $this->em->getConnection();
+        $currentDb = $connection->getDatabase();
+        //echo 'current dbName=' . $connection->getDatabase() . "<br>";
+        //echo "uri=" . $uri . ", locale=" . $locale . ", sessionLocale=" . $sessionLocale . "<br>";
+        if ($locale == 'c/lmh/pathology') {
+            $connection = $this->em->getConnection();
+            $dbName = 'Tenant2';
+            //echo "set connection=".$dbName.'<br>';
+            $connection->selectDatabase($dbName);
+            //echo 'dbName=' . $connection->getDatabase() . "<br>";
+            //exit('dbName='.$connection->getDatabase());
+        }
+        $session->getFlashBag()->add(
+            'notice',
+            'Original dbName='.$currentDb.', current dbName=' . $connection->getDatabase() . "<br>".
+            "uri=" . $uri . ", locale=[" . $locale . "], sessionLocale=[" . $sessionLocale . "]<br>"
+        );
     }
 
 //    //perform heavy jobs

@@ -135,7 +135,12 @@ services:
         tags:
           - { name: 'routing.loader' }
 
-    #App\Routing\DBAL\MultiDbConnectionWrapper:
+#    custom.dynamic_connection:
+#        class: App\Routing\DBAL\DynamicDoctrineConnection
+#        calls:
+#            - [setDoctrineConnection, ['@doctrine.dbal.default_connection']]
+
+    #App\Routing\Util\MultiDbConnectionWrapper:
         #arguments:  ['@request_stack']
         #autowire: true
         #tags: {**}

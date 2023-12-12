@@ -167,7 +167,8 @@
                 <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
             {% endfor %}
 
-            <input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />
+            {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
+            <input type="hidden" id="tenantprefix" value="{{user_security_utility.getSessionLocale()}}" />
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
             <input type="hidden" id="user-preferences-tooltip" value="{{ user_security_utility.getTooltip(app.user) }}" />
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />

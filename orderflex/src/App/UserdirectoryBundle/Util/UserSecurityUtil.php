@@ -3589,4 +3589,18 @@ class UserSecurityUtil {
         return $uploadPath;
     }
 
+    public function getSessionParam( $param ) {
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+        if( $session && $session->has($param) ) {
+            $locale = $session->get($param);
+            return $locale;
+        }
+        return null;
+    }
+    public function getSessionLocale() {
+        $locale = $this->getSessionParam('locale');
+        return $locale;
+    }
+
 }

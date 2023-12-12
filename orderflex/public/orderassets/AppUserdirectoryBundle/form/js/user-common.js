@@ -558,6 +558,7 @@ function initConvertEnterToTab() {
     });
 }
 
+//TODO: replace by Routing.generate('my-route-name');
 function getCommonBaseUrl(link,sitename) {
     //console.log('getCommonBaseUrl: sitename='+sitename);
 
@@ -601,13 +602,19 @@ function getCommonBaseUrl(link,sitename) {
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        urlBase = scheme+"//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
+        if( _tenantprefix ) {
+            urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
+        } else {
+            urlBase = scheme + "//" + urlBase + "/" + prefix + "/" + link;
+        }
+        //urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
     }
 
     //url might be in the form of:
     //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
 
     console.log("urlBase="+urlBase);
+    //alert("urlBase="+urlBase);
     return urlBase;
 }
 

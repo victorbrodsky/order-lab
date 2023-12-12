@@ -81,7 +81,8 @@
 
     <div class="container text-center">
 
-        <input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />
+        {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
+        <input type="hidden" id="tenantprefix" value="{{user_security_utility.getSessionLocale()}}" />
         <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
         <input type="hidden" id="formcycle" value="accountreq" />
         <input type="hidden" id="orderformtype" value="single" />
