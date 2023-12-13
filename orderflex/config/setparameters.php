@@ -417,6 +417,10 @@ if( $conn ) {
             $defaultLocale = '';
             $container->setParameter('defaultlocale', $defaultLocale);
 
+            $orderlocales = '';
+            $container->setParameter('orderlocales', $orderlocales);
+            $container->setParameter('seclocales', $orderlocales);
+
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
 
@@ -449,6 +453,10 @@ if( $conn ) {
                     $multitenancy = 'multitenancy';
                     //$container->setParameter('framework.translator.default_locale', 'main');
                     $container->setParameter('defaultlocale', 'main');
+
+                    $orderlocales = 'main|c/wcm/pathology|c/lmh/pathology';
+                    $container->setParameter('orderlocales', $orderlocales);
+                    $container->setParameter('seclocales', $orderlocales.'/');
                 }
             }
             echo "multitenancy=" . $multitenancy . "\n";

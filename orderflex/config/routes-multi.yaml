@@ -18,7 +18,8 @@ ProjectBaseBundle_localized:
     requirements:
         #_locale: en|es|de|fr
         #_locale: '[^.]+'
-        _locale: main|c/wcm/pathology|c/lmh/pathology
+        #_locale: main|c/wcm/pathology|c/lmh/pathology
+        _locale: '%orderlocales%'
         #tenantprefix: c/wcm/pathology|c/lmh/pathology
 
 #Locale Switcher: https://symfony.com/blog/new-in-symfony-6-1-locale-switcher

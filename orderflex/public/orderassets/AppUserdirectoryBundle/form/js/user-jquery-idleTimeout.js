@@ -178,11 +178,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/
     var thisUrl = window.location.pathname; // /order/index_dev.php/directory/
-    console.log("thisUrl="+thisUrl);
+    //console.log("thisUrl="+thisUrl);
     //convert url: replace '/' to '-'
     //thisUrl = thisUrl.toString().replaceAll("/","_");
     thisUrl = thisUrl.replace(/\//g,"_"); //result: _index_dev.php_c_lmh_pathology_directory_
-    console.log("2 thisUrl="+thisUrl);
+    //console.log("2 thisUrl="+thisUrl);
     // console.log(
     //     "checkIdleTimeout (in sec)" +
     //     ", _idleAfter="+_idleAfter+

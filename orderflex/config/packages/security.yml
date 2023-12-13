@@ -226,58 +226,58 @@ security:
 #       - { path: /.*/login, role: PUBLIC_ACCESS }
 
        ############################## local system user init ##############################
-       - { path: ^/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^/first-time-user-generation-init/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
 
        - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
        ############################## common idle time out logic ##############################
-       - { path: ^/directory/common/, role: ROLE_USER }
+       - { path: ^.*/directory/common/, role: ROLE_USER }
        ############################## common institution tree ##############################
-       - { path: ^/directory/util/common/, role: ROLE_USER }
+       - { path: ^.*/directory/util/common/, role: ROLE_USER }
        ################################# common download file ####################################
-       - { path: ^/directory/file-download/, role: ROLE_USER }
-       - { path: ^/directory/file-delete/, role: ROLE_USER }
-       - { path: ^/directory/user/only-ajax/, role: ROLE_USER }
-       - { path: ^/directory/formnode-fields/, role: ROLE_USER }
+       - { path: ^.*/directory/file-download/, role: ROLE_USER }
+       - { path: ^.*/directory/file-delete/, role: ROLE_USER }
+       - { path: ^.*/directory/user/only-ajax/, role: ROLE_USER }
+       - { path: ^.*/directory/formnode-fields/, role: ROLE_USER }
        ################################# common fos comment ####################################
        - { path: ^/api/threads/, role: ROLE_USER }
 
        ################################# telephony verification ####################################
-       - { path: ^/directory/verify-mobile-code, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
-       - { path: ^/directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-mobile-code, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
 
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^.*/directory/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/login, role: PUBLIC_ACCESS }
 #       - { path: ^/directory/login, role: PUBLIC_ACCESS, requires_channel: https }
-       - { path: ^/directory/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/directory/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/directory/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/directory/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/directory/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/directory/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/reset-password, role: PUBLIC_ACCESS }
 
-       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
-       - { path: ^/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
-       - { path: ^/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
-       - { path: ^/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
-       - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^.*/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
+       - { path: ^.*/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^.*/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
       #tree hierarchy: need for all users for public user access request page
-       - { path: ^/directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
 
        #All other urls: make all /employees accessible only limited special roles
   #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
-       - { path: ^/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
+       - { path: ^.*/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
        ############################## SCAN SITE SETTINGS ##############################
        - { path: ^/scan/access-requests/new/, role: PUBLIC_ACCESS }
@@ -322,20 +322,20 @@ security:
 
 
       ############################## Fellowship Applications SITE SETTINGS ##############################
-       - { path: ^/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/login, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
-       - { path: ^/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
-       - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+       - { path: ^.*/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
 
-       - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+       - { path: ^.*/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
        ############################## Residency Applications SITE SETTINGS ##############################
        - { path: ^/residency-applications/access-requests/new/, role: PUBLIC_ACCESS }
@@ -366,15 +366,15 @@ security:
 
 
        ############################## VacReq SITE SETTINGS ##############################
-       - { path: ^/time-away-request/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/login, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^/time-away-request/, role: ROLE_VACREQ_USER }
+       - { path: ^.*/time-away-request/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/, role: ROLE_VACREQ_USER }
 
       ############################## CallLog SITE SETTINGS ##############################
        - { path: ^/call-log-book/access-requests/new/, role: PUBLIC_ACCESS }

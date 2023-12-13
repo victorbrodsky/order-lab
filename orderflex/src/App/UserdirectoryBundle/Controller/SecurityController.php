@@ -387,6 +387,7 @@ class SecurityController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
+    //Used by Routing.generate in idleTimeoutClass.prototype.checkIdleTimeout.
     //idle log out with refereal url, from this url we can get the sitename and then redirect properly to the same system
     #[Route(path: '/idle-log-out-ref/{url}', name: 'employees_idlelogout_ref', options: ['expose' => true])]
     public function idlelogoutRefAction( Request $request, $url = null )
