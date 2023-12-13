@@ -56,6 +56,7 @@ final class MultiDbConnectionWrapper extends Connection
              */
             $container = $refContainer->getValue($eventManager);
 
+            //$userSecUtil = $container->get('user_security_utility');
             //dump($eventManager);
             //dump($params);
             //dump($config);

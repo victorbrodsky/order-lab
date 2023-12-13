@@ -23,6 +23,7 @@ use App\OrderformBundle\Util\OrderUtil;
 use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\ResAppBundle\Util\PdfUtil;
 use App\ResAppBundle\Util\ResAppUtil;
+use App\Routing\DBAL\MultiDbConnectionWrapper;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
 use App\TranslationalResearchBundle\Util\TransResFormNodeUtil;
@@ -144,6 +145,10 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
         $subscribedServices['dashboard_init'] = '?'.\App\DashboardBundle\Util\DashboardInit::class;
+
+        //$subscribedServices['routing_dbal'] = '?'.\App\Routing\DBAL\MultiDbConnectionWrapper::class;
+        //$subscribedServices['routing_dbal'] = '?'.MultiDbConnectionWrapper::class;
+        //$subscribedServices[] = MultiDbConnectionWrapper::class;
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
