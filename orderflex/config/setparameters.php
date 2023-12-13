@@ -456,7 +456,8 @@ if( $conn ) {
 
                     $orderlocales = 'main|c/wcm/pathology|c/lmh/pathology';
                     $container->setParameter('orderlocales', $orderlocales);
-                    $container->setParameter('seclocales', $orderlocales.'/');
+                    $seclocales = 'main|c/wcm/pathology|c/lmh/pathology/';
+                    $container->setParameter('seclocales', $seclocales);
                 }
             }
             echo "multitenancy=" . $multitenancy . "\n";

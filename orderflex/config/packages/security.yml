@@ -322,33 +322,33 @@ security:
 
 
       ############################## Fellowship Applications SITE SETTINGS ##############################
-       - { path: ^.*/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/login, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/(%orderlocales%)/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
-       - { path: ^.*/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
-       - { path: ^.*/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+       - { path: ^/(%orderlocales%)/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^/(%orderlocales%)/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
 
-       - { path: ^.*/fellowship-applications/, role: ROLE_FELLAPP_USER }
+       - { path: ^/(%orderlocales%)/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
        ############################## Residency Applications SITE SETTINGS ##############################
-       - { path: ^/residency-applications/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/login, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^/residency-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
-       - { path: ^/residency-applications/download/, roles: ROLE_RESAPP_USER }
-       - { path: ^/residency-applications/, role: ROLE_RESAPP_USER }
+       - { path: ^.*/residency-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/residency-applications/download/, roles: ROLE_RESAPP_USER }
+       - { path: ^.*/residency-applications/, role: ROLE_RESAPP_USER }
 
 
        ############################## Deidentifier SITE SETTINGS ##############################
