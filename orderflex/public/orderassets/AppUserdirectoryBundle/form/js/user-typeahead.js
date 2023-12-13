@@ -25,11 +25,14 @@ function initTypeaheadUserSiteSearch() {
         return;
     }       
 
-    //console.log('typeahead search');
+    console.log('typeahead search');
 
-    //Testing routing
-    //var testUrl = Routing.generate('employees_test_url'); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
-    //console.log('testUrl='+testUrl);
+    ///// Testing routing /////
+    var testUrl = Routing.generate('employees_test_url'); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
+    console.log('testUrl='+testUrl);
+    var tenantprefix = $('#tenantprefix').val();
+    console.log('tenantprefix='+tenantprefix);
+    ///// EOF Testing routing /////
 
     var suggestions_limit = 5;
     var rateLimitBy = 'debounce'; //Can be either debounce or throttle. Defaults to debounce
@@ -67,7 +70,6 @@ function initTypeaheadUserSiteSearch() {
     var complex = true; //false;
 
     if( complex ) {
-
         var remoteUrl = Routing.generate('employees_user-data-search',{type: 'user', limit: suggestions_limit});
         remoteUrl = remoteUrl + "/%QUERY";
         console.log('complex remoteUrl='+remoteUrl);

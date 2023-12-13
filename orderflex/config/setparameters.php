@@ -451,7 +451,6 @@ if( $conn ) {
                 //exit('111');
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
                     $multitenancy = 'multitenancy';
-                    //$container->setParameter('framework.translator.default_locale', 'main');
                     $container->setParameter('defaultlocale', 'main');
 
                     //TODO: get from DB

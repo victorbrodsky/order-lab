@@ -243,7 +243,7 @@ security:
        - { path: ^.*/directory/user/only-ajax/, role: ROLE_USER }
        - { path: ^.*/directory/formnode-fields/, role: ROLE_USER }
        ################################# common fos comment ####################################
-       - { path: ^/api/threads/, role: ROLE_USER }
+       - { path: ^.*/api/threads/, role: ROLE_USER }
 
        ################################# telephony verification ####################################
        - { path: ^.*/directory/verify-mobile-code, role: PUBLIC_ACCESS }
@@ -277,6 +277,7 @@ security:
 
        #All other urls: make all /employees accessible only limited special roles
   #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+#       - { path: ^/(_locale)/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
        - { path: ^.*/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
        ############################## SCAN SITE SETTINGS ##############################
