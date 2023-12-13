@@ -28,7 +28,6 @@ use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends OrderAbstractController
@@ -56,6 +55,8 @@ class DefaultController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
 
+        //$this->tokenStorage->setToken(null);
+        //$security->logout(false);
         /////////// testing ///////////
 //        $fellappUtil = $this->container->get('fellapp_util');
 //        $em = $this->getDoctrine()->getManager();

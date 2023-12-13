@@ -155,10 +155,10 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
     console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
     //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
-    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
+    //var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
-    console.log("checkIdleTimeout urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+    //console.log("checkIdleTimeout urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     //var sessionKeepAliveTimer = Math.round(_idleAfter/3); //call server before idle timer expired
     var sessionKeepAliveTimer = 180; //180 sec => 3 min
@@ -181,7 +181,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     console.log("thisUrl="+thisUrl);
     //convert url: replace '/' to '-'
     //thisUrl = thisUrl.toString().replaceAll("/","_");
-    thisUrl = thisUrl.replace(/\//g,"_");
+    thisUrl = thisUrl.replace(/\//g,"_"); //result: _index_dev.php_c_lmh_pathology_directory_
     console.log("2 thisUrl="+thisUrl);
     // console.log(
     //     "checkIdleTimeout (in sec)" +
@@ -197,6 +197,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //https://stackoverflow.com/questions/25842418/symfony-fos-js-routing-and-problems-with-locale
     //var keepaliveUrl = Routing.generate('keepalive',{tenantprefix: 'pathology'});
     //console.log("testing keepaliveUrl="+keepaliveUrl);
+
+    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{url: thisUrl});
+    //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
+    //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
+    console.log("checkIdleTimeout urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     //{tenantprefix} cause error: Uncaught Error: The route "setserveractive" requires the parameter "tenantprefix"
     var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href

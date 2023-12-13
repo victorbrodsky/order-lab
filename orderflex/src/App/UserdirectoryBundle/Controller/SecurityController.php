@@ -387,6 +387,55 @@ class SecurityController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
+    //idle log out with refereal url, from this url we can get the sitename and then redirect properly to the same system
+    #[Route(path: '/idle-log-out-ref/{url}', name: 'employees_idlelogout_ref', options: ['expose' => true])]
+    public function idlelogoutRefAction( Request $request, $url = null )
+    {
+        //exit('idlelogoutAction');
+        //$routename = $request->get('_route');
+
+        //default
+        $sitename = $this->getParameter('employees.sitename');
+
+        if( $url ) {
+            //_index_dev.php_c_lmh_pathology_directory_ => /index_dev.php/c/lmh/pathology/directory/
+            $url = str_replace("_","/",$url);
+
+            if (strpos((string)$url, "/translational-research/") !== false) {
+                $sitename = $this->getParameter('translationalresearch.sitename');
+            }
+            if (strpos((string)$url, "/directory/") !== false) {
+                $sitename = $this->getParameter('employees.sitename');
+            }
+            if (strpos((string)$url, "/fellowship-applications/") !== false) {
+                $sitename = $this->getParameter('fellapp.sitename');
+            }
+            if (strpos((string)$url, "/residency-applications/") !== false) {
+                $sitename = $this->getParameter('resapp.sitename');
+            }
+            if (strpos((string)$url, "/call-log-book/") !== false) {
+                $sitename = $this->getParameter('calllog.sitename');
+            }
+            if (strpos((string)$url, "/critical-result-notifications/") !== false) {
+                $sitename = $this->getParameter('crn.sitename');
+            }
+            if (strpos((string)$url, "/time-away-request/") !== false) {
+                $sitename = $this->getParameter('vacreq.sitename');
+            }
+            if (strpos((string)$url, "/scan/") !== false) {
+                $sitename = $this->getParameter('scan.sitename');
+            }
+            if (strpos((string)$url, "/deidentifier/") !== false) {
+                $sitename = $this->getParameter('deidentifier.sitename');
+            }
+            if (strpos((string)$url, "/dashboard/") !== false) {
+                $sitename = $this->getParameter('dashboard.sitename');
+            }
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        return $userSecUtil->idleLogout( $request, $sitename );
+    }
 
     /**
      * sessionKeepAliveUrl for user-idleTimeouts.js
