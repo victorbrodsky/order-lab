@@ -23,7 +23,7 @@ security:
                 path:   scan_logout
                 target: scan_login
             lazy:  true
-            access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
+            access_denied_url: scan_access_request_new_plain #/scan/access-requests/new/create  #/scan/scan-order/no-permission
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -68,7 +68,7 @@ security:
                 target: fellapp_login
             #anonymous:  true
             lazy: true
-            access_denied_url: /fellowship-applications/access-requests/new/create
+            access_denied_url: fellapp_access_request_new_plain #/fellowship-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -88,7 +88,7 @@ security:
                 path:   resapp_logout
                 target: resapp_logout
             lazy:  true
-            access_denied_url: /residency-applications/access-requests/new/create
+            access_denied_url: resapp_access_request_new_plain #/residency-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -107,7 +107,7 @@ security:
                 path:   deidentifier_logout
                 target: deidentifier_login
             lazy:  true
-            access_denied_url: /deidentifier/access-requests/new/create
+            access_denied_url: deidentifier_access_request_new_plain #/deidentifier/access-requests/new/create
             remember_me:
                 secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
@@ -127,7 +127,7 @@ security:
                 path:   vacreq_logout
                 target: vacreq_login
             lazy:  true
-            access_denied_url: /time-away-request/access-requests/new/create
+            access_denied_url: vacreq_access_request_new_plain #/time-away-request/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -147,7 +147,7 @@ security:
                 path:   calllog_logout
                 target: calllog_login
             lazy:  true
-            access_denied_url: /call-log-book/access-requests/new/create
+            access_denied_url: calllog_access_request_new_plain #/call-log-book/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -167,7 +167,7 @@ security:
                 path:   crn_logout
                 target: crn_login
             lazy:  true
-            access_denied_url: /critical-result-notifications/access-requests/new/create
+            access_denied_url: crn_access_request_new_plain #/critical-result-notifications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -186,7 +186,7 @@ security:
                 path:   translationalresearch_logout
                 target: translationalresearch_login
             lazy:  true
-            access_denied_url: /translational-research/access-requests/new/create
+            access_denied_url: translationalresearch_access_request_new_plain #/translational-research/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -206,7 +206,7 @@ security:
                 path:   dashboard_logout
                 target: dashboard_login
             lazy:  true
-            access_denied_url: /dashboards/access-requests/new/create
+            access_denied_url: dashboard_access_request_new_plain #/dashboards/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
