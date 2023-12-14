@@ -422,7 +422,7 @@ if( $conn ) {
 
             $multilocales = '';
             $container->setParameter('multilocales', $multilocales);
-            $container->setParameter('localedel', "");
+            $container->setParameter('locdel', "");
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
