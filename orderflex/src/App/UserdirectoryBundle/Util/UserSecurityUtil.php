@@ -3590,8 +3590,9 @@ class UserSecurityUtil {
     }
 
     public function getSessionParam( $param ) {
-        $userUtil = $this->container->get('user_utility');
-        $session = $userUtil->getSession();
+        //$userUtil = $this->container->get('user_utility');
+        //$session = $userUtil->getSession();
+        $session = $this->requestStack->getCurrentRequest()->getSession();
         if( $session && $session->has($param) ) {
             $locale = $session->get($param);
             return $locale;
