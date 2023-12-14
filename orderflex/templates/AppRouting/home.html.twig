@@ -16,7 +16,6 @@
 
 
 {% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
-{#{% extends "base.html.twig" %}#}
 
 
 
@@ -58,7 +57,35 @@
 {% endblock %}
 
 
+{% block footer %}
+    <div class="order-content text-center col-xs-12">
+        <div class="footer">
 
+            {% if showcopyrightonfooter %}
+                {#<a href="{{ path('main_common_home',{_locale: 'main'}) }}" target="_blank">O R D E R</a>#}
+                {#&copy; {{ "now"|date('Y') }}#}
+                <a href="" target="_blank">O R D E R</a>
+                &copy; {{ "now"|date('Y') }}
+                {% if institution_url and institution_name %}
+                    <a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.
+                {% else %}
+                    <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Institution's Name]</a>.
+                {% endif %}
+
+                <br><br>
+            {% endif %}
+
+            {% if department_url and department_name and subinstitution_url and subinstitution_name %}
+                <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+                <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
+            {% else %}
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
 
 
 

@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 
+//Can be moved to parameters.php
 class CustomTenancyLoader extends Loader {
 
     private $container;

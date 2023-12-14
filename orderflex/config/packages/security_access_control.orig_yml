@@ -1,0 +1,259 @@
+security:
+
+    #Important Note: the first rule that matches is used,
+    #and if ip, port, host or method are not specified for an entry,
+    #that access_control will match any ip, port, host or method
+    access_control:
+
+       ##################### Uncomment this line to use https for all pages ##########################
+#       - { path: ^/, role: PUBLIC_ACCESS }
+#       - { path: ^/, role: [PUBLIC_ACCESS], requires_channel: '%connection_channel%' }
+#       - path: ^/
+#         roles: [PUBLIC_ACCESS,ROLE_USER,
+#                ROLE_TRANSRES_USER,
+#                ROLE_CALLLOG_USER,
+#                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
+#                ROLE_DEIDENTIFICATOR_USER,
+#                ROLE_FELLAPP_USER,
+#                ROLE_USERDIRECTORY_OBSERVER,ROLE_USERDIRECTORY_EDITOR,ROLE_USERDIRECTORY_ADMIN,
+#                ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_PLATFORM_ADMIN]
+#         requires_channel: '%connection_channel%'
+
+
+#       - { path: ^/{tenantprefix}/directory/login/, role: PUBLIC_ACCESS }
+#       - { path: ^/, role: PUBLIC_ACCESS }
+
+#       - { path: /.*/login, role: PUBLIC_ACCESS }
+
+       ############################## local system user init ##############################
+       - { path: ^.*/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^.*/first-time-user-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
+
+       - { path: ^.*/access-requests/change-status/, role: ROLE_EDITOR }
+
+       ############################## common idle time out logic ##############################
+       - { path: ^.*/directory/common/, role: ROLE_USER }
+       ############################## common institution tree ##############################
+       - { path: ^.*/directory/util/common/, role: ROLE_USER }
+       ################################# common download file ####################################
+       - { path: ^.*/directory/file-download/, role: ROLE_USER }
+       - { path: ^.*/directory/file-delete/, role: ROLE_USER }
+       - { path: ^.*/directory/user/only-ajax/, role: ROLE_USER }
+       - { path: ^.*/directory/formnode-fields/, role: ROLE_USER }
+       ################################# common fos comment ####################################
+       - { path: ^.*/api/threads/, role: ROLE_USER }
+
+       ################################# telephony verification ####################################
+       - { path: ^.*/directory/verify-mobile-code, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
+
+
+       ############################## EMPLOYEES SITE SETTINGS ##############################
+       - { path: ^.*/directory/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/login, role: PUBLIC_ACCESS }
+#       - { path: ^/directory/login, role: PUBLIC_ACCESS, requires_channel: https }
+       - { path: ^.*/directory/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/reset-password, role: PUBLIC_ACCESS }
+
+       - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/users/generate, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
+       - { path: ^.*/directory/admin/populate-all-lists-with-default-values, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^.*/directory/admin/change-list-element-type/, role: [ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_TRANSRES_ADMIN,ROLE_TRANSRES_TECHNICIAN] }
+       - { path: ^.*/directory/admin/, role: ROLE_USERDIRECTORY_ADMIN }
+       - { path: ^.*/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+
+      #tree hierarchy: need for all users for public user access request page
+       - { path: ^.*/directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
+
+       #All other urls: make all /employees accessible only limited special roles
+  #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
+#       - { path: ^/(_locale)/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
+       - { path: ^.*/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
+
+       ############################## SCAN SITE SETTINGS ##############################
+       - { path: ^.*/scan/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/scan/reset-password, role: PUBLIC_ACCESS }
+
+       - { path: ^.*/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^.*/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/users/new, role: ROLE_SCANORDER_ADMIN }
+  #     - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+
+       - { path: ^.*/scan/users/previous, role: ROLE_SCANORDER_ADMIN }
+       - { path: ^.*/scan/admin/, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^.*/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^.*/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
+       - { path: ^.*/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
+#       - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^.*/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
+       - { path: ^.*/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
+
+#       - { path: ^/scan/util/, role: [ROLE_SCANORDER_SUBMITTER] }
+       - { path: ^.*/scan/util/, role: [ROLE_USER] }
+       - { path: ^.*/scan/check/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+       - { path: ^.*/scan/scan-order, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^.*/scan/my-scan-orders, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+       - { path: ^.*/scan/slide-return-request, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+       - { path: ^.*/scan/my-slide-return-requests, role: [ROLE_SCANORDER_SUBMITTER, ROLE_SCANORDER_ORDERING_PROVIDER]}
+
+       - { path: ^.*/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
+
+       #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
+#       - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
+       # has_role() function in security expressions is deprecated since Symfony 4.2, so we should use is_granted() instead
+       - { path: ^.*/scan/, allow_if: "is_granted('ROLE_SCANORDER_SUBMITTER') and !is_granted('ROLE_SCANORDER_UNAPPROVED') and !is_granted('ROLE_SCANORDER_BANNED')" }
+
+
+      ############################## Fellowship Applications SITE SETTINGS ##############################
+       - { path: ^.*/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
+  #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
+
+       - { path: ^.*/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
+
+       - { path: ^.*/fellowship-applications/, role: ROLE_FELLAPP_USER }
+
+       ############################## Residency Applications SITE SETTINGS ##############################
+       - { path: ^.*/residency-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/residency-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/residency-applications/download/, roles: ROLE_RESAPP_USER }
+       - { path: ^.*/residency-applications/, role: ROLE_RESAPP_USER }
+
+
+       ############################## Deidentifier SITE SETTINGS ##############################
+       - { path: ^.*/deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
+#       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
+  #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
+
+
+       ############################## VacReq SITE SETTINGS ##############################
+       - { path: ^.*/time-away-request/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/time-away-request/, role: ROLE_VACREQ_USER }
+
+      ############################## CallLog SITE SETTINGS ##############################
+       - { path: ^.*/call-log-book/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/call-log-book/, role: ROLE_CALLLOG_USER }
+#       - { path: ^/call-log-book/, role: PUBLIC_ACCESS }
+
+      ############################## Crn SITE SETTINGS ##############################
+       - { path: ^.*/critical-result-notifications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/critical-result-notifications/, role: ROLE_CRN_USER }
+
+      ############################## TranslationalResearch SITE SETTINGS ##############################
+       - { path: ^.*/translational-research/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/reset-password, role: PUBLIC_ACCESS }
+
+#       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
+#       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
+       - { path: ^.*/translational-research/project/new/, role: ROLE_USER }
+       - { path: ^.*/translational-research/project/select-new-project-type, role: PUBLIC_ACCESS }
+#       - { path: ^.*/translational-research/project/new/*, role: ROLE_TRANSRES_USER }
+       - { path: ^.*/translational-research/account-confirmation/, role: ROLE_USER }
+
+       - { path: ^.*/translational-research/invoice/download-invoice-pdf/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
+
+       - { path: ^.*/translational-research/work-request/download-packing-slip-pdf/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
+       - { path: ^.*/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
+
+       - { path: ^.*/translational-research/, role: ROLE_TRANSRES_USER }
+
+
+       ############################## Dashboard SITE SETTINGS ##############################
+       - { path: ^.*/dashboards/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/public, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/single-chart/, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/topic/, role: PUBLIC_ACCESS }
+       - { path: ^.*/dashboards/, role: ROLE_DASHBOARD_USER }
+#       - { path: ^/dashboards, role: PUBLIC_ACCESS }
+      #https://stackoverflow.com/questions/21020550/symfony-access-control-for-site-root/21023494
+#       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
+#       - { path: ^/dashboards, role: PUBLIC_ACCESS }
+
+#when@test:
+#    security:
+#        password_hashers:
+#            # By default, password hashers are resource intensive and take time. This is
+#            # important to generate secure password hashes. In tests however, secure hashes
+#            # are not important, waste resources and increase test times. The following
+#            # reduces the work factor to the lowest possible values.
+#            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+#                algorithm: auto
+#                cost: 4 # Lowest possible value for bcrypt
+#                time_cost: 3 # Lowest possible value for argon
+#                memory_cost: 10 # Lowest possible value for argon
+

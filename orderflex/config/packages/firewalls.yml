@@ -95,7 +95,7 @@ security:
                 path:     /residency-applications
 
         ldap_deidentifier_firewall:
-            pattern: ^.*/deidentifier
+            pattern: ^/(%multilocales%)(%locdel%)deidentifier
             context: scan_auth
             switch_user: true
             custom_authenticators:

@@ -15,6 +15,9 @@
  *  limitations under the License.
  */
 
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
 $useDb = true;
 //$useDb = false; //use when new fields are added to the "SiteParameters" entity
 //exit('start user_siteparameters');
@@ -417,9 +420,9 @@ if( $conn ) {
             $defaultLocale = '';
             $container->setParameter('defaultlocale', $defaultLocale);
 
-            $orderlocales = '';
-            $container->setParameter('orderlocales', $orderlocales);
-            //$container->setParameter('seclocales', $orderlocales);
+            $multilocales = '';
+            $container->setParameter('multilocales', $multilocales);
+            $container->setParameter('localedel', "");
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
@@ -454,10 +457,16 @@ if( $conn ) {
                     $container->setParameter('defaultlocale', 'main');
 
                     //TODO: get from DB
-                    $orderlocales = 'main|c/wcm/pathology|c/lmh/pathology';
-                    $container->setParameter('orderlocales', $orderlocales);
-                    //$seclocales = 'main|c/wcm/pathology|c/lmh/pathology/';
-                    //$container->setParameter('seclocales', $seclocales);
+                    $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
+                    $container->setParameter('multilocales', $multilocales);
+
+                    $container->setParameter('locdel', "/"); //locale delimeter '/'
+                    //$container->setParameter('seclocales', $multilocales."(%localedel%)");
+//                    //Load security's access_control yaml for multitatncy
+//                    $configDirectory = '../config/custom';
+//                    $locator = new FileLocator($configDirectory);
+//                    $loader = new YamlFileLoader($container, $locator);
+//                    $loader->load('security_access_control.yml');
                 }
             }
             echo "multitenancy=" . $multitenancy . "\n";
