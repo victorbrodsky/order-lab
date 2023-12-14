@@ -422,7 +422,7 @@ if( $conn ) {
 
             $multilocales = '';
             $container->setParameter('multilocales', $multilocales);
-            $container->setParameter('locdel', "");
+            $container->setParameter('locdel', '');
 
             //$locales = "c/wcm/pathology|c/lmh/pathology";
             //$container->setParameter('locales', $locales);
@@ -459,8 +459,8 @@ if( $conn ) {
                     //TODO: get from DB
                     $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
                     $container->setParameter('multilocales', $multilocales);
+                    $container->setParameter('locdel', '/'); //locale delimeter '/'
 
-                    $container->setParameter('locdel', "/"); //locale delimeter '/'
                     //$container->setParameter('seclocales', $multilocales."(%localedel%)");
 //                    //Load security's access_control yaml for multitatncy
 //                    $configDirectory = '../config/custom';

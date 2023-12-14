@@ -116,7 +116,8 @@ class MaintenanceListener {
                 //echo "locale=" . $locale .', sessionLocale='.$sessionLocale. "<br>";
                 //echo "uri=".$uri.", locale=".$locale."<br>";
                 //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
-                if( $locale != 'main' && $sessionLocale != 'main' && $locale != $sessionLocale ) {
+                //if( $locale != 'main' && $sessionLocale != 'main' && $locale != $sessionLocale ) {
+                if( $locale && $sessionLocale && $locale != $sessionLocale ) {
                     $session->getFlashBag()->add(
                         'warning',
                         "You can not switch between institution's sites without re-login."
