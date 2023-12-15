@@ -88,6 +88,7 @@ final class MultiDbConnectionWrapper extends Connection
         }
 
         if( $enableMulti == false ) {
+            //single tenancy
             parent::__construct($params, $driver, $config, $eventManager);
         }
     }
