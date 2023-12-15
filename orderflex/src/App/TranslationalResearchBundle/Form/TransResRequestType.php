@@ -116,6 +116,7 @@ class TransResRequestType extends AbstractType
                 'widget' => 'single_text',
                 'label' => "Save as Draft Date:",
                 'disabled' => true,
+                //'format' => 'MM/dd/yyyy',
                 'format' => 'MM/dd/yyyy',
                 'html5' => false,
                 'attr' => array('class' => 'datepicker form-control', 'readonly' => true),

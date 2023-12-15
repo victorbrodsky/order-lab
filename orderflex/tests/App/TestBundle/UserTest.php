@@ -169,6 +169,16 @@ class UserTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Preferred Contact Info")')->count()
         );
+
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/edit-user-profile/1');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit Employee")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Preferred Contact Info")')->count()
+        );
     }
 
     public function testHierarchyManagerAction() {

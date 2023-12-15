@@ -3100,7 +3100,6 @@ class UserController extends OrderAbstractController
         }
 
         $editUser = $this->editUser($request,$id, $this->getParameter('employees.sitename'));
-
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -3109,8 +3108,8 @@ class UserController extends OrderAbstractController
     }
 
     public function editUser( $request, $id, $sitename=null ) {
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        ini_set('memory_limit', '3072M');
+        //ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        //ini_set('memory_limit', '3072M');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3157,6 +3156,7 @@ class UserController extends OrderAbstractController
         );
 
         //exit('editUser: before form');
+        //echo "editUser: before form <br>";
 //        $form = $this->createForm(new UserType($params), $entity, array(
 //            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
 //            'method' => 'PUT',

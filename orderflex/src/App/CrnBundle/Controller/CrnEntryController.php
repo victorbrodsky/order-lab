@@ -620,6 +620,9 @@ class CrnEntryController extends OrderAbstractController
 //            }
 //            $queryParameters['endDate'] = $endDateStr;
 //        }
+        //echo "startDate=" . $startDate->format('Y-m-d') . "<br>"; //12/15/2023
+        //dump($startDate);
+        //exit('111');
         if( $startDate ) {
             //echo "startDate=" . $startDate->format('Y-m-d') . "<br>";
             $dql->andWhere('message.orderdate >= :startDate');

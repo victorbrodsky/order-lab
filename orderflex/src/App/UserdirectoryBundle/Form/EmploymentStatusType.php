@@ -28,6 +28,7 @@ use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced na
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -59,16 +60,6 @@ class EmploymentStatusType extends AbstractType
             $readonly = false;
         }
 
-        $builder->add('hireDate',null,array(
-            'disabled' => $readonly,
-            'label'=>"Date of Hire:",
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'html5' => false,
-            'attr' => array('class' => 'datepicker form-control') //'readonly'=>$readonly
-        ));
-
         $builder->add('employmentType',null,array(
             'disabled' => $readonly,
             'label'=>"Employee Type:",
@@ -76,12 +67,27 @@ class EmploymentStatusType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $builder->add('terminationDate',null,array(
+        //hireDate datetime
+        //Error: unable to fetch the response from the backend: read tcp 127.0.0.1:64308->127.0.0.1:55029: wsarecv: An existing connection was forcibly closed by the remote host.
+        //caused by 'format' => 'MM/dd/yyyy', fix: replace by 'input_format' => 'MM/dd/yyyy'
+        //Check if the dates are shown not correctly: 2025-08-23 shown as 02/02/2050 (example in project show)
+        $builder->add('hireDate',DateTimeType::class,array(
+            //'disabled' => $readonly,
+            'label'=>"Date of Hire:",
+            'widget' => 'single_text',
+            'required' => false,
+            //'format' => 'MM/dd/yyyy hh:mm',
+            'format' => 'MM/dd/yyyy', //'format' => 'MM/dd/yyyy',
+            'html5' => false,
+            'attr' => array('class' => 'datepicker form-control') //'readonly'=>$readonly
+        ));
+
+        $builder->add('terminationDate',DateTimeType::class,array(
             'disabled' => $readonly,
             'label'=>"End of Employment Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM/dd/yyyy',
+            'format' => 'MM/dd/yyyy', //'format' => 'MM/dd/yyyy',
             'html5' => false,
             'attr' => array('class' => 'datepicker form-control user-expired-end-date')
         ));

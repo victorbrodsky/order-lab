@@ -311,7 +311,9 @@
             {% endif %}
         {% endif %}
 
-        {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
+        {% if formfield.hireDate is defined %}
+            {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
+        {% endif %}
         {{ formmacros.field(formfield.employmentType) }}
         {{ formmacros.field(formfield.jobDescriptionSummary) }}
         {{ formmacros.field(formfield.jobDescription) }}
@@ -320,7 +322,9 @@
             {{ treemacros.compositeTreeNode(formfield.institution,cycle,prototype) }}
         {% endif %}
 
-        {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cycle,'allow-future-date') }}
+        {% if formfield.terminationDate is defined %}
+            {{ formmacros.fieldDateLabel_notempty(formfield.terminationDate,cycle,'allow-future-date') }}
+        {% endif %}
         {{ formmacros.field_notempty(formfield.terminationType,cycle) }}
 
         {#{% if formfield.terminationReason is defined or (prototype == "prototype" and field.vars.value.terminationReason ) %}#}

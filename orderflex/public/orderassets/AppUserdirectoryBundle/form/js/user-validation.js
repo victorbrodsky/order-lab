@@ -212,7 +212,7 @@ function validateUser(btnEl,origuserid) {
     $("#user-profile-form").submit();
 }
 
-function userdirectoryValidateEmail_orig(inputText)
+function userdirectoryValidateEmail(inputText)
 {
     //console.log('Validation inputText='+inputText);
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -224,7 +224,7 @@ function userdirectoryValidateEmail_orig(inputText)
     }
     return false;
 }
-function userdirectoryValidateEmail(email) {
+function userdirectoryValidateEmail_new(email) {
     return String(email)
         .toLowerCase()
         .match(

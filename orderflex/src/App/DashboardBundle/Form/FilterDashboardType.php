@@ -73,9 +73,9 @@ class FilterDashboardType extends AbstractType
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
-            //'format' => 'MM/dd/yyyy',
             'html5' => false,
-            'input_format' => 'MM/dd/yyyy',
+            'format' => 'MM/dd/yyyy',
+            //'input_format' => 'MM/dd/yyyy', //'format' => 'MM/dd/yyyy',
             //'data' => new \DateTime(),  //$this->params['startDate'],
             'data' => $this->params['startDate'],
             'attr' => array('class'=>'datepicker form-control', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
@@ -85,8 +85,8 @@ class FilterDashboardType extends AbstractType
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
-            //'format' => 'MM/dd/yyyy', //'format' causes server crash: "apache AH00428: Parent: child process 5192 exited with status 255 Restarting"?
-            'input_format' => 'MM/dd/yyyy',
+            'format' => 'MM/dd/yyyy',
+            //'input_format' => 'MM/dd/yyyy', //'format' => 'MM/dd/yyyy', //'format' causes server crash: "apache AH00428: Parent: child process 5192 exited with status 255 Restarting"?
             'html5' => false,
             'data' => $this->params['endDate'],
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',

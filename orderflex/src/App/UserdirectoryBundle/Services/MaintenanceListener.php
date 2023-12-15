@@ -103,7 +103,7 @@ class MaintenanceListener {
         //$this->switchDb($event);
 
         //Relogin if session's locale is different from the current: users can not jump between locales
-        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( 0 && $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
             //echo "multitenancy=".$multitenancy."<br>";
             //exit('MaintenanceListener');

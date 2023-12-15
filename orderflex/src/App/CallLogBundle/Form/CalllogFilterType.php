@@ -77,8 +77,8 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM/dd/yyyy',
             'html5' => false,
+            'format' => 'MM/dd/yyyy', //'format' => 'MM/dd/yyyy',
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 

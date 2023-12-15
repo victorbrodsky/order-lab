@@ -57,8 +57,6 @@ class UserType extends AbstractType
 
     public function formConstructor( $params )
     {
-
-
         $this->params = $params;
 
         $this->cycle = $params['cycle'];
@@ -119,9 +117,7 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $this->formConstructor($options['form_custom_value']);
-
 
         //hook for extended class
         $this->addHookFields($builder);
@@ -167,7 +163,6 @@ class UserType extends AbstractType
         if( $this->params['showfellapp'] ) {
             $this->addFellowshipApplication($builder);
         }
-
 
     }
 
@@ -791,7 +786,6 @@ if(1){
             'prototype' => true,
             'prototype_name' => '__fellowshipapplications__',
         ));
-
         return $builder;
     }
 }
