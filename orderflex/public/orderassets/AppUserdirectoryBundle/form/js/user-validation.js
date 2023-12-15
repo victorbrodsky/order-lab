@@ -21,6 +21,8 @@
 function validateUser(btnEl,origuserid) {
 
     console.log("starting validateUser");
+    //alert('validateUser');
+    //return false;
 
     var lbtn = Ladda.create(btnEl);
     lbtn.start();
