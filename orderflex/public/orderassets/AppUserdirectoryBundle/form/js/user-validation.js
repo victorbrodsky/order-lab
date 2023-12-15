@@ -20,7 +20,7 @@
 
 function validateUser(btnEl,origuserid) {
 
-    //console.log("starting validateUser");
+    console.log("starting validateUser");
 
     var lbtn = Ladda.create(btnEl);
     lbtn.start();
@@ -54,10 +54,13 @@ function validateUser(btnEl,origuserid) {
         addErrorAlert("Preferred Email is not valid");
         $('.user-keytype-field').parent().addClass("has-error");
         lbtn.stop();
+        //alert("email not valid="+preferredEmail);
         //console.log('Validation error preferredEmail='+preferredEmail);
         return false;
     }
-    //console.log('Validation ok preferredEmail='+preferredEmail);
+    //alert("email valid="+preferredEmail);
+    console.log('Validation ok preferredEmail='+preferredEmail);
+    //return false;
 
     if( userType == "" ) {
         $('#userinfo').collapse('show');
