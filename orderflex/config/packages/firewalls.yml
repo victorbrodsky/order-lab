@@ -49,10 +49,11 @@ security:
                   #target: /en/directory/login
               lazy:  true
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
+              #access_denied_url: /directory/access-requests/new/create
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-                  path:     /(%multilocales%)(%locdel%)directory
+                  #path:     /(%multilocales%)(%locdel%)directory
 
         ldap_fellapp_firewall:
             pattern: ^/(%multilocales%)(%locdel%)fellowship-applications

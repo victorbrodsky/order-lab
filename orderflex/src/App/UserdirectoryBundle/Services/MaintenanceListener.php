@@ -121,7 +121,8 @@ class MaintenanceListener {
                     $session->getFlashBag()->add(
                         'warning',
                         "You can not switch between institution's sites without re-login."
-                        ." locale=[$locale]; sessionLocale=[$sessionLocale]"
+                        ." locale=[$locale]; sessionLocale=[$sessionLocale]".
+                        "<br> Uri=".$uri
                     );
 
                     //Redirect to the logged in url

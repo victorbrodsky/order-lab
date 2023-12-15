@@ -3109,7 +3109,6 @@ class UserController extends OrderAbstractController
     }
 
     public function editUser( $request, $id, $sitename=null ) {
-
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '3072M');
 
@@ -3157,6 +3156,7 @@ class UserController extends OrderAbstractController
             'em' => $em
         );
 
+        //exit('editUser: before form');
 //        $form = $this->createForm(new UserType($params), $entity, array(
 //            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
 //            'method' => 'PUT',
@@ -3167,7 +3167,7 @@ class UserController extends OrderAbstractController
             'form_custom_value' => $params,
         ));
 //        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
-
+        //exit('editUser: after form');
         $pageTitle = 'Edit Employee Profile for ' . $entity->getUsernameOptimal();
 
         $addInfo = $entity->getFullStatusStr(false);
