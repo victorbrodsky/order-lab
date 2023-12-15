@@ -20,7 +20,7 @@
 
 function validateUser(btnEl,origuserid) {
 
-    console.log("starting validateUser");
+    //console.log("starting validateUser");
     //alert('validateUser');
     //return false;
 
@@ -32,7 +32,7 @@ function validateUser(btnEl,origuserid) {
     if( typeof origuserid != "undefined" && origuserid != "" ) {
         var actionFlag = 'update';
     }
-    console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
+    //console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
 
     removeAllErrorAlerts();
 
@@ -61,7 +61,7 @@ function validateUser(btnEl,origuserid) {
         return false;
     }
     //alert("email valid="+preferredEmail);
-    console.log('Validation ok preferredEmail='+preferredEmail);
+    //console.log('Validation ok preferredEmail='+preferredEmail);
     //return false;
 
     if( userType == "" ) {
@@ -224,13 +224,13 @@ function userdirectoryValidateEmail(inputText)
     }
     return false;
 }
-function userdirectoryValidateEmail_new(email) {
-    return String(email)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-};
+// function userdirectoryValidateEmail_new(email) {
+//     return String(email)
+//         .toLowerCase()
+//         .match(
+//             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+//         );
+// };
 
 
 function getUserUrl(userid,username) {

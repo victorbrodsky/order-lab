@@ -1931,12 +1931,28 @@ function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUs
 }
 function populateUserFromLdap(searchBtn,inputType) {
     //var btn =
+
+    var modalHolder = $(searchBtn).closest(".modal");
+    modalHolder.find('#add-user-danger-box').hide();
+    modalHolder.find('#add-user-danger-box').html(null);
+
     var lbtn = Ladda.create( searchBtn );
     lbtn.start();
 
     var formholder = $(searchBtn).closest(".modal");
     var holder = $(searchBtn).closest(".input-group");
-    var searchvalue = holder.find("input").val();
+    var inputEl = holder.find("input");
+    var searchvalue = inputEl.val();
+
+    if( inputEl.hasClass('user-email') ) {
+        if( validateEmail(searchvalue) == false ) {
+            var errorMsg = "Please enter a valid user's email address";
+            modalHolder.find('#add-user-danger-box').html(errorMsg);   //"Please enter a new user email address");
+            modalHolder.find('#add-user-danger-box').show(errorMsg);
+            lbtn.stop();
+            return false;
+        }
+    }
     //var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
 
     if( !searchvalue ) {
@@ -2124,7 +2140,7 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
     if( !email ) {
         errorMsg = "Please enter a new user's email address";
     } else {
-        if( !validateEmail(email) ) {
+        if( validateEmail(email) == false ) {
             errorMsg = "Please enter a valid user's email address";
         }
     }
@@ -2210,10 +2226,23 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
 }
 
 //simple validation in the form of: anystring@anystring.anystring
-function validateEmail(email)
+// function validateEmail(email)
+// {
+//     //var re = /\S+@\S+\.\S+/;
+//     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//     return re.test(email);
+// }
+function validateEmail(inputText)
 {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
+    //console.log('Validation inputText='+inputText);
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(inputText.match(mailformat))
+    {
+        //alert("Valid email address!");
+        //document.form1.text1.focus();
+        return true;
+    }
+    return false;
 }
 
 function updateUserComboboxes(response,fieldId) {
