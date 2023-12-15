@@ -68,9 +68,10 @@ class EmploymentStatusType extends AbstractType
         ));
 
         //hireDate datetime
-        //Error: unable to fetch the response from the backend: read tcp 127.0.0.1:64308->127.0.0.1:55029: wsarecv: An existing connection was forcibly closed by the remote host.
+        //Error on windows only: unable to fetch the response from the backend: read tcp 127.0.0.1:64308->127.0.0.1:55029: wsarecv: An existing connection was forcibly closed by the remote host.
         //caused by 'format' => 'MM/dd/yyyy', fix: replace by 'input_format' => 'MM/dd/yyyy'
         //Check if the dates are shown not correctly: 2025-08-23 shown as 02/02/2050 (example in project show)
+        //Do not use input_format because it does not work correctly with datepicker.
         $builder->add('hireDate',DateTimeType::class,array(
             //'disabled' => $readonly,
             'label'=>"Date of Hire:",
