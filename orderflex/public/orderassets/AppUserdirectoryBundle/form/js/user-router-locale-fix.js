@@ -24,7 +24,7 @@
 $(function () {
     //var REQUEST_LOCALE2 = '{{ app.request.locale }}';
     //console.log('REQUEST_LOCALE2='+REQUEST_LOCALE2);
-    console.log('function _REQUEST_LOCALE='+_REQUEST_LOCALE);
+    console.log('generateImpl _REQUEST_LOCALE='+_REQUEST_LOCALE);
     // change name of initial method
     Routing.generateImpl = Routing.generate;
     // override generate fonction by adding a default _locale from request locale

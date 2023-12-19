@@ -114,7 +114,7 @@
         <div class="container text-center">
 
             {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
-            <input type="hidden" id="tenantprefix" value="{{user_security_utility.getSessionLocale()}}" />
+            <input type="hidden" id="tenantprefix" value="{{ app.request.locale }}" />
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
             {% include 'AppUserdirectoryBundle/Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}
