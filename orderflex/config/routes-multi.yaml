@@ -32,6 +32,8 @@ main_multi_home:
     path:      /
     controller: App\Routing\Controller\ExtraController::extra
     schemes:  ['%connection_channel%']
+    #defaults:
+    #  _locale: '%defaultlocale%'
     #prefix:   /{_locale}
     #requirements:
     #    _locale: main|c/wcm/pathology|c/lmh/pathology

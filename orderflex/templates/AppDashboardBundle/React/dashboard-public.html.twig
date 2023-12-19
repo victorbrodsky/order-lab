@@ -78,6 +78,16 @@
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
 
+    {#FOSJsRoutingBundle#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <script>
+        _REQUEST_LOCALE = '{{ app.request.locale }}';
+        //console.log('_REQUEST_LOCALE='+_REQUEST_LOCALE);
+    </script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-router-locale-fix.js') }}"></script>
+    {#EOF FOSJsRoutingBundle#}
+
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
@@ -106,7 +116,7 @@
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
 
 
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
 
 {% endblock %}

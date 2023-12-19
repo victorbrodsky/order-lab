@@ -70,8 +70,18 @@
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.min.js') }}"></script>
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>#}
 
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
+
+    {#FOSJsRoutingBundle#}
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <script>
+        _REQUEST_LOCALE = '{{ app.request.locale }}';
+        console.log('_REQUEST_LOCALE='+_REQUEST_LOCALE);
+    </script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-router-locale-fix.js') }}"></script>
+    {#EOF FOSJsRoutingBundle#}
 
     {#custom js#}
     {% set directJs = 1 %}

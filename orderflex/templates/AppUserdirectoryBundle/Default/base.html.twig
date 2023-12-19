@@ -77,8 +77,7 @@
 
     {% endblock %}
         
-    {% block headeradditionaljs %}{% endblock %}    
-
+    {% block headeradditionaljs %}{% endblock %}
 
     <title>
         {% block title %}
@@ -186,13 +185,23 @@
 
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
-
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+
+            {#FOSJsRoutingBundle#}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+            <script>
+                _REQUEST_LOCALE = '{{ app.request.locale }}';
+                console.log('_REQUEST_LOCALE='+_REQUEST_LOCALE);
+            </script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-router-locale-fix.js') }}"></script>
+            {#EOF FOSJsRoutingBundle#}
+
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
@@ -218,12 +227,6 @@
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
 
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
-
-
-
-            {#FOSJsRoutingBundle#}
-            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
         {% endblock %}
 
         {% block additionaljs %}{% endblock %}
