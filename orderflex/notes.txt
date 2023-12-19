@@ -1879,17 +1879,3 @@ Upgrade GIT on Centos: https://stackoverflow.com/questions/21820715/how-to-insta
 yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm
 yum install git
 git --version
-
-Error on windows only: unable to fetch the response from the backend: read tcp 127.0.0.1:64308->127.0.0.1:55029: wsarecv: An existing connection was forcibly closed by the remote host.
-Error on windows: apache AH00428: Parent: child process 5192 exited with status 255 Restarting
-http://127.0.0.1/index_dev.php/c/wcm/pathology/call-log-book/?filter%5BsortBy%5D=sort-by-creation-date
-&filter%5BstartDate%5D=12%2F11%2F2023&filter%5BendDate%5D=
-&filter%5BmessageCategory%5D=Pathology+Call+Log+Entry_33
-&filter%5Bmrntype%5D=20&filter%5Bsearch%5D=&filter%5BaccessionType%5D=
-&filter%5BaccessionNumber%5D=&filter%5BinitialCommunication%5D=
-&filter%5Bauthor%5D=&filter%5BreferringProvider%5D=&filter%5BreferringProviderSpecialty%5D=
-&filter%5BencounterLocation%5D=&filter%5Binstitution%5D=&filter%5BmessageStatus%5D=All+except+deleted
-&filter%5BpatientListTitle%5D=&filter%5Battending%5D=&filter%5BentryBodySearch%5D=
-&filter%5Btask%5D=&filter%5BtaskType%5D=&filter%5BtaskUpdatedBy%5D=
-&filter%5BtaskAddedBy%5D=&filter%5BpatientPhone%5D=&filter%5BpatientEmail%5D=
-&filter%5BattachmentType%5D=&filter%5Bid%5D=
