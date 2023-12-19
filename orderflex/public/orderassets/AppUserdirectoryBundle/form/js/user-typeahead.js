@@ -30,12 +30,12 @@ function initTypeaheadUserSiteSearch() {
     ///// Testing routing /////
     //https://stackoverflow.com/questions/29937114/how-to-pass-locale-using-fosjsroutingbundle
     //https://github.com/FriendsOfSymfony/FOSJsRoutingBundle/pull/334
-    var tenantprefix = $('#tenantprefix').val();
-    console.log('tenantprefix='+tenantprefix);
+    //var tenantprefix = $('#tenantprefix').val();
+    //console.log('tenantprefix='+tenantprefix);
     var testUrl = Routing.generate('employees_test_url'); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
     console.log('original testUrl='+testUrl);
-    var testUrl = Routing.generate('employees_test_url', {'_locale': tenantprefix}); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
-    console.log('locale testUrl='+testUrl);
+    //var testUrl = Routing.generate('employees_test_url', {'_locale': tenantprefix}); //exists if locale attached: employees_test_url.main employees_test_url.c-wcm-pathology
+    //console.log('locale testUrl='+testUrl);
     ///// EOF Testing routing /////
 
     var suggestions_limit = 5;

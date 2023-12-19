@@ -111,9 +111,10 @@ idleTimeoutClass.prototype.init = function () {
     // cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
     //this.countdownDialog = $("#dialog-countdown");
     //this.urlCommonIdleTimeout = getCommonBaseUrl("common/keepalive",this.employees_sitename);
-    var tenantprefix = $('#tenantprefix').val();
-    console.log('tenantprefix='+tenantprefix);
-    this.urlCommonIdleTimeout = Routing.generate('keepalive', {'_locale': tenantprefix});
+    //var tenantprefix = $('#tenantprefix').val();
+    //console.log('tenantprefix='+tenantprefix);
+    //this.urlCommonIdleTimeout = Routing.generate('keepalive', {'_locale': tenantprefix});
+    this.urlCommonIdleTimeout = Routing.generate('keepalive');
     console.log("urlCommonIdleTimeout="+this.urlCommonIdleTimeout);
 
     this.setMaxIdletime();
@@ -204,14 +205,16 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var tenantprefix = $('#tenantprefix').val();
     console.log('Routing.generate tenantprefix='+tenantprefix);
 
-    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{'_locale': tenantprefix, url: thisUrl});
+    //var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{'_locale': tenantprefix, url: thisUrl});
+    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{url: thisUrl});
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
     console.log("checkIdleTimeout urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     //{tenantprefix} cause error: Uncaught Error: The route "setserveractive" requires the parameter "tenantprefix"
-    var sessionKeepAliveUrl = Routing.generate('setserveractive',{'_locale': tenantprefix, url: thisUrl}); //window.location.href
+    //var sessionKeepAliveUrl = Routing.generate('setserveractive',{'_locale': tenantprefix, url: thisUrl}); //window.location.href
     //var sessionKeepAliveUrl = Routing.generate('setserveractive',{tenantprefix: 'pathology', url: thisUrl}); //window.location.href
+    var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href
     console.log("sessionKeepAliveUrl="+sessionKeepAliveUrl);
 
     //var sessionKeepAliveUrl = getCommonBaseUrl("setserveractive"); //working, but modify to pass {setserveractive} from session
