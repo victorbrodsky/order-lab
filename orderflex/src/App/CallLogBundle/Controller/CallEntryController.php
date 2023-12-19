@@ -673,6 +673,7 @@ class CallEntryController extends OrderAbstractController
             $queryParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
         }
         if( $endDate ) {
+            //echo "endDate=" . $endDate->format('Y-m-d') . "<br>";
             $endDate->modify('+1 day');
             //echo "endDate=" . $endDate->format('Y-m-d') . "<br>";
             $dql->andWhere('message.orderdate <= :endDate');

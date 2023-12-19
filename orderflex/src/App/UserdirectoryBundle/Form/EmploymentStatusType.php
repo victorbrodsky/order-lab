@@ -69,9 +69,11 @@ class EmploymentStatusType extends AbstractType
 
         //hireDate datetime
         //Error on windows only: unable to fetch the response from the backend: read tcp 127.0.0.1:64308->127.0.0.1:55029: wsarecv: An existing connection was forcibly closed by the remote host.
+        //Or error: "apache AH00428: Parent: child process 5192 exited with status 255 Restarting"
         //caused by 'format' => 'MM/dd/yyyy', fix: replace by 'input_format' => 'MM/dd/yyyy'
         //Check if the dates are shown not correctly: 2025-08-23 shown as 02/02/2050 (example in project show)
         //Do not use input_format because it does not work correctly with datepicker.
+        //Fixed: this caused by php.ini: extension=intl. Disabling it fixed the problem
         $builder->add('hireDate',DateTimeType::class,array(
             //'disabled' => $readonly,
             'label'=>"Date of Hire:",
