@@ -34,7 +34,7 @@ $(function () {
             if (params) {
                 paramsExt = params;
             }
-            if (!paramsExt._locale && _REQUEST_LOCALE) {
+            if (!paramsExt._locale) {
                 //paramsExt._locale = '{{ app.request.locale }}';
                 paramsExt._locale = _REQUEST_LOCALE;
             }
