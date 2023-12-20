@@ -167,6 +167,11 @@ services:
 #        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
 
 
+    #dynamic_connection:
+    #App\UserdirectoryBundle\Services\MultiDbConnectionWrapper:
+    #    class: App\UserdirectoryBundle\Services\MultiDbConnectionWrapper
+    #    arguments:  ['@request_stack']
+
 
 #    user_cache_clear:
 #        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand

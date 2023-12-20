@@ -15,26 +15,25 @@
 
 //declare(strict_types=1);
 
-namespace App\Routing\DBAL;
+namespace App\UserdirectoryBundle\Services;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 //use Doctrine\DBAL\Driver\PDO\PgSQL\Driver;
 
 final class MultiDbConnectionWrapper extends Connection
 {
 
-    public function __construct(RequestStack $requestStack, array $params, Driver $driver, $config, $eventManager)
+    #public function __construct(array $params, Driver $driver, $config, $eventManager)
+    public function __construct(array $params, Driver $driver, Configuration $config, EventManager $eventManager)
     {
         //$request = $eventManager->getRequest();
         //$session = $request->getSession();
         //$params['dbname'] = 'ScanOrder2';
         //dump($config);
-        //dump($params);
         //exit('1');
 
         $enableMulti = false;

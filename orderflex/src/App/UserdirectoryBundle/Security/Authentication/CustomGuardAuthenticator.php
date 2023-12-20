@@ -170,6 +170,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         //dump($request->request);
         //exit('authenticate');
+        $logger = $this->container->get('logger');
 
         ///////// Switch DB according to the locale ////////
         //Switch DB must be done on every request: MultiDbConnectionWrapper->__construct
@@ -196,6 +197,23 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 ////            //dump($params);
 ////            //exit('111');
 //        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$connection = $this->em->getConnection();
+        $userSecUtil->switchDb();
+
+//        $connection = $this->em->getConnection();
+//        $uri = $request->getUri();
+//        $logger->notice("authenticate: login DB=". $connection->getDatabase().", uri=".$uri);
+//        if (str_contains($uri, 'c/lmh/pathology')) {
+//            $connection = $this->em->getConnection();
+//            $dbName = 'Tenant2';
+//            //echo "set connection=".$dbName.'<br>';
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $userSecUtil->switchDb($connection,$dbName);
+//            //echo 'dbName=' . $connection->getDatabase() . "<br>";
+//            //exit('dbName='.$connection->getDatabase());
+//        }
         ///////// EOF Switch DB according to the locale ////////
 
         $credentials = $this->getCredentials($request);
@@ -216,8 +234,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $sitename = $credentials['sitename'];
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice("authenticate: login attempt username=[$username], usernametype=[$usernametype], sitename=[$sitename]");
+        $connection = $this->em->getConnection();
+        $uri = $request->getUri();
+        $logger->notice(
+            "authenticate: login attempt username=[$username],".
+            " usernametype=[$usernametype], sitename=[$sitename], ".
+            " DB=".$connection->getDatabase().", uri=".$uri
+        );
 
         //$connection = $this->em->getConnection();
         //$currentDb = $connection->getDatabase();
@@ -453,7 +476,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         }
 
         if ($user) {
-            $logger->notice("authenticateToken: user found by token");
+            $connection = $this->em->getConnection();
+            $logger->notice("authenticateToken: user found by token".", DB=".$connection->getDatabase());
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user, $providerKey);
         }
