@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class MultiDbConnectionWrapper extends Connection
 {
 
-    public function __construct(RequestStack $requestStack, array $params, Driver $driver, $config, $eventManager)
+    public function __construct(array $params, Driver $driver, $config, $eventManager)
     {
         //$request = $eventManager->getRequest();
         //$session = $request->getSession();
@@ -89,7 +89,7 @@ final class MultiDbConnectionWrapper extends Connection
             parent::__construct($params, $driver, $config, $eventManager);
         }
 
-        if( $enableMulti == false ) {
+        if( 1 && $enableMulti == false ) {
             //single tenancy
             parent::__construct($params, $driver, $config, $eventManager);
         }

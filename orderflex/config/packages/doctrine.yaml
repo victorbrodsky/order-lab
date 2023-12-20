@@ -32,7 +32,7 @@ doctrine:
         default_connection: default
         connections:
             default:
-                #wrapper_class: App\Routing\DBAL\MultiDbConnectionWrapper
+                wrapper_class: App\Routing\DBAL\MultiDbConnectionWrapper
                 #wrapper_class:  App\UserdirectoryBundle\Services\MultiDbConnectionWrapper
                 driver:   '%database_driver%'
                 host:     '%database_host%'

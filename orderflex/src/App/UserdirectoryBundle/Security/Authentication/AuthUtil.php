@@ -774,8 +774,8 @@ class AuthUtil {
 
     public function findUserByUsername($username) {
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->switchDb();//$this->em->getConnection());
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil->switchDb();//$this->em->getConnection());
 
         //$userManager = $this->container->get('fos_user.user_manager');
         $userManager = $this->container->get('user_manager');

@@ -158,16 +158,16 @@ services:
 #            $wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
 
     #https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
-    acme_page.dynamic_doctrine_connection:
-        class:      '%acme_page.dynamic_doctrine_connection.class%'
-        arguments:  ['@request_stack', '@doctrine.dbal.default_connection', '@doctrine']
-        #scope:      request
-        #calls:
-        #    - [setContainer, [@service_container]]
-        calls:
-            - [setDoctrineConnection, ['@doctrine.dbal.default_connection']]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#    acme_page.dynamic_doctrine_connection:
+#        class:      '%acme_page.dynamic_doctrine_connection.class%'
+#        arguments:  ['@request_stack', '@doctrine.dbal.default_connection', '@doctrine']
+#        #scope:      request
+#        #calls:
+#        #    - [setContainer, [@service_container]]
+#        calls:
+#            - [setDoctrineConnection, ['@doctrine.dbal.default_connection']]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 
 

@@ -101,6 +101,7 @@ class MaintenanceListener {
 
         //set db
         //$this->switchDb($event);
+        $userSecUtil->switchDb();
 
         //Prevent switching without relogin if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {

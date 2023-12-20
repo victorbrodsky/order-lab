@@ -52,3 +52,7 @@ https://symfony.com/doc/4.1/routing/slash_in_parameter.html
 
 Problem: Routing.generate fos_js_routing and problems with "_locale"
 https://stackoverflow.com/questions/25842418/symfony-fos-js-routing-and-problems-with-locale/35223108#35223108
+
+symfony decorator doctrine.dbal.connection_factory
+DB switch:
+https://blog.dixo.net/2015/02/dynamic-configuration-of-doctrine-and-other-services-in-symfony/

@@ -3613,6 +3613,8 @@ class UserSecurityUtil {
 
         if (str_contains($uri, 'c/lmh/pathology')) {
             $dbName = 'Tenant2';
+        } else {
+            return false;
         }
 
         $params = $connection->getParams();
@@ -3633,6 +3635,7 @@ class UserSecurityUtil {
         } catch (Exception $e) {
             // log and handle exception
         }
+        return true;
     }
 
 }
