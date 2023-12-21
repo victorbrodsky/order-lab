@@ -23,12 +23,23 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 //use Doctrine\DBAL\Driver\PDO\PgSQL\Driver;
 
+//Problem: how to get RequestStack?
+//NOT USED
 final class MultiDbConnectionWrapper extends Connection
 {
 
-    public function __construct(array $params, Driver $driver, $config, $eventManager)
+    //public function __construct(array $params, Driver $driver, Configuration $config, EventManager $eventManager, #[Autowire('@request_stack')])
+    public function __construct(
+        array $params,
+        Driver $driver,
+        Configuration $config,
+        EventManager $eventManager
+    )
     {
         //$request = $eventManager->getRequest();
         //$session = $request->getSession();
@@ -58,6 +69,11 @@ final class MultiDbConnectionWrapper extends Connection
              */
             $container = $refContainer->getValue($eventManager);
 
+            $container = $kernel->getContainer();
+
+            //$userSecUtil = $container->get('user_security_utility');
+            //$userSecUtil->switchDb();
+
             //$userSecUtil = $container->get('user_security_utility');
             //dump($eventManager);
             //dump($params);
@@ -65,6 +81,7 @@ final class MultiDbConnectionWrapper extends Connection
             //dump($container);
             //exit('111');
 
+            //Problem: how to get RequestStack?
             /*
              * @var Symfony\Component\HttpFoundation\Request
              */
@@ -105,4 +122,9 @@ final class MultiDbConnectionWrapper extends Connection
         $params['dbname'] = $dbName;
         parent::__construct($params, $this->_driver, $this->_config, $this->_eventManager);
     }
+    
+    public function createConnectionToMyFavouriteDatabase( RequestStack $requestStack, Connection $connection ) {
+        //
+    }
+
 }

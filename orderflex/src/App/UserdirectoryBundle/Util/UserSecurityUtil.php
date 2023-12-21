@@ -3604,6 +3604,7 @@ class UserSecurityUtil {
         return $locale;
     }
 
+    //NOT USED
     public function switchDb()
     {
         $connection = $this->em->getConnection();

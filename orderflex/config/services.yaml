@@ -135,13 +135,25 @@ services:
         tags:
           - { name: 'routing.loader' }
 
-#    custom.dynamic_connection:
-#        class: App\Routing\DBAL\DynamicDoctrineConnection
+
+    #Dynamic DB connection based on
+    App\Routing\DBAL\DatabaseConnectionFactory:
+        decorates: doctrine.dbal.connection_factory
+        arguments:
+            #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
+            $requestStack: '@request_stack'
+            $multitenancy: '%multitenancy%'
+            #$container: '@service_container'
+
+    #custom.dynamic_connection:
+    #    class: App\Routing\DBAL\MultiDbConnectionWrapper
 #        calls:
 #            - [setDoctrineConnection, ['@doctrine.dbal.default_connection']]
 
-    #App\Routing\Util\MultiDbConnectionWrapper:
-    #    arguments:  ['@request_stack']
+    #App\Routing\DBAL\MultiDbConnectionWrapper:
+    #    arguments:
+    #        $requestStack: '@request_stack'
+        #arguments:  ['@request_stack', '@doctrine.dbal.default_connection.configuration', '@doctrine.dbal.default_connection.event_manager']
         #autowire: true
         #tags: {**}
     #dynamic_connection:
@@ -151,11 +163,6 @@ services:
 #            - [ setDoctrineConnection, ['@doctrine.dbal.default_connection'] ]
 #        tags:
 #            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-#    App\Routing\DBAL\DatabaseConnectionFactory:
-#        decorates: doctrine.dbal.connection_factory
-#        arguments:
-#            $wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
 
     #https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
 #    acme_page.dynamic_doctrine_connection:
@@ -168,6 +175,10 @@ services:
 #            - [setDoctrineConnection, ['@doctrine.dbal.default_connection']]
 #        tags:
 #            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #my.wonderful.dbal_connection_factory:
+    #    class: App\Routing\DBAL\MultiDbConnectionWrapper
+    #    arguments: ['@request_stack', '@doctrine.dbal.default_connection']
 
 
 

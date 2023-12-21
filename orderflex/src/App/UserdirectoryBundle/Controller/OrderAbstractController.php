@@ -32,6 +32,7 @@ use App\TranslationalResearchBundle\Util\TransResPermissionUtil;
 use App\TranslationalResearchBundle\Util\TransResRequestUtil;
 use App\TranslationalResearchBundle\Util\TransResUtil;
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use App\UserdirectoryBundle\Services\MultiDbConnectionWrapper;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;

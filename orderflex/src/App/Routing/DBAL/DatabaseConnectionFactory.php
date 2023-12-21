@@ -12,15 +12,31 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
+use \Doctrine\Bundle\DoctrineBundle\ConnectionFactory;
+//use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DatabaseConnectionFactory
+//Credit to TvC
+//https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
+
+class DatabaseConnectionFactory extends ConnectionFactory
 {
 
-    public $wrappedConnectionFactory;
+    private $requestStack;
+    private $multitenancy;
+    //private $container;
+    //private $wrappedConnectionFactory;
 
-    public function __construct( $wrappedConnectionFactory )
+    public function __construct(
+        $requestStack,
+        $multitenancy
+        //ContainerInterface $container
+        //$wrappedConnectionFactory
+    )
     {
-        $this->wrappedConnectionFactory = $wrappedConnectionFactory;
+        $this->requestStack = $requestStack;
+        $this->multitenancy = $multitenancy;
+        //$this->container = $container;
+        //$this->wrappedConnectionFactory = $wrappedConnectionFactory;
     }
 
 
@@ -34,11 +50,42 @@ class DatabaseConnectionFactory
      *
      * @return mixed
      */
-    public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = [])
+    public function createConnection(
+        array $params,
+        Configuration $config = null,
+        EventManager $eventManager = null,
+        array $mappingTypes = []
+    )
     {
-        $params['url'] = $this->databaseConnectionUrlService->getDatabaseConnectionUrlForApiUser($this->apiUser, $params['url'] );
+        //echo "multitenancy=".$this->multitenancy."<br>";
+        if( $this->multitenancy == 'singletenancy' ) {
+            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+        }
 
-        return $this->wrappedConnectionFactory->createConnection($params, $config, $eventManager, $mappingTypes);
+
+        $uri = null;
+        $request = $this->requestStack->getCurrentRequest();
+
+        if( $request ) {
+            $uri = $request->getUri();
+        }
+        //echo "uri=".$uri."<br>";
+        //dump($params);
+        //exit('111');
+
+//        if( !$uri ) {
+//            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+//        }
+
+        if( $uri && str_contains($uri, 'c/lmh/pathology') ) {
+            $dbName = 'Tenant2';
+            $params['dbname'] = $dbName;
+        } else {
+            //don't change default dbname
+        }
+
+        return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+        //return $this->wrappedConnectionFactory->createConnection($params, $config, $eventManager, $mappingTypes);
     }
 
 }
