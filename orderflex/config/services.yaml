@@ -136,7 +136,8 @@ services:
           - { name: 'routing.loader' }
 
 
-    #Dynamic DB connection based on
+    #Dynamic DB connection based on the decorator pattern in the service definition
+    #https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
     App\Routing\DBAL\DatabaseConnectionFactory:
         decorates: doctrine.dbal.connection_factory
         arguments:
