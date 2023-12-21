@@ -140,9 +140,9 @@ services:
     App\Routing\DBAL\DatabaseConnectionFactory:
         decorates: doctrine.dbal.connection_factory
         arguments:
-            #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
             $requestStack: '@request_stack'
             $multitenancy: '%multitenancy%'
+            #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
             #$container: '@service_container'
 
     #custom.dynamic_connection:

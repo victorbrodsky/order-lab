@@ -12,7 +12,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
-use \Doctrine\Bundle\DoctrineBundle\ConnectionFactory;
+use Doctrine\Bundle\DoctrineBundle\ConnectionFactory;
 //use Symfony\Component\DependencyInjection\ContainerInterface;
 
 //Credit to TvC
@@ -61,7 +61,6 @@ class DatabaseConnectionFactory extends ConnectionFactory
         if( $this->multitenancy == 'singletenancy' ) {
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         }
-
 
         $uri = null;
         $request = $this->requestStack->getCurrentRequest();
