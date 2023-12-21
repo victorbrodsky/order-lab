@@ -27,8 +27,14 @@ $useDb = true;
 if( $useDb ) {
 
     if (!function_exists('getDBParameter')) {
-        function getDBParameter($row, $originalParam, $name)
+        function getDBParameter($inputRow, $originalParam, $name)
         {
+            //dump($inputRow);exit('222');
+            $row = array();
+            if( is_array($inputRow) && count($inputRow) > 0 ) {
+                $row = $inputRow[0];
+            }
+
             //1) try as it is
             if (array_key_exists($name, $row)) {
                 //echo "1 parameter=".$row[$name]."<br>";
@@ -158,7 +164,7 @@ if( $conn ) {
         //echo("table true<br>");
 
         $sql = "SELECT * FROM " . $table;
-        $params = $conn->query($sql); // Simple, but has several drawbacks
+        $params = $conn->executeQuery($sql); // Simple, but has several drawbacks
 
         //var_dump($params);
         //echo "count=".count($params)."<br>";
@@ -178,7 +184,10 @@ if( $conn ) {
             //exit('!is_object($params)');
         }
 
-        $row = $params->fetch();
+        //$row = $params->fetch();
+        $row = $params->fetchAllAssociative();
+        //dump($row);
+        //exit('111');
         if ($continue && (is_object($row) || is_array($row)) && count($row) == 0) {
             $continue = false;
             //exit('!count($row) == 0');
@@ -270,6 +279,7 @@ if( $conn ) {
                 $department_name = getDBParameter($row, $department_name, 'departmentname');
                 $showcopyrightonfooter = getDBParameter($row, $showcopyrightonfooter, 'showCopyrightOnFooter');
 
+                //exit('$defaultSiteEmail='.$defaultSiteEmail);exit('111');
                 //third party software html to pdf
                 //echo "EOF wkhtmltopdfpath=".getDBParameter($row,'wkhtmltopdfpath')."<br>";
                 //echo "EOF wkhtmltopdfpathLinux=".getDBParameter($row,'wkhtmltopdfpathLinux')."<br>";
@@ -434,24 +444,24 @@ if( $conn ) {
             $multitenancy = 'singletenancy';
             //$multitenancy = 'multitenancy';
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
-            $authServerNetwork = null;
-            $authServerNetwork = getDBParameter($row, $authServerNetwork, 'authservernetwork_id');
-            if( $authServerNetwork ) {
-                //dump($authServerNetwork);
+            $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
+            if( $authServerNetworkId ) {
+                //dump($authServerNetworkId);
                 //dump($row);
-                echo "authServerNetwork=".$authServerNetwork."\n";
+                echo "authServerNetworkId=".$authServerNetworkId."\n";
                 $table = 'user_authservernetworklist';
-                $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetwork";
-                $authServerNetworkParams = $conn->query($authServerNetworkSql); // Simple, but has several drawbacks
-                $authServerNetworkRow = $authServerNetworkParams->fetch();
+                $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetworkId";
+                $authServerNetworkParams = $conn->executeQuery($authServerNetworkSql); // Simple, but has several drawbacks
+                $authServerNetworkRow = $authServerNetworkParams->fetchAllAssociative(); //fetch();
                 //dump($authServerNetworkRow);
+                //exit('111');
                 //echo "authServerNetworkRow=" . count($authServerNetworkRow) . "<br>";
                 if( count($authServerNetworkRow) > 0 ) {
-                    //dump($authServerNetworkRow);
-                    $authServerNetworkName = $authServerNetworkRow['name'];
+                    //$authServerNetworkName = $authServerNetworkRow[0]['name'];
+                    $authServerNetworkName = getDBParameter($authServerNetworkRow, null, 'name');
                     echo "authServerNetworkName=" . $authServerNetworkName . "\n";
                 }
-                //exit('111');
+
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
                     $multitenancy = 'multitenancy';
                     $container->setParameter('defaultlocale', 'main');
