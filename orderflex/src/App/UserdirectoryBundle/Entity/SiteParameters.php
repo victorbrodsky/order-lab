@@ -1030,6 +1030,7 @@ class SiteParameters {
 
     //It is enough to have only one hostedUserGroup for each server to function,
     // for example the resulting, concatenated string is 'root/child1/child2...' ('c/wcm/pathology')
+    //hostedUserGroup is the tenant id
 //    #[ORM\JoinTable(name: 'user_siteparameter_hostedusergroup')]
 //    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
 //    #[ORM\InverseJoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
