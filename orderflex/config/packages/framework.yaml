@@ -17,8 +17,10 @@ framework:
 #        resource: "%kernel.project_dir%/config/routes.yml"
 #        strict_requirements: ~
     form: 
-    csrf_protection: ~
-    validation:      { enable_annotations: true }
+    csrf_protection: true
+    validation:      {enable_attributes: true} #{ enable_annotations: true }
+    handle_all_throwables: true
+    http_method_override: true
     #templating:
         #engines: ['twig']
 #        assets_version: SomeVersionScheme
@@ -29,14 +31,19 @@ framework:
     session:
         handler_id: null
         cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
-        #cookie_samesite: lax
+        cookie_secure: auto
+        cookie_samesite: lax
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
         #storage_id: session.storage.filesystem
         storage_factory_id: session.storage.factory.native
+
     #fragments: ~
     fragments: {path: /_fragment}
-    http_method_override: true
+
+    php_errors:
+        log: true
+
     profiler:
         collect: true #show profiler toolbar
         #collect: false

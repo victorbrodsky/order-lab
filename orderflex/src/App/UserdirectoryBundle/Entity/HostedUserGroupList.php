@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
+//hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
 //Attach to: AuthServerNetworkList or SiteParameters?
 //IF "Server Role and Network Access:" = "Internet (Hub)” serve ORDER home page from "/c/wcm/pathology"
 //How to redirect:
