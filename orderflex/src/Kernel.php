@@ -52,8 +52,8 @@ class Kernel extends BaseKernel
         //$dotenv->load(__DIR__.'/../.env');
 
         //$container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
-        $container->setParameter('container.dumper.inline_factories', true);
+        $container->setParameter('.container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+        $container->setParameter('.container.dumper.inline_factories', true);
 
         //$container->setParameter('secret','123');
         $confDir = $this->getProjectDir().'/config';
