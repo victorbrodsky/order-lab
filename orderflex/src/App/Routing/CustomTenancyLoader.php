@@ -57,7 +57,7 @@ class CustomTenancyLoader extends Loader {
             //$this->container->setParameter('defaultlocale', 'main');
             $config = 'routes-multi.yaml';
         } else {
-            //$this->container->setParameter('defaultlocale', '');
+            //$this->container->setParameter('defaultlocale', ''); //Impossible to call set() on a frozen ParameterBag
             $config = 'routes-single.yaml';
         }
 

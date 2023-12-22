@@ -17,7 +17,7 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
-//hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
+//hostedUserGroup is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
 //Attach to: AuthServerNetworkList or SiteParameters?
 //IF "Server Role and Network Access:" = "Internet (Hub)” serve ORDER home page from "/c/wcm/pathology"
 //How to redirect:
@@ -60,6 +60,9 @@ class HostedUserGroupList extends BaseCompositeNode
     private $organizationalGroupType;
 
     //Add tenant's custom parameters such as page footer, list of accessible pages etc.
+    //Homepage and About Us Page Content
+    //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
+    //the the home page for Internet (Solo)
 
     public function __construct($author=null) {
         parent::__construct($author);

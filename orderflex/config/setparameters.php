@@ -467,7 +467,7 @@ if( $conn ) {
                     $multitenancy = 'multitenancy';
                     $container->setParameter('defaultlocale', 'main');
 
-                    //TODO: get from DB
+                    //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
                     $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
                     $container->setParameter('multilocales', $multilocales);
                     $container->setParameter('locdel', '/'); //locale delimeter '/'
