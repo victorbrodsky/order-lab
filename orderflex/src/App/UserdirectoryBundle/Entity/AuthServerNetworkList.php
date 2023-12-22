@@ -37,7 +37,12 @@ class AuthServerNetworkList extends ListAbstract
 
     //hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
     //HostedUserGroupList attach here. Different user's groups can have different tenant ids
-    
+//    #[ORM\JoinTable(name: 'user_siteparameter_hostedusergroup')]
+//    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\InverseJoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['createdate' => 'DESC'])]
+//    private $hostedUserGroups;
 
     //Homepage and About Us Page Content
     //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different

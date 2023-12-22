@@ -1032,6 +1032,10 @@ class SiteParameters {
     private $authPartnerServer;
     //////// EOF Fields for Server Instance connection ////////
 
+//    #[ORM\Column(type: 'text', nullable: true)]
+//    private $tenantPrefixUrlSlug;
+
+    //Move to AuthServerNetworkList
     //hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
 //    #[ORM\JoinTable(name: 'user_siteparameter_hostedusergroup')]
 //    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -1039,10 +1043,6 @@ class SiteParameters {
 //    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
-
-//    #[ORM\Column(type: 'text', nullable: true)]
-//    private $tenantPrefixUrlSlug;
-
       //Homepage and About Us Page Content (if Server Role and Network Access field is set to “Internet (Hub)
 
 

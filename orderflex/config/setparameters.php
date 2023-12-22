@@ -444,6 +444,7 @@ if( $conn ) {
             $multitenancy = 'singletenancy';
             //$multitenancy = 'multitenancy';
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
+            //Can be moved to the CustomTenancyLoader
             $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
             if( $authServerNetworkId ) {
                 //dump($authServerNetworkId);
