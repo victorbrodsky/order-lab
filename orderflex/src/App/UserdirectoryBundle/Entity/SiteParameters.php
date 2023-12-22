@@ -1022,7 +1022,8 @@ class SiteParameters {
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthUserGroupList')]
     private $authUserGroup;
 
-    //Server Network Accessibility and Role: [Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)]
+    //Server Network Accessibility and Role (aka Server Role and Network Access):
+    //[Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)] / Internet (Hub)
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthServerNetworkList')]
     private $authServerNetwork;
 
@@ -1031,8 +1032,6 @@ class SiteParameters {
     private $authPartnerServer;
     //////// EOF Fields for Server Instance connection ////////
 
-    //It is enough to have only one hostedUserGroup for each server to function,
-    // for example the resulting, concatenated string is 'root/child1/child2...' ('c/wcm/pathology')
     //hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
 //    #[ORM\JoinTable(name: 'user_siteparameter_hostedusergroup')]
 //    #[ORM\JoinColumn(name: 'siteParameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -1043,6 +1042,8 @@ class SiteParameters {
 
 //    #[ORM\Column(type: 'text', nullable: true)]
 //    private $tenantPrefixUrlSlug;
+
+      //Homepage and About Us Page Content (if Server Role and Network Access field is set to “Internet (Hub)
 
 
 

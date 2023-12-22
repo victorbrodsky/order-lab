@@ -59,6 +59,7 @@ class HostedUserGroupList extends BaseCompositeNode
 //    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
 
+    //Add tenant's custom parameters such as page footer, list of accessible pages etc.
 
     public function __construct($author=null) {
         parent::__construct($author);

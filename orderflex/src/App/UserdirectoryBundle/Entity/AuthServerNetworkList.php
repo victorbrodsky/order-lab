@@ -20,7 +20,8 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//Dual Authentication Server Network Accessibility and Role: [Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)]
+//Dual Authentication Server Network Accessibility and Role (aka Server Role and Network Access):
+//[Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem) / Internet (Hub)]
 
 #[ORM\Table(name: 'user_authservernetworklist')]
 #[ORM\Entity]
@@ -33,6 +34,16 @@ class AuthServerNetworkList extends ListAbstract
     #[ORM\ManyToOne(targetEntity: 'AuthServerNetworkList', inversedBy: 'synonyms')]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
+
+    //hostedUserGroup is the tenant id (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
+    //HostedUserGroupList attach here. Different user's groups can have different tenant ids
+    
+
+    //Homepage and About Us Page Content
+    //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
+    //the the home page for Internet (Solo)
+
+
 
 
 }
