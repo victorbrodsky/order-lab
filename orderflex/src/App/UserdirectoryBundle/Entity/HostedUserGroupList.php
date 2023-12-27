@@ -28,27 +28,27 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//#[Gedmo\Tree(type: 'nested')]
-//#[ORM\Table(name: 'user_hostedusergrouplist')]
-//#[ORM\Index(name: 'hostedusergroup_name_idx', columns: ['name'])]
-//#[ORM\Entity]
+#[Gedmo\Tree(type: 'nested')]
+#[ORM\Table(name: 'user_hostedusergrouplist')]
+#[ORM\Index(name: 'hostedusergroup_name_idx', columns: ['name'])]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class HostedUserGroupList extends BaseCompositeNode
 {
 
-//    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'original')]
+    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'original')]
     protected $synonyms;
 
-//    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'synonyms')]
-//    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-//    #[Gedmo\TreeParent]
-//    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
-//    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
+    #[Gedmo\TreeParent]
+    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-//    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'parent', cascade: ['persist', 'remove'])]
-//    #[ORM\OrderBy(['lft' => 'ASC'])]
+    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
     /**
@@ -56,16 +56,24 @@ class HostedUserGroupList extends BaseCompositeNode
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Comment Category, 2-Comment Name
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      */
-//    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     private $organizationalGroupType;
+
+    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups')]
+    private $serverNetworks;
 
     //Add tenant's custom parameters such as page footer, list of accessible pages etc.
     //Homepage and About Us Page Content
     //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
     //the the home page for Internet (Solo)
 
+
+
+
     public function __construct($author=null) {
         parent::__construct($author);
+
+        $this->serverNetworks = new ArrayCollection();
     }
 
 
@@ -99,6 +107,29 @@ class HostedUserGroupList extends BaseCompositeNode
             $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
             $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
         }
+    }
+
+    public function getServerNetworks()
+    {
+        return $this->serverNetworks;
+    }
+    public function addServerNetwork( $item )
+    {
+        if( !$this->serverNetworks->contains($item) ) {
+            $this->serverNetworks->add($item);
+            $item->addHostedUserGroup($this);
+        }
+
+        return $this;
+    }
+    public function removeServerNetwork($item)
+    {
+        if( $this->serverNetworks->contains($item) ) {
+            $this->serverNetworks->removeElement($item);
+            $item->removeHostedUserGroup($this);
+        }
+
+        return $this;
     }
 
 

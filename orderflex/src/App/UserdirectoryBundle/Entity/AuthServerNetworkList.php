@@ -43,6 +43,10 @@ class AuthServerNetworkList extends ListAbstract
 //    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
+    #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
+    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'servernetworks')]
+    private $hostedUserGroups;
+    
 
     //MOVED custom page parameters to HostedUserGroupList (Tenant ID)
     //Homepage and About Us Page Content
@@ -50,6 +54,34 @@ class AuthServerNetworkList extends ListAbstract
     //the the home page for Internet (Solo)
 
 
+    public function __construct($author=null) {
 
+        parent::__construct($author);
+
+        $this->hostedUserGroups = new ArrayCollection();
+    }
+
+
+
+    public function getHostedUserGroups()
+    {
+        return $this->hostedUserGroups;
+    }
+    public function addHostedUserGroup( $item )
+    {
+        if( !$this->hostedUserGroups->contains($item) ) {
+            $this->hostedUserGroups->add($item);
+        }
+
+        return $this;
+    }
+    public function removeHostedUserGroup($item)
+    {
+        if( $this->hostedUserGroups->contains($item) ) {
+            $this->hostedUserGroups->removeElement($item);
+        }
+
+        return $this;
+    }
 
 }
