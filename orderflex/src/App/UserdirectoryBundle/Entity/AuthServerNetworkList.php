@@ -44,7 +44,7 @@ class AuthServerNetworkList extends ListAbstract
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
     #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
-    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'servernetworks')]
+    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks')]
     private $hostedUserGroups;
     
 
