@@ -29,6 +29,8 @@ use Doctrine\ORM\EntityRepository;
 class HostedUserGroupType extends AbstractType
 {
 
+    //Use user.administrativeTitles as an example
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add( 'id', HiddenType::class, array(
