@@ -1139,7 +1139,7 @@ class AdminController extends OrderAbstractController
         $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
         $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
         $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
-        //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+        $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
 
         //exit('testing generateAll()');
 
@@ -1284,7 +1284,7 @@ class AdminController extends OrderAbstractController
             'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
             'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
-            //'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
+            'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
             'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -8081,7 +8081,7 @@ class AdminController extends OrderAbstractController
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
             "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
-            //"hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
+            "hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
 
         );
 
@@ -11862,6 +11862,9 @@ class AdminController extends OrderAbstractController
     public function generateHostedUserGroupList() {
         return 0;
 
+        //Generate Tenant IDs i.e. 'c/wcm/pathology' or 'c/lmh/pathology'
+        //Similar to generateResLabs()
+
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -11883,13 +11886,13 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            //$listEntity = new HostedUserGroupList();
-            //$this->setDefaultList($listEntity,$count,$username,$name);
+            $listEntity = new HostedUserGroupList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             //$listEntity->setUrlSlug($urlSlug);
 
-            //$em->persist($listEntity);
-            //$em->flush();
+            $em->persist($listEntity);
+            $em->flush();
 
             $count = $count + 10;
         }

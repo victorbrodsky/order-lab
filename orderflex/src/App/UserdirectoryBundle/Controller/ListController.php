@@ -493,6 +493,7 @@ class ListController extends OrderAbstractController
                 OR LOWER(ent.abbreviation) LIKE LOWER(:search) 
                 OR LOWER(ent.shortname) LIKE LOWER(:search) 
                 OR LOWER(ent.description) LIKE LOWER(:search)
+                OR LOWER(ent.entityName) LIKE LOWER(:search)
                 ";
 
 //            //search location: phone, building, room
@@ -3203,10 +3204,10 @@ class ListController extends OrderAbstractController
                 $className = "AuthPartnerServerList";
                 $displayName = "Dual Authentication Tandem Partner Server URL";
                 break;
-//            case "hostedusergroup":
-//                $className = "HostedUserGroupList";
-//                $displayName = "Hosted User Groups";
-//                break;
+            case "hostedusergroup":
+                $className = "HostedUserGroupList";
+                $displayName = "Hosted User Groups";
+                break;
 
             case "healthcareproviderspecialty":
                 $className = "HealthcareProviderSpecialtiesList";

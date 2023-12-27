@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
+use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
 
 
@@ -1688,6 +1689,20 @@ class GenericListType extends AbstractType
                     'attr' => array('class' => 'form-control'),
                 ));
             }
+        }
+
+        if( $this->params['entity'] instanceof AuthServerNetworkList ) {
+            //hostedUserGroup (ManyToMany) is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
+            $builder->add('hostedUserGroups', CollectionType::class, array(
+                'entry_type' => HostedUserGroupType::class,
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__hostedusergroups__',
+            ));
         }
 
     }
