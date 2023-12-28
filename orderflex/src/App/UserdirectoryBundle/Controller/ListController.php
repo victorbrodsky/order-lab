@@ -4328,6 +4328,7 @@ class ListController extends OrderAbstractController
 
             $pieces = explode("-", $listRootName);
             $pathbase = $pieces[0];
+            //echo '2 pathbase='.$pathbase.'<br>';
             $newRootName = $pathbase."_show";
 
             $request->attributes->set('_route',$newRootName);

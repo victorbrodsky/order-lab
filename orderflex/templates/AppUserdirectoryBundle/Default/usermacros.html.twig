@@ -611,7 +611,10 @@
         {{ usermacros.nestedTree(entity.parent, linktype) }}
     {% endif %}
 
-    <li>{{ usermacros.hrefLinkToNode(entity,linktype) }}</li><br>
+    <li>
+        {{ usermacros.hrefLinkToNode(entity,linktype) }}
+    </li>
+    <br>
 
 {% endmacro %}
 

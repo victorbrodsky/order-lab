@@ -143,9 +143,11 @@ class HostedUserGroupList extends BaseCompositeNode
         return $this->getName()."";
     }
 
+    //is used to construct parent's show path the same as in ListController.php
     public function getClassName()
     {
-        return "HostedUserGroupList";
+        return "HostedUserGroup";
+        //return "hostedusergroup";
     }
 
 }
