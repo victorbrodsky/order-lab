@@ -72,6 +72,6 @@ class HostedUserGroupType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'oleg_userdirectorybundle_hostedusergroup';
+        return 'oleg_userdirectorybundle_hostedusergroups';
     }
 }

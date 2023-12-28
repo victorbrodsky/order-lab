@@ -924,6 +924,9 @@ class AdminController extends OrderAbstractController
 //        $logger->notice("Finished generate AdministratorAction");
 //        return "Finished generateAdministratorAction";
 
+        //testing
+        //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+
         //$count_countryList = $this->generateCountryList();
 
         $count_sitenameList = $this->generateSitenameList($user);
@@ -8081,7 +8084,7 @@ class AdminController extends OrderAbstractController
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
             "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
-            "hostedusergroup" => array('HostedUserGroupList','hostedusergroup-list','Hosted User Groups'),
+            "hostedusergroups" => array('HostedUserGroupList','hostedusergroups-list','Hosted User Groups'),
 
         );
 
@@ -9059,7 +9062,7 @@ class AdminController extends OrderAbstractController
             $bundleName = "UserdirectoryBundle";
             $className = "HostedUserGroupList";
             $title = "Hosted User Group (Tenant IDs) Tree Management";
-            $nodeshowpath = "hostedusergroup_show";
+            $nodeshowpath = "hostedusergroups_show";
         }
 
         $mapper = array(
@@ -11867,43 +11870,124 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
     public function generateHostedUserGroupList() {
-        return 0;
-
         //Generate Tenant IDs i.e. 'c/wcm/pathology' or 'c/lmh/pathology'
         //Similar to generateResLabs()
 
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $types = array(
-            "All Hosted User Groups" => "c", //Parent list item ID = NULL
-            "Test Institution" => "test-institution",
-            "Test Department" => "test-department", //Parent list item {Test Institution}
-            "Demo Institution" => "demo-institution",
-            "Demo Department" => "demo-department", //Parent list item {Demo Institution}
-            "Weill Cornell Medicine" => "wcm",
-            "WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item {Weill Cornell Medicine}
-        );
-
         $count = 10;
-        foreach( $types as $name => $urlSlug ) {
 
-            $listEntity = $em->getRepository(HostedUserGroupList::class)->findOneByName($name);
-            if( $listEntity ) {
-                continue;
-            }
+        $rootName = "All Hosted User Groups";
+        $rootAbbrev = "c";
+        $root = $em->getRepository(HostedUserGroupList::class)->findOneByName($rootName);
+        if( !$root ) {
+            //exit('generateResLabs: No HostedUserGroupList: "c"');
 
-            $listEntity = new HostedUserGroupList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+            $root = new HostedUserGroupList();
+            $count = NULL;
+            $this->setDefaultList($root,$count,$username,$rootName);
 
-            //$listEntity->setUrlSlug($urlSlug);
-
-            $em->persist($listEntity);
-            $em->flush();
-
+            $root->setAbbreviation($rootAbbrev);
+            $root->setUrlSlug($rootAbbrev);
+            $root->setLevel(0);
             $count = $count + 10;
+
+            $em->persist($root);
+            $em->flush();
         }
 
+        $types = array(
+            //"All Hosted User Groups" => "c", //Parent list item ID = NULL
+            // c/test-institution/test-department
+            //"Test Institution" => array("Test Institution" => "test-institution"),
+            //"Test Department" => "test-department", //Parent list item {Test Institution}
+            array(
+                1 => array("Test Institution", "test-institution"),
+                2 => array("Test Department", "test-department"),
+            ),
+
+            // c/demo-institution/demo-department
+            //"Demo Institution" => "demo-institution",
+            //"Demo Department" => "demo-department", //Parent list item {Demo Institution}
+            array(
+                1 => array("Demo Institution", "demo-institution"),
+                2 => array("Demo Department", "demo-department"),
+            ),
+
+            // c/wcm/pathology
+            //"Weill Cornell Medicine" => "wcm",
+            //"WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item {Weill Cornell Medicine}
+            array(
+                1 => array("Weill Cornell Medicine", "wcm"),
+                2 => array("WCM Department of Pathology and Laboratory Medicine", "pathology"),
+            ),
+        );
+
+        foreach( $types as $typeArr ) {
+
+            $toFlush = false;
+            reset($typeArr);
+            //dump($typeArr);
+            //exit('111');
+            $instLevel = key($typeArr);
+            echo 'instLevel='.$instLevel.'<br>';
+            $instArr = $typeArr[$instLevel];
+            dump($instArr);
+
+            $instName = $instArr[0];
+            $instAbbrev = $instArr[1];
+            echo 'instName='.$instName.', instAbbrev='.$instAbbrev.'<br>';
+
+            next($typeArr);
+            $departLevel = key($typeArr);
+            echo 'departLevel='.$departLevel.'<br>';
+            $departArr = $typeArr[$departLevel];
+            $departName = $departArr[0];
+            $departAbbrev = $departArr[1];
+            echo 'departName='.$departName.', departAbbrev='.$departAbbrev.'<br>';
+
+            //exit('111');
+
+            if( $instName && $instAbbrev ) {
+                $instEntity = $em->getRepository(HostedUserGroupList::class)->findOneByName($instName);
+                if( $instEntity ) {
+                    continue;
+                }
+
+                $instEntity = new HostedUserGroupList();
+                $this->setDefaultList($instEntity,$count,$username,$instName);
+                $instEntity->setAbbreviation($instAbbrev);
+                $instEntity->setUrlSlug($instAbbrev);
+                $instEntity->setLevel($instLevel);
+                $root->addChild($instEntity);
+                $em->persist($instEntity);
+                $toFlush = true;
+                $count = $count + 10;
+
+                if( $instEntity && $departName && $departAbbrev ) {
+                    $departEntity = $em->getRepository(HostedUserGroupList::class)->findOneByName($departName);
+                    if( $departEntity ) {
+                        continue;
+                    }
+
+                    $departEntity = new HostedUserGroupList();
+                    $this->setDefaultList($departEntity,$count,$username,$departName);
+                    $departEntity->setAbbreviation($departAbbrev);
+                    $departEntity->setUrlSlug($departAbbrev);
+                    $departEntity->setLevel($departLevel);
+                    $instEntity->addChild($departEntity);
+                    $em->persist($departEntity);
+                    $toFlush = true;
+                    $count = $count + 10;
+                }
+
+            }
+
+            $em->flush();
+        }
+
+        //exit('exit generateHostedUserGroupList');
         return round($count/10);
     }
 

@@ -44,11 +44,11 @@ class HostedUserGroupList extends BaseCompositeNode
     protected $original;
 
     #[Gedmo\TreeParent]
-    #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'children', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'children', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    #[ORM\OneToMany(targetEntity: 'Institution', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
@@ -78,22 +78,22 @@ class HostedUserGroupList extends BaseCompositeNode
     }
 
 
-    /**
-     * @param mixed $organizationalGroupType
-     */
-    public function setOrganizationalGroupType($organizationalGroupType)
-    {
-        $this->organizationalGroupType = $organizationalGroupType;
-        $this->setLevel($organizationalGroupType->getLevel());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrganizationalGroupType()
-    {
-        return $this->organizationalGroupType;
-    }
+//    /**
+//     * @param mixed $organizationalGroupType
+//     */
+//    public function setOrganizationalGroupType($organizationalGroupType)
+//    {
+//        $this->organizationalGroupType = $organizationalGroupType;
+//        $this->setLevel($organizationalGroupType->getLevel());
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getOrganizationalGroupType()
+//    {
+//        return $this->organizationalGroupType;
+//    }
 
     /**
      * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
@@ -104,10 +104,10 @@ class HostedUserGroupList extends BaseCompositeNode
         $this->parent = $parent;
 
         //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
-        if( $parent && count($parent->getChildren()) > 0 ) {
-            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
-            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
-        }
+//        if( $parent && count($parent->getChildren()) > 0 ) {
+//            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
+//            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
+//        }
     }
 
     public function getServerNetworks()
