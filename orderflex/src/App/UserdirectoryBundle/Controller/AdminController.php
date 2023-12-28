@@ -8913,6 +8913,7 @@ class AdminController extends OrderAbstractController
     #[Route(path: '/list/message-categories-tree/', name: 'employees_tree_messagecategories_list', methods: ['GET'])]
     #[Route(path: '/list/charttypes-tree/', name: 'employees_tree_charttypes_list', methods: ['GET'])]
     #[Route(path: '/list/charttopics-tree/', name: 'employees_tree_charttopics_list', methods: ['GET'])]
+    #[Route(path: '/list/hostedusergroups-tree/', name: 'employees_tree_hostedusergroups_list', methods: ['GET'])]
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -9053,6 +9054,12 @@ class AdminController extends OrderAbstractController
             $className = "TopicList";
             $title = "Chart Topics Tree Management";
             $nodeshowpath = "charttopics_show";
+        }
+        if( $routeName == "employees_tree_hostedusergroups_list" ) {
+            $bundleName = "UserdirectoryBundle";
+            $className = "HostedUserGroupList";
+            $title = "Hosted User Group (Tenant IDs) Tree Management";
+            $nodeshowpath = "hostedusergroup_show";
         }
 
         $mapper = array(

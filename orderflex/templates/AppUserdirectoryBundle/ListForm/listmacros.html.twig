@@ -564,6 +564,7 @@
         {{ knp_pagination_render(entities) }}
     </div>
 
+    {#withCreateNewEntityLink={{ withCreateNewEntityLink }}#}
     {% if withCreateNewEntityLink == true %}
         <a href="{{ path(pathbase~'_new'~postPath) }}">
             Create a new entry
