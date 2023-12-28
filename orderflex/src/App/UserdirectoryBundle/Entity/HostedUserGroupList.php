@@ -95,20 +95,20 @@ class HostedUserGroupList extends BaseCompositeNode
 //        return $this->organizationalGroupType;
 //    }
 
-    /**
-     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
-     * @param mixed $parent
-     */
-    public function setParent(CompositeNodeInterface $parent = null)
-    {
-        $this->parent = $parent;
-
-        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
+//    /**
+//     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
+//     * @param mixed $parent
+//     */
+//    public function setParent(CompositeNodeInterface $parent = null)
+//    {
+//        $this->parent = $parent;
+//
+//        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
 //        if( $parent && count($parent->getChildren()) > 0 ) {
 //            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
 //            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
 //        }
-    }
+//    }
 
     public function getServerNetworks()
     {
