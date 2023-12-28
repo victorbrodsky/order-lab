@@ -57,8 +57,8 @@ class HostedUserGroupList extends BaseCompositeNode
      * level int in OrganizationalGroupType corresponds to this level integer: 1-Comment Category, 2-Comment Name
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      */
-    #[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
-    private $organizationalGroupType;
+    //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
+    //private $organizationalGroupType;
 
     #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups')]
     private $serverNetworks;
