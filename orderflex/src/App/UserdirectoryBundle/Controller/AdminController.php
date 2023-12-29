@@ -8926,6 +8926,8 @@ class AdminController extends OrderAbstractController
         return $this->compositeTree($request,$this->getParameter('employees.sitename'));
     }
 
+    //To load JS tree, add getJstree with class, i.e. getJstree('UserdirectoryBundle','Institution');
+    //Set the organizational group in TreeController->classMapper
     public function compositeTree(Request $request, $sitename)
     {
         $mapper = $this->getMapper($request->get('_route'));
