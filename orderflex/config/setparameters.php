@@ -466,11 +466,12 @@ if( $conn ) {
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
                     $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
                     $container->setParameter('defaultlocale', 'main');
+                    $container->setParameter('locdel', '/'); //locale delimeter '/'
 
                     //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
+                    //TODO: make sure ParametersCompilerPass is working
                     $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
                     $container->setParameter('multilocales', $multilocales);
-                    $container->setParameter('locdel', '/'); //locale delimeter '/'
 
                     //$container->setParameter('seclocales', $multilocales."(%localedel%)");
 //                    //Load security's access_control yaml for multitatncy

@@ -735,6 +735,11 @@
         {{ userform.permissionSection(form.permissions, 'new', employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
+    {% if form.hostedUserGroups is defined %}
+        {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+        {{ userform.hostedUserGroupsSection(form.hostedUserGroups, 'new', employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
+    {% endif %}
+
     {{ form_widget(form.submit) }}
     <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list'~postPath) }}">Cancel</a>
 
@@ -866,7 +871,6 @@
         </p>
     {% endif %}
 
-
     {#additional attributes#}
     {{ listmacros.additionalRelationships(edit_form,entity,cycle) }}
 
@@ -878,6 +882,12 @@
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
         {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",true) }}
         {#{{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",false) }}#}
+    {% endif %}
+
+    hostedUserGroups Section!!!
+    {% if edit_form.hostedUserGroups is defined %}
+        {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+        {{ userform.hostedUserGroupsSection(edit_form.hostedUserGroups, cycle, employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
     {% endif %}
 
     {% if edit_form.submit is defined %}

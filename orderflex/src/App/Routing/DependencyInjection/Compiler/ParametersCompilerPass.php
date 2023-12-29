@@ -41,25 +41,32 @@ class ParametersCompilerPass implements CompilerPassInterface
         //exit('111');
 
         $authServerNetwork = $siteParameters->getAuthServerNetwork();
-        echo '$authServerNetwork='.$authServerNetwork."<br>";
+        //echo '$authServerNetwork='.$authServerNetwork."<br>";
 
         if( !$authServerNetwork ) {
             return;
         }
 
+        $multitenancy = 'singletenancy'; //USed by CustomTenancyLoader
+
         if( $authServerNetwork->getName() == 'Internet (Hub)' ) {
+            echo '$authServerNetwork Name='.$authServerNetwork->getName()."<br>";
 
             $hostedUserGroups = $authServerNetwork->getHostedUserGroups();
-            echo '$hostedUserGroup count='.count($hostedUserGroups)."<br>";
+            //echo '$hostedUserGroup count='.count($hostedUserGroups)."<br>";
             foreach($hostedUserGroups as $hostedUserGroup) {
-                echo '$hostedUserGroup='.$hostedUserGroup."<br>";
+                //echo '$hostedUserGroup='.$hostedUserGroup."<br>";
             }
+
+            $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+            $container->setParameter('defaultlocale', 'main');
+            $container->setParameter('locdel', '/'); //locale delimeter '/'
 
             $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
             $container->setParameter('multilocales', $multilocales);
         }
 
-
+        $container->setParameter('multitenancy', $multitenancy);
 
         //$container->setParameter('multilocales', $multilocales);
     }

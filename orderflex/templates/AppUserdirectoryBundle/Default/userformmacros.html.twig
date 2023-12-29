@@ -1231,6 +1231,73 @@
     </div>
 {% endmacro %}
 
+{% macro hostedUserGroupsSection( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
+    hostedUserGroupsSection Section!!!
+    {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    {% if usedata %}
+        <div id="form-prototype-data2"
+             data-prototype-user-hostedusergroups = "{{ userform.hostedusergroups(hostedUserGroups,cycle,'user-hostedusergroups','prototype', sitename)|e }}"
+        ></div>
+    {% endif %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#hostedusergroups">
+                    {{ title }}
+                </a>
+            </h4>
+        </div>
+        <div id="hostedusergroups" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                <div class="user-hostedusergroups-holder">
+                    {% if hostedusergroups|length > 0 %}
+                        {% for hostedusergroup in hostedusergroups %}
+                            {{ userform.hostedusergroups( hostedusergroup, cycle, 'user-hostedusergroups', 'noprototype' ) }}
+                        {% endfor %}
+                    {% else %}
+                        No specific user Hosted User Groups are defined.<br>
+                    {% endif %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-hostedusergroups','Add Hosted User Group') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{% macro hostedusergroups( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if not showFlag %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        {% endif %}
+
+        {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
+        {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.hostedusergroup) }}
+        {#{{ formmacros.field(formfield.institutions) }}#}
+
+    </div>
+{% endmacro %}
 
 {% macro priceSection( form, cycle, sitename, collapsein, title, usedata ) %}
 

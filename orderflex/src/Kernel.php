@@ -23,6 +23,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 //use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
@@ -46,7 +48,6 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-
         //(new Dotenv(false))->loadEnv(dirname(__DIR__).'/.env');
         //use Symfony\Component\Dotenv\Dotenv;
         //exit(__DIR__.'/../.env');
@@ -70,9 +71,21 @@ class Kernel extends BaseKernel
         $loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+    }
+
+    public function build(ContainerBuilder $container): void
+    {
+        // in this method you can manipulate the service container:
+        // for example, changing some container service:
+        //$container->getDefinition('app.some_private_service')->setPublic(true);
 
         //load Symfony's config parameters from database (Doctrine)
         //https://symfony.com/doc/current/service_container/compiler_passes.html
-        $container->addCompilerPass(new ParametersCompilerPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(
+            new ParametersCompilerPass(),
+            PassConfig::TYPE_AFTER_REMOVING,
+            //PassConfig::TYPE_REMOVE,
+            100
+        );
     }
 }
