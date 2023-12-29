@@ -13,8 +13,10 @@ namespace App;
 
 namespace App;
 
+use App\Routing\DependencyInjection\Compiler\ParametersCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 //use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -68,5 +70,9 @@ class Kernel extends BaseKernel
         $loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+
+        //load Symfony's config parameters from database (Doctrine)
+        //https://symfony.com/doc/current/service_container/compiler_passes.html
+        $container->addCompilerPass(new ParametersCompilerPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 }

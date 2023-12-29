@@ -441,10 +441,10 @@ if( $conn ) {
             //echo "default_locale=" . $default_locale . "<br>";
             //$default_locale = $container->getParameter('framework.translator.default_locale');
             //echo "default_locale=" . $default_locale . "<br>";
-            $multitenancy = 'singletenancy';
+            $multitenancy = 'singletenancy'; //USed by CustomTenancyLoader
             //$multitenancy = 'multitenancy';
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
-            //Can be moved to the CustomTenancyLoader
+            //Can be moved to the ParametersCompilerPass
             $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
             if( $authServerNetworkId ) {
                 //dump($authServerNetworkId);
@@ -464,7 +464,7 @@ if( $conn ) {
                 }
 
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
-                    $multitenancy = 'multitenancy';
+                    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
                     $container->setParameter('defaultlocale', 'main');
 
                     //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList

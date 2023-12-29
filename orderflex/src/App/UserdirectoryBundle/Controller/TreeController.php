@@ -746,7 +746,12 @@ class TreeController extends OrderAbstractController {
                 break;
 
             default:
+                $fullClassName = "App\\".$bundleName."\\Entity\\".$className;
+                if( method_exists($fullClassName, 'getOrganizationalGroupType') !== true ) {
+                    $organizationalGroupType = NULL;
+                }
                 //$className = null;
+
         }
 
         $res = array(
