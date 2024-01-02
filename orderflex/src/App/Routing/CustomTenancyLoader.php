@@ -43,6 +43,8 @@ class CustomTenancyLoader extends Loader {
 
     public function load( $resource, $type = null )
     {
+        //echo '###CustomTenancyLoader load'.'<br>###'; exit('222');
+
         // This method will only be called if it suits the parameters
         $routes   = new RouteCollection;
         //$resource = '@AcmeFooBundle/Resources/config/custom_routing.yml';

@@ -57,6 +57,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         array $mappingTypes = []
     )
     {
+        //exit('DatabaseConnectionFactory');
         //echo "multitenancy=".$this->multitenancy."<br>";
         if( $this->multitenancy == 'singletenancy' ) {
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);

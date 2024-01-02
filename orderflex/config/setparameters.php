@@ -415,7 +415,8 @@ if( $conn ) {
             //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
             //3) set tenantid $tenantprefix = authPartnerServer
 
-            //////// tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
+            /////////// 'tenantprefix' ///////////
+            //////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
             //////// and then is used in getCommonBaseUrl. ////////
             //////// It is not need if locale is used ////////
             //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
@@ -423,7 +424,7 @@ if( $conn ) {
             //$tenantprefix = 'c/lmh/pathology/';
             $tenantprefix = ''; //default prefix as it was in the original configuration
             $container->setParameter('tenantprefix', $tenantprefix);
-            //////// EOF tenantprefix is used in base.html.twig to set hidden id="tenantprefix" ////////
+            /////////// EOF 'tenantprefix' ///////////
 
             //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
             //$defaultLocale = 'main';
@@ -441,12 +442,20 @@ if( $conn ) {
             //echo "default_locale=" . $default_locale . "<br>";
             //$default_locale = $container->getParameter('framework.translator.default_locale');
             //echo "default_locale=" . $default_locale . "<br>";
-            $multitenancy = 'singletenancy'; //USed by CustomTenancyLoader
+
+            //set default 'multitenancy' - used by the DatabaseConnectionFactory
+            //On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
+            //When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
+            // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
+            $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
+            $container->setParameter('multitenancy', $multitenancy);
+
+            /////////////// MOVED TO ParametersCompilerPass ///////////////
             //$multitenancy = 'multitenancy';
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
             //Can be moved to the ParametersCompilerPass
             $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
-            if( $authServerNetworkId ) {
+            if( 0 && $authServerNetworkId ) {
                 //dump($authServerNetworkId);
                 //dump($row);
                 echo "authServerNetworkId=".$authServerNetworkId."\n";
@@ -481,8 +490,9 @@ if( $conn ) {
 //                    $loader->load('security_access_control.yml');
                 }
             }
-            echo "multitenancy=" . $multitenancy . "\n";
-            $container->setParameter('multitenancy', $multitenancy);
+            echo "setparameters multitenancy=" . $multitenancy . "\n";
+            //$container->setParameter('multitenancy', $multitenancy);
+            /////////////// ROF MOVED TO ParametersCompilerPass ///////////////
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
             //$router->getContext()->setParameter('tenantprefix', $tenantprefix);

@@ -83,9 +83,9 @@ class Kernel extends BaseKernel
         //https://symfony.com/doc/current/service_container/compiler_passes.html
         $container->addCompilerPass(
             new ParametersCompilerPass(),
-            PassConfig::TYPE_AFTER_REMOVING,
+            PassConfig::TYPE_AFTER_REMOVING
             //PassConfig::TYPE_REMOVE,
-            100
+            //100
         );
     }
 }

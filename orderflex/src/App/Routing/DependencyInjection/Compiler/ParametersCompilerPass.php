@@ -22,11 +22,13 @@ class ParametersCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        //echo '###ParametersCompilerPass process'.'<br>###'; exit('111');
         $em = $container->get('doctrine.orm.default_entity_manager');
 
         $siteParameters = $em->getRepository(SiteParameters::class)->findAll();
-
+        //exit('$siteParameters count='.count($siteParameters));
         if( count($siteParameters) > 0 ) {
+            //exit('111');
             $this->setRoutingParameters($container,$siteParameters[0]);
         }
 
@@ -50,7 +52,7 @@ class ParametersCompilerPass implements CompilerPassInterface
         $multitenancy = 'singletenancy'; //USed by CustomTenancyLoader
 
         if( $authServerNetwork->getName() == 'Internet (Hub)' ) {
-            echo '$authServerNetwork Name='.$authServerNetwork->getName()."<br>";
+            echo 'ParametersCompilerPass: $authServerNetwork Name='.$authServerNetwork->getName()."<br>";
 
             $hostedUserGroups = $authServerNetwork->getHostedUserGroups();
             //echo '$hostedUserGroup count='.count($hostedUserGroups)."<br>";
