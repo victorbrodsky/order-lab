@@ -26,13 +26,17 @@ class CustomTenancyLoader extends Loader {
 
     private $container;
     private $em;
-    protected $security;
+    //protected $security;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security)
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $em
+        //Security $security
+    )
     {
         $this->container = $container;
         $this->em = $em;
-        $this->security = $security;
+        //$this->security = $security;
     }
 
     public function supports( $resource, $type = null )

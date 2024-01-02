@@ -13,7 +13,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\Bundle\DoctrineBundle\ConnectionFactory;
-//use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 //Credit to TvC
 //https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
@@ -22,20 +22,20 @@ class DatabaseConnectionFactory extends ConnectionFactory
 {
 
     private $requestStack;
-    private $multitenancy;
-    //private $container;
+    //private $multitenancy;
+    private $container;
     //private $wrappedConnectionFactory;
 
     public function __construct(
         $requestStack,
-        $multitenancy
-        //ContainerInterface $container
+        //$multitenancy,
+        ContainerInterface $container
         //$wrappedConnectionFactory
     )
     {
         $this->requestStack = $requestStack;
-        $this->multitenancy = $multitenancy;
-        //$this->container = $container;
+        //$this->multitenancy = $multitenancy;
+        $this->container = $container;
         //$this->wrappedConnectionFactory = $wrappedConnectionFactory;
     }
 
@@ -58,8 +58,11 @@ class DatabaseConnectionFactory extends ConnectionFactory
     )
     {
         //exit('DatabaseConnectionFactory');
-        //echo "multitenancy=".$this->multitenancy."<br>";
-        if( $this->multitenancy == 'singletenancy' ) {
+        $logger = $this->container->get('logger');
+        $multitenancy = $this->container->getParameter('multitenancy');
+        //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
+        $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy);
+        if( $multitenancy == 'singletenancy' ) {
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         }
 

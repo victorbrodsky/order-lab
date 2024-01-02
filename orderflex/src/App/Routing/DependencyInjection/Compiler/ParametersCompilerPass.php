@@ -10,8 +10,13 @@ namespace App\Routing\DependencyInjection\Compiler;
 
 
 use App\UserdirectoryBundle\Entity\SiteParameters;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+//use Symfony\Component\HttpKernel\Config\FileLocator;
+//use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 //How to load Symfony's config parameters from database (Doctrine)
 //https://stackoverflow.com/questions/28713495/how-to-load-symfonys-config-parameters-from-database-doctrine
@@ -40,7 +45,7 @@ class ParametersCompilerPass implements CompilerPassInterface
     public function setRoutingParameters( $container, $siteParameters ) {
 
         //dump($siteParameters);
-        //exit('111');
+        //exit('setRoutingParameters 111');
 
         $authServerNetwork = $siteParameters->getAuthServerNetwork();
         //echo '$authServerNetwork='.$authServerNetwork."<br>";
@@ -66,9 +71,15 @@ class ParametersCompilerPass implements CompilerPassInterface
 
             $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
             $container->setParameter('multilocales', $multilocales);
+
+//            $configDirectory = __DIR__.'/../../../../../config/packages/';
+//            $loader = new YamlFileLoader($container, new FileLocator($configDirectory));
+//            $loader->load('firewalls.yml');
+//            $loader->load('security_access_control.yml');
         }
 
         $container->setParameter('multitenancy', $multitenancy);
+        echo '###ParametersCompilerPass multitenancy='.$multitenancy.'###'; //exit('111');
 
         //$container->setParameter('multilocales', $multilocales);
     }

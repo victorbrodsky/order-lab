@@ -431,6 +431,7 @@ if( $conn ) {
             $defaultLocale = '';
             $container->setParameter('defaultlocale', $defaultLocale);
 
+            //'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
             $multilocales = '';
             $container->setParameter('multilocales', $multilocales);
             $container->setParameter('locdel', '');
@@ -455,7 +456,7 @@ if( $conn ) {
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
             //Can be moved to the ParametersCompilerPass
             $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
-            if( 0 && $authServerNetworkId ) {
+            if( $authServerNetworkId ) {
                 //dump($authServerNetworkId);
                 //dump($row);
                 echo "authServerNetworkId=".$authServerNetworkId."\n";
@@ -474,6 +475,8 @@ if( $conn ) {
 
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
                     $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+                    $container->setParameter('multitenancy', $multitenancy);
+
                     $container->setParameter('defaultlocale', 'main');
                     $container->setParameter('locdel', '/'); //locale delimeter '/'
 
@@ -490,8 +493,13 @@ if( $conn ) {
 //                    $loader->load('security_access_control.yml');
                 }
             }
-            echo "setparameters multitenancy=" . $multitenancy . "\n";
+            //echo "setparameters multitenancy=" . $multitenancy . "\n";
             //$container->setParameter('multitenancy', $multitenancy);
+            //$container->setParameter('multitenancy', 'multitenancy');
+            //$multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
+            //$container->setParameter('multilocales', $multilocales);
+            //$container->setParameter('defaultlocale', 'main');
+            //$container->setParameter('locdel', '/'); //locale delimeter '/'
             /////////////// ROF MOVED TO ParametersCompilerPass ///////////////
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);

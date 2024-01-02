@@ -73,19 +73,16 @@ class Kernel extends BaseKernel
         $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 
-    public function build(ContainerBuilder $container): void
-    {
-        // in this method you can manipulate the service container:
-        // for example, changing some container service:
-        //$container->getDefinition('app.some_private_service')->setPublic(true);
+//    public function build(ContainerBuilder $container): void
+//    {
+//        //load Symfony's config parameters from database (Doctrine)
+//        //https://symfony.com/doc/current/service_container/compiler_passes.html
+//        $container->addCompilerPass(
+//            new ParametersCompilerPass(),
+//            PassConfig::TYPE_AFTER_REMOVING,
+//            //PassConfig::TYPE_REMOVE,
+//            1000
+//        );
+//    }
 
-        //load Symfony's config parameters from database (Doctrine)
-        //https://symfony.com/doc/current/service_container/compiler_passes.html
-        $container->addCompilerPass(
-            new ParametersCompilerPass(),
-            PassConfig::TYPE_AFTER_REMOVING
-            //PassConfig::TYPE_REMOVE,
-            //100
-        );
-    }
 }
