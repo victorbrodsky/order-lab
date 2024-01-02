@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 //use Symfony\Component\HttpKernel\Config\FileLocator;
 //use Symfony\Component\Routing\Loader\YamlFileLoader;
 
+//NOT USED. Problem is that these variables are ignored by the yml config files.
 //How to load Symfony's config parameters from database (Doctrine)
 //https://stackoverflow.com/questions/28713495/how-to-load-symfonys-config-parameters-from-database-doctrine
 //https://symfony.com/doc/current/service_container/compiler_passes.html
@@ -27,6 +28,17 @@ class ParametersCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+
+//        $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+//        $container->setParameter('multitenancy', $multitenancy);
+//        $container->setParameter('defaultlocale', 'main');
+//        $container->setParameter('locdel', '/'); //locale delimeter '/'
+//
+//        $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
+//        $container->setParameter('multilocales', $multilocales);
+
+        //return;
+
         //echo '###ParametersCompilerPass process'.'<br>###'; exit('111');
         $em = $container->get('doctrine.orm.default_entity_manager');
 
