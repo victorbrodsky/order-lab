@@ -39,6 +39,12 @@ class HostedUserGroupType extends AbstractType
             'attr' => array('class' => 'comment-field-id')
         ));
 
+        $builder->add('name',null,array(
+            'label' => "Name:",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
 //        $builder->add('serverNetworks',null,array(
 //            'label' => "Description:",
 //            'required' => false,

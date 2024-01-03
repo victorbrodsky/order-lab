@@ -44,8 +44,12 @@ class AuthServerNetworkList extends ListAbstract
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
     #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
-    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks')]
+    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks', cascade: ['persist'])]
     private $hostedUserGroups;
+
+    //Alternative implementation:
+    //Add ManyToMany hostedUserGroups holders,
+    // each of this holder has HostedUserGroupList (nested tree), footer parameters, etc
     
 
     //MOVED custom page parameters to HostedUserGroupList (Tenant ID)

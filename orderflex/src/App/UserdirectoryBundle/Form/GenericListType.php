@@ -1454,7 +1454,6 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'visualization', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:VisualizationList'] by [VisualizationList::class]
                 'class' => VisualizationList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Visualization Method:',
@@ -1473,7 +1472,6 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'chartTypes', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
                 'class' => ChartTypeList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Chart Types:',
@@ -1492,7 +1490,6 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'dataSource', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:DataSourceList'] by [DataSourceList::class]
                 'class' => DataSourceList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Data Source:',
@@ -1705,49 +1702,94 @@ class GenericListType extends AbstractType
 //                'prototype_name' => '__hostedusergroups__',
 //            ));
 
-            //$this->hostedUserGroupsFields($builder);
+            $this->hostedUserGroupsFields($builder);
         }
 
     }
 
     public function hostedUserGroupsFields($builder) {
+
+//        $builder->add( 'hostedUserGroups', EntityType::class, array(
+//            'class' => HostedUserGroupList::class,
+//            //'choice_label' => 'getTreeName',
+//            'label'=>'Hosted User Group Type(s):',
+//            'required'=> false,
+//            'multiple' => true,
+//            //'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
+
+        $builder->add('hostedUserGroups', CollectionType::class, array(
+            'entry_type' => HostedUserGroupType::class,
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__hostedusergroups__',
+        ));
+
         //Similar to BaseCommentsType
         ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $hostedUserGroup = $event->getData();
-            $form = $event->getForm();
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $hostedUserGroup = $event->getData();
+//            $form = $event->getForm();
 
-            $label = null;
-            $mapper = array(
-                'prefix' => "App",
-                'className' => "HostedUserGroupList",
-                'bundleName' => "UserdirectoryBundle",
-                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\HostedUserGroupList",
-                'entityNamespace' => "App\\UserdirectoryBundle\\Entity",
-                'organizationalGroupType' => NULL
-            );
+//            $label = null;
+//            $mapper = array(
+//                'prefix' => "App",
+//                'className' => "HostedUserGroupList",
+//                'bundleName' => "UserdirectoryBundle",
+//                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\HostedUserGroupList",
+//                'entityNamespace' => "App\\UserdirectoryBundle\\Entity",
+//                'organizationalGroupType' => NULL
+//            );
 //            if( $hostedUserGroup ) {
 //                $commentType = $hostedUserGroup->getCommentType();
 //                if( $commentType ) {
 //                    $label = $this->params['em']->getRepository(HostedUserGroupList::class)->getLevelLabels($commentType,$mapper) . ":";
 //                }
 //            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository(HostedUserGroupList::class)->getLevelLabels(null,$mapper) . ":";
-            }
+//            if( !$label ) {
+//                $label = $this->params['em']->getRepository(HostedUserGroupList::class)->getLevelLabels(null,$mapper) . ":";
+//            }
 
-            $form->add('hostedUserGroups', CustomSelectorType::class, array( //'employees_custom_selector'
-                'label' => $label,
-                'required' => false,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                    'data-compositetree-classname' => 'HostedUserGroupList'
-                ),
-                'classtype' => 'hostedusergroup' //define it in CustomSelectorType
-            ));
-        });
+//            $form->add('hostedUserGroups', CustomSelectorType::class, array( //'employees_custom_selector'
+//                'label' => $label,
+//                'required' => false,
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree',
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                    'data-compositetree-classname' => 'HostedUserGroupList'
+//                ),
+//                'classtype' => 'hostedusergroup' //define it in CustomSelectorType
+//            ));
+
+//            $form->add('hostedUserGroups', CollectionType::class, array(
+//                'entry_type' => HostedUserGroupType::class,
+//                'entry_options' => array(
+//                    //'form_custom_value' => $this->params
+//                ),
+//                'label' => 'Hosted User Group Type(s):',
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'required' => false,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__hostedusergroups__',
+//            ));
+//        });
         ///////////////////////// EOF tree node /////////////////////////
     }
 

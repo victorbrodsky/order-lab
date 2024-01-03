@@ -60,7 +60,7 @@ class HostedUserGroupList extends BaseCompositeNode
     //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     //private $organizationalGroupType;
 
-    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups')]
+    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups', cascade: ['persist'])]
     private $serverNetworks;
 
     //Add tenant's custom parameters such as page footer, list of accessible pages etc.

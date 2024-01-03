@@ -1231,6 +1231,10 @@
     </div>
 {% endmacro %}
 
+{% macro hostedUserGroupsSection_TEST( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
+    hostedUserGroups count={{ hostedUserGroups|length }}
+    {#{{ formmacros.field(hostedUserGroups) }}#}
+{% endmacro %}
 {% macro hostedUserGroupsSection( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
     {#2hostedUserGroupsSection Section!!!#}
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
@@ -1293,6 +1297,7 @@
 
         {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
         {{ formmacros.field(formfield.id) }}
+        {{ formmacros.field(formfield.name) }}
         {#{{ formmacros.field(formfield.hostedusergroup) }}#}
         {#{{ formmacros.field(formfield.institutions) }}#}
 
