@@ -24,6 +24,7 @@ use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
 
 
+use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
 
 
@@ -1693,18 +1694,61 @@ class GenericListType extends AbstractType
 
         if( $this->params['entity'] instanceof AuthServerNetworkList ) {
             //hostedUserGroup (ManyToMany) is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
-            $builder->add('hostedUserGroups', CollectionType::class, array(
-                'entry_type' => HostedUserGroupType::class,
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__hostedusergroups__',
-            ));
+//            $builder->add('hostedUserGroups', CollectionType::class, array(
+//                'entry_type' => HostedUserGroupType::class,
+//                'label' => false,
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__hostedusergroups__',
+//            ));
+
+            //$this->hostedUserGroupsFields($builder);
         }
 
+    }
+
+    public function hostedUserGroupsFields($builder) {
+        //Similar to BaseCommentsType
+        ///////////////////////// tree node /////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $hostedUserGroup = $event->getData();
+            $form = $event->getForm();
+
+            $label = null;
+            $mapper = array(
+                'prefix' => "App",
+                'className' => "HostedUserGroupList",
+                'bundleName' => "UserdirectoryBundle",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\HostedUserGroupList",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity",
+                'organizationalGroupType' => NULL
+            );
+//            if( $hostedUserGroup ) {
+//                $commentType = $hostedUserGroup->getCommentType();
+//                if( $commentType ) {
+//                    $label = $this->params['em']->getRepository(HostedUserGroupList::class)->getLevelLabels($commentType,$mapper) . ":";
+//                }
+//            }
+            if( !$label ) {
+                $label = $this->params['em']->getRepository(HostedUserGroupList::class)->getLevelLabels(null,$mapper) . ":";
+            }
+
+            $form->add('hostedUserGroups', CustomSelectorType::class, array( //'employees_custom_selector'
+                'label' => $label,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'HostedUserGroupList'
+                ),
+                'classtype' => 'hostedusergroup' //define it in CustomSelectorType
+            ));
+        });
+        ///////////////////////// EOF tree node /////////////////////////
     }
 
     public function commonChartFields($builder) {

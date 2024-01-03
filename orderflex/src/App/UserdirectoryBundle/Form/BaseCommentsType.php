@@ -125,7 +125,8 @@ class BaseCommentsType extends AbstractType
                         'prefix' => "App",
                         'className' => "CommentTypeList",
                         'bundleName' => "UserdirectoryBundle",
-                        'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                        //'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                        'fullClassName' => "App\\UserdirectoryBundle\\Entity\\CommentTypeList",
                         'entityNamespace' => "App\\UserdirectoryBundle\\Entity",
                         'organizationalGroupType' => "CommentGroupType"
                     );

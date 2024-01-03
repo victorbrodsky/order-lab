@@ -1232,7 +1232,7 @@
 {% endmacro %}
 
 {% macro hostedUserGroupsSection( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
-    hostedUserGroupsSection Section!!!
+    {#2hostedUserGroupsSection Section!!!#}
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
@@ -1254,8 +1254,8 @@
             <div class="panel-body">
 
                 <div class="user-hostedusergroups-holder">
-                    {% if hostedusergroups|length > 0 %}
-                        {% for hostedusergroup in hostedusergroups %}
+                    {% if hostedUserGroups|length > 0 %}
+                        {% for hostedusergroup in hostedUserGroups %}
                             {{ userform.hostedusergroups( hostedusergroup, cycle, 'user-hostedusergroups', 'noprototype' ) }}
                         {% endfor %}
                     {% else %}
@@ -1293,7 +1293,7 @@
 
         {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
         {{ formmacros.field(formfield.id) }}
-        {{ formmacros.field(formfield.hostedusergroup) }}
+        {#{{ formmacros.field(formfield.hostedusergroup) }}#}
         {#{{ formmacros.field(formfield.institutions) }}#}
 
     </div>

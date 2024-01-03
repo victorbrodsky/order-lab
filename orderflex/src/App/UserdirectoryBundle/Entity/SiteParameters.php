@@ -1024,6 +1024,9 @@ class SiteParameters {
 
     //Server Network Accessibility and Role (aka Server Role and Network Access):
     //[Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)] / Internet (Hub)
+    //1) SiteParameters has one AuthServerNetworkList (i.e. 'Internet (Hub)')
+    //2) AuthServerNetworkList has many HostedUserGroupList (nested tree), (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
+    //3) HostedUserGroupList has one tree node (i.e. 'pathology' with parents 'c/wcm/pathology')
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthServerNetworkList')]
     private $authServerNetwork;
 

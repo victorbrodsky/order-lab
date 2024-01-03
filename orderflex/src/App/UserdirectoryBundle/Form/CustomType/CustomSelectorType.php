@@ -237,6 +237,10 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
                 break;
 
+            case "hostedusergroup":
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'HostedUserGroupList');
+                break;
+
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

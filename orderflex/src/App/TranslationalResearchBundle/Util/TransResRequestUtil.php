@@ -1349,7 +1349,7 @@ class TransResRequestUtil
         $mapper = array(
             "entityName" => "Project",
             "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
-            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\TransResRequest",
+            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\Project",
             "entityId" => $project->getId(),
         );
         $receivingValue = null;

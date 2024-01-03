@@ -884,7 +884,7 @@
         {#{{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",false) }}#}
     {% endif %}
 
-    hostedUserGroups Section!!!
+    {#1hostedUserGroups Section!!!#}
     {% if edit_form.hostedUserGroups is defined %}
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
         {{ userform.hostedUserGroupsSection(edit_form.hostedUserGroups, cycle, employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}

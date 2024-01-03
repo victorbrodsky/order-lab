@@ -112,6 +112,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         //return $entity->getId();
 
         //echo "count=".count($entity)."<br>";
+        //echo "$entity=".$entity."<br>";
 
         return $entity->getId();
     }
