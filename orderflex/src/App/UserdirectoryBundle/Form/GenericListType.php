@@ -22,63 +22,25 @@ namespace App\UserdirectoryBundle\Form;
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
-
-
 use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
-
-
 use App\UserdirectoryBundle\Entity\PermissionActionList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionActionList
-
-
 use App\UserdirectoryBundle\Entity\RoleAttributeList; //process.py script: replaced namespace by ::class: added use line for classname=RoleAttributeList
-
-
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
-
-
 use App\UserdirectoryBundle\Entity\ResidencySpecialty; //process.py script: replaced namespace by ::class: added use line for classname=ResidencySpecialty
-
-
 use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
-
-
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
-
-
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
-
-
 use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
-
-
 use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
-
-
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
-
-
 use App\UserdirectoryBundle\Entity\BuildingList; //process.py script: replaced namespace by ::class: added use line for classname=BuildingList
-
-
 use App\UserdirectoryBundle\Entity\FloorList; //process.py script: replaced namespace by ::class: added use line for classname=FloorList
-
-
 use App\OrderformBundle\Entity\MessageTagTypesList; //process.py script: replaced namespace by ::class: added use line for classname=MessageTagTypesList
-
-
 use App\DashboardBundle\Entity\VisualizationList; //process.py script: replaced namespace by ::class: added use line for classname=VisualizationList
-
-
 use App\DashboardBundle\Entity\ChartTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ChartTypeList
-
-
 use App\DashboardBundle\Entity\DataSourceList; //process.py script: replaced namespace by ::class: added use line for classname=DataSourceList
-
-
 use App\DashboardBundle\Entity\UpdateFrequencyList; //process.py script: replaced namespace by ::class: added use line for classname=UpdateFrequencyList
-
-
 use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Entity\TopicList;
@@ -1702,12 +1664,12 @@ class GenericListType extends AbstractType
 //                'prototype_name' => '__hostedusergroups__',
 //            ));
 
-            $this->hostedUserGroupsFields($builder);
+            $this->hostedGroupHoldersFields($builder);
         }
 
     }
 
-    public function hostedUserGroupsFields($builder) {
+    public function hostedGroupHoldersFields($builder) {
 
 //        $builder->add( 'hostedUserGroups', EntityType::class, array(
 //            'class' => HostedUserGroupList::class,
@@ -1728,15 +1690,15 @@ class GenericListType extends AbstractType
 //            },
 //        ));
 
-        $builder->add('hostedUserGroups', CollectionType::class, array(
-            'entry_type' => HostedUserGroupType::class,
+        $builder->add('hostedGroupHolders', CollectionType::class, array(
+            'entry_type' => HostedGroupHolderType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__hostedusergroups__',
+            'prototype_name' => '__hostedgroupholders__',
         ));
 
         //Similar to BaseCommentsType

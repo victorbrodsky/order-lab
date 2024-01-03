@@ -1231,48 +1231,48 @@
     </div>
 {% endmacro %}
 
-{% macro hostedUserGroupsSection_TEST( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
-    hostedUserGroups count={{ hostedUserGroups|length }}
+{% macro hostedGroupHoldersSection_TEST( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
+    hostedGroupHolders count={{ hostedGroupHolders|length }}
     {#{{ formmacros.field(hostedUserGroups) }}#}
 {% endmacro %}
-{% macro hostedUserGroupsSection( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}
-    {#2hostedUserGroupsSection Section!!!#}
+{% macro hostedGroupHoldersSection( hostedGroupHolders, cycle, sitename, collapsein, title, usedata ) %}
+    {#2hostedGroupHoldersSection Section!!!#}
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     {% if usedata %}
         <div id="form-prototype-data2"
-             data-prototype-user-hostedusergroups = "{{ userform.hostedusergroups(hostedUserGroups,cycle,'user-hostedusergroups','prototype', sitename)|e }}"
+             data-prototype-user-hostedgroupholders = "{{ userform.hostedgroupholders(hostedGroupHolders,cycle,'user-hostedgroupholders','prototype', sitename)|e }}"
         ></div>
     {% endif %}
 
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#hostedusergroups">
+                <a data-toggle="collapse" href="#hostedgroupholders">
                     {{ title }}
                 </a>
             </h4>
         </div>
-        <div id="hostedusergroups" class="panel-collapse collapse {{ collapsein }}">
+        <div id="hostedgroupholders" class="panel-collapse collapse {{ collapsein }}">
             <div class="panel-body">
 
-                <div class="user-hostedusergroups-holder">
-                    {% if hostedUserGroups|length > 0 %}
-                        {% for hostedusergroup in hostedUserGroups %}
-                            {{ userform.hostedusergroups( hostedusergroup, cycle, 'user-hostedusergroups', 'noprototype' ) }}
+                <div class="user-hostedgroupholders-holder">
+                    {% if hostedGroupHolders|length > 0 %}
+                        {% for hostedgroupholder in hostedGroupHolders %}
+                            {{ userform.hostedgroupholders( hostedgroupholder, cycle, 'user-hostedgroupholders', 'noprototype' ) }}
                         {% endfor %}
                     {% else %}
-                        No specific user Hosted User Groups are defined.<br>
+                        {#No specific user Hosted User Groups are defined.<br>#}
                     {% endif %}
-                    {{ usermacros.addNewObjectBtn(cycle,'user-hostedusergroups','Add Hosted User Group') }}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-hostedgroupholders','Add Hosted User Group') }}
                 </div>
 
             </div>
         </div>
     </div>
 {% endmacro %}
-{% macro hostedusergroups( field, cycle, classname, prototype ) %}
+{% macro hostedgroupholders( field, cycle, classname, prototype ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if "show" in cycle %}
@@ -1297,7 +1297,8 @@
 
         {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
         {{ formmacros.field(formfield.id) }}
-        {{ formmacros.field(formfield.name) }}
+        {{ formmacros.field(formfield.hostedUserGroups) }}
+        {#{{ formmacros.field(formfield.name) }}#}
         {#{{ formmacros.field(formfield.hostedusergroup) }}#}
         {#{{ formmacros.field(formfield.institutions) }}#}
 

@@ -735,9 +735,9 @@
         {{ userform.permissionSection(form.permissions, 'new', employees_sitename, "in", "Permission(s)",true) }}
     {% endif %}
 
-    {% if form.hostedUserGroups is defined %}
+    {% if form.hostedGroupHolders is defined %}
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
-        {{ userform.hostedUserGroupsSection(form.hostedUserGroups, 'new', employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
+        {{ userform.hostedGroupHoldersSection(form.hostedGroupHolders, 'new', employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
     {% endif %}
 
     {{ form_widget(form.submit) }}
@@ -885,9 +885,9 @@
     {% endif %}
 
     {#1hostedUserGroups Section!!!#}
-    {% if edit_form.hostedUserGroups is defined %}
+    {% if edit_form.hostedGroupHolders is defined %}
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
-        {{ userform.hostedUserGroupsSection(edit_form.hostedUserGroups, cycle, employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
+        {{ userform.hostedGroupHoldersSection(edit_form.hostedGroupHolders, cycle, employees_sitename, "in", "Hosted User Group(s)/Tenant(s)",true) }}
     {% endif %}
 
     {% if edit_form.submit is defined %}

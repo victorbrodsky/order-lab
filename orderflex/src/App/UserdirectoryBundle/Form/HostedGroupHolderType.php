@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -26,7 +27,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-class HostedUserGroupType extends AbstractType
+class HostedGroupHolderType extends AbstractType
 {
 
     //Use user.administrativeTitles as an example
@@ -39,10 +40,23 @@ class HostedUserGroupType extends AbstractType
             'attr' => array('class' => 'comment-field-id')
         ));
 
-        $builder->add('name',null,array(
-            'label' => "Name:",
-            'required' => false,
-            'attr' => array('class'=>'form-control'),
+        $builder->add( 'hostedUserGroups', EntityType::class, array(
+            'class' => HostedUserGroupList::class,
+            //'choice_label' => 'getTreeName',
+            'label'=>'Hosted User Group Type(s):',
+            'required'=> false,
+            //'multiple' => true,
+            //'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
 
 //        $builder->add('serverNetworks',null,array(

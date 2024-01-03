@@ -60,8 +60,11 @@ class HostedUserGroupList extends BaseCompositeNode
     //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     //private $organizationalGroupType;
 
-    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups', cascade: ['persist'])]
-    private $serverNetworks;
+//    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups', cascade: ['persist'])]
+//    private $serverNetworks;
+
+    #[ORM\ManyToMany(targetEntity: HostedGroupHolder::class, inversedBy: 'hostedUserGroups')]
+    private $hostedGroupHolders;
 
     //Add tenant's custom parameters such as page footer, list of accessible pages etc.
     //Homepage and About Us Page Content
@@ -74,7 +77,8 @@ class HostedUserGroupList extends BaseCompositeNode
     public function __construct($author=null) {
         parent::__construct($author);
 
-        $this->serverNetworks = new ArrayCollection();
+        //$this->serverNetworks = new ArrayCollection();
+        $this->hostedGroupHolders = new ArrayCollection();
     }
 
 
@@ -110,24 +114,45 @@ class HostedUserGroupList extends BaseCompositeNode
 //        }
 //    }
 
-    public function getServerNetworks()
+//    public function getServerNetworks()
+//    {
+//        return $this->serverNetworks;
+//    }
+//    public function addServerNetwork( $item )
+//    {
+//        if( !$this->serverNetworks->contains($item) ) {
+//            $this->serverNetworks->add($item);
+//            $item->addHostedUserGroup($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeServerNetwork($item)
+//    {
+//        if( $this->serverNetworks->contains($item) ) {
+//            $this->serverNetworks->removeElement($item);
+//            $item->removeHostedUserGroup($this);
+//        }
+//
+//        return $this;
+//    }
+
+    public function getHostedGroupHolders()
     {
-        return $this->serverNetworks;
+        return $this->hostedGroupHolders;
     }
-    public function addServerNetwork( $item )
+    public function addHostedGroupHolder( $item )
     {
-        if( !$this->serverNetworks->contains($item) ) {
-            $this->serverNetworks->add($item);
-            $item->addHostedUserGroup($this);
+        if( !$this->hostedGroupHolders->contains($item) ) {
+            $this->hostedGroupHolders->add($item);
         }
 
         return $this;
     }
-    public function removeServerNetwork($item)
+    public function removeHostedGroupHolder($item)
     {
-        if( $this->serverNetworks->contains($item) ) {
-            $this->serverNetworks->removeElement($item);
-            $item->removeHostedUserGroup($this);
+        if( $this->hostedGroupHolders->contains($item) ) {
+            $this->hostedGroupHolders->removeElement($item);
         }
 
         return $this;

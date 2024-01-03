@@ -43,14 +43,15 @@ class AuthServerNetworkList extends ListAbstract
 //    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
 //    #[ORM\OrderBy(['createdate' => 'DESC'])]
 //    private $hostedUserGroups;
-    #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
-    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks', cascade: ['persist'])]
-    private $hostedUserGroups;
+//    #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
+//    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks', cascade: ['persist'])]
+//    private $hostedUserGroups;
 
     //Alternative implementation:
-    //Add ManyToMany hostedUserGroups holders,
-    // each of this holder has HostedUserGroupList (nested tree), footer parameters, etc
-    
+    //Add ManyToMany hostedGroup holders,
+    // each of this holder has many HostedUserGroupList (nested tree), server parameters, footer parameters, etc
+    #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'serverNetwork', cascade: ['persist', 'remove'])]
+    private $hostedGroupHolders;
 
     //MOVED custom page parameters to HostedUserGroupList (Tenant ID)
     //Homepage and About Us Page Content
@@ -62,30 +63,52 @@ class AuthServerNetworkList extends ListAbstract
 
         parent::__construct($author);
 
-        $this->hostedUserGroups = new ArrayCollection();
+        //$this->hostedUserGroups = new ArrayCollection();
+        $this->hostedGroupHolders = new ArrayCollection();
     }
 
 
 
-    public function getHostedUserGroups()
+    public function getHostedGroupHolders()
     {
-        return $this->hostedUserGroups;
+        return $this->hostedGroupHolders;
     }
-    public function addHostedUserGroup( $item )
+    public function addHostedGroupHolder( $item )
     {
-        if( !$this->hostedUserGroups->contains($item) ) {
-            $this->hostedUserGroups->add($item);
+        if( !$this->hostedGroupHolders->contains($item) ) {
+            $this->hostedGroupHolders->add($item);
         }
 
         return $this;
     }
-    public function removeHostedUserGroup($item)
+    public function removeHostedGroupHolder($item)
     {
-        if( $this->hostedUserGroups->contains($item) ) {
-            $this->hostedUserGroups->removeElement($item);
+        if( $this->hostedGroupHolders->contains($item) ) {
+            $this->hostedGroupHolders->removeElement($item);
         }
 
         return $this;
     }
+
+//    public function getHostedUserGroups()
+//    {
+//        return $this->hostedUserGroups;
+//    }
+//    public function addHostedUserGroup( $item )
+//    {
+//        if( !$this->hostedUserGroups->contains($item) ) {
+//            $this->hostedUserGroups->add($item);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeHostedUserGroup($item)
+//    {
+//        if( $this->hostedUserGroups->contains($item) ) {
+//            $this->hostedUserGroups->removeElement($item);
+//        }
+//
+//        return $this;
+//    }
 
 }
