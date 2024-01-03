@@ -14,6 +14,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\Bundle\DoctrineBundle\ConnectionFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 //Credit to TvC
 //https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
@@ -22,20 +23,16 @@ class DatabaseConnectionFactory extends ConnectionFactory
 {
 
     private $requestStack;
-    //private $multitenancy;
     private $container;
+
+    //private $multitenancy;
     //private $wrappedConnectionFactory;
 
-    public function __construct(
-        $requestStack,
-        //$multitenancy,
-        ContainerInterface $container
-        //$wrappedConnectionFactory
-    )
+    public function __construct( RequestStack $requestStack, ContainerInterface $container )
     {
         $this->requestStack = $requestStack;
-        //$this->multitenancy = $multitenancy;
         $this->container = $container;
+        //$this->multitenancy = $multitenancy;
         //$this->wrappedConnectionFactory = $wrappedConnectionFactory;
     }
 
