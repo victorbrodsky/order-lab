@@ -121,6 +121,35 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null");
 
+/////// Set default container parameters for multitenancy ///////
+/////////// 'tenantprefix' ///////////
+//////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
+//////// and then is used in getCommonBaseUrl. ////////
+//////// It is not need if locale is used ////////
+//importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
+//$tenantprefix = 'c/wcm/pathology/';
+//$tenantprefix = 'c/lmh/pathology/';
+$tenantprefix = ''; //default prefix as it was in the original configuration
+$container->setParameter('tenantprefix', $tenantprefix);
+/////////// EOF 'tenantprefix' ///////////
+
+//defaultlocale is used in translation.yaml to set default translation for main home page with '/'
+//$defaultLocale = 'main';
+$defaultLocale = '';
+$container->setParameter('defaultlocale', $defaultLocale);
+
+//'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
+$multilocales = '';
+$container->setParameter('multilocales', $multilocales);
+$container->setParameter('locdel', '');
+
+//set default 'multitenancy' - used by the DatabaseConnectionFactory
+//On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
+//When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
+// the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
+$multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
+$container->setParameter('multitenancy', $multitenancy);
+/////// EOF Set default container parameters for multitenancy ///////
 
 $config = new \Doctrine\DBAL\Configuration();
 $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
@@ -409,47 +438,47 @@ if( $conn ) {
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
 
-            ////////////// Dynamically change url prefix /////////////
-            //Test multi tenancy
-            //1) IF "Server Role and Network Access:" = "Internet (Hub)”
-            //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
-            //3) set tenantid $tenantprefix = authPartnerServer
-
-            /////////// 'tenantprefix' ///////////
-            //////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
-            //////// and then is used in getCommonBaseUrl. ////////
-            //////// It is not need if locale is used ////////
-            //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
-            //$tenantprefix = 'c/wcm/pathology/';
-            //$tenantprefix = 'c/lmh/pathology/';
-            $tenantprefix = ''; //default prefix as it was in the original configuration
-            $container->setParameter('tenantprefix', $tenantprefix);
-            /////////// EOF 'tenantprefix' ///////////
-
-            //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
-            //$defaultLocale = 'main';
-            $defaultLocale = '';
-            $container->setParameter('defaultlocale', $defaultLocale);
-
-            //'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
-            $multilocales = '';
-            $container->setParameter('multilocales', $multilocales);
-            $container->setParameter('locdel', '');
-
-            //$locales = "c/wcm/pathology|c/lmh/pathology";
-            //$container->setParameter('locales', $locales);
-
-            //$default_locale = $container->getParameter('framework.default_locale');
-            //echo "default_locale=" . $default_locale . "<br>";
-            //$default_locale = $container->getParameter('framework.translator.default_locale');
-            //echo "default_locale=" . $default_locale . "<br>";
-
-            //set default 'multitenancy' - used by the DatabaseConnectionFactory
-            //On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
-            //When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
-            // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
-            $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
-            $container->setParameter('multitenancy', $multitenancy);
+//            ////////////// Dynamically change url prefix /////////////
+//            //Test multi tenancy
+//            //1) IF "Server Role and Network Access:" = "Internet (Hub)”
+//            //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
+//            //3) set tenantid $tenantprefix = authPartnerServer
+//
+//            /////////// 'tenantprefix' ///////////
+//            //////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
+//            //////// and then is used in getCommonBaseUrl. ////////
+//            //////// It is not need if locale is used ////////
+//            //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
+//            //$tenantprefix = 'c/wcm/pathology/';
+//            //$tenantprefix = 'c/lmh/pathology/';
+//            $tenantprefix = ''; //default prefix as it was in the original configuration
+//            $container->setParameter('tenantprefix', $tenantprefix);
+//            /////////// EOF 'tenantprefix' ///////////
+//
+//            //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
+//            //$defaultLocale = 'main';
+//            $defaultLocale = '';
+//            $container->setParameter('defaultlocale', $defaultLocale);
+//
+//            //'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
+//            $multilocales = '';
+//            $container->setParameter('multilocales', $multilocales);
+//            $container->setParameter('locdel', '');
+//
+//            //$locales = "c/wcm/pathology|c/lmh/pathology";
+//            //$container->setParameter('locales', $locales);
+//
+//            //$default_locale = $container->getParameter('framework.default_locale');
+//            //echo "default_locale=" . $default_locale . "<br>";
+//            //$default_locale = $container->getParameter('framework.translator.default_locale');
+//            //echo "default_locale=" . $default_locale . "<br>";
+//
+//            //set default 'multitenancy' - used by the DatabaseConnectionFactory
+//            //On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
+//            //When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
+//            // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
+//            $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
+//            $container->setParameter('multitenancy', $multitenancy);
 
             /////////////// MOVED TO ParametersCompilerPass ///////////////
             //$multitenancy = 'multitenancy';
