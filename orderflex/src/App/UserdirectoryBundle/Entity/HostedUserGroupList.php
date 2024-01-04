@@ -66,10 +66,7 @@ class HostedUserGroupList extends BaseCompositeNode
     #[ORM\ManyToMany(targetEntity: HostedGroupHolder::class, inversedBy: 'hostedUserGroups')]
     private $hostedGroupHolders;
 
-    //Add tenant's custom parameters such as page footer, list of accessible pages etc.
-    //Homepage and About Us Page Content
-    //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
-    //the the home page for Internet (Solo)
+    
 
 
 

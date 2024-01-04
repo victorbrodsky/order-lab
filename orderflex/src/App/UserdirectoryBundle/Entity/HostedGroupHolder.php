@@ -55,6 +55,12 @@ class HostedGroupHolder {
     private $hostedUserGroups;
 
     //For this group holder add server parameters, footer parameters, etc
+    //Add tenant's custom parameters such as page footer, list of accessible pages etc.
+    //Homepage and About Us Page Content
+    //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
+    //the the home page for Internet (Solo)
+
+
 
 
     public function __construct( $author=null ) {
