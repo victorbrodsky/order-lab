@@ -60,7 +60,34 @@ class HostedGroupHolder {
     //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
     //the the home page for Internet (Solo)
 
+//    database_host: localhost
+//    database_port: 5432
+//    database_name: ScanOrder
+//    #database_name: Tenant2
+//    database_user: symfony
+//    database_password: symfony
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $databaseHost;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $databasePort;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $databaseName;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $databaseUser;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $databasePassword;
+
+    //$systemDb (boolean) Use as a system DB to store multitenancy parameters
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $systemDb;
+
+    //If $serviceDb is true:
+    //Footer parameters for home page
 
 
     public function __construct( $author=null ) {
@@ -161,6 +188,62 @@ class HostedGroupHolder {
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseHost()
+    {
+        return $this->databaseHost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabasePort()
+    {
+        return $this->databasePort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseName()
+    {
+        return $this->databaseName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseUser()
+    {
+        return $this->databaseUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabasePassword()
+    {
+        return $this->databasePassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSystemDb()
+    {
+        return $this->systemDb;
+    }
+
+    /**
+     * @param mixed $systemDb
+     */
+    public function setSystemDb($systemDb)
+    {
+        $this->systemDb = $systemDb;
     }
 
 

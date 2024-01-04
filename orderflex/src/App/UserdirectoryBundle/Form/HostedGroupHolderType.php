@@ -59,11 +59,41 @@ class HostedGroupHolderType extends AbstractType
             },
         ));
 
-//        $builder->add('serverNetworks',null,array(
-//            'label' => "Description:",
-//            'required' => false,
-//            'attr' => array('class'=>'form-control'),
-//        ));
+        $builder->add('databaseHost',null,array(
+            'label' => "Database Host (i.e. localhost):",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('databasePort',null,array(
+            'label' => "Database Port (i.e. 5432):",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('databaseName',null,array(
+            'label' => "Database Name:",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('databaseUser',null,array(
+            'label' => "Database User:",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('databasePassword',null,array(
+            'label' => "Database Password:",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('systemDb',null,array(
+            'label' => "System DB (Use as a system DB to store multitenancy parameters):",
+            'required' => false,
+            'attr' => array('class'=>'form-control'),
+        ));
 
 //        $builder->add('documents', CollectionType::class, array(
 //            'entry_type' => DocumentType::class,
