@@ -77,6 +77,7 @@ class AuthServerNetworkList extends ListAbstract
     {
         if( !$this->hostedGroupHolders->contains($item) ) {
             $this->hostedGroupHolders->add($item);
+            $item->setServerNetwork($this);
         }
 
         return $this;
@@ -85,6 +86,7 @@ class AuthServerNetworkList extends ListAbstract
     {
         if( $this->hostedGroupHolders->contains($item) ) {
             $this->hostedGroupHolders->removeElement($item);
+            //$item->setServerNetwork(NULL);
         }
 
         return $this;

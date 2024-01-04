@@ -2406,6 +2406,13 @@ class ListController extends OrderAbstractController
             }
         }
 
+        if( method_exists($entity,'getHostedGroupHolders') ) {
+            $originalHostedGroupHolders = array();
+            foreach( $entity->getHostedGroupHolders() as $hostedGroupHolder ) {
+                $originalHostedGroupHolders[] = $hostedGroupHolder;
+            }
+        }
+
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
@@ -2552,6 +2559,47 @@ class ListController extends OrderAbstractController
             }
             /////////// EOF remove prices. Used for RequestCategoryTypeList ///////////
 
+//            if( method_exists($entity,'getHostedGroupHolders') ) {
+//                $originalHostedGroupHolders = array();
+//                foreach( $entity->getHostedGroupHolders() as $hostedGroupHolder ) {
+//                    $originalHostedGroupHolders[] = $hostedGroupHolder;
+//                }
+//            }
+            /////////// remove prices. Used for RequestCategoryTypeList ///////////
+            if( method_exists($entity,'getHostedGroupHolders') ) {
+
+                /////////////// Process Removed Collections ///////////////
+                $removedHostedGroupHolderCollections = array();
+
+                $removedInfo = $this->removeHostedGroupHolderCollection($originalHostedGroupHolders,$entity->getHostedGroupHolders(),$entity);
+                if( $removedInfo ) {
+                    $removedHostedGroupHolderCollections[] = $removedInfo;
+                }
+                /////////////// EOF Process Removed Collections ///////////////
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before removeHostedGroupHolderCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                if(0) {
+                    //This caused doctrine problems to persist the Prices->documents
+                    $changedInfoArr = $this->setEventLogChanges($entity);
+                    //exit('1');
+                    //set Edit event log for removed collection and changed fields or added collection
+                    if (count($changedInfoArr) > 0 || count($removedHostedGroupHolderCollections) > 0) {
+                        $event = "HostedGroupHolder " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
+                        $event = $event . implode("<br>", $changedInfoArr);
+                        $event = $event . "<br>" . implode("<br>", $removedHostedGroupHolderCollections);
+                        //$userSecUtil = $this->container->get('user_security_utility');
+                        //echo "event=".$event."<br>";
+                        //print_r($removedCollections);
+                        //exit();
+                        $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'), $event, $user, $entity, $request, 'AuthServerNetworkList HostedGroupHolder Updated');
+                    }
+                }
+                //exit();
+            }
+            /////////// EOF remove prices. Used for RequestCategoryTypeList ///////////
+
+
             if( $entity instanceof UsernameType ) {
                 $entity->setEmptyAbbreviation();
             }
@@ -2671,6 +2719,22 @@ class ListController extends OrderAbstractController
                 $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
                 $entity->removePrice($element);
                 $element->setRequestCategoryType(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function removeHostedGroupHolderCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removeHostedGroupHolder($element);
+                $element->setServerNetwork(NULL);
                 $em->persist($element);
                 $em->remove($element);
             }

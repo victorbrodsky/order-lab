@@ -41,10 +41,10 @@ class HostedGroupHolder {
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     #[ORM\JoinColumn(name: 'author', referencedColumnName: 'id')]
-    protected $author;
+    private $author;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected $createdate;
+    private $createdate;
 
     #[ORM\ManyToOne(targetEntity: AuthServerNetworkList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
@@ -173,6 +173,8 @@ class HostedGroupHolder {
 
     public function addHostedUserGroup( $item )
     {
+        //dump($item);
+        //exit('111');
         if( !$this->hostedUserGroups->contains($item) ) {
             $this->hostedUserGroups->add($item);
             $item->addHostedGroupHolder($this);
@@ -199,11 +201,27 @@ class HostedGroupHolder {
     }
 
     /**
+     * @param mixed $databaseHost
+     */
+    public function setDatabaseHost($databaseHost)
+    {
+        $this->databaseHost = $databaseHost;
+    }
+
+    /**
      * @return mixed
      */
     public function getDatabasePort()
     {
         return $this->databasePort;
+    }
+
+    /**
+     * @param mixed $databasePort
+     */
+    public function setDatabasePort($databasePort)
+    {
+        $this->databasePort = $databasePort;
     }
 
     /**
@@ -215,6 +233,14 @@ class HostedGroupHolder {
     }
 
     /**
+     * @param mixed $databaseName
+     */
+    public function setDatabaseName($databaseName)
+    {
+        $this->databaseName = $databaseName;
+    }
+
+    /**
      * @return mixed
      */
     public function getDatabaseUser()
@@ -223,11 +249,27 @@ class HostedGroupHolder {
     }
 
     /**
+     * @param mixed $databaseUser
+     */
+    public function setDatabaseUser($databaseUser)
+    {
+        $this->databaseUser = $databaseUser;
+    }
+
+    /**
      * @return mixed
      */
     public function getDatabasePassword()
     {
         return $this->databasePassword;
+    }
+
+    /**
+     * @param mixed $databasePassword
+     */
+    public function setDatabasePassword($databasePassword)
+    {
+        $this->databasePassword = $databasePassword;
     }
 
     /**

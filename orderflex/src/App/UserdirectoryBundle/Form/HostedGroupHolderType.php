@@ -34,30 +34,38 @@ class HostedGroupHolderType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add( 'id', HiddenType::class, array(
-            'label'=>false,
-            'required'=>false,
-            'attr' => array('class' => 'comment-field-id')
-        ));
+//        $builder->add( 'id', HiddenType::class, array(
+//            'label'=>false,
+//            'required'=>false,
+//            'attr' => array('class' => 'comment-field-id')
+//        ));
 
-        $builder->add( 'hostedUserGroups', EntityType::class, array(
-            'class' => HostedUserGroupList::class,
-            //'choice_label' => 'getTreeName',
-            'label'=>'Hosted User Group Type(s):',
-            'required'=> false,
-            //'multiple' => true,
-            //'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        if(0) {
+            //TODO: Error: The property  in class  can be defined with the methods add remove but the new value must be an array or an instance of \Traversable.
+            //Error: The property "hostedUserGroups" in class "App\UserdirectoryBundle\Entity\HostedGroupHolder"
+            // can be defined with the methods "addHostedUserGroup()", "removeHostedUserGroup()"
+            // but the new value must be an array or an instance of \Traversable.
+            //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups]" must be
+            //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups][]"
+            $builder->add('hostedUserGroups', EntityType::class, array(
+                'class' => HostedUserGroupList::class,
+                //'choice_label' => 'getTreeName',
+                'label' => 'Hosted User Group Type(s):',
+                'required' => false,
+                //'multiple' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         $builder->add('databaseHost',null,array(
             'label' => "Database Host (i.e. localhost):",
@@ -122,12 +130,12 @@ class HostedGroupHolderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\UserdirectoryBundle\Entity\HostedUserGroupList',
+            'data_class' => 'App\UserdirectoryBundle\Entity\HostedGroupHolder',
         ));
     }
 
     public function getBlockPrefix(): string
     {
-        return 'oleg_userdirectorybundle_hostedusergroups';
+        return 'oleg_userdirectorybundle_hostedgroupholder';
     }
 }
