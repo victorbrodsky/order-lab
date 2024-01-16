@@ -157,6 +157,10 @@ class HostedUserGroupList extends BaseCompositeNode
         return $this;
     }
 
+    public function getTenantUrl() {
+        return $this->getTreeAbbreviation("/");
+    }
+
 
     public function __toString()
     {

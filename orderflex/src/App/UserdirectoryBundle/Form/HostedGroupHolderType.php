@@ -88,7 +88,7 @@ class HostedGroupHolderType extends AbstractType
 
             $builder->add('hostedUserGroup', EntityType::class, array(
                 'class' => HostedUserGroupList::class,
-                //'choice_label' => 'getTreeName',
+                'choice_label' => 'getTenantUrl', //'getTreeName',
                 'label' => 'Hosted User Group Type(s):',
                 'required' => false,
                 //'multiple' => true,
