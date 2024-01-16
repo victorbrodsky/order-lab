@@ -47,33 +47,52 @@ class HostedGroupHolderType extends AbstractType
             // but the new value must be an array or an instance of \Traversable.
             //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups]" must be
             //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups][]"
-            $builder->add('hostedUserGroups', EntityType::class, array(
+//            $builder->add('hostedUserGroups', EntityType::class, array(
+//                'class' => HostedUserGroupList::class,
+//                //'choice_label' => 'getTreeName',
+//                'label' => 'Hosted User Group Type(s):',
+//                'required' => false,
+//                //'multiple' => true,
+//                //'multiple' => false,
+//                'attr' => array('class' => 'combobox combobox-width'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+
+//            $builder->add('hostedUserGroups', null, array(
+//                //'class' => HostedUserGroupList::class,
+//                //'choice_label' => 'getTreeName',
+//                'label' => 'Hosted User Group Type(s):',
+//                'required' => false,
+//                //'multiple' => true,
+//                'multiple' => false,
+//                'by_reference' => false,
+//                'attr' => array('class' => 'combobox'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+
+            $builder->add('hostedUserGroup', EntityType::class, array(
                 'class' => HostedUserGroupList::class,
                 //'choice_label' => 'getTreeName',
                 'label' => 'Hosted User Group Type(s):',
-                //'required' => false,
-                //'multiple' => true,
-                //'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-            ));
-
-            $builder->add('hostedUserGroups', null, array(
-                //'class' => HostedUserGroupList::class,
-                //'choice_label' => 'getTreeName',
-                'label' => 'Hosted User Group Type(s):',
                 'required' => false,
-                'multiple' => true,
-                //'multiple' => false,
-                'by_reference' => false,
+                //'multiple' => true,
+                'multiple' => false,
                 'attr' => array('class' => 'combobox'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')

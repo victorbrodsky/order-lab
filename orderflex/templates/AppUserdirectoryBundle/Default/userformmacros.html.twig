@@ -1297,8 +1297,11 @@
 
         {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
         {#{{ formmacros.field(formfield.id) }}#}
-        {% if formfield.hostedUserGroups is defined %}
-            {{ formmacros.field(formfield.hostedUserGroups) }}
+        {#{% if formfield.hostedUserGroups is defined %}#}
+            {#{{ formmacros.field(formfield.hostedUserGroups) }}#}
+        {#{% endif %}#}
+        {% if formfield.hostedUserGroup is defined %}
+            {{ formmacros.field(formfield.hostedUserGroup) }}
         {% endif %}
         {{ formmacros.field(formfield.databaseHost) }}
         {{ formmacros.field(formfield.databasePort) }}

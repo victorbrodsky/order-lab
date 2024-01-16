@@ -63,11 +63,12 @@ class HostedUserGroupList extends BaseCompositeNode
 //    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups', cascade: ['persist'])]
 //    private $serverNetworks;
 
-    #[ORM\JoinTable(name: 'user_hostedusergroup_hostedgroupholder')]
-    #[ORM\ManyToMany(targetEntity: HostedGroupHolder::class, inversedBy: 'hostedUserGroups')]
-    private $hostedGroupHolders;
+//    #[ORM\JoinTable(name: 'user_hostedusergroup_hostedgroupholder')]
+//    #[ORM\ManyToMany(targetEntity: HostedGroupHolder::class, inversedBy: 'hostedUserGroups')]
+//    private $hostedGroupHolders;
 
-    
+    #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'hostedUserGroup')]
+    private $hostedGroupHolders;
 
 
 

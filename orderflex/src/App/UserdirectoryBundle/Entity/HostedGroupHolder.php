@@ -52,8 +52,16 @@ class HostedGroupHolder {
 
     //Join column user_hostedgroupholder_hostedusergroup does not created?
     //#[ORM\JoinTable(name: 'user_hostedgroupholder_hostedusergroup')]
-    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, mappedBy: 'hostedGroupHolders', cascade: ['persist'])]
-    private $hostedUserGroups;
+//    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, mappedBy: 'hostedGroupHolders', cascade: ['persist'])]
+//    private $hostedUserGroups;
+
+//    #[ORM\ManyToOne(targetEntity: HostedUserGroupList::class)]
+//    #[ORM\JoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id')]
+//    private $hostedUserGroup;
+
+    #[ORM\ManyToOne(targetEntity: HostedUserGroupList::class, inversedBy: 'hostedGroupHolders')]
+    #[ORM\JoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', nullable: true)]
+    private $hostedUserGroup;
 
     //For this group holder add server parameters, footer parameters, etc
     //Add tenant's custom parameters such as page footer, list of accessible pages etc.
@@ -95,7 +103,7 @@ class HostedGroupHolder {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
 
-        $this->hostedUserGroups = new ArrayCollection();
+        //$this->hostedUserGroups = new ArrayCollection();
     }
 
 
@@ -167,33 +175,50 @@ class HostedGroupHolder {
     /**
      * @return mixed
      */
-    public function getHostedUserGroups()
+    public function getHostedUserGroup()
     {
-        return $this->hostedUserGroups;
+        return $this->hostedUserGroup;
     }
 
-    public function addHostedUserGroup( HostedUserGroupList $item )
+    /**
+     * @param mixed $hostedUserGroup
+     */
+    public function setHostedUserGroup($hostedUserGroup)
     {
-        //dump($item);
-        //exit('addHostedUserGroup');
-        if( !$this->hostedUserGroups->contains($item) ) {
-            $this->hostedUserGroups->add($item);
-            $item->addHostedGroupHolder($this);
-        }
-
-        return $this;
+        $this->hostedUserGroup = $hostedUserGroup;
     }
-    public function removeHostedUserGroup( HostedUserGroupList $item)
-    {
-        //dump($item);
-        //exit('removeHostedUserGroup');
-        if( $this->hostedUserGroups->contains($item) ) {
-            $this->hostedUserGroups->removeElement($item);
-            $item->removeHostedGroupHolder($this);
-        }
 
-        return $this;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getHostedUserGroups()
+//    {
+//        return $this->hostedUserGroups;
+//    }
+//    public function addHostedUserGroup( HostedUserGroupList $item )
+//    {
+//        //dump($item);
+//        //exit('addHostedUserGroup');
+//        if( !$this->hostedUserGroups->contains($item) ) {
+//            $this->hostedUserGroups->add($item);
+//            $item->addHostedGroupHolder($this);
+//        }
+//
+//        return $this;
+//    }
+//    public function removeHostedUserGroup( HostedUserGroupList $item)
+//    {
+//        //dump($item);
+//        //exit('removeHostedUserGroup');
+//        if( $this->hostedUserGroups->contains($item) ) {
+//            $this->hostedUserGroups->removeElement($item);
+//            $item->removeHostedGroupHolder($this);
+//        }
+//
+//        return $this;
+//    }
+
+
 
     /**
      * @return mixed
@@ -320,7 +345,7 @@ class HostedGroupHolder {
 //    }
 
     public function __toString() {
-        return "HostedGroupHolder:"."hostedUserGroups=".count($this->getHostedUserGroups())."<br>";
+        return "HostedGroupHolder:"."hostedUserGroup=".$this->getHostedUserGroup()."<br>";
     }
 
 } 
