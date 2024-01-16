@@ -50,7 +50,8 @@ class HostedGroupHolder {
     #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $serverNetwork;
 
-    #[ORM\JoinTable(name: 'user_hostedgroupholder_hostedusergroup')]
+    //Join column user_hostedgroupholder_hostedusergroup does not created?
+    //#[ORM\JoinTable(name: 'user_hostedgroupholder_hostedusergroup')]
     #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, mappedBy: 'hostedGroupHolders', cascade: ['persist'])]
     private $hostedUserGroups;
 
@@ -171,10 +172,10 @@ class HostedGroupHolder {
         return $this->hostedUserGroups;
     }
 
-    public function addHostedUserGroup( $item )
+    public function addHostedUserGroup( HostedUserGroupList $item )
     {
         //dump($item);
-        //exit('111');
+        //exit('addHostedUserGroup');
         if( !$this->hostedUserGroups->contains($item) ) {
             $this->hostedUserGroups->add($item);
             $item->addHostedGroupHolder($this);
@@ -182,8 +183,10 @@ class HostedGroupHolder {
 
         return $this;
     }
-    public function removeHostedUserGroup($item)
+    public function removeHostedUserGroup( HostedUserGroupList $item)
     {
+        //dump($item);
+        //exit('removeHostedUserGroup');
         if( $this->hostedUserGroups->contains($item) ) {
             $this->hostedUserGroups->removeElement($item);
             $item->removeHostedGroupHolder($this);

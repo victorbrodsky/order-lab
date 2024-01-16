@@ -40,7 +40,7 @@ class HostedGroupHolderType extends AbstractType
 //            'attr' => array('class' => 'comment-field-id')
 //        ));
 
-        if(0) {
+        if(1) {
             //TODO: Error: The property  in class  can be defined with the methods add remove but the new value must be an array or an instance of \Traversable.
             //Error: The property "hostedUserGroups" in class "App\UserdirectoryBundle\Entity\HostedGroupHolder"
             // can be defined with the methods "addHostedUserGroup()", "removeHostedUserGroup()"
@@ -51,10 +51,30 @@ class HostedGroupHolderType extends AbstractType
                 'class' => HostedUserGroupList::class,
                 //'choice_label' => 'getTreeName',
                 'label' => 'Hosted User Group Type(s):',
-                'required' => false,
+                //'required' => false,
                 //'multiple' => true,
-                'multiple' => false,
+                //'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('hostedUserGroups', null, array(
+                //'class' => HostedUserGroupList::class,
+                //'choice_label' => 'getTreeName',
+                'label' => 'Hosted User Group Type(s):',
+                'required' => false,
+                'multiple' => true,
+                //'multiple' => false,
+                'by_reference' => false,
+                'attr' => array('class' => 'combobox'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
