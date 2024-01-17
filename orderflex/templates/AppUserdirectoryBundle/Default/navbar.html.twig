@@ -237,6 +237,11 @@
                                     <li class="divider"></li>
                                     <li><a href="{{ path(employees_sitename~'_import_users_excel') }}">Import Users</a></li>
                                     <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
+                                    <li>
+                                        <a target="_blank"
+                                           href="{{ user_service_utility.getSiteParamListUrl('AuthServerNetworkList')|raw }}"
+                                        >Multi-tenancy management</a>
+                                    </li>
                                     <li class="divider"></li>
 
                                     {% if is_granted('ROLE_PLATFORM_ADMIN') %}

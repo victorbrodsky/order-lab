@@ -107,38 +107,38 @@ class HostedGroupHolderType extends AbstractType
         }
 
         $builder->add('databaseHost',null,array(
-            'label' => "Database Host (i.e. localhost):",
+            'label' => "Database Host (default: localhost):",
             'required' => false,
             'attr' => array('class'=>'form-control'),
         ));
 
         $builder->add('databasePort',null,array(
-            'label' => "Database Port (i.e. 5432):",
+            'label' => "Database Port (default: 5432):",
             'required' => false,
             'attr' => array('class'=>'form-control'),
         ));
 
         $builder->add('databaseName',null,array(
             'label' => "Database Name:",
-            'required' => false,
+            'required' => true,
             'attr' => array('class'=>'form-control'),
         ));
 
         $builder->add('databaseUser',null,array(
             'label' => "Database User:",
-            'required' => false,
-            'attr' => array('class'=>'form-control'),
+            'required' => true,
+            'attr' => array('class'=>'form-control', 'required'=>'required'),
         ));
 
         $builder->add('databasePassword',null,array(
             'label' => "Database Password:",
-            'required' => false,
-            'attr' => array('class'=>'form-control'),
+            'required' => true,
+            'attr' => array('class'=>'form-control', 'required'=>'required'),
         ));
 
         $builder->add('systemDb',null,array(
             'label' => "System DB (Use as a system DB to store multitenancy parameters):",
-            'required' => false,
+            'required' => true,
             'attr' => array('class'=>'form-control'),
         ));
 

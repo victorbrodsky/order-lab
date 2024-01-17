@@ -4090,6 +4090,31 @@ Pathology and Laboratory Medicine",
 
         return $url;
     }
+    public function getSiteParamListUrl( $listName ) {
+        //PlatformListManagerRootList find by ListObjectName and get LinkToListID
+        $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
+        if( !$listEntity ) {
+            return NULL;
+        }
+
+        $linkToListId = $listEntity->getLinkToListId();
+
+        if( !$linkToListId ) {
+            return NULL;
+        }
+
+        $url = $this->container->get('router')->generate(
+            //'platformlistmanager_edit',
+            'platform_list_manager',
+            array(
+                'listId' => $linkToListId,
+            )
+            //,
+            //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $url;
+    }
 
     //Used for list Excel generation 
     public function createtListExcelSpout( $repository, $entityClass, $search, $fileName ) {
@@ -4424,6 +4449,7 @@ Pathology and Laboratory Medicine",
     public function getEnvironments() {
         return array("live"=>"live", "test"=>"test", "dev"=>"dev");
     }
+
 
 //    public function updateSiteSettingParametersAfterRestore( $env, $exceptionUsers, $siteEmail ) {
 //        $logger = $this->container->get('logger');
