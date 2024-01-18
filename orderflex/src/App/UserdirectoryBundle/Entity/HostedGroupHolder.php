@@ -49,16 +49,7 @@ class HostedGroupHolder {
     #[ORM\ManyToOne(targetEntity: AuthServerNetworkList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $serverNetwork;
-
-    //Join column user_hostedgroupholder_hostedusergroup does not created?
-    //#[ORM\JoinTable(name: 'user_hostedgroupholder_hostedusergroup')]
-//    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, mappedBy: 'hostedGroupHolders', cascade: ['persist'])]
-//    private $hostedUserGroups;
-
-//    #[ORM\ManyToOne(targetEntity: HostedUserGroupList::class)]
-//    #[ORM\JoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id')]
-//    private $hostedUserGroup;
-
+    
     #[ORM\ManyToOne(targetEntity: HostedUserGroupList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', nullable: true)]
     private $hostedUserGroup;
@@ -102,8 +93,6 @@ class HostedGroupHolder {
     public function __construct( $author=null ) {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
-
-        //$this->hostedUserGroups = new ArrayCollection();
     }
 
 
@@ -187,38 +176,6 @@ class HostedGroupHolder {
     {
         $this->hostedUserGroup = $hostedUserGroup;
     }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getHostedUserGroups()
-//    {
-//        return $this->hostedUserGroups;
-//    }
-//    public function addHostedUserGroup( HostedUserGroupList $item )
-//    {
-//        //dump($item);
-//        //exit('addHostedUserGroup');
-//        if( !$this->hostedUserGroups->contains($item) ) {
-//            $this->hostedUserGroups->add($item);
-//            $item->addHostedGroupHolder($this);
-//        }
-//
-//        return $this;
-//    }
-//    public function removeHostedUserGroup( HostedUserGroupList $item)
-//    {
-//        //dump($item);
-//        //exit('removeHostedUserGroup');
-//        if( $this->hostedUserGroups->contains($item) ) {
-//            $this->hostedUserGroups->removeElement($item);
-//            $item->removeHostedGroupHolder($this);
-//        }
-//
-//        return $this;
-//    }
-
-
 
     /**
      * @return mixed
@@ -315,34 +272,7 @@ class HostedGroupHolder {
     {
         $this->systemDb = $systemDb;
     }
-
-
-
-
-//    public function getDocumentContainers()
-//    {
-//        return $this->documentContainers;
-//    }
-//    public function addDocumentContainer($item)
-//    {
-//        if( $item && !$this->documentContainers->contains($item) ) {
-//            $this->documentContainers->add($item);
-//            $item->setAttachmentContainer($this);
-//        }
-//    }
-//    public function removeDocumentContainer($item)
-//    {
-//        $this->documentContainers->removeElement($item);
-//    }
-//
-//    public function isEmpty() {
-//        foreach( $this->getDocumentContainers() as $documentContainer ) {
-//            if( count($documentContainer->getDocuments()) > 0 ) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
+    
 
     public function __toString() {
         return "HostedGroupHolder:"."hostedUserGroup=".$this->getHostedUserGroup()."<br>";

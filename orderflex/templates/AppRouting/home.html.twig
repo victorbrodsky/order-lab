@@ -41,13 +41,19 @@
                 {#<a href="{{ path('main_common_home') }}">main_common_home</a>#}
             {#</li>#}
 
-            <li class="list-group-item" >
-                <a href="c/wcm/pathology" target="_blank">c/wcm/pathology</a>
-            </li>
+            {% for multilocale in multilocales %}
+                <li class="list-group-item" >
+                    <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
+                </li>
+            {% endfor %}
 
-            <li class="list-group-item">
-                <a href="c/lmh/pathology" target="_blank">c/lmh/pathology</a>
-            </li>
+            {#<li class="list-group-item" >#}
+                {#<a href="c/wcm/pathology" target="_blank">c/wcm/pathology</a>#}
+            {#</li>#}
+
+            {#<li class="list-group-item">#}
+                {#<a href="c/lmh/pathology" target="_blank">c/lmh/pathology</a>#}
+            {#</li>#}
 
         </ul>
     </div>

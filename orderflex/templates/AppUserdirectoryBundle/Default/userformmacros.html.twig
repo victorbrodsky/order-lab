@@ -1231,12 +1231,7 @@
     </div>
 {% endmacro %}
 
-{#{% macro hostedGroupHoldersSection_TEST( hostedUserGroups, cycle, sitename, collapsein, title, usedata ) %}#}
-    {#hostedGroupHolders count={{ hostedGroupHolders|length }}#}
-    {#{{ formmacros.field(hostedUserGroups) }}#}
-{#{% endmacro %}#}
 {% macro hostedGroupHoldersSection( hostedGroupHolders, cycle, sitename, collapsein, title, usedata ) %}
-    {#2hostedGroupHoldersSection Section!!!#}
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
@@ -1295,11 +1290,6 @@
             </div>
         {% endif %}
 
-        {#{{ formmacros.field_notempty(formfield.country,cycle) }}#}
-        {#{{ formmacros.field(formfield.id) }}#}
-        {#{% if formfield.hostedUserGroups is defined %}#}
-            {#{{ formmacros.field(formfield.hostedUserGroups) }}#}
-        {#{% endif %}#}
         {% if formfield.hostedUserGroup is defined %}
             {{ formmacros.field(formfield.hostedUserGroup) }}
         {% endif %}

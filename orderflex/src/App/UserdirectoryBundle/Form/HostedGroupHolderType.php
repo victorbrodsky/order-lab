@@ -34,77 +34,24 @@ class HostedGroupHolderType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $builder->add( 'id', HiddenType::class, array(
-//            'label'=>false,
-//            'required'=>false,
-//            'attr' => array('class' => 'comment-field-id')
-//        ));
 
-        if(1) {
-            //TODO: Error: The property  in class  can be defined with the methods add remove but the new value must be an array or an instance of \Traversable.
-            //Error: The property "hostedUserGroups" in class "App\UserdirectoryBundle\Entity\HostedGroupHolder"
-            // can be defined with the methods "addHostedUserGroup()", "removeHostedUserGroup()"
-            // but the new value must be an array or an instance of \Traversable.
-            //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups]" must be
-            //name="oleg_userdirectorybundle_genericlist[hostedGroupHolders][1][hostedUserGroups][]"
-//            $builder->add('hostedUserGroups', EntityType::class, array(
-//                'class' => HostedUserGroupList::class,
-//                //'choice_label' => 'getTreeName',
-//                'label' => 'Hosted User Group Type(s):',
-//                'required' => false,
-//                //'multiple' => true,
-//                //'multiple' => false,
-//                'attr' => array('class' => 'combobox combobox-width'),
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist", "ASC")
-//                        ->setParameters(array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//            ));
-
-//            $builder->add('hostedUserGroups', null, array(
-//                //'class' => HostedUserGroupList::class,
-//                //'choice_label' => 'getTreeName',
-//                'label' => 'Hosted User Group Type(s):',
-//                'required' => false,
-//                //'multiple' => true,
-//                'multiple' => false,
-//                'by_reference' => false,
-//                'attr' => array('class' => 'combobox'),
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist", "ASC")
-//                        ->setParameters(array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//            ));
-
-            $builder->add('hostedUserGroup', EntityType::class, array(
-                'class' => HostedUserGroupList::class,
-                'choice_label' => 'getTenantUrl', //'getTreeName',
-                'label' => 'Hosted User Group Type(s):',
-                'required' => false,
-                //'multiple' => true,
-                'multiple' => false,
-                'attr' => array('class' => 'combobox'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-            ));
-        }
+        $builder->add('hostedUserGroup', EntityType::class, array(
+            'class' => HostedUserGroupList::class,
+            'choice_label' => 'getTenantUrl', //'getTreeName',
+            'label' => 'Hosted User Group Type(s):',
+            'required' => false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
         $builder->add('databaseHost',null,array(
             'label' => "Database Host (default: localhost):",
@@ -141,28 +88,6 @@ class HostedGroupHolderType extends AbstractType
             'required' => true,
             'attr' => array('class'=>'form-control'),
         ));
-
-//        $builder->add('documents', CollectionType::class, array(
-//            'entry_type' => DocumentType::class,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'required' => false,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__documentsid__',
-//        ));
-//
-//        $builder->add('comment',null,array(
-//            'label' => "Description:",
-//            'required' => false,
-//            'attr' => array('class'=>'form-control'),
-//        ));
-//
-//        $builder->add('catalog',null,array(
-//            'label' => "Catalog:",
-//            'required' => false,
-//            'attr' => array('class'=>'form-control'),
-//        ));
 
     }
 

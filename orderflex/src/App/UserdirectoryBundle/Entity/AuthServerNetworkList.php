@@ -35,36 +35,15 @@ class AuthServerNetworkList extends ListAbstract
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
-    //hostedUserGroup is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
-    //HostedUserGroupList attach here. Different user's groups can have different tenant ids
-//    #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
-//    #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\InverseJoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\HostedUserGroupList', cascade: ['persist', 'remove'])]
-//    #[ORM\OrderBy(['createdate' => 'DESC'])]
-//    private $hostedUserGroups;
-//    #[ORM\JoinTable(name: 'user_servernetwork_hostedusergroup')]
-//    #[ORM\ManyToMany(targetEntity: HostedUserGroupList::class, inversedBy: 'serverNetworks', cascade: ['persist'])]
-//    private $hostedUserGroups;
-
-    //Alternative implementation:
     //Add ManyToMany hostedGroup holders,
-    // each of this holder has many (or one?) HostedUserGroupList (nested tree) as url (c/wcm/pathology),
+    // each of this holder has one HostedUserGroupList (nested tree) as url (c/wcm/pathology),
     // server parameters, footer parameters, etc
     #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'serverNetwork', cascade: ['persist', 'remove'])]
     private $hostedGroupHolders;
 
-    //MOVED custom page parameters to HostedUserGroupList (Tenant ID)
-    //Homepage and About Us Page Content
-    //For example, if Server Role and Network Access field is set to "Internet (Hub)", the home page will look different
-    //the the home page for Internet (Solo)
-
 
     public function __construct($author=null) {
-
         parent::__construct($author);
-
-        //$this->hostedUserGroups = new ArrayCollection();
         $this->hostedGroupHolders = new ArrayCollection();
     }
 
@@ -86,32 +65,11 @@ class AuthServerNetworkList extends ListAbstract
     public function removeHostedGroupHolder($item)
     {
         if( $this->hostedGroupHolders->contains($item) ) {
-            $this->hostedGroupHolders->removeElement($item);
             //$item->setServerNetwork(NULL);
+            $this->hostedGroupHolders->removeElement($item);
         }
 
         return $this;
     }
-
-//    public function getHostedUserGroups()
-//    {
-//        return $this->hostedUserGroups;
-//    }
-//    public function addHostedUserGroup( $item )
-//    {
-//        if( !$this->hostedUserGroups->contains($item) ) {
-//            $this->hostedUserGroups->add($item);
-//        }
-//
-//        return $this;
-//    }
-//    public function removeHostedUserGroup($item)
-//    {
-//        if( $this->hostedUserGroups->contains($item) ) {
-//            $this->hostedUserGroups->removeElement($item);
-//        }
-//
-//        return $this;
-//    }
 
 }

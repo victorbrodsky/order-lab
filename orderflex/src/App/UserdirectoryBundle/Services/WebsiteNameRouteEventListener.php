@@ -92,9 +92,9 @@ class WebsiteNameRouteEventListener implements EventSubscriberInterface {
             //echo 'current tenantprefix='.$tenantprefix."<br>";
 
             if( !$tenantprefix ) {
-                $tenantprefix = 'c/lmh/pathology/';
-                $tenantprefix = 'c/wcm/pathology/';
-                $tenantprefix = 'pathology';
+                $tenantprefix = 'url1'; //'c/lmh/pathology/';
+                $tenantprefix = 'url2'; //'c/wcm/pathology/';
+                $tenantprefix = 'url3';
                 //echo "set parameter tenantprefix=" . $tenantprefix . "<br>";
                 $this->router->getContext()->setParameter('tenantprefix', $tenantprefix);
 

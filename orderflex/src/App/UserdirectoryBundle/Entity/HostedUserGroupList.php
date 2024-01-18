@@ -60,17 +60,8 @@ class HostedUserGroupList extends BaseCompositeNode
     //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     //private $organizationalGroupType;
 
-//    #[ORM\ManyToMany(targetEntity: AuthServerNetworkList::class, mappedBy: 'hostedUserGroups', cascade: ['persist'])]
-//    private $serverNetworks;
-
-//    #[ORM\JoinTable(name: 'user_hostedusergroup_hostedgroupholder')]
-//    #[ORM\ManyToMany(targetEntity: HostedGroupHolder::class, inversedBy: 'hostedUserGroups')]
-//    private $hostedGroupHolders;
-
     #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'hostedUserGroup')]
     private $hostedGroupHolders;
-
-
 
 
     public function __construct($author=null) {
@@ -80,61 +71,6 @@ class HostedUserGroupList extends BaseCompositeNode
         $this->hostedGroupHolders = new ArrayCollection();
     }
 
-
-//    /**
-//     * @param mixed $organizationalGroupType
-//     */
-//    public function setOrganizationalGroupType($organizationalGroupType)
-//    {
-//        $this->organizationalGroupType = $organizationalGroupType;
-//        $this->setLevel($organizationalGroupType->getLevel());
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getOrganizationalGroupType()
-//    {
-//        return $this->organizationalGroupType;
-//    }
-
-//    /**
-//     * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
-//     * @param mixed $parent
-//     */
-//    public function setParent(CompositeNodeInterface $parent = null)
-//    {
-//        $this->parent = $parent;
-//
-//        //change organizationalGroupType of this entity to the first child organizationalGroupType of the parent
-//        if( $parent && count($parent->getChildren()) > 0 ) {
-//            $firstSiblingOrgGroupType = $parent->getChildren()->first()->getOrganizationalGroupType();
-//            $this->setOrganizationalGroupType($firstSiblingOrgGroupType);
-//        }
-//    }
-
-//    public function getServerNetworks()
-//    {
-//        return $this->serverNetworks;
-//    }
-//    public function addServerNetwork( $item )
-//    {
-//        if( !$this->serverNetworks->contains($item) ) {
-//            $this->serverNetworks->add($item);
-//            $item->addHostedUserGroup($this);
-//        }
-//
-//        return $this;
-//    }
-//    public function removeServerNetwork($item)
-//    {
-//        if( $this->serverNetworks->contains($item) ) {
-//            $this->serverNetworks->removeElement($item);
-//            $item->removeHostedUserGroup($this);
-//        }
-//
-//        return $this;
-//    }
 
     public function getHostedGroupHolders()
     {

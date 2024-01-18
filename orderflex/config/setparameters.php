@@ -61,6 +61,29 @@ if( $useDb ) {
             return false;
         }
     }
+    if (!function_exists('getNestedTreeBreadCrumb')) {
+        function getNestedTreeBreadCrumb( $nodeId, $conn, $urlSlug='' )
+        {
+            //Get parent's abbreviation
+            $hostedGroupSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
+                " WHERE id=$nodeId ORDER BY orderinlist ASC";
+            $hostedGroup = $conn->executeQuery($hostedGroupSql);
+            $hostedGroupRows = $hostedGroup->fetchAllAssociative();
+            //dump($hostedGroupRows);
+            $parentId = $hostedGroupRows[0]['parent_id'];
+            $thisUrlSlug = $hostedGroupRows[0]['urlslug'];
+            //echo '$thisUrlSlug='.$thisUrlSlug."<br>";
+            if( $thisUrlSlug ) {
+                $urlSlug = $thisUrlSlug . '/' . $urlSlug;
+            }
+            if( $parentId ) {
+                $urlSlug = getNestedTreeBreadCrumb($parentId,$conn,$urlSlug);
+            }
+            $urlSlug = rtrim($urlSlug, "/");
+            //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
+            return $urlSlug;
+        }
+    }
 }
 
 //$dtz = $this->container->getParameter('default_time_zone');
@@ -87,8 +110,8 @@ if( !$connection_channel ) {
 //echo "password=".$password."<br>";
 
 //upload paths can't be NULL
-$tenantprefix = '';
-$container->setParameter('tenantprefix', $tenantprefix);
+//$tenantprefix = '';
+//$container->setParameter('tenantprefix', $tenantprefix);
 
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";
@@ -511,8 +534,39 @@ if( $conn ) {
 
                     //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
                     //TODO: make sure ParametersCompilerPass is working
-                    $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
-                    $container->setParameter('multilocales', $multilocales);
+                    //$multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
+                    //$container->setParameter('multilocales', $multilocales);
+
+                    $table = 'user_hostedgroupholder';
+                    $hostedGroupHolderSql = "SELECT * FROM " . $table . " WHERE servernetwork_id=$authServerNetworkId";
+                    $hostedGroupHolders = $conn->executeQuery($hostedGroupHolderSql);
+                    $hostedGroupHolderRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
+
+                    if(1) {
+                        $tenantUrlArr = array();
+                        foreach ($hostedGroupHolderRows as $hostedGroupHolderRow) {
+                            //dump($hostedGroupHolderRow);
+                            //$hostedUserGroupId = getDBParameter($hostedGroupHolderRow, null, 'hostedusergroup_id');
+                            $hostedUserGroupId = $hostedGroupHolderRow['hostedusergroup_id'];
+                            echo "\n<br>" . "hostedUserGroupId=$hostedUserGroupId";
+                            //Get parent's abbreviation
+//                            $hostedGroupSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
+//                                " WHERE id=$hostedUserGroupId ORDER BY orderinlist ASC";
+//                            $hostedGroup = $conn->executeQuery($hostedGroupSql);
+//                            $hostedGroupRows = $hostedGroup->fetchAllAssociative(); //fetch();
+
+                            $tenantUrl = getNestedTreeBreadCrumb($hostedUserGroupId,$conn);
+                            echo "\n<br>" . "tenantUrl=$tenantUrl";
+                            $tenantUrlArr[] = $tenantUrl;
+                        }
+                        if( count($tenantUrlArr) > 0 ) {
+                            $multilocales = implode('|',$tenantUrlArr);
+                            echo "\n<br>" . "multilocales=$multilocales";
+                            $container->setParameter('multilocales', 'main|'.$multilocales);
+                            $container->setParameter('multilocales-urls', $multilocales);
+                        }
+                        exit("\n<br>".'user_hostedgroupholder');
+                    }
 
                     //$container->setParameter('seclocales', $multilocales."(%localedel%)");
 //                    //Load security's access_control yaml for multitatncy

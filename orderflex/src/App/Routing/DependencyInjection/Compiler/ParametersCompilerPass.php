@@ -81,7 +81,7 @@ class ParametersCompilerPass implements CompilerPassInterface
             $container->setParameter('defaultlocale', 'main');
             $container->setParameter('locdel', '/'); //locale delimeter '/'
 
-            $multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
+            $multilocales = 'main|url1|url2';
             $container->setParameter('multilocales', $multilocales);
 
 //            $configDirectory = __DIR__.'/../../../../../config/packages/';
