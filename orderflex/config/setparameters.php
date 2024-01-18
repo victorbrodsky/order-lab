@@ -70,6 +70,7 @@ if( $useDb ) {
             $hostedGroup = $conn->executeQuery($hostedGroupSql);
             $hostedGroupRows = $hostedGroup->fetchAllAssociative();
             //dump($hostedGroupRows);
+            $id = $hostedGroupRows[0]['id'];
             $parentId = $hostedGroupRows[0]['parent_id'];
             $thisUrlSlug = $hostedGroupRows[0]['urlslug'];
             //echo '$thisUrlSlug='.$thisUrlSlug."<br>";
@@ -81,6 +82,15 @@ if( $useDb ) {
             }
             $urlSlug = rtrim($urlSlug, "/");
             //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
+
+//            //Set id of this hosted user group
+//            $container->setParameter($urlSlug."-id",$id);
+//            $container->setParameter($urlSlug."-databaseHost",      $hostedGroupRows[0]['databaseHost']);
+//            $container->setParameter($urlSlug."-databasePort",      $hostedGroupRows[0]['databasePort']);
+//            $container->setParameter($urlSlug."-databaseName",      $hostedGroupRows[0]['databaseName']);
+//            $container->setParameter($urlSlug."-databaseUser",      $hostedGroupRows[0]['databaseUser']);
+//            $container->setParameter($urlSlug."-databasePassword",  $hostedGroupRows[0]['databasePassword']);
+
             return $urlSlug;
         }
     }
@@ -565,6 +575,14 @@ if( $conn ) {
                             $tenantUrl = getNestedTreeBreadCrumb($hostedUserGroupId,$conn);
                             echo "\n<br>" . "tenantUrl=$tenantUrl";
                             $tenantUrlArr[] = $tenantUrl;
+
+                            //Set id of this hosted user group
+                            $container->setParameter($tenantUrl."-id",                $hostedGroupHolderRow['id']);
+                            $container->setParameter($tenantUrl."-databaseHost",      $hostedGroupHolderRow['databasehost']);
+                            $container->setParameter($tenantUrl."-databasePort",      $hostedGroupHolderRow['databaseport']);
+                            $container->setParameter($tenantUrl."-databaseName",      $hostedGroupHolderRow['databasename']);
+                            $container->setParameter($tenantUrl."-databaseUser",      $hostedGroupHolderRow['databaseuser']);
+                            $container->setParameter($tenantUrl."-databasePassword",  $hostedGroupHolderRow['databasepassword']);
                         }
                         if( count($tenantUrlArr) > 0 ) {
 

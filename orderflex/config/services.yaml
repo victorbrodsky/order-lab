@@ -143,6 +143,7 @@ services:
         arguments:
             $requestStack: '@request_stack'
             $container: '@service_container'
+            $em: '@doctrine.orm.entity_manager'
             #$multitenancy: '%multitenancy%'
             #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
 
