@@ -89,6 +89,18 @@ class HostedGroupHolderType extends AbstractType
             'attr' => array('class'=>'form-control'),
         ));
 
+        $builder->add('enabled',null,array(
+            'label' => "Enabled:",
+            'required' => true,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add('orderinlist',null,array(
+            'label' => "Display Order:",
+            'required' => true,
+            'attr' => array('class'=>'form-control'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -46,6 +46,9 @@ class HostedGroupHolder {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdate;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $orderinlist;
+
     #[ORM\ManyToOne(targetEntity: AuthServerNetworkList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $serverNetwork;
@@ -86,6 +89,11 @@ class HostedGroupHolder {
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $systemDb;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $enabled;
+
+
+
     //If $serviceDb is true:
     //Footer parameters for home page
 
@@ -93,6 +101,8 @@ class HostedGroupHolder {
     public function __construct( $author=null ) {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
+        //$this->setOrderinlist(-1);
+        $this->setEnabled(false);
     }
 
 
@@ -272,7 +282,40 @@ class HostedGroupHolder {
     {
         $this->systemDb = $systemDb;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getOrderinlist()
+    {
+        return $this->orderinlist;
+    }
+
+    /**
+     * @param mixed $orderinlist
+     */
+    public function setOrderinlist($orderinlist)
+    {
+        $this->orderinlist = $orderinlist;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param mixed $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+
 
     public function __toString() {
         return "HostedGroupHolder:"."hostedUserGroup=".$this->getHostedUserGroup()."<br>";

@@ -77,12 +77,29 @@ class DatabaseConnectionFactory extends ConnectionFactory
 //            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
 //        }
 
-        if( $uri && str_contains($uri, 'c/lmh/pathology') ) {
-            $dbName = 'Tenant2';
-            $params['dbname'] = $dbName;
-        } else {
-            //don't change default dbname
+        $multilocales = $this->container->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
+        $multilocalesUrlArr = explode("|", $multilocales);
+
+        foreach($multilocalesUrlArr as $multilocalesUrl) {
+            //$multilocalesUrl = 'c/lmh/pathology'
+            if( $uri && str_contains($uri, $multilocalesUrl) ) {
+                $strArray = explode('/',$multilocalesUrl);
+                $lastElement = end($strArray);
+                //echo "lastElement=$lastElement <br>";
+                //Find HostedUserGroupList by name=$lastElement
+                $dbName = 'Tenant2';
+                $params['dbname'] = $dbName;
+            } else {
+                //don't change default dbname
+            }
         }
+
+//        if( $uri && str_contains($uri, 'c/lmh/pathology') ) {
+//            $dbName = 'Tenant2';
+//            $params['dbname'] = $dbName;
+//        } else {
+//            //don't change default dbname
+//        }
 
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         //return $this->wrappedConnectionFactory->createConnection($params, $config, $eventManager, $mappingTypes);

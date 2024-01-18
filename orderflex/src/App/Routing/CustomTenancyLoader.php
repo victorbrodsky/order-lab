@@ -69,6 +69,7 @@ class CustomTenancyLoader extends Loader {
 
         $resource = $configDirectory.$config;
         //echo $multitenancy.": add resource=".$resource."<br>";
+        //exit('CustomTenancyLoader');
 
         $type = 'yaml';
 

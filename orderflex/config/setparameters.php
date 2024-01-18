@@ -66,7 +66,7 @@ if( $useDb ) {
         {
             //Get parent's abbreviation
             $hostedGroupSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
-                " WHERE id=$nodeId ORDER BY orderinlist ASC";
+                " WHERE id=$nodeId AND (type='default' OR type='user-added')";
             $hostedGroup = $conn->executeQuery($hostedGroupSql);
             $hostedGroupRows = $hostedGroup->fetchAllAssociative();
             //dump($hostedGroupRows);
@@ -163,6 +163,7 @@ $container->setParameter('defaultlocale', $defaultLocale);
 
 //'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
 $multilocales = '';
+//$multilocales = 'en';
 $container->setParameter('multilocales', $multilocales);
 $container->setParameter('locdel', '');
 
@@ -172,6 +173,8 @@ $container->setParameter('locdel', '');
 // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
 $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
 $container->setParameter('multitenancy', $multitenancy);
+
+$container->setParameter('multilocales-urls', '');
 /////// EOF Set default container parameters for multitenancy ///////
 
 $config = new \Doctrine\DBAL\Configuration();
@@ -526,11 +529,11 @@ if( $conn ) {
                 }
 
                 if( $authServerNetworkName == 'Internet (Hub)' ) {
-                    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
-                    $container->setParameter('multitenancy', $multitenancy);
-
-                    $container->setParameter('defaultlocale', 'main');
-                    $container->setParameter('locdel', '/'); //locale delimeter '/'
+//                    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+//                    $container->setParameter('multitenancy', $multitenancy);
+//
+//                    $container->setParameter('defaultlocale', 'main');
+//                    $container->setParameter('locdel', '/'); //locale delimeter '/'
 
                     //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
                     //TODO: make sure ParametersCompilerPass is working
@@ -538,7 +541,11 @@ if( $conn ) {
                     //$container->setParameter('multilocales', $multilocales);
 
                     $table = 'user_hostedgroupholder';
-                    $hostedGroupHolderSql = "SELECT * FROM " . $table . " WHERE servernetwork_id=$authServerNetworkId";
+                    $hostedGroupHolderSql = "SELECT * FROM " . $table .
+                        " WHERE servernetwork_id=$authServerNetworkId"
+                        ." AND enabled=TRUE"
+                        ." ORDER BY orderinlist ASC" //lower on top
+                    ;
                     $hostedGroupHolders = $conn->executeQuery($hostedGroupHolderSql);
                     $hostedGroupHolderRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
 
@@ -560,12 +567,19 @@ if( $conn ) {
                             $tenantUrlArr[] = $tenantUrl;
                         }
                         if( count($tenantUrlArr) > 0 ) {
+
+                            $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+                            $container->setParameter('multitenancy', $multitenancy);
+
+                            $container->setParameter('defaultlocale', 'main');
+                            $container->setParameter('locdel', '/'); //locale delimeter '/'
+
                             $multilocales = implode('|',$tenantUrlArr);
                             echo "\n<br>" . "multilocales=$multilocales";
                             $container->setParameter('multilocales', 'main|'.$multilocales);
                             $container->setParameter('multilocales-urls', $multilocales);
                         }
-                        exit("\n<br>".'user_hostedgroupholder');
+                        //exit("\n<br>".'user_hostedgroupholder');
                     }
 
                     //$container->setParameter('seclocales', $multilocales."(%localedel%)");
@@ -584,6 +598,13 @@ if( $conn ) {
             //$container->setParameter('defaultlocale', 'main');
             //$container->setParameter('locdel', '/'); //locale delimeter '/'
             /////////////// ROF MOVED TO ParametersCompilerPass ///////////////
+            //$container->setParameter('multilocales', 'en');
+//            echo "<br>".
+//                " locdel=".$container->getParameter('locdel').
+//                ", multilocales=".$container->getParameter('multilocales').
+//                ", _locale=".$container->getParameter('locale').
+//                "<br>";
+            //exit('111');
 
             //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
             //$router->getContext()->setParameter('tenantprefix', $tenantprefix);

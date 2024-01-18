@@ -10,7 +10,8 @@ security:
         #{tenantprefix}/ %tenantprefix%
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)scan
+            #pattern: ^/(%multilocales%)(%locdel%)scan
+            pattern: ^/scan
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -27,7 +28,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)scan
+                #path:     /(%multilocales%)(%locdel%)scan
+                path:     /scan
 #                always_remember_me: true
 
         ldap_employees_firewall:
