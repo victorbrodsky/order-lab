@@ -589,12 +589,14 @@ if( $conn ) {
                             $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
                             $container->setParameter('multitenancy', $multitenancy);
 
-                            $container->setParameter('defaultlocale', 'main');
+                            //$container->setParameter('defaultlocale', 'main');
+                            $container->setParameter('defaultlocale', 'system');
                             $container->setParameter('locdel', '/'); //locale delimeter '/'
 
                             $multilocales = implode('|',$tenantUrlArr);
                             echo "\n<br>" . "multilocales=$multilocales";
-                            $container->setParameter('multilocales', 'main|'.$multilocales);
+                            //$container->setParameter('multilocales', 'main|'.$multilocales);
+                            $container->setParameter('multilocales', 'system|'.$multilocales);
                             $container->setParameter('multilocales-urls', $multilocales);
                         }
                         //exit("\n<br>".'user_hostedgroupholder');
