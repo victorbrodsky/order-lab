@@ -60,9 +60,17 @@ https://blog.dixo.net/2015/02/dynamic-configuration-of-doctrine-and-other-servic
 symfony decorator doctrine.dbal.connection_factory
 https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
 
+System DB
 php bin/console doctrine:database:create --connection=systemdb
 php bin/console doctrine:schema:update --em=systemdb
 php bin/console doctrine:migration:status --em=systemdb
 php bin/console doctrine:migration:migrate --em=systemdb
 php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
 php bin/console doctrine:migration:version --em=systemdb --add --all
+
+TODO:
+move interface "Server Instance:" -> "Server Network Accessibility and Role:" from default DB to system DB
+move interface "Multi-Tenancy Management" from default DB to system DB
+in setparameters.php use user_authservernetworklist from system DB
+
+
