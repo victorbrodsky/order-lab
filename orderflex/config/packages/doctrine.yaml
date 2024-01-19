@@ -51,6 +51,15 @@ doctrine:
                 user:     '%database_user_external%'
                 password: '%database_password_external%'
                 charset:  UTF8
+            #system DB which will be used for multitenancy
+            systemdb:
+                driver:   '%database_driver_systemdb%'
+                host:     '%database_host_systemdb%'
+                port:     '%database_port_systemdb%'
+                dbname:   '%database_name_systemdb%'
+                user:     '%database_user_systemdb%'
+                password: '%database_password_systemdb%'
+                charset:  UTF8
     orm:
         #auto_generate_proxy_classes: '%kernel.debug%'
         #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
@@ -158,6 +167,9 @@ doctrine:
                         YEAR: DoctrineExtensions\Query\Postgresql\Year
             external:
                 connection: external
+
+            systemdb:
+                connection: systemdb
 
 
 #when@test:

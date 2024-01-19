@@ -94,42 +94,42 @@ class DatabaseConnectionFactory extends ConnectionFactory
                 //$entities = $em->getRepository(HostedGroupHolder::class)->findOneByHostedUserGroup();
                 //TODO: connect to the system DB
 
-                if(0) {
-                    $repository = $this->em->getRepository(HostedGroupHolder::class);
-                    $dql = $repository->createQueryBuilder("holder");
-                    $dql->leftJoin('holder.hostedUserGroup', 'hostedUserGroup');
-                    $dql->andWhere("hostedUserGroup.urlSlug = :urlSlug");
-                    $queryParameters['urlSlug'] = $urlSlug;
-                    $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-                    $query->setParameters($queryParameters);
-                    $query->setMaxResults(1);
-                    $hostedGroupHolder = $query->getOneOrNullResult();
-
-                    if ($hostedGroupHolder) {
-                        $dbHost = $hostedGroupHolder->getDatabaseHost();
-                        $dbPort = $hostedGroupHolder->getDatabasePort();
-                        $dbName = $hostedGroupHolder->getDatabaseName();
-                        $dbUser = $hostedGroupHolder->getDatabaseUser();
-                        $dbPassword = $hostedGroupHolder->getDatabasePassword();
-                        $dbEnabled = $hostedGroupHolder->getEnabled();
-
-                        if ($dbEnabled === true && $dbName && $dbUser && $dbPassword) {
-                            if (!$dbHost) {
-                                $dbHost = 'localhost';
-                            }
-                            if (!$dbPort) {
-                                $dbPort = '5432';
-                            }
-
-                            //$params['host'] = $dbHost;
-                            //$params['port'] = $dbPort;
-                            $params['dbname'] = $dbName;
-                            //$params['user'] = $dbName;
-                            //$params['password'] = $dbName;
-                            //$params['driver'] = $dbDriver;
-                        }
-                    }
-                }//if 0
+//                if(0) {
+//                    $repository = $this->em->getRepository(HostedGroupHolder::class);
+//                    $dql = $repository->createQueryBuilder("holder");
+//                    $dql->leftJoin('holder.hostedUserGroup', 'hostedUserGroup');
+//                    $dql->andWhere("hostedUserGroup.urlSlug = :urlSlug");
+//                    $queryParameters['urlSlug'] = $urlSlug;
+//                    $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+//                    $query->setParameters($queryParameters);
+//                    $query->setMaxResults(1);
+//                    $hostedGroupHolder = $query->getOneOrNullResult();
+//
+//                    if ($hostedGroupHolder) {
+//                        $dbHost = $hostedGroupHolder->getDatabaseHost();
+//                        $dbPort = $hostedGroupHolder->getDatabasePort();
+//                        $dbName = $hostedGroupHolder->getDatabaseName();
+//                        $dbUser = $hostedGroupHolder->getDatabaseUser();
+//                        $dbPassword = $hostedGroupHolder->getDatabasePassword();
+//                        $dbEnabled = $hostedGroupHolder->getEnabled();
+//
+//                        if ($dbEnabled === true && $dbName && $dbUser && $dbPassword) {
+//                            if (!$dbHost) {
+//                                $dbHost = 'localhost';
+//                            }
+//                            if (!$dbPort) {
+//                                $dbPort = '5432';
+//                            }
+//
+//                            //$params['host'] = $dbHost;
+//                            //$params['port'] = $dbPort;
+//                            $params['dbname'] = $dbName;
+//                            //$params['user'] = $dbName;
+//                            //$params['password'] = $dbName;
+//                            //$params['driver'] = $dbDriver;
+//                        }
+//                    }
+//                }//if 0
                 $params = $this->getConnectionParams($multilocalesUrl);
 
                 //$dbName = 'Tenant2';
