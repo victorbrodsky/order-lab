@@ -3716,6 +3716,8 @@ class TransResImportData
         $currentDate = date('Y-m-d H:i:s');
         $newline = "\n\r";
 
+        $previousRequestId = null;
+
         //for each request in excel (start at row 2)
         for( $row = $startRaw; $row <= $limitRow; $row++ ) {
 
@@ -3737,8 +3739,14 @@ class TransResImportData
             //dump($rowData);
             //exit('111');
 
-            $requestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
-            $requestID = '20489'; //test
+            $thisRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
+            //$thisRequestID = '20489'; //test
+
+            if( $thisRequestID ) {
+                $requestID = $thisRequestID;
+            } else {
+                $requestID = $previousRequestId;
+            }
 
             //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
             $transresRequest = $em->getRepository(TransResRequest::class)->findOneById($requestID);
@@ -3747,9 +3755,12 @@ class TransResImportData
             }
 
             $comment = $transresRequest->getComment();
-            if( $comment && str_contains($comment,"Added by 2023_IHC_BH.xlsx") ) {
-                //skip
-                continue;
+            if( $comment && str_contains($comment,"Added by 2023_IHC_BH") ) {
+                if( !$thisRequestID ) {
+                    //comment might be already exists from the previous row + current row is continu of the previous row
+                    //skip
+                    continue;
+                }
             }
 
             $projectId = $this->getValueByHeaderName('Project', $rowData, $headers);
@@ -3762,15 +3773,10 @@ class TransResImportData
             $abName = $this->getValueByHeaderName('Ab name', $rowData, $headers);
             $abcompany = $this->getValueByHeaderName('Ab company', $rowData, $headers);
             $catN = $this->getValueByHeaderName('Cat#', $rowData, $headers);
-            //Host
             $host = $this->getValueByHeaderName('Host', $rowData, $headers);
-            //Condition
             $condition = $this->getValueByHeaderName('Condition', $rowData, $headers);
-            //Note
             $note = $this->getValueByHeaderName('Note', $rowData, $headers);
-            //Date done
             $dateDone = $this->getValueByHeaderName('Date done', $rowData, $headers);
-            //TAT
             $tat = $this->getValueByHeaderName('TAT', $rowData, $headers);
 
             $requestID = trim((string)$requestID);
@@ -3820,8 +3826,9 @@ class TransResImportData
 
             if( $thisProjectId != $projectId ) {
                 echo "thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId .  "] <br>";
+                exit("Project ID in this file does not match the Request's project ID in DB");
             } else {
-                echo "thisProjectId=[" . $thisProjectId . "] " . '==' . " projectId=[" . $projectId .  "] <br>";
+                //echo "thisProjectId=[" . $thisProjectId . "] " . '==' . " projectId=[" . $projectId .  "] <br>";
             }
 
             //$rowDataStr = "rowDataStr";// implode(";",$rowData);
@@ -3854,7 +3861,7 @@ class TransResImportData
 
             //dump($rowData);
             echo "comment=$comment <br>";
-            //$transresRequest->setComment();
+            //$transresRequest->setComment($comment);
 
 
         }//for
