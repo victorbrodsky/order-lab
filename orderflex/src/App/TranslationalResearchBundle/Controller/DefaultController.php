@@ -3338,5 +3338,25 @@ class DefaultController extends OrderAbstractController
 
         exit('111');
     }
+
+    #[Route(path: '/populate-project-comment-ihc/', name: 'translationalresearch_populate_project_comment_ihc', methods: ['GET'])]
+    public function populateProjectCommentAction( Request $request ) {
+        //exit("populateProjectCommentAction not allowed");
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $importUtil = $this->container->get('transres_import');
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        echo '$projectDir='.$projectDir.'<br>';
+        $filename = $projectDir . DIRECTORY_SEPARATOR. '..' . DIRECTORY_SEPARATOR . 'importLists'.DIRECTORY_SEPARATOR.
+            '2023_IHC_BH_single.xls';
+        echo '$filename='.$filename.'<br>';
+
+        $importUtil->populateProjectComment($filename,$startRaw=1,$endRow=1400);
+
+        exit('end of populateProjectCommentAction');
+    }
     
 }
