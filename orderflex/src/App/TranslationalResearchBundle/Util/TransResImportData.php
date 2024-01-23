@@ -3741,7 +3741,7 @@ class TransResImportData
 
             $thisRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
             //$thisRequestID = '20489'; //test
-            echo "Original thisRequestID=$thisRequestID <br>";
+            echo "<br>$count: Original thisRequestID=$thisRequestID <br>";
 
             if( $thisRequestID ) {
                 //remove -i and _N
@@ -3793,7 +3793,7 @@ class TransResImportData
 
             $requestID = trim((string)$requestID);
             //$requestID = $requestID."0000000"; //test
-            echo "<br>" . $count . ": requestID=[" . $requestID . "]" . "; projectId=[" . $projectId .  "] <br>";
+            echo "requestID=[" . $requestID . "]" . "; projectId=[" . $projectId .  "] <br>";
 
             ////// Convert Dates ///////
             $dateSubmitted = intval($dateSubmitted);
