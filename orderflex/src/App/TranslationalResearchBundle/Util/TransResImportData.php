@@ -3741,7 +3741,19 @@ class TransResImportData
 
             $thisRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
             //$thisRequestID = '20489'; //test
+            echo "Original thisRequestID=$thisRequestID <br>";
 
+            if( $thisRequestID ) {
+                //remove -i and _N
+                $thisRequestID = str_replace('-i', $thisRequestID);
+                $thisRequestID = str_replace('_N', $thisRequestID);
+                //check if integer
+                # Check if your variable is an integer
+                if( filter_var($thisRequestID, FILTER_VALIDATE_INT) === false ) {
+                    echo "Your variable is not an integer <br>";
+                    $thisRequestID = null;
+                }
+            }
             if( $thisRequestID ) {
                 $requestID = $previousRequestId = $thisRequestID;
             } else {
