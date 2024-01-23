@@ -3750,13 +3750,15 @@ class TransResImportData
                 //check if integer
                 # Check if your variable is an integer
                 if( filter_var($thisRequestID, FILTER_VALIDATE_INT) === false ) {
-                    echo "Your variable is not an integer <br>";
+                    echo "$thisRequestID is not an integer <br>";
                     $thisRequestID = null;
                 }
             }
+            echo "thisRequestID=$thisRequestID <br>";
             if( $thisRequestID ) {
                 $requestID = $previousRequestId = $thisRequestID;
             } else {
+                echo "Use previous request ID=$requestID <br>";
                 $requestID = $previousRequestId;
             }
 
