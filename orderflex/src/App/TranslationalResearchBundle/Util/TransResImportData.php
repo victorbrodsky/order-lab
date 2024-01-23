@@ -3743,7 +3743,7 @@ class TransResImportData
             //$thisRequestID = '20489'; //test
 
             if( $thisRequestID ) {
-                $requestID = $thisRequestID;
+                $requestID = $previousRequestId = $thisRequestID;
             } else {
                 $requestID = $previousRequestId;
             }
