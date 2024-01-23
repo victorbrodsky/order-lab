@@ -3839,7 +3839,7 @@ class TransResImportData
             }
 
             if( $projectId && str_contains($projectId,$thisProjectId) === false ) {
-                if( !$thisRequestID ) {
+                if( $thisRequestID ) {
                     echo "thisRequestID=$thisRequestID: thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
                     exit("Project ID in this file does not match the Request's project ID in DB");
                 }
