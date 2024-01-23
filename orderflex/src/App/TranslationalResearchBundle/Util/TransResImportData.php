@@ -3750,7 +3750,7 @@ class TransResImportData
                 //check if integer
                 # Check if your variable is an integer
                 if( filter_var($thisRequestID, FILTER_VALIDATE_INT) === false ) {
-                    echo "$thisRequestID is not an integer <br>";
+                    echo "[$thisRequestID] is not an integer <br>";
                     $thisRequestID = null;
                 }
             }
@@ -3840,7 +3840,7 @@ class TransResImportData
 
             if( $projectId && str_contains($projectId,$thisProjectId) === false ) {
                 if( !$thisRequestID ) {
-                    echo "thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
+                    echo "thisRequestID=$thisRequestID: thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
                     exit("Project ID in this file does not match the Request's project ID in DB");
                 }
             } else {
