@@ -3724,7 +3724,7 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $row > 6 ) {
+            if( $row > 5 ) {
                 exit("row limit $row");
             }
 
@@ -3883,7 +3883,7 @@ class TransResImportData
 
             //dump($rowData);
             echo "comment=$comment <br>";
-            //$transresRequest->setComment($comment);
+            $transresRequest->setComment($comment);
 
 
         }//for
