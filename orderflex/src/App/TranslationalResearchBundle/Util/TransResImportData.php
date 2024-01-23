@@ -3653,7 +3653,8 @@ class TransResImportData
         //$userSecUtil = $this->container->get('user_security_utility');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $logger = $this->container->get('logger');
-        $em = $this->em;
+
+        $eventType = "Request Updated";
 
         //$userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
 
@@ -3698,8 +3699,6 @@ class TransResImportData
 
         $this->headerMapArr = $this->getHeaderMap($headers);
 
-        $count = 0;
-
         $limitRow = $highestRow;
         if( $endRaw && $endRaw <= $highestRow ) {
             $limitRow = $endRaw;
@@ -3717,6 +3716,8 @@ class TransResImportData
         $newline = "\n\r";
 
         $previousRequestId = null;
+        $batchSize = 20;
+        $count = 0;
 
         //for each request in excel (start at row 2)
         for( $row = $startRaw; $row <= $limitRow; $row++ ) {
@@ -3763,7 +3764,7 @@ class TransResImportData
             }
 
             //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
-            $transresRequest = $em->getRepository(TransResRequest::class)->findOneById($requestID);
+            $transresRequest = $this->em->getRepository(TransResRequest::class)->findOneById($requestID);
             if( !$transresRequest ) {
                 exit("Request not found by ID ".$requestID);
             }
@@ -3878,14 +3879,22 @@ class TransResImportData
                 $prefix = " (use previous request $requestID)";
             }
             $comment = $comment . $newline .
-                "Added by 2023_IHC_BH.xlsx on " . $currentDate . $prefix .
+                "Added by 2023_IHC_BH on " . $currentDate . $prefix .
                 ": " . $rowDataStr;
 
             //dump($rowData);
             echo "comment=$comment <br>";
             $transresRequest->setComment($comment);
 
+            $msg = "Comment of the work request $requestID has been updated by 2023_IHC_BH";
+            $transresUtil->setEventLog($thisProject,$eventType,$msg);
+
+            if( ($count % $batchSize) === 0 ) {
+                $this->em->flush();
+            }
 
         }//for
+
+        $this->em->flush();
     }
 }
