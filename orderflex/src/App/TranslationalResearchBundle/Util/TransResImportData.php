@@ -3723,9 +3723,9 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $row > 9 ) {
-                exit("row limit $row");
-            }
+            //if( $row > 9 ) {
+            //    exit("row limit $row");
+            //}
 
             //$commentArr = array();
 
