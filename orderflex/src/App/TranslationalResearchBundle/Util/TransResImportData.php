@@ -3770,7 +3770,7 @@ class TransResImportData
 
             $comment = $transresRequest->getComment();
             if( $comment && str_contains($comment,"Added by 2023_IHC_BH") ) {
-                if( !$thisRequestID ) {
+                if( $thisRequestID ) {
                     //comment might be already exists from the previous row + current row is continu of the previous row
                     //skip
                     echo "Skip requestID=$requestID <br>";
