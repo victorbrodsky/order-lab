@@ -3837,8 +3837,10 @@ class TransResImportData
             }
 
             if( $projectId && str_contains($projectId,$thisProjectId) === false ) {
-                echo "thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
-                exit("Project ID in this file does not match the Request's project ID in DB");
+                if( !$thisRequestID ) {
+                    echo "thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
+                    exit("Project ID in this file does not match the Request's project ID in DB");
+                }
             } else {
                 //echo "thisProjectId=[" . $thisProjectId . "] " . '==' . " projectId=[" . $projectId .  "] <br>";
             }
