@@ -3745,8 +3745,8 @@ class TransResImportData
 
             if( $thisRequestID ) {
                 //remove -i and _N
-                $thisRequestID = str_replace('-i', $thisRequestID);
-                $thisRequestID = str_replace('_N', $thisRequestID);
+                $thisRequestID = str_replace('-i','',$thisRequestID);
+                $thisRequestID = str_replace('_N','',$thisRequestID);
                 //check if integer
                 # Check if your variable is an integer
                 if( filter_var($thisRequestID, FILTER_VALIDATE_INT) === false ) {
