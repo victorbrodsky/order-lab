@@ -3773,6 +3773,7 @@ class TransResImportData
                 if( !$thisRequestID ) {
                     //comment might be already exists from the previous row + current row is continu of the previous row
                     //skip
+                    echo "Skip requestID=$requestID <br>";
                     continue;
                 }
             }
