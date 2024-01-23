@@ -3888,7 +3888,7 @@ class TransResImportData
             echo "comment=$comment <br>";
             $transresRequest->setComment($comment);
 
-            $msg = "Comment of the work request $requestID has been updated by 2023_IHC_BH";
+            $msg = "Comment of the work request $requestID has been updated by 2023_IHC_BH (appended by row $row): ".$rowDataStr;
             $transresUtil->setEventLog($thisProject,$eventType,$msg);
 
             if( ($count % $batchSize) === 0 ) {
