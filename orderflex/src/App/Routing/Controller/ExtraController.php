@@ -24,7 +24,8 @@ class ExtraController extends OrderAbstractController {
 
         $title = "Welcome to the View!";
 
-        $multilocales = $this->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
+        $multilocales = $this->getParameter('multilocales');
+        //$multilocales = $this->getParameter('multilocales-urls'); //system|c/wcm/pathology|c/lmh/pathology
         //$multilocales = "main|c/wcm/pathology|c/lmh/pathology";
         $multilocalesUrlArr = explode("|", $multilocales);
         //dump($multilocalesUrlArr);
@@ -47,6 +48,61 @@ class ExtraController extends OrderAbstractController {
         //exit('<br>extra');
         $response = new Response();
         return $response;
+    }
+
+    //#[Route(path: '/system-init', name: 'system_home', methods: ['GET'])]
+    //#[Template('AppUserdirectoryBundle/Default/home.html.twig')]
+    public function systemHomeAction(Request $request)
+    {
+        //exit('exit systemHomeAction');
+        $title = "System Manager";
+
+        $multilocales = $this->getParameter('multilocales');
+        //$multilocales = $this->getParameter('multilocales-urls'); //system|c/wcm/pathology|c/lmh/pathology
+        //$multilocales = "main|c/wcm/pathology|c/lmh/pathology";
+        $multilocalesUrlArr = explode("|", $multilocales);
+        //dump($multilocalesUrlArr);
+        //exit('111');
+
+        $params = array(
+            'title' => $title,
+            'multilocales' => $multilocalesUrlArr
+        );
+
+
+        return $this->render('AppUserdirectoryBundle/System/home.html.twig', $params);
+        
+        //exit('<br>extra');
+        return $params;
+        //return $this->render('AppRouting/home.html.twig', ['param' => array()]);
+        //$response = new Response();
+        //return $response;
+    }
+
+    public function systemInitAction(Request $request)
+    {
+        exit('exit systemInitAction');
+        $title = "Welcome to the View!";
+
+        $multilocales = $this->getParameter('multilocales');
+        //$multilocales = $this->getParameter('multilocales-urls'); //system|c/wcm/pathology|c/lmh/pathology
+        //$multilocales = "main|c/wcm/pathology|c/lmh/pathology";
+        $multilocalesUrlArr = explode("|", $multilocales);
+        //dump($multilocalesUrlArr);
+        //exit('111');
+
+        $params = array(
+            'title' => $title,
+            'multilocales' => $multilocalesUrlArr
+        );
+
+        return $this->render('lucky/number.html.twig', ['number' => $number]);
+
+        //exit('<br>extra');
+        return $params;
+        //return $this->render('AppRouting/home.html.twig', ['param' => array()]);
+        //$response = new Response();
+        //return $response;
     }
 
 }

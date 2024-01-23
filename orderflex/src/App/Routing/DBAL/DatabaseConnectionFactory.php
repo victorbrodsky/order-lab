@@ -81,55 +81,19 @@ class DatabaseConnectionFactory extends ConnectionFactory
 //            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
 //        }
 
-        $multilocales = $this->container->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
+        $multilocales = $this->container->getParameter('multilocales');
+        //$multilocales = $this->container->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
         $multilocalesUrlArr = explode("|", $multilocales);
 
         foreach($multilocalesUrlArr as $multilocalesUrl) {
             //$multilocalesUrl = 'c/lmh/pathology'
             if( $uri && str_contains($uri, $multilocalesUrl) ) {
-                $strArray = explode('/',$multilocalesUrl);
-                $urlSlug = end($strArray); //last element
+                //$strArray = explode('/',$multilocalesUrl);
+                //$urlSlug = end($strArray); //last element
                 //echo "lastElement=$lastElement <br>";
                 //Find HostedGroupHolder by name=$lastElement
                 //$entities = $em->getRepository(HostedGroupHolder::class)->findOneByHostedUserGroup();
-                //TODO: connect to the system DB
-
-//                if(0) {
-//                    $repository = $this->em->getRepository(HostedGroupHolder::class);
-//                    $dql = $repository->createQueryBuilder("holder");
-//                    $dql->leftJoin('holder.hostedUserGroup', 'hostedUserGroup');
-//                    $dql->andWhere("hostedUserGroup.urlSlug = :urlSlug");
-//                    $queryParameters['urlSlug'] = $urlSlug;
-//                    $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-//                    $query->setParameters($queryParameters);
-//                    $query->setMaxResults(1);
-//                    $hostedGroupHolder = $query->getOneOrNullResult();
-//
-//                    if ($hostedGroupHolder) {
-//                        $dbHost = $hostedGroupHolder->getDatabaseHost();
-//                        $dbPort = $hostedGroupHolder->getDatabasePort();
-//                        $dbName = $hostedGroupHolder->getDatabaseName();
-//                        $dbUser = $hostedGroupHolder->getDatabaseUser();
-//                        $dbPassword = $hostedGroupHolder->getDatabasePassword();
-//                        $dbEnabled = $hostedGroupHolder->getEnabled();
-//
-//                        if ($dbEnabled === true && $dbName && $dbUser && $dbPassword) {
-//                            if (!$dbHost) {
-//                                $dbHost = 'localhost';
-//                            }
-//                            if (!$dbPort) {
-//                                $dbPort = '5432';
-//                            }
-//
-//                            //$params['host'] = $dbHost;
-//                            //$params['port'] = $dbPort;
-//                            $params['dbname'] = $dbName;
-//                            //$params['user'] = $dbName;
-//                            //$params['password'] = $dbName;
-//                            //$params['driver'] = $dbDriver;
-//                        }
-//                    }
-//                }//if 0
+                //connect to the system DB
                 $params = $this->getConnectionParams($multilocalesUrl);
 
                 //$dbName = 'Tenant2';
@@ -159,6 +123,8 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
         $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
         $params['driver'] = $this->container->getParameter('database_driver');
+
+        echo "dBName=".$params['dbname']."<br>";
 
         return $params;
         

@@ -523,6 +523,16 @@ if( $conn ) {
             //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
             //Can be moved to the ParametersCompilerPass
             if($usemultitenancy) {
+
+                //Set system db connection
+                $tenantUrl = "system";
+                //$container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
+                $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
+                $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
+                $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
+                $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
+                $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
+
                 $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
                 if ($authServerNetworkId) {
                     //dump($authServerNetworkId);

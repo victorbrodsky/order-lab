@@ -131,7 +131,7 @@ if( !$connection_channel ) {
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
 echo "dbname=".$dbname."<br>";
-echo "user=".$user."<br>";
+//echo "user=".$user."<br>";
 //echo "password=".$password."<br>";
 
 //upload paths can't be NULL
