@@ -3724,7 +3724,7 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $count > 10 ) {
+            if( $count > 100 ) {
                 exit("count limit $count");
             }
 
