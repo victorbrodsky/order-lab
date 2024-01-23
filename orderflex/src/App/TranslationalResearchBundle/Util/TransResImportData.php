@@ -3741,7 +3741,7 @@ class TransResImportData
 
             $thisRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
             //$thisRequestID = '20489'; //test
-            echo "<br>$count: Original thisRequestID=$thisRequestID <br>";
+            echo "<br>$row: Original thisRequestID=$thisRequestID <br>";
 
             if( $thisRequestID ) {
                 //remove -i and _N
