@@ -3738,13 +3738,13 @@ class TransResImportData
             //dump($rowData);
             //exit('111');
 
-            $thisRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
+            $thisOriginalRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
             //$thisRequestID = '20489'; //test
-            echo "<br>$row: Original thisRequestID=$thisRequestID <br>";
+            echo "<br>$row: thisOriginalRequestID=$thisOriginalRequestID <br>";
 
-            if( $thisRequestID ) {
+            if( $thisOriginalRequestID ) {
                 //remove -i and _N
-                $thisRequestID = str_replace('-i','',$thisRequestID);
+                $thisRequestID = str_replace('-i','',$thisOriginalRequestID);
                 $thisRequestID = str_replace('_N','',$thisRequestID);
                 //check if integer
                 # Check if your variable is an integer
@@ -3850,7 +3850,7 @@ class TransResImportData
             //$rowDataStr = "rowDataStr";// implode(";",$rowData);
             //$rowDataStr = implode(";",$rowData[0]);
             $rowDataStr =
-                'REQ#='.$requestID."; ".
+                'REQ#='.$thisOriginalRequestID."; ".
                 'Project='.$projectId."; ".
                 'Submitter='.$submitter."; ".
                 'Date submitted='.$dateSubmitted."; ".
