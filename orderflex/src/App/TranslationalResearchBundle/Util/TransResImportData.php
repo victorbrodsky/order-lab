@@ -3638,7 +3638,7 @@ class TransResImportData
 
     public function populateProjectComment($filename, $startRaw=2, $endRaw=null) {
 
-        //exit('exit populateProjectComment');
+        exit('exit populateProjectComment');
 
         if (file_exists($filename)) {
             echo "EXISTS: The file $filename <br><br>";

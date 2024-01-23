@@ -3341,7 +3341,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/populate-project-comment-ihc/', name: 'translationalresearch_populate_project_comment_ihc', methods: ['GET'])]
     public function populateProjectCommentAction( Request $request ) {
-        //exit("populateProjectCommentAction not allowed");
+        exit("populateProjectCommentAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
