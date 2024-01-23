@@ -3723,7 +3723,7 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $row > 100 ) {
+            if( $row > 5 ) {
                 exit("row limit $row");
             }
 
