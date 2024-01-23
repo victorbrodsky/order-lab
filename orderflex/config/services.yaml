@@ -15,7 +15,8 @@ imports:
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/UtilBundles/FOSCommentBundle/Resources/config/services.yml" }
-    - { resource: "setparameters.php" } #must run after importing services
+    #- { resource: "setparameters.php" } #must run after importing services
+    - { resource: "set-tenancy-parameters.php" }
 #    - { resource: "setparameters-test.php" } #must run after importing services
 
 
