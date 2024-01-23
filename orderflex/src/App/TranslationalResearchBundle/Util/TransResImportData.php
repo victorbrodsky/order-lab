@@ -3650,8 +3650,6 @@ class TransResImportData
         ini_set('memory_limit', '7168M');
 
         $transresUtil = $this->container->get('transres_util');
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$transresRequestUtil = $this->container->get('transres_request_util');
         $logger = $this->container->get('logger');
 
         $eventType = "Request Updated";
