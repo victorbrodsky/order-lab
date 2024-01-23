@@ -3872,8 +3872,13 @@ class TransResImportData
             //dump($rowData);
             echo "rowDataStr=$rowDataStr <br>";
 
+            if( $thisRequestID ) {
+                $prefix = "";
+            } else {
+                $prefix = " (use previous request ID $requestID)";
+            }
             $comment = $comment . $newline .
-                "Added by 2023_IHC_BH.xlsx on " . $currentDate .
+                "Added by 2023_IHC_BH.xlsx on " . $currentDate . $prefix .
                 ": " . $rowDataStr;
 
             //dump($rowData);
