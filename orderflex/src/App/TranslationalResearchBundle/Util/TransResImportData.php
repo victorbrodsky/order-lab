@@ -3724,8 +3724,8 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $count > 100 ) {
-                exit("count limit $count");
+            if( $row > 6 ) {
+                exit("row limit $row");
             }
 
             //$commentArr = array();
@@ -3875,7 +3875,7 @@ class TransResImportData
             if( $thisRequestID ) {
                 $prefix = "";
             } else {
-                $prefix = " (use previous request ID $requestID)";
+                $prefix = " (use previous request $requestID)";
             }
             $comment = $comment . $newline .
                 "Added by 2023_IHC_BH.xlsx on " . $currentDate . $prefix .
