@@ -3768,13 +3768,13 @@ class TransResImportData
             }
 
             $comment = $transresRequest->getComment();
-            if( $comment && str_contains($comment,"Added by 2023_IHC_BH") ) {
-                if( $thisRequestID ) {
-                    //comment might be already exists from the previous row + current row is continu of the previous row
+            if( $comment && str_contains($comment,"Added by 2023_IHC_BH (row $row)") ) {
+                //if( !$thisRequestID ) {
+                    //comment might be already exists from the previous row + current row is continue of the previous row
                     //skip
                     echo "Skip requestID=$requestID <br>";
                     continue;
-                }
+                //}
             }
 
             $projectId = $this->getValueByHeaderName('Project', $rowData, $headers);
@@ -3876,8 +3876,12 @@ class TransResImportData
             } else {
                 $prefix = " (use previous request $requestID)";
             }
-            $comment = $comment . $newline .
-                "Added by 2023_IHC_BH on " . $currentDate . $prefix .
+
+            if( $comment ) {
+                $comment = $comment.$newline;
+            }
+            $comment = $comment .
+                "Added by 2023_IHC_BH (row $row) on " . $currentDate . $prefix .
                 ": " . $rowDataStr;
 
             //dump($rowData);
