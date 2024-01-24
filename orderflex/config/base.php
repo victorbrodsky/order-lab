@@ -76,3 +76,10 @@ if (!function_exists('getNestedTreeBreadCrumb')) {
     }
 }
 
+//if (!function_exists('connectDBParameter')) {
+//    function connectDBParameter($systemdbConnectionParams, $config)
+//    {
+//        $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+//        return $conn;
+//    }
+//}
