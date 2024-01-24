@@ -57,14 +57,13 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
     );
     try {
         $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+        if ($conn->isConnected() === false) {
+            $conn = null;
+            echo "*** siteparameters.php: No connection to system DB. Use the default DB ***\n";
+        }
     }
     catch(Exception $e) {
         echo 'Message: ' .$e->getMessage();
-    }
-
-    if( $conn->isConnected() === false ) {
-        $conn = null;
-        echo "*** siteparameters.php: No connection to system DB. Use the default DB ***\n";
     }
 }
 /////// EOF Check if system DB exists ///////
