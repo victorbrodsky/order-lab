@@ -15,97 +15,91 @@
  *  limitations under the License.
  */
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-
-$useDb = true;
-//$useDb = false; //use when new fields are added to the "SiteParameters" entity
-//exit('start user_siteparameters');
-
-//echo "*** Run siteparameters.php ***\n"; //testing
-
-if( $useDb ) {
-
-    if (!function_exists('getDBParameter')) {
-        function getDBParameter($inputRow, $originalParam, $name)
-        {
-            //dump($inputRow);exit('222');
-            $row = array();
-            if( is_array($inputRow) && count($inputRow) > 0 ) {
-                $row = $inputRow[0];
-            }
-
-            //1) try as it is
-            if (array_key_exists($name, $row)) {
-                //echo "1 parameter=".$row[$name]."<br>";
-                return trim((string)$row[$name]);
-            }
-
-            //2) try with lowercase for postgresql
-            $name = strtolower($name);
-            if (array_key_exists($name, $row)) {
-                //echo "2 parameter=".$row[$name]."<br>";
-                return trim((string)$row[$name]);
-            }
-
-            return $originalParam;
-        }
-    }
-    if (!function_exists('isWindows')) {
-        function isWindows()
-        {
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                //Windows
-                return true;
-            }
-            return false;
-        }
-    }
-    if (!function_exists('getNestedTreeBreadCrumb')) {
-        function getNestedTreeBreadCrumb( $nodeId, $conn, $urlSlug='' )
-        {
-            //Get parent's abbreviation
-            $hostedGroupSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
-                " WHERE id=$nodeId AND (type='default' OR type='user-added')";
-            $hostedGroup = $conn->executeQuery($hostedGroupSql);
-            $hostedGroupRows = $hostedGroup->fetchAllAssociative();
-            //dump($hostedGroupRows);
-            $id = $hostedGroupRows[0]['id'];
-            $parentId = $hostedGroupRows[0]['parent_id'];
-            $thisUrlSlug = $hostedGroupRows[0]['urlslug'];
-            //echo '$thisUrlSlug='.$thisUrlSlug."<br>";
-            if( $thisUrlSlug ) {
-                $urlSlug = $thisUrlSlug . '/' . $urlSlug;
-            }
-            if( $parentId ) {
-                $urlSlug = getNestedTreeBreadCrumb($parentId,$conn,$urlSlug);
-            }
-            $urlSlug = rtrim($urlSlug, "/");
-            //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
-
-//            //Set id of this hosted user group
-//            $container->setParameter($urlSlug."-id",$id);
-//            $container->setParameter($urlSlug."-databaseHost",      $hostedGroupRows[0]['databaseHost']);
-//            $container->setParameter($urlSlug."-databasePort",      $hostedGroupRows[0]['databasePort']);
-//            $container->setParameter($urlSlug."-databaseName",      $hostedGroupRows[0]['databaseName']);
-//            $container->setParameter($urlSlug."-databaseUser",      $hostedGroupRows[0]['databaseUser']);
-//            $container->setParameter($urlSlug."-databasePassword",  $hostedGroupRows[0]['databasePassword']);
-
-            return $urlSlug;
-        }
-    }
-}
-
-//$dtz = $this->container->getParameter('default_time_zone');
-//echo "dtz=".$dtz."<br>";
+require 'base.php';
+require 'multitenancy.php';
 
 echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 
-$host = $container->getParameter('database_host');
-$driver = $container->getParameter('database_driver');
-$dbname = $container->getParameter('database_name');
-$user = $container->getParameter('database_user');
-$password = $container->getParameter('database_password');
+//$host = $container->getParameter('database_host');
+//$driver = $container->getParameter('database_driver');
+//$dbname = $container->getParameter('database_name');
+//$user = $container->getParameter('database_user');
+//$password = $container->getParameter('database_password');
+//
+///////// Check if system DB exists ///////
+//$host_systemdb = $container->getParameter('database_host_systemdb');
+//$driver_systemdb = $container->getParameter('database_driver_systemdb');
+//$dbname_systemdb = $container->getParameter('database_name_systemdb');
+//$user_systemdb = $container->getParameter('database_user_systemdb');
+//$password_systemdb = $container->getParameter('database_password_systemdb');
+
+///////// Connect DB //////////
+$conn = null;
+
+$config = new \Doctrine\DBAL\Configuration();
+$config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+
+// Check if system DB exists
+$host_systemdb = $container->getParameter('database_host_systemdb');
+$driver_systemdb = $container->getParameter('database_driver_systemdb');
+$dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
+$user_systemdb = $container->getParameter('database_user_systemdb');
+$password_systemdb = $container->getParameter('database_password_systemdb');
+$port_systemdb = $container->getParameter('database_port_systemdb');
+//exit('$driver_systemdb=['.$driver_systemdb.']');
+if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
+    $systemdbConnectionParams = array(
+        'dbname' => $dbname_systemdb,
+        'user' => $user_systemdb,
+        'password' => $password_systemdb,
+        'host' => $host_systemdb,
+        'driver' => $driver_systemdb,
+        'port' => $port_systemdb
+    );
+    $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+    if( !$conn->isConnected() ) {
+        if( !$conn ) {
+            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
+            $conn = null;
+        }
+    } else {
+        //$conn = null;
+        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
+    }
+//    if( $conn->getConfiguration() ) {
+//        //exit('111');
+//        echo "<br>Connected to system DB<br>";
+//    } else {
+//        echo "<br> Failed to connect to system DB. Use the default DB <br>";
+//    }
+}
+//exit('111');
+/////// EOF Check if system DB exists ///////
+if( !$conn ) {
+    //exit('222');
+    //system DB does not exists => use default DB
+    $host = $container->getParameter('database_host');
+    $driver = $container->getParameter('database_driver');
+    $dbname = $container->getParameter('database_name');
+    $user = $container->getParameter('database_user');
+    $password = $container->getParameter('database_password');
+    $port = $container->getParameter('database_port');
+    $connectionParams = array(
+        'dbname' => $dbname,
+        'user' => $user,
+        'password' => $password,
+        'host' => $host,
+        'driver' => $driver,
+        'port' => $port
+    );
+    $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+//    if( $conn->isConnected() === false ) {
+//        $conn = null;
+//        echo "*** siteparameters.php: Warning: No connection to defaulat DB!!! ***\n";
+//    }
+}
+///////// EOF Connect DB //////////
 
 $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
@@ -115,7 +109,7 @@ if( !$connection_channel ) {
 
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
-echo "dbname=".$dbname."<br>";
+//echo "dbname=".$dbname."<br>";
 //echo "user=".$user."<br>";
 //echo "password=".$password."<br>";
 
@@ -154,61 +148,30 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null");
 
-/////// Set default container parameters for multitenancy ///////
-$usemultitenancy = true;
-if($usemultitenancy) {
-/////////// 'tenantprefix' ///////////
-//////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
-//////// and then is used in getCommonBaseUrl. ////////
-//////// It is not need if locale is used ////////
-////importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
-////$tenantprefix = 'c/wcm/pathology/';
-////$tenantprefix = 'c/lmh/pathology/';
-    $tenantprefix = ''; //default prefix as it was in the original configuration
-    $container->setParameter('tenantprefix', $tenantprefix);
-/////////// EOF 'tenantprefix' ///////////
+//Set default container parameters for multitenancy
+initRequiredMultitenancy($container);
 
-//defaultlocale is used in translation.yaml to set default translation for main home page with '/'
-//$defaultLocale = 'main';
-    $defaultLocale = '';
-    $container->setParameter('defaultlocale', $defaultLocale);
-
-//'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
-    $multilocales = '';
-//$multilocales = 'en';
-    $container->setParameter('multilocales', $multilocales);
-    $container->setParameter('locdel', '');
-
-//set default 'multitenancy' - used by the DatabaseConnectionFactory
-//On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
-//When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
-// the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
-    $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
-    $container->setParameter('multitenancy', $multitenancy);
-
-    $container->setParameter('multilocales-urls', '');
-}
-/////// EOF Set default container parameters for multitenancy ///////
-
-$config = new \Doctrine\DBAL\Configuration();
-$config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
-
-$connectionParams = array(
-    'dbname' => $dbname,
-    'user' => $user,
-    'password' => $password,
-    'host' => $host,
-    'driver' => $driver,
-    //'port' => 3306
-);
-
-//exit("1");
-if( $useDb ) {
-    $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-} else {
-    $conn = NULL;
-}
-//exit("2");
+//if(0) {
+//    $config = new \Doctrine\DBAL\Configuration();
+//    $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+//
+//    $connectionParams = array(
+//        'dbname' => $dbname,
+//        'user' => $user,
+//        'password' => $password,
+//        'host' => $host,
+//        'driver' => $driver,
+//        //'port' => 3306
+//    );
+//
+////exit("1");
+//    if ($useDb) {
+//        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+//    } else {
+//        $conn = NULL;
+//    }
+////exit("2");
+//}
 
 //testing
 //$connected = $conn->connect();
@@ -216,8 +179,8 @@ if( $useDb ) {
 //echo "conn name=".$conn->getName()."<br>"; // connection 1
 
 if( $conn ) {
-
-    echo "*** siteparameters.php: Connection to DB established ***\n";
+    //echo "DB name=".$conn->getDatabase()."<br>";
+    echo "*** siteparameters.php: Connection to DB established. DB name=".$conn->getDatabase()."***\n";
 
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
@@ -477,171 +440,8 @@ if( $conn ) {
                 $container->setParameter('contentabout_page', $contentabout_page);
             }
 
-//            ////////////// Dynamically change url prefix /////////////
-//            //Test multi tenancy
-//            //1) IF "Server Role and Network Access:" = "Internet (Hub)”
-//            //2) Then: get url prefix from HostedUserGroupList (parent/child1/child2 ...) or "Tandem Partner Server URL" (authPartnerServer) or (?)
-//            //3) set tenantid $tenantprefix = authPartnerServer
-//
-//            /////////// 'tenantprefix' ///////////
-//            //////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
-//            //////// and then is used in getCommonBaseUrl. ////////
-//            //////// It is not need if locale is used ////////
-//            //importat to have closing '/' to form url correctly /%multitenancy_prefix%deidentifier => /c/wcm/pathology/deidentifier
-//            //$tenantprefix = 'c/wcm/pathology/';
-//            //$tenantprefix = 'c/lmh/pathology/';
-//            $tenantprefix = ''; //default prefix as it was in the original configuration
-//            $container->setParameter('tenantprefix', $tenantprefix);
-//            /////////// EOF 'tenantprefix' ///////////
-//
-//            //defaultlocale is used in translation.yaml to set default translation for main home page with '/'
-//            //$defaultLocale = 'main';
-//            $defaultLocale = '';
-//            $container->setParameter('defaultlocale', $defaultLocale);
-//
-//            //'multilocales' and 'locdel' are used in firewalls.yml and in security_access_control.yml
-//            $multilocales = '';
-//            $container->setParameter('multilocales', $multilocales);
-//            $container->setParameter('locdel', '');
-//
-//            //$locales = "c/wcm/pathology|c/lmh/pathology";
-//            //$container->setParameter('locales', $locales);
-//
-//            //$default_locale = $container->getParameter('framework.default_locale');
-//            //echo "default_locale=" . $default_locale . "<br>";
-//            //$default_locale = $container->getParameter('framework.translator.default_locale');
-//            //echo "default_locale=" . $default_locale . "<br>";
-//
-//            //set default 'multitenancy' - used by the DatabaseConnectionFactory
-//            //On the home page 'http://127.0.0.1/index_dev.php/' the default value is used which connect to the default DB
-//            //When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
-//            // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
-//            $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
-//            $container->setParameter('multitenancy', $multitenancy);
-
-            //$multitenancy = 'multitenancy';
-            //Get DB: from AuthServerNetworkList if 'Internet (Hub)'
-            //Can be moved to the ParametersCompilerPass
-            if($usemultitenancy) {
-
-                //Set system db connection
-                $tenantUrl = "system";
-                //$container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
-                $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
-                $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
-                $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
-                $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
-                $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
-
-                $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
-                if ($authServerNetworkId) {
-                    //dump($authServerNetworkId);
-                    //dump($row);
-                    echo "authServerNetworkId=" . $authServerNetworkId . "\n";
-                    $table = 'user_authservernetworklist';
-                    $authServerNetworkSql = "SELECT * FROM " . $table . " WHERE id=$authServerNetworkId";
-                    $authServerNetworkParams = $conn->executeQuery($authServerNetworkSql); // Simple, but has several drawbacks
-                    $authServerNetworkRow = $authServerNetworkParams->fetchAllAssociative(); //fetch();
-                    //dump($authServerNetworkRow);
-                    //exit('111');
-                    //echo "authServerNetworkRow=" . count($authServerNetworkRow) . "<br>";
-                    if (count($authServerNetworkRow) > 0) {
-                        //$authServerNetworkName = $authServerNetworkRow[0]['name'];
-                        $authServerNetworkName = getDBParameter($authServerNetworkRow, null, 'name');
-                        echo "authServerNetworkName=" . $authServerNetworkName . "\n";
-                    }
-
-                    if ($authServerNetworkName == 'Internet (Hub)') {
-//                    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
-//                    $container->setParameter('multitenancy', $multitenancy);
-//
-//                    $container->setParameter('defaultlocale', 'main');
-//                    $container->setParameter('locdel', '/'); //locale delimeter '/'
-
-                        //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
-                        //TODO: make sure ParametersCompilerPass is working
-                        //$multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
-                        //$container->setParameter('multilocales', $multilocales);
-
-                        $table = 'user_hostedgroupholder';
-                        $hostedGroupHolderSql = "SELECT * FROM " . $table .
-                            " WHERE servernetwork_id=$authServerNetworkId"
-                            . " AND enabled=TRUE"
-                            . " ORDER BY orderinlist ASC" //lower on top
-                        ;
-                        $hostedGroupHolders = $conn->executeQuery($hostedGroupHolderSql);
-                        $hostedGroupHolderRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
-
-                        if (1) {
-                            $tenantUrlArr = array();
-                            foreach ($hostedGroupHolderRows as $hostedGroupHolderRow) {
-                                //dump($hostedGroupHolderRow);
-                                //$hostedUserGroupId = getDBParameter($hostedGroupHolderRow, null, 'hostedusergroup_id');
-                                $hostedUserGroupId = $hostedGroupHolderRow['hostedusergroup_id'];
-                                echo "\n<br>" . "hostedUserGroupId=$hostedUserGroupId";
-                                //Get parent's abbreviation
-//                            $hostedGroupSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
-//                                " WHERE id=$hostedUserGroupId ORDER BY orderinlist ASC";
-//                            $hostedGroup = $conn->executeQuery($hostedGroupSql);
-//                            $hostedGroupRows = $hostedGroup->fetchAllAssociative(); //fetch();
-
-                                $tenantUrl = getNestedTreeBreadCrumb($hostedUserGroupId, $conn);
-                                echo "\n<br>" . "tenantUrl=$tenantUrl";
-                                $tenantUrlArr[] = $tenantUrl;
-
-                                //Set id of this hosted user group
-                                $container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
-                                $container->setParameter($tenantUrl . "-databaseHost", $hostedGroupHolderRow['databasehost']);
-                                $container->setParameter($tenantUrl . "-databasePort", $hostedGroupHolderRow['databaseport']);
-                                $container->setParameter($tenantUrl . "-databaseName", $hostedGroupHolderRow['databasename']);
-                                $container->setParameter($tenantUrl . "-databaseUser", $hostedGroupHolderRow['databaseuser']);
-                                $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
-                            }
-                            if (count($tenantUrlArr) > 0) {
-
-                                $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
-                                $container->setParameter('multitenancy', $multitenancy);
-
-                                //$container->setParameter('defaultlocale', 'main');
-                                $container->setParameter('defaultlocale', 'system');
-                                $container->setParameter('locdel', '/'); //locale delimeter '/'
-
-                                $multilocales = implode('|', $tenantUrlArr);
-                                echo "\n<br>" . "multilocales=$multilocales";
-                                //$container->setParameter('multilocales', 'main|'.$multilocales);
-                                $container->setParameter('multilocales', 'system|' . $multilocales);
-                                $container->setParameter('multilocales-urls', $multilocales);
-                            }
-                            //exit("\n<br>".'user_hostedgroupholder');
-                        }
-
-                        //$container->setParameter('seclocales', $multilocales."(%localedel%)");
-//                    //Load security's access_control yaml for multitatncy
-//                    $configDirectory = '../config/custom';
-//                    $locator = new FileLocator($configDirectory);
-//                    $loader = new YamlFileLoader($container, $locator);
-//                    $loader->load('security_access_control.yml');
-                    }
-                }
-            }
-            //echo "setparameters multitenancy=" . $multitenancy . "\n";
-            //$container->setParameter('multitenancy', $multitenancy);
-            //$container->setParameter('multitenancy', 'multitenancy');
-            //$multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
-            //$container->setParameter('multilocales', $multilocales);
-            //$container->setParameter('defaultlocale', 'main');
-            //$container->setParameter('locdel', '/'); //locale delimeter '/'
-            //$container->setParameter('multilocales', 'en');
-//            echo "<br>".
-//                " locdel=".$container->getParameter('locdel').
-//                ", multilocales=".$container->getParameter('multilocales').
-//                ", _locale=".$container->getParameter('locale').
-//                "<br>";
-            //exit('111');
-
-            //$container->get('router')->getContext()->setParameter('tenantprefix', $tenantprefix);
-            //$router->getContext()->setParameter('tenantprefix', $tenantprefix);
-            ////////////// EOF Dynamically change url prefix /////////////
+            //Set default container parameters for multitenancy
+            setRequiredMultitenancyByDB($container, $conn, $row);
 
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";
