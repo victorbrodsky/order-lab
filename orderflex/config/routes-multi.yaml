@@ -37,7 +37,6 @@ main_multi_home:
     #prefix:   /{_locale}
     #requirements:
     #    _locale: main|c/wcm/pathology|c/lmh/pathology
-
 main_system_home:
     path:      /system/home
     controller: App\Routing\Controller\ExtraController::systemHomeAction
