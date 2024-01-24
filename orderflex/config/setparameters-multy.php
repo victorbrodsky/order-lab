@@ -55,7 +55,12 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         'driver' => $driver_systemdb,
         //'port' => 3306
     );
-    $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+    try {
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+    }
+    catch(Exception $e) {
+        echo 'Message: ' .$e->getMessage();
+    }
 
     if( $conn->isConnected() === false ) {
         $conn = null;
