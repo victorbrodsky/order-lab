@@ -129,17 +129,17 @@ services:
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #App\Routing\ExtraLoader:
     #    tags: [routing.loader]
-    App\Routing\Controller\:
-        resource: '../src/App/Routing/Controller/'
+    App\SystemBundle\Controller\:
+        resource: '../src/App/SystemBundle/Controller/'
     custom.route_loader:
-        class: App\Routing\CustomTenancyLoader
+        class: App\SystemBundle\CustomTenancyLoader
         tags:
           - { name: 'routing.loader' }
 
 
     #Dynamic DB connection based on the decorator pattern in the service definition
     #https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
-    App\Routing\DBAL\DatabaseConnectionFactory:
+    App\SystemBundle\DBAL\DatabaseConnectionFactory:
         decorates: doctrine.dbal.connection_factory
         arguments:
             $requestStack: '@request_stack'

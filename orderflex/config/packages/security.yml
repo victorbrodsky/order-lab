@@ -192,7 +192,7 @@ security:
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
         #"System Administrator" and "Deputy System Administrator"
-        ROLE_SYSTEM_DEPUTY_ADMIN: []
+        ROLE_SYSTEM_DEPUTY_ADMIN: [ROLE_SYSTEM_USER]
         ROLE_SYSTEM_ADMIN: [ROLE_SYSTEM_DEPUTY_ADMIN]
 
 

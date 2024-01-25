@@ -24,6 +24,18 @@ security:
 
 #       - { path: /.*/login, role: PUBLIC_ACCESS }
 
+      ############################## System SITE SETTINGS ##############################
+       - { path: ^/system/initial-settings, role: PUBLIC_ACCESS }
+       - { path: ^/system/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/system/login, role: PUBLIC_ACCESS }
+       - { path: ^/system/setloginvisit, role: PUBLIC_ACCESS }
+       #- { path: ^/system/account-requests/, role: PUBLIC_ACCESS }
+       #- { path: ^/system/sign-up, role: PUBLIC_ACCESS }
+       #- { path: ^/system/activate-account, role: PUBLIC_ACCESS }
+       #- { path: ^/system/forgot-password, role: PUBLIC_ACCESS }
+       #- { path: ^/system/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/system/, role: ROLE_SYSTEM_USER }
+
        ############################## local system user init ##############################
        - { path: ^/(%multilocales%)(%locdel%)directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^/(%multilocales%)(%locdel%)first-time-user-generation-init/, role: PUBLIC_ACCESS }

@@ -85,7 +85,7 @@ app_userdirectory:
     prefix:   /directory
 
 app_system:
-    resource: "../src/App/Routing/Controller/"
+    resource: "../src/App/SystemBundle/Controller/"
     type:     attribute
     prefix:   /system
 
@@ -136,6 +136,11 @@ login_check:
 
 #logout:
 #    path: /directory/logout
+
+system_login_check:
+    path:   /system/login_check
+system_logout:
+    path:   /system/logout
 
 employees_login_check:
     path:   /directory/login_check

@@ -6,7 +6,7 @@
  * Time: 12:28 PM
  */
 
-namespace App\Routing\DBAL;
+namespace App\SystemBundle\DBAL;
 
 use App\UserdirectoryBundle\Entity\HostedGroupHolder;
 use Doctrine\Common\EventManager;

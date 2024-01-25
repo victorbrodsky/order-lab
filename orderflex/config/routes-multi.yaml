@@ -30,7 +30,7 @@ ProjectBaseBundle_localized:
 #set default_locale: "%defaultlocale%" to 'main'
 main_multi_home:
     path:      /
-    controller: App\Routing\Controller\ExtraController::extra
+    controller: App\SystemBundle\Controller\ExtraController::extra
     schemes:  ['%connection_channel%']
     #defaults:
     #  _locale: '%defaultlocale%'

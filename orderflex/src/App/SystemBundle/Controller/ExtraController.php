@@ -8,7 +8,7 @@
 
 //https://symfony.com/doc/6.4/routing/custom_route_loader.html
 
-namespace App\Routing\Controller;
+namespace App\SystemBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExtraController extends OrderAbstractController {
 
-    #[Template('AppRouting/multitenancy-home.html.twig')]
+    #[Template('AppSystemBundle/multitenancy-home.html.twig')]
     public function extra(Request $request)
     {
 

@@ -9,7 +9,7 @@
 //Enable routes based on container parameters in Symfony 2.3
 //https://stackoverflow.com/questions/18506028/enable-routes-based-on-container-parameters-in-symfony-2-3
 
-namespace App\Routing;
+namespace App\SystemBundle;
 
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;

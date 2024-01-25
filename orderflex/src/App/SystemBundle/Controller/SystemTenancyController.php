@@ -6,9 +6,11 @@
  * Time: 12:35 PM
  */
 
-namespace App\Routing\Controller;
+namespace App\SystemBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -18,16 +20,52 @@ class SystemTenancyController extends OrderAbstractController
 {
 
     #[Route(path: '/', name: 'system-home')]
-    #[Template('AppRouting/home/system-home.html.twig')]
+    #[Template('AppSystemBundle/home/system-home.html.twig')]
     public function systemHomeAction(Request $request)
     {
-        //exit("systemHomeAction");
+        exit("systemHomeAction");
 
         $title = "System";
 
         return array(
             'title' => $title
         );
+    }
+
+    #[Route(path: '/initial-settings', name: 'system_initial_settings', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Default/home.html.twig')]
+    public function initialSettingsAction() {
+        //exit("initialSettingsAction");
+        $em = $this->getDoctrine()->getManager('systemdb');
+        $users = $em->getRepository(User::class)->findAll();
+        echo "users=".count($users)."<br>";
+        if (count($users) == 0) {
+            $systemuser = new User();
+            $systemuser->setKeytype($userkeytype);
+            $systemuser->setPrimaryPublicUserId('system');
+            $systemuser->setUsername('system');
+            $systemuser->setUsernameCanonical('system');
+            $systemuser->setEmail($adminemail);
+            $systemuser->setEmailCanonical($adminemail);
+            $systemuser->setPassword("");
+            $systemuser->setCreatedby('system');
+            $systemuser->addRole('ROLE_PLATFORM_DEPUTY_ADMIN');
+            $systemuser->getPreferences()->setTimezone($default_time_zone);
+            $systemuser->setEnabled(false);
+            //$systemuser->setLocked(true); //system is locked, so no one can logged in with this account
+            //$systemuser->setExpired(false);
+            $this->em->persist($systemuser);
+            $this->em->flush();
+        }
+
+        $params = $em->getRepository(SiteParameters::class)->findAll();
+        echo "system params=".count($params)."<br>";
+        if( count($params) == 0 ) {
+            $params = new SiteParameters();
+        } else {
+            $params = $siteParameters[0];
+        }
+        exit("initialSettingsAction");
     }
 
     #[Route(path: '/manager/', name: 'system-manager')]
