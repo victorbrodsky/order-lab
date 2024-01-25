@@ -82,8 +82,12 @@ app_utilbundles_foscomment:
 app_userdirectory:
     resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     attribute
-    #prefix:   /directory
     prefix:   /directory
+
+app_system:
+    resource: "../src/App/Routing/Controller/"
+    type:     attribute
+    prefix:   /system
 
 #FineUploader
 app_fineuploader:

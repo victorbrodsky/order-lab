@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExtraController extends OrderAbstractController {
 
-    #[Template('AppRouting/home.html.twig')]
+    #[Template('AppRouting/multitenancy-home.html.twig')]
     public function extra(Request $request)
     {
 
@@ -49,6 +49,9 @@ class ExtraController extends OrderAbstractController {
         $response = new Response();
         return $response;
     }
+
+
+
 
     //#[Route(path: '/system-init', name: 'system_home', methods: ['GET'])]
     //#[Template('AppUserdirectoryBundle/Default/home.html.twig')]

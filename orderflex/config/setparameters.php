@@ -172,7 +172,7 @@ initRequiredMultitenancy($container);
 
 if( $conn ) {
     //echo "DB name=".$conn->getDatabase()."<br>";
-    echo "*** siteparameters.php: Connection to DB established. DB name=".$conn->getDatabase()."***\n";
+    echo "*** siteparameters.php: Connection to DB established. DB name=".$conn->getDatabase()." ***\n";
 
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
