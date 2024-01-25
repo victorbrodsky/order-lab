@@ -61,18 +61,44 @@ class DatabaseConnectionFactory extends ConnectionFactory
         //exit('DatabaseConnectionFactory');
         $logger = $this->container->get('logger');
         $multitenancy = $this->container->getParameter('multitenancy');
+        echo "multitenancy=".$multitenancy."<br>";
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
         $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy);
+
+        $systemdb = $this->container->getParameter('systemdb');
+        echo "systemdb=".$systemdb."<br>";
+        if( $systemdb ) {
+            $uri = null;
+            $request = $this->requestStack->getCurrentRequest();
+            if( $request ) {
+                $uri = $request->getUri();
+            }
+            //echo "uri=".$uri."<br>";
+            if( str_contains($uri,'/system/') ) {
+                $params = array();
+                $params['driver'] = $this->container->getParameter('database_driver_systemdb');
+                $params['host'] = $this->container->getParameter('database_host_systemdb');
+                $params['port'] = $this->container->getParameter('database_port_systemdb');
+                $params['dbname'] = $this->container->getParameter('database_name_systemdb');
+                $params['user'] = $this->container->getParameter('database_user_systemdb');
+                $params['password'] = $this->container->getParameter('database_password_systemdb');
+                echo "dBName=".$params['dbname']."<br>";
+                return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+            }
+        }
+        //dump($params);
+        //exit('111');
+
         if( $multitenancy == 'singletenancy' ) {
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         }
 
         $uri = null;
         $request = $this->requestStack->getCurrentRequest();
-
         if( $request ) {
             $uri = $request->getUri();
         }
+
         //echo "uri=".$uri."<br>";
         //dump($params);
         //exit('111');
@@ -117,12 +143,12 @@ class DatabaseConnectionFactory extends ConnectionFactory
     public function getConnectionParams( $urlSlug ) {
 
         $params = array();
+        $params['driver'] = $this->container->getParameter('database_driver');
         $params['host'] = $this->container->getParameter($urlSlug.'-databaseHost');
         $params['port'] = $this->container->getParameter($urlSlug.'-databasePort');
         $params['dbname'] = $this->container->getParameter($urlSlug.'-databaseName');
         $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
         $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
-        $params['driver'] = $this->container->getParameter('database_driver');
 
         echo "dBName=".$params['dbname']."<br>";
 

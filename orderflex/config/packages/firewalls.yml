@@ -33,7 +33,7 @@ security:
 #                always_remember_me: true
 
         ldap_system_firewall:
-            pattern: ^/system
+            pattern: ^/system1111
             context: scan_auth
             switch_user: true
             custom_authenticators:

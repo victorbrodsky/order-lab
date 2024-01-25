@@ -84,10 +84,10 @@ app_userdirectory:
     type:     attribute
     prefix:   /directory
 
-app_system:
-    resource: "../src/App/SystemBundle/Controller/"
-    type:     attribute
-    prefix:   /system
+#app_system:
+#    resource: "../src/App/SystemBundle/Controller/"
+#    type:     attribute
+#    prefix:   /system
 
 #FineUploader
 app_fineuploader:
@@ -106,6 +106,12 @@ fellapp_instructions:
     defaults:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
+
+system_home:
+    path:      /system/
+    controller: App\SystemBundle\Controller\SystemTenancyController::systemHomeAction
+    schemes:  ['%connection_channel%']
+
 
 #login and logout routes
 
@@ -137,10 +143,10 @@ login_check:
 #logout:
 #    path: /directory/logout
 
-system_login_check:
-    path:   /system/login_check
-system_logout:
-    path:   /system/logout
+#system_login_check:
+#    path:   /system/login_check
+#system_logout:
+#    path:   /system/logout
 
 employees_login_check:
     path:   /directory/login_check

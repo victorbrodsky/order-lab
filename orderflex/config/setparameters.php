@@ -34,27 +34,29 @@ echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 //$password_systemdb = $container->getParameter('database_password_systemdb');
 
 ///////// Connect DB //////////
+$container->setParameter('systemdb',false);
 $conn = null;
 
 $config = new \Doctrine\DBAL\Configuration();
 $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
 
 // Check if system DB exists
-$host_systemdb = $container->getParameter('database_host_systemdb');
 $driver_systemdb = $container->getParameter('database_driver_systemdb');
+$host_systemdb = $container->getParameter('database_host_systemdb');
+$port_systemdb = $container->getParameter('database_port_systemdb');
 $dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
 $user_systemdb = $container->getParameter('database_user_systemdb');
 $password_systemdb = $container->getParameter('database_password_systemdb');
-$port_systemdb = $container->getParameter('database_port_systemdb');
 //exit('$driver_systemdb=['.$driver_systemdb.']');
 if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
+    $container->setParameter('systemdb',true);
     $systemdbConnectionParams = array(
+        'driver' => $driver_systemdb,
+        'host' => $host_systemdb,
+        'port' => $port_systemdb,
         'dbname' => $dbname_systemdb,
         'user' => $user_systemdb,
-        'password' => $password_systemdb,
-        'host' => $host_systemdb,
-        'driver' => $driver_systemdb,
-        'port' => $port_systemdb
+        'password' => $password_systemdb
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
 //    if( !$conn->isConnected() ) {
@@ -70,19 +72,19 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
 /////// EOF Check if system DB exists ///////
 if( !$conn ) {
     //system DB does not exists => use default DB
-    $host = $container->getParameter('database_host');
     $driver = $container->getParameter('database_driver');
+    $host = $container->getParameter('database_host');
+    $port = $container->getParameter('database_port');
     $dbname = $container->getParameter('database_name');
     $user = $container->getParameter('database_user');
     $password = $container->getParameter('database_password');
-    $port = $container->getParameter('database_port');
     $connectionParams = array(
+        'driver' => $driver,
+        'host' => $host,
+        'port' => $port,
         'dbname' => $dbname,
         'user' => $user,
-        'password' => $password,
-        'host' => $host,
-        'driver' => $driver,
-        'port' => $port
+        'password' => $password
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
