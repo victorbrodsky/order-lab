@@ -57,26 +57,18 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         'port' => $port_systemdb
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
-    if( !$conn->isConnected() ) {
-        if( !$conn ) {
-            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
-            $conn = null;
-        }
-    } else {
-        //$conn = null;
-        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
-    }
-//    if( $conn->getConfiguration() ) {
-//        //exit('111');
-//        echo "<br>Connected to system DB<br>";
+//    if( !$conn->isConnected() ) {
+//        if( !$conn ) {
+//            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
+//            $conn = null;
+//        }
 //    } else {
-//        echo "<br> Failed to connect to system DB. Use the default DB <br>";
+//        //$conn = null;
+//        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
 //    }
 }
-//exit('111');
 /////// EOF Check if system DB exists ///////
 if( !$conn ) {
-    //exit('222');
     //system DB does not exists => use default DB
     $host = $container->getParameter('database_host');
     $driver = $container->getParameter('database_driver');
