@@ -9,6 +9,9 @@
 namespace App\SystemBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
+use App\UserdirectoryBundle\Entity\HostedGroupHolder;
+use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UsernameType;
@@ -268,9 +271,82 @@ class SystemTenancyController extends OrderAbstractController
         $em->persist($params);
         $em->flush();
 
+        $this->createAuthServerNetworkList($params);
+
         $logger->notice("Finished System's generateSiteParameters: count=".$count/10);
 
         return round($count/10);
+    }
+
+    public function generateAuthServerNetworkList($systemuser) {
+        $em = $this->getDoctrine()->getManager('systemdb');
+
+        $types = array(
+            "Intranet (Solo)",
+            "Intranet (Tandem)",
+            "Internet (Solo) ",
+            "Internet (Tandem)",
+            "Internet (Hub)"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(AuthServerNetworkList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AuthServerNetworkList();
+            $this->setDefaultList($listEntity,$count,$systemuser,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function createAuthServerNetworkList( $params ) {
+        $em = $this->getDoctrine()->getManager('systemdb');
+
+        $systemuser = null;
+        $systemusers = $em->getRepository(User::class)->findBy(
+            array(
+                'primaryPublicUserId' => 'system',
+                'keytype' => $localUserType->getId()
+            )
+        );
+        if( count($systemusers) > 0 ) {
+            $systemuser = $systemusers[0];
+        }
+
+        $this->generateAuthServerNetworkList($systemuser);
+
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName("Internet (Hub)");
+        $params->setAuthServerNetwork($authServerNetwork);
+        $em->flush();
+
+        //HostedGroupHolder
+        $hostedGroupHolder = new HostedGroupHolder($systemuser);
+        $hostedGroupHolder->setServerNetwork($authServerNetwork);
+
+        //set:
+//        private $databaseHost;
+//        private $databasePort;
+//        private $databaseName;
+//        private $databaseUser;
+//        private $databasePassword;
+//        private $systemDb;
+//        private $enabled;
+
+        //set HostedUserGroupList
+        $hostedUserGroup = new HostedUserGroupList($systemuser);
+        $hostedGroupHolder->setHostedUserGroup($hostedUserGroup);
+
+
+        $authServerNetwork->addHostedGroupHolder($hostedGroupHolder);
     }
 
     public function generateUsernameTypes($user=null) {
