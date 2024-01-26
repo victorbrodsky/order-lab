@@ -643,7 +643,6 @@ class UserSecurityUtil {
     public function getUsernameType($abbreviation=null) {
         $userkeytype = null;
         if( $abbreviation ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
             $userkeytype = $this->em->getRepository(UsernameType::class)->findOneBy(
                 array(
                     'type' => array('default', 'user-added'),
@@ -654,7 +653,6 @@ class UserSecurityUtil {
 
             return $userkeytype;
         } else {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
             $userkeytypes = $this->em->getRepository(UsernameType::class)->findBy(
                 array('type' => array('default', 'user-added')),
                 array('orderinlist' => 'ASC')

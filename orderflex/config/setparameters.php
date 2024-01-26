@@ -294,7 +294,7 @@ if( $conn ) {
                 //print_r($row);
                 //exit('111');
 
-                $smtpServerAddress = getDBParameter($row, $smtpServerAddress, 'wkhtmltopdfpath');
+                $smtpServerAddress = getDBParameter($row, $smtpServerAddress, 'smtpServerAddress');
                 $defaultSiteEmail = getDBParameter($row, $defaultSiteEmail, 'siteEmail');
                 $institution_url = getDBParameter($row, $institution_url, 'institutionurl');
                 $institution_name = getDBParameter($row, $institution_name, 'institutionname');
