@@ -82,7 +82,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
                 $params['dbname'] = $this->container->getParameter('database_name_systemdb');
                 $params['user'] = $this->container->getParameter('database_user_systemdb');
                 $params['password'] = $this->container->getParameter('database_password_systemdb');
-                echo "dBName=".$params['dbname']."<br>";
+                echo "<br>dBName=".$params['dbname']."<br>";
                 return parent::createConnection($params, $config, $eventManager, $mappingTypes);
             }
         }

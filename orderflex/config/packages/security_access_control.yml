@@ -25,6 +25,7 @@ security:
 #       - { path: /.*/login, role: PUBLIC_ACCESS }
 
       ############################## System SITE SETTINGS ##############################
+       - { path: ^/system/home/, role: PUBLIC_ACCESS }
 #       - { path: ^/system/initial-settings, role: PUBLIC_ACCESS }
 #       - { path: ^/system/access-requests/new/, role: PUBLIC_ACCESS }
 #       - { path: ^/system/login, role: PUBLIC_ACCESS }
