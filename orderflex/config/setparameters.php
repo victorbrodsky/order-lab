@@ -48,7 +48,7 @@ $dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
 $user_systemdb = $container->getParameter('database_user_systemdb');
 $password_systemdb = $container->getParameter('database_password_systemdb');
 //exit('$driver_systemdb=['.$driver_systemdb.']');
-if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
+if( 0 && $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
     $container->setParameter('systemdb',true);
     $systemdbConnectionParams = array(
         'driver' => $driver_systemdb,
