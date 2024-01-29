@@ -107,18 +107,18 @@ fellapp_instructions:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
 
-system_special_home:
-    path:      /system/home/
-    controller: App\SystemBundle\Controller\SystemTenancyController::systemHomeAction
-    schemes:  ['%connection_channel%']
-system_special_init:
-    path:      /system-init/
-    controller: App\SystemBundle\Controller\SystemTenancyController::systemInitAction
-    schemes:  ['%connection_channel%']
-system_special_first-time-init:
-    path:      /system/first-time-init/
-    controller: App\SystemBundle\Controller\SystemTenancyController::firstTimeLoginGenerationAction
-    schemes:  ['%connection_channel%']
+#system_special_home:
+#    path:      /system/home/
+#    controller: App\SystemBundle\Controller\SystemTenancyController::systemHomeAction
+#    schemes:  ['%connection_channel%']
+#system_special_init:
+#    path:      /system-init/
+#    controller: App\SystemBundle\Controller\SystemTenancyController::systemInitAction
+#    schemes:  ['%connection_channel%']
+#system_special_first-time-init:
+#    path:      /system/first-time-init/
+#    controller: App\SystemBundle\Controller\SystemTenancyController::firstTimeLoginGenerationAction
+#    schemes:  ['%connection_channel%']
 
 
 #login and logout routes

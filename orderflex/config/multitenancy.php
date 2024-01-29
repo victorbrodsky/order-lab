@@ -11,6 +11,7 @@ require 'base.php';
 
 function initRequiredMultitenancy( $container )
 {
+    echo "<br>### initRequiredMultitenancy ### <br>";
     /////////// 'tenantprefix' ///////////
     //////// tenantprefix is used by twig.yaml, the it is used in base.html.twig to set hidden id="tenantprefix" ////////
     //////// and then is used in getCommonBaseUrl. ////////
@@ -38,6 +39,7 @@ function initRequiredMultitenancy( $container )
     //When on the specific tenant's website (i.e. http://127.0.0.1/index_dev.php/c/wcm/pathology),
     // the DB is chosen according to the updated value 'multitenancy' which is set by ParametersCompilerPass
     $multitenancy = 'singletenancy'; //Used by CustomTenancyLoader and DatabaseConnectionFactory
+    //$multitenancy = 'multitenancy'; //testing
     $container->setParameter('multitenancy', $multitenancy);
 
     $container->setParameter('multilocales-urls', '');
@@ -49,6 +51,15 @@ function initRequiredMultitenancy( $container )
 //3) set tenantid $tenantprefix = authPartnerServer
 function setRequiredMultitenancyByDB( $container, $conn, $row )
 {
+    echo "<br>### setRequiredMultitenancyByDB ### <br>";
+
+    $systemdb = $container->getParameter('systemdb');
+    echo "<br>### setRequiredMultitenancyByDB: systemdb=".$systemdb." ### <br>";
+    if( $systemdb == false ) {
+        echo "<br>### setRequiredMultitenancyByDB: system DB does not exists => single-tenancy ### <br>";
+        return;
+    }
+
     //Set system db connection
     $tenantUrl = "system";
     //$container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
@@ -124,7 +135,7 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
                 }
                 if (count($tenantUrlArr) > 0) {
 
-                    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+                    $multitenancy = 'multitenancy'; //Used by CustomTenancyLoader
                     $container->setParameter('multitenancy', $multitenancy);
 
                     //$container->setParameter('defaultlocale', 'main');
@@ -132,7 +143,7 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
                     $container->setParameter('locdel', '/'); //locale delimeter '/'
 
                     $multilocales = implode('|', $tenantUrlArr);
-                    echo "\n<br>" . "multilocales=$multilocales";
+                    echo "\n<br> setRequiredMultitenancyByDB: " . "multilocales=$multilocales <br>";
                     //$container->setParameter('multilocales', 'main|'.$multilocales);
                     $container->setParameter('multilocales', 'system|' . $multilocales);
                     $container->setParameter('multilocales-urls', $multilocales);

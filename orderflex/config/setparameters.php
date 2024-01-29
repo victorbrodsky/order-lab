@@ -59,11 +59,17 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         'password' => $password_systemdb
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
-//    if( !$conn->isConnected() ) {
-//        if( !$conn ) {
+
+    //exit('111');
+    //$schemaManager = $conn->getSchemaManager();
+    //dump($schemaManager);
+    //exit('222');
+//    if( !$conn ) {
+//    //if( !$conn->isConnected() ) {
+//        //if( !$conn ) {
 //            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
 //            $conn = null;
-//        }
+//        //}
 //    } else {
 //        //$conn = null;
 //        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
@@ -88,9 +94,13 @@ if( !$conn ) {
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
-//    if( $conn->isConnected() === false ) {
-//        $conn = null;
-//        echo "*** siteparameters.php: Warning: No connection to defaulat DB!!! ***\n";
+//    echo "isConnected=".$conn->isConnected()."<br>";
+//    if( !$conn ) {
+//    //if( !$conn->isConnected() ) {
+//        //$conn = null;
+//        echo "<br>*** Warning: No connection to defaulat DB!!! ***\n<br>";
+//    } else {
+//        echo "<br>*** Connection to defaulat DB!!! ***\n<br>";
 //    }
 }
 ///////// EOF Connect DB //////////
@@ -166,6 +176,50 @@ initRequiredMultitenancy($container);
 //    }
 ////exit("2");
 //}
+
+
+/// TEST ///
+if(0) {
+    $container->setParameter('defaultlocale', 'system');
+    $container->setParameter('locdel', '/'); //locale delimeter '/'
+    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
+    $container->setParameter('multitenancy', $multitenancy);
+    $multilocales = 'c/wcm/pathology|c/lmh/pathology';
+    $multilocales = 'c/wcm/pathology';
+//$multilocales = 'system';
+    echo "\n<br>" . "Use system DB: multilocales=$multilocales <br>";
+//$container->setParameter('multilocales', 'main|'.$multilocales);
+    $container->setParameter('multilocales', 'system|' . $multilocales);
+//$container->setParameter('multilocales', 'system');
+    $container->setParameter('multilocales-urls', $multilocales);
+
+//Set id of this hosted user group
+    $tenantUrl = 'system';
+    $hostedGroupHolderRow = array();
+    $hostedGroupHolderRow['id'] = 1;
+    $hostedGroupHolderRow['databasehost'] = 'localhost';
+    $hostedGroupHolderRow['databaseport'] = 5432;
+    $hostedGroupHolderRow['databaseuser'] = 'symfony';
+    $hostedGroupHolderRow['databasepassword'] = 'symfony';
+    $hostedGroupHolderRow['databasename'] = 'ScanOrderSystem';
+    $container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
+    $container->setParameter($tenantUrl . "-databaseHost", $hostedGroupHolderRow['databasehost']);
+    $container->setParameter($tenantUrl . "-databasePort", $hostedGroupHolderRow['databaseport']);
+    $container->setParameter($tenantUrl . "-databaseName", $hostedGroupHolderRow['databasename']);
+    $container->setParameter($tenantUrl . "-databaseUser", $hostedGroupHolderRow['databaseuser']);
+    $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
+
+    $tenantUrl = 'c/wcm/pathology';
+    $hostedGroupHolderRow['id'] = 2;
+    $hostedGroupHolderRow['databasename'] = 'ScanOrder';
+    $container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
+    $container->setParameter($tenantUrl . "-databaseHost", $hostedGroupHolderRow['databasehost']);
+    $container->setParameter($tenantUrl . "-databasePort", $hostedGroupHolderRow['databaseport']);
+    $container->setParameter($tenantUrl . "-databaseName", $hostedGroupHolderRow['databasename']);
+    $container->setParameter($tenantUrl . "-databaseUser", $hostedGroupHolderRow['databaseuser']);
+    $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
+}
+/// EOF TEST ///
 
 //testing
 //$connected = $conn->connect();

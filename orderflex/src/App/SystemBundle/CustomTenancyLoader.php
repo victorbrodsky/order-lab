@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 
-//Can be moved to parameters.php
 class CustomTenancyLoader extends Loader {
 
     private $container;
@@ -57,7 +56,7 @@ class CustomTenancyLoader extends Loader {
         //$configDirectory = '../../config/';
 
         $multitenancy = $this->container->getParameter('multitenancy');
-        //echo "multitenancy=".$multitenancy."<br>";
+        //echo "CustomTenancyLoader: multitenancy=".$multitenancy."<br>";
 
         if( $multitenancy == 'multitenancy' ) {
             //$this->container->setParameter('defaultlocale', 'main');

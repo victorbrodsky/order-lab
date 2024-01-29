@@ -61,33 +61,36 @@ class DatabaseConnectionFactory extends ConnectionFactory
         //exit('DatabaseConnectionFactory');
         $logger = $this->container->get('logger');
         $multitenancy = $this->container->getParameter('multitenancy');
-        echo "multitenancy=".$multitenancy."<br>";
+        //echo "createConnection: multitenancy=".$multitenancy."<br>";
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
         $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy);
+        //return parent::createConnection($params, $config, $eventManager, $mappingTypes);
 
-        $systemdb = $this->container->getParameter('systemdb');
-        echo "systemdb=".$systemdb."<br>";
-        if( $systemdb ) {
-            $uri = null;
-            $request = $this->requestStack->getCurrentRequest();
-            if( $request ) {
-                $uri = $request->getUri();
+        if(0) {
+            $systemdb = $this->container->getParameter('systemdb');
+            //echo "systemdb=".$systemdb."<br>";
+            if( $systemdb ) {
+                $uri = null;
+                $request = $this->requestStack->getCurrentRequest();
+                if( $request ) {
+                    $uri = $request->getUri();
+                }
+                //echo "uri=".$uri."<br>";
+                if( str_contains($uri,'/system/') ) {
+                    $params = array();
+                    $params['driver'] = $this->container->getParameter('database_driver_systemdb');
+                    $params['host'] = $this->container->getParameter('database_host_systemdb');
+                    $params['port'] = $this->container->getParameter('database_port_systemdb');
+                    $params['dbname'] = $this->container->getParameter('database_name_systemdb');
+                    $params['user'] = $this->container->getParameter('database_user_systemdb');
+                    $params['password'] = $this->container->getParameter('database_password_systemdb');
+                    echo "<br>SystemDB: dBName=".$params['dbname']."<br>";
+                    return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+                }
             }
-            //echo "uri=".$uri."<br>";
-            if( str_contains($uri,'/system/') ) {
-                $params = array();
-                $params['driver'] = $this->container->getParameter('database_driver_systemdb');
-                $params['host'] = $this->container->getParameter('database_host_systemdb');
-                $params['port'] = $this->container->getParameter('database_port_systemdb');
-                $params['dbname'] = $this->container->getParameter('database_name_systemdb');
-                $params['user'] = $this->container->getParameter('database_user_systemdb');
-                $params['password'] = $this->container->getParameter('database_password_systemdb');
-                echo "<br>dBName=".$params['dbname']."<br>";
-                return parent::createConnection($params, $config, $eventManager, $mappingTypes);
-            }
+            //dump($params);
+            //exit('111');
         }
-        //dump($params);
-        //exit('111');
 
         if( $multitenancy == 'singletenancy' ) {
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
@@ -108,6 +111,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
 //        }
 
         $multilocales = $this->container->getParameter('multilocales');
+        //echo "createConnection: multilocales=$multilocales <br>";
         //$multilocales = $this->container->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
         $multilocalesUrlArr = explode("|", $multilocales);
 
@@ -150,7 +154,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
         $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
 
-        echo "dBName=".$params['dbname']."<br>";
+        //echo "dBName=".$params['dbname']."<br>";
 
         return $params;
         

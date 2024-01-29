@@ -25,7 +25,7 @@ class ExtraController extends OrderAbstractController {
         $title = "Welcome to the View!";
 
         $multilocales = $this->getParameter('multilocales');
-        //$multilocales = $this->getParameter('multilocales-urls'); //system|c/wcm/pathology|c/lmh/pathology
+        $multilocales = $this->getParameter('multilocales-urls'); //system|c/wcm/pathology|c/lmh/pathology
         //$multilocales = "main|c/wcm/pathology|c/lmh/pathology";
         $multilocalesUrlArr = explode("|", $multilocales);
         //dump($multilocalesUrlArr);
