@@ -48,6 +48,8 @@ $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerF
 //2) php bin/console doctrine:schema:update --em=systemdb --complete --force
 //3) php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
 //4) php bin/console doctrine:migration:version --em=systemdb --add --all
+//5) Run: /order/system/admin/first-time-login-generation-init/
+//6) Run on the settings page: 1) Populate Country and City Lists and 2) Populate All Lists with Default Values (Part A)
 $driver_systemdb = $container->getParameter('database_driver_systemdb');
 $host_systemdb = $container->getParameter('database_host_systemdb');
 $port_systemdb = $container->getParameter('database_port_systemdb');
@@ -66,6 +68,16 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         'password' => $password_systemdb
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
+
+    //Set DB connection paraneters for system
+    $tenantUrl = 'system';
+    $container->setParameter($tenantUrl . "-id", null);
+    $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
+    $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
+    $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
+    $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
+    $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
+    $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
 
 //    if( $conn && $conn->isConnected() ) {
 //        $dbname = null;
@@ -194,6 +206,8 @@ $container->setParameter('mailer_dsn', "null://null");
 
 //Set default container parameters for multitenancy
 initRequiredMultitenancy($container);
+
+checkAndEnableSystemDB($container, $conn);
 
 //if(0) {
 //    $config = new \Doctrine\DBAL\Configuration();

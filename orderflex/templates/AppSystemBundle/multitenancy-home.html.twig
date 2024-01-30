@@ -45,6 +45,14 @@
                 <li class="list-group-item" >
                     <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
                 </li>
+
+                {% if multilocale == 'system' %}
+                    <li class="list-group-item" >
+                        <a href="{{ path('first-time-login-generation-init') }}" target="_blank"
+                        >Initialize Database</a>
+                    </li>
+                {% endif %}
+
             {% endfor %}
 
             {#<li class="list-group-item" >#}
