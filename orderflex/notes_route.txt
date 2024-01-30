@@ -62,7 +62,7 @@ https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-earl
 
 System DB
 php bin/console doctrine:database:create --connection=systemdb
-php bin/console doctrine:schema:update --em=systemdb
+php bin/console doctrine:schema:update --em=systemdb --complete --force
 php bin/console doctrine:migration:status --em=systemdb
 php bin/console doctrine:migration:migrate --em=systemdb
 php bin/console doctrine:migration:sync-metadata-storage --em=systemdb

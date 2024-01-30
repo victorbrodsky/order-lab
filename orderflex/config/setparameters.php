@@ -40,7 +40,14 @@ $conn = null;
 $config = new \Doctrine\DBAL\Configuration();
 $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
 
-// Check if system DB exists
+// Check if system DB exists. Multi-tenancy is only available when System DB exists.
+//Connection parameters for system DB must be defined in parameters.yml file.
+//If System DB does not exist, but connections paramteres defined in parameters.yml file then:
+//In the project console (/order-lab/orderflex) run:
+//1) php bin/console doctrine:database:create --connection=systemdb --if-not-exists
+//2) php bin/console doctrine:schema:update --em=systemdb --complete --force
+//3) php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
+//4) php bin/console doctrine:migration:version --em=systemdb --add --all
 $driver_systemdb = $container->getParameter('database_driver_systemdb');
 $host_systemdb = $container->getParameter('database_host_systemdb');
 $port_systemdb = $container->getParameter('database_port_systemdb');
@@ -48,7 +55,7 @@ $dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
 $user_systemdb = $container->getParameter('database_user_systemdb');
 $password_systemdb = $container->getParameter('database_password_systemdb');
 //exit('$driver_systemdb=['.$driver_systemdb.']');
-if( 0 && $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
+if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
     $container->setParameter('systemdb',true);
     $systemdbConnectionParams = array(
         'driver' => $driver_systemdb,
@@ -60,21 +67,54 @@ if( 0 && $host_systemdb && $dbname_systemdb && $user_systemdb && $password_syste
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
 
+//    if( $conn && $conn->isConnected() ) {
+//        $dbname = null;
+//        try {
+//            $dbname = $conn->getDatabase();
+//        } catch (Exception $e) {
+//            exit('NO');
+//            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
+//            $conn = null;
+//            $container->setParameter('systemdb',false);
+//        }
+//    }
+
     //exit('111');
     //$schemaManager = $conn->getSchemaManager();
     //dump($schemaManager);
     //exit('222');
 //    if( !$conn ) {
-//    //if( !$conn->isConnected() ) {
-//        //if( !$conn ) {
+//        if( !$conn->isConnected() ) {
 //            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
 //            $conn = null;
-//        //}
+//            $container->setParameter('systemdb',false);
+//        }
 //    } else {
-//        //$conn = null;
 //        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
 //    }
+
+    //exit('111');
+    //$conn->getDatabase();
+
+    if( $conn ) {
+        $dbname = null;
+        try {
+            $dbname = $conn->getDatabase();
+        } catch (Exception $e) {
+            //exit('NO');
+            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r" . $e->getMessage() . "<br>";
+            $conn = null;
+            $container->setParameter('systemdb', false);
+        }
+    } else {
+        echo "<br>*** siteparameters.php: system DB conn is null ***\n\r <br>";
+        $conn = null;
+        $container->setParameter('systemdb', false);
+    }
+
+    //exit('Yes: '.$dbname);
 }
+
 /////// EOF Check if system DB exists ///////
 if( !$conn ) {
     //system DB does not exists => use default DB
@@ -228,7 +268,14 @@ if(0) {
 
 if( $conn ) {
     //echo "DB name=".$conn->getDatabase()."<br>";
-    echo "*** siteparameters.php: Connection to DB established. DB name=".$conn->getDatabase()." ***\n";
+    echo "*** siteparameters.php: Connection to DB established. DB name=[".$conn->getDatabase()."] ***\n";
+    echo "<br>*** systemdb=[".$container->getParameter('systemdb')."] ***\n<br>";
+    echo "<br>*** multilocales=[".$container->getParameter('multilocales')."] ***\n<br>";
+
+    //TODO: if system DB exists but 'user_siteparameters' table does not exists => init system DB
+    //1) by this script
+    //2) by temporary set container to multitenancy with default '/system' and use it to run
+    //3) /order/system/admin/first-time-login-generation-init/
 
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';

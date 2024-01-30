@@ -66,6 +66,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy);
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes);
 
+        //Do not use '/system/' as a system site. Use '/c/' as a system url.
         if(0) {
             $systemdb = $this->container->getParameter('systemdb');
             //echo "systemdb=".$systemdb."<br>";
@@ -84,7 +85,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
                     $params['dbname'] = $this->container->getParameter('database_name_systemdb');
                     $params['user'] = $this->container->getParameter('database_user_systemdb');
                     $params['password'] = $this->container->getParameter('database_password_systemdb');
-                    echo "<br>SystemDB: dBName=".$params['dbname']."<br>";
+                    //echo "<br>SystemDB: dBName=".$params['dbname']."<br>";
                     return parent::createConnection($params, $config, $eventManager, $mappingTypes);
                 }
             }
@@ -93,6 +94,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         }
 
         if( $multitenancy == 'singletenancy' ) {
+            //echo "singletenancy dBName=".$params['dbname']."<br>";
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         }
 
