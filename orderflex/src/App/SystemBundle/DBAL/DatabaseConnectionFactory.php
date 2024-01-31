@@ -139,57 +139,11 @@ class DatabaseConnectionFactory extends ConnectionFactory
 //            //don't change default dbname
 //        }
 
+        //dump($params);
+        //exit('111');
+
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         //return $this->wrappedConnectionFactory->createConnection($params, $config, $eventManager, $mappingTypes);
     }
-
-//    public function getConnectionParams( $urlSlug ) {
-//
-//        $params = array();
-//        $params['driver'] = $this->container->getParameter('database_driver');
-//        $params['host'] = $this->container->getParameter($urlSlug.'-databaseHost');
-//        $params['port'] = $this->container->getParameter($urlSlug.'-databasePort');
-//        $params['dbname'] = $this->container->getParameter($urlSlug.'-databaseName');
-//        $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
-//        $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
-//
-//        //echo "dBName=".$params['dbname']."<br>";
-//
-//        return $params;
-//
-////        $host = $this->container->getParameter('database_host');
-////        $driver = $this->container->getParameter('database_driver');
-////        $dbname = $this->container->getParameter('database_name');
-////        $user = $this->container->getParameter('database_user');
-////        $password = $this->container->getParameter('database_password');
-////
-////        $connectionParams = array(
-////            'dbname' => $dbname,
-////            'user' => $user,
-////            'password' => $password,
-////            'host' => $host,
-////            'driver' => $driver,
-////            //'port' => 3306
-////        );
-////
-////        $config = new \Doctrine\DBAL\Configuration();
-////        $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
-////
-////        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-////
-////        if( $conn ) {
-////
-////            //get ID of the urlSlug
-////            $hostedGroupHolderSql = "SELECT * FROM " . 'user_hostedusergrouplist' .
-////                " WHERE urlSlug=$urlSlug AND enabled=TRUE";
-////            $hostedGroupHolder = $conn->executeQuery($hostedGroupHolderSql);
-////            $hostedGroupHolderRows = $hostedGroupHolder->fetchAllAssociative();
-////
-////            $hostedGroupHolderSql = "SELECT * FROM " . 'user_hostedgroupholder' .
-////                " WHERE urlSlug=$urlSlug AND enabled=TRUE";
-////            $hostedGroupHolder = $conn->executeQuery($hostedGroupHolderSql);
-////            $hostedGroupHolderRows = $hostedGroupHolder->fetchAllAssociative();
-////        }
-//    }
 
 }

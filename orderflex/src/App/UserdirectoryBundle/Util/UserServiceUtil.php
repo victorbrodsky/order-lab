@@ -4497,6 +4497,8 @@ Pathology and Laboratory Medicine",
         return false;
     }
     public function getConnectionParams( $urlSlug ) {
+        //echo "urlSlug=$urlSlug <br>";
+        //exit('111');
         $params = array();
         $params['driver'] = $this->container->getParameter('database_driver');
         $params['host'] = $this->container->getParameter($urlSlug.'-databaseHost');

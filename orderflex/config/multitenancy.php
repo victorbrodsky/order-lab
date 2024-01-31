@@ -218,17 +218,23 @@ function checkAndEnableSystemDB( $container, $conn )
         $siteparameters = "SELECT * FROM " . $table;
         $hostedGroupHolders = $conn->executeQuery($siteparameters);
         $siteparametersRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
+        //dump($siteparametersRows);
+        //exit('111');
+        if( count($siteparametersRows) > 0 ) {
+            $siteparametersRow = $siteparametersRows[0];
 
-        if( isset($siteparametersRows['initialconfigurationcompleted']) ) {
-            $initialConfigurationCompleted = $siteparametersRows['initialconfigurationcompleted'];
-            echo "<br>### initialConfigurationCompleted=$initialConfigurationCompleted ### <br>";
-            if( !$initialConfigurationCompleted ) {
+            if( isset($siteparametersRow['initialconfigurationcompleted']) ) {
+                $initialConfigurationCompleted = $siteparametersRow['initialconfigurationcompleted'];
+                echo "<br>### initialConfigurationCompleted=$initialConfigurationCompleted ### <br>";
+                if( !$initialConfigurationCompleted ) {
+                    $enableSystem = true;
+                }
+            } else {
+                echo "<br>### ".$table." does not have initialConfigurationCompleted  ### <br>";
                 $enableSystem = true;
             }
-        } else {
-            $enableSystem = true;
         }
-
+        echo "<br>### enableSystem=[$enableSystem]  ### <br>";
         if( $enableSystem ) {
             echo "<br>### Enable multi-tenancy with 'system' ### <br>";
             //Enable multi-tenancy with 'system' to be able to
@@ -249,16 +255,30 @@ function checkAndEnableSystemDB( $container, $conn )
 
             $container->setParameter('multilocales', 'system');
             $container->setParameter('multilocales-urls', 'system');
+        }
 
-//            //Set DB connection paraneters for system
-//            $tenantUrl = 'system';
-//            $container->setParameter($tenantUrl . "-id", null);
-//            $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
-//            $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
-//            $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
-//            $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
-//            $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
-//            $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
+        if( 0 ) {
+            echo "<br>### TEST Enable multi-tenancy with 'system' ### <br>";
+            //Enable multi-tenancy with 'system' to be able to
+            //access /system/ and manage System DB
+            $multitenancy = 'multitenancy'; //Used by CustomTenancyLoader
+            $container->setParameter('multitenancy', $multitenancy);
+
+            $container->setParameter('defaultlocale', 'default');
+            $container->setParameter('locdel', '/'); //locale delimeter '/'
+
+            $container->setParameter('multilocales', 'system|default');
+            $container->setParameter('multilocales-urls', 'system|default');
+
+            //Set id of this hosted user group
+            $tenantUrl = 'default';
+            $container->setParameter($tenantUrl . "-id", null);
+            //$container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver'));
+            $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host'));
+            $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port'));
+            $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name'));
+            $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user'));
+            $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password'));
         }
 
     } else {

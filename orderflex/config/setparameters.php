@@ -124,7 +124,7 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         $container->setParameter('systemdb', false);
     }
 
-    //exit('Yes: '.$dbname);
+    //exit('Yes: '.$dbname); 
 }
 
 /////// EOF Check if system DB exists ///////

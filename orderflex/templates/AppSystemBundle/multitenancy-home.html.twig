@@ -42,16 +42,18 @@
             {#</li>#}
 
             {% for multilocale in multilocales %}
-
+                {#multilocale={{ multilocale }}<br>#}
                 {% if user_service_utility.isDbInitialized(multilocale) %}
                     <li class="list-group-item" >
                         <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
                     </li>
                 {% else %}
-                    <li class="list-group-item" >
-                        <a href="{{ path('first-time-login-generation-init') }}" target="_blank"
-                        >Initialize {{ multilocale }} database</a>
-                    </li>
+                    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                        <li class="list-group-item" >
+                            <a href="{{ path('first-time-login-generation-init', {_locale: multilocale}) }}" target="_blank"
+                            >Initialize {{ multilocale }} database</a>
+                        </li>
+                    {#{% endif %}#}
                 {% endif %}
 
                 {#{% if multilocale == 'system' %}#}
