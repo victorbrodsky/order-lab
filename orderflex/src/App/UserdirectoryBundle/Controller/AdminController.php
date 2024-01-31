@@ -199,60 +199,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class AdminController extends OrderAbstractController
 {
 
-//    /**
-//     * run: http://localhost/order/directory/admin/install-certbot/oli2002@med.cornell.edu
-//     */
-//    #[Route(path: '/install-certbot/{email}', name: 'user_install_certbot')]
-//    public function installCertbotAction(Request $request, $email)
-//    {
-//        $logger = $this->container->get('logger');
-//        $em = $this->getDoctrine()->getManager();
-//        $users = $roles = $em->getRepository(User::class)->findAll();
-//        $logger->notice('installCertbotAction: users='.count($users));
-//
-//        $projectDir = $this->container->get('kernel')->getProjectDir();
-//        $path = $projectDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."packer".DIRECTORY_SEPARATOR;
-//        $script = $path."install-certbot.sh";
-//
-//        $domainname = $request->getHost();
-//        $sslcertificate = "installcertbot";
-//
-//        $command = "bash $script $domainname $sslcertificate $email";
-//        //echo "command=$command <br>";
-//        //echo "path=".$path.", domainname=".$domainname.", sslcertificate=".$sslcertificate.", email=".$email."<br>";
-//        $logger->notice('installCertbotAction: command='.$command);
-//        $logger->notice(
-//            'installCertbotAction: '."path=".$path.
-//            ", domainname=".$domainname.", sslcertificate=".
-//            $sslcertificate.", email=".$email
-//        );
-//
-//        if( count($users) == 0 ) {
-//            //Run script /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email
-//            //$domainname = "domainname"; //get from url
-//
-//            $logger->notice('installCertbotAction: before command='.$command);
-//            $this->runProcess($command);
-//            $logger->notice('installCertbotAction: after command='.$command);
-//
-//            $adminRes = 'Certbot installed with command '.$command;
-//        } else {
-////            if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-////                return $this->redirect($this->generateUrl('employees-nopermission'));
-////            }
-//            $adminRes = 'System is not clean. Certbot is not installed.';
-//            //exit('users already exists');
-//            $logger->notice('Finished initialization. users already exists');
-//        }
-//
-//        $this->addFlash(
-//            'notice',
-//            $adminRes
-//        );
-//
-//        return $this->redirect($this->generateUrl('first-time-login-generation-init-https'));
-//    }
-
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
@@ -269,11 +215,8 @@ class AdminController extends OrderAbstractController
         if (count($users) == 0) {
 
             //1) get systemuser
-            //$userSecUtil = new UserSecurityUtil($em, null);
             $userSecUtil = $this->container->get('user_security_utility');
             $systemuser = $userSecUtil->findSystemUser();
-
-            //$this->generateSitenameList($systemuser);
 
             if (!$systemuser) {
 
@@ -290,25 +233,8 @@ class AdminController extends OrderAbstractController
 
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-
                 //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
-
                 $systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
-
-                //echo "0 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>";
-
-                //set unique username
-                //$usernameUnique = $systemuser->createUniqueUsername();
-                //$systemuser->setUsername($usernameUnique);
-                //$systemuser->setUsernameCanonical($usernameUnique);
-
-                //exit("1 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>");
-
-                //$systemuser->setUsername("system_@_local-user");
-                //$systemuser->setUsernameCanonical("system_@_local-user");
-
-                //$encoder = $this->container->get('security.password_encoder');
-                //$encoded = $encoder->encodePassword($systemuser, "systemuserpass");
                 $authUtil = $this->container->get('authenticator_utility');
                 $encoded = $authUtil->getEncodedPassword($systemuser,"systemuserpass");
 
@@ -322,12 +248,10 @@ class AdminController extends OrderAbstractController
                 //exit("system user created");
             }
 
+            //generate or update default admin user
             $adminRes = $this->generateAdministratorAction(true);
             $logger->notice('Finished generate AdministratorAction. adminRes='.$adminRes);
-            //exit($adminRes);
 
-            //TODO: $channel
-            //if( $channel && $channel == "https" ) {
             if( $request->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
                 $entities = $em->getRepository(SiteParameters::class)->findAll();
@@ -337,7 +261,7 @@ class AdminController extends OrderAbstractController
                     $entities = $em->getRepository(SiteParameters::class)->findAll();
                 }
                 if (count($entities) != 1) {
-                    exit('Must have only one parameter object. Found ' . count($entities) . ' object(s)');
+                    exit('Must have only one SiteParameters object. Found ' . count($entities) . ' object(s)');
                     //throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
                 }
                 $entity = $entities[0];
@@ -346,8 +270,8 @@ class AdminController extends OrderAbstractController
                 $em->flush();
             }
 
-            $logger->notice('Start updateApplication');
-            $updateres = $this->updateApplication();
+            $logger->notice('Start updateApplication (run deploy script)');
+            $updateres = $this->updateApplication(); //run deploy script
 
             $adminRes = $adminRes . " <br> " .$updateres;
 
@@ -356,9 +280,9 @@ class AdminController extends OrderAbstractController
         } else {
             //$adminRes = 'Admin user already exists';
             //$adminRes = "System has been initialized successfully.";
-            $adminRes = 'Admin user has been successfully created.';
+            $adminRes = 'Admin user has been already created';
             //exit('users already exists');
-            $logger->notice('Finished initialization. users already exists');
+            $logger->notice('Finished initialization. '.$adminRes);
         }
 
 
@@ -9134,28 +9058,28 @@ class AdminController extends OrderAbstractController
             //echo 'testing3 <br>';
 
             ////////////// Update password ///////////////////
-            if(0) {
-                //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
-                $authUtil = $this->container->get('authenticator_utility');
-                $encodedPassword = $authUtil->getEncodedPassword($administrator, "1234567890");
-                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-                //$encodedPassword = strval($encodedPassword);
-                $encodedPassword = (string)$encodedPassword;
-
-                $bool = hash_equals($administrator->getPassword(), $encodedPassword);
-
-                //echo "admin id=".$administrator->getId()."<br>";
-
-                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-                //exit('111');
-                //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
-
-                if ($bool == false) {
-                    $administrator->setPassword($encodedPassword);
-                    $flush = true;
-                    $res .= " Password updated.";
-                }
-            }
+//            if(0) {
+//                //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+//                $authUtil = $this->container->get('authenticator_utility');
+//                $encodedPassword = $authUtil->getEncodedPassword($administrator, "1234567890");
+//                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+//                //$encodedPassword = strval($encodedPassword);
+//                $encodedPassword = (string)$encodedPassword;
+//
+//                $bool = hash_equals($administrator->getPassword(), $encodedPassword);
+//
+//                //echo "admin id=".$administrator->getId()."<br>";
+//
+//                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+//                //exit('111');
+//                //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
+//
+//                if ($bool == false) {
+//                    $administrator->setPassword($encodedPassword);
+//                    $flush = true;
+//                    $res .= " Password updated.";
+//                }
+//            }
             ////////////// EOF Update password ///////////////////
 
             ////////////// Update Role ///////////////////
@@ -9170,7 +9094,6 @@ class AdminController extends OrderAbstractController
             if( $administrator->getPerSiteSettings() ) {
                 $phis =  $administrator->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 if( count($phis) == 0 ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                     $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
                     if( $wcmc ) {
                         $administrator->getPerSiteSettings()->addPermittedInstitutionalPHIScope($wcmc);

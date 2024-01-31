@@ -42,16 +42,26 @@
             {#</li>#}
 
             {% for multilocale in multilocales %}
-                <li class="list-group-item" >
-                    <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
-                </li>
 
-                {% if multilocale == 'system' %}
+                {% if user_service_utility.isDbInitialized(multilocale) %}
+                    <li class="list-group-item" >
+                        <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
+                    </li>
+                {% else %}
                     <li class="list-group-item" >
                         <a href="{{ path('first-time-login-generation-init') }}" target="_blank"
-                        >Initialize Database</a>
+                        >Initialize {{ multilocale }} database</a>
                     </li>
                 {% endif %}
+
+                {#{% if multilocale == 'system' %}#}
+                    {#{% if not user_service_utility.isDbInitialized(multilocale) %}#}
+                        {#<li class="list-group-item" >#}
+                            {#<a href="{{ path('first-time-login-generation-init') }}" target="_blank"#}
+                            {#>Initialize {{ multilocale }} database</a>#}
+                        {#</li>#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
 
             {% endfor %}
 

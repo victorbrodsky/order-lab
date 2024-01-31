@@ -972,217 +972,7 @@ class UserServiceUtil {
 
             ////////////////////// EOF Third-Party Software //////////////////
 
-            "contentAboutPage" => '
-                <p>
-                    This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
-                </p>
-
-                <p>
-                    Designers: Victor Brodsky, Oleg Ivanov
-                </p>
-
-                <p>
-                    Developer: Oleg Ivanov
-                </p>
-
-                <p>
-                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
-                </p>
-
-                <p>
-                    We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
-                <a href="mailto:'.$defaultSystemEmail.'" target="_top">'.$defaultSystemEmail.'</a> and attach relevant screenshots.
-                </p>
-
-                <br>
-
-                <p>
-                O R D E R is made possible by:
-                </p>
-
-                <br>
-
-                <p>
-
-                        <ul>
-
-
-                    <li>
-                        <a href="http://php.net">PHP</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://symfony.com">Symfony</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://doctrine-project.org">Doctrine</a>
-                    </li>
-
-                    <br>                  
-					
-					<li>
-                        <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-
-                        <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.dropzonejs.com/">Dropzone JS</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.jstree.com/">jsTree</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
-                    </li>                                
-
-                    <br>
-
-                    <li>
-                        <a href="http://getbootstrap.com/">Bootstrap</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/kriskowal/q">JS promises Q</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://jquery.com">jQuery</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://jqueryui.com/">jQuery UI</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://ivaynberg.github.io/select2/">Select2</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://handsontable.com/">Handsontable</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/bermi/password-generator">Password Generator</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://casperjs.org/">CasperJS</a>
-                    </li>
-
-                </ul>
-                </p>
-            '
+            "contentAboutPage" => $this->getContentAboutPage()
             //"underLoginMsgUser" => "",
             //"underLoginMsgScan => ""
 
@@ -1285,6 +1075,221 @@ class UserServiceUtil {
         $logger->notice("Finished generateSiteParameters: count=".$count/10);
 
         return round($count/10);
+    }
+    public function getContentAboutPage() {
+        $contentAboutPage =
+        '
+            <p>
+                This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
+            </p>
+
+            <p>
+                Designers: Victor Brodsky, Oleg Ivanov
+            </p>
+
+            <p>
+                Developer: Oleg Ivanov
+            </p>
+
+            <p>
+                Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
+            </p>
+
+            <p>
+                We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
+            <a href="mailto:'.$defaultSystemEmail.'" target="_top">'.$defaultSystemEmail.'</a> and attach relevant screenshots.
+            </p>
+
+            <br>
+
+            <p>
+            O R D E R is made possible by:
+            </p>
+
+            <br>
+
+            <p>
+
+                    <ul>
+
+
+                <li>
+                    <a href="http://php.net">PHP</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://symfony.com">Symfony</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://doctrine-project.org">Doctrine</a>
+                </li>
+
+                <br>                  
+                
+                <li>
+                    <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
+                </li>
+
+                <br>
+
+                <li>
+
+                    <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://www.dropzonejs.com/">Dropzone JS</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://www.jstree.com/">jsTree</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
+                </li>                                
+
+                <br>
+
+                <li>
+                    <a href="http://getbootstrap.com/">Bootstrap</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/kriskowal/q">JS promises Q</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://jquery.com">jQuery</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://jqueryui.com/">jQuery UI</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://ivaynberg.github.io/select2/">Select2</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://handsontable.com/">Handsontable</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/bermi/password-generator">Password Generator</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
+                </li>
+
+                <br>
+
+                <li>
+                    <a href="http://casperjs.org/">CasperJS</a>
+                </li>
+
+            </ul>
+            </p>
+        ';
+        return $contentAboutPage;
     }
 
     public function generateSubSiteParameters() {
@@ -4448,6 +4453,59 @@ Pathology and Laboratory Medicine",
 
     public function getEnvironments() {
         return array("live"=>"live", "test"=>"test", "dev"=>"dev");
+    }
+
+    public function isDbInitialized( $locale=null ) {
+        //echo "isDbInitialized: locale=".$locale."<br>";
+        if( !$locale ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $param = $userSecUtil->getSingleSiteSettingsParam();
+            if( $param ) {
+                $initialConfigurationCompleted = $param->getInitialConfigurationCompleted();
+                //echo '$initialConfigurationCompleted='.$initialConfigurationCompleted."<br>";
+                return $initialConfigurationCompleted;
+            }
+            return false;
+        }
+
+        //Connect to DB by tenancy name $locale
+        $config = new \Doctrine\DBAL\Configuration();
+        $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+        $connectionParams = $this->getConnectionParams($locale);
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        $table = 'user_siteparameters';
+        $schemaManager = $conn->createSchemaManager();
+        if ($conn && $schemaManager->tablesExist(array($table)) == true) {
+            //SiteParameters entity exists => Do nothing
+            //echo "<br>### SiteParameters entity exists => Check 'initialConfigurationCompleted' ### <br>";
+            $enableSystem = false;
+            $siteparameters = "SELECT * FROM " . $table;
+            $hostedGroupHolders = $conn->executeQuery($siteparameters);
+            $siteparametersRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
+
+            if( count($siteparametersRows) > 0 ) {
+                $siteparametersRow = $siteparametersRows[0];
+                if( isset($siteparametersRow['initialconfigurationcompleted']) ) {
+                    $initialConfigurationCompleted = $siteparametersRow['initialconfigurationcompleted'];
+                    //echo "<br>### initialConfigurationCompleted=$initialConfigurationCompleted ### <br>";
+                    return $initialConfigurationCompleted;
+                }
+            }
+        }
+
+        return false;
+    }
+    public function getConnectionParams( $urlSlug ) {
+        $params = array();
+        $params['driver'] = $this->container->getParameter('database_driver');
+        $params['host'] = $this->container->getParameter($urlSlug.'-databaseHost');
+        $params['port'] = $this->container->getParameter($urlSlug.'-databasePort');
+        $params['dbname'] = $this->container->getParameter($urlSlug.'-databaseName');
+        $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
+        $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
+        //echo "dBName=".$params['dbname']."<br>";
+        return $params;
     }
 
 
