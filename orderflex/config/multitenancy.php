@@ -43,6 +43,9 @@ function initRequiredMultitenancy( $container )
     $container->setParameter('multitenancy', $multitenancy);
 
     $container->setParameter('multilocales-urls', '');
+
+    //Always have default and system
+    //$container->setParameter('locale_prefixes', "default: '',system: 'system'");
 }
 
 
@@ -257,7 +260,7 @@ function checkAndEnableSystemDB( $container, $conn )
             $container->setParameter('multilocales-urls', 'system');
         }
 
-        if( 0 ) {
+        if( 1 ) {
             echo "<br>### TEST Enable multi-tenancy with 'system' ### <br>";
             //Enable multi-tenancy with 'system' to be able to
             //access /system/ and manage System DB
@@ -269,6 +272,8 @@ function checkAndEnableSystemDB( $container, $conn )
 
             $container->setParameter('multilocales', 'system|default');
             $container->setParameter('multilocales-urls', 'system|default');
+
+            //$container->setParameter('locale_prefixes', "default: '',system: 'system'");
 
             //Set id of this hosted user group
             $tenantUrl = 'default';

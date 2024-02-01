@@ -63,8 +63,8 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $multitenancy = $this->container->getParameter('multitenancy');
         //echo "createConnection: multitenancy=".$multitenancy."<br>";
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
-        $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy);
-        //return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+        $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
+        //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
 
         //Do not use '/system/' as a system site. Use '/c/' as a system url.
         if(0) {

@@ -53,8 +53,9 @@ security:
 
         ldap_employees_firewall:
               #pattern: ^.*/%tenantprefix%/directory //^.* will make patern can be c/wcm/pathology/directory or c/lmh/pathology/directory
-              pattern: ^/(%multilocales%)(%locdel%)directory
-              #pattern: ^.*/directory
+              #pattern: ^/(%multilocales%)(%locdel%)directory
+              pattern: ^.*/directory #^.*/directory will support empty default prefix (/directory) and multi-tenancy (/system/directory)
+              #pattern: ^/(system|default)/directory
               context: scan_auth
               switch_user: true
               custom_authenticators:
@@ -78,7 +79,8 @@ security:
                   #path:     /directory
 
         ldap_fellapp_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
+            #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
+            pattern: ^.*/fellowship-applications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -99,7 +101,8 @@ security:
 #                always_remember_me: true
 
         ldap_resapp_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)residency-applications
+            #pattern: ^/(%multilocales%)(%locdel%)residency-applications
+            pattern: ^.*/residency-applications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -118,7 +121,8 @@ security:
                 path:     /(%multilocales%)(%locdel%)residency-applications
 
         ldap_deidentifier_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)deidentifier
+            #pattern: ^/(%multilocales%)(%locdel%)deidentifier
+            pattern: ^.*/deidentifier
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -138,7 +142,8 @@ security:
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)time-away-request
+            #pattern: ^/(%multilocales%)(%locdel%)time-away-request
+            pattern: ^.*/time-away-request
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -158,7 +163,8 @@ security:
 #                always_remember_me: true
 
         ldap_calllog_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)call-log-book
+            #pattern: ^/(%multilocales%)(%locdel%)call-log-book
+            pattern: ^.*/call-log-book
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -178,7 +184,8 @@ security:
 #                always_remember_me: true
 
         ldap_crn_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)critical-result-notifications
+            #pattern: ^/(%multilocales%)(%locdel%)critical-result-notifications
+            pattern: ^.*/critical-result-notifications
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -197,7 +204,8 @@ security:
                 path:     /(%multilocales%)(%locdel%)critical-result-notifications
 
         ldap_translationalresearch_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)translational-research
+            #pattern: ^/(%multilocales%)(%locdel%)translational-research
+            pattern: ^.*/translational-research
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -217,7 +225,8 @@ security:
 #                always_remember_me: true
 
         ldap_dashboard_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)dashboards
+            #pattern: ^/(%multilocales%)(%locdel%)dashboards
+            pattern: ^.*/dashboards
             context: scan_auth
             switch_user: true
             custom_authenticators:
@@ -236,7 +245,8 @@ security:
                 path:     /(%multilocales%)(%locdel%)dashboards
 
         foscomment_api_firewall:
-            pattern: ^/(%multilocales%)(%locdel%)api
+            #pattern: ^/(%multilocales%)(%locdel%)api
+            pattern: ^.*/api
             #logout_on_user_change: true
             context: scan_auth
             lazy:  true

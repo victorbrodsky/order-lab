@@ -8,13 +8,10 @@
 ProjectBaseBundle_localized:
     resource: 'routes-default.yaml'
     schemes:  ['%connection_channel%']
-    prefix:   /{_locale}
-    #prefix: [default: '',system: 'system']
-      #default: ''
-      #system: 'system'
-    #prefix:
-    #    default: '' #default - no prefix
-    #    system: 'system'
+    #prefix:   /{_locale}
+    prefix:
+        default: '' #default - no prefix
+        system: 'system'
         #c-lmh-pathology: '/c/lmh/pathology'
     #name_prefix: 'localized_'
     requirements:

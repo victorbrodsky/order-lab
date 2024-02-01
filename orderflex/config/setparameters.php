@@ -69,7 +69,7 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
 
-    //Set DB connection paraneters for system
+    //Set DB connection paraneters for system 
     $tenantUrl = 'system';
     $container->setParameter($tenantUrl . "-id", null);
     $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
@@ -124,7 +124,7 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         $container->setParameter('systemdb', false);
     }
 
-    //exit('Yes: '.$dbname); 
+    //exit('Yes: '.$dbname);
 }
 
 /////// EOF Check if system DB exists ///////

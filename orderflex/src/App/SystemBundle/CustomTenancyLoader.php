@@ -61,13 +61,17 @@ class CustomTenancyLoader extends Loader {
         if( $multitenancy == 'multitenancy' ) {
             //$this->container->setParameter('defaultlocale', 'main');
             $config = 'routes-multi.yaml';
+            if( $this->container->getParameter('systemdb') ) {
+                //echo '###CustomTenancyLoader load'.'<br>###';
+                $config = 'routes-multi-default.yaml';
+            }
         } else {
             //$this->container->setParameter('defaultlocale', ''); //Impossible to call set() on a frozen ParameterBag
             $config = 'routes-single.yaml';
         }
 
         $resource = $configDirectory.$config;
-        //echo $multitenancy.": add resource=".$resource."<br>";
+        echo $multitenancy.": add resource=".$resource."<br>";
         //exit('CustomTenancyLoader');
 
         $type = 'yaml';
