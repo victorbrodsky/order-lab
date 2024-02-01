@@ -109,16 +109,18 @@ class MaintenanceListener {
             //echo "multitenancy=".$multitenancy."<br>";
             //exit('MaintenanceListener');
             if( $multitenancy == 'multitenancy' ) {
-                $locale = $request->getLocale(); //main or c-wcm-pathology or c-lmh-pathology
+                $locale = $request->getLocale(); //system or c-wcm-pathology or c-lmh-pathology
                 $sessionLocale = $session->get('locale');
                 //echo "uri=".$uri.", locale=".$locale.", sessionLocale=".$sessionLocale."<br>";
                 //exit('1');
                 //$locale = str_replace("-", "/", $locale);
-                //echo "locale=" . $locale .', sessionLocale='.$sessionLocale. "<br>";
+                //echo "locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
                 //echo "uri=".$uri.", locale=".$locale."<br>";
                 //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
                 //if( $locale != 'main' && $sessionLocale != 'main' && $locale != $sessionLocale ) {
                 if( $locale && $sessionLocale && $locale != $sessionLocale ) {
+                    //echo "locales different!!! locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
+                    //exit('111');
                     $session->getFlashBag()->add(
                         'warning',
                         "You can not switch between institution's sites without re-login."

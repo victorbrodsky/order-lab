@@ -44,8 +44,36 @@ function initRequiredMultitenancy( $container )
 
     $container->setParameter('multilocales-urls', '');
 
-    //Always have default and system
-    //$container->setParameter('locale_prefixes', "default: '',system: 'system'");
+    //Always have default and system locales (prefix)
+    //This will allow to have an access to the system DB (https://mydomain/system) which control multitenancy settings
+    //and will allow to access the default DB (regular url such as https://mydomain)
+
+    $systemdb = $container->getParameter('systemdb');
+    echo "<br>### initRequiredMultitenancy: systemdb=".$systemdb." ### <br>";
+    if( $systemdb == true ) {
+        echo "<br>### Enable multi-tenancy with 'system' and 'default' ### <br>";
+        $container->setParameter('full-multitenancy', false);
+        //Enable multi-tenancy with 'system' to be able to
+        //access /system/ and manage System DB
+        $multitenancy = 'multitenancy'; //Used by CustomTenancyLoader
+        $container->setParameter('multitenancy', $multitenancy);
+
+        $container->setParameter('defaultlocale', 'default');
+        $container->setParameter('locdel', '/'); //locale delimeter '/'
+
+        $container->setParameter('multilocales', 'system|default');
+        $container->setParameter('multilocales-urls', 'system|default');
+
+        //Set id of this hosted user group
+        $tenantUrl = 'default';
+        $container->setParameter($tenantUrl . "-id", null);
+        //$container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver'));
+        $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host'));
+        $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port'));
+        $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name'));
+        $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user'));
+        $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password'));
+    }
 }
 
 
@@ -128,8 +156,8 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
 //                    $container->setParameter('defaultlocale', 'main');
 //                    $container->setParameter('locdel', '/'); //locale delimeter '/'
 
-            //TODO: get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
-            //TODO: make sure ParametersCompilerPass is working
+            //Get from DB. Use $authServerNetworkId to get these from AuthServerNetworkList
+            //Do not use ParametersCompilerPass (not working)
             //$multilocales = 'main|c/wcm/pathology|c/lmh/pathology';
             //$container->setParameter('multilocales', $multilocales);
 
@@ -169,6 +197,8 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
                     $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
                 }
                 if (count($tenantUrlArr) > 0) {
+                    $container->setParameter('full-multitenancy', true); //enable full-multitenancy mode: system, and other tenants
+
                     $multitenancy = 'multitenancy'; //Used by CustomTenancyLoader
                     $container->setParameter('multitenancy', $multitenancy);
 
@@ -181,6 +211,10 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
                     //$container->setParameter('multilocales', 'main|'.$multilocales);
                     $container->setParameter('multilocales', 'system|' . $multilocales);
                     $container->setParameter('multilocales-urls', $multilocales);
+
+                    //Add to system|default
+                    //$container->setParameter('multilocales', 'system|default');
+                    //$container->setParameter('multilocales-urls', 'system|default');
                 }
                 //exit("\n<br>".'user_hostedgroupholder');
             }
@@ -193,9 +227,11 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
 //                    $loader->load('security_access_control.yml');
         }
     }
+
+    //$container->compile();
 }
 
-
+//NOT USED
 function checkAndEnableSystemDB( $container, $conn )
 {
     echo "<br>### checkAndEnableSystemDB ### <br>";
@@ -260,7 +296,7 @@ function checkAndEnableSystemDB( $container, $conn )
             $container->setParameter('multilocales-urls', 'system');
         }
 
-        if( 1 ) {
+        if( 0 ) {
             echo "<br>### TEST Enable multi-tenancy with 'system' ### <br>";
             //Enable multi-tenancy with 'system' to be able to
             //access /system/ and manage System DB
@@ -272,8 +308,6 @@ function checkAndEnableSystemDB( $container, $conn )
 
             $container->setParameter('multilocales', 'system|default');
             $container->setParameter('multilocales-urls', 'system|default');
-
-            //$container->setParameter('locale_prefixes', "default: '',system: 'system'");
 
             //Set id of this hosted user group
             $tenantUrl = 'default';

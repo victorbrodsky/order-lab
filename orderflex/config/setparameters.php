@@ -69,7 +69,7 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
 
-    //Set DB connection paraneters for system 
+    //Set DB connection paraneters for system
     $tenantUrl = 'system';
     $container->setParameter($tenantUrl . "-id", null);
     $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
@@ -207,7 +207,8 @@ $container->setParameter('mailer_dsn', "null://null");
 //Set default container parameters for multitenancy
 initRequiredMultitenancy($container);
 
-checkAndEnableSystemDB($container, $conn);
+//Enable system DB
+//checkAndEnableSystemDB($container, $conn);
 
 //if(0) {
 //    $config = new \Doctrine\DBAL\Configuration();
@@ -568,5 +569,4 @@ if( $conn ) {
 else {
     echo "*** siteparameters.php: No connection to DB ***\n";
 }
-
 

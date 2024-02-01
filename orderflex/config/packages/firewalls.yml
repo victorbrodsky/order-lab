@@ -75,8 +75,8 @@ security:
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-                  path:     /(%multilocales%)(%locdel%)directory
-                  #path:     /directory
+                  #path:     /(%multilocales%)(%locdel%)directory
+                  path:     /directory
 
         ldap_fellapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
@@ -97,7 +97,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)fellowship-applications
+                #path:     /(%multilocales%)(%locdel%)fellowship-applications
+                path:     /fellowship-applications
 #                always_remember_me: true
 
         ldap_resapp_firewall:
@@ -118,7 +119,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)residency-applications
+                #path:     /(%multilocales%)(%locdel%)residency-applications
+                path:     /residency-applications
 
         ldap_deidentifier_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)deidentifier
@@ -138,7 +140,8 @@ security:
             remember_me:
                 secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)deidentifier
+                #path:     /(%multilocales%)(%locdel%)deidentifier
+                path:     /deidentifier
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
@@ -159,7 +162,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)time-away-request
+                #path:     /(%multilocales%)(%locdel%)time-away-request
+                path:     /time-away-request
 #                always_remember_me: true
 
         ldap_calllog_firewall:
@@ -180,7 +184,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)call-log-book
+                #path:     /(%multilocales%)(%locdel%)call-log-book
+                path:     /call-log-book
 #                always_remember_me: true
 
         ldap_crn_firewall:
@@ -201,7 +206,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)critical-result-notifications
+                #path:     /(%multilocales%)(%locdel%)critical-result-notifications
+                path:     /critical-result-notifications
 
         ldap_translationalresearch_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)translational-research
@@ -221,7 +227,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)translational-research
+                #path:     /(%multilocales%)(%locdel%)translational-research
+                path:     /translational-research
 #                always_remember_me: true
 
         ldap_dashboard_firewall:
@@ -242,7 +249,8 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)dashboards
+                #path:     /(%multilocales%)(%locdel%)dashboards
+                path:     /dashboards
 
         foscomment_api_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)api
