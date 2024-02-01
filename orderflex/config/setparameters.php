@@ -48,8 +48,9 @@ $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerF
 //2) php bin/console doctrine:schema:update --em=systemdb --complete --force
 //3) php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
 //4) php bin/console doctrine:migration:version --em=systemdb --add --all
-//5) Run: /order/system/admin/first-time-login-generation-init/
-//6) Run on the settings page: 1) Populate Country and City Lists and 2) Populate All Lists with Default Values (Part A)
+//5) bash deploy.ch
+//6) Run: /system/directory/admin/first-time-login-generation-init/
+//7) Run on the settings page: 1) Populate Country and City Lists and 2) Populate All Lists with Default Values (Part A)
 $driver_systemdb = $container->getParameter('database_driver_systemdb');
 $host_systemdb = $container->getParameter('database_host_systemdb');
 $port_systemdb = $container->getParameter('database_port_systemdb');
@@ -561,12 +562,14 @@ if( $conn ) {
 
 
     } else {
-        //exit("table false<br>");
+        //exit("table false<br>"); 
         //echo("table false<br>");
-    } //if $conn && $schemaManager
+    } //if $conn && $schemaManager      
 
 }//if $conn
 else {
     echo "*** siteparameters.php: No connection to DB ***\n";
 }
+
+printSettings($container);
 

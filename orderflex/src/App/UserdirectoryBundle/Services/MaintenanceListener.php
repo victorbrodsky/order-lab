@@ -103,8 +103,9 @@ class MaintenanceListener {
         //$this->switchDb($event);
         //$userSecUtil->switchDb();
 
-        //Prevent switching without relogin if session's locale is different from the current: users can not jump between locales
-        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        //////// Prevent switching without re-login ////////
+        //Prevent switching without re-login if session's locale is different from the current: users can not jump between locales
+        if( 0 && $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
             //echo "multitenancy=".$multitenancy."<br>";
             //exit('MaintenanceListener');
@@ -147,6 +148,7 @@ class MaintenanceListener {
                 //exit('1');
             }
         }
+        //////// EOF Prevent switching without re-login ////////
 
         //site check accessibility
         if(

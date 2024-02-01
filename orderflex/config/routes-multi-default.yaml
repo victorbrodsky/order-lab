@@ -11,6 +11,7 @@ ProjectBaseBundle_localized:
     #prefix:   /{_locale}
     prefix:
         default: '' #default - no prefix
+        #default: 'default'
         system: 'system'
         #c-lmh-pathology: '/c/lmh/pathology'
     #name_prefix: 'localized_'

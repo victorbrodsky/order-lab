@@ -80,6 +80,8 @@ class CustomTenancyLoader extends Loader {
         $resource = $configDirectory.$config;
         //echo $multitenancy.": add resource=".$resource."<br>";
         //exit('CustomTenancyLoader');
+        $logger = $this->container->get('logger');
+        $logger->notice("CustomTenancyLoader load=".$multitenancy.": add config route=".$config);
 
         $type = 'yaml';
 

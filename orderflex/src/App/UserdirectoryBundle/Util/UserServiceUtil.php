@@ -824,8 +824,6 @@ class UserServiceUtil {
 
         $logger->notice("Start generating SiteParameters");
 
-        $defaultSystemEmail = $this->container->getParameter('default_system_email');
-
         $types = array(
             "connectionChannel" => "http",
 
@@ -1077,6 +1075,7 @@ class UserServiceUtil {
         return round($count/10);
     }
     public function getContentAboutPage() {
+        $defaultSystemEmail = $this->container->getParameter('default_system_email');
         $contentAboutPage =
         '
             <p>

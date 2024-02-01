@@ -66,7 +66,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
 
-        //Do not use '/system/' as a system site. Use '/c/' as a system url.
+        //////// Use '/system/' as a system site ////////
         if(0) {
             $systemdb = $this->container->getParameter('systemdb');
             //echo "systemdb=".$systemdb."<br>";
@@ -92,6 +92,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
             //dump($params);
             //exit('111');
         }
+        //////// EOF Use '/system/' as a system site ////////
 
         if( $multitenancy == 'singletenancy' ) {
             //echo "singletenancy dBName=".$params['dbname']."<br>";
@@ -122,8 +123,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         foreach($multilocalesUrlArr as $multilocalesUrl) {
             //$multilocalesUrl = 'c/lmh/pathology'
             if( $uri && str_contains($uri, $multilocalesUrl) ) {
-                //connect to the system DB
-                //$params = $this->getConnectionParams($multilocalesUrl);
+                //connect to the appropriate DB
                 $params = $userServiceUtil->getConnectionParams($multilocalesUrl);
                 //$dbName = 'Tenant2';
                 //$params['dbname'] = $dbName;
@@ -132,18 +132,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
             }
         }
 
-//        if( $uri && str_contains($uri, 'c/lmh/pathology') ) {
-//            $dbName = 'Tenant2';
-//            $params['dbname'] = $dbName;
-//        } else {
-//            //don't change default dbname
-//        }
-
-        //dump($params);
-        //exit('111');
-
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
-        //return $this->wrappedConnectionFactory->createConnection($params, $config, $eventManager, $mappingTypes);
     }
 
 }

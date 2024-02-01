@@ -390,6 +390,8 @@ class AdminController extends OrderAbstractController
             }
         }
 
+        //$container->compile();
+
         $dirSep = DIRECTORY_SEPARATOR;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -452,7 +454,7 @@ class AdminController extends OrderAbstractController
             if( $cache ) {
                 //echo "assets:install=" . exec("php bin" . $dirSep . "console assets:install") . "<br>";
                 //echo "cache:clear=" . exec("php bin" . $dirSep . "console cache:clear --env=prod --no-debug") . "<br>";
-                echo "deploy=" . exec("bash deploy.sh") . "<br>";
+                echo "windows deploy=" . exec("bash deploy.sh") . "<br>";
 
                 //remove var/cache/prod
                 //$cachePathOld = "var" . $dirSep . "cache" . $dirSep . "prod";

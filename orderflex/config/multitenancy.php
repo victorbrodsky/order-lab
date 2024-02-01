@@ -90,46 +90,6 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
         echo "<br>### setRequiredMultitenancyByDB: system DB does not exists => single-tenancy ### <br>";
         return;
     }
-    
-//    //Enable system DB
-//    //$table = 'user_siteParameters';
-//    $table = 'user_siteparameters';
-//    $schemaManager = $conn->createSchemaManager();
-//    //exit("3");
-//    if ($conn && $schemaManager->tablesExist(array($table)) == true) {
-//        //SiteParameters entity exists => Do nothing
-//        echo "<br>### SiteParameters entity exists => Do nothing ### <br>";
-//    } else {
-//        echo "<br>### Enable multi-tenancy with 'system' ### <br>";
-//        //Enable multi-tenancy with 'system' to be able to
-//        //run /order/system/admin/first-time-login-generation-init/
-//        //and manage System DB
-//        $multitenancy = 'multitenancy'; //Used by CustomTenancyLoader
-//        $container->setParameter('multitenancy', $multitenancy);
-//
-//        //$container->setParameter('defaultlocale', 'main');
-//        $container->setParameter('defaultlocale', 'system');
-//        $container->setParameter('locdel', '/'); //locale delimeter '/'
-//
-//        //$multilocales = implode('|', $tenantUrlArr);
-//        //echo "\n<br> setRequiredMultitenancyByDB: " . "multilocales=$multilocales <br>";
-//        //$container->setParameter('multilocales', 'main|'.$multilocales);
-//        //$container->setParameter('multilocales', 'system|' . $multilocales);
-//        //$container->setParameter('multilocales-urls', $multilocales);
-//
-//        $container->setParameter('multilocales', 'system');
-//        $container->setParameter('multilocales-urls', 'system');
-//    }
-
-//    //Set system db connection
-//    $tenantUrl = "system";
-//    $container->setParameter($tenantUrl . "-id", null);
-//    $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
-//    $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
-//    $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
-//    $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
-//    $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
-//    $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
 
     $authServerNetworkId = getDBParameter($row, null, 'authservernetwork_id');
     if ($authServerNetworkId) {
@@ -143,6 +103,7 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
         //dump($authServerNetworkRow);
         //exit('111');
         //echo "authServerNetworkRow=" . count($authServerNetworkRow) . "<br>";
+        $authServerNetworkName = null;
         if (count($authServerNetworkRow) > 0) {
             //$authServerNetworkName = $authServerNetworkRow[0]['name'];
             $authServerNetworkName = getDBParameter($authServerNetworkRow, null, 'name');
@@ -226,9 +187,20 @@ function setRequiredMultitenancyByDB( $container, $conn, $row )
 //                    $loader = new YamlFileLoader($container, $locator);
 //                    $loader->load('security_access_control.yml');
         }
+    } else {
+        echo "<br>### setRequiredMultitenancyByDB: authServerNetworkName is NULL ### <br>";
     }
 
     //$container->compile();
+}
+
+function printSettings( $container ) {
+    echo "<br>\r\n### printSettings ### <br>\r\n";
+    echo "multitenancy=".$container->getParameter('multitenancy')."<br>\r\n";
+    echo "defaultlocale=".$container->getParameter('defaultlocale')."<br>\r\n";
+    echo "locdel=".$container->getParameter('locdel')."<br>\r\n";
+    echo "multilocales=".$container->getParameter('multilocales')."<br>\r\n";
+    echo "multilocales-urls=".$container->getParameter('multilocales-urls')."<br>\r\n";
 }
 
 //NOT USED
