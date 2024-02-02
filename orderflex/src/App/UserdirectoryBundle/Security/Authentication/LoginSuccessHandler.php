@@ -117,6 +117,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //Set session locale on login
         $locale = $request->getLocale();
         $session->set('locale',$locale);
+        //$this->setConnectionParameters($session,$locale);
 
         //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
         $res = $secUtil->getMaxIdleTimeAndMaintenance();
@@ -299,10 +300,41 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
         $request->getSession()->set('locale',null);
+        //$this->clearConnectionParameters($request->getSession());
 
         $response = new RedirectResponse( $this->router->generate($this->siteName.'_login') );
         return $response;
 
+    }
+
+    //NOT USED
+    public function setConnectionParameters( $session, $locale ) {
+        $session->set('locale',$locale);
+
+//        $params = getConnectionParams($locale);
+//        $params['driver'] = $this->container->getParameter('database_driver');
+//        $params['host'] = $this->container->getParameter($urlSlug.'-databaseHost');
+//        $params['port'] = $this->container->getParameter($urlSlug.'-databasePort');
+//        $params['dbname'] = $this->container->getParameter($urlSlug.'-databaseName');
+//        $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
+//        $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
+        
+//        $session->set('driver',$params['driver']);
+//        $session->set('host',$params['host']);
+//        $session->set('port',$params['port']);
+//        $session->set('dbname',$params['dbname']);
+//        $session->set('user',$params['user']);
+//        $session->set('password',$params['password']);
+    }
+    //NOT USED
+    public function clearConnectionParameters( $session ) {
+        $session->set('locale',null);
+//        $session->set('driver',null);
+//        $session->set('host',null);
+//        $session->set('port',null);
+//        $session->set('dbname',null);
+//        $session->set('user',null);
+//        $session->set('password',null);
     }
 
 }

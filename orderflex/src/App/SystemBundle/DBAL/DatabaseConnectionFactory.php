@@ -107,8 +107,30 @@ class DatabaseConnectionFactory extends ConnectionFactory
 
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $uri = null;
+
         $request = $this->requestStack->getCurrentRequest();
+
+        //Check if session and $session->get('locale',null);
+        $session = null;
+        if( $request ) {
+            if( $request->hasSession() ) {
+                $session = $request->getSession();
+                if ($session) {
+                    //dump($session);
+                    //exit('111');
+                    if ($session->has('locale')) {
+                        $locale = $session->get('locale');
+                        if ($locale) {
+                            $params = $userServiceUtil->getConnectionParams($locale);
+                            $logger->notice("DatabaseConnectionFactory: exit(use locale) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
+                            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+                        }
+                    }
+                }
+            }
+        }
+
+        $uri = null;
         if( $request ) {
             $uri = $request->getUri();
         }
