@@ -29,7 +29,7 @@ security:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
                 #path:     /(%multilocales%)(%locdel%)scan
-                path:     /scan
+                #path:     /scan
 #                always_remember_me: true
 
 #        ldap_system_firewall:
@@ -75,9 +75,9 @@ security:
               lazy:  true
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
               #access_denied_url: /directory/access-requests/new/create
-              #remember_me:
-              #    secret:      "%secret%"
-              #    lifetime: 28800 # 8 hours in seconds
+              remember_me:
+                  secret:      "%secret%"
+                  lifetime: 28800 # 8 hours in seconds
               #    path:     /(%multilocales%)(%locdel%)directory
 #                  #path:     /directory
 
@@ -100,7 +100,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)fellowship-applications
+                #path:     /(%multilocales%)(%locdel%)fellowship-applications
                 #path:     /fellowship-applications
 #                always_remember_me: true
 
@@ -122,7 +122,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)residency-applications
+                #path:     /(%multilocales%)(%locdel%)residency-applications
                 #path:     /residency-applications
 
         ldap_deidentifier_firewall:
@@ -143,7 +143,7 @@ security:
             remember_me:
                 secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)deidentifier
+                #path:     /(%multilocales%)(%locdel%)deidentifier
                 #path:     /deidentifier
 #                always_remember_me: true
 
@@ -165,7 +165,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)time-away-request
+                #path:     /(%multilocales%)(%locdel%)time-away-request
                 #path:     /time-away-request
 #                always_remember_me: true
 
@@ -187,7 +187,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)call-log-book
+                #path:     /(%multilocales%)(%locdel%)call-log-book
                 #path:     /call-log-book
 #                always_remember_me: true
 
@@ -209,7 +209,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)critical-result-notifications
+                #path:     /(%multilocales%)(%locdel%)critical-result-notifications
                 #path:     /critical-result-notifications
 
         ldap_translationalresearch_firewall:
@@ -230,7 +230,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)translational-research
+                #path:     /(%multilocales%)(%locdel%)translational-research
                 #path:     /translational-research
 #                always_remember_me: true
 
@@ -252,7 +252,7 @@ security:
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path:     /(%multilocales%)(%locdel%)dashboards
+                #path:     /(%multilocales%)(%locdel%)dashboards
                 #path:     /dashboards
 
         foscomment_api_firewall:
