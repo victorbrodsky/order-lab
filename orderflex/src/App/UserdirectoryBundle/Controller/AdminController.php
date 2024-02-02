@@ -390,7 +390,7 @@ class AdminController extends OrderAbstractController
             }
         }
 
-        //$container->compile();
+        //$this->container->compile();
 
         $dirSep = DIRECTORY_SEPARATOR;
 

@@ -105,53 +105,72 @@ class MaintenanceListener {
 
         //////// Prevent switching without re-login ////////
         //Prevent switching without re-login if session's locale is different from the current: users can not jump between locales
-        if( 0 && $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
-            //echo "multitenancy=".$multitenancy."<br>";
-            //exit('MaintenanceListener');
             if( $multitenancy == 'multitenancy' ) {
-                $locale = $request->getLocale(); //system or c-wcm-pathology or c-lmh-pathology
-                $sessionLocale = $session->get('locale');
-                //echo "uri=".$uri.", locale=".$locale.", sessionLocale=".$sessionLocale."<br>";
-                //exit('1');
-                //$locale = str_replace("-", "/", $locale);
-                //echo "locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
-                //echo "uri=".$uri.", locale=".$locale."<br>";
-                //if( $locale != 'main' && str_contains($uri, $locale) === false ) {
-                //if( $locale != 'main' && $sessionLocale != 'main' && $locale != $sessionLocale ) {
-                if( $locale && $sessionLocale && $locale != $sessionLocale ) {
-                    //echo "locales different!!! locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
-                    //exit('111');
-                    $session->getFlashBag()->add(
-                        'warning',
-                        "You can not switch between institution's sites without re-login."
-                        ." locale=[$locale]; sessionLocale=[$sessionLocale]".
-                        "<br> Uri=".$uri
-                    );
+                //except common/user-data-search
+                if( !str_contains($uri, 'util/common/user-data-search/') &&
+                    !str_contains($uri, '/common/setserveractive/')
+                ) {
+                    $locale = $request->getLocale(); //system or c-wcm-pathology or c-lmh-pathology
+                    $sessionLocale = $session->get('locale');
+                    if ($locale && $sessionLocale && $locale != $sessionLocale) {
+                        //echo "locales different!!! locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
+                        //echo "1 uri=".$uri."<br>";
+                        $getBaseUrl = $this->container->get('router')->getContext()->getBaseUrl();
+                        $getBaseUrl = $request->getSchemeAndHttpHost();
+                        //echo "getBaseUrl=".$getBaseUrl."<br>";
+                        //exit('111');
 
-                    //Redirect to the logged in url
-                    if( $sessionLocale == 'default' ) {
-                        $uri = str_replace($locale,'',$uri);
-                        $uri = preg_replace('/([^:])(\/{2,})/', '$1/', $uri);
-                    } else {
-                        $uri = str_replace($locale,$sessionLocale,$uri);
+                        if(1) {
+                            $session->getFlashBag()->add(
+                                'warning',
+                                "You can not switch between institution's sites without re-login."
+                                . " locale=[$locale]; sessionLocale=[$sessionLocale]" .
+                                "<br> Uri=" . $uri
+                            );
+
+                            //Redirect to the logged in url
+                            if ($sessionLocale == 'default') {
+                                $uri = str_replace($locale, '', $uri);
+                                $uri = preg_replace('/([^:])(\/{2,})/', '$1/', $uri);
+                            } else {
+                                if( $locale == 'default' ) {
+                                    //http://localhost/directory/ => http://localhost/system/directory/
+                                    //$uri = str_replace($locale, $sessionLocale, $uri);
+                                    $getBaseUrl = $request->getSchemeAndHttpHost();
+                                    $uri = $getBaseUrl."/".$sessionLocale;
+                                } else {
+                                    $uri = str_replace($locale, $sessionLocale, $uri);
+                                }
+                            }
+
+                            //echo "2 uri=".$uri."<br>";
+                            //exit('111');
+                            //$url = $this->container->get('router')->generate($maintenanceRoute);
+                            $response = new RedirectResponse($uri);
+                            $event->setResponse($response);
+
+                            //$response = $this->security->logout();
+                            //$response = $this->security->logout(false);
+                            //$event->setResponse($response);
+                        } else {
+                            $session->getFlashBag()->add(
+                                'warning',
+                                "You can not switch between institution's sites without re-login."
+                                . " locale=[$locale]; sessionLocale=[$sessionLocale]" .
+                                "<br> Uri=" . $uri
+                            );
+
+                            $url = $this->container->get('router')->generate('main_common_home');
+                            $response = new RedirectResponse($url);
+                            $event->setResponse($response);
+//                            $response = $this->security->logout();
+                            //$event->setResponse($response);
+                        }
                     }
-
-                    //echo "uri=".$uri."<br>";
-                    //exit('111');
-                    //$url = $this->container->get('router')->generate($maintenanceRoute);
-                    $response = new RedirectResponse($uri);
-                    $event->setResponse($response);
-
-                    //$response = $this->security->logout();
-                    //$response = $this->security->logout(false);
-                    //$event->setResponse($response);
-
-//                    $url = $this->container->get('router')->generate('main_common_home');
-//                    $response = new RedirectResponse($url);
-//                    $event->setResponse($response);
+                    //exit('1');
                 }
-                //exit('1');
             }
         }
         //////// EOF Prevent switching without re-login ////////

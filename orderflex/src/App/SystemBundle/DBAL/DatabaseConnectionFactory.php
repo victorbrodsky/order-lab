@@ -63,7 +63,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $multitenancy = $this->container->getParameter('multitenancy');
         //echo "createConnection: multitenancy=".$multitenancy."<br>";
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
-        $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
+        //$logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
 
 //        if( !$params['dbname'] ) {
@@ -72,31 +72,31 @@ class DatabaseConnectionFactory extends ConnectionFactory
 //        }
 
         //////// Use '/system/' as a system site ////////
-        if(0) {
-            $systemdb = $this->container->getParameter('systemdb');
-            //echo "systemdb=".$systemdb."<br>";
-            if( $systemdb ) {
-                $uri = null;
-                $request = $this->requestStack->getCurrentRequest();
-                if( $request ) {
-                    $uri = $request->getUri();
-                }
-                //echo "uri=".$uri."<br>";
-                if( str_contains($uri,'/system/') ) {
-                    $params = array();
-                    $params['driver'] = $this->container->getParameter('database_driver_systemdb');
-                    $params['host'] = $this->container->getParameter('database_host_systemdb');
-                    $params['port'] = $this->container->getParameter('database_port_systemdb');
-                    $params['dbname'] = $this->container->getParameter('database_name_systemdb');
-                    $params['user'] = $this->container->getParameter('database_user_systemdb');
-                    $params['password'] = $this->container->getParameter('database_password_systemdb');
-                    //echo "<br>SystemDB: dBName=".$params['dbname']."<br>";
-                    return parent::createConnection($params, $config, $eventManager, $mappingTypes);
-                }
-            }
-            //dump($params);
-            //exit('111');
-        }
+//        if(0) {
+//            $systemdb = $this->container->getParameter('systemdb');
+//            //echo "systemdb=".$systemdb."<br>";
+//            if( $systemdb ) {
+//                $uri = null;
+//                $request = $this->requestStack->getCurrentRequest();
+//                if( $request ) {
+//                    $uri = $request->getUri();
+//                }
+//                //echo "uri=".$uri."<br>";
+//                if( str_contains($uri,'/system/') ) {
+//                    $params = array();
+//                    $params['driver'] = $this->container->getParameter('database_driver_systemdb');
+//                    $params['host'] = $this->container->getParameter('database_host_systemdb');
+//                    $params['port'] = $this->container->getParameter('database_port_systemdb');
+//                    $params['dbname'] = $this->container->getParameter('database_name_systemdb');
+//                    $params['user'] = $this->container->getParameter('database_user_systemdb');
+//                    $params['password'] = $this->container->getParameter('database_password_systemdb');
+//                    //echo "<br>SystemDB: dBName=".$params['dbname']."<br>";
+//                    return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+//                }
+//            }
+//            //dump($params);
+//            //exit('111');
+//        }
         //////// EOF Use '/system/' as a system site ////////
 
         if( $multitenancy == 'singletenancy' ) {
@@ -106,12 +106,9 @@ class DatabaseConnectionFactory extends ConnectionFactory
         }
 
         $userServiceUtil = $this->container->get('user_service_utility');
-
-
         $request = $this->requestStack->getCurrentRequest();
 
-        //Check if session and $session->get('locale',null);
-        $session = null;
+        //Check if session set and $session->get('locale') exists => use locale to get connection parameters
         if( $request ) {
             if( $request->hasSession() ) {
                 $session = $request->getSession();

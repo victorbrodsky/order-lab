@@ -57,6 +57,7 @@ function initTypeaheadUserSiteSearch() {
         var searchLimit = 100;
         //userDBprefetch = getCommonBaseUrl("util/common/user-data-search/user/"+searchLimit+"/prefetchmin","employees");
         userDBprefetch = Routing.generate('employees_user-data-search',{type: 'user', limit: searchLimit, search: 'prefetchmin'});
+        console.log('userDBprefetch='+userDBprefetch);
 
         //institutionDBprefetch = getCommonBaseUrl("util/common/user-data-search/institution/"+searchLimit+"/prefetchmin","employees");
         institutionDBprefetch = Routing.generate('employees_user-data-search',{type: 'institution', limit: searchLimit, search: 'prefetchmin'});

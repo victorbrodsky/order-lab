@@ -117,6 +117,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //Set session locale on login
         $locale = $request->getLocale();
         $session->set('locale',$locale);
+        //echo "locale=".$locale."<br>";
+        //exit('111');
         //$this->setConnectionParameters($session,$locale);
 
         //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
