@@ -445,11 +445,17 @@ class SecurityController extends OrderAbstractController
     public function setServerActiveAction( Request $request, $url=null )
     {
         //echo "keep Alive Action! <br>";
-        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+        if( !$user ) {
+            $response = new Response();
+            $response->setContent('OK');
+            return $response;
+        }
+
+        ////////// setLastLoggedUrl //////////////
+        //We might want to remove this setLastLoggedUrl to record user's activities
+        //because it's an auto passive ping to the system, not a user interaction
         $user->setLastActivity(new \DateTime());
-        //TODO:
-        //echo "url=".$url."<br>";
         //reconstruct url -order-index_dev.php-directory- to http://127.0.0.1/order/index_dev.php/directory/
         $url = str_replace("_","/",$url);
         $url = $request->getSchemeAndHttpHost().$url;
@@ -457,7 +463,9 @@ class SecurityController extends OrderAbstractController
 
         // get current url from request
         $user->setLastLoggedUrl($url); //user's field lastLoggedUrl
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
+        ////////// EOF setLastLoggedUrl //////////////
 
         $response = new Response();
         $response->setContent('OK');

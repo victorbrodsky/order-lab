@@ -130,7 +130,13 @@ class MaintenanceListener {
                     );
 
                     //Redirect to the logged in url
-                    $uri = str_replace($locale,$sessionLocale,$uri);
+                    if( $sessionLocale == 'default' ) {
+                        $uri = str_replace($locale,'',$uri);
+                        $uri = preg_replace('/([^:])(\/{2,})/', '$1/', $uri);
+                    } else {
+                        $uri = str_replace($locale,$sessionLocale,$uri);
+                    }
+
                     //echo "uri=".$uri."<br>";
                     //exit('111');
                     //$url = $this->container->get('router')->generate($maintenanceRoute);

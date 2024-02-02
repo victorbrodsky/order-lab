@@ -564,7 +564,7 @@ if( $conn ) {
     } else {
         //exit("table false<br>"); 
         //echo("table false<br>");
-    } //if $conn && $schemaManager      
+    } //if $conn && $schemaManager     
 
 }//if $conn
 else {

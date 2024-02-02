@@ -66,6 +66,11 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
 
+//        if( !$params['dbname'] ) {
+//            dump($params);
+//            exit('111');
+//        }
+
         //////// Use '/system/' as a system site ////////
         if(0) {
             $systemdb = $this->container->getParameter('systemdb');
@@ -96,6 +101,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
 
         if( $multitenancy == 'singletenancy' ) {
             //echo "singletenancy dBName=".$params['dbname']."<br>";
+            $logger->notice("DatabaseConnectionFactory: exit (singletenancy) multitenancy=[".$multitenancy."]; dbName=[".$params['dbname']."]");
             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
         }
 
@@ -106,6 +112,11 @@ class DatabaseConnectionFactory extends ConnectionFactory
         if( $request ) {
             $uri = $request->getUri();
         }
+        $logger->notice("DatabaseConnectionFactory: uri=".$uri);
+
+        //$urlArray = parse_url($uri);
+        //dump($urlArray);
+        //exit('111');
 
         //echo "uri=".$uri."<br>";
         //dump($params);
@@ -120,18 +131,35 @@ class DatabaseConnectionFactory extends ConnectionFactory
         //$multilocales = $this->container->getParameter('multilocales-urls'); //main|c/wcm/pathology|c/lmh/pathology
         $multilocalesUrlArr = explode("|", $multilocales);
 
+        $found = false;
         foreach($multilocalesUrlArr as $multilocalesUrl) {
+            $logger->notice("DatabaseConnectionFactory: foreach multilocalesUrl=[".$multilocalesUrl."]");
+            //uri=http://127.0.0.1/system/directory/admin/populate-country-city-list-with-default-values
+            //foreach multilocalesUrl=[system]
+            //foreach multilocalesUrl=[default]
+
+            //get the first level of url and break loop
             //$multilocalesUrl = 'c/lmh/pathology'
-            if( $uri && str_contains($uri, $multilocalesUrl) ) {
-                //connect to the appropriate DB
-                $params = $userServiceUtil->getConnectionParams($multilocalesUrl);
-                //$dbName = 'Tenant2';
-                //$params['dbname'] = $dbName;
-            } else {
-                //don't change default dbname
+            if( $multilocalesUrl != 'default' ) {
+                if ($uri && str_contains($uri, "/" . $multilocalesUrl)) {
+                    //connect to the appropriate DB
+                    $params = $userServiceUtil->getConnectionParams($multilocalesUrl);
+                    //$dbName = 'Tenant2';
+                    //$params['dbname'] = $dbName;
+                    $found = true;
+                    break;
+                } else {
+                    //don't change default dbname
+                }
             }
         }
 
+        //if match not found, for example, uri=http://127.0.0.1/directory/, then set to default connection
+        if( !$found ) {
+            $params = $userServiceUtil->getConnectionParams('default');
+        }
+
+        $logger->notice("DatabaseConnectionFactory: exit multitenancy=[".$multitenancy."]; dbName=[".$params['dbname']."]");
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }
 
