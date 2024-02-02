@@ -103,6 +103,20 @@ class MaintenanceListener {
         //$this->switchDb($event);
         //$userSecUtil->switchDb();
 
+        ////// Clean previous session 'local' //////
+        if( $this->container->hasParameter('multilocales') ) {
+            $multilocales = $this->container->getParameter('multilocales');
+            //echo "multilocales=".$multilocales."<br>";
+            $sessionLocale = $session->get('locale');
+            //echo "sessionLocale=['.$sessionLocale. "]<br>";
+            //exit('111');
+            //clean session
+            if (!str_contains($multilocales, $sessionLocale)) {
+                $session->set('locale', null);
+            }
+        }
+        ////// EOF Clean previous session 'local' //////
+
         //////// Prevent switching without re-login ////////
         //Prevent switching without re-login if session's locale is different from the current: users can not jump between locales
         if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
@@ -114,11 +128,13 @@ class MaintenanceListener {
                 ) {
                     $locale = $request->getLocale(); //system or c-wcm-pathology or c-lmh-pathology
                     $sessionLocale = $session->get('locale');
+                    //echo "locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
+                    //exit('111');
                     if ($locale && $sessionLocale && $locale != $sessionLocale) {
                         //echo "locales different!!! locale=[" . $locale .'], sessionLocale=['.$sessionLocale. "]<br>";
                         //echo "1 uri=".$uri."<br>";
-                        $getBaseUrl = $this->container->get('router')->getContext()->getBaseUrl();
-                        $getBaseUrl = $request->getSchemeAndHttpHost();
+                        //$getBaseUrl = $this->container->get('router')->getContext()->getBaseUrl();
+                        //$getBaseUrl = $request->getSchemeAndHttpHost();
                         //echo "getBaseUrl=".$getBaseUrl."<br>";
                         //exit('111');
 
@@ -134,6 +150,7 @@ class MaintenanceListener {
                             if ($sessionLocale == 'default') {
                                 $uri = str_replace($locale, '', $uri);
                                 $uri = preg_replace('/([^:])(\/{2,})/', '$1/', $uri);
+                                $session->set('locale', 'default');
                             } else {
                                 if( $locale == 'default' ) {
                                     //http://localhost/directory/ => http://localhost/system/directory/
@@ -143,6 +160,7 @@ class MaintenanceListener {
                                 } else {
                                     $uri = str_replace($locale, $sessionLocale, $uri);
                                 }
+                                $session->set('locale', $sessionLocale);
                             }
 
                             //echo "2 uri=".$uri."<br>";

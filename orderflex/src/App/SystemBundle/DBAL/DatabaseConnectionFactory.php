@@ -65,6 +65,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
         //$logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
+        //exit('111');
 
 //        if( !$params['dbname'] ) {
 //            dump($params);
@@ -118,6 +119,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
                     if ($session->has('locale')) {
                         $locale = $session->get('locale');
                         if ($locale) {
+                            //exit('$locale='.$locale);
                             $params = $userServiceUtil->getConnectionParams($locale);
                             $logger->notice("DatabaseConnectionFactory: exit(use locale) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
                             return parent::createConnection($params, $config, $eventManager, $mappingTypes);

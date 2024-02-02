@@ -4470,6 +4470,7 @@ Pathology and Laboratory Medicine",
         //Connect to DB by tenancy name $locale
         $config = new \Doctrine\DBAL\Configuration();
         $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+        //exit('locale='.$locale);
         $connectionParams = $this->getConnectionParams($locale);
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
