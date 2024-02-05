@@ -18,17 +18,10 @@
 namespace App\UserdirectoryBundle\Form;
 
 
-
 use App\OrderformBundle\Entity\AccessionType;
 use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
-
-
 use App\OrderformBundle\Entity\OrderDelivery; //process.py script: replaced namespace by ::class: added use line for classname=OrderDelivery
-
-
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
-
-
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;

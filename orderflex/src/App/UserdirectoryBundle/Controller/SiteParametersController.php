@@ -24,6 +24,7 @@ use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced names
 
 use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\TenancyManagementType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
@@ -712,4 +713,56 @@ class SiteParametersController extends OrderAbstractController
         );
     }
 
+
+    #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function tenancyManagementAction( Request $request )
+    {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $siteParam = $userSecUtil->getSingleSiteSettingsParam();
+
+        if( !$siteParam ) {
+            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+        }
+
+        $title = "Tenancy Management";
+
+        $params = array(
+            //'cycle'=>"edit",
+            //'em'=>$em,
+        );
+
+        $form = $this->createForm(TenancyManagementType::class, $siteParam, array(
+            'form_custom_value' => $params,
+        ));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form is valid");
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                "Tenancy settings have been updated."
+            );
+
+            return $this->redirect($this->generateUrl('employees_tenancy_management'));
+        }
+
+        return array(
+            'entity' => $siteParam,
+            'title' => $title,
+            'form' => $form->createView(),
+            'cycle' => 'edit',
+        );
+    }
 }
