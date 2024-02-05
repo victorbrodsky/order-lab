@@ -33,6 +33,18 @@
 
     {{ formmacros.field(form.authServerNetwork) }}
 
+    <br>
+    {% if authServerNetworkId %}
+        <a target="_blank" href="{{ path('authservernetwork_edit', {'id': authServerNetworkId}) }}"
+        >'Internet (Hub)' configuration</a>
+    {% else %}
+        'Internet (Hub)' configuration does not exists
+    {% endif %}
+    <br><br>
+    <a target="_blank"
+       href="{{ user_service_utility.getSiteParamListUrl('AuthServerNetworkList')|raw }}"
+    >Full list of Server Networks</a>
+
     <div class="row">
         <div class="col-xs-3"></div>
         <div class="col-xs-6">

@@ -83,11 +83,11 @@ class HostedGroupHolderType extends AbstractType
             'attr' => array('class'=>'form-control', 'required'=>'required'),
         ));
 
-        $builder->add('systemDb',null,array(
-            'label' => "System DB (Use as a system DB to store multitenancy parameters):",
-            'required' => true,
-            'attr' => array('class'=>'form-control'),
-        ));
+//        $builder->add('systemDb',null,array(
+//            'label' => "System DB (Use as a system DB to store multitenancy parameters):",
+//            'required' => true,
+//            'attr' => array('class'=>'form-control'),
+//        ));
 
         $builder->add('enabled',null,array(
             'label' => "Enabled:",

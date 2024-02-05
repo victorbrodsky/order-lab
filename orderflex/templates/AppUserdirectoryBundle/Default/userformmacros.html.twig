@@ -1298,7 +1298,11 @@
         {{ formmacros.field(formfield.databaseName) }}
         {{ formmacros.field(formfield.databaseUser) }}
         {{ formmacros.field(formfield.databasePassword) }}
-        {{ formmacros.field(formfield.systemDb) }}
+
+        {% if systemDb is defined %}
+            {{ formmacros.field(formfield.systemDb) }}
+        {% endif %}
+
         {{ formmacros.field(formfield.orderinlist) }}
         {{ formmacros.field(formfield.enabled) }}
 

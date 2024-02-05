@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
 
@@ -733,6 +734,13 @@ class SiteParametersController extends OrderAbstractController
 
         $title = "Tenancy Management";
 
+        //find AuthServerNetworkList by name "Internet (Hub)" => show hostedGroupHolders (authservernetwork_edit)
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
         $params = array(
             //'cycle'=>"edit",
             //'em'=>$em,
@@ -762,7 +770,7 @@ class SiteParametersController extends OrderAbstractController
             'entity' => $siteParam,
             'title' => $title,
             'form' => $form->createView(),
-            'cycle' => 'edit',
+            'authServerNetworkId' => $authServerNetworkId,
         );
     }
 }
