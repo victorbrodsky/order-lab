@@ -8,6 +8,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,10 +49,10 @@ class TenancyManagementType extends AbstractType
             },
         ));
 
-
-
-        
-
+        $builder->add('submit', SubmitType::class, array(
+            'label' => 'Save',
+            'attr' => array('class'=>'btn btn-danger')
+        ));
     }
 
     /**

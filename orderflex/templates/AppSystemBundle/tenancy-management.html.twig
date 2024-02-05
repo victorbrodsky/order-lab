@@ -31,8 +31,36 @@
     </h4>
     <br>
 
-    {{ formmacros.field(form.authServerNetwork) }}
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+            {#<ul class="list-group">#}
+                {#Note#}
+                <p class="text-center">
+                    How to enable multi-tenancy:<br>
+                    1) Select "Server Role and Network Access" as "Internet (Hub)"<br>
+                    2) On the "Internet (Hub)" configuration page, add new "Hosted User Group" (tenant)<br>
+                    3) For each hosted user group (tenant), select url prefix for the hosted user group type
+                    and provide database connection parameters such as database name, user, password.
+                    The tenant can be enabled/disabled by "Enabled" checkbox.
+                    The tenant will not be enabled if database name, use or password is blank.<br>
+                </p>
+            {#</ul>#}
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
 
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ formmacros.field(form.authServerNetwork) }}
+
+        {% if form.submit is defined %}
+            {{ form_widget(form.submit) }}
+        {% endif %}
+    {{ form_end(form) }}
+
+    <br>
     <br>
     {% if authServerNetworkId %}
         <a target="_blank" href="{{ path('authservernetwork_edit', {'id': authServerNetworkId}) }}"
@@ -45,16 +73,7 @@
        href="{{ user_service_utility.getSiteParamListUrl('AuthServerNetworkList')|raw }}"
     >Full list of Server Networks</a>
 
-    <div class="row">
-        <div class="col-xs-3"></div>
-        <div class="col-xs-6">
-            <ul class="list-group">
 
-
-            </ul>
-        </div>
-        <div class="col-xs-3"></div>
-    </div>
 
 {% endblock %}
 

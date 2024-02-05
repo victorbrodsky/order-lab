@@ -719,6 +719,16 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request )
     {
+        //only if local is system
+        $locale = $request->getLocale();
+        //exit('$locale='.$locale);
+        if( $locale != "system" ) {
+            $this->addFlash(
+                'error',
+                "Tenancy settings is accessible only for system database. Please relogin to /system"
+            );
+        }
+
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -761,6 +771,14 @@ class SiteParametersController extends OrderAbstractController
             $this->addFlash(
                 'notice',
                 "Tenancy settings have been updated."
+            );
+
+            //runDeployScript
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $userServiceUtil->runDeployScript(false,false,true);
+            $this->addFlash(
+                'notice',
+                "Deploy script run successfully: Cache cleared, Assets dumped."
             );
 
             return $this->redirect($this->generateUrl('employees_tenancy_management'));

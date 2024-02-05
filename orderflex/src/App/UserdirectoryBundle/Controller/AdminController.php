@@ -310,9 +310,11 @@ class AdminController extends OrderAbstractController
         }
         //exit('updateSourceCodeAction ok');
 
-        set_time_limit(0);
-        ini_set('memory_limit', '512M');
-        $this->runDeployScript(true,false,false);
+        //set_time_limit(0);
+        //ini_set('memory_limit', '512M');
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->runDeployScript(true,false,false);
 
         $updateres = "Source code and composer has been successfully updated";
 
@@ -332,7 +334,9 @@ class AdminController extends OrderAbstractController
 
         set_time_limit(0);
         ini_set('memory_limit', '512M');
-        $this->runDeployScript(false,true,false);
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->runDeployScript(false,true,false);
 
         $updateres = "Source code and composer has been successfully updated";
 
@@ -365,10 +369,11 @@ class AdminController extends OrderAbstractController
     }
 
     public function updateApplication() {
-        set_time_limit(0);
+        //set_time_limit(0);
         //ini_set('memory_limit', '512M');
         if( 1 ) {
-            $this->runDeployScript(false,false,true);
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $userServiceUtil->runDeployScript(false,false,true);
         } else {
             $this->clearCache();
             $this->installAssets();
@@ -379,7 +384,7 @@ class AdminController extends OrderAbstractController
 
         return $updateres;
     }
-    public function runDeployScript($update, $composer, $cache) {
+    public function runDeployScript_ORIG($update, $composer, $cache) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }

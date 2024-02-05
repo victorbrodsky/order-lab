@@ -1913,6 +1913,110 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    public function runProcess_NEW($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
+    }
+    public function runDeployScript($update, $composer, $cache) {
+        if( false === $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        if( $update || $composer ) {
+            if (false === $this->security->isGranted('ROLE_PLATFORM_ADMIN')) {
+                return $this->redirect($this->generateUrl('employees-nopermission'));
+            }
+        }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '512M');
+        
+        //$this->container->compile();
+
+        $dirSep = DIRECTORY_SEPARATOR;
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            echo 'This is a server using Windows! <br>';
+            $windows = true;
+            $linux = false;
+        } else {
+            echo 'This is a server not using Windows! Assume Linux <br>';
+            $windows = false;
+            $linux = true;
+        }
+
+        $old_path = getcwd();
+        //echo "webPath=$old_path<br>";
+
+        $deploy_path = str_replace("public","",$old_path);
+        echo "deploy_path=$deploy_path<br>";
+        //exit('111');
+
+        if( is_dir($deploy_path) ) {
+            //echo "deploy path exists! <br>";
+        } else {
+            //echo "not deploy path exists: $deploy_path <br>";
+            exit('No deploy path exists in the filesystem; deploy_path=: '.$deploy_path);
+        }
+
+        //switch to deploy folder
+        echo chdir($deploy_path)."<br>";
+        echo "pwd=[".exec("pwd")."]<br>";
+        //exec("pwd");
+
+        // Everything for owner and for others
+        //chmod($old_path, 0777);
+
+        //$linux
+        if( $linux ) {
+            if( $cache ) {
+                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
+                //$this->runProcess("php bin" . $dirSep . "console assets:install");
+                //$this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
+                $this->runProcess("bash deploy.sh");
+            }
+
+            if( $update ) {
+                $this->runProcess("git pull");
+            }
+
+            if( $composer ) {
+                $this->runProcess("export COMPOSER_HOME=/usr/local/bin/order-lab && /usr/local/bin/composer self-update");
+                $this->runProcess("export COMPOSER_HOME=/usr/local/bin/order-lab && /usr/local/bin/composer install");
+            }
+        }
+
+        //$windows
+        if( $windows ) {
+            if( $cache ) {
+                //echo "windows deploy=" . exec("bash deploy.sh") . "<br>";
+                $this->runProcess("bash deploy.sh");
+            }//cache
+
+            if( $update ) {
+                echo "git pull=" . exec("git pull") . "<br>";
+            }
+
+            if( $composer ) {
+                echo "composer.phar self-update=" . exec("composer.phar self-update") . "<br>";
+                echo "composer.phar install=" . exec("composer.phar install") . "<br>";
+            }
+        }
+
+        //switch back to web folder
+        $output = chdir($old_path);
+        echo "<pre>$output</pre>";
+
+        return;
+        //exit('exit runDeployScript');
+    }
+
     public function classNameUrlMapper($className) {
 
         $mapArr = array(
