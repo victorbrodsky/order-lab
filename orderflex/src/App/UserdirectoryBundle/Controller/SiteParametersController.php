@@ -30,6 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use App\UserdirectoryBundle\Form\InitialConfigurationType;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -773,13 +774,18 @@ class SiteParametersController extends OrderAbstractController
                 "Tenancy settings have been updated."
             );
 
+            $container = new ContainerBuilder();
+            $container->compile();
+
             //runDeployScript
             $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->runDeployScript(false,false,true);
             $this->addFlash(
                 'notice',
-                "Deploy script run successfully: Cache cleared, Assets dumped."
+                "Container rebuilded, deploy script ran: cache cleared, assets dumped."
             );
+
+            //exit('111');
 
             return $this->redirect($this->generateUrl('employees_tenancy_management'));
         }
