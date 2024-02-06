@@ -111,7 +111,7 @@ class MaintenanceListener {
             //echo "sessionLocale=['.$sessionLocale. "]<br>";
             //exit('111');
             //clean session
-            if (!str_contains($multilocales, $sessionLocale)) {
+            if( $multilocales && $sessionLocale && !str_contains($multilocales, $sessionLocale)) {
                 $session->set('locale', null);
             }
         }
