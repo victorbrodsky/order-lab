@@ -104,7 +104,7 @@ class MaintenanceListener {
         //$userSecUtil->switchDb();
 
         ////// Clean previous session 'local' //////
-        if( $this->container->hasParameter('multilocales') ) {
+        if( $uri && $this->container->hasParameter('multilocales') ) {
             $multilocales = $this->container->getParameter('multilocales');
             //echo "multilocales=".$multilocales."<br>";
             $sessionLocale = $session->get('locale');
@@ -119,12 +119,14 @@ class MaintenanceListener {
 
         //////// Prevent switching without re-login ////////
         //Prevent switching without re-login if session's locale is different from the current: users can not jump between locales
-        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( $uri && $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             $multitenancy = $this->container->getParameter('multitenancy');
             if( $multitenancy == 'multitenancy' ) {
                 //except common/user-data-search
-                if( !str_contains($uri, 'util/common/user-data-search/') &&
-                    !str_contains($uri, '/common/setserveractive/')
+                if( !str_contains($uri, '/util/common/user-data-search/') &&
+                    !str_contains($uri, '/common/setserveractive/') &&
+                    !str_contains($uri, '/js/routing') &&
+                    !str_contains($uri, '/_wdt/')
                 ) {
                     $locale = $request->getLocale(); //system or c-wcm-pathology or c-lmh-pathology
                     $sessionLocale = $session->get('locale');

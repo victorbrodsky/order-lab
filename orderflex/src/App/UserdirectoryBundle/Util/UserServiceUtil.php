@@ -43,6 +43,10 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
@@ -1975,12 +1979,12 @@ Pathology and Laboratory Medicine",
 
         //$linux
         if( $linux ) {
-            if( $cache ) {
-                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
-                //$this->runProcess("php bin" . $dirSep . "console assets:install");
-                //$this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
-                $this->runProcess("bash deploy.sh");
-            }
+//            if( $cache ) {
+//                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
+//                //$this->runProcess("php bin" . $dirSep . "console assets:install");
+//                //$this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
+//                $this->runProcess("bash deploy.sh");
+//            }
 
             if( $update ) {
                 $this->runProcess("git pull");
@@ -1994,10 +1998,9 @@ Pathology and Laboratory Medicine",
 
         //$windows
         if( $windows ) {
-            if( $cache ) {
-                //echo "windows deploy=" . exec("bash deploy.sh") . "<br>";
-                $this->runProcess("bash deploy.sh");
-            }//cache
+//            if( $cache ) {
+//                echo "windows deploy=" . exec("bash deploy.sh") . "<br>";
+//            }//cache
 
             if( $update ) {
                 echo "git pull=" . exec("git pull") . "<br>";
@@ -2009,12 +2012,59 @@ Pathology and Laboratory Medicine",
             }
         }
 
+        if( $cache ) {
+            $this->clearCacheInstallAssets();
+        }//cache
+
         //switch back to web folder
         $output = chdir($old_path);
         echo "<pre>$output</pre>";
 
         return;
         //exit('exit runDeployScript');
+    }
+    public function clearCacheInstallAssets( $kernel=null ) {
+
+        if( !$kernel ) {
+            $kernel = $this->container->get('kernel');
+        }
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        //clear cache
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+            // (optional) define the value of command arguments
+            //'fooArgument' => 'barValue',
+            // (optional) pass options to the command
+            //'--bar' => 'fooValue',
+            // (optional) pass options without value
+            //'--baz' => true,
+        ]);
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        // return the output, don't use if you used NullOutput()
+        $content1 = $output->fetch();
+        //dump($content1);
+
+        //install assets
+        $input = new ArrayInput([
+            'command' => 'assets:install',
+        ]);
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        // return the output, don't use if you used NullOutput()
+        $content2 = $output->fetch();
+        //dump($content2);
+
+        $container = new ContainerBuilder();
+        $container->compile();
+
+        //exit('111');
+        return $content1."; ".$content2;
     }
 
     public function classNameUrlMapper($className) {

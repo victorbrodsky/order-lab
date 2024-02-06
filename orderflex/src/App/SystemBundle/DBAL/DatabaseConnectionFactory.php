@@ -64,6 +64,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         //echo "createConnection: multitenancy=".$multitenancy."<br>";
         //echo "DatabaseConnectionFactory multitenancy=".$multitenancy."<br>";
         //$logger->notice("DatabaseConnectionFactory multitenancy=".$multitenancy."; dbName=".$params['dbname']);
+        //$params['dbname'] = 'ScanOrderSystem2';
         //return parent::createConnection($params, $config, $eventManager, $mappingTypes); //testing
         //exit('111');
 
@@ -123,9 +124,15 @@ class DatabaseConnectionFactory extends ConnectionFactory
                             $params = $userServiceUtil->getConnectionParams($locale);
                             $logger->notice("DatabaseConnectionFactory: exit(use locale) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
                             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+                        } else {
+                            $logger->notice("DatabaseConnectionFactory: 'locale' is null");
                         }
+                    } else {
+                        $logger->notice("DatabaseConnectionFactory: session does not have 'locale'");
                     }
                 }
+            } else {
+                $logger->notice("DatabaseConnectionFactory: request does not have a session");
             }
         }
 
@@ -133,7 +140,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         if( $request ) {
             $uri = $request->getUri();
         }
-        $logger->notice("DatabaseConnectionFactory: uri=".$uri);
+        $logger->notice("DatabaseConnectionFactory: uri=[".$uri."]");
 
         //$urlArray = parse_url($uri);
         //dump($urlArray);

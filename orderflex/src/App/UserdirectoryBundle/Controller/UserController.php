@@ -238,6 +238,10 @@ class UserController extends OrderAbstractController
 //        $entities = $em->getRepository($entityNamespace."\\"."VisaStatus")->findAll();
 //        exit("entities=".count($entities));
 
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$output = $userServiceUtil->clearCacheInstallAssets();
+        //exit('output='.$output);
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

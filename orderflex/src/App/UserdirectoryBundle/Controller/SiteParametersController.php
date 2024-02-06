@@ -30,6 +30,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use App\UserdirectoryBundle\Form\InitialConfigurationType;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -39,6 +42,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\SiteParametersType;
@@ -718,18 +722,18 @@ class SiteParametersController extends OrderAbstractController
 
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
-    public function tenancyManagementAction( Request $request )
+    public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
         //only if local is system
         $locale = $request->getLocale();
         //exit('$locale='.$locale);
         if( $locale != "system" ) {
             $this->addFlash(
-                'error',
+                'warning',
                 "Tenancy settings is accessible only for system database. Please relogin to /system"
             );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
-
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -774,15 +778,50 @@ class SiteParametersController extends OrderAbstractController
                 "Tenancy settings have been updated."
             );
 
-            $container = new ContainerBuilder();
-            $container->compile();
+            if(0) {
+                //$container = new ContainerBuilder();
+                //$container->compile();
+
+                $application = new Application($kernel);
+                $application->setAutoExit(false);
+                $input = new ArrayInput([
+                    'command' => 'cache:clear',
+                    //'command' => 'bash deploy.sh',
+                    // (optional) define the value of command arguments
+                    //'fooArgument' => 'barValue',
+                    // (optional) pass options to the command
+                    //'--bar' => 'fooValue',
+                    // (optional) pass options without value
+                    //'--baz' => true,
+                ]);
+                // You can use NullOutput() if you don't need the output
+                $output = new BufferedOutput();
+                $application->run($input, $output);
+                // return the output, don't use if you used NullOutput()
+                $content1 = $output->fetch();
+                //dump($content);
+                //exit('111');
+
+                //install assets
+                $input = new ArrayInput([
+                    'command' => 'assets:install',
+                ]);
+                // You can use NullOutput() if you don't need the output
+                $output = new BufferedOutput();
+                $application->run($input, $output);
+                // return the output, don't use if you used NullOutput()
+                $content2 = $output->fetch();
+
+                $output = $content1 . "; " . $content2;
+            }
 
             //runDeployScript
             $userServiceUtil = $this->container->get('user_service_utility');
-            $userServiceUtil->runDeployScript(false,false,true);
+            //$userServiceUtil->runDeployScript(false,false,true);
+            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
             $this->addFlash(
                 'notice',
-                "Container rebuilded, deploy script ran: cache cleared, assets dumped."
+                "Container rebuilded, cache cleared, assets dumped. Output=".$output
             );
 
             //exit('111');

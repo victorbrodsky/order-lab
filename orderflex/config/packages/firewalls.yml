@@ -11,7 +11,8 @@ security:
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)scan
-            pattern: ^/scan
+            #pattern: ^/scan
+            pattern: ^.*/scan
             context: scan_auth
             switch_user: true
             custom_authenticators:
