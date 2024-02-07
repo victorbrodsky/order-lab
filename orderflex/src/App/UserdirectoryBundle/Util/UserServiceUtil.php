@@ -2060,8 +2060,8 @@ Pathology and Laboratory Medicine",
         $content2 = $output->fetch();
         //dump($content2);
 
-        //$container = new ContainerBuilder();
-        //$container->compile();
+        $container = new ContainerBuilder();
+        $container->compile();
 
         //exit('111');
         return $content1."; ".$content2;

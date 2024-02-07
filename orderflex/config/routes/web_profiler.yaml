@@ -1,9 +1,11 @@
 when@dev:
     web_profiler_wdt:
         resource: '@WebProfilerBundle/Resources/config/routing/wdt.xml'
-        prefix: /{_locale}/_wdt
+        #prefix: /{_locale}/_wdt
+        prefix: /_wdt
 
     web_profiler_profiler:
         resource: '@WebProfilerBundle/Resources/config/routing/profiler.xml'
-        prefix: /{_locale}/_profiler
+        #prefix: /{_locale}/_profiler
+        prefix: /_profiler
 
