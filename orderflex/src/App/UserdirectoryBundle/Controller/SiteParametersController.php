@@ -778,43 +778,6 @@ class SiteParametersController extends OrderAbstractController
                 "Tenancy settings have been updated."
             );
 
-            if(0) {
-                //$container = new ContainerBuilder();
-                //$container->compile();
-
-                $application = new Application($kernel);
-                $application->setAutoExit(false);
-                $input = new ArrayInput([
-                    'command' => 'cache:clear',
-                    //'command' => 'bash deploy.sh',
-                    // (optional) define the value of command arguments
-                    //'fooArgument' => 'barValue',
-                    // (optional) pass options to the command
-                    //'--bar' => 'fooValue',
-                    // (optional) pass options without value
-                    //'--baz' => true,
-                ]);
-                // You can use NullOutput() if you don't need the output
-                $output = new BufferedOutput();
-                $application->run($input, $output);
-                // return the output, don't use if you used NullOutput()
-                $content1 = $output->fetch();
-                //dump($content);
-                //exit('111');
-
-                //install assets
-                $input = new ArrayInput([
-                    'command' => 'assets:install',
-                ]);
-                // You can use NullOutput() if you don't need the output
-                $output = new BufferedOutput();
-                $application->run($input, $output);
-                // return the output, don't use if you used NullOutput()
-                $content2 = $output->fetch();
-
-                $output = $content1 . "; " . $content2;
-            }
-
             //runDeployScript
             $userServiceUtil = $this->container->get('user_service_utility');
             //$userServiceUtil->runDeployScript(false,false,true);
@@ -825,7 +788,6 @@ class SiteParametersController extends OrderAbstractController
             );
 
             //exit('111');
-
             return $this->redirect($this->generateUrl('employees_tenancy_management'));
         }
 
