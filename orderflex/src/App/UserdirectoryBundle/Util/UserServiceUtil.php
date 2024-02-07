@@ -4616,7 +4616,9 @@ Pathology and Laboratory Medicine",
             if( $param ) {
                 $initialConfigurationCompleted = $param->getInitialConfigurationCompleted();
                 //echo '$initialConfigurationCompleted='.$initialConfigurationCompleted."<br>";
-                return $initialConfigurationCompleted;
+                if( $initialConfigurationCompleted ) {
+                    return true;
+                }
             }
             return false;
         }
@@ -4628,27 +4630,78 @@ Pathology and Laboratory Medicine",
         $connectionParams = $this->getConnectionParams($locale);
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
-        $table = 'user_siteparameters';
-        $schemaManager = $conn->createSchemaManager();
-        if ($conn && $schemaManager->tablesExist(array($table)) == true) {
-            //SiteParameters entity exists => Do nothing
-            //echo "<br>### SiteParameters entity exists => Check 'initialConfigurationCompleted' ### <br>";
-            $enableSystem = false;
-            $siteparameters = "SELECT * FROM " . $table;
-            $hostedGroupHolders = $conn->executeQuery($siteparameters);
-            $siteparametersRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
+        if( $conn ) {
+            $dbname = null;
+            try {
+                $dbname = $conn->getDatabase();
+            } catch( \Exception $e ) {
+                //exit('NO');
+                //echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r" . $e->getMessage() . "<br>";
+                $conn = null;
+            }
+        }
 
-            if( count($siteparametersRows) > 0 ) {
-                $siteparametersRow = $siteparametersRows[0];
-                if( isset($siteparametersRow['initialconfigurationcompleted']) ) {
-                    $initialConfigurationCompleted = $siteparametersRow['initialconfigurationcompleted'];
-                    //echo "<br>### initialConfigurationCompleted=$initialConfigurationCompleted ### <br>";
-                    return $initialConfigurationCompleted;
+        if( $conn ) {
+            $table = 'user_siteparameters';
+            $schemaManager = $conn->createSchemaManager();
+            if( $schemaManager->tablesExist(array($table)) == true ) {
+                //SiteParameters entity exists => Do nothing
+                //echo "<br>### SiteParameters entity exists => Check 'initialConfigurationCompleted' ### <br>";
+                $enableSystem = false;
+                $siteparameters = "SELECT * FROM " . $table;
+                $hostedGroupHolders = $conn->executeQuery($siteparameters);
+                $siteparametersRows = $hostedGroupHolders->fetchAllAssociative(); //fetch();
+
+                if( count($siteparametersRows) > 0 ) {
+                    $siteparametersRow = $siteparametersRows[0];
+                    if( isset($siteparametersRow['initialconfigurationcompleted']) ) {
+                        $initialConfigurationCompleted = $siteparametersRow['initialconfigurationcompleted'];
+                        //echo "<br>### initialConfigurationCompleted=$initialConfigurationCompleted ### <br>";
+                        if( $initialConfigurationCompleted ) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
 
         return false;
+    }
+    public function getConnectionByLocale( $locale=null ) {
+        if( !$locale ) {
+            return null;
+        }
+        //Connect to DB by tenancy name $locale
+        $config = new \Doctrine\DBAL\Configuration();
+        $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+        //exit('locale='.$locale);
+        $connectionParams = $this->getConnectionParams($locale);
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        return $conn;
+    }
+    public function isConnectionValid( $conn ) {
+        if( $conn ) {
+            //$dbname = null;
+            try {
+                $dbname = $conn->getDatabase();
+            } catch( \Exception $e ) {
+                //exit('NO');
+                //echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r" . $e->getMessage() . "<br>";
+                $conn = null;
+            }
+        }
+        if( $conn ) {
+            return true;
+        }
+        return false;
+    }
+    public function isLocalValid( $locale=null ) {
+        if( !$locale ) {
+            return false;
+        }
+        $conn = $this->getConnectionByLocale($locale);
+        return $this->isConnectionValid($conn);
+        
     }
     public function getConnectionParams( $urlSlug ) {
         //echo "urlSlug=$urlSlug <br>";

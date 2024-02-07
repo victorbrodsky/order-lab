@@ -174,9 +174,6 @@ class DatabaseConnectionFactory extends ConnectionFactory
                     $params = $userServiceUtil->getConnectionParams($multilocalesUrl);
                     //$dbName = 'Tenant2';
                     //$params['dbname'] = $dbName;
-
-                    //TODO: check if DB connection is correct?
-
                     $found = true;
                     break;
                 } else {
@@ -193,5 +190,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
         $logger->notice("DatabaseConnectionFactory: exit multitenancy=[".$multitenancy."]; dbName=[".$params['dbname']."]");
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }
+
+    //TODO: check if DB connection is correct?
 
 }

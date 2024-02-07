@@ -33,25 +33,6 @@ security:
                 #path:     /scan
 #                always_remember_me: true
 
-#        ldap_system_firewall:
-#            pattern: ^/system1111
-#            context: scan_auth
-#            switch_user: true
-#            custom_authenticators:
-#                authenticator: custom_guard_authenticator
-#            form_login:
-#                login_path: system_login #/%tenantprefix%directory/login
-#                check_path: system_login_check #/%tenantprefix%directory/login
-#            logout:
-#                path:   system_logout
-#                target: system_login
-#            lazy:  true
-#            access_denied_url: system_login #system_access_request_new_plain
-#            remember_me:
-#                secret:      "%secret%"
-#                lifetime: 28800 # 8 hours in seconds
-#                path:     /system
-
         #pattern: ^/(%multilocales%)(%locdel%)directory has a problem when 'default' string is hidden in url.
         #Therefore, pattern: ^.*/directory is safer
 

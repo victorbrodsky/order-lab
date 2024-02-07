@@ -43,17 +43,21 @@
 
             {% for multilocale in multilocales %}
                 {#multilocale={{ multilocale }}<br>#}
-                {% if user_service_utility.isDbInitialized(multilocale) %}
-                    <li class="list-group-item" >
-                        <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
-                    </li>
-                {% else %}
-                    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                {% if user_service_utility.isLocalValid(multilocale) %}
+                    {% if user_service_utility.isDbInitialized(multilocale) %}
                         <li class="list-group-item" >
-                            <a href="{{ path('first-time-login-generation-init', {_locale: multilocale}) }}" target="_blank"
-                            >Initialize {{ multilocale }} database</a>
+                            <a href="{{ multilocale }}" target="_blank">{{ multilocale }}</a>
                         </li>
-                    {#{% endif %}#}
+                    {% else %}
+                        {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                            <li class="list-group-item" >
+                                <a href="{{ path('first-time-login-generation-init', {_locale: multilocale}) }}" target="_blank"
+                                >Initialize {{ multilocale }} database</a>
+                            </li>
+                        {#{% endif %}#}
+                    {% endif %}
+                {% else %}
+                    {{ multilocale }} does not have valid database
                 {% endif %}
 
                 {#{% if multilocale == 'system' %}#}
