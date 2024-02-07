@@ -174,6 +174,9 @@ class DatabaseConnectionFactory extends ConnectionFactory
                     $params = $userServiceUtil->getConnectionParams($multilocalesUrl);
                     //$dbName = 'Tenant2';
                     //$params['dbname'] = $dbName;
+
+                    //TODO: check if DB connection is correct?
+
                     $found = true;
                     break;
                 } else {
