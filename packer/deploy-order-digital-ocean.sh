@@ -346,8 +346,10 @@ echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID, sshfingerprin
 # doctl compute droplet create packer-1698339421 --size 2gb --image 143115012 --region nyc3 --wait --ssh-keys 4d:54:62:****
 if [ -z "$sshfingerprint" ]
   then
+    echo "*** Compute droplet without --ssh-keys ... ***"
     DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
   else
+    echo "*** Compute droplet with --ssh-keys $sshfingerprint ... ***"
     DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait --ssh-keys $sshfingerprint | tail -1)
 fi
 
