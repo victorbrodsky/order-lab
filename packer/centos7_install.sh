@@ -126,8 +126,8 @@ f_install_postgresql15 () {
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
 	echo @### Create system DB and create user $bashdbuser with password $bashdbpass###
-	sudo -Hiu postgres createdb scanorderSystem
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorderSystem to $bashdbuser"
+	sudo -Hiu postgres createdb systemdb
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE systemdb to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5"
 	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5" ${NC}
