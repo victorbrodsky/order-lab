@@ -163,6 +163,7 @@ echo "domainname=$domainname"
 echo "sslcertificate=$sslcertificate"
 echo "sslprivatekey=$sslprivatekey"
 echo "email=$email"
+echo "sshfingerprint=$sshfingerprint"
 
 echo "*** Verifying files presence ***"
 if [ -z "$apitoken" ]
@@ -338,7 +339,7 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 #DROPLETIP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 #echo -e ${COLOR} Script install-cerbot.sh: DROPLETIP="$DROPLETIP" ${NC}
 
-echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID ... ***"
+echo "*** Creating droplet IMAGENAME=$IMAGENAME, IMAGEID=$IMAGEID, sshfingerprint=$sshfingerprint... ***"
 #DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 #??? Error: POST https://api.digitalocean.com/v2/droplets: 422 The image for this droplet does not use root passwords, please use an SSH key.
 #Therefore, specify ssh key's fingerprint:
@@ -351,6 +352,8 @@ if [ -z "$sshfingerprint" ]
 fi
 
 dropletinfos=( $DROPLET )
+echo "After create droplet: dropletinfos=$dropletinfos"
+
 DROPLETIP="${dropletinfos[2]}"
 echo "Create droplet IP=$DROPLETIP"
 ############### EOF Install doctl and create droplet from image ###############
