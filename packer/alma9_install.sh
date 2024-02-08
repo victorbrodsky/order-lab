@@ -122,15 +122,15 @@ f_install_postgresql15 () {
 	sudo systemctl enable postgresql-15
 	sudo systemctl start postgresql-15
 
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass ###
 	sudo -Hiu postgres createdb scanorder
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
-	echo @### Create system DB and create user $bashdbuser with password $bashdbpass###
-	sudo -Hiu postgres createdb scanorderSystem
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorderSystem to $bashdbuser"
+	echo @### Create system DB and create user $bashdbuser with password $bashdbpass ###
+	sudo -Hiu postgres createdb scanordersystem
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanordersystem to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5"
 	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5" ${NC}
