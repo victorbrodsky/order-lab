@@ -133,6 +133,10 @@ class UserSecurityUtil {
             //echo "initCountTest=".$this->initCountTest."<br>";
 
             //$params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            $dbName = $this->em->getConnection()->getDatabase();
+            $logger = $this->container->get('logger');
+            $logger->notice("getSingleSiteSettingsParam: dbName=[$dbName]");
+
             //doctrine Deprecate short namespace aliases
             $params = $this->em->getRepository(SiteParameters::class)->findAll();
             //echo "params count=".count($params)."<br>";
