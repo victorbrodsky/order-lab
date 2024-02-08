@@ -266,6 +266,7 @@ echo "*** Create ssh keys ***"
 #-f my.key tells it to store the key into my.key (change as you see fit).
 #o send enters to an interactive script: echo -e "\n\n\n" | ssh-keygen -t rsa
 #It will generate two files in the current folder: sshkey and sshkey.pub
+#ssh keys added to json file, for example order-packer-centos7.json: file (sshkey.pub), shell (Copy public key to authorized_keys ...)
 ssh-keygen -t rsa -b 4096 -N "" -f ./sshkey
 ###### Create ssh keys ######
 
