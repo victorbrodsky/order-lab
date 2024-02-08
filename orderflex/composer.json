@@ -29,7 +29,7 @@
         "symfony/console": "^6.1",
         "symfony/dotenv": "^6.1",
         "symfony/expression-language": "^6.1",
-        "symfony/flex": "^2.1",
+        "symfony/flex": "^2.4",
         "symfony/form": "^6.1",
         "symfony/framework-bundle": "^6.1",
         "symfony/http-client": "^6.1",
