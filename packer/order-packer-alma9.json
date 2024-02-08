@@ -119,8 +119,7 @@
 		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 		   
-		   "echo @### Install symfony/runtime ###",
-		   "composer require symfony/runtime",
+		   "echo @### Run: composer require symfony/runtime ###",
 		   
 		   "echo @### Check OS Info before deploy_prod.sh ###",
 		   "sudo hostnamectl",
