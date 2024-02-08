@@ -104,7 +104,11 @@
 		   "sestatus",
 		   "echo @### Check OS Info before composer ###",
 		   "sudo hostnamectl",	   
-           "composer install",	   
+           "composer install",	 
+
+		   "echo @### Run: composer require symfony/runtime ###",
+		   "composer require symfony/runtime",
+		   
 		   "echo @### Check OS Info after composer ###",
 		   "sudo hostnamectl",
 		   "echo @### PostgreSQL Version after composer install ###",		
@@ -117,11 +121,9 @@
 		   "echo @### Install additional.sh. env for python ###",
 		   "bash /usr/local/bin/order-lab/packer/additional.sh",
 		   
-	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",		   
 		   
-		   "echo @### Run: composer require symfony/runtime ###",
-		   
-		   "echo @### Check OS Info before deploy_prod.sh ###",
+		   "echo @### Check OS Info before deploy_prod.sh -withdb ###",
 		   "sudo hostnamectl",
 	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
 	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
