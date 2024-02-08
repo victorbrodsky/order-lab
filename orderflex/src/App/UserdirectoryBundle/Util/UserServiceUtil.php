@@ -1929,12 +1929,12 @@ Pathology and Laboratory Medicine",
     }
     public function runDeployScript($update, $composer, $cache) {
         if( false === $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect($this->generateUrl('employees-nopermission'));
+            return null;
         }
 
         if( $update || $composer ) {
             if (false === $this->security->isGranted('ROLE_PLATFORM_ADMIN')) {
-                return $this->redirect($this->generateUrl('employees-nopermission'));
+                return null;
             }
         }
 
