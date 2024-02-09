@@ -266,8 +266,8 @@ echo "*** Create ssh keys ***"
 #-f my.key tells it to store the key into my.key (change as you see fit).
 #o send enters to an interactive script: echo -e "\n\n\n" | ssh-keygen -t rsa
 #It will generate two files in the current folder: sshkey and sshkey.pub
-#Note: ssh keys added to json file, for example order-packer-centos7.json: file sshkey.pub, shell (Copy public key to authorized_keys ...)
-#move sshkey logic from json to a separate shell script, same for all, except ubuntu22: if ~/.ssh/sshkey.pub exists => update sshd_config, if not => skip
+#Note: ssh keys added to json file, for example order-packer-centos7.json: file sshkey.pub, shell, Copy public key to authorized_keys ...
+#move sshkey logic from json to a separate shell script, same for all, except ubuntu22: if sshkey.pub exists => update sshd_config, if not => skip
 ssh-keygen -t rsa -b 4096 -N "" -f ./sshkey
 ###### Create ssh keys ######
 
