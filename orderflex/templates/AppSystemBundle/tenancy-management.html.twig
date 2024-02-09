@@ -44,10 +44,11 @@
                     and provide database connection parameters such as database name, user, password.
                     The tenant can be enabled/disabled by "Enabled" checkbox.
                     The tenant will not be enabled if database name, use or password is blank.<br>
-                    4) Clear cache by running deploy script
-                    <a
-                        general-data-confirm="Are you sure you would like to clear cache and update assets? This action will log out all authenticated users."
-                        href="{{ path('user_update_system_cache_assets') }}">deploy.sh</a>
+                    {#4) Clear cache by running deploy script#}
+                    {#<a#}
+                        {#general-data-confirm="Are you sure you would like to clear cache and update assets? This action will log out all authenticated users."#}
+                        {#href="{{ path('user_update_system_cache_assets') }}">deploy.sh</a>#}
+                    4) Cleare cache and create new tenant's databases by clicking button bellow "Clear Cache and create Databases"
                 </p>
             {#</ul>#}
         </div>
@@ -64,8 +65,7 @@
         {% endif %}
     {{ form_end(form) }}
 
-    <br>
-    <br>
+    <br><br>
     {% if authServerNetworkId %}
         <a target="_blank" href="{{ path('authservernetwork_edit', {'id': authServerNetworkId}) }}"
         >'Internet (Hub)' configuration</a>
@@ -77,7 +77,11 @@
        href="{{ user_service_utility.getSiteParamListUrl('AuthServerNetworkList')|raw }}"
     >Full list of Server Networks</a>
 
-
+    <br><br>
+    <a
+            target="_blank" class="btn btn-danger"
+            href="{{ path('employees_tenancy_management_update') }}"
+    >Clear Cache and create Databases</a>
 
 {% endblock %}
 

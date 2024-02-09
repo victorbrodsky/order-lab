@@ -2067,6 +2067,60 @@ Pathology and Laboratory Medicine",
         return $content1."; ".$content2;
     }
 
+    public function checkAndCreateNewDBs( $authServerNetwork, $kernel ) {
+
+        //$authServerNetwork
+        $output = array();
+        
+        foreach($authServerNetwork->getHostedGroupHolders() as $hostedGroupHolder) {
+            $hostedGroupHolder;
+            $connectionParams = array(
+                'dbname' => $hostedGroupHolder->getDatabaseName(),
+                'user' => $hostedGroupHolder->getDatabaseUser(),
+                'password' => $hostedGroupHolder->getDatabasePassword(),
+                'host' => $hostedGroupHolder->getDatabaseHost(),
+                'driver' => $this->container->getParameter('database_driver'),
+            );
+            $output[] = $this->createNewDB($connectionParams,$kernel);
+        }
+
+        return implode("<br>",$output);
+    }
+
+    //Create new DB: https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+    public function createNewDB( $connectionParams, $kernel ) {
+        $config = new \Doctrine\DBAL\Configuration();
+//        $connectionParams = array(
+//            'dbname' => $dbname,
+//            'user' => $uid,
+//            'password' => $pwd,
+//            'host' => $host,
+//            'driver' => $driver,
+//        );
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command'          => 'doctrine:database:create',
+            '--if-not-exists'  => null,
+            '--no-interaction' => null
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+        //dump($content);
+
+        unset($application);
+        unset($kernel);
+
+        //exit('111');
+        return $content;
+    }
+
     public function classNameUrlMapper($className) {
 
         $mapArr = array(

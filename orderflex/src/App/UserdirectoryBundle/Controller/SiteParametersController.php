@@ -724,6 +724,10 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         //only if local is system
         $locale = $request->getLocale();
         //exit('$locale='.$locale);
@@ -778,14 +782,14 @@ class SiteParametersController extends OrderAbstractController
                 "Tenancy settings have been updated."
             );
 
-            //runDeployScript
-            $userServiceUtil = $this->container->get('user_service_utility');
-            //$userServiceUtil->runDeployScript(false,false,true);
-            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
-            $this->addFlash(
-                'notice',
-                "Container rebuilded, cache cleared, assets dumped. Output=".$output
-            );
+//            //runDeployScript
+//            $userServiceUtil = $this->container->get('user_service_utility');
+//            //$userServiceUtil->runDeployScript(false,false,true);
+//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+//            $this->addFlash(
+//                'notice',
+//                "Container rebuilded, cache cleared, assets dumped. Output=".$output
+//            );
 
             //exit('111');
             return $this->redirect($this->generateUrl('employees_tenancy_management'));
@@ -798,4 +802,39 @@ class SiteParametersController extends OrderAbstractController
             'authServerNetworkId' => $authServerNetworkId,
         );
     }
+
+    #[Route(path: '/tenancy-management-update', name: 'employees_tenancy_management_update', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
+        //Create DB if not exists
+        //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+        $output = $userServiceUtil->checkAndCreateNewDBs($authServerNetwork,$kernel);
+        $this->addFlash(
+            'notice',
+            "New DBs verified and created if not existed. Output=".$output
+        );
+
+        //runDeployScript
+        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil->runDeployScript(false,false,true);
+        $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+        $this->addFlash(
+            'notice',
+            "Container rebuilded, cache cleared, assets dumped. Output=".$output
+        );
+
+        return $this->redirect($this->generateUrl('employees_tenancy_management'));
+    }
+
 }

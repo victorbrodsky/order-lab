@@ -51,7 +51,7 @@ class TenancyManagementType extends AbstractType
 
         $builder->add('submit', SubmitType::class, array(
             'label' => 'Save',
-            'attr' => array('class'=>'btn btn-danger')
+            'attr' => array('class'=>'btn btn-primary')
         ));
     }
 

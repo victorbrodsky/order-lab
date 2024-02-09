@@ -152,7 +152,7 @@
         "type": "shell",
         "inline": [
 			"echo @### Run script to install sshkey ###",
-			"bash /usr/local/bin/order-lab/packer/install_ssh.sh bashsshfingerprint"
+			"bash /usr/local/bin/order-lab/packer/install_ssh.sh $bashsshfingerprint"
          ]
 	   }
   ]
