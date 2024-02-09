@@ -811,6 +811,9 @@ class SiteParametersController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $em = $this->getDoctrine()->getManager();
         $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
         $authServerNetworkId = null;
         if( $authServerNetwork ) {
@@ -819,20 +822,21 @@ class SiteParametersController extends OrderAbstractController
 
         //Create DB if not exists
         //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-        $output = $userServiceUtil->checkAndCreateNewDBs($authServerNetwork,$kernel);
+        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
         $this->addFlash(
             'notice',
-            "New DBs verified and created if not existed. Output=".$output
+            "New DBs verified and created if not existed.<br> Output:<br>".$output
         );
 
         //runDeployScript
-        $userServiceUtil = $this->container->get('user_service_utility');
-        //$userServiceUtil->runDeployScript(false,false,true);
-        $output = $userServiceUtil->clearCacheInstallAssets($kernel);
-        $this->addFlash(
-            'notice',
-            "Container rebuilded, cache cleared, assets dumped. Output=".$output
-        );
+        if(0) {
+            //$userServiceUtil->runDeployScript(false,false,true);
+            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+            $this->addFlash(
+                'notice',
+                "Container rebuilded, cache cleared, assets dumped. Output=" . $output
+            );
+        }
 
         return $this->redirect($this->generateUrl('employees_tenancy_management'));
     }

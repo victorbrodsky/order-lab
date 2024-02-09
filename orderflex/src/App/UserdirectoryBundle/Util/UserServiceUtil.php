@@ -2067,28 +2067,66 @@ Pathology and Laboratory Medicine",
         return $content1."; ".$content2;
     }
 
-    public function checkAndCreateNewDBs( $authServerNetwork, $kernel ) {
+    public function checkAndCreateNewDBs( $request, $authServerNetwork, $kernel ) {
 
         //$authServerNetwork
         $output = array();
         
         foreach($authServerNetwork->getHostedGroupHolders() as $hostedGroupHolder) {
-            $hostedGroupHolder;
-            $connectionParams = array(
-                'dbname' => $hostedGroupHolder->getDatabaseName(),
-                'user' => $hostedGroupHolder->getDatabaseUser(),
-                'password' => $hostedGroupHolder->getDatabasePassword(),
-                'host' => $hostedGroupHolder->getDatabaseHost(),
-                'driver' => $this->container->getParameter('database_driver'),
-            );
-            $output[] = $this->createNewDB($connectionParams,$kernel);
+            if( $hostedGroupHolder->getEnabled() ) {
+                $connectionParams = array(
+                    'dbname' => $hostedGroupHolder->getDatabaseName(),
+                    'user' => $hostedGroupHolder->getDatabaseUser(),
+                    'password' => $hostedGroupHolder->getDatabasePassword(),
+                    'host' => $hostedGroupHolder->getDatabaseHost(),
+                    'driver' => $this->container->getParameter('database_driver'),
+                );
+                $output[] = $this->createNewDB($request,$connectionParams, $kernel);
+            }
         }
 
         return implode("<br>",$output);
     }
 
     //Create new DB: https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-    public function createNewDB( $connectionParams, $kernel ) {
+    public function createNewDB( $request, $connectionParams, $kernel ) {
+
+        $session = $request->getSession();
+        $session->set('create-custom-db', $connectionParams['dbname']);
+        $logger = $this->container->get('logger');
+        $logger->notice("createNewDB: create-custom-db: dbname=".$connectionParams['dbname']);
+
+//[2024-02-09T19:55:02.034982+00:00] app.NOTICE: createNewDB: create-custom-db: dbname=testdb [] []
+//[2024-02-09T19:55:02.075486+00:00] deprecation.INFO: User Deprecated: Relying on a fallback connection used to determine the database
+// platform while connecting to a non-existing database is deprecated. Either use an existing database name in connection parameters
+// or omit the database name if the platform and the server configuration allow that.
+// (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707, package doctrine/dbal)
+// {"exception":"[object] (ErrorException(code: 0): User Deprecated: Relying on a fallback connection used to
+// determine the database platform while connecting to a non-existing database is deprecated. Either use an
+// existing database name in connection parameters or omit the database name if the platform and the server
+// configuration allow that. (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707,
+// package doctrine/dbal) at C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor
+//\\doctrine\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
+
+//[2024-02-09T19:55:02.075661+00:00] deprecation.INFO: User Deprecated: Relying on the DBAL connecting to the "postgres"
+// database by default is deprecated. Unless you want to have the server determine the default database for
+// the connection, specify the database name explicitly. (Driver.php:92 called by Driver.php:35,
+// https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) {"exception":"[object]
+// (ErrorException(code: 0): User Deprecated: Relying on the DBAL connecting to the
+// \"postgres\" database by default is deprecated. Unless you want to have the server determine the
+// default database for the connection, specify the database name explicitly. (Driver.php:92 called by
+// Driver.php:35, https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) at
+// C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor\\doctrine
+//\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
+
+//[2024-02-09T19:55:02.281480+00:00] doctrine.INFO: Connecting with parameters
+// array{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>",
+//"charset":"utf8"} {"params":{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>","charset":"utf8"}} []
+
+//[2024-02-09T19:55:02.321159+00:00] doctrine.DEBUG: Executing query: SELECT datname FROM pg_database {"sql":"SELECT datname FROM pg_database"} []
+//[2024-02-09T19:55:02.322863+00:00] doctrine.INFO: Disconnecting [] []
+//[2024-02-09T19:55:02.324328+00:00] app.NOTICE: createNewDB: create-custom-db: done [] []
+
         $config = new \Doctrine\DBAL\Configuration();
 //        $connectionParams = array(
 //            'dbname' => $dbname,
@@ -2097,7 +2135,22 @@ Pathology and Laboratory Medicine",
 //            'host' => $host,
 //            'driver' => $driver,
 //        );
+        
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname']." valid=$valid <br>";
+
+        if( $valid ) {
+            $session->set('create-custom-db', null);
+            $session->remove('create-custom-db');
+            $logger->notice("createNewDB: create-custom-db: done");
+            return "Database ".$connectionParams['dbname']." already exists.";
+        }
+
+        //dump($connectionParams);
+        //exit('1');
+
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
@@ -2108,17 +2161,21 @@ Pathology and Laboratory Medicine",
         ]);
 
         // You can use NullOutput() if you don't need the output
+        $content = "Creating new DB ".$connectionParams['dbname'].":<br>";
         $output = new BufferedOutput();
         $application->run($input, $output);
-        // return the output, don't use if you used NullOutput()
-        $content = $output->fetch();
+        $contentOut = $output->fetch();
         //dump($content);
+
+        $session->set('create-custom-db', null);
+        $session->remove('create-custom-db');
+        $logger->notice("createNewDB: create-custom-db: done");
 
         unset($application);
         unset($kernel);
 
         //exit('111');
-        return $content;
+        return $content.$contentOut;
     }
 
     public function classNameUrlMapper($className) {
