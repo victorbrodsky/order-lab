@@ -22,7 +22,7 @@ if [ -z "$sshfingerprint" ]
     sshfingerprint=$1
 fi
 
-echo sshfingerprint=$sshfingerprint
+echo "sshfingerprint=$sshfingerprint"
 
 if [ ! -z "$sshfingerprint" ]
 	then 
