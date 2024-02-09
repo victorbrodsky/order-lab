@@ -24,7 +24,7 @@
 			"bashdomainname=bash_domainname",
 			"bashsslcertificate=bash_sslcertificate",
 			"bashemail=bash_email",
-			"bash_sshfingerprint=bash_sshfingerprint"
+			"bashsshfingerprint=bash_sshfingerprint"
 		],
         "script": "alma9_install.sh"
     },
@@ -154,7 +154,7 @@
         "type": "shell",
         "inline": [
 			"echo @### Run script to install sshkey ###",
-			"bash /usr/local/bin/order-lab/packer/install_ssh.sh bash_sshfingerprint"
+			"bash /usr/local/bin/order-lab/packer/install_ssh.sh bashsshfingerprint"
          ]
 	   }
   ]
