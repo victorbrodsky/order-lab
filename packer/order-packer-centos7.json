@@ -134,7 +134,7 @@
 		   "echo @### PostgreSQL Version end of installation ###",
 		   "echo @### Check OS Info end of installation ###",
 		   "sudo hostnamectl",		   
-		   "psql --version"
+		   "psql --version",
 		   
 		   "echo @### Create system DB ###",
 		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
