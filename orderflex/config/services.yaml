@@ -148,6 +148,10 @@ services:
             #$multitenancy: '%multitenancy%'
             #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
 
+    #App\SystemBundle\DBAL\DoctrineMultidatabaseConnection: ~
+        #arguments:  ['@request_stack', '@doctrine.dbal.default_connection.configuration', '@doctrine.dbal.default_connection.event_manager']
+        #autowire: true
+
     #custom.dynamic_connection:
     #    class: App\Routing\DBAL\MultiDbConnectionWrapper
 #        calls:

@@ -119,14 +119,14 @@ class DatabaseConnectionFactory extends ConnectionFactory
                     //exit('111');
 
                     //Create new DB
-                    if ($session->has('create-custom-db')) {
-                        $createDbName = $session->get('create-custom-db');
-                        if( $createDbName ) {
-                            $params['dbname'] = $createDbName;
-                            $logger->notice("DatabaseConnectionFactory: exit(use create-custom-db) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
-                            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
-                        }
-                    }
+//                    if( $session->has('create-custom-db') ) {
+//                        $createDbName = $session->get('create-custom-db');
+//                        if( $createDbName ) {
+//                            $params['dbname'] = $createDbName;
+//                            $logger->notice("DatabaseConnectionFactory: exit(use create-custom-db) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
+//                            return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+//                        }
+//                    }
 
                     if ($session->has('locale')) {
                         $locale = $session->get('locale');

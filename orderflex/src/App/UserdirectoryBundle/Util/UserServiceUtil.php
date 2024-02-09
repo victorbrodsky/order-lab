@@ -2089,7 +2089,7 @@ Pathology and Laboratory Medicine",
     }
 
     //Create new DB: https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-    public function createNewDB( $request, $connectionParams, $kernel ) {
+    public function createNewDB_ORIG( $request, $connectionParams, $kernel ) {
 
         $session = $request->getSession();
         $session->set('create-custom-db', $connectionParams['dbname']);
@@ -2138,6 +2138,8 @@ Pathology and Laboratory Medicine",
         
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
+        //$doctrineConnection->changeDatabase($dbName);
+
         $valid = $this->isConnectionValid($conn);
         echo $connectionParams['dbname']." valid=$valid <br>";
 
@@ -2169,6 +2171,63 @@ Pathology and Laboratory Medicine",
 
         $session->set('create-custom-db', null);
         $session->remove('create-custom-db');
+        $logger->notice("createNewDB: create-custom-db: done");
+
+        unset($application);
+        unset($kernel);
+
+        //exit('111');
+        return $content.$contentOut;
+    }
+    public function createNewDB( $request, $connectionParams, $kernel ) {
+
+        $logger = $this->container->get('logger');
+        $logger->notice("createNewDB: create-custom-db: dbname=".$connectionParams['dbname']);
+
+        $config = new \Doctrine\DBAL\Configuration();
+//        $connectionParams = array(
+//            'dbname' => $dbname,
+//            'user' => $uid,
+//            'password' => $pwd,
+//            'host' => $host,
+//            'driver' => $driver,
+//        );
+
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname']." valid=$valid <br>";
+
+        if( $valid ) {
+            //$session->set('create-custom-db', null);
+            //$session->remove('create-custom-db');
+            $logger->notice("createNewDB: create-custom-db: done");
+            return "Database ".$connectionParams['dbname']." already exists.";
+        }
+
+        //dump($connectionParams);
+        //exit('1');
+
+        $conn->changeDatabase($connectionParams['dbname']);
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command'          => 'doctrine:database:create',
+            '--if-not-exists'  => null,
+            '--no-interaction' => null
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $content = "Creating new DB ".$connectionParams['dbname'].":<br>";
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        $contentOut = $output->fetch();
+        //dump($content);
+
+        //$session->set('create-custom-db', null);
+        //$session->remove('create-custom-db');
         $logger->notice("createNewDB: create-custom-db: done");
 
         unset($application);

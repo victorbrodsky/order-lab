@@ -33,6 +33,7 @@ doctrine:
         connections:
             default:
                 #wrapper_class: App\Routing\DBAL\MultiDbConnectionWrapper
+                #wrapper_class: App\SystemBundle\DBAL\DoctrineMultidatabaseConnection
                 driver:   '%database_driver%'
                 host:     '%database_host%'
                 port:     '%database_port%'
@@ -53,6 +54,7 @@ doctrine:
                 charset:  UTF8
             #system DB which will be used for multitenancy
             systemdb:
+                #wrapper_class: App\SystemBundle\DBAL\DoctrineMultidatabaseConnection
                 driver:   '%database_driver_systemdb%'
                 host:     '%database_host_systemdb%'
                 port:     '%database_port_systemdb%'
