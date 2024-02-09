@@ -23,7 +23,8 @@
 			"bashprotocol=bash_protocol",
 			"bashdomainname=bash_domainname",
 			"bashsslcertificate=bash_sslcertificate",
-			"bashemail=bash_email"
+			"bashemail=bash_email",
+			"bash_sshfingerprint=bash_sshfingerprint"
 		],
         "script": "alma9_install.sh"
     },
@@ -133,7 +134,13 @@
 		   "echo @### PostgreSQL Version end of installation ###",
 		   "echo @### Check OS Info end of installation ###",
 		   "sudo hostnamectl",		   
-		   "psql --version"
+		   "psql --version",
+		   
+		   "echo @### Create system DB ###",
+		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+		   "php bin/console doctrine:database:create --connection=systemdb",
+		   "php bin/console doctrine:schema:update --em=systemdb --complete --force",
+		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh"
          ]    
       },
 
@@ -146,14 +153,8 @@
 	  {
         "type": "shell",
         "inline": [
-            "echo @### Copy public key to authorized_keys: cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys ###",
-		    "cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys",
-			"chmod 700 /root/.ssh",
-			"chmod 600 /root/.ssh/authorized_keys",
-			"echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config",
-			"echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config",
-			"echo @### Restart ssh ###",
-		    "sudo systemctl restart sshd"
+			"echo @### Run script to install sshkey ###",
+			"bash install_ssh.sh bash_sshfingerprint"
          ]
 	   }
   ]

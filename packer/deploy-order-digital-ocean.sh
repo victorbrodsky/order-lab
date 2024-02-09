@@ -266,7 +266,8 @@ echo "*** Create ssh keys ***"
 #-f my.key tells it to store the key into my.key (change as you see fit).
 #o send enters to an interactive script: echo -e "\n\n\n" | ssh-keygen -t rsa
 #It will generate two files in the current folder: sshkey and sshkey.pub
-#Note: ssh keys added to json file, for example order-packer-centos7.json: file sshkey.pub, shell, Copy public key to authorized_keys ...
+#
+#Note: ssh keys added to json file (for example order-packer-centos7.json): file (sshkey.pub), shell (Copy public key to authorized_keys ...)
 #move sshkey logic from json to a separate shell script, same for all, except ubuntu22: if sshkey.pub exists => update sshd_config, if not => skip
 ssh-keygen -t rsa -b 4096 -N "" -f ./sshkey
 ###### Create ssh keys ######
@@ -289,6 +290,7 @@ sed -i -e "s/bash_email/$email/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_sshfingerprint/$sshfingerprint/g" "$ORDERPACKERJSON"
 
 sed -i -e "s/snapshot_name_bash_value/$snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
@@ -311,6 +313,7 @@ sed -i -e "s/$email/bash_email/g" "$ORDERPACKERJSON"
 sed -i -e "s/$domainname/bash_domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
+sed -i -e "s/$sshfingerprint/bash_sshfingerprint/g" "$ORDERPACKERJSON"
 sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
