@@ -42,8 +42,13 @@ use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMSetup;
+//use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
+use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
+use App\SystemBundle\DynamicConnection\DynamicEntityManager;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -2092,43 +2097,113 @@ Pathology and Laboratory Medicine",
     public function createNewDB( $request, $connectionParams, $kernel ) {
         $logger = $this->container->get('logger');
 
-        $config = new \Doctrine\DBAL\Configuration();
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
-        $valid = $this->isConnectionValid($conn);
-        echo $connectionParams['dbname']." valid=$valid <br>";
+        if(0) {
+            $config = new \Doctrine\DBAL\Configuration();
+            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+            $valid = $this->isConnectionValid($conn);
+            echo $connectionParams['dbname'] . " valid=$valid <br>";
 
-        if( $valid ) {
-            $msg = "Database ".$connectionParams['dbname']." already exists.";
-            $logger->notice($msg);
-            return $msg;
+            if ($valid) {
+                $msg = "Database " . $connectionParams['dbname'] . " already exists.";
+                $logger->notice($msg);
+                return $msg;
+            }
+
+            $conn = $this->getConnectionByLocale('system');
+            $sql = "CREATE DATABASE " . $connectionParams['dbname'];
+            $stmt = $conn->prepare($sql);
+            $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
+
+            //Update schema
+            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+            $valid = $this->isConnectionValid($conn);
+            echo $connectionParams['dbname'] . " valid=$valid <br>";
+            if ($valid) {
+                $msg = "Database " . $connectionParams['dbname'] . " already exists.";
+                $logger->notice($msg);
+                return $msg;
+            }
+
+            $input = new ArrayInput([
+                'command'          => 'doctrine:database:create',
+                '--if-not-exists'  => null,
+                '--no-interaction' => null
+            ]);
         }
 
-        $conn = $this->getConnectionByLocale('system');
-        $sql = "CREATE DATABASE ".$connectionParams['dbname'];
-        $stmt = $conn->prepare($sql);
-        $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
-
-        //Update schema
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
-        $valid = $this->isConnectionValid($conn);
-        echo $connectionParams['dbname']." valid=$valid <br>";
-        if( $valid ) {
-            $msg = "Database ".$connectionParams['dbname']." already exists.";
-            $logger->notice($msg);
-            return $msg;
-        }
-        
-        $input = new ArrayInput([
-            'command'          => 'doctrine:database:create',
-            '--if-not-exists'  => null,
-            '--no-interaction' => null
-        ]);
+        $this->updateSchema($request, $connectionParams, $kernel);
         
         //dump($results);
         //exit('111');
         $msg = "Database ".$connectionParams['dbname']." has been created.";
         return $msg;
 
+    }
+    public function updateSchema($request, $connectionParams, $kernel) {
+
+        $logger = $this->container->get('logger');
+        $config = new \Doctrine\DBAL\Configuration();
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname'] . " valid=$valid <br>";
+
+        if ($valid) {
+            $msg = "Database " . $connectionParams['dbname'] . " already exists.";
+            $logger->notice($msg);
+            return $msg;
+        }
+
+        //php bin/console doctrine:schema:update --em=systemdb --complete --force
+        $connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
+
+        $isDevMode = true;
+        $proxyDir = null;
+        $cache = null;
+        $useSimpleAnnotationReader = false;
+
+        $config = ORMSetup::createAttributeMetadataConfiguration(
+            array(__DIR__."/src"),
+            $isDevMode,
+            $proxyDir,
+            $cache,
+            $useSimpleAnnotationReader
+        );
+        //$config = ORMSetup::createYAMLMetadataConfiguration(array(__DIR__."/src"), $isDevMode);
+        //$config = new \Doctrine\DBAL\Configuration();
+        //$entityManager = EntityManager::create($connectionParams, $config);
+
+        //$conn = $this->getConnectionByLocale('system');
+
+        //https://github.com/doctrine/dbal/pull/3770
+        //Fatal error: Declaration of Doctrine\DBAL\Connection::query(string $sql): Doctrine\DBAL\Result
+        // must be compatible with Doctrine\DBAL\Driver\Connection::query(string $sql): Doctrine\DBAL\Driver\Result
+        // in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\dbal\src\Connection.php on line 1977
+        //Update doctrine/orm to 3?
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        //exit('222');
+
+        $entityManager = new EntityManager($conn, $config);
+
+
+        $dynamicEntityManager = new DynamicEntityManager($entityManager);
+
+        $dynamicEntityManager->modifyConnection($connectionParams['dbname']);
+
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+
+        $arguments = [
+            'command'          => 'doctrine:database:create',
+            '--if-not-exists'  => null,
+            '--no-interaction' => null
+        ];
+
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        unset($application);
+        unset($kernel);
+
+        return "Database schema for ".$connectionParams['dbname']." has been updated.";;
     }
 
     public function createNewDB_2( $request, $connectionParams, $kernel ) {
