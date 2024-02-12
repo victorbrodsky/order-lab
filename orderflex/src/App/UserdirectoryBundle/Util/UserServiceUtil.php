@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\SystemBundle\DBAL\DoctrineMultidatabaseConnection;
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\UserdirectoryBundle\Entity\UserInfo; //process.py script: replaced namespace by ::class: added use line for classname=UserInfo
 use App\OrderformBundle\Entity\PatientLastName; //process.py script: replaced namespace by ::class: added use line for classname=PatientLastName
@@ -2088,98 +2089,49 @@ Pathology and Laboratory Medicine",
         return implode("<br>",$output);
     }
 
-    //Create new DB: https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-    public function createNewDB_ORIG( $request, $connectionParams, $kernel ) {
-
-        $session = $request->getSession();
-        $session->set('create-custom-db', $connectionParams['dbname']);
+    public function createNewDB( $request, $connectionParams, $kernel ) {
         $logger = $this->container->get('logger');
-        $logger->notice("createNewDB: create-custom-db: dbname=".$connectionParams['dbname']);
-
-//[2024-02-09T19:55:02.034982+00:00] app.NOTICE: createNewDB: create-custom-db: dbname=testdb [] []
-//[2024-02-09T19:55:02.075486+00:00] deprecation.INFO: User Deprecated: Relying on a fallback connection used to determine the database
-// platform while connecting to a non-existing database is deprecated. Either use an existing database name in connection parameters
-// or omit the database name if the platform and the server configuration allow that.
-// (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707, package doctrine/dbal)
-// {"exception":"[object] (ErrorException(code: 0): User Deprecated: Relying on a fallback connection used to
-// determine the database platform while connecting to a non-existing database is deprecated. Either use an
-// existing database name in connection parameters or omit the database name if the platform and the server
-// configuration allow that. (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707,
-// package doctrine/dbal) at C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor
-//\\doctrine\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
-
-//[2024-02-09T19:55:02.075661+00:00] deprecation.INFO: User Deprecated: Relying on the DBAL connecting to the "postgres"
-// database by default is deprecated. Unless you want to have the server determine the default database for
-// the connection, specify the database name explicitly. (Driver.php:92 called by Driver.php:35,
-// https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) {"exception":"[object]
-// (ErrorException(code: 0): User Deprecated: Relying on the DBAL connecting to the
-// \"postgres\" database by default is deprecated. Unless you want to have the server determine the
-// default database for the connection, specify the database name explicitly. (Driver.php:92 called by
-// Driver.php:35, https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) at
-// C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor\\doctrine
-//\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
-
-//[2024-02-09T19:55:02.281480+00:00] doctrine.INFO: Connecting with parameters
-// array{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>",
-//"charset":"utf8"} {"params":{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>","charset":"utf8"}} []
-
-//[2024-02-09T19:55:02.321159+00:00] doctrine.DEBUG: Executing query: SELECT datname FROM pg_database {"sql":"SELECT datname FROM pg_database"} []
-//[2024-02-09T19:55:02.322863+00:00] doctrine.INFO: Disconnecting [] []
-//[2024-02-09T19:55:02.324328+00:00] app.NOTICE: createNewDB: create-custom-db: done [] []
 
         $config = new \Doctrine\DBAL\Configuration();
-//        $connectionParams = array(
-//            'dbname' => $dbname,
-//            'user' => $uid,
-//            'password' => $pwd,
-//            'host' => $host,
-//            'driver' => $driver,
-//        );
-        
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-
-        //$doctrineConnection->changeDatabase($dbName);
-
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
         $valid = $this->isConnectionValid($conn);
         echo $connectionParams['dbname']." valid=$valid <br>";
 
         if( $valid ) {
-            $session->set('create-custom-db', null);
-            $session->remove('create-custom-db');
-            $logger->notice("createNewDB: create-custom-db: done");
-            return "Database ".$connectionParams['dbname']." already exists.";
+            $msg = "Database ".$connectionParams['dbname']." already exists.";
+            $logger->notice($msg);
+            return $msg;
         }
 
-        //dump($connectionParams);
-        //exit('1');
+        $conn = $this->getConnectionByLocale('system');
+        $sql = "CREATE DATABASE ".$connectionParams['dbname'];
+        $stmt = $conn->prepare($sql);
+        $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
 
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
-
+        //Update schema
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname']." valid=$valid <br>";
+        if( $valid ) {
+            $msg = "Database ".$connectionParams['dbname']." already exists.";
+            $logger->notice($msg);
+            return $msg;
+        }
+        
         $input = new ArrayInput([
             'command'          => 'doctrine:database:create',
             '--if-not-exists'  => null,
             '--no-interaction' => null
         ]);
-
-        // You can use NullOutput() if you don't need the output
-        $content = "Creating new DB ".$connectionParams['dbname'].":<br>";
-        $output = new BufferedOutput();
-        $application->run($input, $output);
-        $contentOut = $output->fetch();
-        //dump($content);
-
-        $session->set('create-custom-db', null);
-        $session->remove('create-custom-db');
-        $logger->notice("createNewDB: create-custom-db: done");
-
-        unset($application);
-        unset($kernel);
-
+        
+        //dump($results);
         //exit('111');
-        return $content.$contentOut;
+        $msg = "Database ".$connectionParams['dbname']." has been created.";
+        return $msg;
+
     }
-    public function createNewDB( $request, $connectionParams, $kernel ) {
+
+    public function createNewDB_2( $request, $connectionParams, $kernel ) {
 
         $logger = $this->container->get('logger');
         $logger->notice("createNewDB: create-custom-db: dbname=".$connectionParams['dbname']);
@@ -2193,7 +2145,10 @@ Pathology and Laboratory Medicine",
 //            'driver' => $driver,
 //        );
 
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
 
         $valid = $this->isConnectionValid($conn);
         echo $connectionParams['dbname']." valid=$valid <br>";
@@ -2236,6 +2191,91 @@ Pathology and Laboratory Medicine",
         //exit('111');
         return $content.$contentOut;
     }
+    //Create new DB: https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+    public function createNewDB_1( $request, $connectionParams, $kernel ) {
+
+        //CREATE DATABASE whatever;
+        //GRANT ALL ON whatever.* TO user@localhost IDENTIFIED BY 'pAsSwOrD'
+
+        $session = $request->getSession();
+        $session->set('create-custom-db', $connectionParams['dbname']);
+        $logger = $this->container->get('logger');
+        $logger->notice("createNewDB: create-custom-db: dbname=".$connectionParams['dbname']);
+
+        $config = new \Doctrine\DBAL\Configuration();
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
+
+        //$doctrineConnection->changeDatabase($dbName);
+
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname']." valid=$valid <br>";
+
+        if( $valid ) {
+            $session->set('create-custom-db', null);
+            $session->remove('create-custom-db');
+            $logger->notice("createNewDB: create-custom-db: done");
+            return "Database ".$connectionParams['dbname']." already exists.";
+        }
+
+        //dump($connectionParams);
+        //exit('1');
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command'          => 'doctrine:database:create',
+            '--if-not-exists'  => null,
+            '--no-interaction' => null
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $content = "Creating new DB ".$connectionParams['dbname'].":<br>";
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        $contentOut = $output->fetch();
+        //dump($content);
+
+        $session->set('create-custom-db', null);
+        $session->remove('create-custom-db');
+        $logger->notice("createNewDB: create-custom-db: done");
+
+        unset($application);
+        unset($kernel);
+
+        //exit('111');
+        return $content.$contentOut;
+    }
+    //[2024-02-09T19:55:02.034982+00:00] app.NOTICE: createNewDB: create-custom-db: dbname=testdb [] []
+//[2024-02-09T19:55:02.075486+00:00] deprecation.INFO: User Deprecated: Relying on a fallback connection used to determine the database
+// platform while connecting to a non-existing database is deprecated. Either use an existing database name in connection parameters
+// or omit the database name if the platform and the server configuration allow that.
+// (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707, package doctrine/dbal)
+// {"exception":"[object] (ErrorException(code: 0): User Deprecated: Relying on a fallback connection used to
+// determine the database platform while connecting to a non-existing database is deprecated. Either use an
+// existing database name in connection parameters or omit the database name if the platform and the server
+// configuration allow that. (Connection.php:459 called by Connection.php:411, https://github.com/doctrine/dbal/pull/5707,
+// package doctrine/dbal) at C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor
+//\\doctrine\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
+
+//[2024-02-09T19:55:02.075661+00:00] deprecation.INFO: User Deprecated: Relying on the DBAL connecting to the "postgres"
+// database by default is deprecated. Unless you want to have the server determine the default database for
+// the connection, specify the database name explicitly. (Driver.php:92 called by Driver.php:35,
+// https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) {"exception":"[object]
+// (ErrorException(code: 0): User Deprecated: Relying on the DBAL connecting to the
+// \"postgres\" database by default is deprecated. Unless you want to have the server determine the
+// default database for the connection, specify the database name explicitly. (Driver.php:92 called by
+// Driver.php:35, https://github.com/doctrine/dbal/pull/5705, package doctrine/dbal) at
+// C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\vendor\\doctrine
+//\\deprecations\\lib\\Doctrine\\Deprecations\\Deprecation.php:210)"} []
+
+//[2024-02-09T19:55:02.281480+00:00] doctrine.INFO: Connecting with parameters
+// array{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>",
+//"charset":"utf8"} {"params":{"driver":"pdo_pgsql","host":"localhost","port":5432,"user":"symfony","password":"<redacted>","charset":"utf8"}} []
+
+//[2024-02-09T19:55:02.321159+00:00] doctrine.DEBUG: Executing query: SELECT datname FROM pg_database {"sql":"SELECT datname FROM pg_database"} []
+//[2024-02-09T19:55:02.322863+00:00] doctrine.INFO: Disconnecting [] []
+//[2024-02-09T19:55:02.324328+00:00] app.NOTICE: createNewDB: create-custom-db: done [] []
 
     public function classNameUrlMapper($className) {
 
