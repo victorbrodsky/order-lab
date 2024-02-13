@@ -1716,7 +1716,7 @@ in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFel
 "doctrine/orm": "^2.9", (uses 2.16.0) => "doctrine/orm": "2.15.3" or "2.15.5",
 ### EOF ###
 
-"doctrine/orm": "2.15.5", => "doctrine/orm": "^3
+"doctrine/orm": "2.15.5", => "doctrine/orm": "^3": Failed, must update other bundles
 
 
 //https://github.com/backup-manager/symfony

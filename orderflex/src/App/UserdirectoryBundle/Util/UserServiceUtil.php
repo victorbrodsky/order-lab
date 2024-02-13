@@ -2139,6 +2139,8 @@ Pathology and Laboratory Medicine",
         return $msg;
 
     }
+    //https://github.com/karol-dabrowski/doctrine-dynamic-connection/tree/master
+    //php bin/console dbal:run-sql 'SELECT * FROM product'
     public function updateSchema($request, $connectionParams, $kernel) {
 
         $logger = $this->container->get('logger');
