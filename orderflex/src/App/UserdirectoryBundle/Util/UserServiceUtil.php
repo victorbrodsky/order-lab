@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\SystemBundle\DBAL\DoctrineMultidatabaseConnection;
+use App\SystemBundle\DynamicConnection\PrimaryReadReplicaConnection;
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\UserdirectoryBundle\Entity\UserInfo; //process.py script: replaced namespace by ::class: added use line for classname=UserInfo
 use App\OrderformBundle\Entity\PatientLastName; //process.py script: replaced namespace by ::class: added use line for classname=PatientLastName
@@ -2097,7 +2098,7 @@ Pathology and Laboratory Medicine",
     public function createNewDB( $request, $connectionParams, $kernel ) {
         $logger = $this->container->get('logger');
 
-        if(0) {
+        if(1) {
             $config = new \Doctrine\DBAL\Configuration();
             $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
             $valid = $this->isConnectionValid($conn);
@@ -2114,21 +2115,21 @@ Pathology and Laboratory Medicine",
             $stmt = $conn->prepare($sql);
             $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
 
-            //Update schema
-            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-            $valid = $this->isConnectionValid($conn);
-            echo $connectionParams['dbname'] . " valid=$valid <br>";
-            if ($valid) {
-                $msg = "Database " . $connectionParams['dbname'] . " already exists.";
-                $logger->notice($msg);
-                return $msg;
-            }
-
-            $input = new ArrayInput([
-                'command'          => 'doctrine:database:create',
-                '--if-not-exists'  => null,
-                '--no-interaction' => null
-            ]);
+//            //Update schema
+//            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+//            $valid = $this->isConnectionValid($conn);
+//            echo $connectionParams['dbname'] . " valid=$valid <br>";
+//            if ($valid) {
+//                $msg = "Database " . $connectionParams['dbname'] . " already exists.";
+//                $logger->notice($msg);
+//                return $msg;
+//            }
+//
+//            $input = new ArrayInput([
+//                'command'          => 'doctrine:database:create',
+//                '--if-not-exists'  => null,
+//                '--no-interaction' => null
+//            ]);
         }
 
         $this->updateSchema($request, $connectionParams, $kernel);
@@ -2142,6 +2143,15 @@ Pathology and Laboratory Medicine",
     //https://github.com/karol-dabrowski/doctrine-dynamic-connection/tree/master
     //php bin/console dbal:run-sql 'SELECT * FROM product'
     public function updateSchema($request, $connectionParams, $kernel) {
+        $logger = $this->container->get('logger');
+
+        
+
+        return "Database schema for ".$connectionParams['dbname']." has been updated.";;
+    }
+    //https://github.com/karol-dabrowski/doctrine-dynamic-connection/tree/master
+    //php bin/console dbal:run-sql 'SELECT * FROM product'
+    public function updateSchema_OLD($request, $connectionParams, $kernel) {
 
         $logger = $this->container->get('logger');
         $config = new \Doctrine\DBAL\Configuration();
@@ -2156,7 +2166,9 @@ Pathology and Laboratory Medicine",
         }
 
         //php bin/console doctrine:schema:update --em=systemdb --complete --force
-        $connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
+        //$connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
+        $connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+        //$connectionParams['wrapperClass'] = PrimaryReadReplicaConnection::class;
 
         $isDevMode = true;
         $proxyDir = null;
@@ -2180,21 +2192,26 @@ Pathology and Laboratory Medicine",
         //Fatal error: Declaration of Doctrine\DBAL\Connection::query(string $sql): Doctrine\DBAL\Result
         // must be compatible with Doctrine\DBAL\Driver\Connection::query(string $sql): Doctrine\DBAL\Driver\Result
         // in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\dbal\src\Connection.php on line 1977
-        https://github.com/webmozart/doctrine-dbal/blob/master/lib/Doctrine/DBAL/Connection.php
+        //https://github.com/webmozart/doctrine-dbal/blob/master/lib/Doctrine/DBAL/Connection.php
         //Update doctrine/orm to 3?
         //https://www.prestashop.com/forums/topic/1069631-solved-update-ps-17-with-php-8-fatall-error/
         //Get rid of beberlei/DoctrineExtensions and replace YEAR() in vacreq calendar 
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
         //exit('222');
 
-        $entityManager = new EntityManager($conn, $config);
+        //$entityManager = new EntityManager($conn, $config);
+        //$entityManager->modifyConnection($connectionParams['dbname']);
 
+        //$dynamicEntityManager = new DynamicEntityManager($entityManager);
+        //$dynamicEntityManager->modifyConnection($connectionParams['dbname']);
 
-        $dynamicEntityManager = new DynamicEntityManager($entityManager);
+        //$session = $request->getSession();
+        //$session->set('create-custom-db', $connectionParams['dbname']);
+        
+        //$conn->modifyConnection($conn,$connectionParams['dbname']);
+        $conn->changeDatabase($connectionParams['dbname']);
 
-        $dynamicEntityManager->modifyConnection($connectionParams['dbname']);
-
-        $application = new Application($this->kernel);
+        $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $arguments = [
@@ -2204,6 +2221,8 @@ Pathology and Laboratory Medicine",
         ];
 
         $commandInput = new ArrayInput($arguments);
+
+        $output = new BufferedOutput();
         $application->run($commandInput, $output);
         unset($application);
         unset($kernel);

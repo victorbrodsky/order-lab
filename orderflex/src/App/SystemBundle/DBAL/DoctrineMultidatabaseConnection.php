@@ -12,24 +12,27 @@
 
 namespace App\SystemBundle\DBAL;
 
+use App\SystemBundle\DynamicConnection\DynamicConnection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 
 //NOT USED
-class DoctrineMultidatabaseConnection extends Connection {
+//implements DynamicConnection
+class DoctrineMultidatabaseConnection extends Connection
+{
 
-//    public function __construct(
-//        array $params,
-//        Driver $driver,
-//        Configuration $config,
-//        EventManager $eventManager
-//    )
-//    {
-//        exit('222');
-//        parent::__construct($params,$driver,$config,$eventManager);
-//    }
+    public function __construct(
+        array $params,
+        Driver $driver,
+        Configuration $config,
+        EventManager $eventManager
+    )
+    {
+        //exit('222');
+        parent::__construct($params,$driver,$config,$eventManager);
+    }
 
     public function changeDatabase(string $dbName): bool {
         $params = $this->getParams();
@@ -59,6 +62,41 @@ class DoctrineMultidatabaseConnection extends Connection {
             }
         }
         return $res;
+    }
+
+    public function modifyConnection(
+        $connection,
+        ?string $databaseName = null,
+        ?string $username = null,
+        ?string $password = null,
+        ?string $host = null,
+        ?string $port = null
+    ): void
+    {
+        //exit('111');
+//        $connection = $this->getDynamicConnection();
+//
+//        if ($this->isTransactionActive()) {
+//            $this->rollback();
+//        }
+//
+//        $this->clear();
+//
+//        $params = $this->getParams($databaseName, $username, $password, $host, $port);
+
+        $params['dbname'] = $databaseName;
+
+        $connection->reinitialize($params);
+    }
+
+    public function reinitialize(array $params): void
+    {
+        if ($this->isConnected()) {
+            $this->close();
+        }
+
+        $params = array_merge($this->getParams(), $params);
+        parent::__construct($params, $this->_driver, $this->_config, $this->_eventManager);
     }
 
 }

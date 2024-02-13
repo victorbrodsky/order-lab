@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 
 
-class DynamicConnectionWrapper extends Connection implements DynamicConnection
+class DynamicConnectionWrapper extends Connection #implements DynamicConnection
 {
     public function __construct(
         array $params,
@@ -25,6 +25,7 @@ class DynamicConnectionWrapper extends Connection implements DynamicConnection
         ?Configuration $config = null,
         ?EventManager $eventManager = null
     ) {
+        //exit('111');
         parent::__construct($params, $driver, $config, $eventManager);
     }
 
