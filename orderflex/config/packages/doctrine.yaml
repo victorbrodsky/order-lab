@@ -166,6 +166,7 @@ doctrine:
                         #GROUP_CONCAT: App\UserdirectoryBundle\Query\GroupConcat
                      datetime_functions:
                         #date: DoctrineExtensions\Query\Mysql\Date
+                        #https://github.com/beberlei/DoctrineExtensions/blob/master/config/postgres.yml
                         YEAR: DoctrineExtensions\Query\Postgresql\Year
             external:
                 connection: external

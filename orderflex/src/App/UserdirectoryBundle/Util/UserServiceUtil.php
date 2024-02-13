@@ -2180,7 +2180,10 @@ Pathology and Laboratory Medicine",
         //Fatal error: Declaration of Doctrine\DBAL\Connection::query(string $sql): Doctrine\DBAL\Result
         // must be compatible with Doctrine\DBAL\Driver\Connection::query(string $sql): Doctrine\DBAL\Driver\Result
         // in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\dbal\src\Connection.php on line 1977
+        https://github.com/webmozart/doctrine-dbal/blob/master/lib/Doctrine/DBAL/Connection.php
         //Update doctrine/orm to 3?
+        //https://www.prestashop.com/forums/topic/1069631-solved-update-ps-17-with-php-8-fatall-error/
+        //Get rid of beberlei/DoctrineExtensions and replace YEAR() in vacreq calendar 
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
         //exit('222');
 
