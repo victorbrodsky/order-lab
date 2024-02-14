@@ -39,9 +39,9 @@ final class DynamicEntityManager extends EntityManagerDecorator
     {
         $connection = $this->getConnection();
 
-        if (!$connection instanceof DynamicConnection) {
-            throw new ConnectionTypeException();
-        }
+        //if (!$connection instanceof DynamicConnection) {
+        //    throw new ConnectionTypeException();
+        //}
 
         return $connection;
     }

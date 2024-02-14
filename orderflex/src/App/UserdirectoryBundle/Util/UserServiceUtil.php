@@ -2088,7 +2088,8 @@ Pathology and Laboratory Medicine",
                     'host' => $hostedGroupHolder->getDatabaseHost(),
                     'driver' => $this->container->getParameter('database_driver'),
                 );
-                $output[] = $this->createNewDB($request,$connectionParams, $kernel);
+                $output[] = $this->createNewDB($request,$connectionParams,$kernel);
+                $output[] = $this->updateSchema($request,$connectionParams,$kernel);
             }
         }
 
@@ -2132,7 +2133,7 @@ Pathology and Laboratory Medicine",
 //            ]);
         }
 
-        $this->updateSchema($request, $connectionParams, $kernel);
+        //$this->updateSchema($request, $connectionParams, $kernel);
         
         //dump($results);
         //exit('111');
@@ -2145,7 +2146,44 @@ Pathology and Laboratory Medicine",
     public function updateSchema($request, $connectionParams, $kernel) {
         $logger = $this->container->get('logger');
 
+        //$config = new \Doctrine\DBAL\Configuration();
+        $isDevMode = true;
+        $proxyDir = null;
+        $cache = null;
+        $useSimpleAnnotationReader = false;
+        $config = ORMSetup::createAttributeMetadataConfiguration(
+            array(__DIR__."/src"),
+            $isDevMode,
+            $proxyDir,
+            $cache,
+            $useSimpleAnnotationReader
+        );
+
+        $connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
+        //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        $valid = $this->isConnectionValid($conn);
+        echo $connectionParams['dbname'] . " valid=$valid <br>";
+
+        if ($valid) {
+            $msg = "Database " . $connectionParams['dbname'] . " exists.";
+            $logger->notice($msg);
+            //return $msg;
+        }
+
+        $entityManagerFactory = EntityManager::create(
+            $connectionParams,
+            $config
+        );
+        $logger->notice("entityManagerFactory created");
+
+        //$entityManager = $entityManagerFactory->createEntityManager();
+        $dynamicEntityManager = new DynamicEntityManager($entityManagerFactory);
+        $dynamicEntityManager->modifyConnection($connectionParams['dbname']);
         
+        $logger->notice("entityManager created");
 
         return "Database schema for ".$connectionParams['dbname']." has been updated.";;
     }
