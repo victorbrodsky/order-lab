@@ -48,8 +48,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup;
 //use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
-use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
-use App\SystemBundle\DynamicConnection\DynamicEntityManager;
+
+//use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
+//use App\SystemBundle\DynamicConnection\DynamicEntityManager;
+use DynamicConnection\DynamicConnectionWrapper;
+use DynamicConnection\DynamicEntityManager;
+
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -2141,9 +2145,55 @@ Pathology and Laboratory Medicine",
         return $msg;
 
     }
+    public function updateSchema($request, $connectionParams, $kernel) {
+        $connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
+
+        $isDevMode = true;
+        $proxyDir = null;
+        $cache = null;
+        $useSimpleAnnotationReader = false;
+
+        $config = Setup::createAnnotationMetadataConfiguration(
+            array(__DIR__."/src"),
+            $isDevMode,
+            $proxyDir,
+            $cache,
+            $useSimpleAnnotationReader
+        );
+
+        // For XML mappings
+        // $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $isDevMode);
+
+        // For YAML mappings
+        // $config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/config/xml"), $isDevMode);
+
+        $entityManager = EntityManager::create($dbParams, $config);
+        $dynamicEntityManager = new DynamicEntityManager($entityManager);
+
+        // Change database name
+        $dynamicEntityManager->modifyConnection($connectionParams['dbname']);
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $arguments = [
+            'command'          => 'doctrine:schema:update',
+            '--complete'  => null,
+            '--force' => null
+        ];
+
+        $commandInput = new ArrayInput($arguments);
+
+        $output = new BufferedOutput();
+        $application->run($commandInput, $output);
+        unset($application);
+        unset($kernel);
+
+        return "Database schema for ".$connectionParams['dbname']." has been updated.";
+    }
     //https://github.com/karol-dabrowski/doctrine-dynamic-connection/tree/master
     //php bin/console dbal:run-sql 'SELECT * FROM product'
-    public function updateSchema($request, $connectionParams, $kernel) {
+    public function updateSchema_1($request, $connectionParams, $kernel) {
         $logger = $this->container->get('logger');
 
         //$config = new \Doctrine\DBAL\Configuration();
