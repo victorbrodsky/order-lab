@@ -27,8 +27,11 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
-use App\SystemBundle\DBAL\DoctrineMultidatabaseConnection;
+use App\SystemBundle\DynamicConnection\DoctrineMultidatabaseConnection;
 use App\SystemBundle\DynamicConnection\PrimaryReadReplicaConnection;
+use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
+use App\SystemBundle\DynamicConnection\DynamicEntityManager;
+
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\UserdirectoryBundle\Entity\UserInfo; //process.py script: replaced namespace by ::class: added use line for classname=UserInfo
 use App\OrderformBundle\Entity\PatientLastName; //process.py script: replaced namespace by ::class: added use line for classname=PatientLastName
@@ -48,11 +51,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup;
 //use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
-
-//use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
-//use App\SystemBundle\DynamicConnection\DynamicEntityManager;
-use DynamicConnection\DynamicConnectionWrapper;
-use DynamicConnection\DynamicEntityManager;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -2146,6 +2144,67 @@ Pathology and Laboratory Medicine",
 
     }
     public function updateSchema($request, $connectionParams, $kernel) {
+
+        $logger = $this->container->get('logger');
+
+        $session = $request->getSession();
+        $session->set('create-custom-db', $connectionParams['dbname']);
+
+        $connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+        $doctrineConnection = $this->doctrine->getConnection();
+        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        //doctrine:schema:update --em=systemdb --complete --force
+        $arguments = [
+            'command'          => 'doctrine:schema:update',
+            '--complete'  => null,
+            '--force' => null
+        ];
+
+        $output = new BufferedOutput();
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        $contentOut = $output->fetch();
+        unset($application);
+        unset($kernel);
+
+        $session->set('create-custom-db', null);
+        $session->remove('create-custom-db');
+        $logger->notice("updateSchema: create-custom-db: done");
+
+        return "DB updated ".$connectionParams['dbname']."; output=".$contentOut;
+    }
+    //updateSchema()
+    public function updateSchema_test2($request, $connectionParams, $kernel) {
+
+        $isDevMode = true;
+        $proxyDir = null;
+        $cache = null;
+        $useSimpleAnnotationReader = false;
+        $config = ORMSetup::createAttributeMetadataConfiguration(
+            array(__DIR__."/src"),
+            $isDevMode,
+            $proxyDir,
+            $cache,
+            $useSimpleAnnotationReader
+        );
+        $connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams,$config);
+        $em = new EntityManager($connection,$config);
+
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        //$classes = null; //array(array(__DIR__."/src"));
+        $classes = array(
+            $em->getClassMetadata('App\UserdirectoryBundle\Entity\*'),
+            $em->getClassMetadata('App\UserdirectoryBundle\Entity\User'),
+            //$em->getClassMetadata('Entities\Profile')
+        );
+        $tool->updateSchema($classes);
+
+        return "Updated";
+
         $connectionParams['wrapperClass'] = DynamicConnectionWrapper::class;
 
         $isDevMode = true;
@@ -2153,7 +2212,7 @@ Pathology and Laboratory Medicine",
         $cache = null;
         $useSimpleAnnotationReader = false;
 
-        $config = Setup::createAnnotationMetadataConfiguration(
+        $config = ORMSetup::createAttributeMetadataConfiguration(
             array(__DIR__."/src"),
             $isDevMode,
             $proxyDir,
@@ -2167,7 +2226,7 @@ Pathology and Laboratory Medicine",
         // For YAML mappings
         // $config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/config/xml"), $isDevMode);
 
-        $entityManager = EntityManager::create($dbParams, $config);
+        $entityManager = EntityManager::create($connectionParams, $config);
         $dynamicEntityManager = new DynamicEntityManager($entityManager);
 
         // Change database name
@@ -2193,7 +2252,7 @@ Pathology and Laboratory Medicine",
     }
     //https://github.com/karol-dabrowski/doctrine-dynamic-connection/tree/master
     //php bin/console dbal:run-sql 'SELECT * FROM product'
-    public function updateSchema_1($request, $connectionParams, $kernel) {
+    public function updateSchema_test1($request, $connectionParams, $kernel) {
         $logger = $this->container->get('logger');
 
         //$config = new \Doctrine\DBAL\Configuration();

@@ -10,7 +10,7 @@
 //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
 //https://github.com/compains/multi-database-symfony-based-project/blob/main/src/Connection/DoctrineMultidatabaseConnection.php
 
-namespace App\SystemBundle\DBAL;
+namespace App\SystemBundle\DynamicConnection;
 
 use App\SystemBundle\DynamicConnection\DynamicConnection;
 use Doctrine\DBAL\Connection;
@@ -64,13 +64,18 @@ class DoctrineMultidatabaseConnection extends Connection
         return $res;
     }
 
+
+
+
+
+
     public function modifyConnection(
         $connection,
-        ?string $databaseName = null,
-        ?string $username = null,
-        ?string $password = null,
-        ?string $host = null,
-        ?string $port = null
+        $databaseName = null,
+        $username = null,
+        $password = null,
+        $host = null,
+        $port = null
     ): void
     {
         //exit('111');

@@ -55,7 +55,7 @@ doctrine:
                 charset:  UTF8
             #system DB which will be used for multitenancy
             systemdb:
-                #wrapper_class: App\SystemBundle\DBAL\DoctrineMultidatabaseConnection
+                #wrapper_class: App\SystemBundle\DynamicConnection\DoctrineMultidatabaseConnection
                 #wrapper_class: App\SystemBundle\DynamicConnection\DynamicConnectionWrapper
                 driver:   '%database_driver_systemdb%'
                 host:     '%database_host_systemdb%'
