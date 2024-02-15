@@ -113,6 +113,7 @@ class MaintenanceListener {
             //clean session
             if( $multilocales && $sessionLocale && !str_contains($multilocales, $sessionLocale)) {
                 $session->set('locale', null);
+                //$session->remove('locale');
             }
         }
         ////// EOF Clean previous session 'local' //////
@@ -139,6 +140,8 @@ class MaintenanceListener {
                         //$getBaseUrl = $request->getSchemeAndHttpHost();
                         //echo "getBaseUrl=".$getBaseUrl."<br>";
                         //exit('111');
+
+                        $this->logger->notice("MaintenanceListener: can not switch: [$uri], [$locale], [$sessionLocale]");
 
                         if(1) {
                             $session->getFlashBag()->add(

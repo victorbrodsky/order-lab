@@ -2089,8 +2089,9 @@ Pathology and Laboratory Medicine",
                     'password' => $hostedGroupHolder->getDatabasePassword(),
                     'host' => $hostedGroupHolder->getDatabaseHost(),
                     'driver' => $this->container->getParameter('database_driver'),
+                    'wrapper_class' => DoctrineMultidatabaseConnection::class
                 );
-                $output[] = $this->createNewDB($request,$connectionParams,$kernel);
+                //$output[] = $this->createNewDB($request,$connectionParams,$kernel);
                 $output[] = $this->updateSchema($request,$connectionParams,$kernel);
             }
         }
@@ -2143,8 +2144,10 @@ Pathology and Laboratory Medicine",
         return $msg;
 
     }
+    //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
     public function updateSchema($request, $connectionParams, $kernel) {
-
+        //dump($connectionParams);
+        //exit('updateSchema');
         $logger = $this->container->get('logger');
 
         $session = $request->getSession();

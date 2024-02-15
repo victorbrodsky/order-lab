@@ -59,6 +59,8 @@ class DatabaseConnectionFactory extends ConnectionFactory
         array $mappingTypes = []
     )
     {
+        //dump($params);
+        //exit('DatabaseConnectionFactory createConnection');
         //exit('DatabaseConnectionFactory');
         $logger = $this->container->get('logger');
         $multitenancy = $this->container->getParameter('multitenancy');
@@ -110,33 +112,62 @@ class DatabaseConnectionFactory extends ConnectionFactory
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $request = $this->requestStack->getCurrentRequest();
+        //$session = $this->requestStack->getSession();
+        //dump($request);
+        //exit(222);
+        //dump($params);
+        //exit('1 DatabaseConnectionFactory createConnection');
 
         //Check if session set and $session->get('locale') exists => use locale to get connection parameters
         if( $request ) {
+
+            $requestLocale = $request->attributes->get('_locale');
+            //echo "requestLocale=".$requestLocale."<br>";
+            //exit('DatabaseConnectionFactory _locale');
+
+            //dump($params);
+            //exit('1 DatabaseConnectionFactory createConnection');
+            //echo "params=".$params['dbname']."<br>";
+            //if(1) {
+            //if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             if( $request->hasSession() ) {
+                //echo "after has Session params=".$params['dbname']."<br>";
+                //dump($params);
+                //exit('2 DatabaseConnectionFactory createConnection');
+
                 $session = $request->getSession();
+                //$params['wrapperClass'] = DoctrineMultidatabaseConnection::class;
                 if ($session) {
                     //dump($session);
-                    //exit('111');
-
+                    //dump($params);
+                    //exit('2 DatabaseConnectionFactory session');
+                    //exit('createConnection 1');
                     //Create new DB
+                    //$session->set('create-custom-db', null);
+                    //$session->remove('create-custom-db');
+
                     if( $session->has('create-custom-db') ) {
+
                         $createDbName = $session->get('create-custom-db');
+                        exit('createConnection createDbName='.$createDbName);
                         if( $createDbName ) {
                             $params['dbname'] = $createDbName;
                             $params['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+                            //dump($params);
+                            //exit('createConnection 1');
                             //exit('wrapperClass='.$wrapperClass);
                             $logger->notice("DatabaseConnectionFactory: exit(use create-custom-db) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
                             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
                         }
                     }
 
-                    if ($session->has('locale')) {
+                    if( $session->has('locale') ) {
+                        //$locale = $request->attributes->get('_locale');
                         $locale = $session->get('locale');
-                        if ($locale) {
+                        if( $locale ) {
                             //exit('$locale='.$locale);
                             $params = $userServiceUtil->getConnectionParams($locale);
-                            $logger->notice("DatabaseConnectionFactory: exit(use locale) multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
+                            $logger->notice("DatabaseConnectionFactory: exit(use locale=".$locale.") multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
                             return parent::createConnection($params, $config, $eventManager, $mappingTypes);
                         } else {
                             $logger->notice("DatabaseConnectionFactory: 'locale' is null");
@@ -145,8 +176,14 @@ class DatabaseConnectionFactory extends ConnectionFactory
                         $logger->notice("DatabaseConnectionFactory: session does not have 'locale'");
                     }
                 }
-            } else {
-                $logger->notice("DatabaseConnectionFactory: request does not have a session");
+            }
+            elseif( $requestLocale ) {
+                $params = $userServiceUtil->getConnectionParams($requestLocale);
+                $logger->notice("DatabaseConnectionFactory: exit(use requestLocale=".$requestLocale.") multitenancy=[" . $multitenancy . "]; dbName=[" . $params['dbname'] . "]");
+                return parent::createConnection($params, $config, $eventManager, $mappingTypes);
+            }
+            else {
+                $logger->notice("DatabaseConnectionFactory: request does not have a session or requestLocale");
             }
         }
 
@@ -201,7 +238,7 @@ class DatabaseConnectionFactory extends ConnectionFactory
             $params = $userServiceUtil->getConnectionParams('default');
         }
 
-        $logger->notice("DatabaseConnectionFactory: exit multitenancy=[".$multitenancy."]; dbName=[".$params['dbname']."]");
+        $logger->notice("DatabaseConnectionFactory: eof exit multitenancy=[".$multitenancy."]; dbName=[".$params['dbname']."]");
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }
 
