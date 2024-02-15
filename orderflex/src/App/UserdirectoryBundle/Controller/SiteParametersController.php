@@ -830,7 +830,7 @@ class SiteParametersController extends OrderAbstractController
         );
 
         //runDeployScript
-        if(0) {
+        if(1) {
             //$userServiceUtil->runDeployScript(false,false,true);
             $output = $userServiceUtil->clearCacheInstallAssets($kernel);
             $this->addFlash(

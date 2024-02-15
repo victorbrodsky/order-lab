@@ -67,45 +67,6 @@ class DoctrineMultidatabaseConnection extends Connection
         }
         return $res;
     }
-
-
-
-
-
-
-//    public function modifyConnection(
-//        $connection,
-//        $databaseName = null,
-//        $username = null,
-//        $password = null,
-//        $host = null,
-//        $port = null
-//    ): void
-//    {
-//        //exit('111');
-////        $connection = $this->getDynamicConnection();
-////
-////        if ($this->isTransactionActive()) {
-////            $this->rollback();
-////        }
-////
-////        $this->clear();
-////
-////        $params = $this->getParams($databaseName, $username, $password, $host, $port);
-//
-//        $params['dbname'] = $databaseName;
-//
-//        $connection->reinitialize($params);
-//    }
-//
-//    public function reinitialize(array $params): void
-//    {
-//        if ($this->isConnected()) {
-//            $this->close();
-//        }
-//
-//        $params = array_merge($this->getParams(), $params);
-//        parent::__construct($params, $this->_driver, $this->_config, $this->_eventManager);
-//    }
+    
 
 }
