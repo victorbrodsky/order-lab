@@ -823,14 +823,14 @@ class SiteParametersController extends OrderAbstractController
         //Create DB if not exists
         $output = null;
         //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-        //$output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
+        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
         $this->addFlash(
             'notice',
             "New DBs verified and created if not existed.<br> Output:<br>".$output
         );
 
         //runDeployScript
-        if(1) {
+        if(0) {
             //$userServiceUtil->runDeployScript(false,false,true);
             $output = $userServiceUtil->clearCacheInstallAssets($kernel);
             $this->addFlash(

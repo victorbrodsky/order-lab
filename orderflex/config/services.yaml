@@ -141,10 +141,10 @@ services:
     #https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
     App\SystemBundle\DBAL\DatabaseConnectionFactory:
         decorates: doctrine.dbal.connection_factory
-        arguments:
-            $requestStack: '@request_stack'
-            $container: '@service_container'
-            $em: '@doctrine.orm.entity_manager'
+#        arguments:
+#            $requestStack: '@request_stack'
+#            $container: '@service_container'
+#            $em: '@doctrine.orm.entity_manager'
             #$multitenancy: '%multitenancy%'
             #$wrappedConnectionFactory: '@App\Routing\DBAL\DatabaseConnectionFactory.inner'
 

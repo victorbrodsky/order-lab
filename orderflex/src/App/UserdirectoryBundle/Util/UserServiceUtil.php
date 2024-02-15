@@ -2079,6 +2079,9 @@ Pathology and Laboratory Medicine",
     public function checkAndCreateNewDBs( $request, $authServerNetwork, $kernel ) {
 
         //$authServerNetwork
+
+        $logger = $this->container->get('logger');
+        $config = new \Doctrine\DBAL\Configuration();
         $output = array();
         
         foreach($authServerNetwork->getHostedGroupHolders() as $hostedGroupHolder) {
@@ -2091,15 +2094,111 @@ Pathology and Laboratory Medicine",
                     'driver' => $this->container->getParameter('database_driver'),
                     'wrapper_class' => DoctrineMultidatabaseConnection::class
                 );
-                //$output[] = $this->createNewDB($request,$connectionParams,$kernel);
-                $output[] = $this->updateSchema($request,$connectionParams,$kernel);
-            }
+
+                //Check if DB exists
+                $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+                $valid = $this->isConnectionValid($conn);
+                echo $connectionParams['dbname'] . " valid=$valid <br>";
+
+                if( $valid ) {
+                    $msg = "Database " . $connectionParams['dbname'] . " already exists.";
+                    $logger->notice($msg);
+                    //return $msg;
+                    $output[] = $msg;
+                } else {
+                    $output[] = $this->createNewDB($request,$connectionParams,$kernel);
+                    $output[] = $this->updateSchema($request,$connectionParams,$kernel);
+                }
+            }//if
         }
 
         return implode("<br>",$output);
     }
 
-    public function createNewDB( $request, $connectionParams, $kernel ) {
+    //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+    public function createNewDB($request, $connectionParams, $kernel) {
+        //dump($connectionParams);
+        //exit('createNewDB');
+        $logger = $this->container->get('logger');
+
+        $session = $request->getSession();
+        $session->set('create-custom-db', $connectionParams['dbname']);
+
+        //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+        $doctrineConnection = $this->doctrine->getConnection();
+        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        //doctrine:schema:update --em=systemdb --complete --force
+        $arguments = [
+            'command'          => 'doctrine:database:create',
+            '--if-not-exists'  => null,
+            '--no-interaction' => null
+        ];
+
+        $output = new BufferedOutput();
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        $contentOut = $output->fetch();
+        unset($application);
+        unset($kernel);
+
+        $session->set('create-custom-db', null);
+        $session->remove('create-custom-db');
+        $logger->notice("createNewDB: create-custom-db: done");
+
+        return "DB created ".$connectionParams['dbname']."; output=".$contentOut;
+    }
+    //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+    public function updateSchema($request, $connectionParams, $kernel) {
+        //dump($connectionParams);
+        //exit('updateSchema');
+        $logger = $this->container->get('logger');
+
+        $session = $request->getSession();
+        $session->set('create-custom-db', $connectionParams['dbname']);
+
+        //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+        $doctrineConnection = $this->doctrine->getConnection();
+        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        //doctrine:schema:update --em=systemdb --complete --force
+        $arguments = [
+            'command'          => 'doctrine:schema:update',
+            //'--complete'  => null,
+            '--force' => null
+        ];
+
+        //doctrine:migrations:migrate --all-or-nothing
+//        $arguments = [
+//            'command'              => 'doctrine:migrations:migrate',
+//            '--no-interaction'     => '',
+//            '--no-debug'           => '',
+//            //'--allow-no-migration' => '',
+//            //'-all-or-nothing'      => ''
+//        ];
+
+        $output = new BufferedOutput();
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        $contentOut = $output->fetch();
+        unset($application);
+        unset($kernel);
+
+        $session->set('create-custom-db', null);
+        $session->remove('create-custom-db');
+        $logger->notice("updateSchema: create-custom-db: done");
+
+        return "DB updated ".$connectionParams['dbname']."; output=".$contentOut;
+    }
+
+
+    public function createNewDB_WORKING( $request, $connectionParams, $kernel ) {
         $logger = $this->container->get('logger');
 
         if(1) {
@@ -2137,48 +2236,12 @@ Pathology and Laboratory Medicine",
         }
 
         //$this->updateSchema($request, $connectionParams, $kernel);
-        
+
         //dump($results);
         //exit('111');
         $msg = "Database ".$connectionParams['dbname']." has been created.";
         return $msg;
 
-    }
-    //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-    public function updateSchema($request, $connectionParams, $kernel) {
-        //dump($connectionParams);
-        //exit('updateSchema');
-        $logger = $this->container->get('logger');
-
-        $session = $request->getSession();
-        $session->set('create-custom-db', $connectionParams['dbname']);
-
-        $connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
-        $doctrineConnection = $this->doctrine->getConnection();
-        $doctrineConnection->changeDatabase($connectionParams['dbname']);
-
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
-
-        //doctrine:schema:update --em=systemdb --complete --force
-        $arguments = [
-            'command'          => 'doctrine:schema:update',
-            '--complete'  => null,
-            '--force' => null
-        ];
-
-        $output = new BufferedOutput();
-        $commandInput = new ArrayInput($arguments);
-        $application->run($commandInput, $output);
-        $contentOut = $output->fetch();
-        unset($application);
-        unset($kernel);
-
-        $session->set('create-custom-db', null);
-        $session->remove('create-custom-db');
-        $logger->notice("updateSchema: create-custom-db: done");
-
-        return "DB updated ".$connectionParams['dbname']."; output=".$contentOut;
     }
     //updateSchema()
     public function updateSchema_test2($request, $connectionParams, $kernel) {
@@ -5172,6 +5235,7 @@ Pathology and Laboratory Medicine",
         $params['dbname'] = $this->container->getParameter($urlSlug.'-databaseName');
         $params['user'] = $this->container->getParameter($urlSlug.'-databaseUser');
         $params['password'] = $this->container->getParameter($urlSlug.'-databasePassword');
+        $params['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         //echo "dBName=".$params['dbname']."<br>";
         return $params;
     }

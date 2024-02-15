@@ -23,16 +23,16 @@ use Doctrine\DBAL\Configuration;
 class DoctrineMultidatabaseConnection extends Connection
 {
 
-    public function __construct(
-        array $params,
-        Driver $driver,
-        Configuration $config,
-        EventManager $eventManager
-    )
-    {
-        //exit('222');
-        parent::__construct($params,$driver,$config,$eventManager);
-    }
+//    public function __construct(
+//        array $params,
+//        Driver $driver,
+//        Configuration $config,
+//        EventManager $eventManager
+//    )
+//    {
+//        //exit('222');
+//        parent::__construct($params,$driver,$config,$eventManager);
+//    }
 
     public function changeDatabase(string $dbName): bool {
         $params = $this->getParams();
@@ -40,8 +40,12 @@ class DoctrineMultidatabaseConnection extends Connection
             if ($this->isConnected()) {
                 $this->close();
             }
-            $params['url'] = "pgsql://" . $params['user'] . ":" . $params['password'] . "@" . $params['host'] . ":" . $params['port'] . "/" . $dbName;
+            //$params['url'] = "pgsql://" . $params['user'] . ":" . $params['password'] . "@" . $params['host'] . ":" . $params['port'] . "/" . $dbName;
+            //$params['dbname'] = $dbName;
+
             $params['dbname'] = $dbName;
+            $params['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+
             parent::__construct(
                 $params,
                 $this->_driver,
@@ -69,39 +73,39 @@ class DoctrineMultidatabaseConnection extends Connection
 
 
 
-    public function modifyConnection(
-        $connection,
-        $databaseName = null,
-        $username = null,
-        $password = null,
-        $host = null,
-        $port = null
-    ): void
-    {
-        //exit('111');
-//        $connection = $this->getDynamicConnection();
+//    public function modifyConnection(
+//        $connection,
+//        $databaseName = null,
+//        $username = null,
+//        $password = null,
+//        $host = null,
+//        $port = null
+//    ): void
+//    {
+//        //exit('111');
+////        $connection = $this->getDynamicConnection();
+////
+////        if ($this->isTransactionActive()) {
+////            $this->rollback();
+////        }
+////
+////        $this->clear();
+////
+////        $params = $this->getParams($databaseName, $username, $password, $host, $port);
 //
-//        if ($this->isTransactionActive()) {
-//            $this->rollback();
+//        $params['dbname'] = $databaseName;
+//
+//        $connection->reinitialize($params);
+//    }
+//
+//    public function reinitialize(array $params): void
+//    {
+//        if ($this->isConnected()) {
+//            $this->close();
 //        }
 //
-//        $this->clear();
-//
-//        $params = $this->getParams($databaseName, $username, $password, $host, $port);
-
-        $params['dbname'] = $databaseName;
-
-        $connection->reinitialize($params);
-    }
-
-    public function reinitialize(array $params): void
-    {
-        if ($this->isConnected()) {
-            $this->close();
-        }
-
-        $params = array_merge($this->getParams(), $params);
-        parent::__construct($params, $this->_driver, $this->_config, $this->_eventManager);
-    }
+//        $params = array_merge($this->getParams(), $params);
+//        parent::__construct($params, $this->_driver, $this->_config, $this->_eventManager);
+//    }
 
 }

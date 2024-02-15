@@ -57,6 +57,7 @@ $port_systemdb = $container->getParameter('database_port_systemdb');
 $dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
 $user_systemdb = $container->getParameter('database_user_systemdb');
 $password_systemdb = $container->getParameter('database_password_systemdb');
+//$wrapper_class_systemdb = $container->getParameter('wrapper_class');
 //exit('$driver_systemdb=['.$driver_systemdb.']');
 if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb ) {
     $container->setParameter('systemdb',true);
@@ -66,7 +67,8 @@ if( $host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb &
         'port' => $port_systemdb,
         'dbname' => $dbname_systemdb,
         'user' => $user_systemdb,
-        'password' => $password_systemdb
+        'password' => $password_systemdb,
+        //'wrapper_class' => $wrapper_class_systemdb
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
 
