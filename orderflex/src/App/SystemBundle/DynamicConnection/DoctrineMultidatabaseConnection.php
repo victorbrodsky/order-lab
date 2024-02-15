@@ -34,7 +34,35 @@ class DoctrineMultidatabaseConnection extends Connection
 //        parent::__construct($params,$driver,$config,$eventManager);
 //    }
 
-    public function changeDatabase(string $dbName): bool {
+    public function changeDatabase($connectionParams): bool {
+        $params = $this->getParams();
+
+        //dump($connectionParams);
+        //dump($params);
+        //exit('111');
+
+        if(
+            $params['dbname'] != $connectionParams['dbname'] ||
+            $params['host'] != $connectionParams['host']
+        ) {
+            if ($this->isConnected()) {
+                $this->close();
+            }
+            //$params['dbname'] = $dbName;
+            //$params['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+
+            parent::__construct(
+                $connectionParams,
+                $this->_driver,
+                $this->_config,
+                $this->_eventManager
+            );
+            return true;
+        }
+        return false;
+    }
+
+    public function changeDatabaseByName(string $dbName): bool {
         $params = $this->getParams();
         if ($params['dbname'] != $dbName) {
             if ($this->isConnected()) {

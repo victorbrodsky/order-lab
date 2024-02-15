@@ -2086,14 +2086,29 @@ Pathology and Laboratory Medicine",
         
         foreach($authServerNetwork->getHostedGroupHolders() as $hostedGroupHolder) {
             if( $hostedGroupHolder->getEnabled() ) {
+
+                $databasePort = $hostedGroupHolder->getDatabasePort();
+                if( !$databasePort ) {
+                    $databasePort = 5432;
+                }
+
+                $databaseHost = $hostedGroupHolder->getDatabaseHost();
+                if( !$databaseHost ) {
+                    $databaseHost = 'localhost';
+                }
+
                 $connectionParams = array(
                     'dbname' => $hostedGroupHolder->getDatabaseName(),
                     'user' => $hostedGroupHolder->getDatabaseUser(),
                     'password' => $hostedGroupHolder->getDatabasePassword(),
-                    'host' => $hostedGroupHolder->getDatabaseHost(),
+                    'host' => $databaseHost,
                     'driver' => $this->container->getParameter('database_driver'),
-                    'wrapper_class' => DoctrineMultidatabaseConnection::class
+                    'wrapper_class' => DoctrineMultidatabaseConnection::class,
+                    'port' => $databasePort,
+                    'charset' => 'utf8'
                 );
+
+                //$this->testDb($request,$connectionParams,$kernel);
 
                 //Check if DB exists
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
@@ -2116,6 +2131,20 @@ Pathology and Laboratory Medicine",
         return implode("<br>",$output);
     }
 
+    //testing DB function
+    public function testDb($request, $connectionParams, $kernel) {
+        $logger = $this->container->get('logger');
+        $doctrineConnection = $this->doctrine->getConnection();
+        $doctrineConnection->changeDatabase($connectionParams);
+        exit('testDb');
+        //$application = new Application($kernel);
+        //$application->setAutoExit(false);
+        $contentOut = null;
+        $msg = "createNewDB: DB created ".$connectionParams['dbname']."; output=".$contentOut;
+        $logger->notice($msg);
+        return $msg;
+    }
+
     //Use App\SystemBundle\DynamicConnection/DoctrineMultidatabaseConnection
     //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
     public function createNewDB($request, $connectionParams, $kernel) {
@@ -2128,7 +2157,7 @@ Pathology and Laboratory Medicine",
 
         //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         $doctrineConnection = $this->doctrine->getConnection();
-        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+        $doctrineConnection->changeDatabase($connectionParams);
 
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -2154,6 +2183,7 @@ Pathology and Laboratory Medicine",
         $logger->notice($msg);
         return $msg;
     }
+
     //Use App\SystemBundle\DynamicConnection/DoctrineMultidatabaseConnection
     //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
     public function updateSchema($request, $connectionParams, $kernel) {
@@ -2163,7 +2193,7 @@ Pathology and Laboratory Medicine",
 
         //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         $doctrineConnection = $this->doctrine->getConnection();
-        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+        $doctrineConnection->changeDatabase($connectionParams);
 
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -2203,7 +2233,7 @@ Pathology and Laboratory Medicine",
 
         //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         $doctrineConnection = $this->doctrine->getConnection();
-        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+        $doctrineConnection->changeDatabase($connectionParams);
 
         $contentOut = array();
         $application = new Application($kernel);
