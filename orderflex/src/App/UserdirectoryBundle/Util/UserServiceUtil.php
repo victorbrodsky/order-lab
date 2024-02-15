@@ -4863,8 +4863,8 @@ Pathology and Laboratory Medicine",
         $connectionParams = $this->getConnectionParams($locale);
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
+        $dbname = null;
         if( $conn ) {
-            $dbname = null;
             try {
                 $dbname = $conn->getDatabase();
             } catch( \Exception $e ) {
@@ -4899,6 +4899,25 @@ Pathology and Laboratory Medicine",
         }
 
         return false;
+    }
+    public function getDbNameByLocale( $locale=null ) {
+        if( !$locale ) {
+            return null;
+        }
+
+        $conn = $this->getConnectionByLocale($locale);
+
+        $dbname = null;
+        if( $conn ) {
+            try {
+                $dbname = $conn->getDatabase();
+            } catch( \Exception $e ) {
+                //exit('NO');
+                //echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r" . $e->getMessage() . "<br>";
+                $conn = null;
+            }
+        }
+        return $dbname;
     }
     public function getConnectionByLocale( $locale=null ) {
         if( !$locale ) {

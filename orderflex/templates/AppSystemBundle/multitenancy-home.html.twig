@@ -52,7 +52,7 @@
                         {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
                             <li class="list-group-item" >
                                 <a href="{{ path('first-time-login-generation-init', {_locale: multilocale}) }}" target="_blank"
-                                >Initialize {{ multilocale }} database</a>
+                                >Initialize {{ multilocale }} database '{{ user_service_utility.getDbNameByLocale(multilocale) }}'</a>
                             </li>
                         {#{% endif %}#}
                     {% endif %}
