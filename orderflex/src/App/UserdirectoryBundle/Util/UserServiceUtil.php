@@ -2108,6 +2108,7 @@ Pathology and Laboratory Medicine",
                 } else {
                     $output[] = $this->createNewDB($request,$connectionParams,$kernel);
                     $output[] = $this->updateSchema($request,$connectionParams,$kernel);
+                    $output[] = $this->syncMigrationsDb($request,$connectionParams,$kernel);
                 }
             }//if
         }
@@ -2122,8 +2123,8 @@ Pathology and Laboratory Medicine",
         //exit('createNewDB');
         $logger = $this->container->get('logger');
 
-        $session = $request->getSession();
-        $session->set('create-custom-db', $connectionParams['dbname']);
+        //$session = $request->getSession();
+        //$session->set('create-custom-db', $connectionParams['dbname']);
 
         //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         $doctrineConnection = $this->doctrine->getConnection();
@@ -2146,11 +2147,12 @@ Pathology and Laboratory Medicine",
         unset($application);
         unset($kernel);
 
-        $session->set('create-custom-db', null);
-        $session->remove('create-custom-db');
-        $logger->notice("createNewDB: create-custom-db: done");
+        //$session->set('create-custom-db', null);
+        //$session->remove('create-custom-db');
 
-        return "DB created ".$connectionParams['dbname']."; output=".$contentOut;
+        $msg = "createNewDB: DB created ".$connectionParams['dbname']."; output=".$contentOut;
+        $logger->notice($msg);
+        return $msg;
     }
     //Use App\SystemBundle\DynamicConnection/DoctrineMultidatabaseConnection
     //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
@@ -2158,9 +2160,6 @@ Pathology and Laboratory Medicine",
         //dump($connectionParams);
         //exit('updateSchema');
         $logger = $this->container->get('logger');
-
-        $session = $request->getSession();
-        $session->set('create-custom-db', $connectionParams['dbname']);
 
         //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
         $doctrineConnection = $this->doctrine->getConnection();
@@ -2172,7 +2171,7 @@ Pathology and Laboratory Medicine",
         //doctrine:schema:update --em=systemdb --complete --force
         $arguments = [
             'command'          => 'doctrine:schema:update',
-            //'--complete'  => null,
+            '--complete'  => null,
             '--force' => null
         ];
 
@@ -2192,11 +2191,54 @@ Pathology and Laboratory Medicine",
         unset($application);
         unset($kernel);
 
-        $session->set('create-custom-db', null);
-        $session->remove('create-custom-db');
         $logger->notice("updateSchema: create-custom-db: done");
 
-        return "DB updated ".$connectionParams['dbname']."; output=".$contentOut;
+        $msg = "updateSchema: DB updated ".$connectionParams['dbname']."; output=".$contentOut;
+        $logger->notice($msg);
+        return $msg;
+    }
+
+    public function syncMigrationsDb($request, $connectionParams, $kernel) {
+        $logger = $this->container->get('logger');
+
+        //$connectionParams['wrapperClass'] = DoctrineMultidatabaseConnection::class;
+        $doctrineConnection = $this->doctrine->getConnection();
+        $doctrineConnection->changeDatabase($connectionParams['dbname']);
+
+        $contentOut = array();
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $output = new BufferedOutput();
+
+        //php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
+        $arguments = [
+            'command'              => 'doctrine:migration:sync-metadata-storage',
+            '--no-interaction'     => null,
+            '--no-debug'           => null
+        ];
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        $contentOut[] = $output->fetch();
+
+        //php bin/console doctrine:migration:version --em=systemdb --add --all
+        $arguments = [
+            'command'               => 'doctrine:migration:version',
+            '--add'                 => null,
+            '--all'                 => null,
+            '--no-interaction'      => null,
+            '--no-debug'            => null,
+        ];
+        $commandInput = new ArrayInput($arguments);
+        $application->run($commandInput, $output);
+        $contentOut[] = $output->fetch();
+
+        unset($application);
+        unset($kernel);
+
+        $msg = "syncMigrationsDb: DB sync migrations ".$connectionParams['dbname']."; output=".implode("<br>",$contentOut);
+        $logger->notice($msg);
+        return $msg;
     }
 
 

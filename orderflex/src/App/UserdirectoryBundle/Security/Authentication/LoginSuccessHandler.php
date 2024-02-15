@@ -115,8 +115,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session = $request->getSession();
 
         //Set session locale on login
-        $session->set('create-custom-db', null);
-        $session->remove('create-custom-db');
+        //$session->set('create-custom-db', null);
+        //$session->remove('create-custom-db');
 
         $locale = $request->getLocale();
         $session->set('locale',$locale);
@@ -306,8 +306,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
         $request->getSession()->set('locale',null);
         //$session->remove('locale');
-        $request->getSession()->set('create-custom-db', null);
-        $request->getSession()->remove('create-custom-db');
+        //$request->getSession()->set('create-custom-db', null);
+        //$request->getSession()->remove('create-custom-db');
         //$this->clearConnectionParameters($request->getSession());
 
         $response = new RedirectResponse( $this->router->generate($this->siteName.'_login') );
