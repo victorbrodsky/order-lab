@@ -574,6 +574,9 @@ else {
 }
 
 //echo "*** locale_get_default=".locale_get_default() ."***\n";
+echo "1 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
+\Symfony\Component\Intl\Locale::setDefault('en');
+echo "2 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
 
 printSettings($container);
 

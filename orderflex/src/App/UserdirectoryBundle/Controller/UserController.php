@@ -55,6 +55,7 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Intl\Locale;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -242,7 +243,9 @@ class UserController extends OrderAbstractController
         //$output = $userServiceUtil->clearCacheInstallAssets();
         //exit('output='.$output);
 
-        echo "locale_get_default=".locale_get_default()."<br>";
+        echo "1 locale_get_default=".Locale::getDefault()."<br>";
+        Locale::setDefault('en');
+        echo "2 locale_get_default=".Locale::getDefault()."<br>";
         exit('111');
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
