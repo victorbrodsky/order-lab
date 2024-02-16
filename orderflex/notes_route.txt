@@ -83,3 +83,13 @@ http://142.93.68.152/system/directory/admin/update-system-cache-assets/
 {"exception":"[object] (Error(code: 0): Found unconstructed IntlDateFormatter at
 /usr/local/bin/order-lab/orderflex/vendor/symfony/form/Extension/Core/Type/DateType.php:137)"} []
 intl.default_locale = en_US
+by default intl.default_locale is set to:
+echo "1 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
+\Symfony\Component\Intl\Locale::setDefault('en');
+echo "2 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
+Result:
+1 locale_get_default=en_US_POSIX
+2 locale_get_default=en
+Result about page:
+1 locale_get_default=c/wcm/pathology
+2 locale_get_default=en

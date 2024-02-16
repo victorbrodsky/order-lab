@@ -559,7 +559,7 @@ if( $conn ) {
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";
             //var_dump($params);
-            //exit("params are not valid<br>");
+            //exit("params are not valid<br>"); 
         }//if param
 
 

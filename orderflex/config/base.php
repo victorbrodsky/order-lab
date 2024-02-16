@@ -56,12 +56,14 @@ if (!function_exists('getNestedTreeBreadCrumb')) {
         $thisUrlSlug = $hostedGroupRows[0]['urlslug'];
         //echo '$thisUrlSlug='.$thisUrlSlug."<br>";
         if( $thisUrlSlug ) {
-            $urlSlug = $thisUrlSlug . '/' . $urlSlug;
+            //$urlSlug = $thisUrlSlug . '/' . $urlSlug;
+            $urlSlug = $thisUrlSlug . '-' . $urlSlug;
         }
         if( $parentId ) {
             $urlSlug = getNestedTreeBreadCrumb($parentId,$conn,$urlSlug);
         }
-        $urlSlug = rtrim($urlSlug, "/");
+        //$urlSlug = rtrim($urlSlug, "/");
+        $urlSlug = rtrim($urlSlug, "-");
         //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
 
 //            //Set id of this hosted user group
