@@ -76,3 +76,10 @@ create home page for system DB to manage multi-tenancy
 
 Run: /order/directory/admin/first-time-login-generation-init/
 
+Error:
+http://142.93.68.152/system/directory/admin/update-system-cache-assets/
+[2024-02-16T18:47:53.801029+00:00] request.CRITICAL: Uncaught PHP Exception Error:
+"Found unconstructed IntlDateFormatter" at DateType.php line 137
+{"exception":"[object] (Error(code: 0): Found unconstructed IntlDateFormatter at
+/usr/local/bin/order-lab/orderflex/vendor/symfony/form/Extension/Core/Type/DateType.php:137)"} []
+intl.default_locale = en_US
