@@ -242,6 +242,9 @@ class UserController extends OrderAbstractController
         //$output = $userServiceUtil->clearCacheInstallAssets();
         //exit('output='.$output);
 
+        echo "locale_get_default=".locale_get_default()."<br>";
+        exit('111');
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

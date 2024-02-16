@@ -573,7 +573,7 @@ else {
     echo "*** siteparameters.php: No connection to DB ***\n";
 }
 
-echo "*** locale_get_default=".locale_get_default() ."***\n";
+//echo "*** locale_get_default=".locale_get_default() ."***\n";
 
 printSettings($container);
 
