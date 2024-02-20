@@ -74,7 +74,7 @@ move interface "Multi-Tenancy Management" from default DB to system DB
 in setparameters.php use user_authservernetworklist from system DB
 create home page for system DB to manage multi-tenancy
 
-Run: /order/directory/admin/first-time-login-generation-init/
+Run: /directory/admin/first-time-login-generation-init/
 
 Error:
 http://142.93.68.152/system/directory/admin/update-system-cache-assets/

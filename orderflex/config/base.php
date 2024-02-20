@@ -56,14 +56,14 @@ if (!function_exists('getNestedTreeBreadCrumb')) {
         $thisUrlSlug = $hostedGroupRows[0]['urlslug'];
         //echo '$thisUrlSlug='.$thisUrlSlug."<br>";
         if( $thisUrlSlug ) {
-            $urlSlug = $thisUrlSlug . '/' . $urlSlug;   //not working with c/wcm/pathology
-            //$urlSlug = $thisUrlSlug . '-' . $urlSlug; //working with c-wcm-pathology
+            //$urlSlug = $thisUrlSlug . '/' . $urlSlug;   //not working with c/wcm/pathology
+            $urlSlug = $thisUrlSlug . '-' . $urlSlug; //working with c-wcm-pathology
         }
         if( $parentId ) {
             $urlSlug = getNestedTreeBreadCrumb($parentId,$conn,$urlSlug);
         }
-        $urlSlug = rtrim($urlSlug, "/");
-        //$urlSlug = rtrim($urlSlug, "-");
+        //$urlSlug = rtrim($urlSlug, "/");
+        $urlSlug = rtrim($urlSlug, "-");
         //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
 
 //            //Set id of this hosted user group
