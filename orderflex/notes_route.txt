@@ -93,3 +93,20 @@ Result:
 Result about page:
 1 locale_get_default=c/wcm/pathology
 2 locale_get_default=en
+
+
+The concept of locale is defined by RFC 4646 language tags, which follow a hyphenated format (e.g., en-US, fr-CA, fr-FR).
+However, it’s essential to recognize that various PHP modules may handle locales differently.
+In the context of Symfony, which comprises 181 distinct bundles, their behavior evolves over time.
+Consequently, what works today may not necessarily work tomorrow.
+Therefore, using a locale format other than the standard hyphenated form could result in unpredictable outcomes.
+
+Dynamically Configured Mass Virtual Hosting
+https://httpd.apache.org/docs/2.4/vhosts/mass.html
+
+Mapping URLs to Filesystem Locations
+https://httpd.apache.org/docs/2.4/urlmapping.html
+https://serverfault.com/questions/839111/handling-multiple-symfony-sites-depending-on-the-url-path
+
+
+https://stackoverflow.com/questions/68036107/symfony-5-3-behind-apache2-proxy-has-unexpected-behavior-incorrect-url-in-brows
