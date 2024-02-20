@@ -62,8 +62,8 @@ if (!function_exists('getNestedTreeBreadCrumb')) {
         if( $parentId ) {
             $urlSlug = getNestedTreeBreadCrumb($parentId,$conn,$urlSlug);
         }
-        //$urlSlug = rtrim($urlSlug, "/");
-        $urlSlug = rtrim($urlSlug, "-");
+        $urlSlug = rtrim($urlSlug, "/");
+        //$urlSlug = rtrim($urlSlug, "-");
         //exit('getNestedTreeBreadCrumb, $urlSlug='.$urlSlug);
 
 //            //Set id of this hosted user group
