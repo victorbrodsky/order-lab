@@ -36,5 +36,8 @@ Alternatives:
 Nginx
 HAProxy
 
-
+Load balancing and HA for multiple applications with Apache, HAProxy and keepalived
 https://backreference.org/2012/04/25/load-balancing-and-ha-for-multiple-applications-with-apache-haproxy-and-keepalived/index.html
+
+Run Apache, Nginx & HAProxy on Same Server (Debian, Ubuntu, CentOS)
+https://www.linuxbabe.com/linux-server/run-apache-nginx-haproxy-on-same-server-debian-ubuntu-centos

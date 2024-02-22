@@ -728,10 +728,32 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
-        $request->request->set('public', 'Public');
+        $filterType = trim((string)$request->get('public'));
 
-        dump($request);
-        exit();
+        $filterPublic = null;
+        $all = $request->query->all();
+        if( isset($all['filter']) && isset($all['filter']['public']) ) {
+            $filterPublic = $all['filter']['public'];
+        }
+        //dump($filterPublic);
+        //exit();
+
+        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
+            return $this->redirectToRoute(
+                'translationalresearch_antibodies_public',
+                array(
+                    'filter[public]' => 'Public',
+                    'filter[type][0]' => 'default',
+                    'filter[type][1]' => 'user-added',
+                )
+            );
+        }
+
+        //$request->request->set('public', 'Public');
+        //$all['filter']['public'] = 'Public';
+        //$request->query->replace($all);
+        //dump($request);
+        //exit();
 
         $listArr = $this->getList($request);
         //$listArr['title'] = "Antibodies";
