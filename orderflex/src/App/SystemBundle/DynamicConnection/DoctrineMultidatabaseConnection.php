@@ -18,7 +18,6 @@ use Doctrine\DBAL\Driver;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 
-//NOT USED
 //implements DynamicConnection
 class DoctrineMultidatabaseConnection extends Connection
 {

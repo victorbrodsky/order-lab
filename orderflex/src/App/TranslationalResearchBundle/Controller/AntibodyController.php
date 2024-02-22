@@ -216,7 +216,7 @@ class AntibodyController extends OrderAbstractController
         }
 
         if( $public ) {
-            echo "public=".$public."<br>";
+            //echo "public=".$public."<br>";
             if( $public == 'Public' ) {
                 $dql->andWhere("ent.openToPublic = TRUE");
             } else {
@@ -723,5 +723,22 @@ class AntibodyController extends OrderAbstractController
         return $mapper;
     }
 
+
+    #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public.html.twig')]
+    public function indexPublicAntibodiesAction(Request $request)
+    {
+        $request->request->set('public', 'Public');
+
+        dump($request);
+        exit();
+
+        $listArr = $this->getList($request);
+        //$listArr['title'] = "Antibodies";
+        $listArr['postPath'] = "_translationalresearch";
+        $listArr['title'] = "Public ".$listArr['title'];
+
+        return $listArr;
+    }
 
 }

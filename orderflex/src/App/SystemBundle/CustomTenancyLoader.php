@@ -48,13 +48,6 @@ class CustomTenancyLoader extends Loader {
     {
         //echo '###CustomTenancyLoader load'.'<br>###'; exit('222');
 
-        // This method will only be called if it suits the parameters
-        $routes   = new RouteCollection;
-        //$resource = '@AcmeFooBundle/Resources/config/custom_routing.yml';
-
-        $configDirectory = __DIR__.'/../../../config/';
-        //$configDirectory = '../../config/';
-
         $multitenancy = $this->container->getParameter('multitenancy');
         //echo "CustomTenancyLoader: multitenancy=".$multitenancy."<br>";
 
@@ -76,6 +69,13 @@ class CustomTenancyLoader extends Loader {
             //$this->container->setParameter('defaultlocale', ''); //Impossible to call set() on a frozen ParameterBag
             $config = 'routes-single.yaml';
         }
+
+        // This method will only be called if it suits the parameters
+        $routes   = new RouteCollection;
+        //$resource = '@AcmeFooBundle/Resources/config/custom_routing.yml';
+
+        $configDirectory = __DIR__.'/../../../config/';
+        //$configDirectory = '../../config/';
 
         $resource = $configDirectory.$config;
         //echo $multitenancy.": add resource=".$resource."<br>";

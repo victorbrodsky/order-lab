@@ -1,0 +1,40 @@
+Apache:
+
+<VirtualHost localhost:80>
+	ServerName localhost
+
+	DocumentRoot C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/
+	<Directory C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/>
+		Options +FollowSymLinks -Includes
+		AllowOverride All
+		Require all granted
+    </Directory>
+    Alias  "/c/test/institution-test-department" "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/"
+
+	#
+	# Configuration for default url '/' at the end of the VirtualHost
+	#
+	DocumentRoot C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/
+	<Directory C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/>
+		Options +FollowSymLinks -Includes
+		AllowOverride All
+		Require all granted
+    </Directory>
+    Alias  "/c/wcm/pathology" "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/"
+
+</VirtualHost>
+
+
+https://serverfault.com/questions/306439/apache-wildcard-documentroot
+<VirtualHost *:80>
+    ServerName placeholdername
+    ServerAlias *.example.com
+    VirtualDocumentRoot /var/www/%1
+</VirtualHost>
+
+Alternatives:
+Nginx
+HAProxy
+
+
+https://backreference.org/2012/04/25/load-balancing-and-ha-for-multiple-applications-with-apache-haproxy-and-keepalived/index.html
