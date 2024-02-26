@@ -149,6 +149,20 @@ if( !$conn ) {
     );
     $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
+    if( $conn ) {
+        $dbname = null;
+        try {
+            $dbname = $conn->getDatabase();
+        } catch (Exception $e) {
+            //exit('NO');
+            echo "<br>*** siteparameters.php: Failed to connect to default Database ***\n\r" . $e->getMessage() . "<br>";
+            $conn = null;
+        }
+    } else {
+        echo "<br>*** siteparameters.php: default DB conn is null ***\n\r <br>";
+        $conn = null;
+    }
+
 //    echo "isConnected=".$conn->isConnected()."<br>";
 //    if( !$conn ) {
 //    //if( !$conn->isConnected() ) {
