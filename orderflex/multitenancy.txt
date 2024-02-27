@@ -41,3 +41,30 @@ https://backreference.org/2012/04/25/load-balancing-and-ha-for-multiple-applicat
 
 Run Apache, Nginx & HAProxy on Same Server (Debian, Ubuntu, CentOS)
 https://www.linuxbabe.com/linux-server/run-apache-nginx-haproxy-on-same-server-debian-ubuntu-centos
+
+How to configure multiple instance of Apache on the same server in CentOS 6.7
+https://www.linuxhelp.com/how-to-configure-multiple-instance-of-apache-on-the-same-server-in-centos-6-7
+
+////// Configure port 8095 /////////
+cp -p /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd2.conf
+cp -pr /etc/httpd/conf.d/ /etc/httpd/conf.d2/
+vim /etc/httpd/conf/httpd2.conf:
+Listen 8095
+PidFile run/httpd.pid2
+Include conf.d2/*.conf
+
+vim /etc/httpd/conf.d2/000-default.conf:
+<VirtualHost *:8095>...
+
+iptables -L
+iptables -F
+service iptables save
+
+netstat -ln | grep 8095
+
+/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k restart
+
+Why port 80 is accesibble but port 8083 is not?
+
+Use Email:
+Question 6:
