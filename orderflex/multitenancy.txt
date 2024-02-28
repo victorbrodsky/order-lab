@@ -47,15 +47,16 @@ https://www.linuxhelp.com/how-to-configure-multiple-instance-of-apache-on-the-sa
 
 ////// Configure port 8095 /////////
 cp -p /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd2.conf
-cp -pr /etc/httpd/conf.d/ /etc/httpd/conf.d2/
-vim /etc/httpd/conf/httpd2.conf:
+cp -pr /etc/httpd/conf.d/ /etc/httpd/conf.d1/
+vim /etc/httpd/conf/httpd1.conf:
 Listen 8095
-PidFile run/httpd.pid2
-Include conf.d2/*.conf
+PidFile run/httpd.pid1
+Include conf.d1/*.conf
 
-vim /etc/httpd/conf.d2/000-default.conf:
+vim /etc/httpd/conf.d1/000-default.conf:
 <VirtualHost *:8095>...
 
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 iptables -L
 iptables -F
 service iptables save
@@ -65,12 +66,31 @@ netstat -ln | grep 8095
 sudo firewall-cmd --permanent --add-port=8081/tcp
 sudo firewall-cmd --permanent --add-port=8082/tcp
 sudo firewall-cmd --reload
+Disable firewall (https://linuxize.com/post/how-to-stop-and-disable-firewalld-on-centos-7):
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo systemctl mask --now firewalld
 
 /usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k restart
 
 Why port 80 is accesibble but port 8083 is not?
 Why custom port is not accesible by tcp?
 Test: netcat -z -v localhost 8095
+
+Firewall:
+sudo systemctl status firewalld
+firewall-cmd --zone=public --add-port=8095/tcp --permanent
+firewall-cmd –-reload
+firewall-cmd --zone=public --list-ports
+
+//https://monovm.com/blog/changing-the-apache-port-in-centos/
+
+netstat -na | grep :8095
+iptables -A INPUT -p tcp --dport 8095 -j ACCEPT
+telnet localhost 8095
+nmap localhost -p 8095
+
+Don't use vpn, it will block custom ports!
 
 Use Email:
 Question 6:
