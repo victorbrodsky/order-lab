@@ -62,9 +62,15 @@ service iptables save
 
 netstat -ln | grep 8095
 
+sudo firewall-cmd --permanent --add-port=8081/tcp
+sudo firewall-cmd --permanent --add-port=8082/tcp
+sudo firewall-cmd --reload
+
 /usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k restart
 
 Why port 80 is accesibble but port 8083 is not?
+Why custom port is not accesible by tcp?
+Test: netcat -z -v localhost 8095
 
 Use Email:
 Question 6:
