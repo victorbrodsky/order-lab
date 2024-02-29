@@ -92,5 +92,8 @@ nmap localhost -p 8095
 
 Don't use vpn, it will block custom ports!
 
+Seacrh listening ports: grep -ri listen /etc/httpd
+Check status: sudo systemctl status httpd.service -l --no-pager
+
 Use Email:
 Question 6:
