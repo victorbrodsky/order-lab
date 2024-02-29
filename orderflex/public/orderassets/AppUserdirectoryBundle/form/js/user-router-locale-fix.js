@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+//NOT USED
 //Routing.generate and _locale fix, proposed in:
 //https://stackoverflow.com/questions/25842418/symfony-fos-js-routing-and-problems-with-locale/35223108#35223108
 
