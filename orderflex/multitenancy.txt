@@ -174,3 +174,11 @@ To troubleshoot this further, you can check the HAProxy logs (often found in /va
 Troubleshoot:
 https://www.digitalocean.com/community/tutorials/haproxy-network-error-cannot-bind-socket
 sudo systemctl status haproxy.service -l --no-pager
+
+//How To Configure HAProxy Logging with Rsyslog on CentOS 8
+https://www.digitalocean.com/community/tutorials/how-to-configure-haproxy-logging-with-rsyslog-on-centos-8-quickstart
+
+How To Troubleshoot Common HAProxy Errors
+https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-haproxy-errors
+
+sudo tail -n 30 /var/log/haproxy.log
