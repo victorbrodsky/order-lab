@@ -181,4 +181,34 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-haproxy-loggin
 How To Troubleshoot Common HAProxy Errors
 https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-haproxy-errors
 
+https://www.haproxy.com/blog/path-based-routing-with-haproxy
+
+sudo systemctl start httpd.service
+sudo systemctl restart haproxy
+httpd -f /etc/httpd/conf/httpd1.conf -k restart
+
+
 sudo tail -n 30 /var/log/haproxy.log
+
+Upgrade HAProxy
+###########################
+https://idolsgate.com/blog/how-to-install-the-latest-version-of-haproxy-on-centos-7/
+https://discourse.haproxy.org/t/upgrading-haproxy1-5-to-1-7/1493
+
+cd /usr/src/
+wget http://www.haproxy.org/download/2.0/src/${LATEST_HAPROXY}.tar.gz
+tar xzvf ${LATEST_HAPROXY}.tar.gz
+
+yum install gcc-c++ openssl-devel pcre-static pcre-devel systemd-devel -y
+
+cd /usr/src/${LATEST_HAPROXY}
+make TARGET=linux-glibc USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1 USE_SYSTEMD=1
+mkdir /etc/haproxy
+make install
+
+sudo cp -f /usr/local/sbin/haproxy /usr/sbin # Overwrite version 1.5 with new 1.7
+sudo service haproxy restart
+sudo chkconfig haproxy on
+
+
+###########################
