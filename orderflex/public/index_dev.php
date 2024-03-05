@@ -20,9 +20,6 @@ $_SERVER['APP_ENV'] = $env;
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
 return function (array $context) {
-    echo "APP_PREFIX_URL=".$context['APP_PREFIX_URL']."<br>";
-    $_SERVER['APP_PREFIX_URL'] = $context['APP_PREFIX_URL'];
-    putenv('APP_PREFIX_URL='.$context['APP_PREFIX_URL']);
     //exit( 'APP_ENV='.$context['APP_ENV'].', debug='.$context['APP_DEBUG'] );
     return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
     //return new Kernel('dev', true);

@@ -77,7 +77,8 @@ function prep()
     php $PROJECT_LOCAL_PATH/bin/console assets:install
 
     #echo "*** Install yarn package.json based on yarn.lock ***"
-    #yarn install --frozen-lockfile
+    #Run npm install --force to update package-lock.js if a new package installed by yarn, i.e. 'yarn add dotenv'
+    #Run after modified package-lock.js: yarn install --frozen-lockfile
     echo "*** Create a production build for Encore Webpack ***"
     yarn encore production
 

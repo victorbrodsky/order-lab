@@ -8,7 +8,6 @@ use App\Kernel;
 //$_SERVER['APP_DEBUG'] = true;
 //$_SERVER['APP_ENV'] = $env;
 //putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
-//putenv('APP_PREFIX_URL='.$context['APP_PREFIX_URL']);
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 

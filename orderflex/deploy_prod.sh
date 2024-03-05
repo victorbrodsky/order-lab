@@ -123,6 +123,8 @@ function prep(){
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
     #php $PROJECT_LOCAL_PATH/bin/console jrk:levenshtein:install
 
+    #Run npm install --force to update package-lock.js if a new package installed by yarn, i.e. 'yarn add dotenv'
+    #Run after modified package-lock.js: yarn install --frozen-lockfile
     echo "*** Create a production build for Encore Webpack ***"
     yarn encore production
 
