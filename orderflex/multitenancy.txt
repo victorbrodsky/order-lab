@@ -360,3 +360,12 @@ ServerName 127.0.0.1
 ### EOF /etc/httpd/conf.d1/000-default.conf ###
 
 ########### EOF Working configuration ###########
+
+Error with webpack: asset's url does not have tenant's prefix 'c/wcm/pathology'
+Correct: http://159.203.95.150:8095/build/userdates-css.e520d018.css?1709659473
+Correct: http://159.203.95.150/c/wcm/pathology/build/userdates-css.e520d018.css?1709659473
+Incorrect: http://159.203.95.150/build/userdates-css.e520d018.css?1709659473
+Fix: add tenant's url prefix to the .setPublicPath('/build') in webpack.config.js: .setPublicPath('/c/wcm/pathology/build')
+https://symfony.com/doc/current/frontend/encore/faq.html
+.setPublicPath('/myAppSubdir/build')
+We can get myAppSubdir from env to have it as a dynamic

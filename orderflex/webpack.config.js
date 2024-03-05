@@ -1,5 +1,4 @@
 //After modifing this, run: yarn watch
-
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -7,6 +6,11 @@ var Encore = require('@symfony/webpack-encore');
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
+
+var dotenv = require('dotenv');
+dotenv.config({path: '.env'});
+console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR); //process.env.APP_SUBDIR=/c/wcm/pathology
+//console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
 Encore
     // directory where compiled assets will be stored
@@ -17,10 +21,10 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
-    //added for subdomain /order/
-    //.setPublicPath('/order/build')
-    //.setManifestKeyPrefix('order/build/')
-    .setPublicPath('/build')
+    // this is your *true* public path
+    //.setPublicPath('/build') or .setPublicPath('/c/wcm/pathology/build')
+    .setPublicPath(process.env.APP_SUBDIR+'/build')
+
     .setManifestKeyPrefix('build/')
 
     /*
