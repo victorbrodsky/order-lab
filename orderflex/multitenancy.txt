@@ -283,7 +283,9 @@ Here's how you can adjust the HAProxy configuration:
 - Be aware of the security implications of rewriting URLs and ensure that it's consistent with your application's requirements.
 
 ########### Working configuration ###########
-/etc/haproxy/haproxy.conf:
+HAProxy backend redirect requests to the tenant port, i.e. 8095, keeping url intact with the tenant url.
+Tenant's httpd config file has the same port for the virual host VirtualHost *:8095. Alias map the tenant's url to the tenant's document root.
+### /etc/haproxy/haproxy.conf ###
 global
    log /dev/log local0
    log /dev/log local1 notice
@@ -308,8 +310,9 @@ frontend http_front
 
 backend app1_backend
     server server1 159.203.95.150:8095 maxconn 32
+### EOF /etc/haproxy/haproxy.conf ###
 
-/etc/httpd/conf.d1/000-default.conf:
+### /etc/httpd/conf.d1/000-default.conf ###
 <VirtualHost *:8095>
     ServerName localhost
     DocumentRoot /usr/local/bin/order-lab-2/orderflex/public/
@@ -318,17 +321,13 @@ backend app1_backend
                 AllowOverride All
                 Require all granted
     </Directory>
-
     Alias /wcm /usr/local/bin/order-lab-2/orderflex/public/
-
     SetEnv APP_ENV prod
     SetEnv APP_DEBUG 0
     ErrorLog /var/log/error.log
     CustomLog /var/log/access.log combined
 </VirtualHost>
-
-
-# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 ServerName 127.0.0.1
+### EOF /etc/httpd/conf.d1/000-default.conf ###
 
 ########### EOF Working configuration ###########
