@@ -282,3 +282,53 @@ Here's how you can adjust the HAProxy configuration:
 - Always backup configuration files before making changes and validate the configuration syntax.
 - Be aware of the security implications of rewriting URLs and ensure that it's consistent with your application's requirements.
 
+########### Working configuration ###########
+/etc/haproxy/haproxy.conf:
+global
+   log /dev/log local0
+   log /dev/log local1 notice
+   chroot /var/lib/haproxy
+   user haproxy
+   group haproxy
+   daemon
+
+defaults
+   mode http
+   log global
+   option httplog
+   option dontlognull
+   timeout connect 50000
+   timeout client  50000
+   timeout server  50000
+
+frontend http_front
+    bind *:80
+    acl url_app1 path_beg -i /wcm
+    use_backend app1_backend if url_app1
+
+backend app1_backend
+    server server1 159.203.95.150:8095 maxconn 32
+
+/etc/httpd/conf.d1/000-default.conf:
+<VirtualHost *:8095>
+    ServerName localhost
+    DocumentRoot /usr/local/bin/order-lab-2/orderflex/public/
+    <Directory /usr/local/bin/order-lab-2/orderflex/public/>
+                Options +FollowSymLinks -Includes
+                AllowOverride All
+                Require all granted
+    </Directory>
+
+    Alias /wcm /usr/local/bin/order-lab-2/orderflex/public/
+
+    SetEnv APP_ENV prod
+    SetEnv APP_DEBUG 0
+    ErrorLog /var/log/error.log
+    CustomLog /var/log/access.log combined
+</VirtualHost>
+
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+ServerName 127.0.0.1
+
+########### EOF Working configuration ###########
