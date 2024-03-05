@@ -312,7 +312,16 @@ backend app1_backend
     server server1 159.203.95.150:8095 maxconn 32
 ### EOF /etc/haproxy/haproxy.conf ###
 
+### /etc/httpd/conf/httpd1.conf ###
+Listen 8095
+PidFile /var/run/httpd1.pid
+IncludeOptional conf.d/*.conf
+#IncludeOptional conf/confd1.conf
+### EOF /etc/httpd/conf/httpd1.conf ###
+
 ### /etc/httpd/conf.d1/000-default.conf ###
+# Alternatevely we can use the same global conf.d/*.conf and place the VirtualHost configuration at the end of the httpd1.conf
+# In this case we can remove the line IncludeOptional conf.d/*.conf
 <VirtualHost *:8095>
     ServerName localhost
     DocumentRoot /usr/local/bin/order-lab-2/orderflex/public/
@@ -328,6 +337,26 @@ backend app1_backend
     CustomLog /var/log/access.log combined
 </VirtualHost>
 ServerName 127.0.0.1
+
+<IfModule ssl_module>
+	<VirtualHost _default_:443>
+		ServerName localhost
+		DocumentRoot /usr/local/bin/order-lab/orderflex/public/
+		SSLEngine on
+		SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+		SSLCertificateFile /usr/local/bin/order-lab/ssl/apache2.crt
+		SSLCertificateKeyFile /usr/local/bin/order-lab/ssl/apache2.key
+		<Directory /usr/local/bin/order-lab-2/orderflex/public/>
+			Options +FollowSymLinks -Includes
+			AllowOverride All
+			Require all granted
+		</Directory>
+		Alias /wcm /usr/local/bin/order-lab-2/orderflex/public/
+		SetEnv APP_ENV prod
+		SetEnv APP_DEBUG 0
+	</VirtualHost>
+</IfModule>
+
 ### EOF /etc/httpd/conf.d1/000-default.conf ###
 
 ########### EOF Working configuration ###########
