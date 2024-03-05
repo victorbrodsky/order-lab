@@ -186,7 +186,7 @@ https://www.haproxy.com/blog/path-based-routing-with-haproxy
 sudo systemctl start httpd.service
 sudo systemctl restart haproxy
 httpd -f /etc/httpd/conf/httpd1.conf -k restart
-
+sudo systemctl restart httpd1
 
 sudo tail -n 30 /var/log/haproxy.log
 
@@ -212,3 +212,73 @@ sudo chkconfig haproxy on
 
 
 ###########################
+
+Question: How to configure Haproxy in the example above to keep the original url but to forward to specific port to root url?
+For example, http://159.203.95.150/url1 will be forwarded to http://159.203.95.150:8095
+showing url as original but url1 will be considered only as a prefix.
+
+To configure HAProxy to forward traffic from `http://159.203.95.150/url1` to `http://159.203.95.150:8095`,
+while treating `/url1` only as a prefix (and not forwarding the `/url1` part to the backend server),
+you'll need to use HAProxy's URL rewriting capabilities. This involves modifying the path in the HTTP request before forwarding it to the backend.
+
+Here's how you can adjust the HAProxy configuration:
+
+1. **Edit HAProxy Configuration:**
+
+   Open the HAProxy configuration file (`/etc/haproxy/haproxy.cfg`) and modify it to include URL rewriting rules:
+
+    ```haproxy
+    global
+        log /dev/log local0
+        log /dev/log local1 notice
+        chroot /var/lib/haproxy
+        user haproxy
+        group haproxy
+        daemon
+
+    defaults
+        log global
+        mode http
+        option httplog
+        option dontlognull
+        timeout connect 5000ms
+        timeout client 50000ms
+        timeout server 50000ms
+
+    frontend http_front
+        bind *:80
+        acl url_path1 path_beg -i /url1
+        use_backend backend_port8095 if url_path1
+
+    backend backend_port8095
+        http-request set-path %[path,regsub(^/url1/,/)]
+        server server1 127.0.0.1:8095
+    ```
+
+   In this configuration:
+   - The frontend listens on port 80 and defines an ACL to match the path beginning with `/url1`.
+   - When a request matches `/url1`, it is forwarded to the `backend_port8095`.
+   - In the backend, the `http-request set-path` line rewrites the path, removing `/url1` from the beginning of the path.
+   This is done using a regular expression.
+
+2. **Restart HAProxy:**
+
+   After modifying the configuration file, restart HAProxy to apply the changes:
+
+    ```bash
+    sudo systemctl restart haproxy
+    ```
+
+3. **Testing:**
+
+   When you now access `http://159.203.95.150/url1`, HAProxy will forward the request to `http://159.203.95.150:8095`
+   but without the `/url1` prefix. The original URL (`http://159.203.95.150/url1`) will still be shown in the browser,
+   as HAProxy only rewrites the internal path of the request.
+
+### Important Notes
+
+- Ensure that your backend server on port 8095 is configured to handle requests correctly after the path rewrite.
+- HAProxy's `http-request set-path` directive is powerful and allows for complex path manipulations using regular expressions.
+- Always backup configuration files before making changes and validate the configuration syntax.
+- Be aware of the security implications of rewriting URLs and ensure that it's consistent with your application's requirements.
+
