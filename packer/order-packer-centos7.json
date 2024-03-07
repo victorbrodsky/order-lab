@@ -136,7 +136,7 @@
 		   "sudo hostnamectl",		   
 		   "psql --version",
 		   
-		   "echo @### Create system DB ###",
+		   "echo @### Create system DB - TODELETE ###",
 		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 		   "php bin/console doctrine:database:create --connection=systemdb",
 		   "php bin/console doctrine:schema:update --em=systemdb --complete --force",
@@ -162,7 +162,20 @@
 			"echo @### Restart ssh ###",
 		    "sudo systemctl restart sshd"
          ]
-	   }
+	   },
+	   
+	   {
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email"
+		],
+        "script": "install-multitenancy.sh"
+    },
       
    ]
 
