@@ -369,3 +369,58 @@ Fix: add tenant's url prefix to the .setPublicPath('/build') in webpack.config.j
 https://symfony.com/doc/current/frontend/encore/faq.html
 .setPublicPath('/myAppSubdir/build')
 We can get myAppSubdir from env to have it as a dynamic
+
+
+sudo systemctl start httpd.service
+sudo systemctl restart haproxy
+httpd -f /etc/httpd/conf/httpd1.conf -k restart
+sudo systemctl restart httpd1
+
+//HAProxy config
+frontend http_front
+    bind *:80
+
+    #8081 - homepage_manager_backend. Default home page with empty '/' declare at the end
+
+    #8082 - tenant_manager_backend
+    acl tenant_manager_url path_beg -i /tenant-manager
+    use_backend tenant_manager_backend if tenant_manager_url
+
+    #8083 - tenant_app_demo_backend
+    acl tenant_app_demo_url path_beg -i /c/demo-institution/demo-department
+    use_backend tenant_app_demo_backend if tenant_app_demo_url
+
+    #8084 - tenant_app_test_backend
+    acl tenant_app_test_url path_beg -i /c/test-institution/test-department
+    use_backend tenant_app_test_backend if tenant_app_test_url
+
+    #8085 - tenant_app1_backend
+    acl tenant_app1_url path_beg -i /c/wcm/pathology
+    use_backend tenant_app1_backend if tenant_app1_url
+
+    #8086 - tenant_app2_backend
+    acl tenant_app2_url path_beg -i /c/wcm/psychiatry
+    use_backend tenant_app2_backend if tenant_app2_url
+
+    #8081 - homepage_manager_backend. Default home page with empty '/' declare at the end
+    acl homepage_manager_url path_beg -i /
+    use_backend homepage_manager_backend if homepage_manager_url
+
+
+backend homepage_manager_backend
+    server homepage_manager_server 159.203.95.150:8081 check
+
+backend tenant_manager_backend
+    server tenant_manager_server 159.203.95.150:8082 check
+
+backend tenant_app_demo_backend
+    server tenant_app_demo_server 159.203.95.150:8083 check
+
+backend tenant_app_test_backend
+    server tenant_app_test_server 159.203.95.150:8084 check
+
+backend tenant_app1_backend
+    server tenant_app1_server 159.203.95.150:8085 check
+
+backend tenant_app2_backend
+    server tenant_app2_server 159.203.95.150:8086 check
