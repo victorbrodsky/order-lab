@@ -121,6 +121,9 @@ f_start_single_httpd() {
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 }
 f_start_all_httpd() {
+	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
+	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
+	
 	f_start_single_httpd "homepagemanager"
 	f_start_single_httpd "tenantmanager"
 }
