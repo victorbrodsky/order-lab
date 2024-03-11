@@ -26,7 +26,7 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-
+#1) Install HAProxy
 f_install_haproxy () {
 	echo -e ${COLOR} Install haproxy ${NC}
 	sudo yum install -y haproxy
@@ -37,6 +37,7 @@ f_install_haproxy () {
 	#sudo yarn add dotenv
 }
 
+#2) Create order instances
 f_create_single_order_instance () {
 	echo -e ${COLOR} Create instance: order-lab-"$1" port "$2" ${NC}
 	cd /usr/local/bin/
@@ -52,15 +53,16 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab-"$1" ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
 	
+	#3) For each order instances set APP_SUBDIR
 	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
 	sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
 }
 f_create_order_instances() {
 	f_create_single_order_instance "order-lab-homepagemanager" "8081" ""
-	f_create_single_order_instance "order-lab-tenantmanager" "8082" "tenant-manager"
+	#f_create_single_order_instance "order-lab-tenantmanager" "8082" "tenant-manager"
 }
 
-#Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
+#4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 f_create_tenant_htppd() {
 	f_create_single_tenant_htppd "homepagemanager" 8081
 	f_create_single_tenant_htppd "tenantmanager" 8082
@@ -88,7 +90,13 @@ f_create_single_tenant_htppd() {
 	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/"$1"-httpd.conf
 }
 
+#5) Create combined certificate and key order-ssl.com.pem
 
+#6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
+
+#7) Start HAProxy: sudo systemctl restart haproxy
+
+#f_install_haproxy
 f_create_order_instances
 f_create_tenant_htppd
 
