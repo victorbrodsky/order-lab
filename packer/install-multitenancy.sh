@@ -39,9 +39,9 @@ f_install_haproxy () {
 
 #2) Create order instances
 f_create_single_order_instance () {
-	echo -e ${COLOR} Create instance: order-lab-"$1" port "$2" ${NC}
+	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	cd /usr/local/bin/
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab order-lab-"$1"
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/"$1"
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab
