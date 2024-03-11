@@ -41,7 +41,7 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	cd /usr/local/bin/
-	#git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab-"$1"
@@ -65,7 +65,7 @@ f_create_single_order_instance () {
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
-	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
@@ -93,18 +93,37 @@ f_create_single_tenant_htppd() {
 	sed -i -e "s/:80/:$2/g" /etc/httpd/conf/"$1"-httpd.conf
 	
 	echo -e ${COLOR} Replace 'order-lab' by order-lab-"$1" ${NC}
-	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/"$1"-httpd.conf
+	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/order-lab-"$1"-httpd.conf
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
+f_create_combined_certificate() {
+	echo -e ${COLOR} Create combined certificate and key order-ssl.com.pem ${NC}
+	cat /usr/local/bin/order-lab/ssl/apache2.crt /usr/local/bin/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
+}
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
+f_start_single_httpd() {
+	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf ${NC}
+	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
+}
+f_start_all_httpd() {
+	f_start_single_httpd "homepagemanager"
+	f_start_single_httpd "tenantmanager"
+}
 
 #7) Start HAProxy: sudo systemctl restart haproxy
+f_start_haproxy() {
+	echo -e ${COLOR} Start haproxy ${NC}
+	sudo systemctl restart haproxy
+}
+
 
 #f_install_haproxy
 f_create_order_instances
 f_create_tenant_htppd
+f_create_combined_certificate
+f_start_all_httpd
 
 
 
