@@ -33,7 +33,7 @@ f_install_haproxy () {
 	
 	echo -e ${COLOR} Copy haproxy from packer ${NC}
 	sudo mv /etc/haproxy/haproxy.cfg
-	sudo cp /usr/local/bin/order-lab/packer/haproxy.cfg /etc/haproxy
+	sudo cp /usr/local/bin/order-lab/packer/haproxy.cfg /etc/haproxy/haproxy.cfg
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
 	#dotenv installed via: sudo yarn install --frozen-lockfile 
