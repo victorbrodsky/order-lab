@@ -89,7 +89,7 @@ f_create_single_order_instance () {
 	#run deploy	
 	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
 	sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
-	bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb
+	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
 	
@@ -178,10 +178,12 @@ f_start_haproxy() {
 
 f_install_haproxy
 f_create_order_instances
-f_create_tenant_htppd
-f_create_combined_certificate
-f_start_all_httpd
-f_start_haproxy
+#f_create_tenant_htppd
+#f_create_combined_certificate
+#f_start_all_httpd
+#f_start_haproxy
+
+
 
 
 #From order-packer-centos7
