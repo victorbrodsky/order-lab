@@ -66,6 +66,43 @@ f_create_single_order_instance () {
 	#3) For each order instances set APP_SUBDIR
 	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
 	sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
+	
+	#copy parameters.yml
+	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
+	sudo cp /usr/local/bin/order-lab/orderflex/config/parameters.yml /usr/local/bin/order-lab-"$1"/orderflex/config/	
+
+	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
+	sed -i -e "s/database_name: scanorder/database_name: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
+	
+	#run composer
+	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
+	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	COMPOSER_ALLOW_SUPERUSER=1 composer install
+	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
+	
+	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
+	sudo yarn install --frozen-lockfile
+	
+	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
+	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
+	
+	#run deploy	
+	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
+	sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
+	bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb
+	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
+	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
+	
+	echo -e ${COLOR} Create and update DB for order-lab-"$1" ${NC}
+	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	sudo php bin/console doctrine:database:create
+	sudo php bin/console doctrine:schema:update --complete --force
+	sudo php bin/console doctrine:migration:status
+	sudo php bin/console doctrine:migration:sync-metadata-storage
+	sudo php bin/console doctrine:migration:version --add --all
+	
+	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
+	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
@@ -108,7 +145,7 @@ f_create_single_tenant_htppd() {
 			sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
 		else
 			echo -e ${COLOR} Alias url not provided "$3" ${NC}
-	fi		
+	fi	
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
@@ -144,7 +181,13 @@ f_create_order_instances
 f_create_tenant_htppd
 f_create_combined_certificate
 f_start_all_httpd
+f_start_haproxy
 
 
-
+#From order-packer-centos7
+#"echo @### Create system DB - TODELETE ###",
+#"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+#"php bin/console doctrine:database:create --connection=systemdb",
+#"php bin/console doctrine:schema:update --em=systemdb --complete --force",
+#"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh"
 
