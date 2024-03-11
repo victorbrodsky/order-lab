@@ -10,6 +10,10 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 var dotenv = require('dotenv');
 dotenv.config({path: '.env'});
 console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR); //process.env.APP_SUBDIR=/c/wcm/pathology
+var publicPathSubDir = '';
+if( process.env.APP_SUBDIR ) {
+    publicPathSubDir = process.env.APP_SUBDIR + '/';
+}
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
 Encore
@@ -24,7 +28,7 @@ Encore
     // this is your *true* public path
     //For multitenancy, set APP_SUBDIR=/c/wcm/pathology in .env to make correct, true public path
     //.setPublicPath('/build') or .setPublicPath('/c/wcm/pathology/build')
-    .setPublicPath(process.env.APP_SUBDIR+'/build')
+    .setPublicPath('/'+publicPathSubDir+'build')
 
     .setManifestKeyPrefix('build/')
 
