@@ -90,6 +90,7 @@ f_create_single_order_instance () {
 	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
 	
 	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
+	#TODO: can not change directory inside script
 	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
 	
 	#run deploy	
