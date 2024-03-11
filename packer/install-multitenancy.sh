@@ -41,7 +41,7 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	cd /usr/local/bin/
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/"$1"
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab
@@ -58,8 +58,8 @@ f_create_single_order_instance () {
 	sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
 }
 f_create_order_instances() {
-	f_create_single_order_instance "order-lab-homepagemanager" "8081" ""
-	#f_create_single_order_instance "order-lab-tenantmanager" "8082" "tenant-manager"
+	f_create_single_order_instance "homepagemanager" "8081" ""
+	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
