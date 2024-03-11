@@ -70,6 +70,7 @@ f_create_order_instances() {
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 f_create_tenant_htppd() {
+    echo -e ${COLOR} f_create_tenant_htppd ${NC}
 	f_create_single_tenant_htppd "homepagemanager" 8081
 	f_create_single_tenant_htppd "tenantmanager" 8082
 	
@@ -93,7 +94,7 @@ f_create_single_tenant_htppd() {
 	sed -i -e "s/:80/:$2/g" /etc/httpd/conf/"$1"-httpd.conf
 	
 	echo -e ${COLOR} Replace 'order-lab' by order-lab-"$1" ${NC}
-	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/order-lab-"$1"-httpd.conf
+	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/"$1"-httpd.conf
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
@@ -104,6 +105,8 @@ f_create_combined_certificate() {
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 f_start_single_httpd() {
+	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf ${NC}
+	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
 	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 }
