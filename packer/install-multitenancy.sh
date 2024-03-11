@@ -79,11 +79,11 @@ f_create_single_tenant_htppd() {
 	cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/"$1"-httpd.conf 
 	
 	echo -e ${COLOR} Replace 'Listen 80' by Listen "$2" ${NC}
-	sed -i -e 's/^Listen/#&/'
+	sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo "Listen $2" >> /etc/httpd/conf/"$1"-httpd.conf
 	
 	echo -e ${COLOR} Append 'PidFile /var/run/httpd$2.pid' ${NC}
-	sed -i -e 's/^PidFile/#&/' 
+	sed -i -e 's/^PidFile/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo "PidFile /var/run/httpd$2.pid" >> /etc/httpd/conf/"$1"-httpd.conf 
 	
 	echo -e ${COLOR} Append VirtualHost config ${NC}
