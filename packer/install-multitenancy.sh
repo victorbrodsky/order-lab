@@ -77,10 +77,15 @@ f_create_single_order_instance () {
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
 	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	echo -e ${COLOR} Current folder: ${NC}
 	pwd
-	COMPOSER_ALLOW_SUPERUSER=1 composer install
-	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
+	COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
+	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
 	
+	echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
+	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	echo -e ${COLOR} Current folder: ${NC}
+	pwd
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
 	sudo yarn install --frozen-lockfile
 	
@@ -107,7 +112,7 @@ f_create_single_order_instance () {
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
-	f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
