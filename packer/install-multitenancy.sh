@@ -69,23 +69,23 @@ f_create_single_order_instance () {
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
-	sudo cp /usr/local/bin/order-lab/orderflex/config/parameters.yml /usr/local/bin/order-lab-"$1"/orderflex/config/	
+	sudo cp /usr/local/bin/order-lab/orderflex/config/parameters.yml /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml	
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
 	sed -i -e "s/database_name: scanorder/database_name: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
 	
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
-	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
-	echo -e ${COLOR} Current folder: ${NC}
-	pwd
+	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	#echo -e ${COLOR} Current folder: ${NC}
+	#pwd
 	COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
 	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
 	
-	echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
-	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
-	echo -e ${COLOR} Current folder: ${NC}
-	pwd
+	#echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
+	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	#echo -e ${COLOR} Current folder: ${NC}
+	#pwd
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
 	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
 	
