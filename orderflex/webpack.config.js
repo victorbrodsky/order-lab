@@ -14,6 +14,7 @@ var publicPathSubDir = '';
 if( process.env.APP_SUBDIR ) {
     publicPathSubDir = process.env.APP_SUBDIR + '/';
 }
+console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/wcm/pathology
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
 Encore
