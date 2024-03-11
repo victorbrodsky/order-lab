@@ -87,7 +87,7 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Current folder: ${NC}
 	pwd
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
-	sudo yarn install --frozen-lockfile --modules-folder /usr/local/bin/order-lab-"$1"/orderflex
+	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
 	
 	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
