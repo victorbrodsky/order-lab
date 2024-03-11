@@ -53,6 +53,12 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab-"$1" ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
 	
+	echo -e ${COLOR} Copy env ${NC}
+	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab-"$1"/orderflex/
+	
+	echo -e ${COLOR} Copy env.test ${NC}
+	cp /usr/local/bin/order-lab/packer/.env.test /usr/local/bin/order-lab-"$1"/orderflex/
+	
 	#3) For each order instances set APP_SUBDIR
 	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
 	sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
