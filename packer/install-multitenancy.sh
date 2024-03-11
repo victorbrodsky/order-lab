@@ -87,7 +87,7 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Current folder: ${NC}
 	pwd
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
-	sudo yarn install --frozen-lockfile
+	sudo yarn install --frozen-lockfile --modules-folder /usr/local/bin/order-lab-"$1"/orderflex
 	
 	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
@@ -101,11 +101,11 @@ f_create_single_order_instance () {
 	
 	echo -e ${COLOR} Create and update DB for order-lab-"$1" ${NC}
 	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
-	sudo php bin/console doctrine:database:create
-	sudo php bin/console doctrine:schema:update --complete --force
-	sudo php bin/console doctrine:migration:status
-	sudo php bin/console doctrine:migration:sync-metadata-storage
-	sudo php bin/console doctrine:migration:version --add --all
+	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:database:create
+	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
+	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
+	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
+	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all
 	
 	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
 	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
