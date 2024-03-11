@@ -71,8 +71,8 @@ f_create_order_instances() {
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 f_create_tenant_htppd() {
     echo -e ${COLOR} f_create_tenant_htppd ${NC}
-	f_create_single_tenant_htppd "homepagemanager" 8081
-	f_create_single_tenant_htppd "tenantmanager" 8082
+	f_create_single_tenant_htppd "homepagemanager" 8081 
+	f_create_single_tenant_htppd "tenantmanager" 8082 tenant-manager
 	
 }
 f_create_single_tenant_htppd() {
@@ -93,8 +93,18 @@ f_create_single_tenant_htppd() {
 	echo -e ${COLOR} Replace port '80' by "$2" ${NC}
 	sed -i -e "s/:80/:$2/g" /etc/httpd/conf/"$1"-httpd.conf
 	
-	echo -e ${COLOR} Replace 'order-lab' by order-lab-"$1" ${NC}
-	sed -i -e "s/order-lab/$1/g" /etc/httpd/conf/"$1"-httpd.conf
+	echo -e ${COLOR} Replace DocumentRoot 'order-lab' by order-lab-"$1" ${NC}
+	sed -i -e "s/order-lab/order-lab-$1/g" /etc/httpd/conf/"$1"-httpd.conf
+	
+	#Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-2/orderflex/public/
+	if [ -n "$3" ]
+		then
+			echo -e ${COLOR} Replace Alias url 'aliasurl' by "$3" ${NC}
+			#Alias /order /usr/local/bin/order-lab/orderflex/public/
+			sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
+		else
+			echo -e ${COLOR} Alias url not provided "$3" ${NC}
+	fi		
 }
 
 #5) Create combined certificate and key order-ssl.com.pem

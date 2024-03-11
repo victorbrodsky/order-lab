@@ -492,21 +492,21 @@ mv ./sshkey.pub ./sshkey-"$curr_dt".pub
 
 
 # '! -z' === '-n': -n has value; -z - is empty
-# url /order/directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
+# url /directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.
-# Therefore url order/directory/admin/first-time-login-generation-init/ is safer to run.
+# Therefore url /directory/admin/first-time-login-generation-init/ is safer to run.
 if [ -n "$protocol" ] && [ "$protocol" = "https" ]
   then
     if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ]
       then
-	      DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/https"
+	      DROPLETIPWEB="http://$domainname/directory/admin/first-time-login-generation-init/https"
 	      #DROPLETIPWEB="http://$domainname/order/directory/admin/first-time-login-generation-init/"
 	    else
-	      DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	      DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/https"
 	      #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 	  fi
   else
-    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+    DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/"
 fi
 
 echo "Trying to open a web browser in OS $OSTYPE... You can try to open a web browser manually and go to $DROPLETIPWEB"
