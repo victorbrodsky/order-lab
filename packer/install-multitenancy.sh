@@ -77,6 +77,7 @@ f_create_single_order_instance () {
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
 	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	pwd
 	COMPOSER_ALLOW_SUPERUSER=1 composer install
 	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
 	
