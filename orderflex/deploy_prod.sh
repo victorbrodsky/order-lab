@@ -21,10 +21,6 @@
 # cd /path/to/simple
 # ./deploy1
 
-echo
-echo "deploy_prod.sh: Current folder:"
-pwd
-echo
 
 PARAM1="-full"
 PARAM2="-nodb"
@@ -35,6 +31,11 @@ echo
 echo "Example of full deploy(DB, casche, assetic updates and cache warmup): bash deploy_prod.sh"
 echo "Example of fast update twig and js scripts: bash deploy_prod.sh -fast -withdb"
 echo "Example of full deploy, except cache warmpup: bash deploy_prod.sh -fast"
+echo
+
+echo
+echo "deploy_prod.sh: Current folder:"
+pwd
 echo
 
 if [ $# -eq 0 ]
