@@ -121,7 +121,6 @@ f_create_order_instances() {
 }
 function changedir() {
   cd $1
-  done
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
