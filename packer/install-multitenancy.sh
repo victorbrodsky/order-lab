@@ -61,10 +61,10 @@ NC='\033[0m' # No Color
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
-	#sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
+	sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
-	sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
+	sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 }
 
 #1) Install HAProxy
@@ -79,10 +79,10 @@ f_install_haproxy () {
 	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
-			sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
+			sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 		else
 			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
-			sed -i -e 's/^bind *:443/#&/' /etc/haproxy/haproxy.cfg
+			sed -i -e 's/^\s*bind \*:443/#&/' /etc/haproxy/haproxy.cfg
 	fi	
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
