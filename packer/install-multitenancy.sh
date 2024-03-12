@@ -123,9 +123,6 @@ f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
 	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
-function changedir() {
-  cd $1
-}
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 f_create_tenant_htppd() {
@@ -193,13 +190,16 @@ f_start_haproxy() {
 	sudo systemctl restart haproxy
 }
 
+function changedir() {
+  cd $1
+}
 
-f_install_haproxy
-f_create_order_instances
-#f_create_tenant_htppd
-#f_create_combined_certificate
-#f_start_all_httpd
-#f_start_haproxy
+#f_install_haproxy
+#f_create_order_instances
+f_create_tenant_htppd
+f_create_combined_certificate
+f_start_all_httpd
+f_start_haproxy
 
 
 
