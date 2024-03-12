@@ -91,12 +91,12 @@ f_create_single_order_instance () {
 	
 	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
-	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
+	bash ./usr/local/bin/order-lab-"$1"/packer/additional.sh
 	
 	#run deploy	
 	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
-	sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
-	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	sudo chmod +x ./usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
+	bash ./usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
 	
@@ -109,7 +109,7 @@ f_create_single_order_instance () {
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all
 	
 	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
-	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
+	bash ./usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
