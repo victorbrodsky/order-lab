@@ -194,8 +194,8 @@ function changedir() {
   cd $1
 }
 
-#f_install_haproxy
-#f_create_order_instances
+f_install_haproxy
+f_create_order_instances
 f_create_tenant_htppd
 f_create_combined_certificate
 f_start_all_httpd
