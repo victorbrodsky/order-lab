@@ -70,10 +70,10 @@ f_install_haproxy () {
 	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
-			sed -i -e 's/bind *:80/#&/' /etc/haproxy/haproxy.cfg
+			sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
 		else
 			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
-			sed -i -e 's/bind *:443/#&/' /etc/haproxy/haproxy.cfg
+			sed -i -e 's/^bind *:443/#&/' /etc/haproxy/haproxy.cfg
 	fi	
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
