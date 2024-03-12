@@ -221,6 +221,11 @@ f_create_combined_certificate() {
 	cat /usr/local/bin/order-lab/ssl/apache2.crt /usr/local/bin/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
 }
 
+f_stop_httpd() {
+	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
+	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
+}
+
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 f_start_single_httpd() {
 	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf ${NC}
@@ -232,8 +237,8 @@ f_start_single_httpd() {
 	sudo netstat -na | grep :"$2"
 }
 f_start_all_httpd() {
-	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
-	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
+	#echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
+	#sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
 	
 	f_start_single_httpd "homepagemanager" 8081
 	f_start_single_httpd "tenantmanager" 8082
@@ -258,6 +263,7 @@ f_create_order_instances
 f_create_tenant_htppd
 f_create_combined_certificate
 f_start_haproxy
+f_stop_httpd
 f_start_all_httpd
 
 
