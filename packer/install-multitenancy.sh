@@ -227,19 +227,25 @@ f_start_single_httpd() {
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
 	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
+	
+	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2" ${NC}
+	sudo netstat -na | grep :"$2"
 }
 f_start_all_httpd() {
 	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
 	
-	f_start_single_httpd "homepagemanager"
-	f_start_single_httpd "tenantmanager"
+	f_start_single_httpd "homepagemanager" 8081
+	f_start_single_httpd "tenantmanager" 8082
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy
 f_start_haproxy() {
 	echo -e ${COLOR} Start haproxy ${NC}
 	sudo systemctl restart haproxy
+	
+	echo -e ${COLOR} Status haproxy ${NC}
+	sudo systemctl status haproxy
 }
 
 function changedir() {
