@@ -121,7 +121,7 @@ f_create_single_order_instance () {
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
-	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
