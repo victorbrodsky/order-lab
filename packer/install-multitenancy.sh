@@ -45,7 +45,7 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	#cd /usr/local/bin/
-	changedir "/usr/local/bin/"
+	changedir /usr/local/bin/
 	echo -e ${COLOR} Current folder: ${NC}
 	pwd
 	
@@ -120,8 +120,8 @@ f_create_order_instances() {
 	#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 }
 function changedir() {
-  cd $1;
-  done;
+  cd $1
+  done
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
