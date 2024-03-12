@@ -23,6 +23,38 @@
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 #7) Start HAProxy: sudo systemctl restart haproxy
 
+if [ -z "$bashdbuser" ]
+  then 	
+    bashdbuser=$1
+fi
+if [ -z "$bashdbpass" ]
+  then 	
+    bashdbpass=$2
+fi
+if [ -z "$bashprotocol" ]
+  then 	
+    bashprotocol=$3
+fi
+if [ -z "$bashdomainname" ]
+  then 	
+    bashdomainname=$4
+fi
+if [ -z "$bashsslcertificate" ]
+  then
+    bashsslcertificate=$5
+fi
+if [ -z "$bashemail" ]
+  then
+    bashemail=$6
+fi
+
+echo bashdbuser=$bashdbuser
+echo bashdbpass=$bashdbpass
+echo bashprotocol=$bashprotocol
+echo bashdomainname=$bashdomainname
+echo bashsslcertificate=$bashsslcertificate
+echo bashemail=$bashemail
+
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
@@ -34,6 +66,15 @@ f_install_haproxy () {
 	echo -e ${COLOR} Copy haproxy from packer ${NC}
 	sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg_orig
 	sudo cp /usr/local/bin/order-lab/packer/haproxy.cfg /etc/haproxy/
+
+	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
+		then 
+			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
+			sed -i -e 's/bind *:80/#&/' /etc/httpd/conf/"$1"-httpd.conf 
+		else
+			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
+			sed -i -e 's/bind *:443/#&/' /etc/httpd/conf/"$1"-httpd.conf 
+	fi	
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
 	#dotenv installed via: sudo yarn install --frozen-lockfile 
@@ -116,10 +157,10 @@ f_create_single_order_instance () {
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
-	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all
+	#sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all --no-interaction
 	
 	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
-	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
+	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 }
 f_create_order_instances() {
 	f_create_single_order_instance "homepagemanager" "8081" ""
