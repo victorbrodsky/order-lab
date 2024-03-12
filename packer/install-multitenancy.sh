@@ -61,7 +61,7 @@ NC='\033[0m' # No Color
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
-	sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
+	#sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
@@ -246,13 +246,13 @@ function changedir() {
   cd $1
 }
 
-f_test
-#f_install_haproxy
-#f_create_order_instances
-#f_create_tenant_htppd
-#f_create_combined_certificate
-#f_start_all_httpd
-#f_start_haproxy
+#f_test
+f_install_haproxy
+f_create_order_instances
+f_create_tenant_htppd
+f_create_combined_certificate
+f_start_all_httpd
+f_start_haproxy
 
 
 
