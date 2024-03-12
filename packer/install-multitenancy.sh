@@ -241,6 +241,7 @@ f_start_all_httpd() {
 	#sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
 	
 	f_start_single_httpd "homepagemanager" 8081
+	sleep 5  # Waits 5 seconds.
 	f_start_single_httpd "tenantmanager" 8082
 }
 
@@ -266,7 +267,7 @@ f_create_combined_certificate
 f_start_haproxy
 f_stop_httpd
 f_start_all_httpd
-f_start_all_httpd
+#f_start_all_httpd
 
 
 
