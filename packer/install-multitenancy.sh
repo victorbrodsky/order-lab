@@ -267,7 +267,7 @@ f_create_combined_certificate
 f_start_haproxy
 f_stop_httpd
 f_start_all_httpd
-#f_start_all_httpd
+f_start_all_httpd
 
 
 
