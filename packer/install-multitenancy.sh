@@ -67,7 +67,7 @@ f_install_haproxy () {
 	sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg_orig
 	sudo cp /usr/local/bin/order-lab/packer/haproxy.cfg /etc/haproxy/
 
-	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
+	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
 			sed -i -e 's/bind *:80/#&/' /etc/haproxy/haproxy.cfg
