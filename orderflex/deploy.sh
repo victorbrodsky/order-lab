@@ -69,7 +69,7 @@ function prep()
 
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
-    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate --em systemdb
+    #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate --em systemdb
 
     #By default, console commands run in the dev environment
     #console: php bin/console assets:install

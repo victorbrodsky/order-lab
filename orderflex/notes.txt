@@ -1884,3 +1884,9 @@ yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-rele
 yum install git
 git --version
 
+
+Centos access postgres:
+local all all trust
+host  all   all  127.0.0.1/32  trust
+\list
+DROP DATABASE dbname;

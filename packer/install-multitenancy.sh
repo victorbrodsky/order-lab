@@ -101,9 +101,11 @@ f_create_single_order_instance () {
 	pwd
 	
 	#run deploy	
-	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
-	sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
-	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	#echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
+	#sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
+	#bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	
+	echo -e ${COLOR} chown apache for order-lab-"$1" ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
 	

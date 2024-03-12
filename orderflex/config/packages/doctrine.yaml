@@ -54,16 +54,16 @@ doctrine:
                 password: '%database_password_external%'
                 charset:  UTF8
             #system DB which will be used for multitenancy
-            systemdb:
+            #systemdb:
                 #wrapper_class: App\SystemBundle\DynamicConnection\DoctrineMultidatabaseConnection
                 #wrapper_class: App\SystemBundle\DynamicConnection\DynamicConnectionWrapper
-                driver:   '%database_driver_systemdb%'
-                host:     '%database_host_systemdb%'
-                port:     '%database_port_systemdb%'
-                dbname:   '%database_name_systemdb%'
-                user:     '%database_user_systemdb%'
-                password: '%database_password_systemdb%'
-                charset:  UTF8
+                #driver:   '%database_driver_systemdb%'
+                #host:     '%database_host_systemdb%'
+                #port:     '%database_port_systemdb%'
+                #dbname:   '%database_name_systemdb%'
+                #user:     '%database_user_systemdb%'
+                #password: '%database_password_systemdb%'
+                #charset:  UTF8
     orm:
         #auto_generate_proxy_classes: '%kernel.debug%'
         #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
@@ -173,79 +173,79 @@ doctrine:
             external:
                 connection: external
 
-            systemdb:
-                connection: systemdb
-                result_cache_driver: ~
-                query_cache_driver: ~
-                mappings:
-                    App\OrderformBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/OrderformBundle/Entity'
-                        prefix: 'App\OrderformBundle\Entity'
-                        alias: 'AppOrderformBundle'
-                    App\UserdirectoryBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/UserdirectoryBundle/Entity'
-                        prefix: 'App\UserdirectoryBundle\Entity'
-                        alias: 'AppUserdirectoryBundle'
-                    App\FellAppBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/FellAppBundle/Entity'
-                        prefix: 'App\FellAppBundle\Entity'
-                        alias: 'AppFellAppBundle'
-                    App\ResAppBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/ResAppBundle/Entity'
-                        prefix: 'App\ResAppBundle\Entity'
-                        alias: 'AppResAppBundle'
-                    App\DeidentifierBundle:
-                        is_bundle: false
-                        #type: annotation
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/DeidentifierBundle/Entity'
-                        prefix: 'App\DeidentifierBundle\Entity'
-                        alias: 'AppDeidentifierBundle'
-                    App\VacReqBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/VacReqBundle/Entity'
-                        prefix: 'App\VacReqBundle\Entity'
-                        alias: 'AppVacReqBundle'
-                    App\CallLogBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/CallLogBundle/Entity'
-                        prefix: 'App\CallLogBundle\Entity'
-                        alias: 'AppCallLogBundle'
-                    App\CrnBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/CrnBundle/Entity'
-                        prefix: 'App\CrnBundle\Entity'
-                        alias: 'AppCrnBundle'
-                    App\TranslationalResearchBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/TranslationalResearchBundle/Entity'
-                        prefix: 'App\TranslationalResearchBundle\Entity'
-                        alias: 'AppTranslationalResearchBundle'
-                    App\DashboardBundle:
-                        is_bundle: false
-                        type: attribute
-                        dir: '%kernel.project_dir%/src/App/DashboardBundle/Entity'
-                        prefix: 'App\DashboardBundle\Entity'
-                        alias: 'AppDashboardBundle'
-
-                    gedmo_tree:
-                        type: attribute
-                        prefix: Gedmo\Tree\Entity
-                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
-                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
-                        is_bundle: false
+#            systemdb:
+#                connection: systemdb
+#                result_cache_driver: ~
+#                query_cache_driver: ~
+#                mappings:
+#                    App\OrderformBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/OrderformBundle/Entity'
+#                        prefix: 'App\OrderformBundle\Entity'
+#                        alias: 'AppOrderformBundle'
+#                    App\UserdirectoryBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/UserdirectoryBundle/Entity'
+#                        prefix: 'App\UserdirectoryBundle\Entity'
+#                        alias: 'AppUserdirectoryBundle'
+#                    App\FellAppBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/FellAppBundle/Entity'
+#                        prefix: 'App\FellAppBundle\Entity'
+#                        alias: 'AppFellAppBundle'
+#                    App\ResAppBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/ResAppBundle/Entity'
+#                        prefix: 'App\ResAppBundle\Entity'
+#                        alias: 'AppResAppBundle'
+#                    App\DeidentifierBundle:
+#                        is_bundle: false
+#                        #type: annotation
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/DeidentifierBundle/Entity'
+#                        prefix: 'App\DeidentifierBundle\Entity'
+#                        alias: 'AppDeidentifierBundle'
+#                    App\VacReqBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/VacReqBundle/Entity'
+#                        prefix: 'App\VacReqBundle\Entity'
+#                        alias: 'AppVacReqBundle'
+#                    App\CallLogBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/CallLogBundle/Entity'
+#                        prefix: 'App\CallLogBundle\Entity'
+#                        alias: 'AppCallLogBundle'
+#                    App\CrnBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/CrnBundle/Entity'
+#                        prefix: 'App\CrnBundle\Entity'
+#                        alias: 'AppCrnBundle'
+#                    App\TranslationalResearchBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/TranslationalResearchBundle/Entity'
+#                        prefix: 'App\TranslationalResearchBundle\Entity'
+#                        alias: 'AppTranslationalResearchBundle'
+#                    App\DashboardBundle:
+#                        is_bundle: false
+#                        type: attribute
+#                        dir: '%kernel.project_dir%/src/App/DashboardBundle/Entity'
+#                        prefix: 'App\DashboardBundle\Entity'
+#                        alias: 'AppDashboardBundle'
+#
+#                    gedmo_tree:
+#                        type: attribute
+#                        prefix: Gedmo\Tree\Entity
+#                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
+#                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+#                        is_bundle: false
 
 #when@test:
 #    doctrine:

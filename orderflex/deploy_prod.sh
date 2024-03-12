@@ -113,15 +113,15 @@ function prep(){
         echo "*** Update tables in Doctrine Default DB ***"
         php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --complete --force
 
-        echo "*** Update tables in Doctrine System DB ***"
-        php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --complete --em systemdb --force
+        #echo "*** Update tables in Doctrine System DB ***"
+        #php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --complete --em systemdb --force
         #php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
 
         echo "*** Validate Doctrine Default DB ***"
         php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
 
-        echo "*** Validate Doctrine System DB ***"
-        php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate --em systemdb
+        #echo "*** Validate Doctrine System DB ***"
+        #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate --em systemdb
     fi
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"

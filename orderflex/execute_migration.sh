@@ -25,8 +25,8 @@ function execute()
     echo "Execute default Migration..."
     php $PROJECT_LOCAL_PATH/bin/console doctrine:migrations:migrate --all-or-nothing
 
-    echo "Execute systemdb Migration..."
-    php $PROJECT_LOCAL_PATH/bin/console doctrine:migrations:migrate --em=systemdb --all-or-nothing
+    #echo "Execute systemdb Migration..."
+    #php $PROJECT_LOCAL_PATH/bin/console doctrine:migrations:migrate --em=systemdb --all-or-nothing
 }
 
 
