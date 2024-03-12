@@ -94,7 +94,11 @@ f_create_single_order_instance () {
 	
 	#echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
-	#bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
+	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
+	
+	changedir /usr/local/bin/order-lab-"$1"/orderflex
+	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
+	pwd
 	
 	#run deploy	
 	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
@@ -104,7 +108,8 @@ f_create_single_order_instance () {
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
 	
 	echo -e ${COLOR} Create and update DB for order-lab-"$1" ${NC}
-	sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	pwd
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:database:create
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
