@@ -58,6 +58,10 @@ echo bashemail=$bashemail
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
+f_test () {
+	sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
+}
+
 #1) Install HAProxy
 f_install_haproxy () {
 	echo -e ${COLOR} Install haproxy ${NC}
@@ -237,12 +241,13 @@ function changedir() {
   cd $1
 }
 
-f_install_haproxy
-f_create_order_instances
-f_create_tenant_htppd
-f_create_combined_certificate
-f_start_all_httpd
-f_start_haproxy
+f_test
+#f_install_haproxy
+#f_create_order_instances
+#f_create_tenant_htppd
+#f_create_combined_certificate
+#f_start_all_httpd
+#f_start_haproxy
 
 
 
