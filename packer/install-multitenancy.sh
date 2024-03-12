@@ -88,8 +88,9 @@ f_create_single_order_instance () {
 	
 	#echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
 	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
-	#echo -e ${COLOR} Current folder: ${NC}
-	#pwd
+	changedir /usr/local/bin/order-lab-"$1"/orderflex
+	echo -e ${COLOR} Current folder before install: ${NC}
+	pwd
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
 	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
 	
