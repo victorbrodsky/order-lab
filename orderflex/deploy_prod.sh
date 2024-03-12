@@ -21,6 +21,11 @@
 # cd /path/to/simple
 # ./deploy1
 
+echo
+echo "deploy_prod.sh: Current folder:"
+pwd
+echo
+
 PARAM1="-full"
 PARAM2="-nodb"
 #PARAM1=$1

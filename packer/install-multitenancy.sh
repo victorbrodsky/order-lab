@@ -45,6 +45,9 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	cd /usr/local/bin/
+	echo -e ${COLOR} Current folder: ${NC}
+	pwd
+	
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
@@ -89,9 +92,9 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
 	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
 	
-	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
+	#echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
-	bash ./usr/local/bin/order-lab-"$1"/packer/additional.sh
+	#bash ./usr/local/bin/order-lab-"$1"/packer/additional.sh
 	
 	#run deploy	
 	echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
