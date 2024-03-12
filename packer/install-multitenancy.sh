@@ -64,7 +64,7 @@ f_test () {
 	#sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
-	sed 's/^\s*bind *:80/#&/'
+	sed 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 }
 
 #1) Install HAProxy
