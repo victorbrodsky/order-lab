@@ -192,8 +192,12 @@ f_create_order_instances() {
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 f_create_tenant_htppd() {
     echo -e ${COLOR} f_create_tenant_htppd ${NC}
-	f_create_single_tenant_htppd "homepagemanager" 8081 
-	f_create_single_tenant_htppd "tenantmanager" 8082 tenant-manager
+	#f_create_single_tenant_htppd "homepagemanager" 8081 
+	#f_create_single_tenant_htppd "tenantmanager" 8082 tenant-manager
+	for str in ${tenantsArray[@]}; do
+	    echo -e ${COLOR} Create httpd: "$str" ${NC}
+		f_create_single_tenant_htppd "$str"
+	done
 	
 }
 f_create_single_tenant_htppd() {
@@ -266,15 +270,13 @@ f_start_all_httpd() {
 	#echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	#sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
 	#sleep 5  # Waits 5 seconds.
-	f_start_single_httpd "homepagemanager" 8081
+	#f_start_single_httpd "homepagemanager" 8081
 	#sleep 5  # Waits 5 seconds.
-	f_start_single_httpd "tenantmanager" 8082
+	#f_start_single_httpd "tenantmanager" 8082
 	
 	for str in ${tenantsArray[@]}; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
 		f_start_single_httpd "$str"
-		#f_create_single_order_instance "homepagemanager" "8081" ""
-		#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 	done
 }
 
