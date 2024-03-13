@@ -102,10 +102,7 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	for str in "${tenantsArray[@]}"; do
-		echo -e ${COLOR} Tenant "$str" ${NC}
-		f_start_all_httpd $str
-	done
+	f_start_all_httpd
 }
 
 #1) Install HAProxy
@@ -308,7 +305,7 @@ f_start_all_httpd() {
 	
 	for str in ${tenantsArray[@]}; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd "$str"
+		f_start_single_httpd $str
 	done
 }
 
