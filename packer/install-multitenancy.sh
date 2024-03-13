@@ -113,8 +113,8 @@ f_test () {
 	
 	#f_start_all_httpd
 	
-	
-	copyFiles "${tenantsArray[@]}"
+	array=("one 1" "two 2" "three 3")
+	copyFiles "${array[@]}"
 }
 
 #1) Install HAProxy
