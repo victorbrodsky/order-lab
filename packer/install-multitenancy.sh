@@ -235,6 +235,12 @@ f_start_single_httpd() {
 	
 	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2" ${NC}
 	sudo netstat -na | grep :"$2"
+	
+	#Start /etc/httpd/conf/tenantmanager-httpd.conf 
+	#(98)Address already in use: AH00072: make_sock: could not bind to address [::]:8082
+	#(98)Address already in use: AH00072: make_sock: could not bind to address 0.0.0.0:8082
+	#no listening sockets available, shutting down
+	#AH00015: Unable to open logs
 }
 f_start_all_httpd() {
 	#echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
@@ -260,13 +266,13 @@ function changedir() {
 
 #f_test
 
-f_install_haproxy
-f_create_order_instances
-f_create_tenant_htppd
-f_create_combined_certificate
-f_start_haproxy
-f_stop_httpd
-f_start_all_httpd
+#f_install_haproxy
+#f_create_order_instances
+#f_create_tenant_htppd
+#f_create_combined_certificate
+#f_start_haproxy
+#f_stop_httpd
+#f_start_all_httpd
 f_start_all_httpd
 
 
