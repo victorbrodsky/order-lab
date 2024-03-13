@@ -277,15 +277,15 @@ f_stop_httpd() {
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 f_start_single_httpd() {
 	sleep 3
-	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf ${NC}
+	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
 	
 	sleep 3
-	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf ${NC}
+	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 	
 	sleep 3
-	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2" ${NC}
+	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo netstat -na | grep :"$2"
 	
 	#Start /etc/httpd/conf/tenantmanager-httpd.conf 
