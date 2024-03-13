@@ -52,6 +52,24 @@ if [ -z "$multitenant" ]
     multitenant=$7
 fi
 
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+	-m|--multitenant)
+		multitenant="$2"
+		shift # past argument
+		shift # past value
+    ;;
+    *)    # unknown option
+		POSITIONAL+=("$1") # save it in an array for later
+		shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
@@ -78,7 +96,7 @@ f_test () {
 	#sed -i -e 's/^bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
-	sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
+	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 }
 
 #1) Install HAProxy
@@ -302,14 +320,14 @@ function changedir() {
 if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
-		#f_test
-		f_install_haproxy
-		f_create_order_instances
-		f_create_tenant_htppd
-		f_create_combined_certificate
-		f_start_haproxy
-		f_stop_httpd
-		f_start_all_httpd
+		f_test
+		#f_install_haproxy
+		#f_create_order_instances
+		#f_create_tenant_htppd
+		#f_create_combined_certificate
+		#f_start_haproxy
+		#f_stop_httpd
+		#f_start_all_httpd
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
 fi

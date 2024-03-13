@@ -159,6 +159,7 @@ if [ -z "$sslprivatekey" ]
     sslprivatekey='localhost.key'
 fi
 
+
 echo "api_token=$apitoken" 
 echo "os=$os"
 echo "parameters=$parameters" 
