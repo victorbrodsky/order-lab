@@ -252,28 +252,29 @@ f_install_php82 () {
     sleep 1
 }
 f_install_php83 () {
-    ########## INSTALL APACHE 8.2 ##########
-    echo "Installing apache 8.2 ..."
+    ########## INSTALL APACHE 8.3 ##########
+    echo "Installing apache 8.3 ..."
     sleep 1
 
 	echo @### Install yum-utils and epel repository ###
-	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	#sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	sudo yum -y install epel-release
 
 	echo @### PHP1: install yum-utils -y ###
 	sudo yum -y install yum-utils
 	sudo yum-config-manager --disable 'remi-php*'
-	sudo yum-config-manager --enable remi-php82
+	sudo yum-config-manager --enable remi-php83
 
-	echo @### PHP2: sudo yum-config-manager --enable remi-php82 ###
+	echo @### PHP2: sudo yum-config-manager --enable remi-php83 ###
 	sudo yum -y update
 
 	#echo @### PHP3: Search for PHP 8.1 packages ###
 	#sudo yum search php81 | more
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
-	echo @### PHP3: Install PHP 8.2 ###
-	sudo yum -y install php82 php82-php-cli
+	echo @### PHP3: Install PHP 8.3 ###
+	sudo yum -y install php83 php83-php-cli
 	
 	echo @### PHP4: Install PHP packages ###
 	#sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
@@ -281,15 +282,15 @@ f_install_php83 () {
 	#sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
 	#sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
 	#sudo yum -y install php81-php-common
-	sudo yum -y install php82-php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	sudo yum -y install php82-php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	sudo yum -y install php83-php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo yum -y install php83-php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
-	yum -y install php82-syspaths
+	yum -y install php83-syspaths
 	
-	yum -y --enablerepo=remi install php82-php
+	yum -y --enablerepo=remi install php83-php
 	
 	echo -e  ${COLOR} export PATH ${NC}
-	export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	export PATH=/opt/remi/php83/root/usr/bin:/opt/remi/php83/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
@@ -404,8 +405,6 @@ f_install_order () {
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
 	cd /usr/local/bin/
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-	#git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-	#git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab
@@ -450,20 +449,7 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy env.test ${NC}
 	cp /usr/local/bin/order-lab/packer/.env.test /usr/local/bin/order-lab/orderflex/
 	
-	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
-	#/etc/opt/remi/php72/ or /etc/
-	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-	
-	#echo -e ${COLOR} PHP 7.4: Copy php.ini to /etc/ ${NC}
-	#cp /etc/php.ini /etc/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
-	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
-	##cp /etc/php.ini /etc/php_ORIG.ini
-	
-	echo -e ${COLOR} PHP 8.2 Copy php.ini ${NC}
-	#cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	echo -e ${COLOR} PHP Copy php.ini ${NC}
 	cp /etc/php.ini /etc/php_ORIG.ini
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
