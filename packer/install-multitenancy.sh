@@ -94,6 +94,15 @@ declare -a tenantsArray=(
 	"tenantmanager 8082 tenant-manager"
 )
 
+function copyFiles() {
+   arr=("$@")
+   for i in "${arr[@]}";
+      do
+          echo "$i"
+      done
+
+}
+
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
@@ -102,7 +111,10 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	f_start_all_httpd
+	#f_start_all_httpd
+	
+	
+	copyFiles "${tenantsArray[@]}"
 }
 
 #1) Install HAProxy
@@ -305,7 +317,7 @@ f_start_all_httpd() {
 	
 	for str in "${tenantsArray[@]}"; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd "$str"
+		f_start_single_httpd $str
 	done
 }
 
