@@ -58,7 +58,7 @@ echo bashemail=$bashemail
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-tenantsArray = ("homepagemanager 8081 " "tenantmanager 8082 tenant-manager")
+tenantsArray=("homepagemanager 8081 " "tenantmanager 8082 tenant-manager")
 	#"tenantappdemo 8083 c/demo-institution/demo-department"
 	#"tenantapptest 8084 c/test-institution/test-department"
 	#"tenantapp1 8085 c/wcm/pathology"
