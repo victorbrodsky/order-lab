@@ -90,8 +90,8 @@ tenantsArray=(
 	"tenantapp2 8086 c/wcm/psychiatry"
 )
 tenantsArray=(
-	"'homepagemanager' '8081' " 
-	"'tenantmanager' '8082' 'tenant-manager'"
+	"homepagemanager 8081 " 
+	"tenantmanager 8082 tenant-manager"
 )
 
 f_test () {
@@ -102,7 +102,7 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	for str in ${tenantsArray[@]}; do
+	for str in "${tenantsArray[@]}"; do
 		echo -e ${COLOR} Tenant "$str" ${NC}
 		f_start_all_httpd "$str"
 	done
