@@ -81,7 +81,7 @@ echo multitenant=$multitenant
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-tenantsArray1=(
+tenantsArray=(
 	"homepagemanager 8081 " 
 	"tenantmanager 8082 tenant-manager"
 	"tenantappdemo 8083 c/demo-institution/demo-department"
@@ -90,17 +90,18 @@ tenantsArray1=(
 	"tenantapp2 8086 c/wcm/psychiatry"
 )
 #declare -a 
-tenantsArray=(
+tenantsArrayTest=(
 	"homepagemanager 8081 " 
 	"tenantmanager 8082 tenant-manager"
 )
 
 f_start_all_httpd_test() {
 	#f_start_single_httpd "homepagemanager" 8081
-	for str in ${tenantsArray[@]}; do
+	for str in ${tenantsArrayTest[@]}; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
 		#f_start_single_httpd $str;shift
-		f_start_single_httpd $str
+		#f_start_single_httpd $str
+		f_start_single_httpd "$str"
 	done
 }
 f_test () {
@@ -312,7 +313,7 @@ f_start_all_httpd() {
 	#sleep 5  # Waits 5 seconds.
 	#f_start_single_httpd "tenantmanager" 8082
 	
-	for str in "${tenantsArray[@]}"; do
+	for str in ${tenantsArray[@]}; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
 		f_start_single_httpd $str
 	done
@@ -335,14 +336,14 @@ function changedir() {
 if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
-		f_test
+		#f_test
 		#f_install_haproxy
 		#f_create_order_instances
 		#f_create_tenant_htppd
 		#f_create_combined_certificate
 		#f_start_haproxy
 		#f_stop_httpd
-		#f_start_all_httpd
+		f_start_all_httpd
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
 fi
