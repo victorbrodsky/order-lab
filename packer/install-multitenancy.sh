@@ -96,7 +96,7 @@ declare -a tenantsArray=(
 
 f_start_all_httpd_test() {
 	#f_start_single_httpd "homepagemanager" 8081
-	for str in "${tenantsArray[@]}"; do
+	for str in ${tenantsArray[@]}; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		f_start_single_httpd $str
