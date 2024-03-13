@@ -102,7 +102,13 @@ function copyFiles() {
       done
 
 }
-
+f_start_all_httpd_test() {
+	#f_start_single_httpd "homepagemanager" 8081
+	for str in "${tenantsArray[@]}"; do
+		echo -e ${COLOR} Start single httpd "$str" ${NC}
+		f_start_single_httpd $str;shift
+	done
+}
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
@@ -111,10 +117,10 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	#f_start_all_httpd
+	f_start_all_httpd_test
 	
-	array=("one 1" "two 2" "three 3")
-	copyFiles "${array[@]}"
+	#array=("one 1" "two 2" "three 3")
+	#copyFiles "${array[@]}"
 }
 
 #1) Install HAProxy
