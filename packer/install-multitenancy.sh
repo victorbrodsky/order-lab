@@ -98,7 +98,7 @@ function copyFiles() {
    arr=("$@")
    for i in "${arr[@]}";
       do
-          echo "$i"
+          echo para="$i"
       done
 
 }
