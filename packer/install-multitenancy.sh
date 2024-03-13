@@ -338,12 +338,12 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
-		#f_install_haproxy
-		#f_create_order_instances
-		#f_create_tenant_htppd
-		#f_create_combined_certificate
-		#f_start_haproxy
-		#f_stop_httpd
+		f_install_haproxy
+		f_create_order_instances
+		f_create_tenant_htppd
+		f_create_combined_certificate
+		f_start_haproxy
+		f_stop_httpd
 		f_start_all_httpd
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
