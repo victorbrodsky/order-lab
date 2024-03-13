@@ -94,19 +94,12 @@ declare -a tenantsArray=(
 	"tenantmanager 8082 tenant-manager"
 )
 
-function copyFiles() {
-   arr=("$@")
-   for i in "${arr[@]}";
-      do
-          echo para="$i"
-      done
-
-}
 f_start_all_httpd_test() {
 	#f_start_single_httpd "homepagemanager" 8081
 	for str in "${tenantsArray[@]}"; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd $str;shift
+		#f_start_single_httpd $str;shift
+		f_start_single_httpd $str
 	done
 }
 f_test () {
@@ -118,9 +111,6 @@ f_test () {
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
 	f_start_all_httpd_test
-	
-	#array=("one 1" "two 2" "three 3")
-	#copyFiles "${array[@]}"
 }
 
 #1) Install HAProxy
