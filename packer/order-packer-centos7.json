@@ -23,7 +23,8 @@
 			"bashprotocol=bash_protocol",
 			"bashdomainname=bash_domainname",
 			"bashsslcertificate=bash_sslcertificate",
-			"bashemail=bash_email"
+			"bashemail=bash_email",
+			"multitenant=bash_multitenant"
 		],
         "script": "centos7_install.sh"
     },
@@ -167,7 +168,8 @@
 			"bashprotocol=bash_protocol",
 			"bashdomainname=bash_domainname",
 			"bashsslcertificate=bash_sslcertificate",
-			"bashemail=bash_email"
+			"bashemail=bash_email",
+			"multitenant=bash_multitenant"
 		],
         "script": "install-multitenancy.sh"
 	  }

@@ -17,7 +17,7 @@
 #--sslcertificate ssl_certificate.crt - optional
 #--sslprivatekey intermediate_certificate.ca-crt
 #--email - optional if sslcertificate=installcertbot
-
+#--multitenant - false/haproxy (default false)
 
 #os - centos or ubuntu
 #apitoken=$1
@@ -29,6 +29,8 @@
 #domainname=$6
 #sslcertificate=$7
 #sslprivatekey=$8
+
+
 
 #Available images: https://do-community.github.io/available-images/
 
@@ -100,6 +102,11 @@ case $key in
 		shift # past argument
 		shift # past value
     ;;
+	-m|--multitenant)
+		multitenant="$2"
+		shift # past argument
+		shift # past value
+    ;;
     --default)
 		DEFAULT=YES
 		shift # past argument
@@ -164,6 +171,7 @@ echo "sslcertificate=$sslcertificate"
 echo "sslprivatekey=$sslprivatekey"
 echo "email=$email"
 echo "sshfingerprint=$sshfingerprint"
+echo "multitenant=$multitenant"
 
 echo "*** Verifying files presence ***"
 if [ -z "$apitoken" ]
@@ -291,8 +299,10 @@ sed -i -e "s/bash_domainname/$domainname/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslcertificate/$sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 sed -i -e "s/bash_sshfingerprint/$sshfingerprint/g" "$ORDERPACKERJSON"
+sed -i -e "s/bash_multitenant/$multitenant/g" "$ORDERPACKERJSON"
 
 sed -i -e "s/snapshot_name_bash_value/$snapshot_name_bash_value/g" "$ORDERPACKERJSON"
+
 
 ############ Run packer json file ############
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
@@ -315,6 +325,7 @@ sed -i -e "s/$sslcertificate/bash_sslcertificate/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 sed -i -e "s/$sshfingerprint/bash_sshfingerprint/g" "$ORDERPACKERJSON"
 sed -i -e "s/$snapshot_name_bash_value/snapshot_name_bash_value/g" "$ORDERPACKERJSON"
+sed -i -e "s/$multitenant/bash_multitenant/g" "$ORDERPACKERJSON"
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 #Use Packer v1.7.0 or later

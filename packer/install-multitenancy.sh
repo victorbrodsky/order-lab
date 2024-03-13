@@ -47,6 +47,10 @@ if [ -z "$bashemail" ]
   then
     bashemail=$6
 fi
+if [ -z "$multitenant" ]
+  then
+    multitenant=$7
+fi
 
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
@@ -54,6 +58,7 @@ echo bashprotocol=$bashprotocol
 echo bashdomainname=$bashdomainname
 echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
+echo multitenant=$multitenant
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -293,15 +298,22 @@ function changedir() {
   cd $1
 }
 
-#f_test
 
-f_install_haproxy
-f_create_order_instances
-f_create_tenant_htppd
-f_create_combined_certificate
-f_start_haproxy
-f_stop_httpd
-f_start_all_httpd
+if [ -n "$multitenant" ] && [ "$multitenant" != "haproxy" ]
+	then
+		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
+		#f_test
+		f_install_haproxy
+		f_create_order_instances
+		f_create_tenant_htppd
+		f_create_combined_certificate
+		f_start_haproxy
+		f_stop_httpd
+		f_start_all_httpd
+	else
+		echo -e ${COLOR} Don't use multitenancy multitenant="$multitenant" ${NC}
+fi
+
 
 
 
