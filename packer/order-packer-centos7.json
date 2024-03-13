@@ -169,7 +169,7 @@
 			"bashemail=bash_email"
 		],
         "script": "install-multitenancy.sh"
-    },
+	  }
       
    ]
 
