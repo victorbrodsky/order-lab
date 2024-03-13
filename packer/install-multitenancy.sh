@@ -227,12 +227,16 @@ f_stop_httpd() {
 }
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
-f_start_single_httpd() {
+f_start_single_httpd() 
+	sleep 3  # Waits 3 seconds.
 	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
+	
+	sleep 3  # Waits 3 seconds.
 	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 	
+	sleep 3  # Waits 3 seconds.
 	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2" ${NC}
 	sudo netstat -na | grep :"$2"
 	
@@ -245,9 +249,9 @@ f_start_single_httpd() {
 f_start_all_httpd() {
 	#echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	#sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
-	sleep 5  # Waits 5 seconds.
+	#sleep 5  # Waits 5 seconds.
 	f_start_single_httpd "homepagemanager" 8081
-	sleep 5  # Waits 5 seconds.
+	#sleep 5  # Waits 5 seconds.
 	f_start_single_httpd "tenantmanager" 8082
 }
 
