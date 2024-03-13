@@ -303,9 +303,9 @@ f_start_all_httpd() {
 	#sleep 5  # Waits 5 seconds.
 	#f_start_single_httpd "tenantmanager" 8082
 	
-	for str in ${tenantsArray[@]}; do
+	for str in "${tenantsArray[@]}"; do
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd $str
+		f_start_single_httpd "$str"
 	done
 }
 
