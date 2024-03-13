@@ -104,7 +104,7 @@ f_test () {
 	
 	for str in "${tenantsArray[@]}"; do
 		echo -e ${COLOR} Tenant "$str" ${NC}
-		f_start_all_httpd "$str"
+		f_start_all_httpd $str
 	done
 }
 
