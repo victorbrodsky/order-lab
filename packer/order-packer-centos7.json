@@ -160,6 +160,7 @@
 	   
 	   {
         "type": "shell",
+		"max_retries": 1,
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass",

@@ -58,6 +58,15 @@ echo bashemail=$bashemail
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
+tenantsArray = (
+	"homepagemanager 8081 " 
+	"tenantmanager 8082 tenant-manager"
+	"tenantappdemo 8083 c/demo-institution/demo-department"
+	"tenantapptest 8084 c/test-institution/test-department"
+	"tenantapp1 8085 c/wcm/pathology"
+	"tenantapp2 8086 c/wcm/psychiatry"
+)
+
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
@@ -172,8 +181,12 @@ f_create_single_order_instance () {
 	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 }
 f_create_order_instances() {
-	f_create_single_order_instance "homepagemanager" "8081" ""
-	f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	for str in ${tenantsArray[@]}; do
+	    echo -e ${COLOR} Create order instance: "$str" ${NC}
+		f_create_single_order_instance "$str"
+		#f_create_single_order_instance "homepagemanager" "8081" ""
+		#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	done
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
@@ -224,6 +237,9 @@ f_create_combined_certificate() {
 f_stop_httpd() {
 	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
+	
+	echo -e ${COLOR} Disable ssl.conf ${NC}
+	sudo mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf_orig
 }
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
@@ -253,6 +269,13 @@ f_start_all_httpd() {
 	f_start_single_httpd "homepagemanager" 8081
 	#sleep 5  # Waits 5 seconds.
 	f_start_single_httpd "tenantmanager" 8082
+	
+	for str in ${tenantsArray[@]}; do
+		echo -e ${COLOR} Start single httpd "$str" ${NC}
+		f_start_single_httpd "$str"
+		#f_create_single_order_instance "homepagemanager" "8081" ""
+		#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
+	done
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy
@@ -270,12 +293,12 @@ function changedir() {
 
 #f_test
 
-f_install_haproxy
-f_create_order_instances
-f_create_tenant_htppd
-f_create_combined_certificate
-f_start_haproxy
-f_stop_httpd
+#f_install_haproxy
+#f_create_order_instances
+#f_create_tenant_htppd
+#f_create_combined_certificate
+#f_start_haproxy
+#f_stop_httpd
 f_start_all_httpd
 
 
