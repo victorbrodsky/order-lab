@@ -89,7 +89,7 @@ tenantsArray1=(
 	"tenantapp1 8085 c/wcm/pathology"
 	"tenantapp2 8086 c/wcm/psychiatry"
 )
-tenantsArray=(
+declare -a tenantsArray=(
 	"homepagemanager 8081 " 
 	"tenantmanager 8082 tenant-manager"
 )
