@@ -97,6 +97,11 @@ f_test () {
 	#sed -i -e 's/^\s*bind *:80/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
+	
+	for str in ${tenantsArray[@]}; do
+		echo -e ${COLOR} Tenant "$str" ${NC}
+		f_start_all_httpd "$str"
+	done
 }
 
 #1) Install HAProxy
