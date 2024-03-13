@@ -299,7 +299,7 @@ function changedir() {
 }
 
 
-if [ -n "$multitenant" ] && [ "$multitenant" != "haproxy" ]
+if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
@@ -311,8 +311,9 @@ if [ -n "$multitenant" ] && [ "$multitenant" != "haproxy" ]
 		f_stop_httpd
 		f_start_all_httpd
 	else
-		echo -e ${COLOR} Don't use multitenancy multitenant="$multitenant" ${NC}
+		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
 fi
+
 
 
 
