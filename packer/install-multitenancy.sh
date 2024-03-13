@@ -101,7 +101,7 @@ f_start_all_httpd_test() {
 		echo -e ${COLOR} Start single httpd "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		f_start_single_httpd "$str"
+		f_start_single_httpd $str
 	done
 }
 f_test () {
@@ -112,7 +112,8 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	f_start_all_httpd_test
+	#f_start_all_httpd_test
+	f_start_all_httpd
 }
 
 #1) Install HAProxy
@@ -222,7 +223,7 @@ f_create_single_order_instance () {
 f_create_order_instances() {
 	for str in ${tenantsArray[@]}; do
 	    echo -e ${COLOR} Create order instance: "$str" ${NC}
-		f_create_single_order_instance "$str"
+		f_create_single_order_instance $str
 		#f_create_single_order_instance "homepagemanager" "8081" ""
 		#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 	done
@@ -235,7 +236,7 @@ f_create_tenant_htppd() {
 	#f_create_single_tenant_htppd "tenantmanager" 8082 tenant-manager
 	for str in ${tenantsArray[@]}; do
 	    echo -e ${COLOR} Create httpd: "$str" ${NC}
-		f_create_single_tenant_htppd "$str"
+		f_create_single_tenant_htppd $str
 	done
 	
 }
