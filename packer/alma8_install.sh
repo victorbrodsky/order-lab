@@ -310,6 +310,9 @@ f_install_order () {
     echo -e "${COLOR} Installing order ..."
     sleep 1
 	
+	echo -e ${COLOR} Install vim ${NC}		
+	sudo yum install -y vim	
+	
 	echo @### Install Git ###		
 	sudo yum install -y git	
 

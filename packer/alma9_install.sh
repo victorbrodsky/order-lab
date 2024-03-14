@@ -217,6 +217,9 @@ f_install_util () {
     echo "Installing util ..."
     sleep 1
 
+	echo -e ${COLOR} Install vim ${NC}		
+	sudo yum install -y vim	
+
 	echo -e ${COLOR} Install Git ${NC}		
 	sudo yum install -y git	
 	

@@ -114,6 +114,9 @@ f_start_all_httpd_test() {
 		#f_start_single_httpd $str
 	#done
 }
+f_replace() {
+	sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
+}
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
 	echo -e ${COLOR} f_test ${NC}
@@ -126,14 +129,17 @@ f_test () {
 	#f_start_all_httpd
 	
 	#for str in ${tenantsArrayTest[@]}; do
-	for str in "${tenantsArrayTest[@]}"; do
-		echo -e ${COLOR} Testing "$str" ${NC}
+	#for str in "${tenantsArrayTest[@]}"; do
+	#	echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
 		#don't use ""!
-		f_start_all_httpd_test $str
-	done
+	#	f_start_all_httpd_test $str
+	#done
+
+	f_replace tenantapp1 8085 c/wcm/pathology
 }
+
 
 
 
@@ -314,6 +320,7 @@ f_create_combined_certificate() {
 f_stop_httpd() {
 	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
+	sudo systemctl stop httpd.service
 	
 	echo -e ${COLOR} Disable ssl.conf ${NC}
 	sudo mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf_orig
@@ -391,7 +398,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
-		if true; then
+		if false; then
 			echo -e ${COLOR} True ${NC}
 			f_install_haproxy
 			f_create_order_instances
@@ -402,8 +409,8 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_all_httpd
 		else
 			echo -e ${COLOR} False ${NC}
-			#f_test
-			f_start_all_httpd
+			f_test
+			#f_start_all_httpd
 		fi
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
