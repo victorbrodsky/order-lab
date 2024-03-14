@@ -130,7 +130,7 @@ f_test () {
 		echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		f_start_all_httpd_test $str
+		f_start_all_httpd_test "$str"
 	done
 }
 
