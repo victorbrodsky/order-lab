@@ -344,7 +344,7 @@ f_start_all_httpd() {
 	
 	for str in ${tenantsArray[@]}; do
 		#echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd $str
+		f_start_single_httpd "$str"
 	done
 }
 
