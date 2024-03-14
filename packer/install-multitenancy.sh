@@ -197,7 +197,8 @@ f_create_single_order_instance () {
 	
 	#3) For each order instances set APP_SUBDIR
 	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
-	sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
+	#sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
+	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" /usr/local/bin/order-lab-"$1"/orderflex/.env
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
@@ -306,7 +307,8 @@ f_create_single_tenant_htppd() {
 		then
 			echo -e ${COLOR} Replace Alias url 'aliasurl' by "$3" ${NC}
 			#Alias /order /usr/local/bin/order-lab/orderflex/public/
-			sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
+			#sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
+			sed -i -e "s,aliasurl,$3,g" /etc/httpd/conf/"$1"-httpd.conf
 		else
 			echo -e ${COLOR} Alias url not provided "$3" ${NC}
 	fi	
@@ -399,7 +401,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
-		if false; then
+		if true; then
 			echo -e ${COLOR} True ${NC}
 			f_install_haproxy
 			f_create_order_instances
