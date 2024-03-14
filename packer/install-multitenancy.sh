@@ -99,7 +99,7 @@ tenantsArrayTest=(
 )
 
 f_start_all_httpd_test() {
-	echo -e ${COLOR} Start single httpd "$str" ${NC}
+	echo -e ${COLOR} String:["$str"] ${NC}
 	echo -e ${COLOR} First element ${NC}
 	echo $1
 	echo -e ${COLOR} Second element ${NC}
