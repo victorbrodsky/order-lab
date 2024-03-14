@@ -95,16 +95,25 @@ tenantsArray=(
 tenantsArrayTest=(
 	"homepagemanager 8081 " 
 	"tenantmanager 8082 tenant-manager"
+	"tenantappdemo 8083 c/demo-institution/demo-department"
 )
 
 f_start_all_httpd_test() {
+	echo -e ${COLOR} Start single httpd "$str" ${NC}
+	echo -e ${COLOR} First element ${NC}
+	echo $1
+	echo -e ${COLOR} Second element ${NC}
+	echo $2
+	echo -e ${COLOR} Third element ${NC}
+	echo $3
+	
 	#f_start_single_httpd "homepagemanager" 8081
-	for str in ${tenantsArrayTest[@]}; do
-		echo -e ${COLOR} Start single httpd "$str" ${NC}
+	#for str in ${tenantsArrayTest[@]}; do
+		#echo -e ${COLOR} Start single httpd "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		f_start_single_httpd $str
-	done
+		#f_start_single_httpd $str
+	#done
 }
 f_test () {
     #sed -i -e 's/^Listen/#&/' /etc/httpd/conf/"$1"-httpd.conf 
@@ -115,7 +124,14 @@ f_test () {
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
 	#f_start_all_httpd_test
-	f_start_all_httpd
+	#f_start_all_httpd
+	
+	for str in ${tenantsArrayTest[@]}; do
+		echo -e ${COLOR} Testing "$str" ${NC}
+		#f_start_single_httpd $str;shift
+		#f_start_single_httpd $str
+		f_start_all_httpd_test $str
+	done
 }
 
 #1) Install HAProxy
@@ -339,6 +355,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
+		if false; then
 		f_install_haproxy
 		f_create_order_instances
 		f_create_tenant_htppd
@@ -346,6 +363,9 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		f_start_haproxy
 		f_stop_httpd
 		f_start_all_httpd
+		else
+			f_test
+		fi
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
 fi
