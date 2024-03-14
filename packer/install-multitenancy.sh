@@ -122,7 +122,7 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	f_start_all_httpd_test tenantappdemo 8083 c/demo-institution/demo-department
+	#f_start_all_httpd_test tenantappdemo 8083 c/demo-institution/demo-department
 	#f_start_all_httpd
 	
 	#for str in ${tenantsArrayTest[@]}; do
