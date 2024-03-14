@@ -356,7 +356,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
 		if true; then
-		echo "True"
+		echo -e ${COLOR} True ${NC}
 		f_install_haproxy
 		f_create_order_instances
 		f_create_tenant_htppd
@@ -365,7 +365,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		f_stop_httpd
 		f_start_all_httpd
 		else
-			echo "False"
+			echo -e ${COLOR} False ${NC}
 			f_test
 		fi
 	else
