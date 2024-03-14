@@ -144,6 +144,19 @@ f_test () {
 
 }
 
+myFunction() {
+    echo "$1"
+    echo "$2"
+    echo "$3"
+}
+myParams=("firstString" "Hello World" "thirdString")
+for param in "${myParams[@]}"; do
+    myFunction "$param"
+done
+
+
+
+
 #1) Install HAProxy
 f_install_haproxy () {
 	echo -e ${COLOR} Install haproxy ${NC}
