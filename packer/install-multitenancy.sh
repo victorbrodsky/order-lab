@@ -92,7 +92,7 @@ tenantsArray=(
 	"tenantapp2 8086 c/wcm/psychiatry"
 )
 declare -a tenantsArrayTest=(
-	"homepagemanager 8081 " 
+	"homepagemanager 8081 "
 	"tenantmanager 8082 tenant-manager"
 	"tenantappdemo 8083 c/demo-institution/demo-department"
 )
