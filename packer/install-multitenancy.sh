@@ -115,6 +115,7 @@ f_start_all_httpd_test() {
 	#done
 }
 f_replace() {
+	echo -e ${COLOR} replace "$3" in /etc/httpd/conf/"$1"-httpd.conf  ${NC}
 	sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
 }
 f_test () {
