@@ -353,9 +353,9 @@ f_start_all_httpd() {
 	"tenantapptest 8084 c/test-institution/test-department"
 	"tenantapp1 8085 c/wcm/pathology"
 	"tenantapp2 8086 c/wcm/psychiatry"
-	f_start_single_httpd homepagemanager 8081
-	f_start_single_httpd tenantmanager 8082 tenant-manager
-	f_start_single_httpd tenantappdemo 8083 c/demo-institution/demo-department
+	f_start_single_httpd "homepagemanager" 8081
+	f_start_single_httpd "tenantmanager" 8082 "tenant-manager"
+	f_start_single_httpd "tenantappdemo" 8083 "c/demo-institution/demo-department"
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy
