@@ -123,15 +123,15 @@ f_test () {
 	#sed -i -e 's/^global/#&/' /etc/haproxy/haproxy.cfg
 	#sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
 	
-	#f_start_all_httpd_test
+	f_start_all_httpd_test tenantappdemo 8083 c/demo-institution/demo-department
 	#f_start_all_httpd
 	
-	for str in ${tenantsArrayTest[@]}; do
-		echo -e ${COLOR} Testing "$str" ${NC}
+	#for str in ${tenantsArrayTest[@]}; do
+		#echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		f_start_all_httpd_test "$str"
-	done
+		#f_start_all_httpd_test "$str"
+	#done
 }
 
 #1) Install HAProxy
