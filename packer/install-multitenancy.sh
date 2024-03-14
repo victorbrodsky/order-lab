@@ -81,6 +81,8 @@ echo multitenant=$multitenant
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
+#TODO: convert ../../ to a string without '/' in httpd config file name 
+#TODO: test if parameters can be provided to the functions as $1 $2 $3
 tenantsArray=(
 	"homepagemanager 8081 " 
 	"tenantmanager 8082 tenant-manager"
@@ -238,7 +240,6 @@ f_create_tenant_htppd() {
 	    echo -e ${COLOR} Create httpd: "$str" ${NC}
 		f_create_single_tenant_htppd $str
 	done
-	
 }
 f_create_single_tenant_htppd() {
 	echo -e ${COLOR} Create "$1"-httpd.conf ${NC}
