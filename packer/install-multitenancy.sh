@@ -93,8 +93,8 @@ tenantsArray=(
 )
 #declare -a 
 tenantsArrayTest=(
-	#"homepagemanager 8081 " 
-	#"tenantmanager 8082 tenant-manager"
+	"homepagemanager 8081 " 
+	"tenantmanager 8082 tenant-manager"
 	"tenantappdemo 8083 c/demo-institution/demo-department"
 )
 
@@ -127,7 +127,7 @@ f_test () {
 	#f_start_all_httpd
 	
 	#for str in ${tenantsArrayTest[@]}; do
-	for str in "$tenantsArrayTest"; do
+	for str in "${!tenantsArrayTest}"; do
 		#echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
