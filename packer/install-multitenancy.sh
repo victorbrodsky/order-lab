@@ -141,18 +141,7 @@ f_test () {
 	
 	#files=('foo bar' 'another file' file1 'file2')
 	#for f in "${files[@]}"; do file -- "$f"; done
-
 }
-
-myFunction() {
-    echo "$1"
-    echo "$2"
-    echo "$3"
-}
-myParams=("firstString" "Hello World" "thirdString")
-for param in "${myParams[@]}"; do
-    myFunction "$param"
-done
 
 
 
