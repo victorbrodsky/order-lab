@@ -309,6 +309,13 @@ f_stop_httpd() {
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 f_start_single_httpd() {
+	echo -e ${COLOR} First element ${NC}
+	echo $1
+	echo -e ${COLOR} Second element ${NC}
+	echo $2
+	echo -e ${COLOR} Third element ${NC}
+	echo $3
+	
 	sleep 3
 	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
@@ -336,7 +343,7 @@ f_start_all_httpd() {
 	#f_start_single_httpd "tenantmanager" 8082
 	
 	for str in ${tenantsArray[@]}; do
-		echo -e ${COLOR} Start single httpd "$str" ${NC}
+		#echo -e ${COLOR} Start single httpd "$str" ${NC}
 		f_start_single_httpd $str
 	done
 }
