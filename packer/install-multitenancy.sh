@@ -136,6 +136,7 @@ f_test () {
 	for ((i = 0; i < ${#tenantsArrayTest[@]}; i++))
 	do
 		echo "${tenantsArrayTest[$i]}"
+		f_start_all_httpd_test "${tenantsArrayTest[$i]}"
 	done
 	
 	#files=('foo bar' 'another file' file1 'file2')
