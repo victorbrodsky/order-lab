@@ -133,10 +133,13 @@ f_test () {
 		#f_start_all_httpd_test "$str"
 	#done
 	
-	for ((i = 0; i < ${#tenantsArrayTest[@]}; i++))
-	do
-		echo "${tenantsArrayTest[$i]}"
-	done
+	#for ((i = 0; i < ${#tenantsArrayTest[@]}; i++))
+	#do
+	#	echo "${tenantsArrayTest[$i]}"
+	#done
+	
+	files=('foo bar' 'another file' file1 'file2')
+	for f in "${files[@]}"; do file -- "$f"; done
 
 }
 
