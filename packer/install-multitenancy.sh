@@ -99,7 +99,7 @@ tenantsArrayTest=(
 )
 
 f_start_all_httpd_test() {
-	echo -e ${COLOR} String:"$str" ${NC}
+	#echo -e ${COLOR} String:"$str" ${NC}
 	echo -e ${COLOR} First element ${NC}
 	echo $1
 	echo -e ${COLOR} Second element ${NC}
@@ -127,11 +127,12 @@ f_test () {
 	#f_start_all_httpd
 	
 	#for str in ${tenantsArrayTest[@]}; do
+	for str in "$tenantsArrayTest"; do
 		#echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		#f_start_all_httpd_test "$str"
-	#done
+		f_start_all_httpd_test "$str"
+	done
 }
 
 #1) Install HAProxy
