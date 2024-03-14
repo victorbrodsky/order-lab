@@ -130,17 +130,9 @@ f_test () {
 		echo -e ${COLOR} Testing "$str" ${NC}
 		#f_start_single_httpd $str;shift
 		#f_start_single_httpd $str
-		f_start_all_httpd_test "$str"
+		#don't use ""!
+		f_start_all_httpd_test $str
 	done
-	
-	#for ((i = 0; i < ${#tenantsArrayTest[@]}; i++))
-	#do
-	#	echo "${tenantsArrayTest[$i]}"
-	#	f_start_all_httpd_test "${tenantsArrayTest[$i]}"
-	#done
-	
-	#files=('foo bar' 'another file' file1 'file2')
-	#for f in "${files[@]}"; do file -- "$f"; done
 }
 
 
@@ -378,7 +370,8 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_all_httpd
 		else
 			echo -e ${COLOR} False ${NC}
-			f_test
+			#f_test
+			f_start_all_httpd
 		fi
 	else
 		echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
