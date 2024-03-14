@@ -93,8 +93,8 @@ tenantsArray=(
 )
 #declare -a 
 tenantsArrayTest=(
-	"homepagemanager 8081 " 
-	"tenantmanager 8082 tenant-manager"
+	#"homepagemanager 8081 " 
+	#"tenantmanager 8082 tenant-manager"
 	"tenantappdemo 8083 c/demo-institution/demo-department"
 )
 
