@@ -342,10 +342,20 @@ f_start_all_httpd() {
 	#sleep 5  # Waits 5 seconds.
 	#f_start_single_httpd "tenantmanager" 8082
 	
-	for str in ${tenantsArray[@]}; do
-		#echo -e ${COLOR} Start single httpd "$str" ${NC}
-		f_start_single_httpd "$str"
-	done
+	#for str in ${tenantsArray[@]}; do
+	#	#echo -e ${COLOR} Start single httpd "$str" ${NC}
+	#	f_start_single_httpd "$str"
+	#done
+	
+	"homepagemanager 8081 " 
+	"tenantmanager 8082 tenant-manager"
+	"tenantappdemo 8083 c/demo-institution/demo-department"
+	"tenantapptest 8084 c/test-institution/test-department"
+	"tenantapp1 8085 c/wcm/pathology"
+	"tenantapp2 8086 c/wcm/psychiatry"
+	f_start_single_httpd homepagemanager 8081
+	f_start_single_httpd tenantmanager 8082 tenant-manager
+	f_start_single_httpd tenantappdemo 8083 c/demo-institution/demo-department
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy
