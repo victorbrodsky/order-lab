@@ -1,5 +1,8 @@
+#Configure Apache to Start on Boot 
+#/etc/systemd/system/httpd_custom.service
+
 [Unit]
-Description=The Apache HTTP Server Custom Instance
+Description=The Apache HTTP Server Custom Instance httpd_custom.conf
 After=network.target
 
 [Service]

@@ -312,6 +312,10 @@ f_create_single_tenant_htppd() {
 		else
 			echo -e ${COLOR} Alias url not provided "$3" ${NC}
 	fi	
+	
+	#Create httpd service
+	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/"$1"_httpd.service
+	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/"$1"_httpd.service
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
