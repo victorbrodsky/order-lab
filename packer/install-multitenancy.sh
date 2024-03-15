@@ -353,17 +353,17 @@ f_start_single_httpd() {
 	#sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 	
 	sleep 3
-	echo -e ${COLOR} Stop "$1"_httpd service for port "$2", url "$3" ${NC}
-	sudo systemctl stop "$1"_httpd
+	echo -e ${COLOR} Stop httpd"$1" service for port "$2", url "$3" ${NC}
+	sudo systemctl stop httpd"$1"
 	
 	sleep 3
-	echo -e ${COLOR} Start "$1"_httpd service for port "$2", url "$3" ${NC}
-	sudo systemctl start "$1"_httpd
+	echo -e ${COLOR} Start httpd"$1" service for port "$2", url "$3" ${NC}
+	sudo systemctl start httpd"$1"
 	
 	sleep 3
-	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2", url "$3" ${NC}
+	echo -e ${COLOR} Status httpd"$1" for port "$2", url "$3" ${NC}
 	sudo netstat -na | grep :"$2"
-	sudo systemctl status "$1"_httpd
+	sudo systemctl status httpd"$1"
 	
 	#Start /etc/httpd/conf/tenantmanager-httpd.conf 
 	#(98)Address already in use: AH00072: make_sock: could not bind to address [::]:8082
