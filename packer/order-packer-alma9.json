@@ -24,7 +24,8 @@
 			"bashdomainname=bash_domainname",
 			"bashsslcertificate=bash_sslcertificate",
 			"bashemail=bash_email",
-			"bashsshfingerprint=bash_sshfingerprint"
+			"bashsshfingerprint=bash_sshfingerprint",
+			"multitenant=bash_multitenant"
 		],
         "script": "alma9_install.sh"
     },
@@ -154,6 +155,21 @@
 			"echo @### Run script to install sshkey ###",
 			"bash /usr/local/bin/order-lab/packer/install_ssh.sh $bashsshfingerprint"
          ]
+	   },
+	   
+	   {
+		 "type": "shell",
+		 "max_retries": 1,
+		 "environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+			"multitenant=bash_multitenant"
+		 ],
+         "script": "install-multitenancy.sh"
 	   }
   ]
 

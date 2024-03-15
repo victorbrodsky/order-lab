@@ -162,6 +162,73 @@ f_install_postgresql15 () {
 	echo ""
     sleep 1
 }
+f_install_postgresql16 () {
+	#https://computingforgeeks.com/install-postgresql-server-on-rocky-almalinux/?expand_article=1
+    ########## INSTALL Postgresql ##########
+    echo -e "${COLOR} Installing Postgresql 16 ... ${NC}"
+    sleep 1
+
+	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	#sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	
+	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
+	sudo dnf -qy module disable postgresql
+	
+	#After repository has been added, list available repositories, update system and reboot
+	#echo @### List available repositories, update system ###	
+	#sudo dnf repolist -y
+	#sudo dnf -y update 
+	#sudo systemctl reboot
+	
+	echo @### Install postgresql 16 ###	
+	sudo dnf install -y postgresql16-server postgresql16
+
+	#echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#sudo yum install -y oidentd
+	#sudo dnf install -y authd
+	#sudo dnf install -y xinetd
+
+	echo @### Optionally initialize the database and enable automatic start ###	
+	sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
+	sudo systemctl enable postgresql-16
+	sudo systemctl start postgresql-16
+
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	sudo -Hiu postgres createdb scanorder
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	#echo @### Create system DB and create user $bashdbuser with password $bashdbpass###
+	#sudo -Hiu postgres createdb systemdb
+	#sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE systemdb to $bashdbuser"
+	
+	#Modify pg_hba.conf in /var/lib/pgsql/16/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/16/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/16/data/pg_hba.conf
+	
+	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/16/data/pg_hba.conf
+	
+	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/16/data/pg_hba.conf
+	
+	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/16/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/16/data/postgresql.conf
+	
+	echo -e ${COLOR} Set port ${NC}
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/16/data/postgresql.conf
+		
+	sudo systemctl restart postgresql-16
+	
+	echo ""
+    sleep 1
+}
 
 f_install_php82 () {
     ########## INSTALL PHP 8.2 ##########
@@ -203,6 +270,47 @@ f_install_php82 () {
 	
 	#echo -e  ${COLOR} export PATH ${NC}
 	#export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	
+	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	php -v
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	echo ""
+    sleep 1
+}
+f_install_php83 () {
+    ########## INSTALL PHP 8.3 ##########
+	#https://www.linkedin.com/pulse/how-install-php-82-alma-linux-8-spin-servers/
+    echo "Installing PHP 8.3 ..."
+    sleep 1
+
+	echo @### Install yum-utils and epel repository ###
+	sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+	sudo dnf -y install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+	echo @### PHP: update DNF cache ###
+	sudo dnf makecache -y
+
+	echo @### PHP: List the repositories to ensure they are installed using the command below ###
+	sudo dnf repolist
+
+	echo @### PHP: reset the default PHP module ###
+	sudo dnf module reset php -y
+	
+	echo @### PHP: Enable the PHP 8.3 REMI module ###
+	sudo dnf module install php:remi-8.3 -y
+	
+	echo @### PHP: Install PHP 8.3 ###
+	sudo dnf -y install php 
+	
+	echo @### PHP: list of all the installable PHP modules ###
+	php -m
+	
+	echo @### PHP: Install PHP modules ###
+	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
@@ -419,8 +527,10 @@ f_install_post() {
 
 f_update_os
 f_install_apache
-f_install_postgresql15
-f_install_php82
+#f_install_postgresql15
+f_install_postgresql16
+#f_install_php82
+f_install_php83
 f_install_util
 f_install_python3
 f_install_order
