@@ -316,10 +316,12 @@ f_create_single_tenant_htppd() {
 	fi	
 	
 	#Create httpd service
+	echo -e ${COLOR} Create httpd"$1".service for port "$2", url "$3" ${NC}
 	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
 	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/httpd"$1".service
+	echo -e ${COLOR} Enable httpd"$1".service for port "$2", url "$3" ${NC}
 	sudo systemctl enable httpd"$1"
-	sudo systemctl start httpd"$1"
+	#sudo systemctl start httpd"$1"
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
@@ -343,25 +345,25 @@ f_stop_httpd() {
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 f_start_single_httpd() {
-	#echo -e ${COLOR} First element ${NC}
-	#echo $1
-	#echo -e ${COLOR} Second element ${NC}
-	#echo $2
-	#echo -e ${COLOR} Third element ${NC}
-	#echo $3
+	#sleep 3
+	#echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
+	#sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
+	#sleep 3
+	#echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
+	#sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
 	
 	sleep 3
-	echo -e ${COLOR} Stop /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
-	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k stop
+	echo -e ${COLOR} Stop "$1"_httpd service for port "$2", url "$3" ${NC}
+	sudo systemctl stop "$1"_httpd
 	
 	sleep 3
-	echo -e ${COLOR} Start /etc/httpd/conf/"$1"-httpd.conf for port "$2", url "$3" ${NC}
-	sudo httpd -f /etc/httpd/conf/"$1"-httpd.conf -k start
+	echo -e ${COLOR} Start "$1"_httpd service for port "$2", url "$3" ${NC}
+	sudo systemctl start "$1"_httpd
 	
 	sleep 3
 	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo netstat -na | grep :"$2"
-	sudo systemctl start "$1"_httpd
+	sudo systemctl status "$1"_httpd
 	
 	#Start /etc/httpd/conf/tenantmanager-httpd.conf 
 	#(98)Address already in use: AH00072: make_sock: could not bind to address [::]:8082
@@ -382,12 +384,6 @@ f_start_all_httpd() {
 	#	f_start_single_httpd "$str"
 	#done
 	
-	#"homepagemanager 8081 " 
-	#"tenantmanager 8082 tenant-manager"
-	#"tenantappdemo 8083 c/demo-institution/demo-department"
-	#"tenantapptest 8084 c/test-institution/test-department"
-	#"tenantapp1 8085 c/wcm/pathology"
-	#"tenantapp2 8086 c/wcm/psychiatry"
 	f_start_single_httpd homepagemanager 8081
 	f_start_single_httpd tenantmanager 8082 tenant-manager
 	f_start_single_httpd tenantappdemo 8083 c/demo-institution/demo-department
