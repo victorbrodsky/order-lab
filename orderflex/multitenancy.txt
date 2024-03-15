@@ -468,5 +468,9 @@ sudo systemctl enable httpd1
 sudo systemctl start httpd1
 
 
-
+//Error on alma8
+[Fri Mar 15 19:44:22.040449 2024] [proxy:error] [pid 3556:tid 140394318767872] (2)No such file or directory: AH02454: FCGI: attempt to connect to Unix domain socket /run/php-fpm/www.sock (*) failed
+[Fri Mar 15 19:44:22.040491 2024] [proxy_fcgi:error] [pid 3556:tid 140394318767872] [client 142.117.240.36:58511] AH01079: failed to make connection to backend: httpd-UDS
+sudo service php-fpm start
+sudo service php-fpm status
 

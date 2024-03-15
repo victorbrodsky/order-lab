@@ -167,6 +167,12 @@ f_install_haproxy () {
 	#dotenv installed via: sudo yarn install --frozen-lockfile 
 	#echo -e ${COLOR} Install dotenv ${NC}
 	#sudo yarn add dotenv
+	
+	echo -e ${COLOR} Install netstat ${NC}
+	sudo yum install -y net-tools
+	
+	#Install firewall
+	#Enable ports
 }
 
 #2) Create order instances

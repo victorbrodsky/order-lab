@@ -312,6 +312,10 @@ f_install_php83 () {
 	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
 	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
+	echo @### PHP: Start php-fpm ###
+	sudo service php-fpm start
+	sudo service php-fpm status
+	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
 	
