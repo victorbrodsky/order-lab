@@ -280,6 +280,8 @@ f_create_tenant_htppd() {
 	f_create_single_tenant_htppd tenantapptest 8084 c/test-institution/test-department
 	f_create_single_tenant_htppd tenantapp1 8085 c/wcm/pathology
 	f_create_single_tenant_htppd tenantapp2 8086 c/wcm/psychiatry
+	
+	sudo systemctl daemon-reload
 }
 f_create_single_tenant_htppd() {
 	echo -e ${COLOR} Create "$1"-httpd.conf ${NC}
@@ -314,8 +316,10 @@ f_create_single_tenant_htppd() {
 	fi	
 	
 	#Create httpd service
-	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/"$1"_httpd.service
-	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/"$1"_httpd.service
+	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
+	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/httpd"$1".service
+	sudo systemctl enable httpd"$1"
+	sudo systemctl start httpd"$1"
 }
 
 #5) Create combined certificate and key order-ssl.com.pem
@@ -357,6 +361,7 @@ f_start_single_httpd() {
 	sleep 3
 	echo -e ${COLOR} Status "$1"-httpd.conf for port "$2", url "$3" ${NC}
 	sudo netstat -na | grep :"$2"
+	sudo systemctl start "$1"_httpd
 	
 	#Start /etc/httpd/conf/tenantmanager-httpd.conf 
 	#(98)Address already in use: AH00072: make_sock: could not bind to address [::]:8082

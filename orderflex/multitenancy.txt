@@ -464,5 +464,9 @@ Create another service file `/etc/systemd/system/httpd2.service` for the second 
 Reload the systemd daemon:
 sudo systemctl daemon-reload
 
+sudo systemctl enable httpd1
+sudo systemctl start httpd1
+
+
 
 
