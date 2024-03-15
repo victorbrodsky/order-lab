@@ -1,0 +1,13 @@
+[Unit]
+Description=The Apache HTTP Server Custom Instance
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/httpd -f /etc/httpd/conf/httpd_custom.conf -k start
+ExecReload=/usr/sbin/httpd -f /etc/httpd/conf/httpd_custom.conf -k graceful
+ExecStop=/usr/sbin/httpd -f /etc/httpd/conf/httpd_custom.conf -k stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -321,6 +321,10 @@ f_create_combined_certificate() {
 }
 
 f_stop_httpd() {
+	echo -e ${COLOR} Mask httpd service i.e. completely disable it so that no other service can activate httpd ${NC}
+	sudo systemctl mask httpd
+	sudo systemctl disable httpd
+	
 	echo -e ${COLOR} Stop default /etc/httpd/conf/httpd.conf ${NC}
 	sudo httpd -f /etc/httpd/conf/httpd.conf -k stop
 	sudo systemctl stop httpd.service

@@ -428,3 +428,41 @@ backend tenant_app2_backend
     server tenant_app2_server 159.203.95.150:8086 check
 
 /////////////// EOF HAProxy config ///////////////
+
+Problem: after Gracefully shutting down droplet...
+httpd.service is running, httpd custom not running, haproxy is not running (because httpd.service is running)
+sudo systemctl status httpd.service
+sudo systemctl stop httpd.service
+
+sudo httpd -f /etc/httpd/conf/tenantmanager-httpd.conf -k start
+sudo httpd -f /etc/httpd/conf/tenantmanager-httpd.conf -k stop
+sudo netstat -na | grep :8082
+
+vim /etc/haproxy/haproxy.cfg
+sudo systemctl restart haproxy
+sudo systemctl status haproxy
+
+
+### 5. Configure Apache to Start on Boot
+Since you're running multiple instances manually, you'll need to create custom systemd service files to manage them.
+Create a new service file `/etc/systemd/system/httpd1.service`:
+[Unit]
+Description=The Apache HTTP Server First Instance
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k start
+ExecReload=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k graceful
+ExecStop=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+Create another service file `/etc/systemd/system/httpd2.service` for the second instance (change the `httpd1.conf` to `httpd2.conf`).
+Reload the systemd daemon:
+sudo systemctl daemon-reload
+
+
+
