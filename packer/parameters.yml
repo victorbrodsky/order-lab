@@ -9,12 +9,12 @@ parameters:
     database_user: bash_dbuser
     database_password: bash_dbpass
     #systemdb DB
-    database_driver_systemdb: pdo_pgsql
-    database_host_systemdb: localhost
-    database_port_systemdb: 5432
-    database_name_systemdb: systemdb
-    database_user_systemdb: bash_dbuser
-    database_password_systemdb: bash_dbpass
+    #database_driver_systemdb: pdo_pgsql
+    #database_host_systemdb: localhost
+    #database_port_systemdb: 5432
+    #database_name_systemdb: systemdb
+    #database_user_systemdb: bash_dbuser
+    #database_password_systemdb: bash_dbpass
     #external DB
     database_driver_external: pdo_sqlsrv
     database_host_external: null

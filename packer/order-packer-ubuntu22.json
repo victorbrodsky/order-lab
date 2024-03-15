@@ -92,13 +92,13 @@
 		   "echo @### PostgreSQL Version end of installation ###",
 		   "echo @### Check OS Info end of installation ###",
 		   "sudo hostnamectl",		   
-		   "psql --version",
+		   "psql --version"
 		   
-		   "echo @### Create system DB ###",
-		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
-		   "php bin/console doctrine:database:create --connection=systemdb",
-		   "php bin/console doctrine:schema:update --em=systemdb --complete --force",
-		   "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh"
+		   #"echo @### Create system DB ###",
+		   #"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+		   #"php bin/console doctrine:database:create --connection=systemdb",
+		   #"php bin/console doctrine:schema:update --em=systemdb --complete --force",
+		   #"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh"
          ]    
       },
 
