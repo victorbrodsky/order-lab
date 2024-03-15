@@ -117,7 +117,7 @@ f_install_postgresql15 () {
 	#sudo dnf install -y authd
 	#sudo dnf install -y xinetd
 
-	echo @### Optionally initialize the database and enable automatic start ###	
+	echo @### Optionally initialize the database postgresql-15 and enable automatic start ###	
 	sudo /usr/pgsql-15/bin/postgresql-15-setup initdb
 	sudo systemctl enable postgresql-15
 	sudo systemctl start postgresql-15
@@ -177,7 +177,7 @@ f_install_postgresql16 () {
 	#sudo dnf install -y authd
 	#sudo dnf install -y xinetd
 
-	echo @### Optionally initialize the database and enable automatic start ###	
+	echo @### Optionally initialize the database postgresql-16 and enable automatic start ###	
 	sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
 	sudo systemctl enable postgresql-16
 	sudo systemctl start postgresql-16
