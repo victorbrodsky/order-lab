@@ -126,10 +126,6 @@
 		   "bash /usr/local/bin/order-lab/packer/additional.sh",
 		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",		
-
-		   #"echo @### Create system DB ###",
-		   #"php bin/console doctrine:database:create --connection=systemdb",
-		   #"php bin/console doctrine:schema:update --em=systemdb --complete --force",
 		   
 		   "echo @### Check OS Info before deploy_prod.sh -withdb ###",
 		   "sudo hostnamectl",
