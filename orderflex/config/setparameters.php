@@ -157,7 +157,8 @@ if( !$conn ) {
             $dbname = $conn->getDatabase();
         } catch (Exception $e) {
             //exit('NO');
-            echo "<br>*** siteparameters.php: Failed to connect to default Database ***\n\r" . $e->getMessage() . "<br>";
+            echo "<br>*** siteparameters.php: Failed to connect to default Database. DB has not been created yet, use default site settings. ***\n\r" . "<br>";
+            //echo "<br>*** siteparameters.php: Ignore the following error message ***\n\r" . $e->getMessage() . "<br>";
             $conn = null;
         }
     } else {

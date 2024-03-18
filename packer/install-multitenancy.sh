@@ -245,7 +245,6 @@ f_create_single_order_instance () {
 	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
 	
 	echo -e ${COLOR} Create and update DB for order-lab-"$1" ${NC}
-	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
 	pwd
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:database:create
 	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
