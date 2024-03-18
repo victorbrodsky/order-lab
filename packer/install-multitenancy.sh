@@ -404,6 +404,8 @@ f_start_haproxy() {
 	
 	echo -e ${COLOR} Status haproxy ${NC}
 	sudo systemctl status haproxy
+	echo -e ${COLOR} Status haproxy: ournalctl -xeu haproxy.service ${NC}
+	sudo journalctl -xeu haproxy.service
 }
 
 function changedir() {

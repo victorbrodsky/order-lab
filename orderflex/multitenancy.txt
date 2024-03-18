@@ -474,3 +474,5 @@ sudo systemctl start httpd1
 sudo service php-fpm start
 sudo service php-fpm status
 
+cat /etc/os-release
+
