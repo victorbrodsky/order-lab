@@ -16,7 +16,7 @@
  */
 
 require 'base.php';
-require 'multitenancy.php';
+//require 'multitenancy.php';
 
 echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 
@@ -225,7 +225,7 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 $container->setParameter('mailer_dsn', "null://null");
 
 //Set default container parameters for multitenancy
-initRequiredMultitenancy($container);
+#initRequiredMultitenancy($container);
 
 //Enable system DB
 //checkAndEnableSystemDB($container, $conn);
@@ -305,7 +305,7 @@ if( $conn ) {
     //echo "DB name=".$conn->getDatabase()."<br>";
     echo "*** siteparameters.php: Connection to DB established. DB name=[".$conn->getDatabase()."] ***\n";
     #echo "<br>*** systemdb=[".$container->getParameter('systemdb')."] ***\n<br>";
-    echo "<br>*** multilocales=[".$container->getParameter('multilocales')."] ***\n<br>";
+    #echo "<br>*** multilocales=[".$container->getParameter('multilocales')."] ***\n<br>";
 
     //TODO: if system DB exists but 'user_siteparameters' table does not exists => init system DB
     //1) by this script
@@ -571,7 +571,7 @@ if( $conn ) {
             }
 
             //Set default container parameters for multitenancy
-            setRequiredMultitenancyByDB($container, $conn, $row);
+            //setRequiredMultitenancyByDB($container, $conn, $row);
 
         } else {
             echo "*** siteparameters.php: DB is empty. Do not overwrite container's parameters ***\n";
@@ -595,5 +595,5 @@ echo "1 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>"
 \Symfony\Component\Intl\Locale::setDefault('en');
 echo "2 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
 
-printSettings($container);
+#printSettings($container);
 

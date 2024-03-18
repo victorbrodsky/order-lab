@@ -729,15 +729,15 @@ class SiteParametersController extends OrderAbstractController
         }
 
         //only if local is system
-        $locale = $request->getLocale();
-        //exit('$locale='.$locale);
-        if( $locale != "system" ) {
-            $this->addFlash(
-                'warning',
-                "Tenancy settings is accessible only for system database. Please relogin to /system"
-            );
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
+//        $locale = $request->getLocale();
+//        //exit('$locale='.$locale);
+//        if( $locale != "system" ) {
+//            $this->addFlash(
+//                'warning',
+//                "Tenancy settings is accessible only for system database. Please relogin to /system"
+//            );
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

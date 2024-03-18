@@ -184,7 +184,7 @@
                 <input type="hidden" id="user-preferences-tooltip" value="{{ user_security_utility.getTooltip(app.user) }}" />
             {% endif %}
             {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
-            <input type="hidden" id="tenantprefix" value="{{ app.request.locale }}" />
+            {#<input type="hidden" id="tenantprefix" value="{{ app.request.locale }}" />#}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
             <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />

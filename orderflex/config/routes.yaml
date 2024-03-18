@@ -1,9 +1,9 @@
 
 #This will call App\Routing: CustomTenancyLoader
-_custom_routes:
-    resource: .
-    type:     custom
+#_custom_routes:
+#    resource: .
+#    type:     custom
 
-#ProjectBaseBundle_default:
-#    resource: 'routes-default.yaml'
-#    schemes:  ['%connection_channel%']
+ProjectBaseBundle_default:
+    resource: 'routes-default.yaml'
+    schemes:  ['%connection_channel%']

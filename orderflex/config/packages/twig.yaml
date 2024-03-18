@@ -23,7 +23,7 @@ twig:
         #check container parameter: php bin/console debug:container --parameter tenantprefix
         #tenantprefix is used by JS getCommonBaseUrl
         #tenantprefix: '%tenantprefix%'
-        tenantprefix: '%tenantprefix%'
+        #tenantprefix: '%tenantprefix%'
 
         institution_url: '%institution_url%'
         institution_name: '%institution_name%'

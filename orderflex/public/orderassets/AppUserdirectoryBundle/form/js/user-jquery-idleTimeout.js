@@ -202,8 +202,8 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //var keepaliveUrl = Routing.generate('keepalive',{tenantprefix: 'pathology'});
     //console.log("testing keepaliveUrl="+keepaliveUrl);
 
-    var tenantprefix = $('#tenantprefix').val();
-    console.log('Routing.generate tenantprefix='+tenantprefix);
+    //var tenantprefix = $('#tenantprefix').val();
+    //console.log('Routing.generate tenantprefix='+tenantprefix);
 
     //var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{'_locale': tenantprefix, url: thisUrl});
     var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout_ref',{url: thisUrl});

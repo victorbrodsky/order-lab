@@ -18,7 +18,7 @@
  * Created by oli2002 on 9/3/14.
  */
 
-var _tenantprefix = $("#tenantprefix").val();
+//var _tenantprefix = $("#tenantprefix").val();
 var _cycleShow = false;
 var _sitename = "";
 var asyncflag = true;
@@ -593,7 +593,7 @@ function getCommonBaseUrl(link,sitename) {
 
     //get tenantprefix from container
     //_tenantprefix = ''; //testing
-    console.log("_tenantprefix="+_tenantprefix);
+    //console.log("_tenantprefix="+_tenantprefix);
     //Get the tenantprefix from the URL
     // /order/index_dev.php/c/lmh/pathology/fellowship-applications/interview-modal/1575
     //Or get it using ajax call to the server to get tenantprefix from the container
@@ -602,11 +602,11 @@ function getCommonBaseUrl(link,sitename) {
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        if( _tenantprefix ) {
-            urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
-        } else {
+        //if( _tenantprefix ) {
+        //    urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
+        //} else {
             urlBase = scheme + "//" + urlBase + "/" + prefix + "/" + link;
-        }
+        //}
         //urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + prefix + "/" + link;
     }
 
