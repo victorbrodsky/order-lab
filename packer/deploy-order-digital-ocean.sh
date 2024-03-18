@@ -502,7 +502,7 @@ mv ./sshkey.pub ./sshkey-"$curr_dt".pub
 #exit
 ###### EOF Run install-certbot.sh on the droplet ######
 
-
+DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/"
 # '! -z' === '-n': -n has value; -z - is empty
 # url /directory/admin/first-time-login-generation-init/https might not work if certificate is not installed correctly,
 # because will set scheme (connection-channel) to https and run deploy script.
