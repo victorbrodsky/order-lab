@@ -402,12 +402,16 @@ f_start_all_httpd() {
 
 #7) Start HAProxy: sudo systemctl restart haproxy
 f_start_haproxy() {
+	#TODO: haproxy is not started?!
+	echo -e ${COLOR} Enable haproxy ${NC}
+	sudo systemctl enable haproxy
+	
 	echo -e ${COLOR} Start haproxy ${NC}
 	sudo systemctl restart haproxy
 	
 	echo -e ${COLOR} Status haproxy ${NC}
 	sudo systemctl status haproxy
-	echo -e ${COLOR} Status haproxy: ournalctl -xeu haproxy.service ${NC}
+	echo -e ${COLOR} Status haproxy: journalctl -xeu haproxy.service ${NC}
 	sudo journalctl -xeu haproxy.service
 }
 
