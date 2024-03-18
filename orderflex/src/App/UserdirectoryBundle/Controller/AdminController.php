@@ -1336,6 +1336,18 @@ class AdminController extends OrderAbstractController
             //"ROLE_BANNED" => "Banned user for all sites",                 //general super admin role for all sites
             //"ROLE_UNAPPROVED" => "Unapproved User",                       //general unapproved user
 
+            "ROLE_SUPER_ADMIN" => array(
+                "Super User",
+                "Access to the tenant manager",
+                //"Access to the tenant manager and homepage manager",
+                100
+            ),
+            "ROLE_SUPER_DEPUTY_ADMIN" => array(
+                "Deputy Super User",
+                'The same as "Super User" role',
+                100
+            ),
+
             //ROLE_TESTER
             "ROLE_TESTER" => array(
                 "Tester",

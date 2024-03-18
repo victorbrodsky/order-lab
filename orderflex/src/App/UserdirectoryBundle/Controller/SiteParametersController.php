@@ -724,7 +724,7 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SUPER_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -738,10 +738,6 @@ class SiteParametersController extends OrderAbstractController
 //            );
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
-
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
@@ -807,7 +803,7 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
     {
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SUPER_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

@@ -162,6 +162,9 @@ f_install_haproxy () {
 			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
 			sed -i -e 's/^\s*bind \*:443/#&/' /etc/haproxy/haproxy.cfg
 	fi	
+	
+	echo -e ${COLOR} Adding new line to haproxy to prevent 'Missing LF on last line' ${NC}
+	echo "" >> /etc/haproxy/haproxy.cfg
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
 	#dotenv installed via: sudo yarn install --frozen-lockfile 

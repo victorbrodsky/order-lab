@@ -179,9 +179,9 @@ security:
         #ROLE_TRANSRES_IRB_REVIEWER_USCAP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_IRB_REVIEWER]
         #ROLE_TRANSRES_ADMIN_USCAP: [ROLE_TRANSRES_IRB_REVIEWER_USCAP]
 
-#"System Administrator" and "Deputy System Administrator"
-        ROLE_SYSTEM_DEPUTY_ADMIN: [ROLE_SYSTEM_USER]
-        ROLE_SYSTEM_ADMIN: [ROLE_SYSTEM_DEPUTY_ADMIN]
+        #"System Administrator" and "Deputy System Administrator"
+        #ROLE_SYSTEM_DEPUTY_ADMIN: [ROLE_SYSTEM_USER]
+        #ROLE_SYSTEM_ADMIN: [ROLE_SYSTEM_DEPUTY_ADMIN]
 
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
         #impersonate user: ?_switch_user=thomas
@@ -192,13 +192,12 @@ security:
                                     ROLE_TRANSRES_ADMIN, ROLE_TRANSRES_ADMIN_APCP, ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY,
                                     ROLE_TRANSRES_ADMIN_COVID19, ROLE_TRANSRES_ADMIN_MISI, ROLE_TRANSRES_ADMIN_USCAP,
                                     ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER,
-                                    ROLE_DASHBOARD_ADMIN,
-                                    ROLE_SYSTEM_ADMIN, ROLE_SYSTEM_DEPUTY_ADMIN]
+                                    ROLE_DASHBOARD_ADMIN]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
         #"System Administrator" and "Deputy System Administrator"
-        #ROLE_SYSTEM_DEPUTY_ADMIN: [ROLE_SYSTEM_USER, ROLE_PLATFORM_DEPUTY_ADMIN]
-        #ROLE_SYSTEM_ADMIN: [ROLE_SYSTEM_DEPUTY_ADMIN]
+        ROLE_SUPER_DEPUTY_ADMIN: []
+        ROLE_SUPER_ADMIN: [ROLE_SUPER_DEPUTY_ADMIN]
 
 
     providers:
