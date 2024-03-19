@@ -18,7 +18,8 @@ class CalllogTest extends WebTestBase
         //$phpVersion = phpversion();
         //echo "[Calllog,PHP=".$phpVersion."]";
         echo "[Calllog]";
-        
+
+        $this->client->followRedirects();
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'call-log-book/login');
 
