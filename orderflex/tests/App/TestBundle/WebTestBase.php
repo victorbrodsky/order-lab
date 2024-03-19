@@ -252,6 +252,12 @@ class WebTestBase extends WebTestCase
         $userSecUtil = $this->testContainer->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
+        $users = $this->em->getRepository(User::class)->all();
+        echo "[user count=".count($users)."]\n";
+        foreach($users as $user) {
+            echo "[user=$user]\n";
+        }
+
         if( !$systemUser ) {
             echo "[systemUser 1 not found]";
             $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('Administrator');
