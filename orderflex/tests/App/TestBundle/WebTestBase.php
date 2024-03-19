@@ -255,7 +255,7 @@ class WebTestBase extends WebTestCase
         $systemUser = $userSecUtil->findSystemUser();
 
         $dbName = $this->em->getConnection()->getDatabase();
-        echo "[DB Name=".$dbName."]\n";
+        //echo "[DB Name=".$dbName."]\n";
 
         //$users = $this->em->getRepository(User::class)->findAll();
         //echo "[user count=".count($users)."]\n";
@@ -264,16 +264,16 @@ class WebTestBase extends WebTestCase
         //}
 
         if( !$systemUser ) {
-            echo "[systemUser 1 not found]";
+            //echo "[systemUser 1 not found]";
             $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('Administrator');
         }
 
         if( !$systemUser ) {
-            echo "[systemUser 2 not found]";
+            //echo "[systemUser 2 not found]";
             $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('administrator');
         }
 
-        echo "[systemUser=$systemUser]";
+        //echo "[systemUser=$systemUser]";
 
         return $systemUser;
     }

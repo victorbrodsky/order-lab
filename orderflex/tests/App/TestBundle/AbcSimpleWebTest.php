@@ -87,7 +87,7 @@ class AbcSimpleWebTest extends WebTestBase
         $userServiceUtil = $this->testContainer->get('user_service_utility');
         echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
-        $this->client->followRedirects();
+        //$this->client->followRedirects();
         $loginUrl = '/'.$this->tenantprefix.'directory/login';
         $crawler = $this->client->request('GET', $loginUrl);
         echo '[login url='.$loginUrl."]";
