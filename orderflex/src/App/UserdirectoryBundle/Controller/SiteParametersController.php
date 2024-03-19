@@ -724,7 +724,24 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
-        if( false === $this->isGranted('ROLE_SUPER_DEPUTY_ADMIN') ) {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -805,7 +822,21 @@ class SiteParametersController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
     {
-        if( false === $this->isGranted('ROLE_SUPER_DEPUTY_ADMIN') ) {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from the tenant manager system."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
