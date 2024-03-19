@@ -216,6 +216,9 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
 	sed -i -e "s/database_name: scanorder/database_name: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
 	
+	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
+	sed -i -e "s/tenant_role: null/tenant_role: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
+	
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
 	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
