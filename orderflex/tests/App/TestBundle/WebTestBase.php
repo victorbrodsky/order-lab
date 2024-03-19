@@ -100,8 +100,9 @@ class WebTestBase extends WebTestCase
 
 
         //Set tenantid in the url
-        $this->tenantprefix = $this->testContainer->getParameter('defaultlocale');
+        //$this->tenantprefix = $this->testContainer->getParameter('defaultlocale');
         //$this->tenantprefix = 'c/lmh/pathology/';
+        $this->tenantprefix = '';
         if( $this->tenantprefix ) {
             $this->tenantprefix = $this->tenantprefix . "/";
             $this->client->request('GET', $this->tenantprefix);
