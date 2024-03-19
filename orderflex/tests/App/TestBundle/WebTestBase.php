@@ -241,6 +241,7 @@ class WebTestBase extends WebTestCase
             'HTTPS' => $httpsChannel
         ]);
 
+        //Add follow redirect. Required when using HAproxy
         $client->followRedirects();
 
         $this->client = $client;

@@ -801,6 +801,7 @@ class UserServiceUtil {
         return $href;
     }
 
+    //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once
     //Get single or generate SettingParameter (Singleton)
     public function getSingleSiteSettingParameter() {
         $entities = $this->em->getRepository(SiteParameters::class)->findAll();
@@ -4844,8 +4845,9 @@ Pathology and Laboratory Medicine",
     public function isDbInitialized( $locale=null ) {
         //echo "isDbInitialized: locale=".$locale."<br>";
         if( !$locale ) {
-            $userSecUtil = $this->container->get('user_security_utility');
-            $param = $userSecUtil->getSingleSiteSettingsParam();
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$param = $userSecUtil->getSingleSiteSettingsParam();
+            $param = $this->getSingleSiteSettingParameter();
             if( $param ) {
                 $initialConfigurationCompleted = $param->getInitialConfigurationCompleted();
                 //echo '$initialConfigurationCompleted='.$initialConfigurationCompleted."<br>";

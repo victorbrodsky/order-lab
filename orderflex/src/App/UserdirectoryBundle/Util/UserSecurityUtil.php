@@ -126,45 +126,48 @@ class UserSecurityUtil {
     }
 
     //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once
-    public function getSingleSiteSettingsParam() {
-        if( $this->siteSettingsParam === null ) {
-
-            //$this->initCountTest++;
-            //echo "initCountTest=".$this->initCountTest."<br>";
-
-            //$params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-            $dbName = $this->em->getConnection()->getDatabase();
-            $logger = $this->container->get('logger');
-            //$logger->notice("getSingleSiteSettingsParam: dbName=[$dbName]");
-
-            //doctrine Deprecate short namespace aliases
-            $params = $this->em->getRepository(SiteParameters::class)->findAll();
-            //echo "params count=".count($params)."<br>";
-
-            if (count($params) == 0) {
-                //return -1;
-                return null;
-                //return "[Site Settings is not initialized]";
-            }
-
-            if (count($params) > 1) {
-                $logger = $this->container->get('logger');
-                $msg = 'getSingleSiteSettingsParam: Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
-                $logger->error($msg);
-                exit($msg);
-                //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-            }
-
-            //$param = $params[0];
-            $this->siteSettingsParam = $params[0];
-        }
-
-        if( $this->siteSettingsParam === null ) {
-            return null;
-        }
-
-        return $this->siteSettingsParam;
-    }
+    //Deprecated, use $userServiceUtil->getSingleSiteSettingParameter()
+//    public function getSingleSiteSettingsParam() {
+//        if( $this->siteSettingsParam === null ) {
+//
+//            //$this->initCountTest++;
+//            //echo "initCountTest=".$this->initCountTest."<br>";
+//
+//            //$params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//            //$dbName = $this->em->getConnection()->getDatabase();
+//            $logger = $this->container->get('logger');
+//            //$logger->notice("getSingleSiteSettingsParam: dbName=[$dbName]");
+//
+//            //doctrine Deprecate short namespace aliases
+//            $params = $this->em->getRepository(SiteParameters::class)->findAll();
+//            //echo "params count=".count($params)."<br>";
+//
+//            if (count($params) == 0) {
+//                //return -1;
+//                return null;
+//                //return "[Site Settings is not initialized]";
+//            }
+//
+//            if (count($params) > 1) {
+//                $logger = $this->container->get('logger');
+//                $msg = 'getSingleSiteSettingsParam: Must have only one parameter object. Found ' .
+//                    count($params) .
+//                    ' object(s). Please follow the initialization instructions.';
+//                $logger->error($msg);
+//                exit($msg);
+//                //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//
+//            //$param = $params[0];
+//            $this->siteSettingsParam = $params[0];
+//        }
+//
+//        if( $this->siteSettingsParam === null ) {
+//            return null;
+//        }
+//
+//        return $this->siteSettingsParam;
+//    }
 
     public function isCurrentUser( $id ) {
 
@@ -1729,8 +1732,10 @@ class UserSecurityUtil {
 //            $this->siteSettingsParam = $params[0];
 //        }
 
-        $param = $this->getSingleSiteSettingsParam();
+        //$param = $this->getSingleSiteSettingsParam();
         //$param = $this->siteSettingsParam;
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
 
         if( $param === null ) {
             return null;
@@ -1948,8 +1953,11 @@ class UserSecurityUtil {
 //
 //        $param = $params[0];
 
-        $param = $this->getSingleSiteSettingsParam();
+        //$param = $this->getSingleSiteSettingsParam();
         //$param = $this->siteSettingsParam;
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+
         if( !$param ) {
             $res = array(
                 'maxIdleTime' => 1800,

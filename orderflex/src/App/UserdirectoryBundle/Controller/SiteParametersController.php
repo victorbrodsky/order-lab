@@ -740,8 +740,10 @@ class SiteParametersController extends OrderAbstractController
 //        }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $siteParam = $userSecUtil->getSingleSiteSettingsParam();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$siteParam = $userSecUtil->getSingleSiteSettingsParam();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $siteParam = $userServiceUtil->getSingleSiteSettingParameter();
 
         if( !$siteParam ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');

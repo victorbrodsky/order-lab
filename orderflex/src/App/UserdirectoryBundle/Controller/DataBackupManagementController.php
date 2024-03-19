@@ -112,7 +112,8 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees_home'));
         }
 
-        $param = $userSecUtil->getSingleSiteSettingsParam();
+        //$param = $userSecUtil->getSingleSiteSettingsParam();
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
         if( !$param ) {
             $this->addFlash(
                 'pnotify-error',
@@ -403,8 +404,10 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $param = $userSecUtil->getSingleSiteSettingsParam();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$param = $userSecUtil->getSingleSiteSettingsParam();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
 
         if( $status == 'enable' ) {
             $param->setMaintenance(true);
@@ -634,7 +637,9 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $resStatus == 'OK' ) {
 
-            $param = $userSecUtil->getSingleSiteSettingsParam();
+            //$param = $userSecUtil->getSingleSiteSettingsParam();
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $param = $userServiceUtil->getSingleSiteSettingParameter();
             $logger->notice("After get settings parameters. paramId=" . $param->getId());
 
             if( $param && $param->getId() ) {

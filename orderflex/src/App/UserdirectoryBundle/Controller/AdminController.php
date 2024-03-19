@@ -209,6 +209,7 @@ class AdminController extends OrderAbstractController
     {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->container->get('user_service_utility');
         $users = $roles = $em->getRepository(User::class)->findAll();
         $logger->notice('firstTimeLoginGenerationAction: users='.count($users));
 
@@ -231,7 +232,7 @@ class AdminController extends OrderAbstractController
 
                 $this->generateSitenameList(null);
 
-                $userSecUtil = $this->container->get('user_security_utility');
+                //$userSecUtil = $this->container->get('user_security_utility');
                 $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
                 //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
                 $systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
@@ -252,19 +253,34 @@ class AdminController extends OrderAbstractController
             $adminRes = $this->generateAdministratorAction(true);
             $logger->notice('Finished generate AdministratorAction. adminRes='.$adminRes);
 
+            //generate multitenancy parameters (SERVER ROLE AND NETWORK ACCESS, etc)
+            $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
+            $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
+            $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
+            $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+            $logger->notice('Finished generate multitenancy parameters. '.
+                'generateAuthUserGroupList='.$count_generateAuthUserGroupList.
+                '; generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.
+                '; generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.
+                '; generateHostedUserGroupList='.$count_generateHostedUserGroupList
+            );
+
             if( $request->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
-                $entities = $em->getRepository(SiteParameters::class)->findAll();
-                if (count($entities) != 1) {
-                    $userServiceUtil = $this->container->get('user_service_utility');
-                    $userServiceUtil->generateSiteParameters();
-                    $entities = $em->getRepository(SiteParameters::class)->findAll();
-                }
-                if (count($entities) != 1) {
-                    exit('Must have only one SiteParameters object. Found ' . count($entities) . ' object(s)');
-                    //throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
-                }
-                $entity = $entities[0];
+//                $entities = $em->getRepository(SiteParameters::class)->findAll();
+//                if (count($entities) != 1) {
+//                    $userServiceUtil = $this->container->get('user_service_utility');
+//                    $userServiceUtil->generateSiteParameters();
+//                    $entities = $em->getRepository(SiteParameters::class)->findAll();
+//                }
+//                if (count($entities) != 1) {
+//                    exit('Must have only one SiteParameters object. Found ' . count($entities) . ' object(s)');
+//                    //throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
+//                }
+//                $entity = $entities[0];
+                //getSingleSiteSettingsParam();
+                //Get single or generate SettingParameter (Singleton)
+                $entity = $userServiceUtil->getSingleSiteSettingParameter();
                 $entity->setConnectionChannel("https");
                 //$em->flush($entity);
                 $em->flush();

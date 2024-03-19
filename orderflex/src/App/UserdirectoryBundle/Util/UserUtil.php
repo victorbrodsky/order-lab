@@ -865,13 +865,13 @@ class UserUtil {
             return $duser;
         }
 
-        $siteParameters = $this->em->getRepository(SiteParameters::class)->findAll();
-
-        if( count($siteParameters) != 1 ) {
-            throw new \Exception( 'populateDefaultUserFields: Must have only one parameter object. Found '.count($siteParameters).'object(s)' );
-        }
-
-        $siteParameter = $siteParameters[0];
+//        $siteParameters = $this->em->getRepository(SiteParameters::class)->findAll();
+//        if( count($siteParameters) != 1 ) {
+//            throw new \Exception( 'populateDefaultUserFields: Must have only one parameter object. Found '.count($siteParameters).'object(s)' );
+//        }
+//        $siteParameter = $siteParameters[0];
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $siteParameter = $userServiceUtil->getSingleSiteSettingParameter();
 
         $organizationalGroupDefaults = $siteParameter->getOrganizationalGroupDefaults();
 
