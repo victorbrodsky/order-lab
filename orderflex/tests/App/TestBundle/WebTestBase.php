@@ -253,12 +253,16 @@ class WebTestBase extends WebTestCase
         $systemUser = $userSecUtil->findSystemUser();
 
         if( !$systemUser ) {
+            echo "[systemUser 1 not found]";
             $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('Administrator');
         }
 
         if( !$systemUser ) {
+            echo "[systemUser 2 not found]";
             $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('administrator');
         }
+
+        echo "[systemUser=$systemUser]";
 
         return $systemUser;
     }
