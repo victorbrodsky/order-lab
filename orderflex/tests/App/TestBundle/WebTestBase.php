@@ -252,6 +252,9 @@ class WebTestBase extends WebTestCase
         $userSecUtil = $this->testContainer->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
+        $dbName = $this->em->getConnection()->getDatabase();
+        echo "[DB Name=".$dbName."]\n";
+
         $users = $this->em->getRepository(User::class)->findAll();
         echo "[user count=".count($users)."]\n";
         foreach($users as $user) {
