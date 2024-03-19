@@ -241,6 +241,8 @@ class WebTestBase extends WebTestCase
             'HTTPS' => $httpsChannel
         ]);
 
+        $client->followRedirects();
+
         $this->client = $client;
 
         //Alternative of setting HTTPS: When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
@@ -255,11 +257,11 @@ class WebTestBase extends WebTestCase
         $dbName = $this->em->getConnection()->getDatabase();
         echo "[DB Name=".$dbName."]\n";
 
-        $users = $this->em->getRepository(User::class)->findAll();
-        echo "[user count=".count($users)."]\n";
-        foreach($users as $user) {
-            echo "[user=$user]\n";
-        }
+        //$users = $this->em->getRepository(User::class)->findAll();
+        //echo "[user count=".count($users)."]\n";
+        //foreach($users as $user) {
+        //    echo "[user=$user]\n";
+        //}
 
         if( !$systemUser ) {
             echo "[systemUser 1 not found]";
