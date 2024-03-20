@@ -887,7 +887,9 @@ class AdminController extends OrderAbstractController
 
         $count_CommentGroupType = $this->generateCommentGroupType();
 
-        $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
+        //$count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $count_siteParameters = $userServiceUtil->generateSiteParameters();
 
         $count_Permissions = $this->generatePermissions();
         $count_PermissionObjects = $this->generatePermissionObjects();
