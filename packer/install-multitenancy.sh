@@ -191,6 +191,9 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab-"$1"
 	
+	echo -e ${COLOR} Add ownership in repository ${NC}
+	git config --global --add safe.directory /usr/local/bin/order-lab-"$1"
+	
 	#chown -R apache:apache /var/www
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab-"$1" ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab-"$1"
