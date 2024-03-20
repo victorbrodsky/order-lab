@@ -809,7 +809,7 @@ class UserServiceUtil {
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
-            $logger->notice("getSingleSiteSettingParameter: SiteParameters count=".count($entities));
+            $logger->notice("getSingleSiteSettingParameter: SiteParameters count=".count($entities)."; createIfEmpty=".$createIfEmpty);
             if( $createIfEmpty ) {
                 $this->generateSiteParameters();
             }
@@ -817,7 +817,14 @@ class UserServiceUtil {
         }
 
         if( count($entities) != 1 ) {
-            throw new \Exception( 'getSingleSiteSettingParameter: Must have only one parameter object. Found '.count($entities).' object(s)' );
+            if( $createIfEmpty ) {
+                throw new \Exception(
+                    'getSingleSiteSettingParameter: Must have only one parameter object. Found '.
+                    count($entities).' object(s)'."; createIfEmpty=".$createIfEmpty
+                );
+            } else {
+                return null;
+            }
         }
 
         return $entities[0];
