@@ -183,7 +183,7 @@ class SystemTenancyController extends OrderAbstractController
             return -1;
         }
 
-        $logger->notice("Start generating SiteParameters");
+        $logger->notice("SystemTenancyController: Start generating SiteParameters");
 
         //Use only params used in setparameters.php
         $types = array(
@@ -265,7 +265,7 @@ class SystemTenancyController extends OrderAbstractController
             $method = "set".$key;
             $params->$method( $value );
             $count = $count + 10;
-            $logger->notice("setter: $method");
+            $logger->notice("SystemTenancyController: generateSiteParameters setter: $method");
         }
 
         $em->persist($params);

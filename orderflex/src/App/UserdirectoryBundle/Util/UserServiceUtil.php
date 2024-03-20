@@ -836,7 +836,7 @@ class UserServiceUtil {
             return -1;
         }
 
-        $logger->notice("Start generating SiteParameters");
+        $logger->notice("generateSiteParameters: Start generating SiteParameters");
 
         $types = array(
             "connectionChannel" => "http",
@@ -1026,7 +1026,7 @@ class UserServiceUtil {
             $method = "set".$key;
             $params->$method( $value );
             $count = $count + 10;
-            $logger->notice("setter: $method");
+            $logger->notice("generateSiteParameters setter: $method");
         }
 
         //auto assign Institution
@@ -1366,7 +1366,7 @@ class UserServiceUtil {
             $method = "set".$key;
             $params->$method( $value );
             $count = $count + 10;
-            $logger->notice("setter: $method");
+            $logger->notice("generateVacReqSiteParameters setter: $method");
         }
 
 
@@ -1404,7 +1404,7 @@ class UserServiceUtil {
             return 0;
         }
 
-        $logger->notice("Start generating SiteParameters");
+        $logger->notice("generateResAppSiteParameters: Start generating SiteParameters");
 
 
         $types = array(
@@ -1457,7 +1457,7 @@ Pathology and Laboratory Medicine",
             $method = "set".$key;
             $params->$method( $value );
             $count = $count + 10;
-            $logger->notice("setter: $method");
+            $logger->notice("generateResAppSiteParameters setter: $method");
         }
 
 
