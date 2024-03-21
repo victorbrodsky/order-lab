@@ -34,7 +34,7 @@ class TenantManager
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    private $user;
+    private $author;
 
     /**
      * @var \DateTime
@@ -75,8 +75,9 @@ class TenantManager
     private $footer;
 
 
-    public function __construct() {
-        $this->setStatus(self::STATUS_ACTIVE);
+    public function __construct( $author ) {
+        $this->setAuthor($author);
+        $this->tenants = new ArrayCollection();
     }
 
 
@@ -98,35 +99,19 @@ class TenantManager
     }
 
     /**
-     * @param mixed $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return mixed
      */
-    public function getUser()
+    public function getAuthor()
     {
-        return $this->user;
+        return $this->author;
     }
 
     /**
-     * @param mixed $siteName
+     * @param mixed $author
      */
-    public function setSiteName($siteName)
+    public function setAuthor($author)
     {
-        $this->siteName = $siteName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSiteName()
-    {
-        return $this->siteName;
+        $this->author = $author;
     }
 
     /**
@@ -179,387 +164,74 @@ class TenantManager
         return $this->updatedby;
     }
 
-    public function getUpdateAuthorRoles()
+    /**
+     * @return mixed
+     */
+    public function getGreeting()
     {
-        return $this->updateAuthorRoles;
+        return $this->greeting;
     }
 
-
-    public function setUpdateAuthorRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addUpdateAuthorRole($role."");
-        }
-    }
-
-    public function addUpdateAuthorRole($role) {
-        $role = strtoupper($role);
-        if( !in_array($role, $this->updateAuthorRoles, true) ) {
-            $this->updateAuthorRoles[] = $role;
-        }
+    /**
+     * @param mixed $greeting
+     */
+    public function setGreeting($greeting)
+    {
+        $this->greeting = $greeting;
     }
 
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getMaintext()
     {
-        return $this->email;
+        return $this->maintext;
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $maintext
      */
-    public function setEmail($email)
+    public function setMaintext($maintext)
     {
-        $this->email = $email;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @param mixed $firstName
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
+        $this->maintext = $maintext;
     }
 
     /**
      * @return mixed
      */
-    public function getLastName()
+    public function getFooter()
     {
-        return $this->lastName;
+        return $this->footer;
     }
 
     /**
-     * @param mixed $lastName
+     * @param mixed $footer
      */
-    public function setLastName($lastName)
+    public function setFooter($footer)
     {
-        $this->lastName = $lastName;
+        $this->footer = $footer;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPhone()
+    public function getTenants()
     {
-        return $this->phone;
+        return $this->tenants;
     }
-
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone)
+    public function addTenant( $item )
     {
-        $this->phone = $phone;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getJob()
-    {
-        return $this->job;
-    }
-
-    /**
-     * @param mixed $job
-     */
-    public function setJob($job)
-    {
-        $this->job = $job;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrganizationalGroup()
-    {
-        return $this->organizationalGroup;
-    }
-
-    /**
-     * @param mixed $organizationalGroup
-     */
-    public function setOrganizationalGroup($organizationalGroup)
-    {
-        $this->organizationalGroup = $organizationalGroup;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
-     * @param mixed $reason
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSimilaruser()
-    {
-        return $this->similaruser;
-    }
-
-    /**
-     * @param mixed $similaruser
-     */
-    public function setSimilaruser($similaruser)
-    {
-        $this->similaruser = $similaruser;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReferencename()
-    {
-        return $this->referencename;
-    }
-
-    /**
-     * @param mixed $referencename
-     */
-    public function setReferencename($referencename)
-    {
-        $this->referencename = $referencename;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReferenceemail()
-    {
-        return $this->referenceemail;
-    }
-
-    /**
-     * @param mixed $referenceemail
-     */
-    public function setReferenceemail($referenceemail)
-    {
-        $this->referenceemail = $referenceemail;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReferencephone()
-    {
-        return $this->referencephone;
-    }
-
-    /**
-     * @param mixed $referencephone
-     */
-    public function setReferencephone($referencephone)
-    {
-        $this->referencephone = $referencephone;
-    }
-
-
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function getStatusStr()
-    {
-        $str = "";
-
-        if( $this->getStatus() == self::STATUS_ACTIVE )
-            $str = "Active";
-
-        if( $this->getStatus() == self::STATUS_DECLINED )
-            $str = "Declined";
-
-        if( $this->getStatus() == self::STATUS_APPROVED )
-            $str = "Approved";
-
-        return $str;
-    }
-
-    /////////////// Mobile Phone /////////////
-    /**
-     * @return mixed
-     */
-    public function getMobilePhone()
-    {
-        return $this->mobilePhone;
-    }
-
-    /**
-     * @param mixed $mobilePhone
-     */
-    public function setMobilePhone($mobilePhone)
-    {
-        if( $mobilePhone ) {
-            //strip '-' and ' '
-            $mobilePhone = str_replace('-','',$mobilePhone);
-            $mobilePhone = str_replace(' ','',$mobilePhone);
+        if( !$this->tenants->contains($item) ) {
+            $this->tenants->add($item);
         }
 
-        if( $this->mobilePhone != $mobilePhone ) {
-//            $this->setMobilePhoneVerified(false);
-//            $this->setMobilePhoneVerifyCode(NULL);
-//            $this->setMobilePhoneVerifyCodeDate(NULL);
-            $this->setUnVerified();
+        return $this;
+    }
+    public function removeTenant($item)
+    {
+        if( $this->tenants->contains($item) ) {
+            $this->tenants->removeElement($item);
         }
 
-        $this->mobilePhone = $mobilePhone;
+        return $this;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getMobilePhoneVerifyCode()
-    {
-        return $this->mobilePhoneVerifyCode;
-    }
-
-    /**
-     * @param mixed $mobilePhoneVerifyCode
-     */
-    public function setMobilePhoneVerifyCode($mobilePhoneVerifyCode)
-    {
-        $this->mobilePhoneVerifyCode = $mobilePhoneVerifyCode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMobilePhoneVerifyCodeDate()
-    {
-        return $this->mobilePhoneVerifyCodeDate;
-    }
-
-    /**
-     * @param mixed $mobilePhoneVerifyCodeDate
-     */
-    public function setMobilePhoneVerifyCodeDate($mobilePhoneVerifyCodeDate)
-    {
-        $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
-    }
-
-    //Link methods for UserInfo
-    public function getPreferredMobilePhoneVerified()
-    {
-        return $this->getMobilePhoneVerified();
-    }
-    public function getPreferredMobilePhone()
-    {
-        return $this->getMobilePhone();
-    }
-
-    public function verifyCode($verificationCode) {
-        $userVerificationCode = $this->getMobilePhoneVerifyCode();
-        $phoneNumber = $this->getMobilePhone();
-        $notExpired = $this->verificationCodeIsNotExpired();
-        if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
-            //OK
-//            $this->setMobilePhoneVerified(NULL);
-//            $this->setMobilePhoneVerifyCodeDate(NULL);
-//            $this->setMobilePhoneVerifyCode(true);
-            $this->setVerified();
-
-            return true;
-        }
-
-        return false;
-    }
-    public function setVerified() {
-        $this->setMobilePhoneVerified(true);
-        $this->setMobilePhoneVerifyCodeDate(NULL);
-        $this->setMobilePhoneVerifyCode(NULL);
-    }
-    public function setUnVerified() {
-        $this->setMobilePhoneVerified(false);
-        $this->setMobilePhoneVerifyCodeDate(NULL);
-        $this->setMobilePhoneVerifyCode(NULL);
-    }
-    public function verificationCodeIsNotExpired() {
-        $expireDate = new \DateTime();
-        $expireDate->modify("-2 day");
-        $verificationCodeCreationDate = $this->getMobilePhoneVerifyCodeDate();
-        if( !$verificationCodeCreationDate ) {
-            return true;
-        }
-
-        if( $verificationCodeCreationDate >= $expireDate ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMobilePhoneVerified()
-    {
-        return $this->mobilePhoneVerified;
-    }
-
-    /**
-     * @param mixed $mobilePhoneVerified
-     */
-    public function setMobilePhoneVerified($mobilePhoneVerified)
-    {
-        $this->mobilePhoneVerified = $mobilePhoneVerified;
-    }
-
-    public function updateUserMobilePhoneByAccessRequest() {
-        $user = $this->getUser();
-        $userInfo = $user->getUserInfo();
-        $accessRequestMobilePhone = $this->getMobilePhone();
-        if( $accessRequestMobilePhone != $userInfo->getPreferredMobilePhone() ) {
-            $userInfo->setPreferredMobilePhone($accessRequestMobilePhone);
-        }
-        $accessRequestMobilePhoneVerifyCode = $this->getMobilePhoneVerifyCode();
-        if( $accessRequestMobilePhoneVerifyCode != $userInfo->getMobilePhoneVerifyCode() ) {
-            $userInfo->setMobilePhoneVerifyCode($accessRequestMobilePhoneVerifyCode);
-        }
-        $accessRequestMobilePhoneVerifyCodeDate = $this->getMobilePhoneVerifyCodeDate();
-        if( $accessRequestMobilePhoneVerifyCodeDate != $userInfo->getMobilePhoneVerifyCodeDate() ) {
-            $userInfo->setMobilePhoneVerifyCodeDate($accessRequestMobilePhoneVerifyCodeDate);
-        }
-        $accessRequestMobilePhoneVerified = $this->getMobilePhoneVerified();
-        if( $accessRequestMobilePhoneVerified != $userInfo->getPreferredMobilePhoneVerified() ) {
-            $userInfo->setPreferredMobilePhoneVerified($accessRequestMobilePhoneVerified);
-        }
-    }
-    /////////////// EOF Mobile Phone /////////////
 
 
 }

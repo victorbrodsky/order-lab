@@ -37,8 +37,10 @@ class TenantList extends ListAbstract
     private $tenantManager;
 
     //tenant url (tenant name) (similar to HostedUserGroupList)
-    #[ORM\ManyToOne(targetEntity: TenantUrlList::class, inversedBy: 'tenants')]
-    #[ORM\JoinColumn(name: 'tenanturl_id', referencedColumnName: 'id', nullable: true)]
+    //#[ORM\ManyToOne(targetEntity: TenantUrlList::class, inversedBy: 'tenants')]
+    //#[ORM\JoinColumn(name: 'tenanturl_id', referencedColumnName: 'id', nullable: true)]
+    //private $tenantUrl;
+    #[ORM\OneToOne(targetEntity: TenantUrlList::class, cascade: ['persist', 'remove'])]
     private $tenantUrl;
 
 
@@ -67,6 +69,150 @@ class TenantList extends ListAbstract
 
     public function __construct($author=null) {
         parent::__construct($author);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTenantManager()
+    {
+        return $this->tenantManager;
+    }
+
+    /**
+     * @param mixed $tenantManager
+     */
+    public function setTenantManager($tenantManager)
+    {
+        $this->tenantManager = $tenantManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTenantUrl()
+    {
+        return $this->tenantUrl;
+    }
+
+    /**
+     * @param mixed $tenantUrl
+     */
+    public function setTenantUrl($tenantUrl)
+    {
+        $this->tenantUrl = $tenantUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseHost()
+    {
+        return $this->databaseHost;
+    }
+
+    /**
+     * @param mixed $databaseHost
+     */
+    public function setDatabaseHost($databaseHost)
+    {
+        $this->databaseHost = $databaseHost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabasePort()
+    {
+        return $this->databasePort;
+    }
+
+    /**
+     * @param mixed $databasePort
+     */
+    public function setDatabasePort($databasePort)
+    {
+        $this->databasePort = $databasePort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseName()
+    {
+        return $this->databaseName;
+    }
+
+    /**
+     * @param mixed $databaseName
+     */
+    public function setDatabaseName($databaseName)
+    {
+        $this->databaseName = $databaseName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseUser()
+    {
+        return $this->databaseUser;
+    }
+
+    /**
+     * @param mixed $databaseUser
+     */
+    public function setDatabaseUser($databaseUser)
+    {
+        $this->databaseUser = $databaseUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabasePassword()
+    {
+        return $this->databasePassword;
+    }
+
+    /**
+     * @param mixed $databasePassword
+     */
+    public function setDatabasePassword($databasePassword)
+    {
+        $this->databasePassword = $databasePassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSystemDb()
+    {
+        return $this->systemDb;
+    }
+
+    /**
+     * @param mixed $systemDb
+     */
+    public function setSystemDb($systemDb)
+    {
+        $this->systemDb = $systemDb;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param mixed $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
     }
 
 

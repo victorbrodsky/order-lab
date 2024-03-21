@@ -70,7 +70,7 @@ class MultiTenancyController extends OrderAbstractController
 
     #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure', methods: ['GET', 'POST'])]
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
-    public function tenancyManagerConfigureAction(Request $request): Response
+    public function tenantManagerConfigureAction(Request $request): Response
     {
         //First show tenancy home page settings (TenantManager)
         //The homepage of the 'TenantManager' has:
@@ -81,24 +81,47 @@ class MultiTenancyController extends OrderAbstractController
         // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
         // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
 
-        //Tenant list
-
-        $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
-
-        if ($request->isMethod('POST')) {
-            $form->submit($request->getPayload()->get($form->getName()));
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                // perform some action...
-
-                return $this->redirectToRoute('task_success');
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
             }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        return $this->render('task/new.html.twig', [
-            'form' => $form,
-        ]);
+        $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $tenantManager = $userServiceUtil->getSingleTenantManager();
+
+
+        return array(
+            'tenantManager' => $tenantManager,
+            'title' => "Tenants Configuration",
+            //'form' => $form->createView(),
+            //'authServerNetworkId' => $authServerNetworkId,
+        );
+
+        //Tenant list
+//        $task = new Task();
+//        $form = $this->createForm(TaskType::class, $task);
+//
+//        if ($request->isMethod('POST')) {
+//            $form->submit($request->getPayload()->get($form->getName()));
+//
+//            if ($form->isSubmitted() && $form->isValid()) {
+//                // perform some action...
+//
+//                return $this->redirectToRoute('task_success');
+//            }
+//        }
+//
+//        return $this->render('task/new.html.twig', [
+//            'form' => $form,
+//        ]);
     }
 
 
