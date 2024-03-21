@@ -17,33 +17,33 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
-//HostedUserGroupList is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
-//Attach to: HostedGroupHolder
+//TenantUrlList is the Tenant ID (i.e. 'c/wcm/pathology' or 'c/lmh/pathology')
+//Attach to: TenantList
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'user_hostedusergrouplist')]
-#[ORM\Index(name: 'hostedusergroup_name_idx', columns: ['name'])]
+#[ORM\Table(name: 'user_tenanturllist')]
+#[ORM\Index(name: 'tenanturl_name_idx', columns: ['name'])]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
-class HostedUserGroupList extends BaseCompositeNode
+class TenantUrlList extends BaseCompositeNode
 {
 
-    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'original')]
+    #[ORM\OneToMany(targetEntity: 'TenantUrlList', mappedBy: 'original')]
     protected $synonyms;
 
-    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'synonyms')]
+    #[ORM\ManyToOne(targetEntity: 'TenantUrlList', inversedBy: 'synonyms')]
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
     #[Gedmo\TreeParent]
-    #[ORM\ManyToOne(targetEntity: 'HostedUserGroupList', inversedBy: 'children', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: 'TenantUrlList', inversedBy: 'children', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id')]
     protected $parent;
 
-    #[ORM\OneToMany(targetEntity: 'HostedUserGroupList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: 'TenantUrlList', mappedBy: 'parent', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     protected $children;
 
@@ -55,39 +55,39 @@ class HostedUserGroupList extends BaseCompositeNode
     //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     //private $organizationalGroupType;
 
-    #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'hostedUserGroup')]
-    private $hostedGroupHolders;
+    #[ORM\OneToMany(targetEntity: TenantList::class, mappedBy: 'tenantUrl')]
+    private $tenants;
 
 
     public function __construct($author=null) {
         parent::__construct($author);
 
-        //$this->serverNetworks = new ArrayCollection();
-        $this->hostedGroupHolders = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
 
-    public function getHostedGroupHolders()
+    public function getTenants()
     {
-        return $this->hostedGroupHolders;
+        return $this->tenants;
     }
-    public function addHostedGroupHolder( $item )
+    public function addTenant( $item )
     {
-        if( !$this->hostedGroupHolders->contains($item) ) {
-            $this->hostedGroupHolders->add($item);
+        if( !$this->tenants->contains($item) ) {
+            $this->tenants->add($item);
         }
 
         return $this;
     }
-    public function removeHostedGroupHolder($item)
+    public function removeTenant($item)
     {
-        if( $this->hostedGroupHolders->contains($item) ) {
-            $this->hostedGroupHolders->removeElement($item);
+        if( $this->tenants->contains($item) ) {
+            $this->tenants->removeElement($item);
         }
 
         return $this;
     }
 
+    
     public function getTenantUrl() {
         return $this->getTreeAbbreviation("/");
     }
@@ -105,7 +105,7 @@ class HostedUserGroupList extends BaseCompositeNode
     //is used to construct parent's show path the same as in ListController.php
     public function getClassName()
     {
-        return "HostedUserGroup";
+        return "TenantUrl";
         //return "hostedusergroup";
     }
 

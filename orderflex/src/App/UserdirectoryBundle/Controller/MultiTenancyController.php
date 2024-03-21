@@ -18,10 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-//TenantManager - entity contains the list of the tenants as a ListOfHostedTenants
-//Keep the list of tenants in ListOfHostedTenants. It's very similar to HostedGroupHolder,
-// however 'ListOfHostedTenants' name is much clear than 'HostedGroupHolder'.
+//TenantManager - entity contains the list of the tenants as a ListOfHostedTenants (TenantList)
+//Keep the list of tenants in TenantList. It's very similar to HostedGroupHolder,
+// however 'TenantList' name is much clear than 'HostedGroupHolder'.
 // We will not need HostedGroupHolder, plus the the purpose of the AuthServerNetworkList object is not clear.
+// TenantManager has many tenant (TenantList). Each tenant has tenantUrl (url slug as TenantUrlList) and other tenant's parameters (name, db name, etc.)
+
 //The homepage of the 'TenantManager' has:
 // * Header Image : [DropZone field allowing upload of 1 image]
 // * Greeting Text : [free text form field, multi-line, accepts HTML, with default value:
@@ -66,10 +68,48 @@ use Symfony\Component\HttpFoundation\Response;
 class MultiTenancyController extends OrderAbstractController
 {
 
+    #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function tenancyManagerConfigureAction(Request $request): Response
+    {
+        //First show tenancy home page settings (TenantManager)
+        //The homepage of the 'TenantManager' has:
+        // * Header Image : [DropZone field allowing upload of 1 image]
+        // * Greeting Text : [free text form field, multi-line, accepts HTML, with default value:
+        //  “Welcome to the View! The following organizations are hosted on this platform:”]
+        // * ListOfHostedTenants as a List of hosted tenants, each one shown as a clickable link
+        // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
+        // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
+
+        //Tenant list
+
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+
+        if ($request->isMethod('POST')) {
+            $form->submit($request->getPayload()->get($form->getName()));
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                // perform some action...
+
+                return $this->redirectToRoute('task_success');
+            }
+        }
+
+        return $this->render('task/new.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+
+
+
+
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
+        //exit("tenancyManagementAction");
         $tenantRole = $this->getParameter('tenant_role');
         if( $tenantRole != 'tenantmanager' ) {
             if( !$tenantRole ) {
@@ -134,7 +174,7 @@ class MultiTenancyController extends OrderAbstractController
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //exit("form is valid");
+            exit("tenancyManagementAction: form is valid");
 
             $em->flush();
 
@@ -168,6 +208,7 @@ class MultiTenancyController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
     {
+        exit('updateTenancyManagementAction');
         $tenantRole = $this->getParameter('tenant_role');
         if( $tenantRole != 'tenantmanager' ) {
             $this->addFlash(
@@ -195,24 +236,26 @@ class MultiTenancyController extends OrderAbstractController
             $authServerNetworkId = $authServerNetwork->getId();
         }
 
-        //Create DB if not exists
-        $output = null;
-        //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
-        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
-        $this->addFlash(
-            'notice',
-            "New DBs verified and created if not existed.<br> Output:<br>".$output
-        );
+        //Scan order instances
 
-        //runDeployScript
-        if(1) {
-            //$userServiceUtil->runDeployScript(false,false,true);
-            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
-            $this->addFlash(
-                'notice',
-                "Container rebuilded, cache cleared, assets dumped. Output=" . $output
-            );
-        }
+//        //Create DB if not exists
+//        $output = null;
+//        //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+//        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
+//        $this->addFlash(
+//            'notice',
+//            "New DBs verified and created if not existed.<br> Output:<br>".$output
+//        );
+//
+//        //runDeployScript
+//        if(1) {
+//            //$userServiceUtil->runDeployScript(false,false,true);
+//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+//            $this->addFlash(
+//                'notice',
+//                "Container rebuilded, cache cleared, assets dumped. Output=" . $output
+//            );
+//        }
 
         return $this->redirect($this->generateUrl('employees_tenancy_management'));
     }

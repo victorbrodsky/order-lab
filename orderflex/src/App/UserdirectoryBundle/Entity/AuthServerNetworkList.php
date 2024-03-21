@@ -36,8 +36,7 @@ class AuthServerNetworkList extends ListAbstract
     protected $original;
 
     //Add ManyToMany hostedGroup holders,
-    // each of this holder has one HostedUserGroupList (nested tree) as url (c/wcm/pathology),
-    // server parameters, footer parameters, etc
+    // each of this HostedGroupHolder has one HostedUserGroupList (nested tree) as url (c/wcm/pathology), server parameters, footer parameters, etc
     #[ORM\OneToMany(targetEntity: HostedGroupHolder::class, mappedBy: 'serverNetwork', cascade: ['persist', 'remove'])]
     private $hostedGroupHolders;
 

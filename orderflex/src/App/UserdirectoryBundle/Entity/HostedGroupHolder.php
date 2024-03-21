@@ -52,7 +52,8 @@ class HostedGroupHolder {
     #[ORM\ManyToOne(targetEntity: AuthServerNetworkList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'servernetwork_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $serverNetwork;
-    
+
+    //tenant url
     #[ORM\ManyToOne(targetEntity: HostedUserGroupList::class, inversedBy: 'hostedGroupHolders')]
     #[ORM\JoinColumn(name: 'hostedusergroup_id', referencedColumnName: 'id', nullable: true)]
     private $hostedUserGroup;
