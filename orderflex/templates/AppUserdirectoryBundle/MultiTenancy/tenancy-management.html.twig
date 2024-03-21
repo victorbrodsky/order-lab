@@ -1,0 +1,138 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+            {#<ul class="list-group">#}
+                {#Note#}
+                <p class="text-center">
+                    Below is the manual procedure to add/manage a tenant (i.e. tenant1, using port 8087)
+                        described in /packer/install-multitenancy.sh with HAProxy:<br>
+                    <b>1) Create a new order instance /order-lab-tenenat1/ and run git clone to /order-lab-tenenat1 </b><br>
+                    a) Add APP_SUBDIR=tenenat1 to /order-lab-tenenat1/orderflex/.env <br>
+                    b) In parameters.yml: specify database_name and tenant_role if required <br>
+                    (null is default value for all tenants, 'homepagemanager' or 'tenantmanager') <br>
+                    c) Run 'composer install', 'yarn install --frozen-lockfile'<br>
+                    d) Create DB by running:<br>
+                    sudo php bin/console doctrine:database:create<br>
+                    sudo php bin/console doctrine:schema:update --complete --force<br>
+                    sudo php bin/console doctrine:migration:status<br>
+                    sudo php bin/console doctrine:migration:sync-metadata-storage <br>
+                    e) Run 'bash deploy_prod.sh -withdb'<br>
+
+                    <b>2) Create /etc/httpd/conf/tenant1-httpd.conf for this new order instances above </b><br>
+                    a) Append the content of packer/000-default.conf to /etc/httpd/conf/tenant1-httpd.conf <br>
+                    and make the following adjustment in tenant1-httpd.conf file:<br>
+                    b) Add a new line 'Listen 8087' to /etc/httpd/conf/tenant1-httpd.conf<br>
+                    c) Replace the port :80 by :8087 in /etc/httpd/conf/tenant1-httpd.conf<br>
+                    d) Add a new line 'PidFile /var/run/httpd$2.pid' to /etc/httpd/conf/tenant1-httpd.conf<br>
+                    e) Replace the folder 'order-lab', containing the source code in DocumentRoot, Directory and Alias to 'order-lab-tenenat1'.<br>
+                    For example, 'DocumentRoot /usr/local/bin/order-lab/orderflex/public/'
+                    will be 'DocumentRoot /usr/local/bin/order-lab-tenenat1/orderflex/public/'<br>
+
+                    <b>3) Disable default apache httpd: </b><br>
+                    sudo systemctl mask httpd<br>
+                    sudo systemctl disable httpd<br>
+                    sudo systemctl stop httpd.service<br>
+
+                    <b>5) Create httpd service for each tenant1-httpd.conf</b><br>
+                    a) cp /order-lab/packer/custom_httpd.service /etc/systemd/system/httpdtenant1.service<br>
+                    b) Replace 'httpd_custom.conf' by 'tenenat1-httpd.conf'<br>
+                    c) sudo systemctl enable httpdtenenat1<br>
+                    d) sudo systemctl start httpdtenenat1<br>
+
+                    <b>6) Create combined ssl certificate order-ssl.pem and delete default ssl file ssl.conf (ssl will be handled by HAProxy)</b><br>
+                    a) In haproxy.cfg under frontend add: bind *:443 ssl crt /etc/haproxy/certs/order-ssl.pem<br>
+
+                    <b>7) In haproxy.cfg under frontend add:</b><br>
+                    a) Add under frontend add:<br>
+                    acl tenant1_url path_beg -i /c/wcm/pathology<br>
+                    use_backend tenant1_backend if tenant1_url<br>
+                    c) Add new backend:<br>
+                    backend tenant1_backend<br>
+                    server tenant1_server *:8087 check<br>
+                    d) Restart haproxy: sudo systemctl restart haproxy<br>
+
+
+                    {#How to enable multi-tenancy:<br>#}
+                    {#1) Select "Server Role and Network Access" as "Internet (Hub)"<br>#}
+                    {#2) On the "Internet (Hub)" configuration page, add new "Hosted User Group" (tenant)<br>#}
+                    {#3) For each hosted user group (tenant), select url prefix for the hosted user group type#}
+                    {#and provide database connection parameters such as database name, user, password.#}
+                    {#The tenant can be enabled/disabled by "Enabled" checkbox.#}
+                    {#The tenant will not be enabled if database name, use or password is blank.<br>#}
+                    {#4) Clear cache by running deploy script#}
+                    {#<a#}
+                        {#general-data-confirm="Are you sure you would like to clear cache and update assets? This action will log out all authenticated users."#}
+                        {#href="{{ path('user_update_system_cache_assets') }}">deploy.sh</a>#}
+                    {#4) Cleare cache and create new tenant's databases by clicking button bellow "Clear Cache and create Databases"#}
+                </p>
+            {#</ul>#}
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ formmacros.field(form.authServerNetwork) }}
+
+        {% if form.submit is defined %}
+            {{ form_widget(form.submit) }}
+        {% endif %}
+    {{ form_end(form) }}
+
+    <br><br>
+    {% if authServerNetworkId %}
+        <a target="_blank" href="{{ path('authservernetwork_edit', {'id': authServerNetworkId}) }}"
+        >'Internet (Hub)' configuration</a>
+    {% else %}
+        'Internet (Hub)' configuration does not exists
+    {% endif %}
+    <br><br>
+    <a target="_blank"
+       href="{{ user_service_utility.getSiteParamListUrl('AuthServerNetworkList')|raw }}"
+    >Full list of Server Networks</a>
+
+    <br><br>
+    <a
+            target="_blank" class="btn btn-danger"
+            href="{{ path('employees_tenancy_management_update') }}"
+    >Clear Cache and create Databases</a>
+
+{% endblock %}
+
+
+
+

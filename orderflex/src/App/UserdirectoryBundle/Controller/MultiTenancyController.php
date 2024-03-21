@@ -1,0 +1,382 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: ch3
+ * Date: 3/20/2024
+ * Time: 2:15 PM
+ */
+
+namespace App\UserdirectoryBundle\Controller;
+
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
+use App\UserdirectoryBundle\Form\TenancyManagementType;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+
+//TenantManager - entity contains the list of the tenants as a ListOfHostedTenants
+//Keep the list of tenants in ListOfHostedTenants. It's very similar to HostedGroupHolder,
+// however 'ListOfHostedTenants' name is much clear than 'HostedGroupHolder'.
+// We will not need HostedGroupHolder, plus the the purpose of the AuthServerNetworkList object is not clear.
+//The homepage of the 'TenantManager' has:
+// * Header Image : [DropZone field allowing upload of 1 image]
+// * Greeting Text : [free text form field, multi-line, accepts HTML, with default value:
+//  “Welcome to the View! The following organizations are hosted on this platform:”]
+// * ListOfHostedTenants as a List of hosted tenants, each one shown as a clickable link
+// * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
+// * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
+
+//Once the user log into the Tenant Manager instance, to manage tenants “/tenant-manager/configure”:
+//Each tenant (ListOfHostedTenants) you have the following attributes:
+// * Name (that is what would be shown on the homepage list)
+// * URL Slug (that will be used to construct the link to the tenant homepage - /c/wcm/pathology , etc)
+// * Show on Homepage? (Yes/No, Boolean) if set to “No” do not show on the main homepage list
+// * Parent (Hierarchical): Since the list of tenants is hierarchical it should stay hierarchical:
+//      the root tenant is /c , /c/wcm is an entry for the institution with parent of /c ,
+//      /c/wcm/pathology and /c/wcm/psychiatry have /c/wcm as parent, etc
+// * Active and accessible via Web GUI? (Yes/No, Boolean) – this is separate from showing it on the homepage
+//      or not – a tenant can be active and accessible via web gui but not shown on the homepage (like the test and demo sites),
+//      or it can be set to be inaccessible – meaning even direct navigation to those
+//      URLs /c/some-org/some-client-who-left would not let users access the site)
+// * Database file name:””
+// * Path to the database file: “”
+// * Database password: “”
+// * Platform Administrator Account User Name: “”
+// * Tenant Institution Title: [free text]
+// * Tenant Department Title: [free text]
+// * Billing Tenant Administrator Contact Name: [free text]
+// * Billing Tenant Administrator Contact Email: [free text]
+// * Operational Tenant Administrator Contact Name: [free text]
+// * Operational Tenant Administrator Contact Email: [free text]
+
+//Each tenant should have the following four buttons:
+// * “Create Tenant Database and Activate for Use” button when a completely new tenant is added without any additional actions
+// * “Inactivate tenant and make it inaccessible via Web GUI” (this should not delete the database)
+// * “Activate this previously inactivated tenant and make it accessible via Web GUI” (self-explanatory)
+// * “Put Tenant Site in Maintenance Mode” (this is to kick out all users from the tenant and prevent all logins
+//      except Platform Administrator – this will be useful if it is hacked).
+// * “Reset Platform Administrator Account Password for this tenant” (Call your password generation function
+//      you already have and show a dialog with a new password saying “Password for the platform administrator account “Administrator” for tenant “Tenant Name” accessible at “/c/link/here” has been reset to “NewPassword”.)
+
+#[Route(path: '/settings')]
+class MultiTenancyController extends OrderAbstractController
+{
+
+    #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
+    public function tenancyManagementAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //only if local is system
+//        $locale = $request->getLocale();
+//        //exit('$locale='.$locale);
+//        if( $locale != "system" ) {
+//            $this->addFlash(
+//                'warning',
+//                "Tenancy settings is accessible only for system database. Please relogin to /system"
+//            );
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$siteParam = $userSecUtil->getSingleSiteSettingsParam();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $siteParam = $userServiceUtil->getSingleSiteSettingParameter();
+
+        if( !$siteParam ) {
+            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+        }
+
+        $title = "Tenancy Management";
+
+        //find AuthServerNetworkList by name "Internet (Hub)" => show hostedGroupHolders (authservernetwork_edit)
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
+        $params = array(
+            //'cycle'=>"edit",
+            //'em'=>$em,
+        );
+
+        $form = $this->createForm(TenancyManagementType::class, $siteParam, array(
+            'form_custom_value' => $params,
+        ));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form is valid");
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                "Tenancy settings have been updated."
+            );
+
+//            //runDeployScript
+//            $userServiceUtil = $this->container->get('user_service_utility');
+//            //$userServiceUtil->runDeployScript(false,false,true);
+//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+//            $this->addFlash(
+//                'notice',
+//                "Container rebuilded, cache cleared, assets dumped. Output=".$output
+//            );
+
+            //exit('111');
+            return $this->redirect($this->generateUrl('employees_tenancy_management'));
+        }
+
+        return array(
+            'entity' => $siteParam,
+            'title' => $title,
+            'form' => $form->createView(),
+            'authServerNetworkId' => $authServerNetworkId,
+        );
+    }
+
+    #[Route(path: '/tenancy-management-update', name: 'employees_tenancy_management_update', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from the tenant manager system."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $em = $this->getDoctrine()->getManager();
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
+        //Create DB if not exists
+        $output = null;
+        //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
+        $this->addFlash(
+            'notice',
+            "New DBs verified and created if not existed.<br> Output:<br>".$output
+        );
+
+        //runDeployScript
+        if(1) {
+            //$userServiceUtil->runDeployScript(false,false,true);
+            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+            $this->addFlash(
+                'notice',
+                "Container rebuilded, cache cleared, assets dumped. Output=" . $output
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_tenancy_management'));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////// BELOW IS THE OLD IMPLEMENTATION, NOT USED /////////////////
+    #[Route(path: '/tenancy-management_orig', name: 'employees_tenancy_management_orig', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function tenancyManagementOrigAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //only if local is system
+//        $locale = $request->getLocale();
+//        //exit('$locale='.$locale);
+//        if( $locale != "system" ) {
+//            $this->addFlash(
+//                'warning',
+//                "Tenancy settings is accessible only for system database. Please relogin to /system"
+//            );
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$siteParam = $userSecUtil->getSingleSiteSettingsParam();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $siteParam = $userServiceUtil->getSingleSiteSettingParameter();
+
+        if( !$siteParam ) {
+            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
+        }
+
+        $title = "Tenancy Management";
+
+        //find AuthServerNetworkList by name "Internet (Hub)" => show hostedGroupHolders (authservernetwork_edit)
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
+        $params = array(
+            //'cycle'=>"edit",
+            //'em'=>$em,
+        );
+
+        $form = $this->createForm(TenancyManagementType::class, $siteParam, array(
+            'form_custom_value' => $params,
+        ));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form is valid");
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                "Tenancy settings have been updated."
+            );
+
+//            //runDeployScript
+//            $userServiceUtil = $this->container->get('user_service_utility');
+//            //$userServiceUtil->runDeployScript(false,false,true);
+//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+//            $this->addFlash(
+//                'notice',
+//                "Container rebuilded, cache cleared, assets dumped. Output=".$output
+//            );
+
+            //exit('111');
+            return $this->redirect($this->generateUrl('employees_tenancy_management'));
+        }
+
+        return array(
+            'entity' => $siteParam,
+            'title' => $title,
+            'form' => $form->createView(),
+            'authServerNetworkId' => $authServerNetworkId,
+        );
+    }
+
+    #[Route(path: '/tenancy-management-update-orig', name: 'employees_tenancy_management_update_orig', methods: ['GET', 'POST'])]
+    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    public function updateTenancyManagementOrigAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from the tenant manager system."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //ROLE_PLATFORM_DEPUTY_ADMIN or ROLE_SUPER_DEPUTY_ADMIN
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only by ROLE_SUPER_DEPUTY_ADMIN."
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $em = $this->getDoctrine()->getManager();
+        $authServerNetwork = $em->getRepository(AuthServerNetworkList::class)->findOneByName('Internet (Hub)');
+        $authServerNetworkId = null;
+        if( $authServerNetwork ) {
+            $authServerNetworkId = $authServerNetwork->getId();
+        }
+
+        //Create DB if not exists
+        $output = null;
+        //https://carlos-compains.medium.com/multi-database-doctrine-symfony-based-project-0c1e175b64bf
+        $output = $userServiceUtil->checkAndCreateNewDBs($request,$authServerNetwork,$kernel);
+        $this->addFlash(
+            'notice',
+            "New DBs verified and created if not existed.<br> Output:<br>".$output
+        );
+
+        //runDeployScript
+        if(1) {
+            //$userServiceUtil->runDeployScript(false,false,true);
+            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+            $this->addFlash(
+                'notice',
+                "Container rebuilded, cache cleared, assets dumped. Output=" . $output
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_tenancy_management'));
+    }
+}
