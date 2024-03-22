@@ -814,7 +814,7 @@ class UserServiceUtil {
 
         //make sure sitesettings is initialized
         if( count($tenantManagers) == 0 ) {
-            $logger->notice("getSingleTenantManager: TenantManager count=".count($entities)."; createIfEmpty=".$createIfEmpty);
+            $logger->notice("getSingleTenantManager: TenantManager count=".count($tenantManagers)."; createIfEmpty=".$createIfEmpty);
             if( $createIfEmpty ) {
                 $tenantManager = $this->generateTenantManager();
                 return $tenantManager;
@@ -841,11 +841,11 @@ class UserServiceUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
-        $entities = $em->getRepository(TenantManager::class)->findAll();
+        $tenantManagers = $em->getRepository(TenantManager::class)->findAll();
 
-        if (count($entities) > 0) {
+        if (count($tenantManagers) > 0) {
             $logger->notice("Exit generateTenantManager: TenantManager has been already generated.");
-            return $entities[0];
+            return $tenantManagers[0];
         }
 
         $tenantManager = new TenantManager();

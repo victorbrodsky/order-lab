@@ -33,19 +33,19 @@ class TenantManagerType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('greeting',null,array(
-            'label'=>'Greeting text:',
+            'label' => 'Greeting text:',
             'required' => false,
             'attr' => array('class'=>'form-control textarea')
         ));
 
         $builder->add('maintext',null,array(
-            'label'=>'Main text:',
+            'label' => 'Main text:',
             'required' => false,
             'attr' => array('class'=>'form-control textarea')
         ));
 
         $builder->add('footer',null,array(
-            'label'=>'Footer:',
+            'label' => 'Footer:',
             'required' => false,
             'attr' => array('class'=>'form-control textarea')
         ));

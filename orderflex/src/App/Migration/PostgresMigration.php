@@ -48,7 +48,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //deprecation.INFO: User Deprecated: The "App\Migration\PostgresMigration" class implements "Symfony\Component\DependencyInjection\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead
 //remove: implements ContainerAwareInterface
 
-class PostgresMigration extends AbstractMigration
+class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
 {
 
     private $container;
@@ -58,7 +58,7 @@ class PostgresMigration extends AbstractMigration
     private $counter = 0;
     private $processedCounter = 0;
     private $processedArr = array();
-
+    
     /**
      * Sets the container.
      *

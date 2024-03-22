@@ -70,8 +70,8 @@ class MultiTenancyController extends OrderAbstractController
 {
 
     #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure', methods: ['GET', 'POST'])]
-    #[Template('AppSystemBundle/tenant-manager-config.html.twig')]
-    public function tenantManagerConfigureAction(Request $request): Response
+    #[Template('AppUserdirectoryBundle/MultiTenancy/tenant-manager-config.html.twig')]
+    public function tenantManagerConfigureAction(Request $request)
     {
         //First show tenancy home page settings (TenantManager)
         //The homepage of the 'TenantManager' has:
@@ -100,11 +100,41 @@ class MultiTenancyController extends OrderAbstractController
 
         $form = $this->createForm(TenantManagerType::class, $tenantManager);
 
+        if( $form->isSubmitted() ) {
+            exit("tenantManagerConfigureAction: form is submitted");
+        }
+        if( $form->isSubmitted() && $form->isValid() ) {
+            exit("tenantManagerConfigureAction: form is valid");
+        }
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            exit("tenantManagerConfigureAction: form is valid");
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                "Tenancy configuration have been updated."
+            );
+
+//            //runDeployScript
+//            $userServiceUtil = $this->container->get('user_service_utility');
+//            //$userServiceUtil->runDeployScript(false,false,true);
+//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
+//            $this->addFlash(
+//                'notice',
+//                "Container rebuilded, cache cleared, assets dumped. Output=".$output
+//            );
+
+            //exit('111');
+            return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
+        }
+
         return array(
             'tenantManager' => $tenantManager,
             'title' => "Tenants Configuration",
-            'form' => $form->createView(),
-            //'authServerNetworkId' => $authServerNetworkId,
+            'form' => $form->createView()
         );
 
         //Tenant list

@@ -11,7 +11,7 @@ use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-putenv('APP_PREFIX_URL='.$context['APP_PREFIX_URL']);
+//putenv('APP_PREFIX_URL='.$context['APP_PREFIX_URL']);
 
 return function (array $context) {
 
