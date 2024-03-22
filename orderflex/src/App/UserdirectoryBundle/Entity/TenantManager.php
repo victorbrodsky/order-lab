@@ -52,9 +52,14 @@ class TenantManager
     #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     private $updatedby;
 
-    //The homepage of the 'TenantManager' has:
-    // * Header Image : [DropZone field allowing upload of 1 image]
 
+    // * Header Image : [DropZone field allowing upload of 1 image]
+    #[ORM\JoinTable(name: 'user_tenantmanager_logo')]
+    #[ORM\JoinColumn(name: 'tenantmanager_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'logo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
+    private $logos;
 
     // * ListOfHostedTenants as a List of hosted tenants, each one shown as a clickable link
     #[ORM\OneToMany(targetEntity: TenantList::class, mappedBy: 'tenantManager', cascade: ['persist', 'remove'])]
@@ -77,7 +82,9 @@ class TenantManager
 
     public function __construct( $author ) {
         $this->setAuthor($author);
+        $this->setCreatedate(new \DateTime());
         $this->tenants = new ArrayCollection();
+        $this->logos = new ArrayCollection();
     }
 
 
@@ -162,6 +169,25 @@ class TenantManager
     public function getUpdatedby()
     {
         return $this->updatedby;
+    }
+
+    public function addLogo($item)
+    {
+        if( $item && !$this->logos->contains($item) ) {
+            $this->logos->add($item);
+            $item->createUseObject($this);
+        }
+
+        return $this;
+    }
+    public function removeLogo($item)
+    {
+        $this->logos->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getLogos()
+    {
+        return $this->logos;
     }
 
     /**

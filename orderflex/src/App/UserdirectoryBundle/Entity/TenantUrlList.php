@@ -55,37 +55,37 @@ class TenantUrlList extends BaseCompositeNode
     //#[ORM\ManyToOne(targetEntity: 'CommentGroupType', cascade: ['persist'])]
     //private $organizationalGroupType;
 
-    //#[ORM\OneToMany(targetEntity: TenantList::class, mappedBy: 'tenantUrl')]
-    //private $tenants;
+    #[ORM\OneToMany(targetEntity: TenantList::class, mappedBy: 'tenantUrl')]
+    private $tenants;
 
 
     public function __construct($author=null) {
         parent::__construct($author);
 
-        //$this->tenants = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
 
-//    public function getTenants()
-//    {
-//        return $this->tenants;
-//    }
-//    public function addTenant( $item )
-//    {
-//        if( !$this->tenants->contains($item) ) {
-//            $this->tenants->add($item);
-//        }
-//
-//        return $this;
-//    }
-//    public function removeTenant($item)
-//    {
-//        if( $this->tenants->contains($item) ) {
-//            $this->tenants->removeElement($item);
-//        }
-//
-//        return $this;
-//    }
+    public function getTenants()
+    {
+        return $this->tenants;
+    }
+    public function addTenant( $item )
+    {
+        if( !$this->tenants->contains($item) ) {
+            $this->tenants->add($item);
+        }
+
+        return $this;
+    }
+    public function removeTenant($item)
+    {
+        if( $this->tenants->contains($item) ) {
+            $this->tenants->removeElement($item);
+        }
+
+        return $this;
+    }
 
 
     public function getTenantUrl() {

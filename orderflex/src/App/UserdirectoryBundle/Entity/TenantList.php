@@ -32,16 +32,18 @@ class TenantList extends ListAbstract
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
+
     #[ORM\ManyToOne(targetEntity: TenantManager::class, inversedBy: 'tenants')]
     #[ORM\JoinColumn(name: 'tenantmanager_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $tenantManager;
 
     //tenant url (tenant name) (similar to HostedUserGroupList)
-    //#[ORM\ManyToOne(targetEntity: TenantUrlList::class, inversedBy: 'tenants')]
-    //#[ORM\JoinColumn(name: 'tenanturl_id', referencedColumnName: 'id', nullable: true)]
-    //private $tenantUrl;
-    #[ORM\OneToOne(targetEntity: TenantUrlList::class, cascade: ['persist', 'remove'])]
+    //One url can belong to the multiple tenants, for example tenant1 and tenant2, when tenant 1 is active and tenent2 is inactive.
+    #[ORM\ManyToOne(targetEntity: TenantUrlList::class, inversedBy: 'tenants')]
+    #[ORM\JoinColumn(name: 'tenanturl_id', referencedColumnName: 'id', nullable: true)]
     private $tenantUrl;
+    //#[ORM\OneToOne(targetEntity: TenantUrlList::class, cascade: ['persist', 'remove'])]
+    //private $tenantUrl;
 
 
     #[ORM\Column(type: 'string', nullable: true)]

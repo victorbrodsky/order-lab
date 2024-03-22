@@ -44,8 +44,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //1) Add "use App\Migration\PostgresMigration;"
 //2) Rename after extends "AbstractMigration" to "PostgresMigration":
 //   sed -i -e "s/AbstractMigration/PostgresMigration/g" Version....php
-//3) NOT NEED IT ANYMORE: Rename [addSql] to [processSql]:
-//   sed -i -e "s/addSql/processSql/g" Version....php
 
 //deprecation.INFO: User Deprecated: The "App\Migration\PostgresMigration" class implements "Symfony\Component\DependencyInjection\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead
 //remove: implements ContainerAwareInterface

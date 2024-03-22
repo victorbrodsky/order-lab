@@ -11,6 +11,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Form\TenancyManagementType;
+use App\UserdirectoryBundle\Form\TenantManagerType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -69,7 +70,7 @@ class MultiTenancyController extends OrderAbstractController
 {
 
     #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure', methods: ['GET', 'POST'])]
-    #[Template('AppSystemBundle/tenancy-management.html.twig')]
+    #[Template('AppSystemBundle/tenant-manager-config.html.twig')]
     public function tenantManagerConfigureAction(Request $request): Response
     {
         //First show tenancy home page settings (TenantManager)
@@ -97,11 +98,12 @@ class MultiTenancyController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $tenantManager = $userServiceUtil->getSingleTenantManager();
 
+        $form = $this->createForm(TenantManagerType::class, $tenantManager);
 
         return array(
             'tenantManager' => $tenantManager,
             'title' => "Tenants Configuration",
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             //'authServerNetworkId' => $authServerNetworkId,
         );
 

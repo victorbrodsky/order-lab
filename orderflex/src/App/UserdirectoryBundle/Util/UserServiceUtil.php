@@ -804,29 +804,35 @@ class UserServiceUtil {
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
         $logger = $this->container->get('logger');
-        $entities = $this->em->getRepository(TenantManager::class)->findAll();
 
-        //make sure sitesettings is initialized
-        if( count($entities) != 1 ) {
-            $logger->notice("getSingleTenantManager: TenantManager count=".count($entities)."; createIfEmpty=".$createIfEmpty);
-            if( $createIfEmpty ) {
-                $this->generateTenantManager();
-            }
-            $entities = $this->em->getRepository(SiteParameters::class)->findAll();
+        $tenantManager = null;
+        $tenantManagers = $this->em->getRepository(TenantManager::class)->findAll();
+
+        if( count($tenantManagers) == 1 ) {
+            return $tenantManagers[0];
         }
 
-        if( count($entities) != 1 ) {
+        //make sure sitesettings is initialized
+        if( count($tenantManagers) == 0 ) {
+            $logger->notice("getSingleTenantManager: TenantManager count=".count($entities)."; createIfEmpty=".$createIfEmpty);
+            if( $createIfEmpty ) {
+                $tenantManager = $this->generateTenantManager();
+                return $tenantManager;
+            }
+        }
+
+        if( count($tenantManagers) != 1 ) {
             if( $createIfEmpty ) {
                 throw new \Exception(
-                    'getSingleSiteSettingParameter: Must have only one parameter object. Found '.
-                    count($entities).' object(s)'."; createIfEmpty=".$createIfEmpty
+                    'getSingleTenantManager: Must have only one tenant manager object. Found '.
+                    count($tenantManagers).' object(s)'."; createIfEmpty=".$createIfEmpty
                 );
             } else {
                 return null;
             }
         }
 
-        return $entities[0];
+        return null;
     }
     public function generateTenantManager()
     {
@@ -842,76 +848,18 @@ class UserServiceUtil {
             return $entities[0];
         }
 
+        $tenantManager = new TenantManager();
 
-        $params = new TenantManager();
+        $tenantManager->setGreeting("Welcome to the View! The following organizations are hosted on this platform:");
+        $tenantManager->setMaintext("Please log in to manage the tenants on this platform.");
+        //$tenantManager->setFooter();
 
-
-        $count = 0;
-        foreach( $types as $key => $value ) {
-            $method = "set".$key;
-            $params->$method( $value );
-            $count = $count + 10;
-            $logger->notice("generateSiteParameters setter: $method");
-        }
-
-        //auto assign Institution
-        $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
-        if( $autoAssignInstitution ) {
-            $params->setAutoAssignInstitution($autoAssignInstitution);
-            $logger->notice("Auto Assign Institution: $autoAssignInstitution");
-        } else {
-//            $institutionName = 'Weill Cornell Medical College';
-//            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionName);
-//            if (!$institution) {
-//                //throw new \Exception( 'Institution was not found for name='.$institutionName );
-//            } else {
-//                $params->setAutoAssignInstitution($institution);
-//            }
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
-            if( $wcmc ) {
-                $mapper = array(
-                    'prefix' => 'App',
-                    'bundleName' => 'UserdirectoryBundle',
-                    'className' => 'Institution',
-                    'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
-                    'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
-                );
-                //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                $autoAssignInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
-                    "Pathology and Laboratory Medicine",
-                    $wcmc,
-                    $mapper
-                );
-                if( $autoAssignInstitution ) {
-                    $params->setAutoAssignInstitution($autoAssignInstitution);
-                    $logger->notice("Auto Assign Generated Institution: $autoAssignInstitution");
-                }
-            } else {
-                //exit('generateSiteParameters: No Institution: "WCM"');
-                $logger->notice("Auto Assign Generated Institution is not set: No Institution found by abbreviation 'WCM'");
-            }
-        }
-        $logger->notice("Finished with Auto Assign Institution");
-
-        $em->persist($params);
+        $em->persist($tenantManager);
         $em->flush();
 
-//        if( $this->isWindows() ) {
-//            $emailUtil = $this->container->get('user_mailer_utility');
-//            $emailUtil->createEmailCronJob();
-//            $logger->notice("Created email cron job");
-//        } else {
-//            $this->createCronsLinux();
-//        }
-        $this->createCrons();
+        $logger->notice("Finished generateTenantManager");
 
-        $resappCount = $this->generateSubSiteParameters();
-        $count = $count + $resappCount;
-
-        $logger->notice("Finished generateSiteParameters: count=".$count/10);
-
-        return round($count/10);
+        return $tenantManager;
 
     }
 
