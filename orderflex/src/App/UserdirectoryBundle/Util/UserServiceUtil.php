@@ -812,7 +812,7 @@ class UserServiceUtil {
 
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
-        ////// 1) read haproxy //////
+        ////// 1) read haproxy (check if tenant is enabled) //////
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
 
         if( $this->isWindows() ) {
@@ -882,7 +882,7 @@ class UserServiceUtil {
         ////// EOF 1) read haproxy //////
 
 
-        ////// 2) read tenant's htppd if enables //////
+        ////// 2) Check if tenant's htppd exists //////
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
         // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
         $httpdPath = '/etc/httpd/conf/';
@@ -897,8 +897,13 @@ class UserServiceUtil {
 
         //$files = scandir($path);
         $files = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
-        dump($files);
+        //dump($files);
         //exit('111');
+        foreach($files as $file) {
+            if( str_contains($file, '-httpd.conf') ) {
+
+            }
+        }
 
         ////// EOF 2) read htppd if enables //////
 
