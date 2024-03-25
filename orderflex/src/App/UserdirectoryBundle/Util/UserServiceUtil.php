@@ -861,7 +861,6 @@ class UserServiceUtil {
         $logger->notice("Finished generateTenantManager");
 
         return $tenantManager;
-
     }
 
     //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once

@@ -8,6 +8,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
@@ -31,6 +32,18 @@ class TenantManagerType extends AbstractType
     {
 
         $this->formConstructor($options['form_custom_value']);
+
+
+        $builder->add('logos', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Header Image:',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
 
         $builder->add('greeting',null,array(
             'label' => 'Greeting text:',

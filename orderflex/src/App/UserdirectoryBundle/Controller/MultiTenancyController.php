@@ -10,6 +10,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\TenancyManagementType;
 use App\UserdirectoryBundle\Form\TenantManagerType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,7 +98,7 @@ class MultiTenancyController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
-        $tenantManager = $userServiceUtil->getSingleTenantManager();
+        $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty=true);
 
         $params = array(
             //'cycle'=>"edit",
@@ -132,6 +133,8 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
+            $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
+
             $em->flush();
 
             $this->addFlash(
@@ -155,7 +158,8 @@ class MultiTenancyController extends OrderAbstractController
         return array(
             'tenantManager' => $tenantManager,
             'title' => "Tenants Configuration",
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'cycle' => 'edit'
         );
 
         //Tenant list

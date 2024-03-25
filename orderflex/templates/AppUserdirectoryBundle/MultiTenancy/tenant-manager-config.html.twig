@@ -185,13 +185,50 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
 
+        {% if form.logos is defined %}
+
+            {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            <p>
+            <div class="well form-element-holder user-logos">
+                <label class="col-xs-12 control-label">Platform Logo Image(s) - the most recent will be used</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.logos,cycle,'noprototype',8,'default','Header Image','asForm') }}
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
         {{ formmacros.field(form.greeting) }}
         {{ formmacros.field(form.maintext) }}
         {{ formmacros.field(form.footer) }}
 
+
+
         {% if form.submit is defined %}
             {{ form_widget(form.submit) }}
         {% endif %}
+
+        {#<div class="row">#}
+            {#<div class="col-xs-6" align="right">#}
+                {#{% if form.submit is defined %}#}
+                    {#{{ form_widget(form.submit) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+            {#<div class="col-xs-6" align="left">#}
+                {#<a class="btn btn-default" href="{{ path('employees_tenancy_manager_configure') }}">Cancel</a>#}
+            {#</div>#}
+        {#</div>#}
+
     {{ form_end(form) }}
 
 
