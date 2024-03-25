@@ -52,7 +52,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 class PostgresMigration extends AbstractMigration
 {
 
-    private $container;
+    //private $container;
     private $indexArr = array();
     private $foreignkeyArr = array();
     private $sequenceArr = array();
@@ -65,10 +65,10 @@ class PostgresMigration extends AbstractMigration
      *
      * @return void
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
+//    public function setContainer(ContainerInterface $container = null)
+//    {
+//        $this->container = $container;
+//    }
 
     public function up(Schema $schema) : void {}
     public function down(Schema $schema) : void {}
@@ -92,22 +92,22 @@ class PostgresMigration extends AbstractMigration
         //$em = $this->container->get('doctrine.orm.entity_manager');
         //$sm = $em->getConnection()->getSchemaManager();
         //$sm = $em->getConnection()->createSchemaManager();
-        $sm = $this->sm;
+        //$sm = $this->sm;
         
-        $tables = $sm->listTables();
+        $tables = $this->sm->listTables();
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
         foreach ($tables as $table) {
-            $indexes = $sm->listTableIndexes($table->getName());
+            $indexes = $this->sm->listTableIndexes($table->getName());
             foreach ($indexes as $index) {
                 //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
                 $this->indexArr[$index->getName()] = $table->getName();
             }
-            $foreignkeys = $sm->listTableForeignKeys($table->getName());
+            $foreignkeys = $this->sm->listTableForeignKeys($table->getName());
             foreach ($foreignkeys as $foreignkey) {
                 //echo $foreignkey->getName() . ': ' . ($foreignkey->isUnique() ? 'unique' : 'not unique') . "\n";
                 $this->foreignkeyArr[$foreignkey->getName()] = $table->getName();
             }
-            $sequences = $sm->listSequences($table->getName());
+            $sequences = $this->sm->listSequences($table->getName());
             foreach ($sequences as $sequence) {
                 //echo $foreignkey->getName() . ': ' . ($foreignkey->isUnique() ? 'unique' : 'not unique') . "\n";
                 $this->sequenceArr[$sequence->getName()] = $table->getName();
