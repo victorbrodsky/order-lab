@@ -897,7 +897,7 @@ class UserServiceUtil {
 
         //$files = scandir($path);
         $files = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
-        //dump($files);
+        dump($files);
         //exit('111');
 
         ////// EOF 2) read htppd if enables //////
