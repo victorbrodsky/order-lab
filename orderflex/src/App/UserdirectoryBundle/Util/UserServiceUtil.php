@@ -857,11 +857,11 @@ class UserServiceUtil {
         //exit('111');
         //Result:
 //        0 => "###START-CUSTOM-TENANTS "
-//        1 => "\tacl tenant_app3_url path_beg -i /c/wcm/333"
-//        2 => "    use_backend tenant_app3_backend if tenant_app3_url"
+//        1 => "\tacl tenantapp3_url path_beg -i /c/wcm/333"
+//        2 => "    use_backend tenantapp3_backend if tenant_app3_url"
 //        3 => "\t"
-//        4 => "\tacl tenant_app4_url path_beg -i /c/wcm/444"
-//        5 => "    use_backend tenant_app4_backend if tenant_app4_url"
+//        4 => "\tacl tenantapp4url path_beg -i /c/wcm/444"
+//        5 => "    use_backend tenantapp4backend if tenant_app4_url"
 
         //Get '/c/wcm/333'
         foreach($tenantsArray as $tenant) {
@@ -901,7 +901,8 @@ class UserServiceUtil {
         //exit('111');
         foreach($files as $file) {
             if( str_contains($file, '-httpd.conf') ) {
-                echo "file=[".$file."]<br>";
+                echo "file=[".$file."]<br>"; //tenantapp2-httpd.conf
+                //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
             }
         }
 
