@@ -841,7 +841,10 @@ class UserServiceUtil {
         // \tacl tenant_app3_url path_beg -i /c/wcm/333\n
         // use_backend tenant_app3_backend if tenant_app3_url\n
 
-        $pattern = '/(###START-CUSTOM-TENANTS)(?:.|[\n\r])+(?=###END-CUSTOM-TENANTS)/';
+        $startStr = '###START-FRONTEND';
+        $endStr = '###END-FRONTEND';
+
+        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
         preg_match($pattern, $originalString, $matches);
         if( !isset($matches[0]) ) {
             echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
@@ -893,7 +896,7 @@ class UserServiceUtil {
         }
 
         //$files = scandir($path);
-        $files = array_diff(scandir($path), array('.', '..')); //remove . and .. from the returned array from scandir
+        $files = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
         //dump($files);
         //exit('111');
 
