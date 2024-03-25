@@ -102,10 +102,26 @@ class MultiTenancyController extends OrderAbstractController
 
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
         //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
-        $tenants = $userServiceUtil->getTenants();
-//        foreach($tenants as $tenant) {
-//            echo "tenanat=".$tenant."<br>";
-//        }
+        $tenantDataArr = $userServiceUtil->getTenants();
+
+        if( $tenantDataArr['error'] ) {
+            foreach($tenantDataArr['error'] as $error ) {
+                $this->addFlash(
+                    'notice',
+                    $error
+                );
+            }
+        }
+        
+        if( $tenantDataArr['tenantUrl'] ) {
+            //echo "tenantUrl=".$tenantUrl."<br>";
+            foreach($tenantDataArr['tenantUrl'] as $tenantUrl ) {
+                $this->addFlash(
+                    'notice',
+                    "Tenant url: ".$tenantUrl
+                );
+            }
+        }
 
         $params = array(
             //'cycle'=>"edit",

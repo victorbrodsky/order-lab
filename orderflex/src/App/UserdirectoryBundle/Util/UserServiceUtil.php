@@ -806,9 +806,13 @@ class UserServiceUtil {
     //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
     // tenantapp1-httpd.conf, tenantapp2-httpd.conf
     public function getTenants() {
+        $tenantDataArr = array();
+        $tenantDataArr['error'] = null;
+        $tenantDataArr['tenantUrl'] = null;
+
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
-        //1) get haproxy config
+        ////// 1) read haproxy //////
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
 
         if( $this->isWindows() ) {
@@ -821,10 +825,11 @@ class UserServiceUtil {
             echo "The file $haproxyConfig exists";
         } else {
             echo "The file $haproxyConfig does not exist";
-            return "The config file $haproxyConfig does not exist";
+            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not exist";
+            return $tenantDataArr;
         }
 
-        //2) read haproxy and get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
+        //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
         $originalString = file_get_contents($haproxyConfig);
 
 //        $tempArray = explode('###START-CUSTOM-TENANTS', $originalString);
@@ -849,7 +854,6 @@ class UserServiceUtil {
 //        4 => "\tacl tenant_app4_url path_beg -i /c/wcm/444"
 //        5 => "    use_backend tenant_app4_backend if tenant_app4_url"
 
-        $tenantDataArr = array();
         //Get '/c/wcm/333'
         foreach($tenantsArray as $tenant) {
             $tenantUrl = null;
@@ -866,6 +870,29 @@ class UserServiceUtil {
                 }
             }
         }//foreach
+        ////// EOF 1) read haproxy //////
+
+
+        ////// 2) read tenant's htppd if enables //////
+        //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
+        // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
+        $httpdPath = '/etc/httpd/conf/';
+
+        if( file_exists($httpdPath) ) {
+            echo "The httpd directory $httpdPath exists";
+        } else {
+            echo "The httpd directory $httpdPath does not exist";
+            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
+            return $tenantDataArr;
+        }
+
+        //$files = scandir($path);
+        $files = array_diff(scandir($path), array('.', '..')); //remove . and .. from the returned array from scandir
+        //dump($files);
+        //exit('111');
+
+        ////// EOF 2) read htppd if enables //////
+
 
         dump($tenantDataArr);
         exit('111');
