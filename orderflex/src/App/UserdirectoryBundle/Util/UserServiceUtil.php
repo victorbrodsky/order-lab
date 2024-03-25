@@ -802,6 +802,77 @@ class UserServiceUtil {
         return $href;
     }
 
+    //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
+    //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
+    // tenantapp1-httpd.conf, tenantapp2-httpd.conf
+    public function getTenants() {
+        $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
+
+        //1) get haproxy config
+        $haproxyConfig = '/etc/haproxy/haproxy.cfg';
+
+        if( $this->isWindows() ) {
+            //testing with packer's default haproxy config
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+            $haproxyConfig = $projectRoot.'/../packer/haproxy.cfg';
+        }
+
+        if( file_exists($haproxyConfig) ) {
+            echo "The file $haproxyConfig exists";
+        } else {
+            echo "The file $haproxyConfig does not exist";
+            return "The config file $haproxyConfig does not exist";
+        }
+
+        //2) read haproxy and get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
+        $originalString = file_get_contents($haproxyConfig);
+
+//        $tempArray = explode('###START-CUSTOM-TENANTS', $originalString);
+//        $str = explode('###END-CUSTOM-TENANTS', $tempArray[1]);
+//        $finalArray = explode('\n', $str[0]);
+        //dump($finalArray);
+        //exit('111');
+        //Result:
+        // \tacl tenant_app3_url path_beg -i /c/wcm/333\n
+        // use_backend tenant_app3_backend if tenant_app3_url\n
+
+        $pattern = '/(###START-CUSTOM-TENANTS)(?:.|[\n\r])+(?=###END-CUSTOM-TENANTS)/';
+        preg_match($pattern, $originalString, $matches);
+        $tenantsArray = explode("\n",trim($matches[0]));
+        //dump($finalArray);
+        //exit('111');
+        //Result:
+//        0 => "###START-CUSTOM-TENANTS "
+//        1 => "\tacl tenant_app3_url path_beg -i /c/wcm/333"
+//        2 => "    use_backend tenant_app3_backend if tenant_app3_url"
+//        3 => "\t"
+//        4 => "\tacl tenant_app4_url path_beg -i /c/wcm/444"
+//        5 => "    use_backend tenant_app4_backend if tenant_app4_url"
+
+        $tenantDataArr = array();
+        //Get '/c/wcm/333'
+        foreach($tenantsArray as $tenant) {
+            $tenantUrl = null;
+            if( str_contains($tenant, 'path_beg -i') ) {
+                $tenantUrlArr = explode('path_beg -i', $tenant);
+                echo "tenant count=".count($tenantUrlArr)."<br>";
+                if( count($tenantUrlArr) > 1 ) {
+                    $tenantUrl = end($tenantUrlArr);
+                    if( $tenantUrl ) {
+                        $tenantUrl = trim($tenantUrl);
+                        echo "tenantUrl=[".$tenantUrl."]<br>";
+                        $tenantDataArr['tenantUrl'][] = $tenantUrl;
+                    }
+                }
+            }
+        }//foreach
+
+        dump($tenantDataArr);
+        exit('111');
+
+        return $tenantDataArr;
+    }
+
     public function getSingleTenantManager( $createIfEmpty=false ) {
         $logger = $this->container->get('logger');
 

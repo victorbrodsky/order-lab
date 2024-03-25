@@ -132,6 +132,11 @@ class ExceptionListener {
             return false;
         }
 
+        //Filter out apache requests every 10 min in Windows url http://wpad.nyp.org/wpad.dat
+        if (strpos((string)$event->getRequest()->getUri(), '/wpad.dat') !== false) {
+            return false;
+        }
+
         $message = "Error: " . $exception->getMessage() . " with code" . $exception->getCode() .
             "<br>File: ".$exception->getFile() .
             "<br>Line: ".$exception->getLine()

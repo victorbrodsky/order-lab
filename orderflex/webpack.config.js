@@ -29,6 +29,7 @@ Encore
     // this is your *true* public path
     //For multitenancy, set APP_SUBDIR=/c/wcm/pathology in .env to make correct, true public path
     //.setPublicPath('/build') or .setPublicPath('/c/wcm/pathology/build')
+    //.setPublicPath('/build')
     .setPublicPath('/'+publicPathSubDir+'build')
 
     .setManifestKeyPrefix('build/')

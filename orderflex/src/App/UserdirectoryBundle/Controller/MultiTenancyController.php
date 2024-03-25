@@ -100,6 +100,13 @@ class MultiTenancyController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty=true);
 
+        //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
+        //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
+        $tenants = $userServiceUtil->getTenants();
+//        foreach($tenants as $tenant) {
+//            echo "tenanat=".$tenant."<br>";
+//        }
+
         $params = array(
             //'cycle'=>"edit",
             //'em'=>$em,
@@ -109,25 +116,6 @@ class MultiTenancyController extends OrderAbstractController
         ));
         $form->handleRequest($request);
 
-        //dump($form);
-        //exit("tenantManagerConfigureAction: form");
-        
-        //if( $form->isSubmitted() ) {
-        //    exit("tenantManagerConfigureAction: form is submitted");
-        //} else {
-        //    echo "tenantManagerConfigureAction: Form is not submitted <br>";
-        //}
-
-        //if( $form->isSubmitted() && $form->isValid() ) {
-        //    exit("tenantManagerConfigureAction: form is valid");
-        //} else {
-        //    echo "tenantManagerConfigureAction: Form is not submitted or valid <br>";
-//            if( $form->isValid() ) {
-//                echo "tenantManagerConfigureAction: Form valid <br>";
-//            } else {
-//                echo "tenantManagerConfigureAction: Form not valid <br>";
-//            }
-        //}
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
