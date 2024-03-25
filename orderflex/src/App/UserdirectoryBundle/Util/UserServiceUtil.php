@@ -848,7 +848,8 @@ class UserServiceUtil {
             return $tenantManagers[0];
         }
 
-        $tenantManager = new TenantManager();
+        $user = $this->security->getUser();
+        $tenantManager = new TenantManager($user);
 
         $tenantManager->setGreeting("Welcome to the View! The following organizations are hosted on this platform:");
         $tenantManager->setMaintext("Please log in to manage the tenants on this platform.");

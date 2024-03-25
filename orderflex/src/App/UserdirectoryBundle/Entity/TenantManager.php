@@ -19,6 +19,7 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -80,7 +81,7 @@ class TenantManager
     private $footer;
 
 
-    public function __construct( $author ) {
+    public function __construct( $author=null ) {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
         $this->tenants = new ArrayCollection();

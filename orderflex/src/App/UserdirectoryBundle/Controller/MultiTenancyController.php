@@ -69,7 +69,8 @@ use Symfony\Component\HttpFoundation\Response;
 class MultiTenancyController extends OrderAbstractController
 {
 
-    #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure', methods: ['GET', 'POST'])]
+    //, methods: ['GET', 'POST']
+    #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure')]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenant-manager-config.html.twig')]
     public function tenantManagerConfigureAction(Request $request)
     {
@@ -98,18 +99,38 @@ class MultiTenancyController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $tenantManager = $userServiceUtil->getSingleTenantManager();
 
-        $form = $this->createForm(TenantManagerType::class, $tenantManager);
+        $params = array(
+            //'cycle'=>"edit",
+            //'em'=>$em,
+        );
+        $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
+            'form_custom_value' => $params,
+        ));
+        $form->handleRequest($request);
 
-        if( $form->isSubmitted() ) {
-            exit("tenantManagerConfigureAction: form is submitted");
-        }
+        //dump($form);
+        //exit("tenantManagerConfigureAction: form");
+        
+        //if( $form->isSubmitted() ) {
+        //    exit("tenantManagerConfigureAction: form is submitted");
+        //} else {
+        //    echo "tenantManagerConfigureAction: Form is not submitted <br>";
+        //}
+
+        //if( $form->isSubmitted() && $form->isValid() ) {
+        //    exit("tenantManagerConfigureAction: form is valid");
+        //} else {
+        //    echo "tenantManagerConfigureAction: Form is not submitted or valid <br>";
+//            if( $form->isValid() ) {
+//                echo "tenantManagerConfigureAction: Form valid <br>";
+//            } else {
+//                echo "tenantManagerConfigureAction: Form not valid <br>";
+//            }
+        //}
+
         if( $form->isSubmitted() && $form->isValid() ) {
-            exit("tenantManagerConfigureAction: form is valid");
-        }
 
-        if( $form->isSubmitted() && $form->isValid() ) {
-
-            exit("tenantManagerConfigureAction: form is valid");
+            //exit("tenantManagerConfigureAction: form is valid");
 
             $em->flush();
 
@@ -197,6 +218,7 @@ class MultiTenancyController extends OrderAbstractController
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
 
+        //$user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         //$userSecUtil = $this->container->get('user_security_utility');
         //$siteParam = $userSecUtil->getSingleSiteSettingsParam();
