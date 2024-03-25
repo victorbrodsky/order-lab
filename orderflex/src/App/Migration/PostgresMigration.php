@@ -48,7 +48,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //deprecation.INFO: User Deprecated: The "App\Migration\PostgresMigration" class implements "Symfony\Component\DependencyInjection\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead
 //remove: implements ContainerAwareInterface
 
-class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
+//class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
+class PostgresMigration extends AbstractMigration
 {
 
     private $container;
@@ -87,10 +88,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
     public function createIndexArr() {
         $newline = "\n";
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        
+
+        //$em = $this->container->get('doctrine.orm.entity_manager');
         //$sm = $em->getConnection()->getSchemaManager();
-        $sm = $em->getConnection()->createSchemaManager();
+        //$sm = $em->getConnection()->createSchemaManager();
+        $sm = $this->sm;
         
         $tables = $sm->listTables();
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
