@@ -843,7 +843,13 @@ class UserServiceUtil {
 
         $pattern = '/(###START-CUSTOM-TENANTS)(?:.|[\n\r])+(?=###END-CUSTOM-TENANTS)/';
         preg_match($pattern, $originalString, $matches);
-        $tenantsArray = explode("\n",trim($matches[0]));
+        if( !isset($matches[0]) ) {
+            echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+            return $tenantDataArr;
+        }
+
+        $tenantsArray = explode("\n", trim($matches[0]));
         //dump($finalArray);
         //exit('111');
         //Result:
