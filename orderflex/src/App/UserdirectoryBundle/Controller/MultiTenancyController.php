@@ -117,10 +117,14 @@ class MultiTenancyController extends OrderAbstractController
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
                 $tenantData = $tenantDataArr[$tenantId];
                 $enabled = $tenantData['enabled'];
+                $enabledStr = "Disabled";
+                if( $enabled ) {
+                    $enabledStr = "Enabled";
+                }
                 $url = $tenantData['url'];
                 $this->addFlash(
                     'notice',
-                    "Tenant ID=" . $tenantId . "; Enabled=" . $enabled . "; url=" . $url
+                    "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
                 );
             }
         }
