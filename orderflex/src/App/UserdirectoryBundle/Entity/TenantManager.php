@@ -247,6 +247,7 @@ class TenantManager
     {
         if( !$this->tenants->contains($item) ) {
             $this->tenants->add($item);
+            $item->setTenantManager($this);
         }
 
         return $this;
@@ -255,6 +256,7 @@ class TenantManager
     {
         if( $this->tenants->contains($item) ) {
             $this->tenants->removeElement($item);
+            //$item->setTenantManager(null);
         }
 
         return $this;

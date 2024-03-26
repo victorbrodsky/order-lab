@@ -25,6 +25,7 @@ use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
 use App\UserdirectoryBundle\Entity\HostedUserGroupList;
+use App\UserdirectoryBundle\Entity\TenantUrlList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
 use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
@@ -257,12 +258,14 @@ class AdminController extends OrderAbstractController
             $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
             $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
             $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
-            $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+            //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+            $count_generateTenantUrlList = $this->generateTenantUrlList();
             $logger->notice('Finished generate multitenancy parameters. '.
                 'generateAuthUserGroupList='.$count_generateAuthUserGroupList.
                 '; generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.
                 '; generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.
-                '; generateHostedUserGroupList='.$count_generateHostedUserGroupList
+                //'; generateHostedUserGroupList='.$count_generateHostedUserGroupList
+                '; generateTenantUrlList='.$count_generateTenantUrlList
             );
 
             if( $request->get('_route') == "first-time-login-generation-init-https" ) {
@@ -1092,7 +1095,8 @@ class AdminController extends OrderAbstractController
         $count_generateAuthUserGroupList = $this->generateAuthUserGroupList();
         $count_generateAuthServerNetworkList = $this->generateAuthServerNetworkList();
         $count_generateAuthPartnerServerList = $this->generateAuthPartnerServerList();
-        $count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+        //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
+        $count_generateTenantUrlList = $this->generateTenantUrlList();
 
         //exit('testing generateAll()');
 
@@ -1237,7 +1241,8 @@ class AdminController extends OrderAbstractController
             'generateAuthUserGroupList='.$count_generateAuthUserGroupList.', '.
             'generateAuthServerNetworkList='.$count_generateAuthServerNetworkList.', '.
             'generateAuthPartnerServerList='.$count_generateAuthPartnerServerList.', '.
-            'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
+            //'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
+            'generateTenantUrlList='.$count_generateTenantUrlList.', '.
             'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -8046,7 +8051,9 @@ class AdminController extends OrderAbstractController
             "authusergroup" => array('AuthUserGroupList','authusergroup-list','Dual Authentication User Group List'),
             "authservernetwork" => array('AuthServerNetworkList','authservernetwork-list','Dual Authentication Server Network Accessibility and Role'),
             "authpartnerserver" => array('AuthPartnerServerList','authpartnerserver-list','Dual Authentication Tandem Partner Server URL'),
-            "hostedusergroups" => array('HostedUserGroupList','hostedusergroups-list','Hosted User Groups'),
+            //"hostedusergroups" => array('HostedUserGroupList','hostedusergroups-list','Hosted User Groups'),
+            "tenanturls" => array('TenantUrlList','tenanturls-list','Tenant Url List'),
+
 
         );
 
@@ -8871,6 +8878,7 @@ class AdminController extends OrderAbstractController
 
 
     ////////////////// Employee Tree Util //////////////////////
+    // #[Route(path: '/list/hostedusergroups-tree/', name: 'employees_tree_hostedusergroups_list', methods: ['GET'])]
     //to initialize JS, add "getJstree('OrderformBundle','MessageCategory');" to user-formReady.js
     #[Route(path: '/list/institutional-tree/', name: 'employees_tree_institutiontree_list', methods: ['GET'])]
     #[Route(path: '/list/comment-tree/', name: 'employees_tree_commenttree_list', methods: ['GET'])]
@@ -8878,7 +8886,7 @@ class AdminController extends OrderAbstractController
     #[Route(path: '/list/message-categories-tree/', name: 'employees_tree_messagecategories_list', methods: ['GET'])]
     #[Route(path: '/list/charttypes-tree/', name: 'employees_tree_charttypes_list', methods: ['GET'])]
     #[Route(path: '/list/charttopics-tree/', name: 'employees_tree_charttopics_list', methods: ['GET'])]
-    #[Route(path: '/list/hostedusergroups-tree/', name: 'employees_tree_hostedusergroups_list', methods: ['GET'])]
+    #[Route(path: '/list/tenanturls-tree/', name: 'employees_tree_tenanturls_list', methods: ['GET'])]
     public function institutionTreeAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
@@ -9023,11 +9031,17 @@ class AdminController extends OrderAbstractController
             $title = "Chart Topics Tree Management";
             $nodeshowpath = "charttopics_show";
         }
-        if( $routeName == "employees_tree_hostedusergroups_list" ) {
+//        if( $routeName == "employees_tree_hostedusergroups_list" ) {
+//            $bundleName = "UserdirectoryBundle";
+//            $className = "HostedUserGroupList";
+//            $title = "Hosted User Group (Tenant IDs) Tree Management";
+//            $nodeshowpath = "hostedusergroups_show";
+//        }
+        if( $routeName == "employees_tree_tenanturls_list" ) {
             $bundleName = "UserdirectoryBundle";
-            $className = "HostedUserGroupList";
-            $title = "Hosted User Group (Tenant IDs) Tree Management";
-            $nodeshowpath = "hostedusergroups_show";
+            $className = "TenantUrlList";
+            $title = "Tenenat Url Tree Management";
+            $nodeshowpath = "tenanturls_show";
         }
 
         $mapper = array(
@@ -11833,7 +11847,7 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-    public function generateHostedUserGroupList() {
+    public function generateHostedUserGroupList_TODELETE() {
         //Generate Tenant IDs i.e. 'c/wcm/pathology' or 'c/lmh/pathology'
         //Similar to generateResLabs()
 
@@ -11952,6 +11966,126 @@ class AdminController extends OrderAbstractController
         }
 
         //exit('exit generateHostedUserGroupList');
+        return round($count/10);
+    }
+    public function generateTenantUrlList() {
+        //Generate Tenant urls i.e. 'c/wcm/pathology' or 'c/lmh/pathology'
+
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $count = 10;
+
+        $rootName = "All Tenants";
+        $rootAbbrev = "c";
+        $root = $em->getRepository(TenantUrlList::class)->findOneByName($rootName);
+        if( !$root ) {
+            //exit('generateResLabs: No TenantUrlList: "c"');
+
+            $root = new TenantUrlList();
+            $count = NULL;
+            $this->setDefaultList($root,$count,$username,$rootName);
+
+            $root->setAbbreviation($rootAbbrev);
+            $root->setUrlSlug($rootAbbrev);
+            $root->setLevel(0);
+            $count = $count + 10;
+
+            $em->persist($root);
+            $em->flush();
+        }
+
+        $types = array(
+            //"All Hosted User Groups" => "c", //Parent list item ID = NULL
+            // c/test-institution/test-department
+            //"Test Institution" => array("Test Institution" => "test-institution"),
+            //"Test Department" => "test-department", //Parent list item {Test Institution}
+            array(
+                1 => array("Test Institution", "test-institution"),
+                2 => array("Test Department", "test-department"),
+            ),
+
+            // c/demo-institution/demo-department
+            //"Demo Institution" => "demo-institution",
+            //"Demo Department" => "demo-department", //Parent list item {Demo Institution}
+            array(
+                1 => array("Demo Institution", "demo-institution"),
+                2 => array("Demo Department", "demo-department"),
+            ),
+
+            // c/wcm/pathology
+            //"Weill Cornell Medicine" => "wcm",
+            //"WCM Department of Pathology and Laboratory Medicine" => "pathology", //Parent list item {Weill Cornell Medicine}
+            array(
+                1 => array("Weill Cornell Medicine", "wcm"),
+                2 => array("WCM Department of Pathology and Laboratory Medicine", "pathology"),
+            ),
+        );
+
+        foreach( $types as $typeArr ) {
+
+            $toFlush = false;
+            reset($typeArr);
+            //dump($typeArr);
+            //exit('111');
+            $instLevel = key($typeArr);
+            echo 'instLevel='.$instLevel.'<br>';
+            $instArr = $typeArr[$instLevel];
+            dump($instArr);
+
+            $instName = $instArr[0];
+            $instAbbrev = $instArr[1];
+            echo 'instName='.$instName.', instAbbrev='.$instAbbrev.'<br>';
+
+            next($typeArr);
+            $departLevel = key($typeArr);
+            echo 'departLevel='.$departLevel.'<br>';
+            $departArr = $typeArr[$departLevel];
+            $departName = $departArr[0];
+            $departAbbrev = $departArr[1];
+            echo 'departName='.$departName.', departAbbrev='.$departAbbrev.'<br>';
+
+            //exit('111');
+
+            if( $instName && $instAbbrev ) {
+                $instEntity = $em->getRepository(TenantUrlList::class)->findOneByName($instName);
+                if( $instEntity ) {
+                    continue;
+                }
+
+                $instEntity = new TenantUrlList();
+                $this->setDefaultList($instEntity,$count,$username,$instName);
+                $instEntity->setAbbreviation($instAbbrev);
+                $instEntity->setUrlSlug($instAbbrev);
+                $instEntity->setLevel($instLevel);
+                $root->addChild($instEntity);
+                $em->persist($instEntity);
+                $toFlush = true;
+                $count = $count + 10;
+
+                if( $instEntity && $departName && $departAbbrev ) {
+                    $departEntity = $em->getRepository(TenantUrlList::class)->findOneByName($departName);
+                    if( $departEntity ) {
+                        continue;
+                    }
+
+                    $departEntity = new TenantUrlList();
+                    $this->setDefaultList($departEntity,$count,$username,$departName);
+                    $departEntity->setAbbreviation($departAbbrev);
+                    $departEntity->setUrlSlug($departAbbrev);
+                    $departEntity->setLevel($departLevel);
+                    $instEntity->addChild($departEntity);
+                    $em->persist($departEntity);
+                    $toFlush = true;
+                    $count = $count + 10;
+                }
+
+            }
+
+            $em->flush();
+        }
+
+        //exit('exit generateTenantUrlList');
         return round($count/10);
     }
 

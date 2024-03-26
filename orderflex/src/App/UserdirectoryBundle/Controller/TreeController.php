@@ -741,7 +741,10 @@ class TreeController extends OrderAbstractController {
             case "TopicList":
                 $organizationalGroupType = NULL;
                 break;
-            case "HostedUserGroupList":
+//            case "HostedUserGroupList":
+//                $organizationalGroupType = NULL;
+//                break;
+            case "TenantUrlList":
                 $organizationalGroupType = NULL;
                 break;
 

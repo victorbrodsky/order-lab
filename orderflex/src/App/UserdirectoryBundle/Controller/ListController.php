@@ -305,7 +305,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/', name: 'authusergroup-list', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork-list', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver-list', methods: ['GET'])]
-    #[Route(path: '/list/hostedusergroups/', name: 'hostedusergroups-list', methods: ['GET'])]
+    #[Route(path: '/list/tenanturls/', name: 'tenanturls-list', methods: ['GET'])]
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
@@ -1005,7 +1005,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/', name: 'authusergroup_create', methods: ['POST'])]
     #[Route(path: '/list/authservernetwork/', name: 'authservernetwork_create', methods: ['POST'])]
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver_create', methods: ['POST'])]
-    #[Route(path: '/list/hostedusergroups/', name: 'hostedusergroups_create', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/list/tenanturls/', name: 'tenanturls_create', methods: ['POST'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
@@ -1371,7 +1371,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/new', name: 'authusergroup_new', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/new', name: 'authservernetwork_new', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/new', name: 'authpartnerserver_new', methods: ['GET'])]
-    #[Route(path: '/list/hostedusergroups/new', name: 'hostedusergroups_new', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/tenanturls/new', name: 'tenanturls_new', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/new', name: 'antibodycategorytag_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
@@ -1685,7 +1685,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_show', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_show', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_show', methods: ['GET'])]
-    #[Route(path: '/list/hostedusergroups/{id}', name: 'hostedusergroups_show', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_show', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
@@ -1992,7 +1992,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}/edit', name: 'authusergroup_edit', methods: ['GET'])]
     #[Route(path: '/list/authservernetwork/{id}/edit', name: 'authservernetwork_edit', methods: ['GET'])]
     #[Route(path: '/list/authpartnerserver/{id}/edit', name: 'authpartnerserver_edit', methods: ['GET'])]
-    #[Route(path: '/list/hostedusergroups/{id}/edit', name: 'hostedusergroups_edit', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/list/tenanturls/{id}/edit', name: 'tenanturls_edit', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}/edit', name: 'antibodycategorytag_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
@@ -2349,7 +2349,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_update', methods: ['PUT'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_update', methods: ['PUT'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_update', methods: ['PUT'])]
-    #[Route(path: '/list/hostedusergroups/{id}', name: 'hostedusergroups_update', methods: ['PUT'], options: ['expose' => true])]
+    #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_update', methods: ['PUT'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
@@ -3268,9 +3268,13 @@ class ListController extends OrderAbstractController
                 $className = "AuthPartnerServerList";
                 $displayName = "Dual Authentication Tandem Partner Server URL";
                 break;
-            case "hostedusergroups":
-                $className = "HostedUserGroupList";
-                $displayName = "Hosted User Groups";
+//            case "hostedusergroups":
+//                $className = "HostedUserGroupList";
+//                $displayName = "Hosted User Groups";
+//                break;
+            case "tenanturls":
+                $className = "TenantUrlList";
+                $displayName = "Tenant Urls";
                 break;
 
             case "healthcareproviderspecialty":
@@ -4265,7 +4269,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authusergroup/{id}', name: 'authusergroup_delete', methods: ['DELETE'])]
     #[Route(path: '/list/authservernetwork/{id}', name: 'authservernetwork_delete', methods: ['DELETE'])]
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_delete', methods: ['DELETE'])]
-    #[Route(path: '/list/hostedusergroups/{id}', name: 'hostedusergroups_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_delete', methods: ['DELETE'])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {

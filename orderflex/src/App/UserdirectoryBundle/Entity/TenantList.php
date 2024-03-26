@@ -63,9 +63,9 @@ class TenantList extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $databasePassword;
 
-    //$systemDb (boolean) Use as a system DB to store multitenancy parameters
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private $systemDb;
+//    //$systemDb (boolean) Use as a system DB to store multitenancy parameters
+//    #[ORM\Column(type: 'boolean', nullable: true)]
+//    private $systemDb;
 
     //Show on Homepage? (Yes/No, Boolean) if set to “No” do not show on the main homepage list
     #[ORM\Column(type: 'boolean', nullable: true)]

@@ -213,6 +213,12 @@
         {{ formmacros.field(form.footer) }}
 
 
+        {% if form.tenants is defined %}
+            tenants:
+            {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+            {{ userform.tenantsSection(form.tenants, cycle, employees_sitename, "in", "Tenant(s)",true) }}
+        {% endif %}
+
 
         {% if form.submit is defined %}
             {{ form_widget(form.submit) }}

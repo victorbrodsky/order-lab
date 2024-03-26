@@ -224,6 +224,12 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $this->addCustomFields($builder);
+
+    }
+
+    public function addCustomFields($builder) {
+        return;
     }
 
     /**

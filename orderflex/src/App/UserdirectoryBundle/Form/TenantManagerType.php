@@ -23,6 +23,12 @@ class TenantManagerType extends AbstractType
     public function formConstructor( $params=null )
     {
         $this->params = $params;
+
+        $this->mapper = array();
+        $this->mapper['className'] = "TenantList";
+        $this->mapper['bundleName'] = "UserdirectoryBundle";
+        $this->mapper['fullClassName'] = "App\\".$this->mapper['bundleName']."\\Entity\\".$this->mapper['className'];
+        $this->mapper['entityNamespace'] = "App\\".$this->mapper['bundleName']."\\Entity";
     }
 
     /**
@@ -61,6 +67,22 @@ class TenantManagerType extends AbstractType
             'label' => 'Footer:',
             'required' => false,
             'attr' => array('class'=>'form-control textarea')
+        ));
+
+        $builder->add('tenants', CollectionType::class, array(
+            'entry_type' => TenantType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+                'form_custom_value_mapper' => $this->mapper
+            ),
+            //'form_custom_value' => $this->params,
+            'label' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__tenants__',
         ));
 
 //        $builder->add('authServerNetwork', EntityType::class, array(

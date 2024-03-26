@@ -1309,6 +1309,94 @@
     </div>
 {% endmacro %}
 
+
+{% macro tenantsSection( tenants, cycle, sitename, collapsein, title, usedata ) %}
+    {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    {% if usedata %}
+        <div id="form-prototype-data2"
+             data-prototype-user-tenants = "{{ userform.tenantholders(tenants,cycle,'user-tenants','prototype', sitename)|e }}"
+        ></div>
+    {% endif %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#tenants">
+                    {{ title }}
+                </a>
+            </h4>
+        </div>
+        <div id="tenants" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                <div class="user-tenants-holder">
+                    {% if tenants|length > 0 %}
+                        {% for tenant in tenants %}
+                            {{ userform.tenantholders( tenant, cycle, 'user-tenants', 'noprototype' ) }}
+                        {% endfor %}
+                    {% else %}
+                        {#No specific tenants are defined.<br>#}
+                    {% endif %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-tenants','Add Tenants') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{% macro tenantholders( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="well {{ classname }}">
+
+        {% if not showFlag %}
+            <div class="text-right">
+                <button type="button"
+                        class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        {% endif %}
+
+        {% if formfield.tenantUrl is defined %}
+            {{ formmacros.field(formfield.tenantUrl) }}
+        {% endif %}
+        {{ formmacros.field(formfield.databaseHost) }}
+        {{ formmacros.field(formfield.databasePort) }}
+        {{ formmacros.field(formfield.databaseName) }}
+        {{ formmacros.field(formfield.databaseUser) }}
+        {{ formmacros.field(formfield.databasePassword) }}
+
+        {{ formmacros.field(formfield.adminName) }}
+        {{ formmacros.field(formfield.institutionTitle) }}
+        {{ formmacros.field(formfield.departmentTitle) }}
+        {{ formmacros.field(formfield.billingAdminName) }}
+        {{ formmacros.field(formfield.billingAdminEmail) }}
+        {{ formmacros.field(formfield.operationalAdminName) }}
+        {{ formmacros.field(formfield.operationalAdminEmail) }}
+
+        {{ formmacros.field(formfield.orderinlist) }}
+        {{ formmacros.field(formfield.showOnHomepage) }}
+        {{ formmacros.field(formfield.enabled) }}
+
+    </div>
+{% endmacro %}
+
+
 {% macro priceSection( form, cycle, sitename, collapsein, title, usedata ) %}
 
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}

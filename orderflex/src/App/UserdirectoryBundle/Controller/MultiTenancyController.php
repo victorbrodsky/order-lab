@@ -97,8 +97,15 @@ class MultiTenancyController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
+
         $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty=true);
+
+        $originalTenants = array();
+        foreach( $tenantManager->getTenants() as $tenant ) {
+            $originalTenants[] = $tenant;
+        }
 
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
         //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
@@ -133,6 +140,8 @@ class MultiTenancyController extends OrderAbstractController
             //'cycle'=>"edit",
             //'em'=>$em,
         );
+        $params['user'] = $user;
+        $params['cycle'] = "edit";
         $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
             'form_custom_value' => $params,
         ));
@@ -142,6 +151,16 @@ class MultiTenancyController extends OrderAbstractController
         if( $form->isSubmitted() && $form->isValid() ) {
 
             //exit("tenantManagerConfigureAction: form is valid");
+
+            //$removedTenantCollections = array();
+            //$removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
+            //if( $removedInfo ) {
+            //    $removedTenantCollections[] = $removedInfo;
+            //}
+            echo "tenant count=".count($tenantManager->getTenants())."<br>";
+            foreach($tenantManager->getTenants() as $tenant) {
+                echo "tenant=$tenant <br>";
+            }
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
@@ -171,26 +190,24 @@ class MultiTenancyController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => 'edit'
         );
-
-        //Tenant list
-//        $task = new Task();
-//        $form = $this->createForm(TaskType::class, $task);
-//
-//        if ($request->isMethod('POST')) {
-//            $form->submit($request->getPayload()->get($form->getName()));
-//
-//            if ($form->isSubmitted() && $form->isValid()) {
-//                // perform some action...
-//
-//                return $this->redirectToRoute('task_success');
-//            }
-//        }
-//
-//        return $this->render('task/new.html.twig', [
-//            'form' => $form,
-//        ]);
     }
 
+    public function removeTenantCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removeTenant($element);
+                $element->setServerNetwork(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
 
 
 
