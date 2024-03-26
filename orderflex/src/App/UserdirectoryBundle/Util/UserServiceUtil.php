@@ -898,15 +898,15 @@ class UserServiceUtil {
 //        5 => "    use_backend tenantapp4backend if tenant_app4_url"
 
         //Get '/c/wcm/333'
-        foreach($tenantsArray as $tenant) {
+        foreach($tenantsArray as $frontendTenantLine) {
             $tenantUrl = null;
-            if( str_contains($tenant, 'path_beg -i') && !str_contains($tenant, '#') ) {
+            if( str_contains($frontendTenantLine, 'path_beg -i') ) {
                 //get tenant ID: ' tenantapp3_url' => tenantapp3
-                $tenantId = $this->get_string_between($tenant,"acl ","_url");
+                $tenantId = $this->get_string_between($frontendTenantLine,"acl ","_url");
                 $tenantId = trim($tenantId);
                 $tenantDataArr[$tenantId]['enabled'] = false;
 
-                $tenantUrlArr = explode('path_beg -i', $tenant);
+                $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
                 echo "tenant count=".count($tenantUrlArr)."<br>";
                 if( count($tenantUrlArr) > 1 ) {
                     $tenantUrl = end($tenantUrlArr);
@@ -916,9 +916,11 @@ class UserServiceUtil {
                         $tenantDataArr[$tenantId]['url'] = $tenantUrl;
                         //$tenantDataArr[$tenantId]['enabled'] = true;
 
-                        foreach($tenantDataArr['existedTenantIds'] as $existedTenantId) {
-                            if( $existedTenantId == $tenantId ) {
-                                $tenantDataArr[$tenantId]['enabled'] = true;
+                        if( !str_contains($frontendTenantLine, '#') ) {
+                            foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+                                if ($existedTenantId == $tenantId) {
+                                    $tenantDataArr[$tenantId]['enabled'] = true;
+                                }
                             }
                         }
                     }
@@ -926,9 +928,6 @@ class UserServiceUtil {
             }
         }//foreach
         ////// EOF 2) read haproxy //////
-
-
-
 
 
         dump($tenantDataArr);
