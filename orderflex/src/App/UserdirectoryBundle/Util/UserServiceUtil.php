@@ -809,8 +809,8 @@ class UserServiceUtil {
         $tenantDataArr = array();
         $tenantDataArr['error'] = null;
         $tenantDataArr['existedTenantIds'] = null;
-        $tenantDataArr['enabledTenants'] = null;
-        $tenantDataArr['tenantUrl'] = null;
+        //$tenantDataArr['enabledTenants'] = null;
+        //$tenantDataArr['tenantUrl'] = null;
 
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
@@ -914,7 +914,13 @@ class UserServiceUtil {
                         $tenantUrl = trim($tenantUrl);
                         echo "tenantUrl=[".$tenantUrl."]<br>";
                         $tenantDataArr[$tenantId]['url'] = $tenantUrl;
-                        $tenantDataArr[$tenantId]['enabled'] = true;
+                        //$tenantDataArr[$tenantId]['enabled'] = true;
+
+                        foreach($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+                            if( $existedTenantId == $tenantId ) {
+                                $tenantDataArr[$tenantId]['enabled'] = true;
+                            }
+                        }
                     }
                 }
             }
