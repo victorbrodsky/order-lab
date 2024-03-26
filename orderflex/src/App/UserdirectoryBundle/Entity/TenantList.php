@@ -37,14 +37,16 @@ class TenantList extends ListAbstract
     #[ORM\JoinColumn(name: 'tenantmanager_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $tenantManager;
 
+    //Name (that is what would be shown on the homepage list) - tenantId, i.e. 'tenantapp3'
+
     //tenant url (tenant name) (similar to HostedUserGroupList)
     //One url can belong to the multiple tenants, for example tenant1 and tenant2, when tenant 1 is active and tenent2 is inactive.
+    //URL Slug (that will be used to construct the link to the tenant homepage - /c/wcm/pathology , etc)
     #[ORM\ManyToOne(targetEntity: TenantUrlList::class, inversedBy: 'tenants')]
     #[ORM\JoinColumn(name: 'tenanturl_id', referencedColumnName: 'id', nullable: true)]
     private $tenantUrl;
     //#[ORM\OneToOne(targetEntity: TenantUrlList::class, cascade: ['persist', 'remove'])]
     //private $tenantUrl;
-
 
     #[ORM\Column(type: 'string', nullable: true)]
     private $databaseHost;
@@ -65,13 +67,55 @@ class TenantList extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $systemDb;
 
+    //Show on Homepage? (Yes/No, Boolean) if set to “No” do not show on the main homepage list
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showOnHomepage;
+
+    //Active and accessible via Web GUI? (Yes/No, Boolean)
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enabled;
+
+
+    //Parent (Hierarchical): Since the list of tenants is hierarchical it should stay hierarchical: the root tenant is /c , /c/wcm is an entry for the institution with parent of /c , /c/wcm/pathology and /c/wcm/psychiatry have /c/wcm as parent, etc
+    //Database file name: ""
+    //Path to the database file: ""
+
+    //Platform Administrator Account User Name: "" (User object or string?)
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $adminName;
+
+    //Tenant Institution Title: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $institutionTitle;
+
+    //Tenant Department Title: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $departmentTitle;
+
+    //Billing Tenant Administrator Contact Name: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $billingAdminName;
+
+    //Billing Tenant Administrator Contact Email: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $billingAdminEmail;
+
+    //Operational Tenant Administrator Contact Name: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $operationalAdminName;
+
+    //Operational Tenant Administrator Contact Email: [free text]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $operationalAdminEmail;
+
 
 
     public function __construct($author=null) {
         parent::__construct($author);
     }
+
+
+
 
     /**
      * @return mixed
@@ -215,6 +259,134 @@ class TenantList extends ListAbstract
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowOnHomepage()
+    {
+        return $this->showOnHomepage;
+    }
+
+    /**
+     * @param mixed $showOnHomepage
+     */
+    public function setShowOnHomepage($showOnHomepage)
+    {
+        $this->showOnHomepage = $showOnHomepage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdminName()
+    {
+        return $this->adminName;
+    }
+
+    /**
+     * @param mixed $adminName
+     */
+    public function setAdminName($adminName)
+    {
+        $this->adminName = $adminName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitutionTitle()
+    {
+        return $this->institutionTitle;
+    }
+
+    /**
+     * @param mixed $institutionTitle
+     */
+    public function setInstitutionTitle($institutionTitle)
+    {
+        $this->institutionTitle = $institutionTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartmentTitle()
+    {
+        return $this->departmentTitle;
+    }
+
+    /**
+     * @param mixed $departmentTitle
+     */
+    public function setDepartmentTitle($departmentTitle)
+    {
+        $this->departmentTitle = $departmentTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingAdminName()
+    {
+        return $this->billingAdminName;
+    }
+
+    /**
+     * @param mixed $billingAdminName
+     */
+    public function setBillingAdminName($billingAdminName)
+    {
+        $this->billingAdminName = $billingAdminName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingAdminEmail()
+    {
+        return $this->billingAdminEmail;
+    }
+
+    /**
+     * @param mixed $billingAdminEmail
+     */
+    public function setBillingAdminEmail($billingAdminEmail)
+    {
+        $this->billingAdminEmail = $billingAdminEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperationalAdminName()
+    {
+        return $this->operationalAdminName;
+    }
+
+    /**
+     * @param mixed $operationalAdminName
+     */
+    public function setOperationalAdminName($operationalAdminName)
+    {
+        $this->operationalAdminName = $operationalAdminName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperationalAdminEmail()
+    {
+        return $this->operationalAdminEmail;
+    }
+
+    /**
+     * @param mixed $operationalAdminEmail
+     */
+    public function setOperationalAdminEmail($operationalAdminEmail)
+    {
+        $this->operationalAdminEmail = $operationalAdminEmail;
     }
 
 
