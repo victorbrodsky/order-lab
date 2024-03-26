@@ -808,11 +808,47 @@ class UserServiceUtil {
     public function getTenants() {
         $tenantDataArr = array();
         $tenantDataArr['error'] = null;
+        $tenantDataArr['existedTenantIds'] = null;
+        $tenantDataArr['enabledTenants'] = null;
         $tenantDataArr['tenantUrl'] = null;
 
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
-        ////// 1) read haproxy (check if tenant is enabled) //////
+
+        ////// 1) Check if tenant's htppd exists //////
+        //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
+        // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
+        $httpdPath = '/etc/httpd/conf/';
+
+        if( file_exists($httpdPath) ) {
+            echo "The httpd directory $httpdPath exists";
+        } else {
+            echo "The httpd directory $httpdPath does not exist";
+            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
+            return $tenantDataArr;
+        }
+
+        //$files = scandir($path);
+        $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
+        //dump($files);
+        //exit('111');
+        foreach($httpdFiles as $httpdFile) {
+            if( str_contains($httpdFile, '-httpd.conf') ) {
+                echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
+                //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
+                $tenantId = null;
+                $tenantIdArr = explode('-', $httpdFile);
+                if( count($tenantIdArr) == 2 ) {
+                    $tenantId = $tenantIdArr[0];
+                }
+                $tenantDataArr['existedTenantIds'][] = $tenantId;
+            }
+        }
+
+        ////// EOF 1) read htppd if enables //////
+
+
+        ////// 2) read haproxy (check if tenant is enabled) //////
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
 
         if( $this->isWindows() ) {
@@ -867,6 +903,11 @@ class UserServiceUtil {
         foreach($tenantsArray as $tenant) {
             $tenantUrl = null;
             if( str_contains($tenant, 'path_beg -i') ) {
+                //get tenant ID: ' tenantapp3_url' => tenantapp3
+                $tenantId = $this->get_string_between($tenant,"acl ","_url");
+                $tenantId = trim($tenantId);
+                $tenantDataArr[$tenantId]['enabled'] = false;
+
                 $tenantUrlArr = explode('path_beg -i', $tenant);
                 echo "tenant count=".count($tenantUrlArr)."<br>";
                 if( count($tenantUrlArr) > 1 ) {
@@ -874,45 +915,30 @@ class UserServiceUtil {
                     if( $tenantUrl ) {
                         $tenantUrl = trim($tenantUrl);
                         echo "tenantUrl=[".$tenantUrl."]<br>";
-                        $tenantDataArr['tenantUrl'][] = $tenantUrl;
+                        $tenantDataArr[$tenantId]['url'] = $tenantUrl;
+                        $tenantDataArr[$tenantId]['enabled'] = true;
                     }
                 }
             }
         }//foreach
-        ////// EOF 1) read haproxy //////
+        ////// EOF 2) read haproxy //////
 
 
-        ////// 2) Check if tenant's htppd exists //////
-        //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
-        // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
-        $httpdPath = '/etc/httpd/conf/';
 
-        if( file_exists($httpdPath) ) {
-            echo "The httpd directory $httpdPath exists";
-        } else {
-            echo "The httpd directory $httpdPath does not exist";
-            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
-            return $tenantDataArr;
-        }
-
-        //$files = scandir($path);
-        $files = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
-        //dump($files);
-        //exit('111');
-        foreach($files as $file) {
-            if( str_contains($file, '-httpd.conf') ) {
-                echo "file=[".$file."]<br>"; //tenantapp2-httpd.conf
-                //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
-            }
-        }
-
-        ////// EOF 2) read htppd if enables //////
 
 
         dump($tenantDataArr);
         exit('111');
 
         return $tenantDataArr;
+    }
+    function get_string_between($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
     }
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
