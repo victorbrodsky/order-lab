@@ -900,7 +900,7 @@ class UserServiceUtil {
         //Get '/c/wcm/333'
         foreach($tenantsArray as $tenant) {
             $tenantUrl = null;
-            if( str_contains($tenant, 'path_beg -i') ) {
+            if( str_contains($tenant, 'path_beg -i') && !str_contains($tenant, '#') ) {
                 //get tenant ID: ' tenantapp3_url' => tenantapp3
                 $tenantId = $this->get_string_between($tenant,"acl ","_url");
                 $tenantId = trim($tenantId);
