@@ -811,6 +811,7 @@ class UserServiceUtil {
         $tenantDataArr['existedTenantIds'] = null;
         //$tenantDataArr['enabledTenants'] = null;
         //$tenantDataArr['tenantUrl'] = null;
+        //$tenantDataArr['tenants'] = null;
 
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
@@ -841,6 +842,7 @@ class UserServiceUtil {
                     $tenantId = $tenantIdArr[0];
                 }
                 $tenantDataArr['existedTenantIds'][] = $tenantId;
+                //$tenantDataArr['tenants']['tenantId'] = $tenantId;
             }
         }
 
