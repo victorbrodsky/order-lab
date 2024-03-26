@@ -821,9 +821,9 @@ class UserServiceUtil {
         $httpdPath = '/etc/httpd/conf/';
 
         if( file_exists($httpdPath) ) {
-            echo "The httpd directory $httpdPath exists";
+            //echo "The httpd directory $httpdPath exists";
         } else {
-            echo "The httpd directory $httpdPath does not exist";
+            //echo "The httpd directory $httpdPath does not exist";
             $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
             return $tenantDataArr;
         }
@@ -834,7 +834,7 @@ class UserServiceUtil {
         //exit('111');
         foreach($httpdFiles as $httpdFile) {
             if( str_contains($httpdFile, '-httpd.conf') ) {
-                echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
+                //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
                 //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
                 $tenantId = null;
                 $tenantIdArr = explode('-', $httpdFile);
@@ -858,9 +858,9 @@ class UserServiceUtil {
         }
 
         if( file_exists($haproxyConfig) ) {
-            echo "The file $haproxyConfig exists";
+            //echo "The file $haproxyConfig exists";
         } else {
-            echo "The file $haproxyConfig does not exist";
+            //echo "The file $haproxyConfig does not exist";
             $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not exist";
             return $tenantDataArr;
         }
@@ -883,7 +883,7 @@ class UserServiceUtil {
         $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
         preg_match($pattern, $originalString, $matches);
         if( !isset($matches[0]) ) {
-            echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
             $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
             return $tenantDataArr;
         }
@@ -909,12 +909,12 @@ class UserServiceUtil {
                 $tenantDataArr[$tenantId]['enabled'] = false;
 
                 $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
-                echo "tenant count=".count($tenantUrlArr)."<br>";
+                //echo "tenant count=".count($tenantUrlArr)."<br>";
                 if( count($tenantUrlArr) > 1 ) {
                     $tenantUrl = end($tenantUrlArr);
                     if( $tenantUrl ) {
                         $tenantUrl = trim($tenantUrl);
-                        echo "tenantUrl=[".$tenantUrl."]<br>";
+                        //echo "tenantUrl=[".$tenantUrl."]<br>";
                         $tenantDataArr[$tenantId]['url'] = $tenantUrl;
                         //$tenantDataArr[$tenantId]['enabled'] = true;
 
@@ -931,9 +931,8 @@ class UserServiceUtil {
         }//foreach
         ////// EOF 2) read haproxy //////
 
-
-        dump($tenantDataArr);
-        exit('111');
+        //dump($tenantDataArr);
+        //exit('111');
 
         return $tenantDataArr;
     }
