@@ -814,7 +814,6 @@ class UserServiceUtil {
 
         $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
 
-
         ////// 1) Check if tenant's htppd exists //////
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
         // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
@@ -846,7 +845,6 @@ class UserServiceUtil {
         }
 
         ////// EOF 1) read htppd if enables //////
-
 
         ////// 2) read haproxy (check if tenant is enabled) //////
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
