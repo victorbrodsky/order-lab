@@ -155,6 +155,7 @@ class MultiTenancyController extends OrderAbstractController
                         $newTenant->setName($tenantId);
                         $newTenant->setOrderinlist($orderInList);
                         $newTenant->setEnabled($enabled);
+                        $newTenant->setShowOnHomepage(false);
                         $orderInList = $orderInList + 10;
                     }
                 }
