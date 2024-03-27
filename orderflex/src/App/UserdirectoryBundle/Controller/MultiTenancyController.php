@@ -150,6 +150,7 @@ class MultiTenancyController extends OrderAbstractController
                     } else {
                         //add tenant to DB and, therefore, this form
                         $newTenant = new TenantList($user);
+                        $tenantManager->addTenant($newTenant);
                         $newTenant->setName($tenantId);
                         $newTenant->setEnabled($enabled);
                     }
