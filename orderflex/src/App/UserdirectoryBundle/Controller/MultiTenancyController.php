@@ -71,10 +71,10 @@ use Symfony\Component\HttpFoundation\Response;
 class MultiTenancyController extends OrderAbstractController
 {
 
-    //, methods: ['GET', 'POST']
+    //, methods: ['GET', 'POST'] TenantManager $tenantManager=null
     #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure')]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenant-manager-config.html.twig')]
-    public function tenantManagerConfigureAction(Request $request, TenantManager $tenantManager)
+    public function tenantManagerConfigureAction(Request $request)
     {
         //First show tenancy home page settings (TenantManager)
         //The homepage of the 'TenantManager' has:
@@ -101,12 +101,13 @@ class MultiTenancyController extends OrderAbstractController
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        if( !$tenantManager ) {
+        //if( !$tenantManager ) {
             $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
-            $cycle = "new";
-        } else {
-            $cycle = "edit";
-        }
+            //$cycle = "new";
+        //} else {
+        //    $cycle = "edit";
+       // }
+        $cycle = "edit";
 
         $originalTenants = array();
         foreach( $tenantManager->getTenants() as $tenant ) {
