@@ -229,21 +229,21 @@ class TenantList extends ListAbstract
         $this->databasePassword = $databasePassword;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSystemDb()
-    {
-        return $this->systemDb;
-    }
-
-    /**
-     * @param mixed $systemDb
-     */
-    public function setSystemDb($systemDb)
-    {
-        $this->systemDb = $systemDb;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getSystemDb()
+//    {
+//        return $this->systemDb;
+//    }
+//
+//    /**
+//     * @param mixed $systemDb
+//     */
+//    public function setSystemDb($systemDb)
+//    {
+//        $this->systemDb = $systemDb;
+//    }
 
     /**
      * @return mixed
