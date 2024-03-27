@@ -71,10 +71,10 @@ class TenantManagerType extends AbstractType
 
         $builder->add('tenants', CollectionType::class, array(
             'entry_type' => TenantType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params,
-                'form_custom_value_mapper' => $this->mapper
-            ),
+            //'entry_options' => array(
+            //    'form_custom_value' => $this->params,
+            //    'form_custom_value_mapper' => $this->mapper
+            //),
             //'form_custom_value' => $this->params,
             'label' => false,
             'allow_add' => true,

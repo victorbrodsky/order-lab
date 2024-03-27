@@ -32,8 +32,25 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 
-class TenantType extends ListType
+class TenantType extends AbstractType
+//class TenantType extends ListType
 {
+
+    protected $params;
+
+    public function formConstructor( $params=null )
+    {
+        $this->params = $params;
+    }
+
+    /**
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $this->formConstructor($options['form_custom_value']);
+        $this->addCustomFields($builder);
+    }
 
     /**
      * @return void
@@ -41,6 +58,17 @@ class TenantType extends ListType
     //public function buildForm(FormBuilderInterface $builder, array $options)
     public function addCustomFields($builder)
     {
+        $builder->add('name',null,array(
+            'label'=>'Tenant name:',
+            'required' => true,
+            'attr' => array('class'=>'form-control', 'required'=>'required')
+        ));
+
+        $builder->add('orderinlist',null,array(
+            'label'=>'Display Order:',
+            'required' => true,
+            'attr' => array('class'=>'form-control', 'required'=>'required')
+        ));
 
         $builder->add('databaseHost',null,array(
             'label'=>'Database Host:',
@@ -136,22 +164,23 @@ class TenantType extends ListType
     /**
      * @return void
      */
-    public function configureOptions_ORIG(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\TenantList',
+            'form_custom_value' => null
         ));
     }
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions_new(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            //'data_class' => 'App\UserdirectoryBundle\Entity\TenantList',
-            'inherit_data' => true,
-            'form_custom_value' => null,
-            'form_custom_value_mapper' => null
+            'data_class' => 'App\UserdirectoryBundle\Entity\TenantList',
+            //'inherit_data' => true,
+            //'form_custom_value' => null,
+            //'form_custom_value_mapper' => null
         ));
     }
 

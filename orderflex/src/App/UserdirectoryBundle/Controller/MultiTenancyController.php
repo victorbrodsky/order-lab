@@ -107,6 +107,7 @@ class MultiTenancyController extends OrderAbstractController
         //} else {
         //    $cycle = "edit";
        // }
+        echo "tenantManager ID=".$tenantManager->getId()."<br>";
         $cycle = "edit";
 
         $originalTenants = array();
@@ -143,7 +144,7 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-        echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
+        echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
         foreach($tenantManager->getTenants() as $tenant) {
             echo "tenant=$tenant <br>";
         }
@@ -168,16 +169,22 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
-            //$removedTenantCollections = array();
-            //$removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
-            //if( $removedInfo ) {
-            //    $removedTenantCollections[] = $removedInfo;
-            //}
+            $removedTenantCollections = array();
+            $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
+            if( $removedInfo ) {
+                $removedTenantCollections[] = $removedInfo;
+                echo "Remove tenant: ".$removedInfo."<br>";
+                $this->addFlash(
+                    'notice',
+                    "Tenant has been removed: ".$removedInfo
+                );
+            }
+
             echo "2 tenant count=".count($tenantManager->getTenants())."<br>";
             foreach($tenantManager->getTenants() as $tenant) {
                 echo "tenant=$tenant <br>";
             }
-            exit("tenantManagerConfigureAction: submitted");
+            //exit("tenantManagerConfigureAction: submitted");
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
@@ -215,15 +222,21 @@ class MultiTenancyController extends OrderAbstractController
 
         foreach( $originalArr as $element ) {
             if( false === $currentArr->contains($element) ) {
-                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $removeArr[] = "<strong>"."Removed tenant: ".$element." ".$this->getEntityId($element)."</strong>";
                 $entity->removeTenant($element);
-                $element->setServerNetwork(NULL);
+                //$element->setTenantManager(NULL);
                 $em->persist($element);
                 $em->remove($element);
             }
         } //foreach
 
         return implode("<br>", $removeArr);
+    }
+    public function getEntityId($entity) {
+        if( $entity->getId() ) {
+            return "ID=".$entity->getId();
+        }
+        return "New";
     }
 
 

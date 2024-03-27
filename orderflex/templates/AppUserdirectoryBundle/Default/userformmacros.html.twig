@@ -1372,6 +1372,9 @@
             </div>
         {% endif %}
 
+        {{ formmacros.field(formfield.name) }}
+        {{ formmacros.field(formfield.orderinlist) }}
+
         {% if formfield.tenantUrl is defined %}
             {{ formmacros.field(formfield.tenantUrl) }}
         {% endif %}
@@ -1389,7 +1392,7 @@
         {{ formmacros.field(formfield.operationalAdminName) }}
         {{ formmacros.field(formfield.operationalAdminEmail) }}
 
-        {{ formmacros.field(formfield.orderinlist) }}
+
         {{ formmacros.field(formfield.showOnHomepage) }}
         {{ formmacros.field(formfield.enabled) }}
 
