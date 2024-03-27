@@ -68,6 +68,8 @@ use Symfony\Component\HttpFoundation\Response;
 // * “Reset Platform Administrator Account Password for this tenant” (Call your password generation function
 //      you already have and show a dialog with a new password saying “Password for the platform administrator account “Administrator” for tenant “Tenant Name” accessible at “/c/link/here” has been reset to “NewPassword”.)
 
+//Make sure php-fpm is started:	sudo systemctl start php-fpm
+
 #[Route(path: '/settings')]
 class MultiTenancyController extends OrderAbstractController
 {
@@ -142,7 +144,7 @@ class MultiTenancyController extends OrderAbstractController
 
                     //Add tenants to the tenant's section
                     //1) check if tenant from the file system exists in DB
-                    $tenantDb = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
+                    $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
                     if( $tenantDb ) {
                         //tenant already exists in DB
                     } else {
