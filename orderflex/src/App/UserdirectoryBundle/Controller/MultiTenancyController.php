@@ -11,6 +11,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\TenantList;
 use App\UserdirectoryBundle\Entity\TenantManager;
 use App\UserdirectoryBundle\Form\TenancyManagementType;
 use App\UserdirectoryBundle\Form\TenantManagerType;
@@ -101,13 +102,9 @@ class MultiTenancyController extends OrderAbstractController
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        //if( !$tenantManager ) {
-            $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
-            //$cycle = "new";
-        //} else {
-        //    $cycle = "edit";
-       // }
+        $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
         echo "tenantManager ID=".$tenantManager->getId()."<br>";
+
         $cycle = "edit";
 
         $originalTenants = array();
@@ -130,17 +127,31 @@ class MultiTenancyController extends OrderAbstractController
 
         if( $tenantDataArr['existedTenantIds'] ) {
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
-                $tenantData = $tenantDataArr[$tenantId];
-                $enabled = $tenantData['enabled'];
-                $enabledStr = "Disabled";
-                if( $enabled ) {
-                    $enabledStr = "Enabled";
+                if( $tenantId ) {
+                    $tenantData = $tenantDataArr[$tenantId];
+                    $enabled = $tenantData['enabled'];
+                    $enabledStr = "Disabled";
+                    if ($enabled) {
+                        $enabledStr = "Enabled";
+                    }
+                    $url = $tenantData['url'];
+                    $this->addFlash(
+                        'notice',
+                        "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
+                    );
+
+                    //Add tenants to the tenant's section
+                    //1) check if tenant from the file system exists in DB
+                    $tenantDb = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
+                    if( $tenantDb ) {
+                        //tenant already exists in DB
+                    } else {
+                        //add tenant to DB and, therefore, this form
+                        $newTenant = new TenantList($user);
+                        $newTenant->setName($tenantId);
+                        $newTenant->setEnabled($enabled);
+                    }
                 }
-                $url = $tenantData['url'];
-                $this->addFlash(
-                    'notice',
-                    "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
-                );
             }
         }
 

@@ -59,7 +59,7 @@ class TenantType extends AbstractType
     public function addCustomFields($builder)
     {
         $builder->add('name',null,array(
-            'label'=>'Tenant name:',
+            'label'=>'Tenant name (without spaces and special characters):',
             'required' => true,
             'attr' => array('class'=>'form-control', 'required'=>'required')
         ));
