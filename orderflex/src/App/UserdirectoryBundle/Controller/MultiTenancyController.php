@@ -128,6 +128,7 @@ class MultiTenancyController extends OrderAbstractController
         }
 
         if( $tenantDataArr['existedTenantIds'] ) {
+            $orderInList = 10;
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
                 if( $tenantId ) {
                     $tenantData = $tenantDataArr[$tenantId];
@@ -152,7 +153,9 @@ class MultiTenancyController extends OrderAbstractController
                         $newTenant = new TenantList($user);
                         $tenantManager->addTenant($newTenant);
                         $newTenant->setName($tenantId);
+                        $newTenant->setOrderinlist($orderInList);
                         $newTenant->setEnabled($enabled);
+                        $orderInList = $orderInList + 10;
                     }
                 }
             }
