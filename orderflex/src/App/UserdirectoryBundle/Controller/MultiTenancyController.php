@@ -11,6 +11,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\TenantManager;
 use App\UserdirectoryBundle\Form\TenancyManagementType;
 use App\UserdirectoryBundle\Form\TenantManagerType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,7 +74,7 @@ class MultiTenancyController extends OrderAbstractController
     //, methods: ['GET', 'POST']
     #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure')]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenant-manager-config.html.twig')]
-    public function tenantManagerConfigureAction(Request $request)
+    public function tenantManagerConfigureAction(Request $request, TenantManager $tenantManager)
     {
         //First show tenancy home page settings (TenantManager)
         //The homepage of the 'TenantManager' has:
@@ -100,7 +101,12 @@ class MultiTenancyController extends OrderAbstractController
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty=true);
+        if( !$tenantManager ) {
+            $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
+            $cycle = "new";
+        } else {
+            $cycle = "edit";
+        }
 
         $originalTenants = array();
         foreach( $tenantManager->getTenants() as $tenant ) {
@@ -136,17 +142,26 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
+        echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
+        foreach($tenantManager->getTenants() as $tenant) {
+            echo "tenant=$tenant <br>";
+        }
+
         $params = array(
             //'cycle'=>"edit",
             //'em'=>$em,
         );
         $params['user'] = $user;
-        $params['cycle'] = "edit";
+        $params['cycle'] = $cycle;
         $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
             'form_custom_value' => $params,
         ));
         $form->handleRequest($request);
 
+        echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
+        foreach($tenantManager->getTenants() as $tenant) {
+            echo "tenant=$tenant <br>";
+        }
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
@@ -157,10 +172,11 @@ class MultiTenancyController extends OrderAbstractController
             //if( $removedInfo ) {
             //    $removedTenantCollections[] = $removedInfo;
             //}
-            echo "tenant count=".count($tenantManager->getTenants())."<br>";
+            echo "2 tenant count=".count($tenantManager->getTenants())."<br>";
             foreach($tenantManager->getTenants() as $tenant) {
                 echo "tenant=$tenant <br>";
             }
+            exit("tenantManagerConfigureAction: submitted");
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
@@ -188,7 +204,7 @@ class MultiTenancyController extends OrderAbstractController
             'tenantManager' => $tenantManager,
             'title' => "Tenants Configuration",
             'form' => $form->createView(),
-            'cycle' => 'edit'
+            'cycle' => $cycle
         );
     }
 
