@@ -169,6 +169,14 @@ class MultiTenancyController extends OrderAbstractController
                         //Therefore, use field tenant's 'urlSlug' field
                         $newTenant->setUrlSlug($url);
 
+                        $newTenant->setDatabaseName($tenantId); //DB name is the same as tenant ID
+                        //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
+                        //Port (get it from haproxy or corresponding httpd)
+                        //DB user (get it from corresponding parameters.yml)
+                        //DB password (get it from corresponding parameters.yml)
+
+
+
                     }
                 }
             }

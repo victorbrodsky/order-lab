@@ -877,18 +877,19 @@ class UserServiceUtil {
         // \tacl tenant_app3_url path_beg -i /c/wcm/333\n
         // use_backend tenant_app3_backend if tenant_app3_url\n
 
-        $startStr = '###START-FRONTEND';
-        $endStr = '###END-FRONTEND';
+//        $startStr = '###START-FRONTEND';
+//        $endStr = '###END-FRONTEND';
+//        //Get part of the text $frontendMatches by $startStr and $endStr
+//        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
+//        preg_match($pattern, $originalString, $frontendMatches);
+//        if( !isset($frontendMatches[0]) ) {
+//            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+//            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+//            return $tenantDataArr;
+//        }
+//        $frontendTenantsArray = explode("\n", trim($frontendMatches[0]));
 
-        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
-        preg_match($pattern, $originalString, $matches);
-        if( !isset($matches[0]) ) {
-            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-            return $tenantDataArr;
-        }
-
-        $tenantsArray = explode("\n", trim($matches[0]));
+        $frontendTenantsArray = $this->getTextByStartEnd('###START-FRONTEND','###END-FRONTEND');
         //dump($finalArray);
         //exit('111');
         //Result:
@@ -899,36 +900,79 @@ class UserServiceUtil {
 //        4 => "\tacl tenantapp4url path_beg -i /c/wcm/444"
 //        5 => "    use_backend tenantapp4backend if tenant_app4_url"
 
-        //Get '/c/wcm/333'
-        foreach($tenantsArray as $frontendTenantLine) {
-            $tenantUrl = null;
-            if( str_contains($frontendTenantLine, 'path_beg -i') ) {
-                //get tenant ID: ' tenantapp3_url' => tenantapp3
-                $tenantId = $this->get_string_between($frontendTenantLine,"acl ","_url");
-                $tenantId = trim($tenantId);
-                $tenantDataArr[$tenantId]['enabled'] = false;
+        //Get url '/c/wcm/333', enabled
+        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+            $tenantDataArr[$tenantId]['enabled'] = false;
+            foreach($frontendTenantsArray as $frontendTenantLine) {
+                if( str_contains($frontendTenantLine, $tenantId.'_url') ) {
 
-                $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
-                //echo "tenant count=".count($tenantUrlArr)."<br>";
-                if( count($tenantUrlArr) > 1 ) {
-                    $tenantUrl = end($tenantUrlArr);
-                    if( $tenantUrl ) {
-                        $tenantUrl = trim($tenantUrl);
-                        //echo "tenantUrl=[".$tenantUrl."]<br>";
-                        $tenantDataArr[$tenantId]['url'] = $tenantUrl;
-                        //$tenantDataArr[$tenantId]['enabled'] = true;
 
-                        if( !str_contains($frontendTenantLine, '#') ) {
-                            foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
-                                if ($existedTenantId == $tenantId) {
-                                    $tenantDataArr[$tenantId]['enabled'] = true;
-                                }
+                    $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
+                    if( count($tenantUrlArr) > 1 ) {
+                        $tenantUrl = end($tenantUrlArr); //=>' /c/wcm/333'
+                        if ($tenantUrl) {
+                            $tenantUrl = trim($tenantUrl);
+                            //echo "tenantUrl=[".$tenantUrl."]<br>";
+                            $tenantDataArr[$tenantId]['url'] = $tenantUrl;
+                        }
+                    }
+
+
+                    if( !str_contains($frontendTenantLine, '#') ) {
+                        foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+                            if ($existedTenantId == $tenantId) {
+                                $tenantDataArr[$tenantId]['enabled'] = true;
                             }
                         }
                     }
                 }
-            }
-        }//foreach
+            } //foreach $frontendTenantsArray
+        } //foreach $tenantDataArr['existedTenantIds']
+
+//        foreach($frontendTenantsArray as $frontendTenantLine) {
+//            $tenantUrl = null;
+//            if( str_contains($frontendTenantLine, 'path_beg -i') ) {
+//                //get tenant ID: ' tenantapp3_url' => tenantapp3
+//                $tenantId = $this->get_string_between($frontendTenantLine,"acl ","_url");
+//                $tenantId = trim($tenantId);
+//                $tenantDataArr[$tenantId]['enabled'] = false;
+//
+//                $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
+//                //echo "tenant count=".count($tenantUrlArr)."<br>";
+//                if( count($tenantUrlArr) > 1 ) {
+//                    $tenantUrl = end($tenantUrlArr);
+//                    if( $tenantUrl ) {
+//                        $tenantUrl = trim($tenantUrl);
+//                        //echo "tenantUrl=[".$tenantUrl."]<br>";
+//                        $tenantDataArr[$tenantId]['url'] = $tenantUrl;
+//                        //$tenantDataArr[$tenantId]['enabled'] = true;
+//
+//                        if( !str_contains($frontendTenantLine, '#') ) {
+//                            foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+//                                if ($existedTenantId == $tenantId) {
+//                                    $tenantDataArr[$tenantId]['enabled'] = true;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }//foreach
+
+        //Get port front backend between ###START-BACKEND and ###END-BACKEND
+        //backend homepagemanager_backend
+        //server homepagemanager_server *:8081 check
+        $backendTenantsArray = $this->getTextByStartEnd('###START-BACKEND','###END-BACKEND');
+        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+            foreach($backendTenantsArray as $backendTenantLine) {
+                if( str_contains($backendTenantLine, $tenantId.'_server') ) {
+                    $tenantPort = $this->get_string_between($backendTenantLine,$tenantId.'_server'," check"); //=>*:8081
+                    $tenantPort = str_replace($tenantPort,"*:",""); //=>8081
+                    $tenantDataArr[$tenantId]['port'] = $tenantPort;
+                }
+            } //foreach $backendTenantsArray
+        } //foreach $tenantDataArr['existedTenantIds']
+
         ////// EOF 2) read haproxy //////
 
         //dump($tenantDataArr);
@@ -943,6 +987,21 @@ class UserServiceUtil {
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
+    }
+    function getTextByStartEnd($startStr, $endStr) {
+        //$startStr = '###START-FRONTEND';
+        //$endStr = '###END-FRONTEND';
+        //Get part of the text $matches by $startStr and $endStr
+        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
+        preg_match($pattern, $originalString, $matches);
+        if( !isset($matches[0]) ) {
+            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
+            return $tenantDataArr;
+        }
+
+        $frontendTenantsArray = explode("\n", trim($matches[0]));
+        return $frontendTenantsArray;
     }
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
