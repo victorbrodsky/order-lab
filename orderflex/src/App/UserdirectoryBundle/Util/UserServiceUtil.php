@@ -809,9 +809,6 @@ class UserServiceUtil {
         $tenantDataArr = array();
         $tenantDataArr['error'] = null;
         $tenantDataArr['existedTenantIds'] = null;
-        //$tenantDataArr['enabledTenants'] = null;
-        //$tenantDataArr['tenantUrl'] = null;
-        //$tenantDataArr['tenants'] = null;
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
@@ -819,43 +816,6 @@ class UserServiceUtil {
 //        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
 //        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
 //        $tenantDataArr['existedTenantIds'][] = '2';
-
-        //$tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
-        //dump($tenantDataArr);
-        //exit('111');
-
-//        ////// 1) Check if tenant's htppd exists //////
-//        //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
-//        // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
-//        $httpdPath = '/etc/httpd/conf/';
-//
-//        if( file_exists($httpdPath) ) {
-//            //echo "The httpd directory $httpdPath exists";
-//            //$files = scandir($path);
-//            $tenantDataArr['existedTenantIds'] = null;
-//            $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
-//            //dump($files);
-//            //exit('111');
-//            foreach($httpdFiles as $httpdFile) {
-//                if( str_contains($httpdFile, '-httpd.conf') ) {
-//                    //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
-//                    //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
-//                    $tenantId = null;
-//                    $tenantIdArr = explode('-', $httpdFile);
-//                    if( count($tenantIdArr) == 2 ) {
-//                        $tenantId = $tenantIdArr[0];
-//                    }
-//                    $tenantDataArr['existedTenantIds'][] = $tenantId;
-//                    //$tenantDataArr['tenants']['tenantId'] = $tenantId;
-//                }
-//            }
-//        } else {
-//            //echo "The httpd directory $httpdPath does not exist";
-//            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
-//            return $tenantDataArr;
-//        }
-//
-//        ////// EOF 1) read htppd if enables //////
 
         ////// 1) Check if tenant's htppd exists and get tenant list as array //////
         $tenantDataArr = $this->getTenantDataFromHttpd($tenantDataArr);
