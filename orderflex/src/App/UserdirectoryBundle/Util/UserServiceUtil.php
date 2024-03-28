@@ -866,9 +866,9 @@ class UserServiceUtil {
         }
 
         //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
-        $originalString = file_get_contents($haproxyConfig);
+        $originalText = file_get_contents($haproxyConfig);
 
-//        $tempArray = explode('###START-CUSTOM-TENANTS', $originalString);
+//        $tempArray = explode('###START-CUSTOM-TENANTS', $originalText);
 //        $str = explode('###END-CUSTOM-TENANTS', $tempArray[1]);
 //        $finalArray = explode('\n', $str[0]);
         //dump($finalArray);
@@ -881,7 +881,7 @@ class UserServiceUtil {
 //        $endStr = '###END-FRONTEND';
 //        //Get part of the text $frontendMatches by $startStr and $endStr
 //        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
-//        preg_match($pattern, $originalString, $frontendMatches);
+//        preg_match($pattern, $originalText, $frontendMatches);
 //        if( !isset($frontendMatches[0]) ) {
 //            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
 //            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
@@ -889,7 +889,7 @@ class UserServiceUtil {
 //        }
 //        $frontendTenantsArray = explode("\n", trim($frontendMatches[0]));
 
-        $frontendTenantsArray = $this->getTextByStartEnd('###START-FRONTEND','###END-FRONTEND');
+        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
         //dump($finalArray);
         //exit('111');
         //Result:
@@ -962,7 +962,7 @@ class UserServiceUtil {
         //Get port front backend between ###START-BACKEND and ###END-BACKEND
         //backend homepagemanager_backend
         //server homepagemanager_server *:8081 check
-        $backendTenantsArray = $this->getTextByStartEnd('###START-BACKEND','###END-BACKEND');
+        $backendTenantsArray = $this->getTextByStartEnd($originalText,'###START-BACKEND','###END-BACKEND');
         foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
             foreach($backendTenantsArray as $backendTenantLine) {
                 if( str_contains($backendTenantLine, $tenantId.'_server') ) {
@@ -988,12 +988,12 @@ class UserServiceUtil {
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
     }
-    function getTextByStartEnd($startStr, $endStr) {
+    function getTextByStartEnd($text, $startStr, $endStr) {
         //$startStr = '###START-FRONTEND';
         //$endStr = '###END-FRONTEND';
         //Get part of the text $matches by $startStr and $endStr
         $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
-        preg_match($pattern, $originalString, $matches);
+        preg_match($pattern, $text, $matches);
         if( !isset($matches[0]) ) {
             //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
             $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
