@@ -105,7 +105,7 @@ class MultiTenancyController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
 
         $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
-        echo "tenantManager ID=".$tenantManager->getId()."<br>";
+        //echo "tenantManager ID=".$tenantManager->getId()."<br>";
 
         $cycle = "edit";
 
@@ -152,11 +152,14 @@ class MultiTenancyController extends OrderAbstractController
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
                     if( $tenantDb ) {
                         //tenant already exists in DB
+                        $tenantDb->setMatchSystem("tenant already exists in DB");
                     } else {
                         //add tenant to DB and, therefore, this form
                         $orderInList = $orderInList + 10;
                         $newTenant = new TenantList($user);
                         $tenantManager->addTenant($newTenant);
+
+                        $newTenant->setMatchSystem("add tenant to DB");
                         $newTenant->setName($tenantId);
                         $newTenant->setOrderinlist($orderInList);
                         $newTenant->setEnabled($enabled);
@@ -172,28 +175,33 @@ class MultiTenancyController extends OrderAbstractController
                         $newTenant->setDatabaseName($tenantId); //DB name is the same as tenant ID
 
                         //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
-                        $newTenant->setDatabaseHost($tenantData['databaseHost']);
+                        if( isset($tenantData['databaseHost']) ) {
+                            $newTenant->setDatabaseHost($tenantData['databaseHost']);
+                        }
 
                         //Port (get it from haproxy or corresponding httpd)
-                        $newTenant->setDatabasePort($tenantData['port']);
+                        if( isset($tenantData['port']) ) {
+                            $newTenant->setDatabasePort($tenantData['port']);
+                        }
 
                         //DB user (get it from corresponding parameters.yml)
-                        $newTenant->setDatabaseUser($tenantData['databaseUser']);
+                        if( isset($tenantData['databaseUser']) ) {
+                            $newTenant->setDatabaseUser($tenantData['databaseUser']);
+                        }
 
                         //DB password (get it from corresponding parameters.yml)
-                        $newTenant->setDatabasePassword($tenantData['databasePassword']);
-
-
-
+                        if( isset($tenantData['databasePassword']) ) {
+                            $newTenant->setDatabasePassword($tenantData['databasePassword']);
+                        }
                     }
                 }
             }
         }
 
-        echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
-        foreach($tenantManager->getTenants() as $tenant) {
-            echo "tenant=$tenant <br>";
-        }
+        //echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
+        //foreach($tenantManager->getTenants() as $tenant) {
+        //    echo "tenant=$tenant <br>";
+        //}
 
         $params = array(
             //'cycle'=>"edit",
@@ -206,10 +214,10 @@ class MultiTenancyController extends OrderAbstractController
         ));
         $form->handleRequest($request);
 
-        echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
-        foreach($tenantManager->getTenants() as $tenant) {
-            echo "tenant=$tenant <br>";
-        }
+        //echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
+        //foreach($tenantManager->getTenants() as $tenant) {
+        //    echo "tenant=$tenant <br>";
+        //}
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
@@ -219,17 +227,17 @@ class MultiTenancyController extends OrderAbstractController
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
             if( $removedInfo ) {
                 $removedTenantCollections[] = $removedInfo;
-                echo "Remove tenant: ".$removedInfo."<br>";
+                //echo "Remove tenant: ".$removedInfo."<br>";
                 $this->addFlash(
                     'notice',
                     "Tenant has been removed: ".$removedInfo
                 );
             }
 
-            echo "2 tenant count=".count($tenantManager->getTenants())."<br>";
-            foreach($tenantManager->getTenants() as $tenant) {
-                echo "tenant=$tenant <br>";
-            }
+            //echo "2 tenant count=".count($tenantManager->getTenants())."<br>";
+            //foreach($tenantManager->getTenants() as $tenant) {
+            //    echo "tenant=$tenant <br>";
+            //}
             //exit("tenantManagerConfigureAction: submitted");
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");

@@ -812,10 +812,10 @@ class UserServiceUtil {
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
-//        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
-//        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
-//        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
-//        $tenantDataArr['existedTenantIds'][] = '2';
+        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
+        $tenantDataArr['existedTenantIds'][] = '2';
 
         ////// 1) Check if tenant's htppd exists and get tenant list as array //////
         $tenantDataArr = $this->getTenantDataFromHttpd($tenantDataArr);

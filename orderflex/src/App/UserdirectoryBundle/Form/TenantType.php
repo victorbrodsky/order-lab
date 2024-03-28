@@ -25,6 +25,7 @@ use App\UserdirectoryBundle\Entity\LinkTypeList; //process.py script: replaced n
 use App\UserdirectoryBundle\Entity\TenantUrlList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -59,90 +60,90 @@ class TenantType extends AbstractType
     public function addCustomFields($builder)
     {
         $builder->add('name',null,array(
-            'label'=>'Tenant name (without spaces and special characters):',
+            'label' => 'Tenant name (without spaces and special characters):',
             'required' => true,
             'attr' => array('class'=>'form-control', 'required'=>'required')
         ));
 
         $builder->add('orderinlist',null,array(
-            'label'=>'Display Order:',
+            'label' => 'Display Order:',
             'required' => true,
             'attr' => array('class'=>'form-control', 'required'=>'required')
         ));
 
         $builder->add('databaseHost',null,array(
-            'label'=>'Database Host:',
+            'label' => 'Database Host:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('databasePort',null,array(
-            'label'=>'Database Port:',
+            'label' => 'Database Port:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('databaseName',null,array(
-            'label'=>'Database Name:',
+            'label' => 'Database Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('databaseUser',null,array(
-            'label'=>'Database User:',
+            'label' => 'Database User:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('databasePassword',null,array(
-            'label'=>'Database Password:',
+            'label' => 'Database Password:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('showOnHomepage',null,array(
-            'label'=>'Show on Homepage:',
+            'label' => 'Show on Homepage:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('enabled',null,array(
-            'label'=>'Enabled:',
+            'label' => 'Enabled:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('adminName',null,array(
-            'label'=>'Platform Administrator Account User Name:',
+            'label' => 'Platform Administrator Account User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('institutionTitle',null,array(
-            'label'=>'Tenant Institution Title:',
+            'label' => 'Tenant Institution Title:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('departmentTitle',null,array(
-            'label'=>'Tenant Department Title:',
+            'label' => 'Tenant Department Title:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('billingAdminName',null,array(
-            'label'=>'Billing Tenant Administrator Contact Name:',
+            'label' => 'Billing Tenant Administrator Contact Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('billingAdminEmail',null,array(
-            'label'=>'Billing Tenant Administrator Contact Email:',
+            'label' => 'Billing Tenant Administrator Contact Email:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('operationalAdminName',null,array(
-            'label'=>'Operational Tenant Administrator Contact Name:',
+            'label' => 'Operational Tenant Administrator Contact Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('operationalAdminEmail',null,array(
-            'label'=>'Operational Tenant Administrator Contact Email:',
+            'label' => 'Operational Tenant Administrator Contact Email:',
             'attr' => array('class'=>'form-control')
         ));
 
 
         $builder->add('urlSlug',null,array(
-            'label'=>'URL Slug:',
+            'label' => 'URL Slug:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -165,6 +166,12 @@ class TenantType extends AbstractType
                 },
             ));
         }
+
+        $builder->add('matchSystem',null,array(
+            'label' => 'Match:',
+            //'mapped' => false,
+            'attr' => array('class'=>'form-control')
+        ));
 
     }
 

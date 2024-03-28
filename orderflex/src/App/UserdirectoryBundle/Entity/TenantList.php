@@ -108,6 +108,8 @@ class TenantList extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $operationalAdminEmail;
 
+    //Not mapped: indicates if the tenant in DB matches with tenant data from the filesystem on the server
+    private $matchSystem;
 
 
     public function __construct($author=null) {
@@ -388,6 +390,24 @@ class TenantList extends ListAbstract
     {
         $this->operationalAdminEmail = $operationalAdminEmail;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMatchSystem()
+    {
+        return $this->matchSystem;
+    }
+
+    /**
+     * @param mixed $matchSystem
+     */
+    public function setMatchSystem($matchSystem)
+    {
+        $this->matchSystem = $matchSystem;
+    }
+
+
 
 
 
