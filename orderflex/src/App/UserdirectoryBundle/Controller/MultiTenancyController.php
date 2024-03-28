@@ -128,7 +128,7 @@ class MultiTenancyController extends OrderAbstractController
         }
 
         if( $tenantDataArr['existedTenantIds'] ) {
-            $orderInList = 10;
+            $orderInList = 0;
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
                 if( $tenantId ) {
                     $tenantData = $tenantDataArr[$tenantId];
@@ -138,6 +138,10 @@ class MultiTenancyController extends OrderAbstractController
                         $enabledStr = "Enabled";
                     }
                     $url = $tenantData['url'];
+                    //remove leading '/' if not a single '/'
+                    if( $url != '/' ) {
+                        $str = ltrim($url, '/');
+                    }
                     $this->addFlash(
                         'notice',
                         "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
@@ -150,13 +154,21 @@ class MultiTenancyController extends OrderAbstractController
                         //tenant already exists in DB
                     } else {
                         //add tenant to DB and, therefore, this form
+                        $orderInList = $orderInList + 10;
                         $newTenant = new TenantList($user);
                         $tenantManager->addTenant($newTenant);
                         $newTenant->setName($tenantId);
                         $newTenant->setOrderinlist($orderInList);
                         $newTenant->setEnabled($enabled);
                         $newTenant->setShowOnHomepage(false);
-                        $orderInList = $orderInList + 10;
+
+                        //URL
+                        //If url should corresponds to the list of URL,
+                        // then we don't have any match for url '/' corresponding
+                        // 'https://view.online' homepagemanager 127.0.0.1:8081
+                        //Therefore, use field tenant's 'urlSlug' field
+                        $newTenant->setUrlSlug($url);
+
                     }
                 }
             }
