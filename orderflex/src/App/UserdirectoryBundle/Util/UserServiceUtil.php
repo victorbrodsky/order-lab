@@ -975,8 +975,8 @@ class UserServiceUtil {
 
         ////// EOF 2) read haproxy //////
 
-        //dump($tenantDataArr);
-        //exit('111');
+        dump($tenantDataArr);
+        exit('111');
 
         return $tenantDataArr;
     }
