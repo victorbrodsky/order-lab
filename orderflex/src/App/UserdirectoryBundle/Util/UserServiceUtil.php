@@ -822,29 +822,33 @@ class UserServiceUtil {
 
         if( file_exists($httpdPath) ) {
             //echo "The httpd directory $httpdPath exists";
+            //$files = scandir($path);
+            $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
+            //dump($files);
+            //exit('111');
+            foreach($httpdFiles as $httpdFile) {
+                if( str_contains($httpdFile, '-httpd.conf') ) {
+                    //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
+                    //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
+                    $tenantId = null;
+                    $tenantIdArr = explode('-', $httpdFile);
+                    if( count($tenantIdArr) == 2 ) {
+                        $tenantId = $tenantIdArr[0];
+                    }
+                    $tenantDataArr['existedTenantIds'][] = $tenantId;
+                    //$tenantDataArr['tenants']['tenantId'] = $tenantId;
+                }
+            }
         } else {
             //echo "The httpd directory $httpdPath does not exist";
-            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
-            return $tenantDataArr;
+            //$tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
+            //return $tenantDataArr;
         }
 
-        //$files = scandir($path);
-        $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
-        //dump($files);
-        //exit('111');
-        foreach($httpdFiles as $httpdFile) {
-            if( str_contains($httpdFile, '-httpd.conf') ) {
-                //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
-                //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
-                $tenantId = null;
-                $tenantIdArr = explode('-', $httpdFile);
-                if( count($tenantIdArr) == 2 ) {
-                    $tenantId = $tenantIdArr[0];
-                }
-                $tenantDataArr['existedTenantIds'][] = $tenantId;
-                //$tenantDataArr['tenants']['tenantId'] = $tenantId;
-            }
-        }
+        //testing
+        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
 
         ////// EOF 1) read htppd if enables //////
 
