@@ -910,7 +910,6 @@ class UserServiceUtil {
             foreach($frontendTenantsArray as $frontendTenantLine) {
                 if( str_contains($frontendTenantLine, $tenantId.'_url') ) {
 
-
                     $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
                     if( count($tenantUrlArr) > 1 ) {
                         $tenantUrl = end($tenantUrlArr); //=>' /c/wcm/333'
@@ -920,7 +919,6 @@ class UserServiceUtil {
                             $tenantDataArr[$tenantId]['url'] = $tenantUrl;
                         }
                     }
-
 
                     if( !str_contains($frontendTenantLine, '#') ) {
                         foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
@@ -970,8 +968,12 @@ class UserServiceUtil {
         foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
             foreach($backendTenantsArray as $backendTenantLine) {
                 if( str_contains($backendTenantLine, $tenantId.'_server') ) {
+                    //echo "backendTenantLine=$backendTenantLine <br>"; // server tenantmanager_server *:8082 check
                     $tenantPort = $this->get_string_between($backendTenantLine,$tenantId.'_server'," check"); //=>*:8081
-                    $tenantPort = str_replace($tenantPort,"*:",""); //=>8081
+                    $tenantPort = trim($tenantPort);
+                    //echo "tenantPort=[$tenantPort] <br>";
+                    $tenantPort = str_replace('*:','',$tenantPort); //=>8081
+                    //echo "tenantPort=[$tenantPort] <br>";
                     $tenantDataArr[$tenantId]['port'] = $tenantPort;
                 }
             } //foreach $backendTenantsArray
@@ -979,8 +981,8 @@ class UserServiceUtil {
 
         ////// EOF 2) read haproxy //////
 
-        dump($tenantDataArr);
-        exit('111');
+        //dump($tenantDataArr);
+        //exit('111');
 
         return $tenantDataArr;
     }
