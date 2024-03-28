@@ -813,7 +813,12 @@ class UserServiceUtil {
         //$tenantDataArr['tenantUrl'] = null;
         //$tenantDataArr['tenants'] = null;
 
-        $tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
+        //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
+        //testing
+//        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+//        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+//        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
+//        $tenantDataArr['existedTenantIds'][] = '2';
 
         ////// 1) Check if tenant's htppd exists //////
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
@@ -823,6 +828,7 @@ class UserServiceUtil {
         if( file_exists($httpdPath) ) {
             //echo "The httpd directory $httpdPath exists";
             //$files = scandir($path);
+            $tenantDataArr['existedTenantIds'] = null;
             $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
             //dump($files);
             //exit('111');
@@ -841,14 +847,9 @@ class UserServiceUtil {
             }
         } else {
             //echo "The httpd directory $httpdPath does not exist";
-            //$tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
-            //return $tenantDataArr;
+            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
+            return $tenantDataArr;
         }
-
-        //testing
-        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
-        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
-        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
 
         ////// EOF 1) read htppd if enables //////
 
@@ -981,6 +982,64 @@ class UserServiceUtil {
 
         ////// EOF 2) read haproxy //////
 
+
+////// 3) read corresponding parameters.yml //////
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $orderHolderFolder = $projectRoot.'/../../';
+        $orderFolders = array_diff(scandir($orderHolderFolder), array('.', '..')); //remove . and .. from the returned array from scandir
+        foreach($orderFolders as $orderFolder) {
+            //echo "orderFolder=$orderFolder <br>";
+            if( str_contains($orderFolder, 'order-lab-') ) {
+                foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+                    $orderPath = $orderHolderFolder.DIRECTORY_SEPARATOR.'order-lab-'.$tenantId.DIRECTORY_SEPARATOR; //order-lab-tenantapp2
+                    $orderParameterPath = $orderPath . DIRECTORY_SEPARATOR.'orderflex'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
+                    if( file_exists($orderParameterPath) ) {
+                        //echo "orderParameterPath=$orderParameterPath <br>";
+                        $originalText = file_get_contents($orderParameterPath);
+                        //echo "originalText=$originalText <br>";
+
+                        $tenantDataArr[$tenantId]['databaseHost'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databaseName'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databaseUser'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databasePassword'] = 'Unknown';
+
+                        $parametersLines = $this->getTextByStartEnd($originalText,'parameters:','');
+                        foreach($parametersLines as $parametersLine) {
+                            //echo "parametersLine=$parametersLine <br>";
+                            if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
+                                $dbHost = str_replace('database_host:','',$parametersLine);
+                                $dbHost = trim($dbHost);
+                                $tenantDataArr[$tenantId]['databaseHost'] = $dbHost;
+                            }
+                            if( str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#') ) {
+                                $dbName = str_replace('database_name:','',$parametersLine);
+                                $dbName = trim($dbName);
+                                $tenantDataArr[$tenantId]['databaseName'] = $dbName;
+                            }
+                            if( str_contains($parametersLine, 'database_user:') && !str_contains($parametersLine, '#') ) {
+                                $dbUser = str_replace('database_user:','',$parametersLine);
+                                $dbUser = trim($dbUser);
+                                $tenantDataArr[$tenantId]['databaseUser'] = $dbUser;
+                            }
+                            if( str_contains($parametersLine, 'database_password:') && !str_contains($parametersLine, '#') ) {
+                                $dbPass = str_replace('database_password:','',$parametersLine);
+                                $dbPass = trim($dbPass);
+                                $tenantDataArr[$tenantId]['databasePassword'] = $dbPass;
+                            }
+                        }
+                        //dump($dbHost);
+                        //exit('111');
+
+                    } else {
+
+                    }
+                }
+            }
+        }
+        //dump($tenantDataArr);
+        //exit('111');
+        ////// 3) EOF read corresponding parameters.yml //////
+
         //dump($tenantDataArr);
         //exit('111');
 
@@ -1001,9 +1060,9 @@ class UserServiceUtil {
         $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
         preg_match($pattern, $text, $matches);
         if( !isset($matches[0]) ) {
-            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-            return $tenantDataArr;
+            echo "File does not have $startStr and $endStr";
+            //$errorMsg = "File does not have $startStr and $endStr";
+            return array();
         }
 
         $frontendTenantsArray = explode("\n", trim($matches[0]));
