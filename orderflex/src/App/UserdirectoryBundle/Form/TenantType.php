@@ -141,23 +141,30 @@ class TenantType extends AbstractType
         ));
 
 
-        $builder->add( 'tenantUrl', EntityType::class, array(
-            'class' => TenantUrlList::class,
-            'choice_label' => 'getTenantUrl',
-            'label'=>'Tenant Url:',
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
+        $builder->add('urlSlug',null,array(
+            'label'=>'URL Slug:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        if(0) {
+            $builder->add('tenantUrl', EntityType::class, array(
+                'class' => TenantUrlList::class,
+                'choice_label' => 'getTenantUrl',
+                'label' => 'Tenant Url:',
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
                         ));
                 },
-        ));
+            ));
+        }
 
     }
 
