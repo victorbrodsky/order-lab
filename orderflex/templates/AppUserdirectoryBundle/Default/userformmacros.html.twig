@@ -1373,8 +1373,8 @@
         {% endif %}
 
 
-        {#{{ formmacros.field(formfield.matchSystem) }}#}
-        {{ formmacros.simplefield( "Match with DB:", formfield.matchSystem.vars.value, "", "disabled" ) }}
+        {{ formmacros.field(formfield.matchSystem) }}
+        {#{{ formmacros.simplefield( "Match with DB:", formfield.matchSystem.vars.value, "", "disabled" ) }}#}
 
         {{ formmacros.field(formfield.name) }}
         {{ formmacros.field(formfield.orderinlist) }}
