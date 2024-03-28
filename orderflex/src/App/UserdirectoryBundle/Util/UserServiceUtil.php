@@ -927,11 +927,21 @@ class UserServiceUtil {
             return $tenantDataArr;
         }
 
+        dump($tenantDataArr);
+        exit('111');
         return $tenantDataArr;
     }
 
     ////// 2) read haproxy (check if tenant is enabled) //////
     public function getTenantDataFromHaproxy( $tenantDataArr ) {
+
+        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+            //ok
+        } else {
+            $tenantDataArr['error'][] = "getTenantDataFromHaproxy: Tenants are not found";
+            return $tenantDataArr;
+        }
+
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
 
         if( $this->isWindows() ) {
@@ -950,27 +960,6 @@ class UserServiceUtil {
 
         //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
         $originalText = file_get_contents($haproxyConfig);
-
-//        $tempArray = explode('###START-CUSTOM-TENANTS', $originalText);
-//        $str = explode('###END-CUSTOM-TENANTS', $tempArray[1]);
-//        $finalArray = explode('\n', $str[0]);
-        //dump($finalArray);
-        //exit('111');
-        //Result:
-        // \tacl tenant_app3_url path_beg -i /c/wcm/333\n
-        // use_backend tenant_app3_backend if tenant_app3_url\n
-
-//        $startStr = '###START-FRONTEND';
-//        $endStr = '###END-FRONTEND';
-//        //Get part of the text $frontendMatches by $startStr and $endStr
-//        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
-//        preg_match($pattern, $originalText, $frontendMatches);
-//        if( !isset($frontendMatches[0]) ) {
-//            //echo "The file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-//            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not have ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS";
-//            return $tenantDataArr;
-//        }
-//        $frontendTenantsArray = explode("\n", trim($frontendMatches[0]));
 
         $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
         //dump($finalArray);
@@ -1010,36 +999,6 @@ class UserServiceUtil {
             } //foreach $frontendTenantsArray
         } //foreach $tenantDataArr['existedTenantIds']
 
-//        foreach($frontendTenantsArray as $frontendTenantLine) {
-//            $tenantUrl = null;
-//            if( str_contains($frontendTenantLine, 'path_beg -i') ) {
-//                //get tenant ID: ' tenantapp3_url' => tenantapp3
-//                $tenantId = $this->get_string_between($frontendTenantLine,"acl ","_url");
-//                $tenantId = trim($tenantId);
-//                $tenantDataArr[$tenantId]['enabled'] = false;
-//
-//                $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
-//                //echo "tenant count=".count($tenantUrlArr)."<br>";
-//                if( count($tenantUrlArr) > 1 ) {
-//                    $tenantUrl = end($tenantUrlArr);
-//                    if( $tenantUrl ) {
-//                        $tenantUrl = trim($tenantUrl);
-//                        //echo "tenantUrl=[".$tenantUrl."]<br>";
-//                        $tenantDataArr[$tenantId]['url'] = $tenantUrl;
-//                        //$tenantDataArr[$tenantId]['enabled'] = true;
-//
-//                        if( !str_contains($frontendTenantLine, '#') ) {
-//                            foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
-//                                if ($existedTenantId == $tenantId) {
-//                                    $tenantDataArr[$tenantId]['enabled'] = true;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }//foreach
-
         //Get port front backend between ###START-BACKEND and ###END-BACKEND
         //backend homepagemanager_backend
         //server homepagemanager_server *:8081 check
@@ -1063,6 +1022,14 @@ class UserServiceUtil {
 
     ////// 3) read corresponding parameters.yml //////
     public function getTenantDataFromParameters( $tenantDataArr ) {
+
+        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+            //ok
+        } else {
+            $tenantDataArr['error'][] = "getTenantDataFromParameters: Tenants are not found";
+            return $tenantDataArr;
+        }
+
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $orderHolderFolder = $projectRoot.'/../../';
         $orderFolders = array_diff(scandir($orderHolderFolder), array('.', '..')); //remove . and .. from the returned array from scandir
