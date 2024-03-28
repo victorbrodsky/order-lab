@@ -815,10 +815,14 @@ class UserServiceUtil {
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
-//        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
-//        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
-//        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
-//        $tenantDataArr['existedTenantIds'][] = '2';
+        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
+        $tenantDataArr['existedTenantIds'][] = '2';
+
+        $tenantDataArr = $this->getTenantDataParameters($tenantDataArr);
+        dump($tenantDataArr);
+        exit('111');
 
         ////// 1) Check if tenant's htppd exists //////
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
@@ -983,6 +987,38 @@ class UserServiceUtil {
         ////// EOF 2) read haproxy //////
 
 
+
+
+        //dump($tenantDataArr);
+        //exit('111');
+
+        return $tenantDataArr;
+    }
+    function get_string_between($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
+    }
+    function getTextByStartEnd($text, $startStr, $endStr) {
+        //$startStr = '###START-FRONTEND';
+        //$endStr = '###END-FRONTEND';
+        //Get part of the text $matches by $startStr and $endStr
+        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
+        preg_match($pattern, $text, $matches);
+        if( !isset($matches[0]) ) {
+            echo "File does not have $startStr and $endStr";
+            //$errorMsg = "File does not have $startStr and $endStr";
+            return array();
+        }
+
+        $frontendTenantsArray = explode("\n", trim($matches[0]));
+        return $frontendTenantsArray;
+    }
+
+    public function getTenantDataParameters( $tenantDataArr ) {
         ////// 3) read corresponding parameters.yml //////
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $orderHolderFolder = $projectRoot.'/../../';
@@ -1008,8 +1044,10 @@ class UserServiceUtil {
                             echo "parametersLine=$parametersLine <br>";
                             if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
                                 $dbHost = str_replace('database_host:','',$parametersLine);
+                                echo "dbHost=$dbHost <br>";
                                 $dbHost = trim($dbHost);
                                 $tenantDataArr[$tenantId]['databaseHost'] = $dbHost;
+                                exit('111');
                             }
                             if( str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#') ) {
                                 $dbName = str_replace('database_name:','',$parametersLine);
@@ -1039,34 +1077,7 @@ class UserServiceUtil {
         //dump($tenantDataArr);
         //exit('111');
         ////// 3) EOF read corresponding parameters.yml //////
-
-        //dump($tenantDataArr);
-        //exit('111');
-
         return $tenantDataArr;
-    }
-    function get_string_between($string, $start, $end){
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) return '';
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-        return substr($string, $ini, $len);
-    }
-    function getTextByStartEnd($text, $startStr, $endStr) {
-        //$startStr = '###START-FRONTEND';
-        //$endStr = '###END-FRONTEND';
-        //Get part of the text $matches by $startStr and $endStr
-        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
-        preg_match($pattern, $text, $matches);
-        if( !isset($matches[0]) ) {
-            echo "File does not have $startStr and $endStr";
-            //$errorMsg = "File does not have $startStr and $endStr";
-            return array();
-        }
-
-        $frontendTenantsArray = explode("\n", trim($matches[0]));
-        return $frontendTenantsArray;
     }
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
