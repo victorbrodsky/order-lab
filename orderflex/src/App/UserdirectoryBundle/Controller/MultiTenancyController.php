@@ -171,6 +171,7 @@ class MultiTenancyController extends OrderAbstractController
 
                         $newTenant->setDatabaseName($tenantId); //DB name is the same as tenant ID
                         //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
+                        $newTenant->setDatabaseHost($tenantData['databaseHost']);
                         //Port (get it from haproxy or corresponding httpd)
                         $newTenant->setDatabasePort($tenantData['port']);
                         //DB user (get it from corresponding parameters.yml)

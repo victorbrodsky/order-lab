@@ -1041,13 +1041,13 @@ class UserServiceUtil {
 
                         $parametersLines = $this->getTextByStartEnd($originalText,'parameters:','');
                         foreach($parametersLines as $parametersLine) {
-                            echo "parametersLine=$parametersLine <br>";
+                            //echo "parametersLine=$parametersLine <br>";
                             if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
                                 $dbHost = str_replace('database_host:','',$parametersLine);
-                                echo "dbHost=$dbHost <br>";
+                                //echo "dbHost=$dbHost <br>";
                                 $dbHost = trim($dbHost);
                                 $tenantDataArr[$tenantId]['databaseHost'] = $dbHost;
-                                exit('111');
+                                //exit('111');
                             }
                             if( str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#') ) {
                                 $dbName = str_replace('database_name:','',$parametersLine);
