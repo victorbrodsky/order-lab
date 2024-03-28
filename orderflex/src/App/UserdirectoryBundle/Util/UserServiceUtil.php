@@ -983,7 +983,7 @@ class UserServiceUtil {
         ////// EOF 2) read haproxy //////
 
 
-////// 3) read corresponding parameters.yml //////
+        ////// 3) read corresponding parameters.yml //////
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $orderHolderFolder = $projectRoot.'/../../';
         $orderFolders = array_diff(scandir($orderHolderFolder), array('.', '..')); //remove . and .. from the returned array from scandir
@@ -1005,7 +1005,7 @@ class UserServiceUtil {
 
                         $parametersLines = $this->getTextByStartEnd($originalText,'parameters:','');
                         foreach($parametersLines as $parametersLine) {
-                            //echo "parametersLine=$parametersLine <br>";
+                            echo "parametersLine=$parametersLine <br>";
                             if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
                                 $dbHost = str_replace('database_host:','',$parametersLine);
                                 $dbHost = trim($dbHost);
