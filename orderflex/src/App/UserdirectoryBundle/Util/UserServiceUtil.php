@@ -815,14 +815,14 @@ class UserServiceUtil {
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
-        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
-        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
-        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
-        $tenantDataArr['existedTenantIds'][] = '2';
+//        $tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+//        $tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+//        $tenantDataArr['existedTenantIds'][] = 'tenantapp2';
+//        $tenantDataArr['existedTenantIds'][] = '2';
 
-        $tenantDataArr = $this->getTenantDataParameters($tenantDataArr);
-        dump($tenantDataArr);
-        exit('111');
+        //$tenantDataArr = $this->getTenantDataParameters($tenantDataArr);
+        //dump($tenantDataArr);
+        //exit('111');
 
         ////// 1) Check if tenant's htppd exists //////
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
@@ -986,8 +986,8 @@ class UserServiceUtil {
 
         ////// EOF 2) read haproxy //////
 
-
-
+        ////// 3) read corresponding parameters.yml //////
+        $tenantDataArr = $this->getTenantDataParameters($tenantDataArr);
 
         //dump($tenantDataArr);
         //exit('111');
