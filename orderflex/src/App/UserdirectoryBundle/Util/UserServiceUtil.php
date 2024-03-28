@@ -927,8 +927,8 @@ class UserServiceUtil {
             return $tenantDataArr;
         }
 
-        dump($tenantDataArr);
-        exit('111');
+        //dump($tenantDataArr);
+        //exit('111');
         return $tenantDataArr;
     }
 
