@@ -399,6 +399,7 @@ class UserTenantUtil
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                         $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#',$tenant->getEnabled());
+                        $this->restartHaproxy();
                         break;
                     }
                 }
@@ -413,6 +414,7 @@ class UserTenantUtil
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                         $this->fileReplaceContent($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        $this->restartHaproxy();
                         break;
                     }
                 }
@@ -425,6 +427,7 @@ class UserTenantUtil
                     foreach ($httpdTenantsArray as $httpdTenantLine) {
                         if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
                             $this->fileReplaceContent($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                            $this->restartTenantHttpd($tenantId);
                             break;
                         }
                     }
@@ -488,6 +491,18 @@ class UserTenantUtil
         file_put_contents($file, $allContent);
         //dump($allContent);
         //exit('111');
+    }
+
+    public function restartHaproxy() {
+        //sudo systemctl restart haproxy
+        $output = shell_exec('sudo systemctl restart haproxy');
+        echo "<pre>$output</pre>";
+    }
+
+    public function restartTenantHttpd( $tenantId ) {
+        //sudo systemctl restart haproxy
+        $output = shell_exec('sudo systemctl restart httpd'.$tenantId);
+        echo "<pre>$output</pre>";
     }
 
 }
