@@ -812,7 +812,7 @@ class UserServiceUtil {
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
-        if(1) {
+        if(0) {
             //$tenantDataArr['existedTenantIds'][] = 'tenantmanager';
             //$tenantDataArr['existedTenantIds'][] = 'homepagemanager';
             //$tenantDataArr['existedTenantIds'][] = 'tenantapp2';
