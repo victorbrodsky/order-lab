@@ -221,6 +221,7 @@ class UserTenantUtil
 //        }
 
         $haproxyConfig = $this->getHaproxyConfig();
+        echo "haproxyConfig file=".$haproxyConfig."<br>";
 
         //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
         $originalText = file_get_contents($haproxyConfig);
@@ -238,26 +239,27 @@ class UserTenantUtil
 
         //Get url '/c/wcm/333', enabled
         foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
-            $tenantDataArr[$tenantId]['enabled'] = false;
+            $tenantDataArr[$tenantId]['enabled'] = true;
             foreach($frontendTenantsArray as $frontendTenantLine) {
                 if( str_contains($frontendTenantLine, ' '.$tenantId.'_url') ) {
-
+                    //echo "frontendTenantLine=$frontendTenantLine <br>";
                     $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
                     if( count($tenantUrlArr) > 1 ) {
                         $tenantUrl = end($tenantUrlArr); //=>' /c/wcm/333'
                         if ($tenantUrl) {
                             $tenantUrl = trim($tenantUrl);
-                            echo "tenantUrl=[".$tenantUrl."]<br>";
+                            //echo "tenantUrl=[".$tenantUrl."]<br>";
                             $tenantDataArr[$tenantId]['url'] = $tenantUrl;
                         }
                     }
 
-                    if( !str_contains($frontendTenantLine, '#') ) {
-                        foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
-                            if ($existedTenantId == $tenantId) {
-                                $tenantDataArr[$tenantId]['enabled'] = true;
-                            }
-                        }
+                    if( str_contains($frontendTenantLine, '#') ) {
+                        $tenantDataArr[$tenantId]['enabled'] = false;
+//                        foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+//                            if ($existedTenantId == $tenantId) {
+//                                $tenantDataArr[$tenantId]['enabled'] = true;
+//                            }
+//                        }
                     }
                 }
             } //foreach $frontendTenantsArray
@@ -387,65 +389,72 @@ class UserTenantUtil
             $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
             //dump($tenantDataArr);
             //exit('111');
-            echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
+
+            //echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
             if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
-                echo "Change enable <br>";
+                //echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
-
-                //Disable if enabled
-//                if( $tenantDataArr[$tenantId]['enabled'] ) {
-//                    if( !$tenant->getEnabled() ) {
-//                        //haproxy in frontend: find and comment out the line by tenant 'tenantmanager_url' and comment it out
-//                        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-//                        foreach($frontendTenantsArray as $frontendTenantLine) {
-//                            if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-//                                $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#','add');
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                if( !$tenantDataArr[$tenantId]['enabled'] ) {
-//                    if( $tenant->getEnabled() ) {
-//                        //haproxy in frontend: find and comment out the line by tenant 'tenantmanager_url' and comment it out
-//                        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-//                        foreach($frontendTenantsArray as $frontendTenantLine) {
-//                            if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-//                                $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#','remove');
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-
-                //if( $tenant->getEnabled() === true ) {
-                    //if( $tenantDataArr[$tenantId]['enabled'] === false ) {
-                        //enable
-                    //}
-                    $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-                    foreach($frontendTenantsArray as $frontendTenantLine) {
-                        if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                            $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#',$tenant->getEnabled());
-                            break;
-                        }
+                //Disable or enabled according to DB value $tenant->getEnabled()
+                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+                foreach($frontendTenantsArray as $frontendTenantLine) {
+                    if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+                        $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#',$tenant->getEnabled());
+                        break;
                     }
-                //}
-                //if( $tenant->getEnabled() === false ) {
-                //
-               // }
+                }
+            }
 
-                //exit('111');
+            //update URL slug: modify files: haproxy and $tenantId-httpd.conf
+            $tenantDbUrl = $tenant->getUrlSlug();
+            if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
+                $originalText = file_get_contents($haproxyConfig);
+                //modify 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
+                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+                foreach($frontendTenantsArray as $frontendTenantLine) {
+                    if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+                        $this->fileReplaceContent($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        break;
+                    }
+                }
+
+                $httpdConfig = $this->getTenantHttpd($tenantId);
+                $originalText = file_get_contents($httpdConfig);
+                //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
+                $httpdTenantsArray = $this->getTextByStartEnd($originalText,'<VirtualHost','VirtualHost>');
+                foreach($httpdTenantsArray as $httpdTenantLine) {
+                    if( str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url']) ) {
+                        $this->fileReplaceContent($httpdConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        break;
+                    }
+                }
             }
         }
 
-       exit('111');
+       //exit('111');
     }
+
+    public function getTenantHttpd( $tenantId ) {
+        $httpdPath = '/etc/httpd/conf/';
+        // /etc/httpd/conf/tenantappdemo-httpd.conf
+        $httpdFile = $httpdPath.$tenantId.'-httpd.conf';
+        if( file_exists($httpdFile) ) {
+            return $httpdFile;
+        }
+        return null;
+    }
+
+    public function fileReplaceContent($path, $oldContent, $newContent)
+    {
+        $str = file_get_contents($path);
+        $str = str_replace($oldContent, $newContent, $str);
+        file_put_contents($path, $str);
+    }
+
     //https://stackoverflow.com/questions/29182924/overwrite-a-specific-line-in-a-text-file-with-php
     public function changeLineInFile( $file, $keyStr, $appendStr, $enable ) {
-        echo "file=".$file."<br>";
-        echo "keyStr=".$keyStr."<br>";
-        echo "appendStr=".$appendStr."<br>";
+        //echo "file=".$file."<br>";
+        //echo "keyStr=".$keyStr."<br>";
+        //echo "appendStr=".$appendStr."<br>";
         $content = file($file); // reads an array of lines
         //dump($content);
         //exit('111');
@@ -456,16 +465,16 @@ class UserTenantUtil
                 if( !$enable ) {
                     //Disable line
                     $newValue = $appendStr.$value;
-                    echo "append $appendStr line=[".$newValue."]<br>";
+                    //echo "append $appendStr line=[".$newValue."]<br>";
                 }
                 if( $enable ) {
                     //Enable line
                     $newValue = str_replace($appendStr,'',$value);
-                    echo "remove $appendStr line=[".$newValue."]<br>";
+                    //echo "remove $appendStr line=[".$newValue."]<br>";
                 }
-                echo "line=[".$value."]?=[".$newValue."]<br>";
+                //echo "line=[".$value."]?=[".$newValue."]<br>";
                 if( $value != $newValue ) {
-                    echo "new line=".$newValue."<br>";
+                    //echo "new line=".$newValue."<br>";
                     $content[$key] = $newValue;
                 }
 
