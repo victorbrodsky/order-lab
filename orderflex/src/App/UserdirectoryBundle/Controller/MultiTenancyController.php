@@ -152,10 +152,10 @@ class MultiTenancyController extends OrderAbstractController
                     if( $url != '/' ) {
                         $url = ltrim($url, '/');
                     }
-                    $this->addFlash(
-                        'notice',
-                        "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
-                    );
+//                    $this->addFlash(
+//                        'notice',
+//                        "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
+//                    );
 
                     if( $url ) {
                         if( $url == '/' ) {
@@ -164,7 +164,7 @@ class MultiTenancyController extends OrderAbstractController
                             $tenantBaseUrl = $baseUrl . '/' . $url;
                         }
 
-                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '">' . $tenantBaseUrl . '</a> ';
+                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ' . " ($enabledStr)";
                         $tenantBaseUrlArr[] = $tenantBaseUrl;
                     }
 
@@ -172,7 +172,7 @@ class MultiTenancyController extends OrderAbstractController
                     //1) check if tenant from the file system exists in DB
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
                     if( $tenantDb ) {
-                        //tenant already exists in DB
+                        //tenant already exists in DB => don't add
                         $tenantDb->setMatchSystem("Database");
                     } else {
                         //add tenant to DB and, therefore, this form
