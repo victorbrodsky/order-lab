@@ -164,7 +164,10 @@ class MultiTenancyController extends OrderAbstractController
                             $tenantBaseUrl = $baseUrl . '/' . $url;
                         }
 
-                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ' . " ($enabledStr)";
+                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+                        if( !$enabled ) {
+                            $tenantBaseUrl = $tenantBaseUrl . " ($enabledStr)";
+                        }
                         $tenantBaseUrlArr[] = $tenantBaseUrl;
                     }
 
