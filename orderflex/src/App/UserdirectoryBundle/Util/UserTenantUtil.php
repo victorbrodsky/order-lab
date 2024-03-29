@@ -413,7 +413,15 @@ class UserTenantUtil
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                        $this->fileReplaceContent($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        $res = $this->replace_in_file($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        if( $res['status'] == 'error' ) {
+                            $userUtil = $this->container->get('user_utility');
+                            $session = $userUtil->getSession(); //$this->container->get('session');
+                            $session->getFlashBag()->add(
+                                'warning',
+                                $res['message']
+                            );
+                        }
                         $this->restartHaproxy();
                         break;
                     }
@@ -426,7 +434,15 @@ class UserTenantUtil
                     $httpdTenantsArray = $this->getTextByStartEnd($originalText, '<VirtualHost', 'VirtualHost>');
                     foreach ($httpdTenantsArray as $httpdTenantLine) {
                         if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
-                            $this->fileReplaceContent($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                            $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                            if( $res['status'] == 'error' ) {
+                                $userUtil = $this->container->get('user_utility');
+                                $session = $userUtil->getSession(); //$this->container->get('session');
+                                $session->getFlashBag()->add(
+                                    'warning',
+                                    $res['message']
+                                );
+                            }
                             $this->restartTenantHttpd($tenantId);
                             break;
                         }
@@ -453,6 +469,50 @@ class UserTenantUtil
         $str = file_get_contents($path);
         $str = str_replace($oldContent, $newContent, $str);
         file_put_contents($path, $str);
+    }
+    /**
+     * Replaces a string in a file
+     *
+     * @param string $FilePath
+     * @param string $OldText text to be replaced
+     * @param string $NewText new text
+     * @return array $Result status (success | error) & message (file exist, file permissions)
+     */
+    function replace_in_file($FilePath, $OldText, $NewText)
+    {
+        $Result = array('status' => 'error', 'message' => '');
+        if(file_exists($FilePath)===TRUE)
+        {
+            if(is_writeable($FilePath))
+            {
+                try
+                {
+                    $FileContent = file_get_contents($FilePath);
+                    $FileContent = str_replace($OldText, $NewText, $FileContent);
+                    if(file_put_contents($FilePath, $FileContent) > 0)
+                    {
+                        $Result["status"] = 'success';
+                    }
+                    else
+                    {
+                        $Result["message"] = 'Error while writing file';
+                    }
+                }
+                catch(Exception $e)
+                {
+                    $Result["message"] = 'Error : '.$e;
+                }
+            }
+            else
+            {
+                $Result["message"] = 'File '.$FilePath.' is not writable !';
+            }
+        }
+        else
+        {
+            $Result["message"] = 'File '.$FilePath.' does not exist !';
+        }
+        return $Result;
     }
 
     //https://stackoverflow.com/questions/29182924/overwrite-a-specific-line-in-a-text-file-with-php
