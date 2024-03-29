@@ -561,7 +561,7 @@ class UserTenantUtil
         //create haproxywrapper.c
         //https://askubuntu.com/questions/155791/how-do-i-sudo-a-command-in-a-script-without-being-asked-for-a-password
         //sudo systemctl restart haproxy
-        $output = shell_exec('sudo systemctl restart haproxy');
+        $output = shell_exec('/bin/sh /usr/local/bin/order-lab-tenantmanager/orderflex/php_root');
         echo "<pre>$output</pre>";
     }
 
