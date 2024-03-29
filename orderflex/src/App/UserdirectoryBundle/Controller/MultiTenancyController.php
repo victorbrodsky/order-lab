@@ -112,6 +112,7 @@ class MultiTenancyController extends OrderAbstractController
         $originalTenants = array();
         foreach( $tenantManager->getTenants() as $tenant ) {
             $originalTenants[] = $tenant;
+            $tenant->setMatchSystem("Database");
         }
 
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
@@ -137,7 +138,11 @@ class MultiTenancyController extends OrderAbstractController
                     if ($enabled) {
                         $enabledStr = "Enabled";
                     }
-                    $url = $tenantData['url'];
+
+                    $url = null;
+                    if( isset($tenantData['url']) ) {
+                        $url = $tenantData['url'];
+                    }
                     //remove leading '/' if not a single '/'
                     if( $url != '/' ) {
                         $str = ltrim($url, '/');
@@ -152,14 +157,15 @@ class MultiTenancyController extends OrderAbstractController
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
                     if( $tenantDb ) {
                         //tenant already exists in DB
-                        $tenantDb->setMatchSystem("tenant already exists in DB");
+                        $tenantDb->setMatchSystem("Database");
                     } else {
                         //add tenant to DB and, therefore, this form
                         $orderInList = $orderInList + 10;
                         $newTenant = new TenantList($user);
+                        //$em->persist($newTenant);
                         $tenantManager->addTenant($newTenant);
 
-                        $newTenant->setMatchSystem("add tenant to DB");
+                        $newTenant->setMatchSystem("File system");
                         $newTenant->setName($tenantId);
                         $newTenant->setOrderinlist($orderInList);
                         $newTenant->setEnabled($enabled);
@@ -172,7 +178,9 @@ class MultiTenancyController extends OrderAbstractController
                         //Therefore, use field tenant's 'urlSlug' field
                         $newTenant->setUrlSlug($url);
 
-                        $newTenant->setDatabaseName($tenantId); //DB name is the same as tenant ID
+                        if( isset($tenantData['databaseName']) ) {
+                            $newTenant->setDatabaseName($tenantData['databaseName']);
+                        }
 
                         //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
                         if( isset($tenantData['databaseHost']) ) {
