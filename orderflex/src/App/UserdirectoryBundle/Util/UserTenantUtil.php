@@ -555,6 +555,10 @@ class UserTenantUtil
 
     public function restartHaproxy() {
         //https://stackoverflow.com/questions/8532304/execute-root-commands-via-php
+        //create haproxy-restart.sh
+        //chown root /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+        //chmod u=rwx,go=xr /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+        //create haproxywrapper.c
         //https://askubuntu.com/questions/155791/how-do-i-sudo-a-command-in-a-script-without-being-asked-for-a-password
         //sudo systemctl restart haproxy
         $output = shell_exec('sudo systemctl restart haproxy');
