@@ -131,7 +131,7 @@ class MultiTenancyController extends OrderAbstractController
         $tenantBaseUrlArr = array();
 
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
-        $tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
+        //$tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
 
         if( $tenantDataArr['existedTenantIds'] ) {
             $orderInList = 0;
@@ -157,9 +157,16 @@ class MultiTenancyController extends OrderAbstractController
                         "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
                     );
 
-                    $tenantBaseUrl = $baseUrl . '/' . $url;
-                    $tenantBaseUrl = '<a href="'.$tenantBaseUrl.'">'.$tenantBaseUrl.'</a> ';
-                    $tenantBaseUrlArr[] = $tenantBaseUrl;
+                    if( $url ) {
+                        if( $url == '/' ) {
+                            $tenantBaseUrl = $baseUrl;
+                        } else {
+                            $tenantBaseUrl = $baseUrl . '/' . $url;
+                        }
+
+                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '">' . $tenantBaseUrl . '</a> ';
+                        $tenantBaseUrlArr[] = $tenantBaseUrl;
+                    }
 
                     //Add tenants to the tenant's section
                     //1) check if tenant from the file system exists in DB
