@@ -1377,7 +1377,7 @@
         {#baseUrl={{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}#}
         {% if formfield.vars.value %}
             {% set tenantUrl = app.request.schemeAndHttpHost ~ app.request.baseUrl ~ '/' ~ formfield.vars.value.urlSlug %}
-            {% set tenantUrl = app.request.schemeAndHttpHost ~ '/' ~ formfield.vars.value.urlSlug %}
+            {% set tenantUrl = app.request.schemeAndHttpHost ~ formfield.vars.value.urlSlug %}
             <a href="{{ tenantUrl }}">{{ tenantUrl }}</a>
         {% endif %}
 
