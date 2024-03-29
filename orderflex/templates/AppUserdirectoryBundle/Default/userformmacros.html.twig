@@ -1373,6 +1373,13 @@
         {% endif %}
 
 
+        {#show clickable url#}
+        {#baseUrl={{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}#}
+        {% if formfield.vars.value %}
+            {% set tenantUrl = app.request.schemeAndHttpHost ~ app.request.baseUrl ~ '/' ~ formfield.vars.value.urlSlug %}
+            <a href="{{ tenantUrl }}">{{ tenantUrl }}</a>
+        {% endif %}
+
         {{ formmacros.field(formfield.matchSystem) }}
         {#{{ formmacros.simplefield( "Match with DB:", formfield.matchSystem.vars.value, "", "disabled" ) }}#}
 
