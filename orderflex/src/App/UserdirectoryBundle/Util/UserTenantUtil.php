@@ -418,13 +418,15 @@ class UserTenantUtil
                 }
 
                 $httpdConfig = $this->getTenantHttpd($tenantId);
-                $originalText = file_get_contents($httpdConfig);
-                //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
-                $httpdTenantsArray = $this->getTextByStartEnd($originalText,'<VirtualHost','VirtualHost>');
-                foreach($httpdTenantsArray as $httpdTenantLine) {
-                    if( str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url']) ) {
-                        $this->fileReplaceContent($httpdConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
-                        break;
+                if( $httpdConfig ) {
+                    $originalText = file_get_contents($httpdConfig);
+                    //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
+                    $httpdTenantsArray = $this->getTextByStartEnd($originalText, '<VirtualHost', 'VirtualHost>');
+                    foreach ($httpdTenantsArray as $httpdTenantLine) {
+                        if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
+                            $this->fileReplaceContent($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                            break;
+                        }
                     }
                 }
             }
