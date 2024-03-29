@@ -147,6 +147,9 @@ services:
     oleg.logout.listener:
           class: App\UserdirectoryBundle\Services\LogoutEventSubscriber
 
+    user_tenant_utility:
+            class: App\UserdirectoryBundle\Util\UserTenantUtil
+
 #    user_comment_utility:
 #        class: App\UserdirectoryBundle\Util\UserCommentUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]

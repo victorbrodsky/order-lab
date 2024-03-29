@@ -41,6 +41,7 @@ use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
+use App\UserdirectoryBundle\Util\UserTenantUtil;
 use App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil;
 use App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil;
 use App\VacReqBundle\Util\VacReqCalendarUtil;
@@ -94,6 +95,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['user_service_utility'] = '?'.UserServiceUtil::class;
         $subscribedServices['user_manager'] = '?'.UserManager::class;
         $subscribedServices['authenticator_utility'] = '?'.AuthUtil::class;
+        $subscribedServices['user_tenant_utility'] = '?'.UserTenantUtil::class;
 
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
         $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;

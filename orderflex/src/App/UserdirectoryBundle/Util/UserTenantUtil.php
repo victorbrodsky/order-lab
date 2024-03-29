@@ -1,0 +1,482 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: ch3
+ * Date: 3/29/2024
+ * Time: 12:05 PM
+ */
+
+namespace App\UserdirectoryBundle\Util;
+
+
+use App\UserdirectoryBundle\Entity\TenantManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+
+
+class UserTenantUtil
+{
+
+    protected $em;
+    protected $doctrine;
+    protected $security;
+    protected $container;
+    protected $m3;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        Security $security,
+        ContainerInterface $container,
+        ManagerRegistry $doctrine
+    ) {
+        $this->em = $em;
+        $this->doctrine = $doctrine;
+        $this->security = $security;
+        $this->container = $container;
+    }
+
+
+    public function getSingleTenantManager( $createIfEmpty=false ) {
+        $logger = $this->container->get('logger');
+
+        $tenantManager = null;
+        $tenantManagers = $this->em->getRepository(TenantManager::class)->findAll();
+
+        if( count($tenantManagers) == 1 ) {
+            return $tenantManagers[0];
+        }
+
+        //make sure sitesettings is initialized
+        if( count($tenantManagers) == 0 ) {
+            $logger->notice("getSingleTenantManager: TenantManager count=".count($tenantManagers)."; createIfEmpty=".$createIfEmpty);
+            if( $createIfEmpty ) {
+                $tenantManager = $this->generateTenantManager();
+                return $tenantManager;
+            }
+        }
+
+        if( count($tenantManagers) != 1 ) {
+            if( $createIfEmpty ) {
+                throw new \Exception(
+                    'getSingleTenantManager: Must have only one tenant manager object. Found '.
+                    count($tenantManagers).' object(s)'."; createIfEmpty=".$createIfEmpty
+                );
+            } else {
+                return null;
+            }
+        }
+
+        return null;
+    }
+    public function generateTenantManager()
+    {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->em;
+
+        $tenantManagers = $em->getRepository(TenantManager::class)->findAll();
+
+        if (count($tenantManagers) > 0) {
+            $logger->notice("Exit generateTenantManager: TenantManager has been already generated.");
+            return $tenantManagers[0];
+        }
+
+        $user = $this->security->getUser();
+        $tenantManager = new TenantManager($user);
+
+        $tenantManager->setGreeting("Welcome to the View! The following organizations are hosted on this platform:");
+        $tenantManager->setMaintext("Please log in to manage the tenants on this platform.");
+        //$tenantManager->setFooter();
+
+        $em->persist($tenantManager);
+        $em->flush();
+
+        $logger->notice("Finished generateTenantManager");
+
+        return $tenantManager;
+    }
+
+
+    //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
+    //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
+    // tenantapp1-httpd.conf, tenantapp2-httpd.conf
+    public function getTenants() {
+        $tenantDataArr = array();
+        $tenantDataArr['error'] = null;
+        $tenantDataArr['existedTenantIds'] = null;
+
+        //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
+        //testing
+        if(0) {
+            //$tenantDataArr['existedTenantIds'][] = 'tenantmanager';
+            //$tenantDataArr['existedTenantIds'][] = 'homepagemanager';
+            //$tenantDataArr['existedTenantIds'][] = 'tenantapp2';
+            $tenantDataArr['existedTenantIds'][] = 'tenantappdemo';
+        }
+
+        ////// 1) Check if tenant's htppd exists and get tenant list as array //////
+        $tenantDataArr = $this->getTenantDataFromHttpd($tenantDataArr);
+
+        ////// 2) read haproxy (check if tenant is enabled) //////
+        $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
+
+        ////// 3) read corresponding parameters.yml //////
+        $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
+
+        //dump($tenantDataArr);
+        //exit('111');
+
+        return $tenantDataArr;
+    }
+    function get_string_between($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
+    }
+    function getTextByStartEnd($text, $startStr, $endStr) {
+        //$startStr = '###START-FRONTEND';
+        //$endStr = '###END-FRONTEND';
+        //Get part of the text $matches by $startStr and $endStr
+        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
+        preg_match($pattern, $text, $matches);
+        if( !isset($matches[0]) ) {
+            echo "File does not have $startStr and $endStr";
+            //$errorMsg = "File does not have $startStr and $endStr";
+            return array();
+        }
+
+        $frontendTenantsArray = explode("\n", trim($matches[0]));
+        return $frontendTenantsArray;
+    }
+
+    ////// 1) Check if tenant's htppd exists and get tenant list as array //////
+    public function getTenantDataFromHttpd( $tenantDataArr ) {
+        //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
+        // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
+        $httpdPath = '/etc/httpd/conf/';
+
+        if( file_exists($httpdPath) ) {
+            //echo "The httpd directory $httpdPath exists";
+            //$files = scandir($path);
+            $tenantDataArr['existedTenantIds'] = null;
+            $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
+            //dump($files);
+            //exit('111');
+            foreach($httpdFiles as $httpdFile) {
+                if( str_contains($httpdFile, '-httpd.conf') ) {
+                    //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
+                    //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
+                    $tenantId = null;
+                    $tenantIdArr = explode('-', $httpdFile);
+                    if( count($tenantIdArr) == 2 ) {
+                        $tenantId = $tenantIdArr[0];
+                    }
+                    $tenantDataArr['existedTenantIds'][] = $tenantId;
+                    //$tenantDataArr['tenants']['tenantId'] = $tenantId;
+                }
+            }
+        } else {
+            //echo "The httpd directory $httpdPath does not exist";
+            $tenantDataArr['error'][] = "The httpd configuration directory $httpdPath does not exist";
+            return $tenantDataArr;
+        }
+
+        //dump($tenantDataArr);
+        //exit('111');
+        return $tenantDataArr;
+    }
+
+    ////// 2) read haproxy (check if tenant is enabled) //////
+    public function getTenantDataFromHaproxy( $tenantDataArr ) {
+
+        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+            //ok
+        } else {
+            $tenantDataArr['error'][] = "getTenantDataFromHaproxy: Tenants are not found";
+            return $tenantDataArr;
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+//        $haproxyConfig = '/etc/haproxy/haproxy_testing.cfg';
+//
+//        if( $userServiceUtil->isWindows() ) {
+//            //testing with packer's default haproxy config
+//            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//            $haproxyConfig = $projectRoot.'/../packer/haproxy.cfg';
+//        }
+//
+//        if( file_exists($haproxyConfig) ) {
+//            //echo "The file $haproxyConfig exists";
+//        } else {
+//            //echo "The file $haproxyConfig does not exist";
+//            $tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not exist";
+//            return $tenantDataArr;
+//        }
+
+        $haproxyConfig = $this->getHaproxyConfig();
+
+        //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
+        $originalText = file_get_contents($haproxyConfig);
+
+        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+        //dump($finalArray);
+        //exit('111');
+        //Result:
+//        0 => "###START-CUSTOM-TENANTS "
+//        1 => "\tacl tenantapp3_url path_beg -i /c/wcm/333"
+//        2 => "    use_backend tenantapp3_backend if tenant_app3_url"
+//        3 => "\t"
+//        4 => "\tacl tenantapp4url path_beg -i /c/wcm/444"
+//        5 => "    use_backend tenantapp4backend if tenant_app4_url"
+
+        //Get url '/c/wcm/333', enabled
+        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+            $tenantDataArr[$tenantId]['enabled'] = false;
+            foreach($frontendTenantsArray as $frontendTenantLine) {
+                if( str_contains($frontendTenantLine, ' '.$tenantId.'_url') ) {
+
+                    $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
+                    if( count($tenantUrlArr) > 1 ) {
+                        $tenantUrl = end($tenantUrlArr); //=>' /c/wcm/333'
+                        if ($tenantUrl) {
+                            $tenantUrl = trim($tenantUrl);
+                            echo "tenantUrl=[".$tenantUrl."]<br>";
+                            $tenantDataArr[$tenantId]['url'] = $tenantUrl;
+                        }
+                    }
+
+                    if( !str_contains($frontendTenantLine, '#') ) {
+                        foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
+                            if ($existedTenantId == $tenantId) {
+                                $tenantDataArr[$tenantId]['enabled'] = true;
+                            }
+                        }
+                    }
+                }
+            } //foreach $frontendTenantsArray
+        } //foreach $tenantDataArr['existedTenantIds']
+
+        //Get port front backend between ###START-BACKEND and ###END-BACKEND
+        //backend homepagemanager_backend
+        //server homepagemanager_server *:8081 check
+        $backendTenantsArray = $this->getTextByStartEnd($originalText,'###START-BACKEND','###END-BACKEND');
+        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+            foreach($backendTenantsArray as $backendTenantLine) {
+                if( str_contains($backendTenantLine, ' '.$tenantId.'_server') ) {
+                    //echo "backendTenantLine=$backendTenantLine <br>"; // server tenantmanager_server *:8082 check
+                    $tenantPort = $this->get_string_between($backendTenantLine,$tenantId.'_server'," check"); //=>*:8081
+                    $tenantPort = trim($tenantPort);
+                    //echo "tenantPort=[$tenantPort] <br>";
+                    $tenantPort = str_replace('*:','',$tenantPort); //=>8081
+                    //echo "tenantPort=[$tenantPort] <br>";
+                    $tenantDataArr[$tenantId]['port'] = $tenantPort;
+                }
+            } //foreach $backendTenantsArray
+        } //foreach $tenantDataArr['existedTenantIds']
+
+        return $tenantDataArr;
+    }
+    public function getHaproxyConfig() {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $haproxyConfig = '/etc/haproxy/haproxy.cfg';
+
+        if( $userServiceUtil->isWindows() ) {
+            //testing with packer's default haproxy config
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+            $haproxyConfig = $projectRoot.'/../packer/haproxy_testing.cfg';
+        }
+
+        if( file_exists($haproxyConfig) ) {
+            //echo "The file $haproxyConfig exists";
+        } else {
+            //echo "The file $haproxyConfig does not exist";
+            //$tenantDataArr['error'][] = "HAproxy configuration file $haproxyConfig does not exist";
+            //return $tenantDataArr;
+            return null;
+        }
+        return $haproxyConfig;
+    }
+
+    ////// 3) read corresponding parameters.yml //////
+    public function getTenantDataFromParameters( $tenantDataArr ) {
+
+        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+            //ok
+        } else {
+            $tenantDataArr['error'][] = "getTenantDataFromParameters: Tenants are not found";
+            return $tenantDataArr;
+        }
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $orderHolderFolder = $projectRoot.'/../../';
+        $orderFolders = array_diff(scandir($orderHolderFolder), array('.', '..')); //remove . and .. from the returned array from scandir
+        foreach($orderFolders as $orderFolder) {
+            //echo "orderFolder=$orderFolder <br>";
+            if( str_contains($orderFolder, 'order-lab-') ) {
+                foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+                    $orderPath = $orderHolderFolder.DIRECTORY_SEPARATOR.'order-lab-'.$tenantId.DIRECTORY_SEPARATOR; //order-lab-tenantapp2
+                    $orderParameterPath = $orderPath . DIRECTORY_SEPARATOR.'orderflex'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
+                    if( file_exists($orderParameterPath) ) {
+                        //echo "orderParameterPath=$orderParameterPath <br>";
+                        $originalText = file_get_contents($orderParameterPath);
+                        //echo "originalText=$originalText <br>";
+
+                        $tenantDataArr[$tenantId]['databaseHost'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databaseName'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databaseUser'] = 'Unknown';
+                        $tenantDataArr[$tenantId]['databasePassword'] = 'Unknown';
+
+                        $parametersLines = $this->getTextByStartEnd($originalText,'parameters:','');
+                        foreach($parametersLines as $parametersLine) {
+                            //echo "parametersLine=$parametersLine <br>";
+                            if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
+                                $dbHost = str_replace('database_host:','',$parametersLine);
+                                //echo "dbHost=$dbHost <br>";
+                                $dbHost = trim($dbHost);
+                                $tenantDataArr[$tenantId]['databaseHost'] = $dbHost;
+                                //exit('111');
+                            }
+                            if( str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#') ) {
+                                //echo "database_name=$parametersLine <br>";
+                                $dbName = str_replace('database_name:','',$parametersLine);
+                                $dbName = trim($dbName);
+                                $tenantDataArr[$tenantId]['databaseName'] = $dbName;
+                            }
+                            if( str_contains($parametersLine, 'database_user:') && !str_contains($parametersLine, '#') ) {
+                                $dbUser = str_replace('database_user:','',$parametersLine);
+                                $dbUser = trim($dbUser);
+                                $tenantDataArr[$tenantId]['databaseUser'] = $dbUser;
+                            }
+                            if( str_contains($parametersLine, 'database_password:') && !str_contains($parametersLine, '#') ) {
+                                $dbPass = str_replace('database_password:','',$parametersLine);
+                                $dbPass = trim($dbPass);
+                                $tenantDataArr[$tenantId]['databasePassword'] = $dbPass;
+                            }
+                        }
+                        //dump($dbHost);
+                        //exit('111');
+
+                    } else {
+
+                    }
+                }
+            }
+        }
+        //dump($tenantDataArr);
+        //exit('111');
+        return $tenantDataArr;
+    }
+
+    public function processDBTenants( $tenantManager ) {
+        foreach( $tenantManager->getTenants() as $tenant ) {
+            echo "tenant:".$tenant."; url=".$tenant->getUrlSlug()."<br>";
+
+            $tenantId = $tenant->getName();
+            $haproxyConfig = $this->getHaproxyConfig();
+
+            //Enable/Disable => haproxy
+            $tenantDataArr = array();
+            $tenantDataArr['existedTenantIds'][] = $tenantId;
+            $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
+            //dump($tenantDataArr);
+            //exit('111');
+            echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
+            if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
+                echo "Change enable <br>";
+                $originalText = file_get_contents($haproxyConfig);
+
+                //Disable if enabled
+//                if( $tenantDataArr[$tenantId]['enabled'] ) {
+//                    if( !$tenant->getEnabled() ) {
+//                        //haproxy in frontend: find and comment out the line by tenant 'tenantmanager_url' and comment it out
+//                        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+//                        foreach($frontendTenantsArray as $frontendTenantLine) {
+//                            if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+//                                $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#','add');
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                if( !$tenantDataArr[$tenantId]['enabled'] ) {
+//                    if( $tenant->getEnabled() ) {
+//                        //haproxy in frontend: find and comment out the line by tenant 'tenantmanager_url' and comment it out
+//                        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+//                        foreach($frontendTenantsArray as $frontendTenantLine) {
+//                            if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+//                                $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#','remove');
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+
+                //if( $tenant->getEnabled() === true ) {
+                    //if( $tenantDataArr[$tenantId]['enabled'] === false ) {
+                        //enable
+                    //}
+                    $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+                    foreach($frontendTenantsArray as $frontendTenantLine) {
+                        if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+                            $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#',$tenant->getEnabled());
+                            break;
+                        }
+                    }
+                //}
+                //if( $tenant->getEnabled() === false ) {
+                //
+               // }
+
+                //exit('111');
+            }
+        }
+
+       exit('111');
+    }
+    //https://stackoverflow.com/questions/29182924/overwrite-a-specific-line-in-a-text-file-with-php
+    public function changeLineInFile( $file, $keyStr, $appendStr, $enable ) {
+        echo "file=".$file."<br>";
+        echo "keyStr=".$keyStr."<br>";
+        echo "appendStr=".$appendStr."<br>";
+        $content = file($file); // reads an array of lines
+        //dump($content);
+        //exit('111');
+
+        foreach($content as $key=>$value) {
+            if (str_contains($value, $keyStr)) {
+                $newValue = null;
+                if( !$enable ) {
+                    //Disable line
+                    $newValue = $appendStr.$value;
+                    echo "append $appendStr line=[".$newValue."]<br>";
+                }
+                if( $enable ) {
+                    //Enable line
+                    $newValue = str_replace($appendStr,'',$value);
+                    echo "remove $appendStr line=[".$newValue."]<br>";
+                }
+                echo "line=[".$value."]?=[".$newValue."]<br>";
+                if( $value != $newValue ) {
+                    echo "new line=".$newValue."<br>";
+                    $content[$key] = $newValue;
+                }
+
+                //echo "new line=".$content[$key]."<br>";
+                break;
+            }
+        }
+        $allContent = implode("", $content);
+        file_put_contents($file, $allContent);
+        //dump($allContent);
+        //exit('111');
+    }
+
+}

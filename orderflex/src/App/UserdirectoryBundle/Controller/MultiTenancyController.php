@@ -103,8 +103,9 @@ class MultiTenancyController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
-        $tenantManager = $userServiceUtil->getSingleTenantManager($createIfEmpty = true);
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         //echo "tenantManager ID=".$tenantManager->getId()."<br>";
 
         $cycle = "edit";
@@ -117,13 +118,19 @@ class MultiTenancyController extends OrderAbstractController
 
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
         //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
-        $tenantDataArr = $userServiceUtil->getTenants();
+        $tenantDataArr = $userTenantUtil->getTenants();
 
         if( $tenantDataArr['error'] ) {
             foreach($tenantDataArr['error'] as $error ) {
+//                $this->addFlash(
+//                    'warning',
+//                    $error
+//                );
+            }
+            if( count($tenantDataArr['error']) > 0 ) {
                 $this->addFlash(
-                    'notice',
-                    $error
+                    'warning',
+                    implode("<br>",$tenantDataArr['error'])
                 );
             }
         }
@@ -250,6 +257,8 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
+            $userTenantUtil->processDBTenants($tenantManager);
+
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
             if( $removedInfo ) {
@@ -257,7 +266,7 @@ class MultiTenancyController extends OrderAbstractController
                 //echo "Remove tenant: ".$removedInfo."<br>";
                 $this->addFlash(
                     'notice',
-                    "Tenant has been removed: ".$removedInfo
+                    "Tenant has been removed from Database: ".$removedInfo
                 );
             }
 

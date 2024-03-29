@@ -37,7 +37,7 @@ use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Entity\Procedure;
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
-use App\UserdirectoryBundle\Util\UserServiceUtil;
+//use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CrnBundle\Form\CrnFilterType;
 use App\CrnBundle\Form\CrnMessageType;
