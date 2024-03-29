@@ -554,6 +554,7 @@ class UserTenantUtil
     }
 
     public function restartHaproxy() {
+        //https://stackoverflow.com/questions/8532304/execute-root-commands-via-php
         //sudo systemctl restart haproxy
         $output = shell_exec('sudo systemctl restart haproxy');
         echo "<pre>$output</pre>";
