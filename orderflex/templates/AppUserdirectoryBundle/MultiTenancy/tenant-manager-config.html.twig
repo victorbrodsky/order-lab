@@ -182,6 +182,16 @@
         <div class="col-xs-1"></div>
     </div>
 
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Available Tenants</div>
+        <div class="panel-body">
+            {% for tenantBaseUrl in tenantBaseUrlArr %}
+                {{ tenantBaseUrl|raw }}<br>
+            {% endfor %}
+        </div>
+    </div>
+
     {{ form_start(form) }}
         {{ form_errors(form) }}
 

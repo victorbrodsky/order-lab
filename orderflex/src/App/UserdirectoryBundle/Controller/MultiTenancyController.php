@@ -128,6 +128,11 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
+        $tenantBaseUrlArr = array();
+
+        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        $tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
+
         if( $tenantDataArr['existedTenantIds'] ) {
             $orderInList = 0;
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
@@ -145,12 +150,16 @@ class MultiTenancyController extends OrderAbstractController
                     }
                     //remove leading '/' if not a single '/'
                     if( $url != '/' ) {
-                        $str = ltrim($url, '/');
+                        $url = ltrim($url, '/');
                     }
                     $this->addFlash(
                         'notice',
                         "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
                     );
+
+                    $tenantBaseUrl = $baseUrl . '/' . $url;
+                    $tenantBaseUrl = '<a href="'.$tenantBaseUrl.'">'.$tenantBaseUrl.'</a> ';
+                    $tenantBaseUrlArr[] = $tenantBaseUrl;
 
                     //Add tenants to the tenant's section
                     //1) check if tenant from the file system exists in DB
@@ -272,6 +281,7 @@ class MultiTenancyController extends OrderAbstractController
 
         return array(
             'tenantManager' => $tenantManager,
+            'tenantBaseUrlArr' => $tenantBaseUrlArr,
             'title' => "Tenants Configuration",
             'form' => $form->createView(),
             'cycle' => $cycle
