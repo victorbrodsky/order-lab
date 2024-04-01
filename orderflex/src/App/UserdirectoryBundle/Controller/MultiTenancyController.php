@@ -265,6 +265,7 @@ class MultiTenancyController extends OrderAbstractController
                 $haproxyInfo = $tenantProcessInfo['haproxy-url'];
                 echo "haproxyInfo: ".$haproxyInfo."<br>";
             }
+            exit('111');
             if( $res['status'] == 'error' ) {
                 $session = $userUtil->getSession(); //$this->container->get('session');
                 $session->getFlashBag()->add(
