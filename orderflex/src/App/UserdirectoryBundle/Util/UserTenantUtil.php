@@ -392,6 +392,7 @@ class UserTenantUtil
 
         //testing
         $this->restartHaproxy();
+        $this->restartTenantHttpd();
         return $resultArr;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
@@ -705,8 +706,16 @@ class UserTenantUtil
 
     public function restartTenantHttpd( $tenantId ) {
         //sudo systemctl restart haproxy
-        $output = shell_exec('sudo systemctl restart httpd'.$tenantId);
-        echo "<pre>$output</pre>";
+        //$output = shell_exec('sudo systemctl restart httpd'.$tenantId);
+        //echo "<pre>$output</pre>";
+
+        $commandArr = array(
+            //'sudo systemctl restart httpd'.$tenantId,
+            '/usr/bin/systemctl',
+            'restart',
+            'httpd'.$tenantId
+        );
+        $this->runProcess($commandArr);
     }
 
     public function runProcess($commandArr) {
