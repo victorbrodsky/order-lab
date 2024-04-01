@@ -471,6 +471,7 @@ class UserTenantUtil
                     $httpdOriginalText = file_get_contents($httpdConfig);
                     //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
                     $httpdTenantsArray = $this->getTextByStartEnd($httpdOriginalText, '<VirtualHost', 'VirtualHost>');
+                    dump($httpdTenantsArray);
                     foreach ($httpdTenantsArray as $httpdTenantLine) {
                         echo "httpdTenantLine=[$httpdTenantLine] <br>";
                         if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
