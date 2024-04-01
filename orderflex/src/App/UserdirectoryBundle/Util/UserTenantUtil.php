@@ -477,6 +477,7 @@ class UserTenantUtil
 //                                    'warning',
 //                                    $res['message']
 //                                );
+                                echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                                 $resultArr['httpd-error'][$tenantId] = $res['message'];
                             } else {
                                 $session->getFlashBag()->add(
