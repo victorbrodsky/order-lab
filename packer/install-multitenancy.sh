@@ -329,6 +329,7 @@ f_create_single_tenant_htppd() {
 			echo -e ${COLOR} Alias url not provided "$3" ${NC}
 	fi	
 	
+	#Since you're running multiple instances manually, you'll need to create custom systemd service files to manage them.
 	#Create httpd service
 	echo -e ${COLOR} Create httpd"$1".service for port "$2", url "$3" ${NC}
 	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
@@ -421,6 +422,12 @@ f_start_haproxy() {
 	sudo journalctl -xeu haproxy.service
 }
 
+f_restart_phpfpm() {
+	#Make sure php-fpm is started	
+	echo -e ${COLOR} Make sure php-fpm is started ${NC}
+	sudo systemctl start php-fpm
+}
+
 function changedir() {
   cd $1
 }
@@ -439,6 +446,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_haproxy
 			f_stop_httpd
 			f_start_all_httpd
+			f_restart_phpfpm
 		else
 			echo -e ${COLOR} False ${NC}
 			f_test
