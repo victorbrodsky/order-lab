@@ -263,7 +263,9 @@ class MultiTenancyController extends OrderAbstractController
             //exit('111');
             foreach( $res as $tenantId => $tenantProcessInfo ) {
                 $haproxyInfo = $tenantProcessInfo['haproxy-url'];
-                echo "haproxyInfo: ".$haproxyInfo."<br>";
+                $status = $haproxyInfo['status'];
+                $msg = $haproxyInfo['message'];
+                echo "$tenantId haproxyInfo: status=".$status."; msg=".$msg."<br>";
             }
             exit('111');
             if( $res['status'] == 'error' ) {
