@@ -257,7 +257,20 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
-            $userTenantUtil->processDBTenants($tenantManager);
+            $res = $userTenantUtil->processDBTenants($tenantManager);
+
+            if( $res['status'] == 'error' ) {
+                $session = $userUtil->getSession(); //$this->container->get('session');
+                $session->getFlashBag()->add(
+                    'warning',
+                    $res['message']
+                );
+            } else {
+                $this->addFlash(
+                    'notice',
+                    "Tenancy configuration have been updated."
+                );
+            }
 
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
@@ -301,7 +314,7 @@ class MultiTenancyController extends OrderAbstractController
         return array(
             'tenantManager' => $tenantManager,
             'tenantBaseUrlArr' => $tenantBaseUrlArr,
-            'title' => "Tenants Configuration",
+            'title' => "Tenancy Configuration",
             'form' => $form->createView(),
             'cycle' => $cycle
         );

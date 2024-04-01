@@ -221,7 +221,7 @@ class UserTenantUtil
 //        }
 
         $haproxyConfig = $this->getHaproxyConfig();
-        echo "haproxyConfig file=".$haproxyConfig."<br>";
+        //echo "haproxyConfig file=".$haproxyConfig."<br>";
 
         //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
         $originalText = file_get_contents($haproxyConfig);
@@ -379,6 +379,9 @@ class UserTenantUtil
     public function processDBTenants( $tenantManager ) {
 
         $userUtil = $this->container->get('user_utility');
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession(); //$this->container->get('session');
+
         $update = false;
         $resultArr = array();
 
@@ -406,6 +409,7 @@ class UserTenantUtil
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
+                        $resultArr[$tenantId]['haproxy-enable'] = $res;
                         if( $res['status'] == 'error' ) {
                             $session = $userUtil->getSession(); //$this->container->get('session');
                             $session->getFlashBag()->add(
@@ -413,6 +417,14 @@ class UserTenantUtil
                                 $res['message']
                             );
                         } else {
+                            $enabledStr = "disabled";
+                            if( $tenant->getEnabled() ) {
+                                $enabledStr = "enabled";
+                            }
+                            $session->getFlashBag()->add(
+                                'note',
+                                "Tenant $tenantId has been $enabledStr in haproxy config"
+                            );
                             $update = true;
                         }
                         //$this->restartHaproxy();
@@ -431,19 +443,22 @@ class UserTenantUtil
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                         $res = $this->replace_in_file($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
+                        $resultArr[$tenantId]['haproxy-url'] = $res;
                         if( $res['status'] == 'error' ) {
-                            $userUtil = $this->container->get('user_utility');
-                            $session = $userUtil->getSession(); //$this->container->get('session');
                             $session->getFlashBag()->add(
                                 'warning',
                                 $res['message']
                             );
                         } else {
+                            $session->getFlashBag()->add(
+                                'note',
+                                "Tenant $tenantId url has been updated in haproxy config"
+                            );
                             $update = true;
                         }
                         break;
                     }
-                }
+                }//foreach tenant's haproxy
 
                 $httpdConfig = $this->getTenantHttpd($tenantId);
                 if( $httpdConfig ) {
@@ -461,6 +476,11 @@ class UserTenantUtil
                                     $res['message']
                                 );
                             } else {
+                                $session->getFlashBag()->add(
+                                    'note',
+                                    "Tenant's $tenantId url has been updated in httpd from "
+                                    .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl
+                                );
                                 $update = true;
                             }
                             $resultArr[$tenantId]['httpd'] = $res;
@@ -468,8 +488,8 @@ class UserTenantUtil
                             break;
                         }
                     }
-                }
-            }
+                }//if httpd
+            }//if url changes
         }//foreach
 
         if( $update === true ) {
@@ -477,6 +497,7 @@ class UserTenantUtil
         }
 
        //exit('111');
+        return $resultArr;
     }
 
     public function getTenantHttpd( $tenantId ) {
