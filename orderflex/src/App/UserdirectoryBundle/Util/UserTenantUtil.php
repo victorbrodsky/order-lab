@@ -699,6 +699,7 @@ class UserTenantUtil
 
         //Use the sudo visudo command to edit the /etc/sudoers file
         //apache ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+        //Permission denied:
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
 
