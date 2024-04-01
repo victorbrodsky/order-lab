@@ -437,66 +437,109 @@ class UserTenantUtil
                 }
             }
 
-            //update URL slug: modify files: haproxy and $tenantId-httpd.conf
+            //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
-            if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
+            $tenantDbPort = $tenant->getTenantPort();
+            if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] || $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
 
                 $originalText = file_get_contents($haproxyConfig);
-                //modify 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
-                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-                foreach($frontendTenantsArray as $frontendTenantLine) {
-                    if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                        $res = $this->replace_in_file($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
-                        //$resultArr[$tenantId]['haproxy-url'] = $res;
-                        if( $res['status'] == 'error' ) {
-//                            $session->getFlashBag()->add(
-//                                'warning',
-//                                $res['message']
-//                            );
-                            $resultArr['haproxy-error'] = $res['message'];
-                        } else {
-                            $session->getFlashBag()->add(
-                                'note',
-                                "Tenant $tenantId url has been updated in haproxy config"
-                            );
-                            $updateHaproxy = true;
-                        }
-                        break;
-                    }
-                }//foreach tenant's haproxy
 
+                //modify url in haproxy: 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
+                if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
+                    $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
+                    foreach($frontendTenantsArray as $frontendTenantLine) {
+                        if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
+                            if ($tenantDbUrl != $tenantDataArr[$tenantId]['url']) {
+                                $res = $this->replace_in_file($haproxyConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                                //$resultArr[$tenantId]['haproxy-url'] = $res;
+                                if ($res['status'] == 'error') {
+                                    $resultArr['haproxy-error'] = $res['message'];
+                                } else {
+                                    $session->getFlashBag()->add(
+                                        'note',
+                                        "Tenant $tenantId url has been updated in haproxy config"
+                                    );
+                                    $updateHaproxy = true;
+                                }
+                                break;
+                            }
+                        }
+                    }//foreach tenant's haproxy
+                }
+
+
+                //modify port in haproxy: 'server tenantmanager_server *:8082 check'
+                if( $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
+                    $backendTenantsArray = $this->getTextByStartEnd($originalText, '###START-BACKEND', '###END-BACKEND');
+                    foreach($backendTenantsArray as $backendTenantLine) {
+                        //modify 'server tenantmanager_server *:8082 check'
+                        if (str_contains($backendTenantLine, 'server ' . $tenantId . '_server')) {
+                            $res = $this->replace_in_file($haproxyConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
+                            if ($res['status'] == 'error') {
+                                $resultArr['haproxy-error'] = $res['message'];
+                            } else {
+                                $session->getFlashBag()->add(
+                                    'note',
+                                    "Tenant $tenantId port has been updated in haproxy config"
+                                );
+                                $updateHaproxy = true;
+                            }
+                            break;
+                        }
+                    }//foreach tenant's haproxy
+                }
+
+
+                //change URL in httpd config file
                 $httpdConfig = $this->getTenantHttpd($tenantId);
                 echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
                     $httpdOriginalText = file_get_contents($httpdConfig);
-                    //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
-                    $httpdTenantsArray = $this->getTextByStartEnd($httpdOriginalText, '<VirtualHost', 'VirtualHost>');
-                    dump($httpdTenantsArray);
-                    foreach ($httpdTenantsArray as $httpdTenantLine) {
-                        echo "httpdTenantLine=[$httpdTenantLine] <br>";
-                        if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
-                            $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
-                            if( $res['status'] == 'error' ) {
-//                                $session->getFlashBag()->add(
-//                                    'warning',
-//                                    $res['message']
-//                                );
-                                //echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
-                                $resultArr['httpd-error'][$tenantId] = $res['message'];
-                            } else {
-                                $session->getFlashBag()->add(
-                                    'note',
-                                    "Tenant's $tenantId url has been updated in httpd from "
-                                    .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl
-                                );
-                                $updateHttpd = true;
-                            }
-                            $this->restartTenantHttpd($tenantId);
-                            break;
+                    $updateThisHttpd = false;
+
+                    //modify URL in httpd
+                    if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['url'])) {
+                        $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                        if( $res['status'] == 'error' ) {
+                            echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
+                            $resultArr['httpd-error'][$tenantId] = $res['message'];
+                        } else {
+                            $session->getFlashBag()->add(
+                                'note',
+                                "Tenant's $tenantId url has been updated in httpd from "
+                                .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl
+                            );
+                            $updateHttpd = true;
                         }
+                        $updateThisHttpd = true;
                     }
-                }//if httpd
+
+                    //modify port in httpd
+                    if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['port'])) {
+                        $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbUrl);
+                        if( $res['status'] == 'error' ) {
+                            echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
+                            $resultArr['httpd-error'][$tenantId] = $res['message'];
+                        } else {
+                            $session->getFlashBag()->add(
+                                'note',
+                                "Tenant's $tenantId port has been updated in httpd from "
+                                .$tenantDataArr[$tenantId]['port']." to ".$tenantDbUrl
+                            );
+                            $updateHttpd = true;
+                        }
+                        $updateThisHttpd = true;
+                    }
+
+                    if( $updateThisHttpd === true ) {
+                        $this->restartTenantHttpd($tenantId);
+                    }
+
+                }//if $httpdConfig
+
             }//if url changes
+
+
         }//foreach
 
         if( $updateHttpd === true && $updateHaproxy === true ) {

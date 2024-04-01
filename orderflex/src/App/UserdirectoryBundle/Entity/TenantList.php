@@ -49,6 +49,9 @@ class TenantList extends ListAbstract
     //private $tenantUrl;
 
     #[ORM\Column(type: 'string', nullable: true)]
+    private $tenantPort;
+
+    #[ORM\Column(type: 'string', nullable: true)]
     private $databaseHost;
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -150,6 +153,24 @@ class TenantList extends ListAbstract
     {
         $this->tenantUrl = $tenantUrl;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTenantPort()
+    {
+        return $this->tenantPort;
+    }
+
+    /**
+     * @param mixed $tenantPort
+     */
+    public function setTenantPort($tenantPort)
+    {
+        $this->tenantPort = $tenantPort;
+    }
+
+    
 
     /**
      * @return mixed

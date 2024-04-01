@@ -76,10 +76,10 @@ class TenantType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('databasePort',null,array(
-            'label' => 'Database Port:',
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('databasePort',null,array(
+//            'label' => 'Database Port:',
+//            'attr' => array('class'=>'form-control')
+//        ));
 
         $builder->add('databaseName',null,array(
             'label' => 'Database Name:',
@@ -144,6 +144,11 @@ class TenantType extends AbstractType
 
         $builder->add('urlSlug',null,array(
             'label' => 'URL Slug:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('tenantPort',null,array(
+            'label' => 'Tenant Port:',
             'attr' => array('class'=>'form-control')
         ));
 
