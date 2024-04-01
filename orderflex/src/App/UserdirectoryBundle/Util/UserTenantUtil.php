@@ -379,6 +379,7 @@ class UserTenantUtil
         return $tenantDataArr;
     }
 
+    //Best option is to have shell script to create and modify config files and to run restart
     public function processDBTenants( $tenantManager ) {
 
         $userUtil = $this->container->get('user_utility');
@@ -413,19 +414,13 @@ class UserTenantUtil
                 //echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
                 //Disable or enabled according to DB value $tenant->getEnabled():
-                //comment out line frontend->use_backend tenantappdemo_backend if tenantappdemo_url
+                //comment out line frontend->'use_backend tenantappdemo_backend if tenantappdemo_url'
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
-                        //$resultArr[$tenantId]['haproxy-enable'] = $res;
                         if( $res['status'] == 'error' ) {
-//                            $session = $userUtil->getSession(); //$this->container->get('session');
-//                            $session->getFlashBag()->add(
-//                                'warning',
-//                                $res['message']
-//                            );
                             $resultArr['haproxy-error'] = $res['message'];
                         } else {
                             $enabledStr = "disabled";
@@ -456,7 +451,7 @@ class UserTenantUtil
                     foreach($frontendTenantsArray as $frontendTenantLine) {
                         if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                             if ($tenantDbUrl != $tenantDataArr[$tenantId]['url']) {
-                                $res = $this->replace_in_file($haproxyConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                                $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
                                 //$resultArr[$tenantId]['haproxy-url'] = $res;
                                 if ($res['status'] == 'error') {
                                     $resultArr['haproxy-error'] = $res['message'];
@@ -480,7 +475,7 @@ class UserTenantUtil
                     foreach($backendTenantsArray as $backendTenantLine) {
                         //modify 'server tenantmanager_server *:8082 check'
                         if (str_contains($backendTenantLine, 'server ' . $tenantId . '_server')) {
-                            $res = $this->replace_in_file($haproxyConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
+                            $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                             } else {
@@ -505,7 +500,7 @@ class UserTenantUtil
 
                     //modify URL in httpd
                     if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['url'])) {
-                        $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
@@ -522,7 +517,7 @@ class UserTenantUtil
 
                     //modify port in httpd
                     if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['port'])) {
-                        $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbUrl);
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbUrl);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
@@ -594,7 +589,7 @@ class UserTenantUtil
      * @param string $NewText new text
      * @return array $Result status (success | error) & message (file exist, file permissions)
      */
-    function replace_in_file($FilePath, $OldText, $NewText)
+    function replaceAllInFile($FilePath, $OldText, $NewText)
     {
         $Result = array('status' => 'error', 'message' => '');
         if(file_exists($FilePath)===TRUE)
@@ -695,12 +690,18 @@ class UserTenantUtil
         //$output = shell_exec('/bin/sh /usr/local/bin/order-lab-tenantmanager/orderflex/php_root');
         //echo "<pre>$output</pre>";
 
+//        $commandArr = array(
+//            //'/usr/bin/systemctl restart haproxy',
+//            '/usr/bin/systemctl',
+//            'restart',
+//            'haproxy'
+//        );
+
+        //run: order-lab/utils/executables/haproxy-restart.sh
         $commandArr = array(
-            //'/usr/bin/systemctl restart haproxy',
-            '/usr/bin/systemctl',
-            'restart',
-            'haproxy'
+            'order-lab/utils/executables/haproxy-restart.sh'
         );
+
         $this->runProcess($commandArr);
     }
 
