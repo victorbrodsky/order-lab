@@ -259,6 +259,11 @@ class MultiTenancyController extends OrderAbstractController
 
             $res = $userTenantUtil->processDBTenants($tenantManager);
 
+            dump($res);
+            exit('111');
+            foreach( $res as $tenantProcessInfo ) {
+
+            }
             if( $res['status'] == 'error' ) {
                 $session = $userUtil->getSession(); //$this->container->get('session');
                 $session->getFlashBag()->add(
