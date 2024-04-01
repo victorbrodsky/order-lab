@@ -276,7 +276,7 @@ class MultiTenancyController extends OrderAbstractController
                 //echo "$httpdError<br>";
                 $this->addFlash(
                     'warning',
-                    $errorMessage . " for tenant " . $tenantId
+                    "Tenant $tenantId: " . $errorMessage
                 );
             }
             //exit('111');
