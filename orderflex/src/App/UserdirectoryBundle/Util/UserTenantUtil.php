@@ -390,7 +390,7 @@ class UserTenantUtil
         $resultArr['httpd-error'] = null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
-            echo "tenant:".$tenant."; url=".$tenant->getUrlSlug()."<br>";
+            echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
 
             $tenantId = $tenant->getName();
             $haproxyConfig = $this->getHaproxyConfig();
@@ -478,7 +478,7 @@ class UserTenantUtil
 //                                    'warning',
 //                                    $res['message']
 //                                );
-                                echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
+                                //echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                                 $resultArr['httpd-error'][$tenantId] = $res['message'];
                             } else {
                                 $session->getFlashBag()->add(
