@@ -279,7 +279,7 @@ class MultiTenancyController extends OrderAbstractController
                     $errorMessage . " for tenant " . $tenantId
                 );
             }
-            exit('111');
+            //exit('111');
 
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
