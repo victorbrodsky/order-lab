@@ -259,8 +259,8 @@ class MultiTenancyController extends OrderAbstractController
 
             $res = $userTenantUtil->processDBTenants($tenantManager);
 
-            dump($res);
-            exit('111');
+            //dump($res);
+            //exit('111');
 
             $haproxyError = $resultArr['haproxy-error'];
             if( $haproxyError ) {
@@ -280,19 +280,6 @@ class MultiTenancyController extends OrderAbstractController
                 );
             }
             //exit('111');
-
-//            if( $res['status'] == 'error' ) {
-//                $session = $userUtil->getSession(); //$this->container->get('session');
-//                $session->getFlashBag()->add(
-//                    'warning',
-//                    $res['message']
-//                );
-//            } else {
-//                $this->addFlash(
-//                    'notice',
-//                    "Tenancy configuration have been updated."
-//                );
-//            }
 
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);

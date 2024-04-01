@@ -466,11 +466,13 @@ class UserTenantUtil
                 }//foreach tenant's haproxy
 
                 $httpdConfig = $this->getTenantHttpd($tenantId);
+                echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
-                    $originalText = file_get_contents($httpdConfig);
+                    $httpdOriginalText = file_get_contents($httpdConfig);
                     //modify: Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-tenantappdemo/orderflex/public/
-                    $httpdTenantsArray = $this->getTextByStartEnd($originalText, '<VirtualHost', 'VirtualHost>');
+                    $httpdTenantsArray = $this->getTextByStartEnd($httpdOriginalText, '<VirtualHost', 'VirtualHost>');
                     foreach ($httpdTenantsArray as $httpdTenantLine) {
+                        echo "httpdTenantLine=[$httpdTenantLine] <br>";
                         if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
                             $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
                             if( $res['status'] == 'error' ) {
