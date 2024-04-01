@@ -264,7 +264,7 @@ class MultiTenancyController extends OrderAbstractController
 
             $haproxyError = $resultArr['haproxy-error'];
             if( $haproxyError ) {
-                echo "$tenantId: haproxyError=$haproxyError<br>";
+                //echo "$tenantId: haproxyError=$haproxyError<br>";
                 $this->addFlash(
                     'warning',
                     $haproxyError
@@ -272,14 +272,11 @@ class MultiTenancyController extends OrderAbstractController
             }
             
             foreach( $res['httpd-error'] as $tenantId => $errorMessage ) {
-                //$haproxyInfo = $tenantProcessInfo['haproxy-url'];
-                //$status = $haproxyInfo['status'];
-                //$msg = $haproxyInfo['message'];
-                $httpdError = "$tenantId: errorMessage=$errorMessage";
-                echo "$httpdError<br>";
+                //$httpdError = "$tenantId: errorMessage=$errorMessage";
+                //echo "$httpdError<br>";
                 $this->addFlash(
                     'warning',
-                    $errorMessage
+                    $errorMessage . " for tenant " . $tenantId
                 );
             }
             //exit('111');

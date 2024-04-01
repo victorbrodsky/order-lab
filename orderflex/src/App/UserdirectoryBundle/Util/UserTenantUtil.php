@@ -390,7 +390,7 @@ class UserTenantUtil
         $resultArr['httpd-error'] = null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
-            echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
+            //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
 
             $tenantId = $tenant->getName();
             $haproxyConfig = $this->getHaproxyConfig();
@@ -503,14 +503,14 @@ class UserTenantUtil
         if( $updateHttpd === false ) {
             $session->getFlashBag()->add(
                 'warning',
-                "Httpd config file does not exists or not writable"
+                "Httpd config file does not exist or not writable"
             );
         }
 
         if( $updateHaproxy === false ) {
             $session->getFlashBag()->add(
                 'warning',
-                "HaProxy config file does not exists or not writable"
+                "HaProxy config file does not exist or not writable"
             );
         }
 
