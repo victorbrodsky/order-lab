@@ -262,7 +262,7 @@ class MultiTenancyController extends OrderAbstractController
             //dump($res);
             //exit('111');
 
-            $haproxyError = $resultArr['haproxy-error'];
+            $haproxyError = $res['haproxy-error'];
             if( $haproxyError ) {
                 //echo "$tenantId: haproxyError=$haproxyError<br>";
                 $this->addFlash(
@@ -270,16 +270,18 @@ class MultiTenancyController extends OrderAbstractController
                     $haproxyError
                 );
             }
-            
-            foreach( $res['httpd-error'] as $tenantId => $errorMessage ) {
-                //$httpdError = "$tenantId: errorMessage=$errorMessage";
-                //echo "$httpdError<br>";
-                $this->addFlash(
-                    'warning',
-                    "Tenant $tenantId: " . $errorMessage
-                );
+
+            if( $res['httpd-error'] ) {
+                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
+                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
+                    //echo "$httpdError<br>";
+                    $this->addFlash(
+                        'warning',
+                        "Tenant $tenantId: " . $errorMessage
+                    );
+                }
             }
-            //exit('111');
+            exit('111');
 
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);

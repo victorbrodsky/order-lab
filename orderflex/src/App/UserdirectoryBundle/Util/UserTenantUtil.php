@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Process\Process;
 
 
 class UserTenantUtil
@@ -380,7 +381,6 @@ class UserTenantUtil
     public function processDBTenants( $tenantManager ) {
 
         $userUtil = $this->container->get('user_utility');
-        $userUtil = $this->container->get('user_utility');
         $session = $userUtil->getSession(); //$this->container->get('session');
 
         $updateHaproxy = false;
@@ -388,6 +388,10 @@ class UserTenantUtil
         $resultArr = array();
         $resultArr['haproxy-error'] = null;
         $resultArr['httpd-error'] = null;
+
+        //testing
+        $this->restartHaproxy();
+        return $resultArr;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
             //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
@@ -686,14 +690,34 @@ class UserTenantUtil
         //create haproxywrapper.c
         //https://askubuntu.com/questions/155791/how-do-i-sudo-a-command-in-a-script-without-being-asked-for-a-password
         //sudo systemctl restart haproxy
-        $output = shell_exec('/bin/sh /usr/local/bin/order-lab-tenantmanager/orderflex/php_root');
-        echo "<pre>$output</pre>";
+        //$output = shell_exec('/bin/sh /usr/local/bin/order-lab-tenantmanager/orderflex/php_root');
+        //echo "<pre>$output</pre>";
+
+        $commandArr = array(
+            //'/usr/bin/systemctl restart haproxy',
+            '/usr/bin/systemctl',
+            'restart',
+            'haproxy'
+        );
+        $this->runProcess();
     }
 
     public function restartTenantHttpd( $tenantId ) {
         //sudo systemctl restart haproxy
         $output = shell_exec('sudo systemctl restart httpd'.$tenantId);
         echo "<pre>$output</pre>";
+    }
+
+    public function runProcess($commandArr) {
+        $process = new Process($commandArr);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $output = $process->getOutput();
+        echo $output;
+        return $output;
     }
 
 }
