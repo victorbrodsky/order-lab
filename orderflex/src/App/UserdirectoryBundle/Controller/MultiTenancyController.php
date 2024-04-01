@@ -261,25 +261,35 @@ class MultiTenancyController extends OrderAbstractController
 
             dump($res);
             //exit('111');
-            foreach( $res as $tenantId => $tenantProcessInfo ) {
-                $haproxyInfo = $tenantProcessInfo['haproxy-url'];
-                $status = $haproxyInfo['status'];
-                $msg = $haproxyInfo['message'];
-                echo "$tenantId haproxyInfo: status=".$status."; msg=".$msg."<br>";
+
+            $haproxyError = $resultArr['haproxy-error'];
+            if( $haproxyError ) {
+                $this->addFlash(
+                    'warning',
+                    $haproxyError
+                );
+            }
+            
+            foreach( $res['httpd-error'] as $tenantId => $errorMessage ) {
+                //$haproxyInfo = $tenantProcessInfo['haproxy-url'];
+                //$status = $haproxyInfo['status'];
+                //$msg = $haproxyInfo['message'];
+                echo "$tenantId haproxyInfo: errorMessage=$errorMessage<br>";
             }
             exit('111');
-            if( $res['status'] == 'error' ) {
-                $session = $userUtil->getSession(); //$this->container->get('session');
-                $session->getFlashBag()->add(
-                    'warning',
-                    $res['message']
-                );
-            } else {
-                $this->addFlash(
-                    'notice',
-                    "Tenancy configuration have been updated."
-                );
-            }
+
+//            if( $res['status'] == 'error' ) {
+//                $session = $userUtil->getSession(); //$this->container->get('session');
+//                $session->getFlashBag()->add(
+//                    'warning',
+//                    $res['message']
+//                );
+//            } else {
+//                $this->addFlash(
+//                    'notice',
+//                    "Tenancy configuration have been updated."
+//                );
+//            }
 
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);

@@ -385,6 +385,8 @@ class UserTenantUtil
         $updateHaproxy = false;
         $updateHttpd = false;
         $resultArr = array();
+        $resultArr['haproxy-error'] = null;
+        $resultArr['httpd-error'] = null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
             echo "tenant:".$tenant."; url=".$tenant->getUrlSlug()."<br>";
@@ -410,13 +412,14 @@ class UserTenantUtil
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
-                        $resultArr[$tenantId]['haproxy-enable'] = $res;
+                        //$resultArr[$tenantId]['haproxy-enable'] = $res;
                         if( $res['status'] == 'error' ) {
 //                            $session = $userUtil->getSession(); //$this->container->get('session');
 //                            $session->getFlashBag()->add(
 //                                'warning',
 //                                $res['message']
 //                            );
+                            $resultArr['haproxy-error'] = $res['message'];
                         } else {
                             $enabledStr = "disabled";
                             if( $tenant->getEnabled() ) {
@@ -443,12 +446,13 @@ class UserTenantUtil
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                         $res = $this->replace_in_file($haproxyConfig,$tenantDataArr[$tenantId]['url'],$tenantDbUrl);
-                        $resultArr[$tenantId]['haproxy-url'] = $res;
+                        //$resultArr[$tenantId]['haproxy-url'] = $res;
                         if( $res['status'] == 'error' ) {
 //                            $session->getFlashBag()->add(
 //                                'warning',
 //                                $res['message']
 //                            );
+                            $resultArr['haproxy-error'] = $res['message'];
                         } else {
                             $session->getFlashBag()->add(
                                 'note',
@@ -469,10 +473,11 @@ class UserTenantUtil
                         if (str_contains($httpdTenantLine, $tenantDataArr[$tenantId]['url'])) {
                             $res = $this->replace_in_file($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
                             if( $res['status'] == 'error' ) {
-                                $session->getFlashBag()->add(
-                                    'warning',
-                                    $res['message']
-                                );
+//                                $session->getFlashBag()->add(
+//                                    'warning',
+//                                    $res['message']
+//                                );
+                                $resultArr['httpd-error'][$tenantId] = $res['message'];
                             } else {
                                 $session->getFlashBag()->add(
                                     'note',
@@ -481,7 +486,6 @@ class UserTenantUtil
                                 );
                                 $updateHttpd = true;
                             }
-                            $resultArr[$tenantId]['httpd'] = $res;
                             $this->restartTenantHttpd($tenantId);
                             break;
                         }
