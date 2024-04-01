@@ -699,7 +699,7 @@ class UserTenantUtil
             'restart',
             'haproxy'
         );
-        $this->runProcess();
+        $this->runProcess($commandArr);
     }
 
     public function restartTenantHttpd( $tenantId ) {
