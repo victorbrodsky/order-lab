@@ -697,9 +697,12 @@ class UserTenantUtil
 //            'haproxy'
 //        );
 
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+
         //run: order-lab/utils/executables/haproxy-restart.sh
         $commandArr = array(
-            'order-lab/utils/executables/haproxy-restart.sh'
+            $haproxyRestartScript
         );
 
         $this->runProcess($commandArr);
