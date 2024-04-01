@@ -140,14 +140,14 @@ class UserTenantUtil
         return substr($string, $ini, $len);
     }
     function getTextByStartEnd($text, $startStr, $endStr) {
-        echo "getTextByStartEnd: startStr=[$startStr]; endStr=[$endStr] <br>";
+        //echo "getTextByStartEnd: startStr=[$startStr]; endStr=[$endStr] <br>";
         //$startStr = '###START-FRONTEND';
         //$endStr = '###END-FRONTEND';
         //Get part of the text $matches by $startStr and $endStr
         $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
         preg_match($pattern, $text, $matches);
         if( !isset($matches[0]) ) {
-            echo "getTextByStartEnd: text does not have $startStr and $endStr";
+            //echo "getTextByStartEnd: text does not have $startStr and $endStr";
             //$errorMsg = "File does not have $startStr and $endStr";
             return array();
         }
