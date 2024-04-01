@@ -146,7 +146,7 @@ class UserTenantUtil
         $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
         preg_match($pattern, $text, $matches);
         if( !isset($matches[0]) ) {
-            echo "File does not have $startStr and $endStr";
+            echo "getTextByStartEnd: text does not have $startStr and $endStr";
             //$errorMsg = "File does not have $startStr and $endStr";
             return array();
         }
