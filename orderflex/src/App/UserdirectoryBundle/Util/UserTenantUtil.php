@@ -377,6 +377,11 @@ class UserTenantUtil
     }
 
     public function processDBTenants( $tenantManager ) {
+
+        $userUtil = $this->container->get('user_utility');
+        $update = false;
+        $resultArr = array();
+
         foreach( $tenantManager->getTenants() as $tenant ) {
             echo "tenant:".$tenant."; url=".$tenant->getUrlSlug()."<br>";
 
@@ -394,12 +399,23 @@ class UserTenantUtil
             if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
                 //echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
-                //Disable or enabled according to DB value $tenant->getEnabled()
+                //Disable or enabled according to DB value $tenant->getEnabled():
+                //comment out line frontend->use_backend tenantappdemo_backend if tenantappdemo_url
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
                 foreach($frontendTenantsArray as $frontendTenantLine) {
-                    if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                        $this->changeLineInFile($haproxyConfig,$tenantId . '_url','#',$tenant->getEnabled());
-                        $this->restartHaproxy();
+                    $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
+                    if (str_contains($frontendTenantLine,$lineIdentifier)) {
+                        $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
+                        if( $res['status'] == 'error' ) {
+                            $session = $userUtil->getSession(); //$this->container->get('session');
+                            $session->getFlashBag()->add(
+                                'warning',
+                                $res['message']
+                            );
+                        } else {
+                            $update = true;
+                        }
+                        //$this->restartHaproxy();
                         break;
                     }
                 }
@@ -408,6 +424,7 @@ class UserTenantUtil
             //update URL slug: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
             if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
+
                 $originalText = file_get_contents($haproxyConfig);
                 //modify 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
@@ -421,8 +438,9 @@ class UserTenantUtil
                                 'warning',
                                 $res['message']
                             );
+                        } else {
+                            $update = true;
                         }
-                        $this->restartHaproxy();
                         break;
                     }
                 }
@@ -442,13 +460,20 @@ class UserTenantUtil
                                     'warning',
                                     $res['message']
                                 );
+                            } else {
+                                $update = true;
                             }
+                            $resultArr[$tenantId]['httpd'] = $res;
                             $this->restartTenantHttpd($tenantId);
                             break;
                         }
                     }
                 }
             }
+        }//foreach
+
+        if( $update === true ) {
+            $this->restartHaproxy();
         }
 
        //exit('111');
@@ -516,41 +541,56 @@ class UserTenantUtil
     }
 
     //https://stackoverflow.com/questions/29182924/overwrite-a-specific-line-in-a-text-file-with-php
-    public function changeLineInFile( $file, $keyStr, $appendStr, $enable ) {
-        //echo "file=".$file."<br>";
-        //echo "keyStr=".$keyStr."<br>";
+    public function changeLineInFile( $filePath, $lineIdentifier, $appendStr, $enable ) {
+        //echo "filePath=".$filePath."<br>";
+        //echo "lineIdentifier=".$lineIdentifier."<br>";
         //echo "appendStr=".$appendStr."<br>";
-        $content = file($file); // reads an array of lines
-        //dump($content);
-        //exit('111');
 
-        foreach($content as $key=>$value) {
-            if (str_contains($value, $keyStr)) {
-                $newValue = null;
-                if( !$enable ) {
-                    //Disable line
-                    $newValue = $appendStr.$value;
-                    //echo "append $appendStr line=[".$newValue."]<br>";
-                }
-                if( $enable ) {
-                    //Enable line
-                    $newValue = str_replace($appendStr,'',$value);
-                    //echo "remove $appendStr line=[".$newValue."]<br>";
-                }
-                //echo "line=[".$value."]?=[".$newValue."]<br>";
-                if( $value != $newValue ) {
-                    //echo "new line=".$newValue."<br>";
-                    $content[$key] = $newValue;
-                }
+        $result = array('status' => 'error', 'message' => '');
 
-                //echo "new line=".$content[$key]."<br>";
-                break;
-            }
-        }
-        $allContent = implode("", $content);
-        file_put_contents($file, $allContent);
+        if(file_exists($filePath)===TRUE) {
+            if (is_writeable($filePath)) {
+
+                $content = file($filePath); // reads an array of lines
+                //dump($content);
+                //exit('111');
+
+                foreach ($content as $key => $value) {
+                    if (str_contains($value, $lineIdentifier)) {
+                        $newValue = null;
+                        if (!$enable) {
+                            //Disable line
+                            $newValue = $appendStr . $value;
+                            //echo "append $appendStr line=[".$newValue."]<br>";
+                        }
+                        if ($enable) {
+                            //Enable line
+                            $newValue = str_replace($appendStr, '', $value);
+                            //echo "remove $appendStr line=[".$newValue."]<br>";
+                        }
+                        //echo "line=[".$value."]?=[".$newValue."]<br>";
+                        if ($value != $newValue) {
+                            //echo "new line=".$newValue."<br>";
+                            $content[$key] = $newValue;
+                        }
+
+                        //echo "new line=".$content[$key]."<br>";
+                        break;
+                    }
+                }
+                $allContent = implode("", $content);
+                file_put_contents($filePath, $allContent);
+
+            } else {
+                $result["message"] = 'File '.$filePath.' is not writable !';
+            }//if is_writeable
+        } else {
+            $result["message"] = 'File '.$filePath.' does not exist !';
+        }//if file_exists
+
         //dump($allContent);
         //exit('111');
+        return $result;
     }
 
     public function restartHaproxy() {
