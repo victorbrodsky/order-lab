@@ -260,9 +260,10 @@ class MultiTenancyController extends OrderAbstractController
             $res = $userTenantUtil->processDBTenants($tenantManager);
 
             dump($res);
-            exit('111');
-            foreach( $res as $tenantProcessInfo ) {
-
+            //exit('111');
+            foreach( $res as $tenantId => $tenantProcessInfo ) {
+                $haproxyInfo = $tenantProcessInfo['haproxy-url'];
+                echo "haproxyInfo: ".$haproxyInfo."<br>";
             }
             if( $res['status'] == 'error' ) {
                 $session = $userUtil->getSession(); //$this->container->get('session');
