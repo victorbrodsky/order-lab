@@ -395,6 +395,7 @@ class UserTenantUtil
         $logger = $this->container->get('logger');
         $logger->notice("start restartHaproxy ".date('h:i:s'));
         $this->restartHaproxy();
+        sleep(5);
         $logger->notice("end restartHaproxy ".date('h:i:s'));
         //$this->restartTenantHttpd();
 
@@ -407,12 +408,9 @@ class UserTenantUtil
         $logger->notice("end journalctl ".date('h:i:s'));
         //echo $output."<br>";
 
-        $logger->notice("start journalctl ".date('h:i:s'));
-        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service", false);
-        $logger->notice("end journalctl ".date('h:i:s'));
-
         $logger->notice("start php-fpm ".date('h:i:s'));
         $this->runProcessShell("/usr/bin/sudo service php-fpm restart");
+        sleep(5);
         $logger->notice("end php-fpm ".date('h:i:s'));
 
         return null;
@@ -784,6 +782,10 @@ class UserTenantUtil
 
         $logger = $this->container->get('logger');
         $process->run();
+
+        // wait a few seconds for the process to be ready
+        sleep(5);
+
         if (!$process->isSuccessful()) {
             $logger->notice("runProcessShell: failed");
             throw new ProcessFailedException($process);
