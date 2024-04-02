@@ -411,7 +411,7 @@ class UserTenantUtil
         //$output = $this->runProcess($commandArr);
         //exit('end runProcessShell, output='.$output);
 
-        $output = $this->runProcessShell('/usr/bin/bash '.$haproxyRestartScript, false);
+        $output = $this->runProcessShell('/usr/bin/bash '.$haproxyRestartScript);
         exit('end runProcessShell, output='.$output);
         return $output;
 

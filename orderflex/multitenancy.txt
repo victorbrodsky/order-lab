@@ -480,15 +480,16 @@ switch to apache user:
 su -s /bin/bash apache
 /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 
+https://serverfault.com/questions/1070602/centos-apache-all-root-nopasswd-path-to-shell-sh-is-not-working
 Permission:
 sudo visudo
-apache ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+apache ALL=(ALL:ALL) NOPASSWD: /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 id root
 ps aux | egrep '(apache|httpd)'
 /bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
 
 Aadjust your sudo configuration to be more restrictive:
 User_Alias WWW=apache
-Cmnd_Alias WEBCMDS=/etc/init.d/portmap
+Cmnd_Alias WEBCMDS=/bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 WWW ALL=NOPASSWD: WEBCMDS
 
