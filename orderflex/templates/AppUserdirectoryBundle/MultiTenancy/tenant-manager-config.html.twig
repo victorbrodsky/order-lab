@@ -233,6 +233,10 @@
             {{ form_widget(form.submit) }}
         {% endif %}
 
+        <p>
+            <a class="btn btn-default" href="{{ path('employees_tenancy_manager_update_server_config') }}">Update Server Configuration</a>
+        </p>
+
         {#<div class="row">#}
             {#<div class="col-xs-6" align="right">#}
                 {#{% if form.submit is defined %}#}

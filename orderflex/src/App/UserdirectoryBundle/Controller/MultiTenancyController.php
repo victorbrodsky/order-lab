@@ -257,33 +257,31 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
-            $res = null;
-            $res = $userTenantUtil->processDBTenants($tenantManager);
-
+            //$res = null;
+            //$res = $userTenantUtil->processDBTenants($tenantManager);
             //dump($res);
             //exit('111');
-
-            if( $res ) {
-                $haproxyError = $res['haproxy-error'];
-                if ($haproxyError) {
-                    //echo "$tenantId: haproxyError=$haproxyError<br>";
-                    $this->addFlash(
-                        'warning',
-                        $haproxyError
-                    );
-                }
-
-                if ($res['httpd-error']) {
-                    foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
-                        //$httpdError = "$tenantId: errorMessage=$errorMessage";
-                        //echo "$httpdError<br>";
-                        $this->addFlash(
-                            'warning',
-                            "Tenant $tenantId: " . $errorMessage
-                        );
-                    }
-                }
-            }
+//            if( $res ) {
+//                $haproxyError = $res['haproxy-error'];
+//                if ($haproxyError) {
+//                    //echo "$tenantId: haproxyError=$haproxyError<br>";
+//                    $this->addFlash(
+//                        'warning',
+//                        $haproxyError
+//                    );
+//                }
+//
+//                if ($res['httpd-error']) {
+//                    foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
+//                        //$httpdError = "$tenantId: errorMessage=$errorMessage";
+//                        //echo "$httpdError<br>";
+//                        $this->addFlash(
+//                            'warning',
+//                            "Tenant $tenantId: " . $errorMessage
+//                        );
+//                    }
+//                }
+//            }
             //exit('111');
 
             $removedTenantCollections = array();
@@ -358,7 +356,53 @@ class MultiTenancyController extends OrderAbstractController
         return "New";
     }
 
+    #[Route(path: '/tenant-manager/update-server-config', name: 'employees_tenancy_manager_update_server_config', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
+    public function syncTenantsUpdateServerConfigAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+        $res = $userTenantUtil->processDBTenants($tenantManager);
+
+        //dump($res);
+        //exit('111');
+
+        if( $res ) {
+            $haproxyError = $res['haproxy-error'];
+            if ($haproxyError) {
+                //echo "$tenantId: haproxyError=$haproxyError<br>";
+                $this->addFlash(
+                    'warning',
+                    $haproxyError
+                );
+            }
+
+            if ($res['httpd-error']) {
+                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
+                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
+                    //echo "$httpdError<br>";
+                    $this->addFlash(
+                        'warning',
+                        "Tenant $tenantId: " . $errorMessage
+                    );
+                }
+            }
+        }
+
+        //return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
+        return $this->redirect( $this->generateUrl('main_common_home') );
+    }
 
 
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
