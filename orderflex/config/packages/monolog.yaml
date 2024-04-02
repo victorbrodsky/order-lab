@@ -9,7 +9,7 @@ when@dev:
                 type: rotating_file #stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event"]
+                channels: ["!event", "!deprecation"]
                 max_files: 30 #10 days rotating
             nested_error:
                 type: rotating_file #stream
@@ -78,3 +78,4 @@ when@prod:
                 type: stream
                 channels: [deprecation]
                 path: php://stderr
+                #path: '%kernel.logs_dir%/%kernel.environment%_DEPRECATION.log'
