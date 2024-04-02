@@ -713,7 +713,7 @@ class UserTenantUtil
         //$this->runProcess($commandArr);
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+        $this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
     }
 
     public function restartTenantHttpd( $tenantId ) {
