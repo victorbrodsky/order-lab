@@ -713,8 +713,8 @@ class UserTenantUtil
         $this->runProcess($commandArr);
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        $output = $this->runProcessShell("bash " . $haproxyRestartScript);
-        echo $output."<br>";
+        //$output = $this->runProcessShell("bash " . $haproxyRestartScript);
+        //echo $output."<br>";
     }
 
     public function restartTenantHttpd( $tenantId ) {
