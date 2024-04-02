@@ -103,7 +103,7 @@ class TenantManagerType extends AbstractType
 //        ));
 
         $builder->add('submit', SubmitType::class, array(
-            'label' => 'Save',
+            'label' => 'Update Tenants in DB',
             'attr' => array('class'=>'btn btn-primary')
         ));
     }

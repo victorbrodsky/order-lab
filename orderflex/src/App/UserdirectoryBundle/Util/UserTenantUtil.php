@@ -382,6 +382,7 @@ class UserTenantUtil
     //Best option is to have shell script to create and modify config files and to run restart
     public function processDBTenants( $tenantManager ) {
 
+        $logger = $this->container->get('logger');
         $userUtil = $this->container->get('user_utility');
         $session = $userUtil->getSession(); //$this->container->get('session');
 
@@ -437,6 +438,9 @@ class UserTenantUtil
                                 'note',
                                 "Tenant $tenantId has been $enabledStr in haproxy config"
                             );
+                            $logger->notice(
+                                "Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
+                            );
                             $updateHaproxy = true;
                         }
                         break;
@@ -466,6 +470,11 @@ class UserTenantUtil
                                         'note',
                                         "Tenant $tenantId url has been updated in haproxy config"
                                     );
+                                    $logger->notice(
+                                        "Update haproxy config for tenant ".$tenantId.", update URL from "
+                                        .$tenantDataArr[$tenantId]['url']
+                                        ." to ".$tenantDbUrl
+                                    );
                                     $updateHaproxy = true;
                                 }
                                 break;
@@ -488,6 +497,11 @@ class UserTenantUtil
                                 $session->getFlashBag()->add(
                                     'note',
                                     "Tenant $tenantId port has been updated in haproxy config"
+                                );
+                                $logger->notice(
+                                    "Update haproxy config for tenant ".$tenantId.", update port from "
+                                    .$tenantDataArr[$tenantId]['port']
+                                    ." to ".$tenantDbPort
                                 );
                                 $updateHaproxy = true;
                             }
@@ -518,6 +532,11 @@ class UserTenantUtil
                             );
                             $updateHttpd = true;
                         }
+                        $logger->notice(
+                            "Update httpd config for tenant ".$tenantId.", update URL from "
+                            .$tenantDataArr[$tenantId]['url']
+                            ." to ".$tenantDbUrl
+                        );
                         $updateThisHttpd = true;
                     }
 
@@ -535,10 +554,16 @@ class UserTenantUtil
                             );
                             $updateHttpd = true;
                         }
+                        $logger->notice(
+                            "Update httpd config for tenant ".$tenantId.", update port from "
+                            .$tenantDataArr[$tenantId]['port']
+                            ." to ".$tenantDbUrl
+                        );
                         $updateThisHttpd = true;
                     }
 
                     if( $updateThisHttpd === true ) {
+                        $logger->notice("Restart httpd service for tenant ".$tenantId);
                         $this->restartTenantHttpd($tenantId);
                     }
 
