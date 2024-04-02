@@ -771,7 +771,7 @@ class UserTenantUtil
     public function runProcessWait($script) {
         $logger = $this->container->get('logger');
         //$process = Process::fromShellCommandline($script);
-        $process = new Process($script);
+        $process = new Process([$script]);
         //$process->disableOutput();
         //$process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->start();
