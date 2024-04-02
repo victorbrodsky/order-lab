@@ -481,6 +481,9 @@ Verify if script is executable by apache:
 su -s /bin/bash apache
 2) run as apache:
 sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+3) verify haproxy status
+/usr/bin/systemctl status haproxy
+4) TODO: run in background
 
 https://serverfault.com/questions/1070602/centos-apache-all-root-nopasswd-path-to-shell-sh-is-not-working
 Permission:

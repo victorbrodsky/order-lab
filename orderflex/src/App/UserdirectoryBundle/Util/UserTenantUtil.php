@@ -731,6 +731,7 @@ class UserTenantUtil
         return $result;
     }
 
+    //TODO: run in background as cron?
     public function restartHaproxy() {
         //https://stackoverflow.com/questions/8532304/execute-root-commands-via-php
         //create haproxy-restart.sh
