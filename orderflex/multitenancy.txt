@@ -476,3 +476,10 @@ sudo service php-fpm status
 
 cat /etc/os-release
 
+Permission:
+sudo visudo
+apache ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+id root
+ps aux | egrep '(apache|httpd)'
+/bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
+
