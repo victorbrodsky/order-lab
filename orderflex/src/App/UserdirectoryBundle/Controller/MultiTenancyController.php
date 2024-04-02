@@ -148,7 +148,7 @@ class MultiTenancyController extends OrderAbstractController
                 if( $tenantId ) {
                     $tenantData = $tenantDataArr[$tenantId];
                     //dump($tenantData);
-                    //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                    echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                     //exit('111');
 
                     $enabled = $tenantData['enabled'];
@@ -215,7 +215,7 @@ class MultiTenancyController extends OrderAbstractController
                         //Port (get it from haproxy or corresponding httpd)
                         echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
-                            echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                            echo "set port for tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                             $tenantDb->setTenantPort($tenantData['port']);
                         }
                         //exit('111');

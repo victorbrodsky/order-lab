@@ -275,12 +275,12 @@ class UserTenantUtil
         foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
             foreach($backendTenantsArray as $backendTenantLine) {
                 if( str_contains($backendTenantLine, ' '.$tenantId.'_server') ) {
-                    echo "backendTenantLine=$backendTenantLine <br>"; // server tenantmanager_server *:8082 check
+                    //echo "backendTenantLine=$backendTenantLine <br>"; // server tenantmanager_server *:8082 check
                     $tenantPort = $this->get_string_between($backendTenantLine,$tenantId.'_server'," check"); //=>*:8081
                     $tenantPort = trim($tenantPort);
-                    echo "1 tenantPort=[$tenantPort] <br>";
+                    //echo "1 tenantPort=[$tenantPort] <br>";
                     $tenantPort = str_replace('*:','',$tenantPort); //=>8081
-                    echo "2 tenantPort=[$tenantPort] <br>";
+                    //echo "2 tenantPort=[$tenantPort] <br>";
                     $tenantDataArr[$tenantId]['port'] = $tenantPort;
                 }
             } //foreach $backendTenantsArray

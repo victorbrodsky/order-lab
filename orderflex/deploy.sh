@@ -135,10 +135,10 @@ function prep()
     chown postgres $PROJECT_LOCAL_PATH/../backup/alert_dba
     chgrp postgres $PROJECT_LOCAL_PATH/../backup/alert_dba
 
-    echo "*** Set permissions for haproxy ***"
-    chmod a+x $PROJECT_LOCAL_PATH/../utils/executables
-    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../utils/executables
-    chmod 744 $PROJECT_LOCAL_PATH/../utils/executables/haproxy-restart.sh
+    #echo "*** Set permissions for haproxy ***"
+    #chmod a+x $PROJECT_LOCAL_PATH/../utils/executables
+    #chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../utils/executables
+    #chmod 744 $PROJECT_LOCAL_PATH/../utils/executables/haproxy-restart.sh
 }
 
 
