@@ -399,6 +399,11 @@ class UserTenantUtil
         //$logger->notice("end restartHaproxy ".date('h:i:s'));
         //$this->restartTenantHttpd();
 
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+        shell_exec($haproxyRestartScript);
+        exit('end haproxy-restart.sh');
+
         shell_exec('sudo /usr/bin/systemctl restart haproxy');
         exit('222');
         //sleep(3);
