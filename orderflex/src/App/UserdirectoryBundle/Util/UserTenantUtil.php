@@ -393,15 +393,16 @@ class UserTenantUtil
 
         //testing
         $logger = $this->container->get('logger');
-        //$logger->notice("start restartHaproxy ".date('h:i:s'));
-        //$this->restartHaproxy();
-        //sleep(5);
-        //$logger->notice("end restartHaproxy ".date('h:i:s'));
+        $logger->notice("start restartHaproxy ".date('h:i:s'));
+        $output = $this->restartHaproxy();
+        $logger->notice("end restartHaproxy ".date('h:i:s').", output=".$output);
         //$this->restartTenantHttpd();
+        return $output;
 
-        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
-        $haproxyRestartScript = realpath($haproxyRestartScript);
+
+        //$projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        //$haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+        //$haproxyRestartScript = realpath($haproxyRestartScript);
 
         //$output = shell_exec('sudo /bin/bash '.$haproxyRestartScript);
         //$output = shell_exec('sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh');
@@ -415,16 +416,17 @@ class UserTenantUtil
 //        $output = $this->runProcess($commandArr);
 //        exit('end runProcessShell, output='.$output);
 
-        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
-        exit('end runProcessShell, output='.$output);
-        return $output;
+        //Working
+        //$output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
+        //exit('end runProcessShell, output='.$output);
+        //return $output;
 
-        shell_exec('sudo /usr/bin/systemctl restart haproxy');
-        exit('222');
+//        shell_exec('sudo /usr/bin/systemctl restart haproxy');
+//        exit('222');
         //sleep(3);
         //$logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
         //echo "<pre>$output</pre>";
-        return null;
+        //return null;
 
         $logger->notice("start systemctl haproxy ".date('h:i:s'));
         $output = $this->runProcessShell("/usr/bin/sudo /usr/bin/systemctl restart haproxy", false);
@@ -750,21 +752,25 @@ class UserTenantUtil
         //Use the 'sudo visudo' command to edit the /etc/sudoers file
         //apache ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 
-        ///bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
+        // /bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
         //Permission denied:
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+        $haproxyRestartScript = realpath($haproxyRestartScript);
 
         //run: order-lab/utils/executables/haproxy-restart.sh
-        $commandArr = array(
-            'bash',
-            $haproxyRestartScript
-        );
+        //$commandArr = array(
+        //    'sudo',
+        //    '/bin/bash',
+        //    $haproxyRestartScript
+        //);
         //$this->runProcess($commandArr);
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        $output = $this->runProcessShell("bash " . $haproxyRestartScript);
-        echo $output."<br>";
+
+        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript, false);
+        //exit('end runProcessShell, output='.$output);
+        return $output;
     }
 
     public function restartTenantHttpd( $tenantId ) {
