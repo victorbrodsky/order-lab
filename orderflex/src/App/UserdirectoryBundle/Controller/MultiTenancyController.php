@@ -198,7 +198,6 @@ class MultiTenancyController extends OrderAbstractController
 
                         if( !$tenantDb ) {
                             $tenantDb = new TenantList($user);
-                            //$em->persist($tenantDb);
                             $tenantManager->addTenant($tenantDb);
                         }
 
@@ -218,11 +217,11 @@ class MultiTenancyController extends OrderAbstractController
                         //Port (get it from haproxy or corresponding httpd)
                         //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
-                            $tenantPort = strval($tenantData['port']);
+                            //$tenantPort = strval($tenantData['port']);
                             //echo "set port for tenant=$tenantId: port=[".$tenantPort."]<br>";
-                            $tenantDb->setTenantPort($tenantPort);
+                            $tenantDb->setTenantPort($tenantData['port']);
                         }
-                        echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
+                        //echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
                         //exit('111');
 
                         if( isset($tenantData['databaseName']) ) {

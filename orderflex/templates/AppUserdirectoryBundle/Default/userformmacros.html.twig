@@ -1394,9 +1394,7 @@
         {% if formfield.urlSlug is defined %}
             {{ formmacros.field(formfield.urlSlug) }}
         {% endif %}
-        {#{% if formfield.tenantPort is defined %}#}
-            {#{{ formmacros.field(formfield.tenantPort) }}#}
-        {#{% endif %}#}
+
         {{ formmacros.field(formfield.tenantPort) }}
 
         {{ formmacros.field(formfield.databaseHost) }}
