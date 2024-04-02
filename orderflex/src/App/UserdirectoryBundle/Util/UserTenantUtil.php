@@ -392,13 +392,20 @@ class UserTenantUtil
         $resultArr['httpd-error'] = null;
 
         //testing
+        $logger = $this->container->get('logger');
+        $logger->notice("start restartHaproxy ".date('h:i:s'));
         $this->restartHaproxy();
+        $logger->notice("end restartHaproxy ".date('h:i:s'));
         //$this->restartTenantHttpd();
+
         // wait a few seconds for the process to be ready
         sleep(15);
+        $logger->notice("end sleep ".date('h:i:s'));
 
+        $logger->notice("start journalctl ".date('h:i:s'));
         $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service", false);
-        echo $output."<br>";
+        $logger->notice("end journalctl ".date('h:i:s'));
+        //echo $output."<br>";
 
         return null;
 
