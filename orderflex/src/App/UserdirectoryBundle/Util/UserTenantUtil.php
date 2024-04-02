@@ -400,7 +400,7 @@ class UserTenantUtil
         //$this->restartTenantHttpd();
 
         $output = shell_exec('/usr/bin/sudo /usr/bin/systemctl restart haproxy');
-        sleep(3);
+        //sleep(3);
         //$logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
         //echo "<pre>$output</pre>";
         return null;
