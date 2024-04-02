@@ -401,10 +401,11 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-        //exit("");
-        sleep(5);
+        $url = $this->generateUrl('employees_tenancy_manager_configure');
+        exit("Server config files updated. Please go to the main page ".$url);
+        //sleep(5);
         //return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
-        return $this->redirect( $this->generateUrl('main_common_home') );
+        //return $this->redirect( $this->generateUrl('main_common_home') );
     }
 
 
