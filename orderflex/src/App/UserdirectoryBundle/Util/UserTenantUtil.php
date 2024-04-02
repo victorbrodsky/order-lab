@@ -712,8 +712,8 @@ class UserTenantUtil
         );
         //$this->runProcess($commandArr);
 
-        $this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        //$output = $this->runProcessWait("bash " . $haproxyRestartScript);
+        //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+        $output = $this->runProcessShell("bash " . $haproxyRestartScript);
         echo $output."<br>";
     }
 
