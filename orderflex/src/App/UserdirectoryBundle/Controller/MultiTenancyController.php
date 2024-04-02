@@ -218,6 +218,7 @@ class MultiTenancyController extends OrderAbstractController
                             echo "set port for tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                             $tenantDb->setTenantPort($tenantData['port']);
                         }
+                        echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
                         //exit('111');
 
                         if( isset($tenantData['databaseName']) ) {
