@@ -392,61 +392,15 @@ class UserTenantUtil
         $resultArr['httpd-error'] = null;
 
         //testing
-        $logger = $this->container->get('logger');
-        $logger->notice("start restartHaproxy ".date('h:i:s'));
-        $output = $this->restartHaproxy();
-        $logger->notice("end restartHaproxy ".date('h:i:s').", output=".$output);
-        //$this->restartTenantHttpd();
-        return $output;
+        if(0) {
+            $logger = $this->container->get('logger');
+            $logger->notice("start restartHaproxy " . date('h:i:s'));
+            $output = $this->restartHaproxy();
+            $logger->notice("end restartHaproxy " . date('h:i:s') . ", output=" . $output);
+            //$this->restartTenantHttpd();
+            return $output;
+        }
 
-
-        //$projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        //$haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
-        //$haproxyRestartScript = realpath($haproxyRestartScript);
-
-        //$output = shell_exec('sudo /bin/bash '.$haproxyRestartScript);
-        //$output = shell_exec('sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh');
-        //exit('end haproxy-restart.sh output='.$output);
-
-//        $commandArr = array(
-//            'sudo',
-//            '/bin/bash',
-//            $haproxyRestartScript
-//        );
-//        $output = $this->runProcess($commandArr);
-//        exit('end runProcessShell, output='.$output);
-
-        //Working
-        //$output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
-        //exit('end runProcessShell, output='.$output);
-        //return $output;
-
-//        shell_exec('sudo /usr/bin/systemctl restart haproxy');
-//        exit('222');
-        //sleep(3);
-        //$logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
-        //echo "<pre>$output</pre>";
-        //return null;
-
-        $logger->notice("start systemctl haproxy ".date('h:i:s'));
-        $output = $this->runProcessShell("/usr/bin/sudo /usr/bin/systemctl restart haproxy", false);
-        $logger->notice("end systemctl haproxy ".date('h:i:s'));
-
-        // wait a few seconds for the process to be ready
-        sleep(15);
-        $logger->notice("end sleep ".date('h:i:s'));
-
-        $logger->notice("start journalctl ".date('h:i:s'));
-        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service", false);
-        $logger->notice("end journalctl ".date('h:i:s'));
-        //echo $output."<br>";
-
-        $logger->notice("start php-fpm ".date('h:i:s'));
-        $this->runProcessShell("/usr/bin/sudo service php-fpm restart");
-        sleep(5);
-        $logger->notice("end php-fpm ".date('h:i:s'));
-
-        return null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
             //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
