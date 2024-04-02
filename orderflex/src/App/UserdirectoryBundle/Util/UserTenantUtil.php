@@ -401,7 +401,7 @@ class UserTenantUtil
 
         $output = shell_exec('/usr/bin/sudo /usr/bin/systemctl restart haproxy');
         sleep(3);
-        $logger->notice("output ".date('h:i:s') . ": ".$output);
+        $logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
         echo "<pre>$output</pre>";
         return null;
 
