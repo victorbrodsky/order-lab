@@ -476,9 +476,11 @@ sudo service php-fpm status
 
 cat /etc/os-release
 
-switch to apache user:
+Verify if script is executable by apache:
+1) switch to apache user:
 su -s /bin/bash apache
-/bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+2) run as apache:
+sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 
 https://serverfault.com/questions/1070602/centos-apache-all-root-nopasswd-path-to-shell-sh-is-not-working
 Permission:

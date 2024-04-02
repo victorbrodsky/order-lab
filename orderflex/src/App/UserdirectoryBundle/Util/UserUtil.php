@@ -99,15 +99,15 @@ class UserUtil {
     }
 
     public function getSession() {
-        $logger = $this->container->get('logger');
-        $logger->notice("before getSession");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("before getSession");
 
         $session = $this->session;
         if( $session ) {
-            $logger->notice("UserUtil: session ok");
+            //$logger->notice("UserUtil: session ok");
             return $session;
         }
-        $logger->notice("UserUtil: session NULL");
+        //$logger->notice("UserUtil: session NULL");
         return NULL;
 
 //        if( $this->requestStack ) {
