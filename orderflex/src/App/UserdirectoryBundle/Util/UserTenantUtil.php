@@ -732,13 +732,20 @@ class UserTenantUtil
     }
 
     public function runProcess($commandArr) {
+        $logger = $this->container->get('logger');
         $process = new Process($commandArr);
         $process->run();
 
         if (!$process->isSuccessful()) {
+            $logger->notice("process failed");
             throw new ProcessFailedException($process);
+        } else {
+            echo "process successfull <br>";
+            $logger->notice("process successfull");
         }
         $output = $process->getOutput();
+        $logger->notice("process output: ".$output);
+
         echo $output;
         return $output;
     }
