@@ -195,9 +195,12 @@ class MultiTenancyController extends OrderAbstractController
                     } else {
                         //add tenant to DB and, therefore, this form
                         $orderInList = $orderInList + 10;
-                        $tenantDb = new TenantList($user);
-                        //$em->persist($tenantDb);
-                        $tenantManager->addTenant($tenantDb);
+
+                        if( !$tenantDb ) {
+                            $tenantDb = new TenantList($user);
+                            //$em->persist($tenantDb);
+                            $tenantManager->addTenant($tenantDb);
+                        }
 
                         $tenantDb->setMatchSystem("File system");
                         $tenantDb->setName($tenantId);
@@ -216,7 +219,7 @@ class MultiTenancyController extends OrderAbstractController
                         //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
                             $tenantPort = strval($tenantData['port']);
-                            echo "set port for tenant=$tenantId: port=[".$tenantPort."]<br>";
+                            //echo "set port for tenant=$tenantId: port=[".$tenantPort."]<br>";
                             $tenantDb->setTenantPort($tenantPort);
                         }
                         echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
