@@ -483,3 +483,8 @@ id root
 ps aux | egrep '(apache|httpd)'
 /bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
 
+Aadjust your sudo configuration to be more restrictive:
+User_Alias WWW=apache
+Cmnd_Alias WEBCMDS=/etc/init.d/portmap
+WWW ALL=NOPASSWD: WEBCMDS
+

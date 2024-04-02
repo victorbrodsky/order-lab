@@ -1,3 +1,3 @@
 #!/bin/sh
-/usr/bin/systemctl restart haproxy
+/usr/bin/sudo /usr/bin/systemctl restart haproxy
 
