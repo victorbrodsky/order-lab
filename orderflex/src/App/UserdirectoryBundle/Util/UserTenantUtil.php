@@ -707,6 +707,7 @@ class UserTenantUtil
 
         //run: order-lab/utils/executables/haproxy-restart.sh
         $commandArr = array(
+            '/usr/bin/bash',
             $haproxyRestartScript
         );
 
