@@ -713,7 +713,7 @@ class UserTenantUtil
         //$this->runProcess($commandArr);
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        $output = $this->runProcessShell("bash " . $haproxyRestartScript);
+        $output = $this->runProcessShellWait("bash " . $haproxyRestartScript);
         echo $output."<br>";
     }
 
@@ -765,6 +765,25 @@ class UserTenantUtil
         }
         $output = $process->getOutput();
         $logger->notice("runProcessShell: output: ".$output);
+        return $output;
+    }
+
+    public function runProcessShellWait($script) {
+        $logger = $this->container->get('logger');
+        $process = Process::fromShellCommandline($script);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->start();
+
+        $process->wait();
+
+        if (!$process->isSuccessful()) {
+            $logger->notice("runProcessShellWait: failed");
+            throw new ProcessFailedException($process);
+        } else {
+            $logger->notice("runProcessShellWait: successfull");
+        }
+        $output = $process->getOutput();
+        $logger->notice("runProcessShellWait: output: ".$output);
         return $output;
     }
 
