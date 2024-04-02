@@ -706,14 +706,15 @@ class UserTenantUtil
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
 
         //run: order-lab/utils/executables/haproxy-restart.sh
-        $commandArr = array(
-            '/usr/bin/bash',
-            $haproxyRestartScript
-        );
+        //$commandArr = array(
+        //    '/usr/bin/bash',
+        //    $haproxyRestartScript
+        //);
         //$this->runProcess($commandArr);
 
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+        //$projectRoot = $this->container->get('kernel')->getProjectDir();
+        //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+        $this->runProcessShell("bash " . $haproxyRestartScript);
     }
 
     public function restartTenantHttpd( $tenantId ) {
