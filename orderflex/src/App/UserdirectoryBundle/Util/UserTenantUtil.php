@@ -712,8 +712,8 @@ class UserTenantUtil
         );
         //$this->runProcess($commandArr);
 
-        //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        $output = $this->runProcessWait("bash " . $haproxyRestartScript);
+        $this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
+        //$output = $this->runProcessWait("bash " . $haproxyRestartScript);
         echo $output."<br>";
     }
 
@@ -765,6 +765,10 @@ class UserTenantUtil
         }
         $output = $process->getOutput();
         $logger->notice("runProcessShell: output: ".$output);
+
+        // wait a few seconds for the process to be ready
+        sleep(3);
+
         return $output;
     }
 
@@ -775,7 +779,7 @@ class UserTenantUtil
         //$process->disableOutput();
         //$process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->start();
-        //$process->wait();
+        $process->wait();
         //return null;
 
         while ($process->isRunning()) {
