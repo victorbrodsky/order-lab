@@ -408,8 +408,8 @@ class UserTenantUtil
         //exit('end haproxy-restart.sh output='.$output);
 
         $commandArr = array(
-            'sudo',
-            '/bin/bash '.$haproxyRestartScript
+            //'sudo',
+            'sudo /bin/bash '.$haproxyRestartScript
         );
         $output = $this->runProcess($commandArr);
         exit('end runProcessShell, output='.$output);
