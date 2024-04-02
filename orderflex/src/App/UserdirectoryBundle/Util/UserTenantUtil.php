@@ -402,7 +402,7 @@ class UserTenantUtil
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
         //shell_exec($haproxyRestartScript);
-        $output = $this->runProcessShell("/usr/bin/sudo ".$haproxyRestartScript);
+        $output = $this->runProcessShell("bash ".$haproxyRestartScript);
         //exit('end haproxy-restart.sh');
         return $output;
 
