@@ -393,7 +393,7 @@ class UserTenantUtil
 
         //testing
         $this->restartHaproxy();
-        $this->restartTenantHttpd();
+        //$this->restartTenantHttpd();
         return $resultArr;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
@@ -710,8 +710,10 @@ class UserTenantUtil
             '/usr/bin/bash',
             $haproxyRestartScript
         );
+        //$this->runProcess($commandArr);
 
-        $this->runProcess($commandArr);
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
     }
 
     public function restartTenantHttpd( $tenantId ) {
@@ -738,6 +740,18 @@ class UserTenantUtil
         $output = $process->getOutput();
         echo $output;
         return $output;
+    }
+
+    public function runProcessShell($script) {
+        //$process = new Process($script);
+        $process = Process::fromShellCommandline($script);
+        //$process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(7200); //7200 sec => 2 hours
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
     }
 
 }
