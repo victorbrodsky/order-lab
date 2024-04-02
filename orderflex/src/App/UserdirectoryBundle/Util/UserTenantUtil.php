@@ -710,11 +710,11 @@ class UserTenantUtil
             'bash',
             $haproxyRestartScript
         );
-        $this->runProcess($commandArr);
+        //$this->runProcess($commandArr);
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
-        //$output = $this->runProcessShell("bash " . $haproxyRestartScript);
-        //echo $output."<br>";
+        $output = $this->runProcessShell("bash " . $haproxyRestartScript);
+        echo $output."<br>";
     }
 
     public function restartTenantHttpd( $tenantId ) {
@@ -737,29 +737,35 @@ class UserTenantUtil
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $logger->notice("process failed");
+            $logger->notice("runProcess: failed");
             throw new ProcessFailedException($process);
         } else {
-            echo "process successfull <br>";
-            $logger->notice("process successfull");
+            //echo "process successfull <br>";
+            //$logger->notice("runProcess: successfull");
         }
         $output = $process->getOutput();
-        $logger->notice("process output: ".$output);
+        $logger->notice("runProcess: output: ".$output);
 
         echo $output;
         return $output;
     }
 
     public function runProcessShell($script) {
+        $logger = $this->container->get('logger');
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
         //$process->setTimeout(1800); //sec; 1800 sec => 30 min
         $process->setTimeout(7200); //7200 sec => 2 hours
         $process->run();
         if (!$process->isSuccessful()) {
+            $logger->notice("runProcessShell: failed");
             throw new ProcessFailedException($process);
+        } else {
+            $logger->notice("runProcessShell: successfull");
         }
-        return $process->getOutput();
+        $output = $process->getOutput();
+        $logger->notice("runProcessShell: output: ".$output);
+        return $output;
     }
 
 }
