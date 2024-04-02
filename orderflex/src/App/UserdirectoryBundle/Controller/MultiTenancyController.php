@@ -189,7 +189,7 @@ class MultiTenancyController extends OrderAbstractController
                     //Add tenants to the tenant's section
                     //1) check if tenant from the file system exists in DB
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
-                    if( $tenantDb && !$syncConfigToDB ) {
+                    if( $tenantDb && $syncConfigToDB === false ) {
                         //tenant already exists in DB => don't add
                         $tenantDb->setMatchSystem("Database");
                     } else {
@@ -213,12 +213,12 @@ class MultiTenancyController extends OrderAbstractController
                         $tenantDb->setUrlSlug($url);
 
                         //Port (get it from haproxy or corresponding httpd)
-                        //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                        echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
-                            //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                            echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                             $tenantDb->setTenantPort($tenantData['port']);
                         }
-                        //exit('111');
+                        exit('111');
 
                         if( isset($tenantData['databaseName']) ) {
                             $tenantDb->setDatabaseName($tenantData['databaseName']);
