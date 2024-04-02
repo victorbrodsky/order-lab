@@ -407,6 +407,14 @@ class UserTenantUtil
         $logger->notice("end journalctl ".date('h:i:s'));
         //echo $output."<br>";
 
+        $logger->notice("start journalctl ".date('h:i:s'));
+        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service", false);
+        $logger->notice("end journalctl ".date('h:i:s'));
+
+        $logger->notice("start php-fpm ".date('h:i:s'));
+        $this->runProcessShell("/usr/bin/sudo service php-fpm restart");
+        $logger->notice("end php-fpm ".date('h:i:s'));
+
         return null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
