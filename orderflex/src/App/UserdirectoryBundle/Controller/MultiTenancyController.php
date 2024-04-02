@@ -148,6 +148,7 @@ class MultiTenancyController extends OrderAbstractController
                 if( $tenantId ) {
                     $tenantData = $tenantDataArr[$tenantId];
                     dump($tenantData);
+                    echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                     exit('111');
 
                     $enabled = $tenantData['enabled'];
