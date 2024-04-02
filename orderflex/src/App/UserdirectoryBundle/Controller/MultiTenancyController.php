@@ -147,8 +147,8 @@ class MultiTenancyController extends OrderAbstractController
             foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
                 if( $tenantId ) {
                     $tenantData = $tenantDataArr[$tenantId];
-                    dump($tenantData);
-                    echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                    //dump($tenantData);
+                    //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                     //exit('111');
 
                     $enabled = $tenantData['enabled'];
@@ -184,57 +184,59 @@ class MultiTenancyController extends OrderAbstractController
                         $tenantBaseUrlArr[] = $tenantBaseUrl;
                     }
 
+                    $syncConfigToDB = false; //don't overwrite tenants in DB
+                    $syncConfigToDB = true; //force sync tenants data from config to DB
                     //Add tenants to the tenant's section
                     //1) check if tenant from the file system exists in DB
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
-                    if( $tenantDb ) {
+                    if( $tenantDb && !$syncConfigToDB ) {
                         //tenant already exists in DB => don't add
                         $tenantDb->setMatchSystem("Database");
                     } else {
                         //add tenant to DB and, therefore, this form
                         $orderInList = $orderInList + 10;
-                        $newTenant = new TenantList($user);
-                        //$em->persist($newTenant);
-                        $tenantManager->addTenant($newTenant);
+                        $tenantDb = new TenantList($user);
+                        //$em->persist($tenantDb);
+                        $tenantManager->addTenant($tenantDb);
 
-                        $newTenant->setMatchSystem("File system");
-                        $newTenant->setName($tenantId);
-                        $newTenant->setOrderinlist($orderInList);
-                        $newTenant->setEnabled($enabled);
-                        $newTenant->setShowOnHomepage(false);
+                        $tenantDb->setMatchSystem("File system");
+                        $tenantDb->setName($tenantId);
+                        $tenantDb->setOrderinlist($orderInList);
+                        $tenantDb->setEnabled($enabled);
+                        $tenantDb->setShowOnHomepage(false);
 
                         //URL
                         //If url should corresponds to the list of URL,
                         // then we don't have any match for url '/' corresponding
                         // 'https://view.online' homepagemanager 127.0.0.1:8081
                         //Therefore, use field tenant's 'urlSlug' field
-                        $newTenant->setUrlSlug($url);
+                        $tenantDb->setUrlSlug($url);
 
                         //Port (get it from haproxy or corresponding httpd)
-                        echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                        //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
-                            echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
-                            $newTenant->setTenantPort($tenantData['port']);
+                            //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                            $tenantDb->setTenantPort($tenantData['port']);
                         }
-                        exit('111');
+                        //exit('111');
 
                         if( isset($tenantData['databaseName']) ) {
-                            $newTenant->setDatabaseName($tenantData['databaseName']);
+                            $tenantDb->setDatabaseName($tenantData['databaseName']);
                         }
 
                         //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
                         if( isset($tenantData['databaseHost']) ) {
-                            $newTenant->setDatabaseHost($tenantData['databaseHost']);
+                            $tenantDb->setDatabaseHost($tenantData['databaseHost']);
                         }
 
                         //DB user (get it from corresponding parameters.yml)
                         if( isset($tenantData['databaseUser']) ) {
-                            $newTenant->setDatabaseUser($tenantData['databaseUser']);
+                            $tenantDb->setDatabaseUser($tenantData['databaseUser']);
                         }
 
                         //DB password (get it from corresponding parameters.yml)
                         if( isset($tenantData['databasePassword']) ) {
-                            $newTenant->setDatabasePassword($tenantData['databasePassword']);
+                            $tenantDb->setDatabasePassword($tenantData['databasePassword']);
                         }
                     }
                 }
