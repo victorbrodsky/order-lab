@@ -402,16 +402,17 @@ class UserTenantUtil
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
         $haproxyRestartScript = realpath($haproxyRestartScript);
-        //$output = shell_exec('sudo /bin/bash '.$haproxyRestartScript);
-        $output = shell_exec('sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh');
-        exit('end haproxy-restart.sh output='.$output);
 
-//        $commandArr = array(
-//            'bash',
-//            $haproxyRestartScript
-//        );
-        //$output = $this->runProcess($commandArr);
-        //exit('end runProcessShell, output='.$output);
+        //$output = shell_exec('sudo /bin/bash '.$haproxyRestartScript);
+        //$output = shell_exec('sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh');
+        //exit('end haproxy-restart.sh output='.$output);
+
+        $commandArr = array(
+            'sudo',
+            '/bin/bash '.$haproxyRestartScript
+        );
+        $output = $this->runProcess($commandArr);
+        exit('end runProcessShell, output='.$output);
 
         $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
         exit('end runProcessShell, output='.$output);
