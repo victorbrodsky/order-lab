@@ -119,6 +119,8 @@ class MultiTenancyController extends OrderAbstractController
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
         //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
         $tenantDataArr = $userTenantUtil->getTenants();
+        dump($tenantDataArr);
+        exit('111');
 
         if( $tenantDataArr['error'] ) {
             foreach($tenantDataArr['error'] as $error ) {
