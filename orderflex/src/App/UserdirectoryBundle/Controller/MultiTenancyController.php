@@ -257,7 +257,8 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
-            $res = $userTenantUtil->processDBTenants($tenantManager);
+            $res = null;
+            //$res = $userTenantUtil->processDBTenants($tenantManager);
 
             //dump($res);
             //exit('111');

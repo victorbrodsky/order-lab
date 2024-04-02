@@ -767,7 +767,7 @@ class UserTenantUtil
         $logger->notice("runProcessShell: output: ".$output);
 
         // wait a few seconds for the process to be ready
-        sleep(3);
+        sleep(5);
 
         return $output;
     }
