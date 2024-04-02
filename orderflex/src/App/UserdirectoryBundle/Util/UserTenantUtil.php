@@ -395,9 +395,9 @@ class UserTenantUtil
         $this->restartHaproxy();
         //$this->restartTenantHttpd();
         // wait a few seconds for the process to be ready
-        sleep(5);
+        sleep(15);
 
-        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service");
+        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service", false);
         echo $output."<br>";
 
         return null;
@@ -756,12 +756,18 @@ class UserTenantUtil
         return $output;
     }
 
-    public function runProcessShell($script) {
-        $logger = $this->container->get('logger');
+    public function runProcessShell($script, $output=true) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
-        //$process->setTimeout(1800); //sec; 1800 sec => 30 min
-        $process->setTimeout(7200); //7200 sec => 2 hours
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+
+        if( $output === false ) {
+            $process->disableOutput();
+            $process->run();
+            return null;
+        }
+
+        $logger = $this->container->get('logger');
         $process->run();
         if (!$process->isSuccessful()) {
             $logger->notice("runProcessShell: failed");
@@ -773,7 +779,7 @@ class UserTenantUtil
         $logger->notice("runProcessShell: output: ".$output);
 
         // wait a few seconds for the process to be ready
-        sleep(5);
+        //sleep(5);
 
         return $output;
     }
