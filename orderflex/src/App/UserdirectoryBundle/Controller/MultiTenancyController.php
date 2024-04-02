@@ -149,7 +149,7 @@ class MultiTenancyController extends OrderAbstractController
                     $tenantData = $tenantDataArr[$tenantId];
                     dump($tenantData);
                     echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
-                    exit('111');
+                    //exit('111');
 
                     $enabled = $tenantData['enabled'];
                     $enabledStr = "Disabled";
@@ -211,10 +211,12 @@ class MultiTenancyController extends OrderAbstractController
                         $newTenant->setUrlSlug($url);
 
                         //Port (get it from haproxy or corresponding httpd)
+                        echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                         if( isset($tenantData['port']) ) {
                             echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
                             $newTenant->setTenantPort($tenantData['port']);
                         }
+                        exit('111');
 
                         if( isset($tenantData['databaseName']) ) {
                             $newTenant->setDatabaseName($tenantData['databaseName']);
