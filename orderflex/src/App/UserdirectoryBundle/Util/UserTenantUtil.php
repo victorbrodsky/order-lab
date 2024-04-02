@@ -399,11 +399,11 @@ class UserTenantUtil
         //$logger->notice("end restartHaproxy ".date('h:i:s'));
         //$this->restartTenantHttpd();
 
-        $output = shell_exec('/usr/bin/sudo /usr/bin/systemctl restart haproxy');
-        sleep(3);
-        $logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
-        echo "<pre>$output</pre>";
-        return null;
+        //$output = shell_exec('/usr/bin/sudo /usr/bin/systemctl restart haproxy');
+        //sleep(3);
+        //$logger->notice("shell_exec output ".date('h:i:s') . ": ".$output);
+        //echo "<pre>$output</pre>";
+        //return null;
 
         $logger->notice("start systemctl haproxy ".date('h:i:s'));
         $output = $this->runProcessShell("/usr/bin/sudo /usr/bin/systemctl restart haproxy", false);
