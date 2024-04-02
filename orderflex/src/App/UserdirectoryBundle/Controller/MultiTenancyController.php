@@ -262,23 +262,25 @@ class MultiTenancyController extends OrderAbstractController
             //dump($res);
             //exit('111');
 
-            $haproxyError = $res['haproxy-error'];
-            if( $haproxyError ) {
-                //echo "$tenantId: haproxyError=$haproxyError<br>";
-                $this->addFlash(
-                    'warning',
-                    $haproxyError
-                );
-            }
-
-            if( $res['httpd-error'] ) {
-                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
-                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
-                    //echo "$httpdError<br>";
+            if( $res ) {
+                $haproxyError = $res['haproxy-error'];
+                if ($haproxyError) {
+                    //echo "$tenantId: haproxyError=$haproxyError<br>";
                     $this->addFlash(
                         'warning',
-                        "Tenant $tenantId: " . $errorMessage
+                        $haproxyError
                     );
+                }
+
+                if ($res['httpd-error']) {
+                    foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
+                        //$httpdError = "$tenantId: errorMessage=$errorMessage";
+                        //echo "$httpdError<br>";
+                        $this->addFlash(
+                            'warning',
+                            "Tenant $tenantId: " . $errorMessage
+                        );
+                    }
                 }
             }
             //exit('111');

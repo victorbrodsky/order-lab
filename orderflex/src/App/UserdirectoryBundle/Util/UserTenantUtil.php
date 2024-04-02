@@ -394,7 +394,7 @@ class UserTenantUtil
         //testing
         $this->restartHaproxy();
         //$this->restartTenantHttpd();
-        return $resultArr;
+        return null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
             //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
