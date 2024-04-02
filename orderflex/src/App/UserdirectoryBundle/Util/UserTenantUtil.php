@@ -394,6 +394,12 @@ class UserTenantUtil
         //testing
         $this->restartHaproxy();
         //$this->restartTenantHttpd();
+        // wait a few seconds for the process to be ready
+        sleep(5);
+
+        $output = $this->runProcessShell("/usr/bin/sudo journalctl -xeu haproxy.service");
+        echo $output."<br>";
+
         return null;
 
         foreach( $tenantManager->getTenants() as $tenant ) {
