@@ -393,11 +393,15 @@ class UserTenantUtil
 
         //testing
         $logger = $this->container->get('logger');
-        $logger->notice("start restartHaproxy ".date('h:i:s'));
-        $this->restartHaproxy();
-        sleep(5);
-        $logger->notice("end restartHaproxy ".date('h:i:s'));
+        //$logger->notice("start restartHaproxy ".date('h:i:s'));
+        //$this->restartHaproxy();
+        //sleep(5);
+        //$logger->notice("end restartHaproxy ".date('h:i:s'));
         //$this->restartTenantHttpd();
+
+        $logger->notice("start systemctl haproxy ".date('h:i:s'));
+        $output = $this->runProcessShell("/usr/bin/sudo /usr/bin/systemctl restart haproxy", false);
+        $logger->notice("end systemctl haproxy ".date('h:i:s'));
 
         // wait a few seconds for the process to be ready
         sleep(15);
