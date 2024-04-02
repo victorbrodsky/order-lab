@@ -404,6 +404,13 @@ class UserTenantUtil
         //shell_exec($haproxyRestartScript);
         //exit('end haproxy-restart.sh');
 
+        $commandArr = array(
+            'bash',
+            $haproxyRestartScript
+        );
+        $output = $this->runProcess($commandArr);
+        exit('end runProcessShell, output='.$output);
+
         $output = $this->runProcessShell('/usr/bin/bash '.$haproxyRestartScript);
         exit('end runProcessShell, output='.$output);
         return $output;
