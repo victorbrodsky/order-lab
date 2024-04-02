@@ -409,7 +409,7 @@ class UserTenantUtil
 
         $commandArr = array(
             //'sudo',
-            'sudo /bin/bash '.$haproxyRestartScript
+            '/usr/bin/sudo /bin/bash '.$haproxyRestartScript
         );
         $output = $this->runProcess($commandArr);
         exit('end runProcessShell, output='.$output);
