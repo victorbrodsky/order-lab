@@ -401,6 +401,7 @@ class UserTenantUtil
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+        $haproxyRestartScript = realpath($haproxyRestartScript);
         //shell_exec($haproxyRestartScript);
         //exit('end haproxy-restart.sh');
 
@@ -814,13 +815,13 @@ class UserTenantUtil
         sleep(5);
 
         if (!$process->isSuccessful()) {
-            $logger->notice("runProcessShell: failed");
+            $logger->notice("runProcessShell: failed, script=$script");
             throw new ProcessFailedException($process);
         } else {
-            $logger->notice("runProcessShell: successfull");
+            $logger->notice("runProcessShell: successfull, script=$script");
         }
         $output = $process->getOutput();
-        $logger->notice("runProcessShell: output: ".$output);
+        $logger->notice("runProcessShell: finish script=$script, output: ".$output);
 
         // wait a few seconds for the process to be ready
         //sleep(5);
