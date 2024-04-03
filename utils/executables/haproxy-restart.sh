@@ -5,8 +5,8 @@ while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
-	-m|--multitenant)
-		multitenant="$2"
+	-t|--tenant)
+		tenant="$2"
 		shift # past argument
 		shift # past value
     ;;
@@ -18,7 +18,8 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-echo multitenant=$multitenant
+echo tenant=$tenant
+
 
 sleep 1  # Waits 1 seconds.
 /usr/bin/sudo /usr/bin/systemctl restart haproxy
