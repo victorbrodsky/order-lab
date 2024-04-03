@@ -21,10 +21,10 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 echo tenant=$tenant
 
 sleep 1  # Waits 1 seconds.
-/usr/bin/sudo /usr/bin/systemctl restart haproxy
+/usr/bin/sudo /usr/bin/systemctl restart httpd"$tenant"
 sleep 1  # Waits 1 seconds.
 #/usr/bin/sudo journalctl -xeu haproxy.service
-/usr/bin/sudo service php-fpm restart
-sleep 1  # Waits 1 seconds.
+#/usr/bin/sudo service php-fpm restart
+#sleep 1  # Waits 1 seconds.
 
 
