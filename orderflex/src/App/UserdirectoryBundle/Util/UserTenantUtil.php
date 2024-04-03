@@ -516,6 +516,7 @@ class UserTenantUtil
                 echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
                     $httpdOriginalText = file_get_contents($httpdConfig);
+                    dump($httpdOriginalText);
                     $updateThisHttpd = false;
 
                     //modify URL in httpd
@@ -540,6 +541,8 @@ class UserTenantUtil
                             ." to ".$tenantDbUrl
                         );
                         $updateThisHttpd = true;
+                    } else {
+                        echo "processDBTenants: httpdConfig for $tenantId: config does not have url=".$tenantDataArr[$tenantId]['url']."<br>";
                     }
 
                     //modify port in httpd
@@ -563,6 +566,8 @@ class UserTenantUtil
                             ." to ".$tenantDbUrl
                         );
                         $updateThisHttpd = true;
+                    } else {
+                        echo "processDBTenants: httpdConfig for $tenantId: config does not have port=".$tenantDataArr[$tenantId]['port']."<br>";
                     }
 
                     if( $updateThisHttpd === true ) {

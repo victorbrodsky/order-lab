@@ -388,7 +388,7 @@ class MultiTenancyController extends OrderAbstractController
         $res = $userTenantUtil->processDBTenants($tenantManager);
 
         dump($res);
-        exit('res='.$res);
+        exit('exit processDBTenants');
 
         if( $res ) {
             $haproxyError = $res['haproxy-error'];
