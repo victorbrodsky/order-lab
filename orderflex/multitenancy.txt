@@ -492,6 +492,8 @@ Update httpd:
 1) Change persmission
 chown -R apache /etc/httpd/conf/*.conf
 chmod 744 /etc/httpd/conf/*.conf
+chown -R apache /etc/haproxy/haproxy.cfg
+chmod 744 /etc/haproxy/haproxy.cfg
 2) Failed to restart httpdtenantapptest.service: Interactive authentication required
 
 
