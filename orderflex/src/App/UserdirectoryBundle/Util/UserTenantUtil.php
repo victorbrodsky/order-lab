@@ -595,16 +595,29 @@ class UserTenantUtil
         }
 
         if( $updateHttpd === false ) {
+            if( $resultArr['httpd-error'] == null ) {
+                $msg = "The Apache HTTPD configuration has not been restarted because no differences".
+                    " have been detected between the database and server configurations.";
+            } else {
+                $msg = "The Apache HTTPD configuration has not been restarted due to an error.";
+            }
+
             $session->getFlashBag()->add(
                 'warning',
-                "Httpd config file does not exist or not writable"
+                $msg
             );
         }
 
         if( $updateHaproxy === false ) {
+            if( $resultArr['haproxy-error'] == null ) {
+                $msg = "The HAProxy configuration has not been restarted because no differences".
+                " have been detected between the database and server configurations.";
+            } else {
+                $msg = "The HAProxy configuration has not been restarted due to an error.";
+            }
             $session->getFlashBag()->add(
                 'warning',
-                "HaProxy config file does not exist or not writable"
+                $msg
             );
         }
 
