@@ -435,6 +435,7 @@ class MultiTenancyController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
