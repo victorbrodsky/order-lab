@@ -523,7 +523,7 @@ class UserTenantUtil
 
                     //modify URL in httpd
                     if (str_contains($httpdOriginalText, $tenantUrl)) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, $tenantDbUrl);
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, '/'.$tenantDbUrl);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
@@ -549,7 +549,7 @@ class UserTenantUtil
 
                     //modify port in httpd
                     if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['port'])) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbUrl);
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: status=".$res['status']."; message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
@@ -558,14 +558,14 @@ class UserTenantUtil
                             $session->getFlashBag()->add(
                                 'note',
                                 "Tenant's $tenantId port has been updated in httpd from "
-                                .$tenantDataArr[$tenantId]['port']." to ".$tenantDbUrl
+                                .$tenantDataArr[$tenantId]['port']." to ".$tenantDbPort
                             );
                             $updateHttpd = true;
                         }
                         $logger->notice(
                             "Update httpd config for tenant ".$tenantId.", update port from "
                             .$tenantDataArr[$tenantId]['port']
-                            ." to ".$tenantDbUrl
+                            ." to ".$tenantDbPort
                         );
                         $updateThisHttpd = true;
                     } else {
@@ -574,7 +574,7 @@ class UserTenantUtil
 
                     if( $updateThisHttpd === true ) {
                         $logger->notice("Restart httpd service for tenant ".$tenantId);
-                        $this->restartTenantHttpd($tenantId);
+                        //$this->restartTenantHttpd($tenantId);
                     }
 
                 }//if $httpdConfig
@@ -585,7 +585,7 @@ class UserTenantUtil
         }//foreach
 
         if( $updateHttpd === true && $updateHaproxy === true ) {
-            $this->restartHaproxy();
+            //$this->restartHaproxy();
         }
 
         if( $updateHttpd === false ) {
