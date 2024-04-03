@@ -467,7 +467,7 @@ class UserTenantUtil
                     foreach($frontendTenantsArray as $frontendTenantLine) {
                         if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                             if ($tenantDbUrl != $tenantDataArr[$tenantId]['url']) {
-                                $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                                $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['url'], '/'.$tenantDbUrl);
                                 //$resultArr[$tenantId]['haproxy-url'] = $res;
                                 if ($res['status'] == 'error') {
                                     $resultArr['haproxy-error'] = $res['message'];
