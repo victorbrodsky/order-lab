@@ -140,6 +140,7 @@ function prep()
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../utils/executables
     chmod 744 $PROJECT_LOCAL_PATH/../utils/executables/haproxy-restart.sh
     chmod 744 $PROJECT_LOCAL_PATH/../utils/executables/httpd-restart.sh
+    chmod 744 /etc/haproxy/haproxy.cfg
 }
 
 

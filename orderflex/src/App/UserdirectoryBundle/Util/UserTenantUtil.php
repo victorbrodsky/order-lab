@@ -522,7 +522,7 @@ class UserTenantUtil
                 echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
                     $httpdOriginalText = file_get_contents($httpdConfig);
-                    dump($httpdOriginalText);
+                    //dump($httpdOriginalText);
                     $updateThisHttpd = false;
 
                     $tenantUrl = trim($tenantDataArr[$tenantId]['url'],'/');
