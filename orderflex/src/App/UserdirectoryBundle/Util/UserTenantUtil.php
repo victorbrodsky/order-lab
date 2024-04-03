@@ -525,10 +525,12 @@ class UserTenantUtil
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
                         } else {
+                            $msg = "Tenant's $tenantId url has been updated in httpd from "
+                                .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl;
+                            echo "msg=".$msg."<br>";
                             $session->getFlashBag()->add(
                                 'note',
-                                "Tenant's $tenantId url has been updated in httpd from "
-                                .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl
+                                $msg
                             );
                             $updateHttpd = true;
                         }
@@ -544,9 +546,10 @@ class UserTenantUtil
                     if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['port'])) {
                         $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbUrl);
                         if( $res['status'] == 'error' ) {
-                            echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
+                            echo "processDBTenants: $tenantId: status=".$res['status']."; message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
                         } else {
+                            echo "processDBTenants: $tenantId: status=".$res['status']."<br>";
                             $session->getFlashBag()->add(
                                 'note',
                                 "Tenant's $tenantId port has been updated in httpd from "

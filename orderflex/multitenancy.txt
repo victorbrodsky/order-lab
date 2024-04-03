@@ -514,7 +514,7 @@ Switch to apache: su - apache
 sudo ls -la /root
 
 Check sudo:
-sudo -u <user> command
+sudo -u <user> command (sudo -u apache ls -la /root)
 sudo -g <group> command
 sudo -u <user> -g <group> command
 
