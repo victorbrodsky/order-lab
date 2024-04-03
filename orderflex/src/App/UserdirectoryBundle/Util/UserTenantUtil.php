@@ -761,13 +761,13 @@ class UserTenantUtil
         //$output = shell_exec('sudo systemctl restart httpd'.$tenantId);
         //echo "<pre>$output</pre>";
 
-        $commandArr = array(
-            //'sudo systemctl restart httpd'.$tenantId,
-            '/usr/bin/systemctl',
-            'restart',
-            'httpd'.$tenantId
-        );
-        $this->runProcess($commandArr);
+//        $commandArr = array(
+//            //'sudo systemctl restart httpd'.$tenantId,
+//            '/usr/bin/systemctl',
+//            'restart',
+//            'httpd'.$tenantId
+//        );
+//        $this->runProcess($commandArr);
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/httpd-restart.sh';
