@@ -768,6 +768,13 @@ class UserTenantUtil
             'httpd'.$tenantId
         );
         $this->runProcess($commandArr);
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $haproxyRestartScript = $projectRoot.'/../utils/executables/httpd-restart.sh';
+        $haproxyRestartScript = realpath($haproxyRestartScript);
+        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript.' -t '.$tenantId, false);
+        //exit('end runProcessShell, output='.$output);
+        return $output;
     }
 
     public function runProcess($commandArr) {
