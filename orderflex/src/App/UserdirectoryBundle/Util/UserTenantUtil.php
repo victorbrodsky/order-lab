@@ -461,7 +461,7 @@ class UserTenantUtil
 
                 $originalText = file_get_contents($haproxyConfig);
 
-                //modify url in haproxy: 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
+                //URL: modify URL in haproxy: 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
                 if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
                     $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
                     foreach($frontendTenantsArray as $frontendTenantLine) {
@@ -490,7 +490,7 @@ class UserTenantUtil
                 }
 
 
-                //modify port in haproxy: 'server tenantmanager_server *:8082 check'
+                //PORT: modify port in haproxy: 'server tenantmanager_server *:8082 check'
                 if( $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
                     $backendTenantsArray = $this->getTextByStartEnd($originalText, '###START-BACKEND', '###END-BACKEND');
                     foreach($backendTenantsArray as $backendTenantLine) {
@@ -517,7 +517,7 @@ class UserTenantUtil
                 }
 
 
-                //change URL in httpd config file
+                //URL: change URL in httpd config file
                 $httpdConfig = $this->getTenantHttpd($tenantId);
                 echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
@@ -529,7 +529,7 @@ class UserTenantUtil
 
                     //modify URL in httpd
                     if (str_contains($httpdOriginalText, $tenantUrl)) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, '/'.$tenantDbUrl);
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, $tenantDbUrl);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
