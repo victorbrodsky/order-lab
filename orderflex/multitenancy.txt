@@ -523,3 +523,11 @@ sudo -u <user> -g <group> command
 
 List all groups: getent group
 List user's group: groups apache
+
+//In order to update server config:
+1) change sudoer config: 'sudo visudo' => 'apache       ALL=(ALL)       NOPASSWD: ALL'
+2) Change permission for apache and haproxy.cfg config files:
+chown -R apache /etc/httpd/conf/*.conf
+chmod 744 /etc/httpd/conf/*.conf
+
+

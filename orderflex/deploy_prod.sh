@@ -182,7 +182,7 @@ function prep(){
     chmod 744 $PROJECT_LOCAL_PATH/../utils/executables/httpd-restart.sh
     #Danger: required for multinenacy
     echo "*** Set permissions for haproxy and httpd config ***"
-    chown -R apache /etc/httpd/conf/*.conf
+    chown -R "$WEB_USER" /etc/httpd/conf/*.conf
     chmod 744 /etc/httpd/conf/*.conf
     chown -R "$WEB_USER" /etc/haproxy/haproxy.cfg
     chmod 744 /etc/haproxy/haproxy.cfg

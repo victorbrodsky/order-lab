@@ -366,7 +366,7 @@ class MultiTenancyController extends OrderAbstractController
             'cycle' => $cycle
         );
     }
-
+    
     #[Route(path: '/tenant-manager/update-server-config', name: 'employees_tenancy_manager_update_server_config', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function syncTenantsUpdateServerConfigAction( Request $request, KernelInterface $kernel )
