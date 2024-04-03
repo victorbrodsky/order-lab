@@ -123,12 +123,6 @@ class MultiTenancyController extends OrderAbstractController
         //exit('111');
 
         if( $tenantDataArr['error'] ) {
-            foreach($tenantDataArr['error'] as $error ) {
-//                $this->addFlash(
-//                    'warning',
-//                    $error
-//                );
-            }
             if( count($tenantDataArr['error']) > 0 ) {
                 $this->addFlash(
                     'warning',
@@ -423,7 +417,135 @@ class MultiTenancyController extends OrderAbstractController
         //return $this->redirect( $this->generateUrl('main_common_home') );
     }
 
+    #[Route(path: '/tenant-manager/update-db-config', name: 'employees_tenancy_manager_update_db_config', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
+    public function syncTenantsUpdateDBConfigAction( Request $request, KernelInterface $kernel )
+    {
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != 'tenantmanager' ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Tenancy settings is accessible only from tenant manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
+        //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
+        $tenantDataArr = $userTenantUtil->getTenants();
+        //dump($tenantDataArr);
+        //exit('111');
+
+        if( $tenantDataArr['error'] ) {
+            if( count($tenantDataArr['error']) > 0 ) {
+                $this->addFlash(
+                    'warning',
+                    implode("<br>",$tenantDataArr['error'])
+                );
+            }
+        }
+
+        $tenantBaseUrlArr = array();
+
+        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        //$tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
+
+        if( $tenantDataArr['existedTenantIds'] ) {
+            $orderInList = 0;
+            foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
+                if( $tenantId ) {
+                    $tenantData = $tenantDataArr[$tenantId];
+                    //dump($tenantData);
+                    //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                    //exit('111');
+
+                    $enabled = $tenantData['enabled'];
+                    $enabledStr = "Disabled";
+                    if ($enabled) {
+                        $enabledStr = "Enabled";
+                    }
+
+                    $url = null;
+                    if (isset($tenantData['url'])) {
+                        $url = $tenantData['url'];
+                    }
+                    //remove leading '/' if not a single '/'
+                    if ($url != '/') {
+                        $url = ltrim($url, '/');
+                    }
+
+                    //Add/Update tenants
+                    //1) check if tenant from the file system exists in DB
+                    $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
+
+                    if (!$tenantDb) {
+                        $tenantDb = new TenantList($user);
+                        $tenantManager->addTenant($tenantDb);
+
+                        $orderInList = $orderInList + 10;
+                        $tenantDb->setMatchSystem("File system");
+                        $tenantDb->setName($tenantId);
+                        $tenantDb->setOrderinlist($orderInList);
+                        $tenantDb->setEnabled($enabled);
+                        $tenantDb->setShowOnHomepage(true);
+                    }
+
+                    //URL
+                    //If url should corresponds to the list of URL,
+                    // then we don't have any match for url '/' corresponding
+                    // 'https://view.online' homepagemanager 127.0.0.1:8081
+                    //Therefore, use field tenant's 'urlSlug' field
+                    $tenantDb->setUrlSlug($url);
+
+                    //Port (get it from haproxy or corresponding httpd)
+                    //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
+                    if (isset($tenantData['port'])) {
+                        //$tenantPort = strval($tenantData['port']);
+                        //echo "set port for tenant=$tenantId: port=[".$tenantPort."]<br>";
+                        $tenantDb->setTenantPort($tenantData['port']);
+                    }
+                    //echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
+                    //exit('111');
+
+                    if (isset($tenantData['databaseName'])) {
+                        $tenantDb->setDatabaseName($tenantData['databaseName']);
+                    }
+
+                    //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
+                    if (isset($tenantData['databaseHost'])) {
+                        $tenantDb->setDatabaseHost($tenantData['databaseHost']);
+                    }
+
+                    //DB user (get it from corresponding parameters.yml)
+                    if (isset($tenantData['databaseUser'])) {
+                        $tenantDb->setDatabaseUser($tenantData['databaseUser']);
+                    }
+
+                    //DB password (get it from corresponding parameters.yml)
+                    if (isset($tenantData['databasePassword'])) {
+                        $tenantDb->setDatabasePassword($tenantData['databasePassword']);
+                    }
+
+                }//if( $tenantId ) {
+            }//foreach
+
+            $em->flush();
+
+        }//if( $tenantDataArr['existedTenantIds'] )
+
+        return $this->redirect( $this->generateUrl('employees_tenancy_manager_configure') );
+    }
+
+
+
+
+    //////////// OLD ////////////////////////
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )

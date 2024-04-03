@@ -508,3 +508,15 @@ User_Alias WWW=apache
 Cmnd_Alias WEBCMDS=/bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
 WWW ALL=NOPASSWD: WEBCMDS
 
+Add apache to wheel:
+usermod -aG wheel apache
+Switch to apache: su - apache
+sudo ls -la /root
+
+Check sudo:
+sudo -u <user> command
+sudo -g <group> command
+sudo -u <user> -g <group> command
+
+List all groups: getent group
+List user's group: groups apache
