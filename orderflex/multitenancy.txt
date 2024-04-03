@@ -496,9 +496,10 @@ chmod 744 /etc/httpd/conf/*.conf
 
 
 https://serverfault.com/questions/1070602/centos-apache-all-root-nopasswd-path-to-shell-sh-is-not-working
+use * for commands (https://unix.stackexchange.com/questions/178069/how-do-i-use-command-arguments-with-cmnd-alias-in-sudoers)
 Permission:
 sudo visudo
-apache ALL=(ALL:ALL) NOPASSWD: /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+apache ALL=(ALL) NOPASSWD: /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh*
 id root
 ps aux | egrep '(apache|httpd)'
 /bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
