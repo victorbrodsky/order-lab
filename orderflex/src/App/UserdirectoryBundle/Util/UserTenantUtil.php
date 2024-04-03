@@ -519,15 +519,17 @@ class UserTenantUtil
                     dump($httpdOriginalText);
                     $updateThisHttpd = false;
 
+                    $tenantUrl = trim($tenantDataArr[$tenantId]['url'],'/');
+
                     //modify URL in httpd
-                    if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['url'])) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['url'], $tenantDbUrl);
+                    if (str_contains($httpdOriginalText, $tenantUrl)) {
+                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, $tenantDbUrl);
                         if( $res['status'] == 'error' ) {
                             echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
                             $resultArr['httpd-error'][$tenantId] = $res['message'];
                         } else {
                             $msg = "Tenant's $tenantId url has been updated in httpd from "
-                                .$tenantDataArr[$tenantId]['url']." to ".$tenantDbUrl;
+                                .$tenantUrl." to ".$tenantDbUrl;
                             echo "msg=".$msg."<br>";
                             $session->getFlashBag()->add(
                                 'note',
@@ -537,12 +539,12 @@ class UserTenantUtil
                         }
                         $logger->notice(
                             "Update httpd config for tenant ".$tenantId.", update URL from "
-                            .$tenantDataArr[$tenantId]['url']
+                            .$tenantUrl
                             ." to ".$tenantDbUrl
                         );
                         $updateThisHttpd = true;
                     } else {
-                        echo "processDBTenants: httpdConfig for $tenantId: config does not have url=".$tenantDataArr[$tenantId]['url']."<br>";
+                        echo "processDBTenants: httpdConfig for $tenantId: config does not have url=".$tenantUrl."; tenantDbUrl=$tenantDbUrl"."<br>";
                     }
 
                     //modify port in httpd
