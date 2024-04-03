@@ -580,7 +580,7 @@ class UserTenantUtil
 
                     if( $updateThisHttpd === true ) {
                         $logger->notice("Restart httpd service for tenant ".$tenantId);
-                        //$this->restartTenantHttpd($tenantId);
+                        $this->restartTenantHttpd($tenantId);
                     }
 
                 }//if $httpdConfig
@@ -591,7 +591,7 @@ class UserTenantUtil
         }//foreach
 
         if( $updateHttpd === true && $updateHaproxy === true ) {
-            //$this->restartHaproxy();
+            $this->restartHaproxy();
         }
 
         if( $updateHttpd === false ) {
