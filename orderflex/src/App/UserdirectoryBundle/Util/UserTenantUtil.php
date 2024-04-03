@@ -407,6 +407,12 @@ class UserTenantUtil
             //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
 
             $tenantId = $tenant->getName();
+
+            //testing
+            if( $tenantId != 'tenantapptest' ) {
+                continue;
+            }
+
             $haproxyConfig = $this->getHaproxyConfig();
 
             //Enable/Disable => haproxy
