@@ -24,11 +24,11 @@ class TenantManagerType extends AbstractType
     {
         $this->params = $params;
 
-        $this->mapper = array();
-        $this->mapper['className'] = "TenantList";
-        $this->mapper['bundleName'] = "UserdirectoryBundle";
-        $this->mapper['fullClassName'] = "App\\".$this->mapper['bundleName']."\\Entity\\".$this->mapper['className'];
-        $this->mapper['entityNamespace'] = "App\\".$this->mapper['bundleName']."\\Entity";
+//        $this->mapper = array();
+//        $this->mapper['className'] = "TenantList";
+//        $this->mapper['bundleName'] = "UserdirectoryBundle";
+//        $this->mapper['fullClassName'] = "App\\".$this->mapper['bundleName']."\\Entity\\".$this->mapper['className'];
+//        $this->mapper['entityNamespace'] = "App\\".$this->mapper['bundleName']."\\Entity";
     }
 
     /**
@@ -39,6 +39,8 @@ class TenantManagerType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
+        //echo "cycle=".$this->params['cycle']."<br>";
+        //echo "disabled=".$this->params['disabled']."<br>";
 
         $builder->add('logos', CollectionType::class, array(
             'entry_type' => DocumentType::class,
@@ -102,10 +104,12 @@ class TenantManagerType extends AbstractType
 //            },
 //        ));
 
-        $builder->add('submit', SubmitType::class, array(
-            'label' => 'Update Tenants in DB',
-            'attr' => array('class'=>'btn btn-primary')
-        ));
+        if( $this->params['cycle'] == 'edit' ) {
+            $builder->add('submit', SubmitType::class, array(
+                'label' => 'Update Tenants in DB',
+                'attr' => array('class' => 'btn btn-primary')
+            ));
+        }
     }
 
     /**

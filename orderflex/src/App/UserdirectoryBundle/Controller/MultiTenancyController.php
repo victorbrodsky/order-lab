@@ -117,6 +117,8 @@ class MultiTenancyController extends OrderAbstractController
             $cycle = "edit";
             $disabled = false;
         }
+        //echo "cycle=".$cycle."<br>";
+        //exit('111');
 
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();

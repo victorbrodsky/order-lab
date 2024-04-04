@@ -31,6 +31,8 @@
     </h4>
     <br>
 
+    {#cycle={{ cycle }}#}
+
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-10">
@@ -229,30 +231,52 @@
         {% endif %}
 
 
-        {% if form.submit is defined %}
-            {{ form_widget(form.submit) }}
-        {% endif %}
+        {#{% if form.submit is defined %}#}
+            {#{{ form_widget(form.submit) }}#}
+        {#{% endif %}#}
 
-        {#<div class="row">#}
-            {#<div class="col-xs-6" align="right">#}
+    {% if form.submit is defined %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
                 {#{% if form.submit is defined %}#}
-                    {#{{ form_widget(form.submit) }}#}
+                    {{ form_widget(form.submit) }}
                 {#{% endif %}#}
-            {#</div>#}
-            {#<div class="col-xs-6" align="left">#}
-                {#<a class="btn btn-default" href="{{ path('employees_tenancy_manager_configure') }}">Cancel</a>#}
-            {#</div>#}
-        {#</div>#}
+            </div>
+            <div class="col-xs-6" align="left">
+                <a class="btn btn-default" href="{{ path('employees_tenancy_manager_configure') }}"
+                >Cancel</a>
+            </div>
+        </div>
+    {% endif %}
 
     {{ form_end(form) }}
 
-    <br>
-    <p>
-        <a class="btn btn-warning" href="{{ path('employees_tenancy_manager_update_db_config') }}">Update DB Configuration from server</a>
-    </p>
-    <p>
-        <a class="btn btn-danger" href="{{ path('employees_tenancy_manager_update_server_config') }}">Update Server Configuration from DB</a>
-    </p>
+    {#{% if cycle == 'edit' %}#}
+        {#<p>#}
+            {#<a class="btn btn-warning" href="{{ path('employees_tenancy_manager_configure') }}"#}
+            {#>Cancel</a>#}
+        {#</p>#}
+    {#{% endif %}#}
+    {% if cycle == 'show' %}
+        <br>
+        <p>
+            <a class="btn btn-success" href="{{ path('employees_tenancy_manager_configure_edit') }}"
+            >Edit</a>
+        </p>
+        <p>
+            <a
+                class="btn btn-warning"
+                general-data-confirm="Are you sure you would like to update DB tenancy configuration from the server configuration files?"
+                href="{{ path('employees_tenancy_manager_update_db_config') }}"
+            >Update DB Configuration from the server</a>
+        </p>
+        <p>
+            <a class="btn btn-danger"
+               general-data-confirm="Are you sure you would like to update server tenancy configuration files from DB?"
+               href="{{ path('employees_tenancy_manager_update_server_config') }}"
+            >Update Server Configuration from DB</a>
+        </p>
+    {% endif %}
 
     {#<br><br>#}
     {#<a#}
