@@ -456,60 +456,69 @@ class UserTenantUtil
 
             //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
+            $tenantDbUrlTrim = trim(trim($tenantDbUrl,'/'));
+            $tenantServerUrlTrim = trim(trim($tenantDataArr[$tenantId]['url'],'/'));
+
             $tenantDbPort = $tenant->getTenantPort();
-            $logger->notice("compare url: ".$tenantDbUrl."?=".$tenantDataArr[$tenantId]['url']);
-            $logger->notice("compare port: ".$tenantDbPort."?=".$tenantDataArr[$tenantId]['port']);
-            if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] || $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
+            $tenantDbPortTrim = trim($tenantDbPort);
+            $tenantServerPortTrim = trim($tenantDataArr[$tenantId]['port']);
+
+            $logger->notice("compare url: ".$tenantDbUrlCanonical."?=".$tenantDataArrCanonical);
+            $logger->notice("compare port: ".$tenantDbPortTrim."?=".$tenantServerPortTrim);
+
+            if( $tenantDbUrlTrim != $tenantServerUrlTrim || $tenantDbPortTrim != $tenantServerPortTrim ) {
 
                 $originalText = file_get_contents($haproxyConfig);
 
                 //URL: modify URL in haproxy: 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
-                if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] ) {
+                if( $tenantDbUrlTrim != $tenantServerUrlTrim ) {
                     $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
                     foreach($frontendTenantsArray as $frontendTenantLine) {
                         if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                            if ($tenantDbUrl != $tenantDataArr[$tenantId]['url']) {
-                                $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['url'], '/'.$tenantDbUrl);
-                                //$resultArr[$tenantId]['haproxy-url'] = $res;
-                                if ($res['status'] == 'error') {
-                                    $resultArr['haproxy-error'] = $res['message'];
-                                } else {
-                                    $session->getFlashBag()->add(
-                                        'note',
-                                        "Tenant $tenantId url has been updated in haproxy config"
-                                    );
-                                    $logger->notice(
-                                        "Update haproxy config for tenant ".$tenantId.", update URL from "
-                                        ."[".$tenantDataArr[$tenantId]['url']."]"
-                                        ." to [".$tenantDbUrl."]"
-                                    );
-                                    $updateHaproxy = true;
-                                }
-                                break;
+                            $res = $this->replaceAllInFile($haproxyConfig,$tenantServerUrlTrim,$tenantDbUrlTrim);
+                            //$resultArr[$tenantId]['haproxy-url'] = $res;
+                            if ($res['status'] == 'error') {
+                                $resultArr['haproxy-error'] = $res['message'];
+                            } else {
+                                $session->getFlashBag()->add(
+                                    'note',
+                                    "Tenant $tenantId url has been updated in haproxy config from"
+                                    ."[".$tenantServerUrlTrim."]"
+                                    ." to [".$tenantDbUrlTrim."]"
+                                );
+                                $logger->notice(
+                                    "Update haproxy config for tenant ".$tenantId.", update URL from "
+                                    ."[".$tenantServerUrlTrim."]"
+                                    ." to [".$tenantDbUrlTrim."]"
+                                );
+                                $updateHaproxy = true;
                             }
+                            break;
                         }
                     }//foreach tenant's haproxy
                 }
 
 
                 //PORT: modify port in haproxy: 'server tenantmanager_server *:8082 check'
-                if( $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
+                if( $tenantDbPortTrim != $tenantServerPortTrim ) {
                     $backendTenantsArray = $this->getTextByStartEnd($originalText, '###START-BACKEND', '###END-BACKEND');
                     foreach($backendTenantsArray as $backendTenantLine) {
                         //modify 'server tenantmanager_server *:8082 check'
                         if (str_contains($backendTenantLine, 'server ' . $tenantId . '_server')) {
-                            $res = $this->replaceAllInFile($haproxyConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
+                            $res = $this->replaceAllInFile($haproxyConfig, $tenantServerPortTrim, $tenantDbPortTrim);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                             } else {
                                 $session->getFlashBag()->add(
                                     'note',
-                                    "Tenant $tenantId port has been updated in haproxy config"
+                                    "Tenant $tenantId port has been updated in haproxy config from"
+                                    ."[".$tenantServerPortTrim."]"
+                                    ." to [".$tenantDbPortTrim."]"
                                 );
                                 $logger->notice(
                                     "Update haproxy config for tenant ".$tenantId.", update port from "
-                                    ."[".$tenantDataArr[$tenantId]['port']."]"
-                                    ." to [".$tenantDbPort."]"
+                                    ."[".$tenantServerPortTrim."]"
+                                    ." to [".$tenantDbPortTrim."]"
                                 );
                                 $updateHaproxy = true;
                             }
@@ -527,57 +536,62 @@ class UserTenantUtil
                     //dump($httpdOriginalText);
                     $updateThisHttpd = false;
 
-                    $tenantUrl = trim($tenantDataArr[$tenantId]['url'],'/');
+                    //$tenantServerUrlTrim $tenantUrl = trim($tenantDataArr[$tenantId]['url'],'/');
 
                     //modify URL in httpd
-                    if (str_contains($httpdOriginalText, $tenantUrl)) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantUrl, $tenantDbUrl);
-                        if( $res['status'] == 'error' ) {
-                            echo "processDBTenants: $tenantId: error=>message=".$res['message']."<br>";
-                            $resultArr['httpd-error'][$tenantId] = $res['message'];
-                        } else {
-                            $msg = "Tenant's $tenantId url has been updated in httpd from "
-                                .$tenantUrl." to ".$tenantDbUrl;
-                            echo "msg=".$msg."<br>";
-                            $session->getFlashBag()->add(
-                                'note',
-                                $msg
+                    if( $tenantDbUrlTrim != $tenantServerUrlTrim ) {
+                        if (str_contains($httpdOriginalText, $tenantServerUrlTrim)) {
+                            $res = $this->replaceAllInFile($httpdConfig, $tenantServerUrlTrim, $tenantDbUrlTrim);
+                            if ($res['status'] == 'error') {
+                                echo "processDBTenants: $tenantId: error=>message=" . $res['message'] . "<br>";
+                                $resultArr['httpd-error'][$tenantId] = $res['message'];
+                            } else {
+                                $msg = "Tenant's $tenantId url has been updated in httpd from "
+                                    . $tenantServerUrlTrim . " to " . $tenantDbUrlTrim;
+                                echo "msg=" . $msg . "<br>";
+                                $session->getFlashBag()->add(
+                                    'note',
+                                    $msg
+                                );
+                                $updateHttpd = true;
+                            }
+                            $logger->notice(
+                                "Update httpd config for tenant " . $tenantId . ", update URL from "
+                                . "[" . $tenantServerUrlTrim . "]"
+                                . " to [" . $tenantDbUrlTrim . "]"
                             );
-                            $updateHttpd = true;
+                            $updateThisHttpd = true;
+                        } else {
+                            echo "processDBTenants: httpdConfig for $tenantId: config does not have url=" .
+                                $tenantServerUrlTrim . "; tenantDbUrl=$tenantDbUrlTrim" . "<br>";
                         }
-                        $logger->notice(
-                            "Update httpd config for tenant ".$tenantId.", update URL from "
-                            ."[".$tenantUrl."]"
-                            ." to [".$tenantDbUrl."]"
-                        );
-                        $updateThisHttpd = true;
-                    } else {
-                        echo "processDBTenants: httpdConfig for $tenantId: config does not have url=".$tenantUrl."; tenantDbUrl=$tenantDbUrl"."<br>";
                     }
 
                     //modify port in httpd
-                    if (str_contains($httpdOriginalText, $tenantDataArr[$tenantId]['port'])) {
-                        $res = $this->replaceAllInFile($httpdConfig, $tenantDataArr[$tenantId]['port'], $tenantDbPort);
-                        if( $res['status'] == 'error' ) {
-                            echo "processDBTenants: $tenantId: status=".$res['status']."; message=".$res['message']."<br>";
-                            $resultArr['httpd-error'][$tenantId] = $res['message'];
-                        } else {
-                            echo "processDBTenants: $tenantId: status=".$res['status']."<br>";
-                            $session->getFlashBag()->add(
-                                'note',
-                                "Tenant's $tenantId port has been updated in httpd from "
-                                ."[".$tenantDataArr[$tenantId]['port']."] to [".$tenantDbPort."]"
+                    if( $tenantDbPortTrim != $tenantServerPortTrim ) {
+                        if (str_contains($httpdOriginalText, $tenantServerPortTrim)) {
+                            $res = $this->replaceAllInFile($httpdConfig, $tenantServerPortTrim, $tenantDbPortTrim);
+                            if ($res['status'] == 'error') {
+                                echo "processDBTenants: $tenantId: status=" . $res['status'] . "; message=" . $res['message'] . "<br>";
+                                $resultArr['httpd-error'][$tenantId] = $res['message'];
+                            } else {
+                                echo "processDBTenants: $tenantId: status=" . $res['status'] . "<br>";
+                                $session->getFlashBag()->add(
+                                    'note',
+                                    "Tenant's $tenantId port has been updated in httpd from "
+                                    . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]"
+                                );
+                                $updateHttpd = true;
+                            }
+                            $logger->notice(
+                                "Update httpd config for tenant " . $tenantId . ", update port from "
+                                . "[" . $tenantServerPortTrim . "]"
+                                . " to [" . $tenantDbPortTrim . "]"
                             );
-                            $updateHttpd = true;
+                            $updateThisHttpd = true;
+                        } else {
+                            echo "processDBTenants: httpdConfig for $tenantId: config does not have port=" . $tenantServerPortTrim . "<br>";
                         }
-                        $logger->notice(
-                            "Update httpd config for tenant ".$tenantId.", update port from "
-                            ."[".$tenantDataArr[$tenantId]['port']."]"
-                            ." to [".$tenantDbPort."]"
-                        );
-                        $updateThisHttpd = true;
-                    } else {
-                        echo "processDBTenants: httpdConfig for $tenantId: config does not have port=".$tenantDataArr[$tenantId]['port']."<br>";
                     }
 
                     if( $updateThisHttpd === true ) {
