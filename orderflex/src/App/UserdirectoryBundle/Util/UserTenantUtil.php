@@ -777,7 +777,7 @@ class UserTenantUtil
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
 
-        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript, false);
+        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
         //exit('end runProcessShell, output='.$output);
         return $output;
     }
@@ -798,7 +798,7 @@ class UserTenantUtil
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $haproxyRestartScript = $projectRoot.'/../utils/executables/httpd-restart.sh';
         $haproxyRestartScript = realpath($haproxyRestartScript);
-        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript.' -t '.$tenantId, false);
+        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript.' -t '.$tenantId);
         //exit('end runProcessShell, output='.$output);
         return $output;
     }
@@ -825,6 +825,10 @@ class UserTenantUtil
     public function runProcessShell($script, $output=true) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
+        $process->start();
+        return null;
+
+
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
 
         if( $output === false ) {
@@ -834,10 +838,10 @@ class UserTenantUtil
         }
 
         $logger = $this->container->get('logger');
-        $process->run();
+        //$process->run();
 
         // wait a few seconds for the process to be ready
-        sleep(5);
+        //sleep(5);
 
         if (!$process->isSuccessful()) {
             $logger->notice("runProcessShell: failed, script=$script");
