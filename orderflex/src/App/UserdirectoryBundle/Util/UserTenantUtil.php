@@ -823,8 +823,9 @@ class UserTenantUtil
     }
 
     public function runProcessShell($script, $output=true) {
-        //$process = new Process($script);
+        echo "runProcessShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
+        $process->setOptions(['create_new_console' => true]);
         $process->start();
         return null;
 
