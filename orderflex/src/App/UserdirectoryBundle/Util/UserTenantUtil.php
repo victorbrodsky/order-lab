@@ -545,8 +545,8 @@ class UserTenantUtil
                         }
                         $logger->notice(
                             "Update httpd config for tenant ".$tenantId.", update URL from "
-                            .$tenantUrl
-                            ." to ".$tenantDbUrl
+                            ."[".$tenantUrl."]"
+                            ." to [".$tenantDbUrl."]"
                         );
                         $updateThisHttpd = true;
                     } else {
@@ -564,7 +564,7 @@ class UserTenantUtil
                             $session->getFlashBag()->add(
                                 'note',
                                 "Tenant's $tenantId port has been updated in httpd from "
-                                .$tenantDataArr[$tenantId]['port']." to ".$tenantDbPort
+                                ."[".$tenantDataArr[$tenantId]['port']."] to [".$tenantDbPort."]"
                             );
                             $updateHttpd = true;
                         }
