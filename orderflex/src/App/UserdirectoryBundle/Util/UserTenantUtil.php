@@ -478,8 +478,8 @@ class UserTenantUtil
                                     );
                                     $logger->notice(
                                         "Update haproxy config for tenant ".$tenantId.", update URL from "
-                                        .$tenantDataArr[$tenantId]['url']
-                                        ." to ".$tenantDbUrl
+                                        ."[".$tenantDataArr[$tenantId]['url']."]"
+                                        ." to [".$tenantDbUrl."]"
                                     );
                                     $updateHaproxy = true;
                                 }
@@ -506,8 +506,8 @@ class UserTenantUtil
                                 );
                                 $logger->notice(
                                     "Update haproxy config for tenant ".$tenantId.", update port from "
-                                    .$tenantDataArr[$tenantId]['port']
-                                    ." to ".$tenantDbPort
+                                    ."[".$tenantDataArr[$tenantId]['port']."]"
+                                    ." to [".$tenantDbPort."]"
                                 );
                                 $updateHaproxy = true;
                             }
