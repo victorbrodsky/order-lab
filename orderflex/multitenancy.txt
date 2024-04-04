@@ -481,8 +481,10 @@ Verify if script is executable by apache:
 su -s /bin/bash apache
 2) run as apache:
 sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
-3) verify haproxy status
+3) verify haproxy, httpd status
 /usr/bin/systemctl status haproxy
+/usr/bin/systemctl status htppdtenantmanager
+/usr/bin/systemctl status php-fpm
 or
 journalctl -xeu haproxy
 4) TODO: run in background as cron
