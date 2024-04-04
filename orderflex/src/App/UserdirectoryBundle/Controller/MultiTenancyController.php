@@ -75,7 +75,8 @@ class MultiTenancyController extends OrderAbstractController
 {
 
     //, methods: ['GET', 'POST'] TenantManager $tenantManager=null
-    #[Route(path: '/tenant-manager/configure', name: 'employees_tenancy_manager_configure')]
+    #[Route(path: '/tenant-manager/configure/', name: 'employees_tenancy_manager_configure')]
+    #[Route(path: '/tenant-manager/configure/edit', name: 'employees_tenancy_manager_configure_edit')]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenant-manager-config.html.twig')]
     public function tenantManagerConfigureAction(Request $request)
     {
@@ -108,7 +109,14 @@ class MultiTenancyController extends OrderAbstractController
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         //echo "tenantManager ID=".$tenantManager->getId()."<br>";
 
-        $cycle = "edit";
+        $cycle = "show";
+        $disabled = true;
+
+        $routeName = $request->get('_route');
+        if( $routeName == 'employees_tenancy_manager_configure_edit' ) {
+            $cycle = "edit";
+            $disabled = false;
+        }
 
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
@@ -139,133 +147,6 @@ class MultiTenancyController extends OrderAbstractController
             $originalTenants[] = $tenant;
         }
 
-//        if(0) {
-//            //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
-//            //homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf, tenantapp1-httpd.conf, tenantapp2-httpd.conf
-//            $tenantDataArr = $userTenantUtil->getTenants();
-//            //dump($tenantDataArr);
-//            //exit('111');
-//
-//            if ($tenantDataArr['error']) {
-//                if (count($tenantDataArr['error']) > 0) {
-//                    $this->addFlash(
-//                        'warning',
-//                        implode("<br>", $tenantDataArr['error'])
-//                    );
-//                }
-//            }
-//
-//            $tenantBaseUrlArr = array();
-//
-//            $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
-//            //$tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
-//
-//            if ($tenantDataArr['existedTenantIds']) {
-//                $orderInList = 0;
-//                foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
-//                    if ($tenantId) {
-//                        $tenantData = $tenantDataArr[$tenantId];
-//                        //dump($tenantData);
-//                        //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
-//                        //exit('111');
-//
-//                        $enabled = $tenantData['enabled'];
-//                        $enabledStr = "Disabled";
-//                        if ($enabled) {
-//                            $enabledStr = "Enabled";
-//                        }
-//
-//                        $url = null;
-//                        if (isset($tenantData['url'])) {
-//                            $url = $tenantData['url'];
-//                        }
-//                        //remove leading '/' if not a single '/'
-//                        if ($url != '/') {
-//                            $url = ltrim($url, '/');
-//                        }
-////                    $this->addFlash(
-////                        'notice',
-////                        "Tenant ID=" . $tenantId . "; " . $enabledStr . "; url=" . $url
-////                    );
-//
-//                        if ($url) {
-//                            if ($url == '/') {
-//                                $tenantBaseUrl = $baseUrl;
-//                            } else {
-//                                $tenantBaseUrl = $baseUrl . '/' . $url;
-//                            }
-//
-//                            $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
-//                            if (!$enabled) {
-//                                $tenantBaseUrl = $tenantBaseUrl . " ($enabledStr)";
-//                            }
-//                            $tenantBaseUrlArr[] = $tenantBaseUrl;
-//                        }
-//
-//                        $syncConfigToDB = false; //don't overwrite tenants in DB
-//                        $syncConfigToDB = true; //force sync tenants data from config to DB
-//                        //Add tenants to the tenant's section
-//                        //1) check if tenant from the file system exists in DB
-//                        $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
-//                        if ($tenantDb && $syncConfigToDB === false) {
-//                            //tenant already exists in DB => don't add
-//                            $tenantDb->setMatchSystem("Database");
-//                        } else {
-//                            //add tenant to DB and, therefore, this form
-//                            $orderInList = $orderInList + 10;
-//
-//                            if (!$tenantDb) {
-//                                $tenantDb = new TenantList($user);
-//                                $tenantManager->addTenant($tenantDb);
-//                            }
-//
-//                            $tenantDb->setMatchSystem("File system");
-//                            $tenantDb->setName($tenantId);
-//                            $tenantDb->setOrderinlist($orderInList);
-//                            $tenantDb->setEnabled($enabled);
-//                            $tenantDb->setShowOnHomepage(false);
-//
-//                            //URL
-//                            //If url should corresponds to the list of URL,
-//                            // then we don't have any match for url '/' corresponding
-//                            // 'https://view.online' homepagemanager 127.0.0.1:8081
-//                            //Therefore, use field tenant's 'urlSlug' field
-//                            $tenantDb->setUrlSlug($url);
-//
-//                            //Port (get it from haproxy or corresponding httpd)
-//                            //echo "tenant=$tenantId: port=[".$tenantData['port']."]<br>";
-//                            if (isset($tenantData['port'])) {
-//                                //$tenantPort = strval($tenantData['port']);
-//                                //echo "set port for tenant=$tenantId: port=[".$tenantPort."]<br>";
-//                                $tenantDb->setTenantPort($tenantData['port']);
-//                            }
-//                            //echo "tenant port DB=".$tenantDb->getTenantPort()."<br>";
-//                            //exit('111');
-//
-//                            if (isset($tenantData['databaseName'])) {
-//                                $tenantDb->setDatabaseName($tenantData['databaseName']);
-//                            }
-//
-//                            //Host (get it from corresponding parameters.yml 'localhost': order-lab-$tenantId/orderflex/config)
-//                            if (isset($tenantData['databaseHost'])) {
-//                                $tenantDb->setDatabaseHost($tenantData['databaseHost']);
-//                            }
-//
-//                            //DB user (get it from corresponding parameters.yml)
-//                            if (isset($tenantData['databaseUser'])) {
-//                                $tenantDb->setDatabaseUser($tenantData['databaseUser']);
-//                            }
-//
-//                            //DB password (get it from corresponding parameters.yml)
-//                            if (isset($tenantData['databasePassword'])) {
-//                                $tenantDb->setDatabasePassword($tenantData['databasePassword']);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         //echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
         //foreach($tenantManager->getTenants() as $tenant) {
         //    echo "tenant=$tenant <br>";
@@ -279,6 +160,7 @@ class MultiTenancyController extends OrderAbstractController
         $params['cycle'] = $cycle;
         $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
             'form_custom_value' => $params,
+            'disabled' => $disabled,
         ));
         $form->handleRequest($request);
 
@@ -291,33 +173,6 @@ class MultiTenancyController extends OrderAbstractController
 
             //exit("tenantManagerConfigureAction: form is valid");
 
-            //$res = null;
-            //$res = $userTenantUtil->processDBTenants($tenantManager);
-            //dump($res);
-            //exit('111');
-//            if( $res ) {
-//                $haproxyError = $res['haproxy-error'];
-//                if ($haproxyError) {
-//                    //echo "$tenantId: haproxyError=$haproxyError<br>";
-//                    $this->addFlash(
-//                        'warning',
-//                        $haproxyError
-//                    );
-//                }
-//
-//                if ($res['httpd-error']) {
-//                    foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
-//                        //$httpdError = "$tenantId: errorMessage=$errorMessage";
-//                        //echo "$httpdError<br>";
-//                        $this->addFlash(
-//                            'warning',
-//                            "Tenant $tenantId: " . $errorMessage
-//                        );
-//                    }
-//                }
-//            }
-            //exit('111');
-
             $removedTenantCollections = array();
             $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
             if( $removedInfo ) {
@@ -329,12 +184,6 @@ class MultiTenancyController extends OrderAbstractController
                 );
             }
 
-            //echo "2 tenant count=".count($tenantManager->getTenants())."<br>";
-            //foreach($tenantManager->getTenants() as $tenant) {
-            //    echo "tenant=$tenant <br>";
-            //}
-            //exit("tenantManagerConfigureAction: submitted");
-
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
             $em->flush();
@@ -343,15 +192,6 @@ class MultiTenancyController extends OrderAbstractController
                 'notice',
                 "Tenancy configuration have been updated."
             );
-
-//            //runDeployScript
-//            $userServiceUtil = $this->container->get('user_service_utility');
-//            //$userServiceUtil->runDeployScript(false,false,true);
-//            $output = $userServiceUtil->clearCacheInstallAssets($kernel);
-//            $this->addFlash(
-//                'notice',
-//                "Container rebuilded, cache cleared, assets dumped. Output=".$output
-//            );
 
             //exit('111');
             return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
