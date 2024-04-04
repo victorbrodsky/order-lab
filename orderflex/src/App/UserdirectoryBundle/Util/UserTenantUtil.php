@@ -580,6 +580,10 @@ class UserTenantUtil
 
                     if( $updateThisHttpd === true ) {
                         $logger->notice("Restart httpd service for tenant ".$tenantId);
+                        $session->getFlashBag()->add(
+                            'notice',
+                            "Restart httpd service for tenant ".$tenantId
+                        );
                         $this->restartTenantHttpd($tenantId);
                     }
 
@@ -591,6 +595,11 @@ class UserTenantUtil
         }//foreach
 
         if( $updateHttpd === true && $updateHaproxy === true ) {
+            $logger->notice("Restart haproxy service");
+            $session->getFlashBag()->add(
+                'notice',
+                "Restart haproxy service"
+            );
             $this->restartHaproxy();
         }
 
