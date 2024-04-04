@@ -21,7 +21,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 echo tenant=$tenant
 
 
-sleep 1  # Waits 1 seconds.
+sleep 5  # Waits 1 seconds.
 /usr/bin/sudo /usr/bin/systemctl restart haproxy
 sleep 1  # Waits 1 seconds.
 #/usr/bin/sudo journalctl -xeu haproxy.service

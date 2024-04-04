@@ -18,13 +18,14 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+#tenant ID
 echo tenant=$tenant
 
-sleep 5  # Waits 1 seconds.
-/usr/bin/sudo /usr/bin/systemctl restart httpd"$tenant"
-sleep 1  # Waits 1 seconds.
-#/usr/bin/sudo journalctl -xeu haproxy.service
-#/usr/bin/sudo service php-fpm restart
-#sleep 1  # Waits 1 seconds.
+
+source ../../packer/install-multitenancy.sh
+
+#f_create_single_order_instance tenantapp3 8086 c/wcm/informatics
+#f_create_single_tenant_htppd tenantapp3 8086 c/wcm/informatics
+#f_start_single_httpd tenantapp3 8086 c/wcm/informatics
 
 
