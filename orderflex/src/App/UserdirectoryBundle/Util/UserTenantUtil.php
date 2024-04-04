@@ -457,6 +457,8 @@ class UserTenantUtil
             //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
             $tenantDbPort = $tenant->getTenantPort();
+            $logger->notice("compare url: ".$tenantDbUrl."?=".$tenantDataArr[$tenantId]['url']);
+            $logger->notice("compare port: ".$tenantDbPort."?=".$tenantDataArr[$tenantId]['port']);
             if( $tenantDbUrl != $tenantDataArr[$tenantId]['url'] || $tenantDbPort != $tenantDataArr[$tenantId]['port'] ) {
 
                 $originalText = file_get_contents($haproxyConfig);
@@ -570,8 +572,8 @@ class UserTenantUtil
                         }
                         $logger->notice(
                             "Update httpd config for tenant ".$tenantId.", update port from "
-                            .$tenantDataArr[$tenantId]['port']
-                            ." to ".$tenantDbPort
+                            ."[".$tenantDataArr[$tenantId]['port']."]"
+                            ." to [".$tenantDbPort."]"
                         );
                         $updateThisHttpd = true;
                     } else {
