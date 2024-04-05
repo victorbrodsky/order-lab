@@ -392,7 +392,9 @@ class UserTenantUtil
         $resultArr['haproxy-error'] = null;
         $resultArr['haproxy-ok'] = null;
         $resultArr['httpd-error'] = null;
-
+        $resultTenantArr = array();
+        $resultTenantArr['haproxy-message'] = null;
+        $resultTenantArr['httpd-message'] = null;
 
         //testing
         if(0) {
@@ -441,6 +443,7 @@ class UserTenantUtil
                         $logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
                         if( $res['status'] == 'error' ) {
                             $resultArr['haproxy-error'] = $res['message'];
+                            $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                         } else {
                             $enabledStr = "disabled";
                             if( $tenant->getEnabled() ) {
@@ -456,6 +459,7 @@ class UserTenantUtil
                                 //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
                             );
                             $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+                            $resultTenantArr['haproxy-message']['success'][] = $msg;
                             $updateHaproxy = true;
                         }
                         break;
@@ -488,6 +492,7 @@ class UserTenantUtil
                             //$resultArr[$tenantId]['haproxy-url'] = $res;
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
+                                $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                             } else {
                                 $msg = "URL for tenant $tenantId has been updated in haproxy config from"
                                     ."[".$tenantServerUrlTrim."]"
@@ -500,6 +505,7 @@ class UserTenantUtil
                                     $msg
                                 );
                                 $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+                                $resultTenantArr['haproxy-message']['success'][] = $msg;
                                 $updateHaproxy = true;
                             }
                             break;
@@ -517,6 +523,7 @@ class UserTenantUtil
                             $res = $this->replaceAllInFile($haproxyConfig, $tenantServerPortTrim, $tenantDbPortTrim);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
+                                $resultTenantArr['error-haproxy-message']['error'][] = $res['message'];
                             } else {
                                 $msg = "Port for tenant $tenantId has been updated in haproxy config from"
                                     ."[".$tenantServerPortTrim."]"
@@ -529,6 +536,7 @@ class UserTenantUtil
                                     $msg
                                 );
                                 $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+                                $resultTenantArr['haproxy-message']['success'][] = $msg;
                                 $updateHaproxy = true;
                             }
                             break;
@@ -554,14 +562,16 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 echo "processDBTenants: $tenantId: error=>message=" . $res['message'] . "<br>";
                                 $resultArr['httpd-error'][$tenantId] = $res['message'];
+                                $resultTenantArr[$tenantId]['message']['error'][] = $res['message'];
                             } else {
                                 $msg = "Tenant's $tenantId url has been updated in httpd from "
                                     . $tenantServerUrlTrim . " to " . $tenantDbUrlTrim;
                                 echo "msg=" . $msg . "<br>";
-                                $session->getFlashBag()->add(
-                                    'note',
-                                    $msg
-                                );
+//                                $session->getFlashBag()->add(
+//                                    'note',
+//                                    $msg
+//                                );
+                                $resultTenantArr[$tenantId]['message']['success'][] = $msg;
                                 $updateHttpd = true;
                             }
                             $logger->notice(
@@ -583,19 +593,22 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 echo "processDBTenants: $tenantId: status=" . $res['status'] . "; message=" . $res['message'] . "<br>";
                                 $resultArr['httpd-error'][$tenantId] = $res['message'];
+                                $resultTenantArr[$tenantId]['message']['error'][] = $res['message'];
+                                $msg = $res['message'];
                             } else {
                                 echo "processDBTenants: $tenantId: status=" . $res['status'] . "<br>";
-                                $session->getFlashBag()->add(
-                                    'note',
-                                    "Tenant's $tenantId port has been updated in httpd from "
-                                    . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]"
-                                );
+                                $msg = "Port for tenant $tenantId has been updated in httpd from "
+                                . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]";
+//                                $session->getFlashBag()->add(
+//                                    'note',
+//                                    "Tenant's $tenantId port has been updated in httpd from "
+//                                    . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]"
+//                                );
+                                $resultTenantArr[$tenantId]['message']['success'][] = $msg;
                                 $updateHttpd = true;
                             }
                             $logger->notice(
-                                "Update httpd config for tenant " . $tenantId . ", update port from "
-                                . "[" . $tenantServerPortTrim . "]"
-                                . " to [" . $tenantDbPortTrim . "]"
+                                $msg
                             );
                             $updateThisHttpd = true;
                         } else {
@@ -604,11 +617,13 @@ class UserTenantUtil
                     }
 
                     if( $updateThisHttpd === true ) {
-                        $logger->notice("Restart httpd service for tenant ".$tenantId);
-                        $session->getFlashBag()->add(
-                            'notice',
-                            "Restart httpd service for tenant ".$tenantId
-                        );
+                        $msg = "Restart httpd service for tenant ".$tenantId;
+                        $logger->notice($msg);
+//                        $session->getFlashBag()->add(
+//                            'notice',
+//                            "Restart httpd service for tenant ".$tenantId
+//                        );
+                        $resultTenantArr[$tenantId]['message']['success'][] = $msg;
                         $this->restartTenantHttpd($tenantId);
                     }
 
@@ -620,12 +635,14 @@ class UserTenantUtil
         }//foreach
 
         if( $updateHttpd === true && $updateHaproxy === true ) {
-            $logger->notice("Restart haproxy service");
+            $msg = "Restart haproxy service";
+            $logger->notice($msg);
 //            $session->getFlashBag()->add(
 //                'notice',
 //                "Restart haproxy service"
 //            );
             $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; Restart haproxy service.";
+            $resultTenantArr['haproxy-message']['success'][] = $msg;
             $this->restartHaproxy();
         }
 
@@ -637,10 +654,12 @@ class UserTenantUtil
                 $msg = "The Apache HTTPD configuration has not been restarted due to an error.";
             }
 
-            $session->getFlashBag()->add(
-                'warning',
-                $msg
-            );
+            $resultTenantArr['httpd-message']['error'][] = $msg;
+
+//            $session->getFlashBag()->add(
+//                'warning',
+//                $msg
+//            );
         }
 
         if( $updateHaproxy === false ) {
@@ -650,10 +669,11 @@ class UserTenantUtil
             } else {
                 $msg = "The HAProxy configuration has not been restarted due to an error.";
             }
-            $session->getFlashBag()->add(
-                'warning',
-                $msg
-            );
+//            $session->getFlashBag()->add(
+//                'warning',
+//                $msg
+//            );
+            $resultTenantArr['haproxy-message']['error'][] = $msg;
         }
 
        //exit('111');

@@ -232,31 +232,77 @@ class MultiTenancyController extends OrderAbstractController
         //dump($res);
         //exit('exit processDBTenants');
 
-        if( $res ) {
-            if ($res['haproxy-error']) {
-                $this->addFlash(
-                    'warning',
-                    $res['haproxy-error']
-                );
-            }
-            if ($res['haproxy-ok']) {
+        //$resultTenantArr['haproxy-message']['error']
+        if( isset($res['haproxy-message']['error']) ) {
+            $this->addFlash(
+                'warning',
+                implode("<br>", $res['haproxy-message']['error'])
+            );
+        }
+        //$resultTenantArr['haproxy-message']['success']
+        if( isset($res['haproxy-message']['success']) ) {
+            $this->addFlash(
+                'notice',
+                implode("<br>", $res['haproxy-message']['success'])
+            );
+        }
+
+        //$resultTenantArr['httpd-message']
+        if( isset($res['httpd-message']['success']) ) {
+            $this->addFlash(
+                'notice',
+                implode("<br>", $res['httpd-message']['success'])
+            );
+        }
+        if( isset($res['httpd-message']['error']) ) {
+            $this->addFlash(
+                'warning',
+                implode("<br>", $res['httpd-message']['error'])
+            );
+        }
+
+        //$resultTenantArr[$tenantId]['message']['error']
+        //$resultTenantArr[$tenantId]['message']['success']
+        foreach($res as $tenantId => $tenantInfoArr) {
+            if( isset($tenantInfoArr['message']['success']) ) {
                 $this->addFlash(
                     'notice',
-                    $res['haproxy-ok']
+                    implode("<br>", $tenantInfoArr['message']['success'])
                 );
             }
-
-            if ($res['httpd-error']) {
-                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
-                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
-                    //echo "$httpdError<br>";
-                    $this->addFlash(
-                        'warning',
-                        "Tenant $tenantId: " . $errorMessage
-                    );
-                }
+            if( isset($tenantInfoArr['message']['error']) ) {
+                $this->addFlash(
+                    'warning',
+                    implode("<br>", $tenantInfoArr['error']['success'])
+                );
             }
         }
+
+//        if( $res ) {
+//            if ($res['haproxy-error']) {
+//                $this->addFlash(
+//                    'warning',
+//                    $res['haproxy-error']
+//                );
+//            }
+//            if ($res['haproxy-ok']) {
+//                $this->addFlash(
+//                    'notice',
+//                    $res['haproxy-ok']
+//                );
+//            }
+//
+//            if ($res['httpd-error']) {
+//                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
+//                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
+//                    //echo "$httpdError<br>";
+//                    $this->addFlash(
+//                        'warning',
+//                        "Tenant $tenantId: " . $errorMessage
+//                    );
+//                }
+//            }
+//        }
 
         //$url = $this->generateUrl('employees_tenancy_manager_configure');
         //exit("Server config files updated. Please go to the main page.");
