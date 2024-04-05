@@ -754,7 +754,22 @@ class UserTenantUtil
                     }
                 }
                 $allContent = implode("", $content);
-                file_put_contents($filePath, $allContent);
+
+                try
+                {
+                    if(file_put_contents($filePath, $allContent) > 0)
+                    {
+                        $Result["status"] = 'success';
+                    }
+                    else
+                    {
+                        $Result["message"] = 'Error while writing file';
+                    }
+                }
+                catch(Exception $e)
+                {
+                    $Result["message"] = 'Error : '.$e;
+                }
 
             } else {
                 $result["message"] = 'File '.$filePath.' is not writable !';
