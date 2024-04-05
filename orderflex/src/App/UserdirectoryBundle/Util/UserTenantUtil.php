@@ -634,7 +634,7 @@ class UserTenantUtil
 
         }//foreach
 
-        if( $updateHttpd === true && $updateHaproxy === true ) {
+        if( $updateHttpd === true || $updateHaproxy === true ) {
             $msg = "Restart haproxy service";
             $logger->notice($msg);
 //            $session->getFlashBag()->add(
