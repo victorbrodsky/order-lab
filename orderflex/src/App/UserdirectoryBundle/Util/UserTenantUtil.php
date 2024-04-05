@@ -422,16 +422,19 @@ class UserTenantUtil
             //dump($tenantDataArr);
             //exit('111');
 
-            //echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
+            echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
+            $logger->notice("compare url: "."enable: [".$tenant->getEnabled()."]?=[".$tenantDataArr[$tenantId]['enabled']."]");
             if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
-                //echo "Change enable <br>";
+                echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
                 //Disable or enabled according to DB value $tenant->getEnabled():
                 //comment out line frontend->'use_backend tenantappdemo_backend if tenantappdemo_url'
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
+                    $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
+                        $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
                         if( $res['status'] == 'error' ) {
                             $resultArr['haproxy-error'] = $res['message'];
@@ -463,7 +466,7 @@ class UserTenantUtil
             $tenantDbPortTrim = trim($tenantDbPort);
             $tenantServerPortTrim = trim($tenantDataArr[$tenantId]['port']);
 
-            $logger->notice("compare url: ".$tenantDbUrlCanonical."?=".$tenantDataArrCanonical);
+            $logger->notice("compare url: ".$tenantDbUrlTrim."?=".$tenantServerUrlTrim);
             $logger->notice("compare port: ".$tenantDbPortTrim."?=".$tenantServerPortTrim);
 
             if( $tenantDbUrlTrim != $tenantServerUrlTrim || $tenantDbPortTrim != $tenantServerPortTrim ) {
