@@ -436,6 +436,7 @@ class UserTenantUtil
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
                         $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
+                        $logger->notice("changeLineInFile: status=[".$res['status']."]");
                         if( $res['status'] == 'error' ) {
                             $resultArr['haproxy-error'] = $res['message'];
                         } else {
