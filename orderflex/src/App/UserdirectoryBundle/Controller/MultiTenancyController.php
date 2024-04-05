@@ -233,12 +233,16 @@ class MultiTenancyController extends OrderAbstractController
         //exit('exit processDBTenants');
 
         if( $res ) {
-            $haproxyError = $res['haproxy-error'];
-            if ($haproxyError) {
-                //echo "$tenantId: haproxyError=$haproxyError<br>";
+            if ($res['haproxy-error']) {
                 $this->addFlash(
                     'warning',
-                    $haproxyError
+                    $res['haproxy-error']
+                );
+            }
+            if ($res['haproxy-ok']) {
+                $this->addFlash(
+                    'notice',
+                    $res['haproxy-ok']
                 );
             }
 

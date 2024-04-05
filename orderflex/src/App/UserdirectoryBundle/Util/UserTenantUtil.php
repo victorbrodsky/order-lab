@@ -390,7 +390,9 @@ class UserTenantUtil
         $updateHttpd = false;
         $resultArr = array();
         $resultArr['haproxy-error'] = null;
+        $resultArr['haproxy-ok'] = null;
         $resultArr['httpd-error'] = null;
+
 
         //testing
         if(0) {
@@ -444,13 +446,16 @@ class UserTenantUtil
                             if( $tenant->getEnabled() ) {
                                 $enabledStr = "enabled";
                             }
-                            $session->getFlashBag()->add(
-                                'note',
-                                "Tenant $tenantId has been $enabledStr in haproxy config"
-                            );
+                            $msg = "Tenant $tenantId has been $enabledStr in haproxy config";
+//                            $session->getFlashBag()->add(
+//                                'note',
+//                                "Tenant $tenantId has been $enabledStr in haproxy config"
+//                            );
                             $logger->notice(
-                                "Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
+                                $msg
+                                //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
                             );
+                            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
                             $updateHaproxy = true;
                         }
                         break;
@@ -484,17 +489,17 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                             } else {
-                                $session->getFlashBag()->add(
-                                    'note',
-                                    "Tenant $tenantId url has been updated in haproxy config from"
+                                $msg = "URL for tenant $tenantId has been updated in haproxy config from"
                                     ."[".$tenantServerUrlTrim."]"
-                                    ." to [".$tenantDbUrlTrim."]"
-                                );
+                                    ." to [".$tenantDbUrlTrim."]";
+//                                $session->getFlashBag()->add(
+//                                    'note',
+//                                    $msg
+//                                );
                                 $logger->notice(
-                                    "Update haproxy config for tenant ".$tenantId.", update URL from "
-                                    ."[".$tenantServerUrlTrim."]"
-                                    ." to [".$tenantDbUrlTrim."]"
+                                    $msg
                                 );
+                                $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
                                 $updateHaproxy = true;
                             }
                             break;
@@ -513,17 +518,17 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                             } else {
-                                $session->getFlashBag()->add(
-                                    'note',
-                                    "Tenant $tenantId port has been updated in haproxy config from"
+                                $msg = "Port for tenant $tenantId has been updated in haproxy config from"
                                     ."[".$tenantServerPortTrim."]"
-                                    ." to [".$tenantDbPortTrim."]"
-                                );
+                                    ." to [".$tenantDbPortTrim."]";
+//                                $session->getFlashBag()->add(
+//                                    'note',
+//                                    $msg
+//                                );
                                 $logger->notice(
-                                    "Update haproxy config for tenant ".$tenantId.", update port from "
-                                    ."[".$tenantServerPortTrim."]"
-                                    ." to [".$tenantDbPortTrim."]"
+                                    $msg
                                 );
+                                $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
                                 $updateHaproxy = true;
                             }
                             break;
@@ -616,10 +621,11 @@ class UserTenantUtil
 
         if( $updateHttpd === true && $updateHaproxy === true ) {
             $logger->notice("Restart haproxy service");
-            $session->getFlashBag()->add(
-                'notice',
-                "Restart haproxy service"
-            );
+//            $session->getFlashBag()->add(
+//                'notice',
+//                "Restart haproxy service"
+//            );
+            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; Restart haproxy service.";
             $this->restartHaproxy();
         }
 
