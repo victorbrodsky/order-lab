@@ -617,7 +617,7 @@ class UserTenantUtil
                     }
 
                     if( $updateThisHttpd === true ) {
-                        $msg = "Restart httpd service for tenant ".$tenantId;
+                        $msg = "Httpd httpd service for tenant ".$tenantId." has been restarted.";
                         $logger->notice($msg);
 //                        $session->getFlashBag()->add(
 //                            'notice',
@@ -641,7 +641,7 @@ class UserTenantUtil
 //                'notice',
 //                "Restart haproxy service"
 //            );
-            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; Restart haproxy service.";
+            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; HAProxy service has been restarted.";
             $resultTenantArr['haproxy-message']['success'][] = $msg;
             $this->restartHaproxy();
         }
