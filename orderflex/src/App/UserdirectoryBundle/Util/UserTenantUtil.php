@@ -759,16 +759,16 @@ class UserTenantUtil
                 {
                     if(file_put_contents($filePath, $allContent) > 0)
                     {
-                        $Result["status"] = 'success';
+                        $result["status"] = 'success';
                     }
                     else
                     {
-                        $Result["message"] = 'Error while writing file';
+                        $result["message"] = 'Error while writing file';
                     }
                 }
                 catch(Exception $e)
                 {
-                    $Result["message"] = 'Error : '.$e;
+                    $result["message"] = 'Error : '.$e;
                 }
 
             } else {
