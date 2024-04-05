@@ -677,7 +677,7 @@ class UserTenantUtil
         }
 
        //exit('111');
-        return $resultArr;
+        return $resultTenantArr; //$resultArr;
     }
 
     public function getTenantHttpd( $tenantId ) {

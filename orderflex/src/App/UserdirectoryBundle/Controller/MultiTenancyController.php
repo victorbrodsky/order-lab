@@ -229,9 +229,6 @@ class MultiTenancyController extends OrderAbstractController
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         $res = $userTenantUtil->processDBTenants($tenantManager);
 
-        //dump($res);
-        //exit('exit processDBTenants');
-
         //$resultTenantArr['haproxy-message']['error']
         if( isset($res['haproxy-message']['error']) ) {
             $this->addFlash(
@@ -260,6 +257,9 @@ class MultiTenancyController extends OrderAbstractController
                 implode("<br>", $res['httpd-message']['error'])
             );
         }
+
+        dump($res);
+        exit('exit processDBTenants');
 
         //$resultTenantArr[$tenantId]['message']['error']
         //$resultTenantArr[$tenantId]['message']['success']
