@@ -258,8 +258,8 @@ class MultiTenancyController extends OrderAbstractController
             );
         }
 
-        dump($res);
-        exit('exit processDBTenants');
+        //dump($res);
+        //exit('exit processDBTenants');
 
         //$resultTenantArr[$tenantId]['message']['error']
         //$resultTenantArr[$tenantId]['message']['success']
