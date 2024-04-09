@@ -415,8 +415,8 @@ class UserTenantUtil
 
             //testing
             if(
-                //$tenantId != 'newtenant'
-                $tenantId != 'tenantapptest'
+                $tenantId != 'newtenant'
+                //$tenantId != 'tenantapptest'
             ) { //newtenant tenantapptest
                 continue;
             }
