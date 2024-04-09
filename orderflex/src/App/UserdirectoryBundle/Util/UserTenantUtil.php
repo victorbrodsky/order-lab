@@ -420,9 +420,6 @@ class UserTenantUtil
                 continue;
             }
 
-            $httpdConfig = $this->getTenantHttpd($tenantId);
-            echo "httpdConfig=[$httpdConfig]<br>";
-
 
             $haproxyConfig = $this->getHaproxyConfig();
 
@@ -430,8 +427,22 @@ class UserTenantUtil
             $tenantDataArr = array();
             $tenantDataArr['existedTenantIds'][] = $tenantId;
             $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
+
+            $httpdConfig = $this->getTenantHttpd($tenantId);
+            echo "httpdConfig=[$httpdConfig]<br>";
+
             dump($tenantDataArr);
             exit('111');
+
+            //$tenantDataArr: for existing tenant, $tenantDataArr should have url and port (set and not null)
+            //$httpdConfig: for existing tenant should be not null
+            if( $httpdConfig && isset($tenantDataArr[$tenantId]['url']) && isset($tenantDataArr[$tenantId]['port']) ) {
+                //tenant exists
+            } else {
+                //create new tenant
+                $this->createNewTenant($tenantId);
+                continue;
+            }
 
             echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
             $logger->notice("compare url: "."enable: [".$tenant->getEnabled()."]?=[".$tenantDataArr[$tenantId]['enabled']."]");
@@ -695,6 +706,11 @@ class UserTenantUtil
             return $httpdFile;
         }
         return null;
+    }
+
+    public function createNewTenant($tenantId) {
+        //create new httpd file, add tenant to haproxy
+        
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
