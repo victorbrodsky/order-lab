@@ -712,14 +712,21 @@ class UserTenantUtil
     public function createNewTenant($tenantId) {
         //create new httpd file, add tenant to haproxy
         // order-lab/utils/executables/create-new-tenant.sh
+        $logger = $this->container->get('logger');
 
         $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
         $url = $tenant->getUrlSlug();
         $port = $tenant->getTenantPort();
+        $logger->notice("createNewTenant: create-new-tenant.sh: tenant=[$tenant], url=[$url], port=[$port]");
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.shh';
+        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
         $createNewTenantScript = realpath($createNewTenantScript);
+
+        if( file_exists($createNewTenantScript) ) {
+            $logger->notice("createNewTenant: file not exists: [$createNewTenantScript]");
+        }
+
         $output = $this->runProcessShell('sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url);
         //exit('end runProcessShell, output='.$output);
         return $output;
