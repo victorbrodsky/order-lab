@@ -9,6 +9,7 @@
 namespace App\UserdirectoryBundle\Util;
 
 
+use App\UserdirectoryBundle\Entity\TenantList;
 use App\UserdirectoryBundle\Entity\TenantManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -710,7 +711,18 @@ class UserTenantUtil
 
     public function createNewTenant($tenantId) {
         //create new httpd file, add tenant to haproxy
-        
+        // order-lab/utils/executables/create-new-tenant.sh
+
+        $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
+        $url = $tenant->getUrlSlug();
+        $port = $tenant->getTenantPort();
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.shh';
+        $createNewTenantScript = realpath($createNewTenantScript);
+        $output = $this->runProcessShell('sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url);
+        //exit('end runProcessShell, output='.$output);
+        return $output;
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
