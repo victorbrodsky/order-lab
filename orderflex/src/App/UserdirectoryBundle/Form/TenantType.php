@@ -71,30 +71,36 @@ class TenantType extends AbstractType
             'attr' => array('class'=>'form-control', 'required'=>'required')
         ));
 
-        $builder->add('databaseHost',null,array(
-            'label' => 'Database Host:',
-            'attr' => array('class'=>'form-control')
-        ));
+        if(1) {
+            $builder->add('databaseHost', null, array(
+                'label' => 'Database Host:',
+                //'disabled' => true,
+                'attr' => array('class' => 'form-control')
+            ));
 
 //        $builder->add('databasePort',null,array(
 //            'label' => 'Database Port:',
 //            'attr' => array('class'=>'form-control')
 //        ));
 
-        $builder->add('databaseName',null,array(
-            'label' => 'Database Name:',
-            'attr' => array('class'=>'form-control')
-        ));
+            $builder->add('databaseName', null, array(
+                'label' => 'Database Name:',
+                //'disabled' => true,
+                'attr' => array('class' => 'form-control')
+            ));
 
-        $builder->add('databaseUser',null,array(
-            'label' => 'Database User:',
-            'attr' => array('class'=>'form-control')
-        ));
+            $builder->add('databaseUser', null, array(
+                'label' => 'Database User:',
+                //'disabled' => true,
+                'attr' => array('class' => 'form-control')
+            ));
 
-        $builder->add('databasePassword',null,array(
-            'label' => 'Database Password:',
-            'attr' => array('class'=>'form-control')
-        ));
+            $builder->add('databasePassword', null, array(
+                'label' => 'Database Password:',
+                //'disabled' => true,
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         $builder->add('showOnHomepage',null,array(
             'label' => 'Show on Homepage:',

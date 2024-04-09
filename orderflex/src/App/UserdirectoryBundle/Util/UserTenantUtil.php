@@ -413,9 +413,13 @@ class UserTenantUtil
             $tenantId = $tenant->getName();
 
             //testing
-            if( $tenantId != 'tenantapptest' ) {
+            if( $tenantId != 'newtenant' ) { //newtenant tenantapptest
                 continue;
             }
+
+            $httpdConfig = $this->getTenantHttpd($tenantId);
+            echo "httpdConfig=[$httpdConfig]<br>";
+
 
             $haproxyConfig = $this->getHaproxyConfig();
 
@@ -423,8 +427,8 @@ class UserTenantUtil
             $tenantDataArr = array();
             $tenantDataArr['existedTenantIds'][] = $tenantId;
             $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
-            //dump($tenantDataArr);
-            //exit('111');
+            dump($tenantDataArr);
+            exit('111');
 
             echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
             $logger->notice("compare url: "."enable: [".$tenant->getEnabled()."]?=[".$tenantDataArr[$tenantId]['enabled']."]");
@@ -546,8 +550,8 @@ class UserTenantUtil
 
 
                 //URL: change URL in httpd config file
-                $httpdConfig = $this->getTenantHttpd($tenantId);
-                echo "httpdConfig=[$httpdConfig]<br>";
+                //$httpdConfig = $this->getTenantHttpd($tenantId);
+                //echo "httpdConfig=[$httpdConfig]<br>";
                 if( $httpdConfig ) {
                     $httpdOriginalText = file_get_contents($httpdConfig);
                     //dump($httpdOriginalText);
