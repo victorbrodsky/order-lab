@@ -413,7 +413,10 @@ class UserTenantUtil
             $tenantId = $tenant->getName();
 
             //testing
-            if( $tenantId != 'newtenant' ) { //newtenant tenantapptest
+            if(
+                //$tenantId != 'newtenant'
+                $tenantId != 'tenantapptest'
+            ) { //newtenant tenantapptest
                 continue;
             }
 
