@@ -432,8 +432,8 @@ class UserTenantUtil
             $httpdConfig = $this->getTenantHttpd($tenantId);
             echo "httpdConfig=[$httpdConfig]<br>";
 
-            dump($tenantDataArr);
-            exit('111');
+            //dump($tenantDataArr);
+            //exit('111');
 
             //$tenantDataArr: for existing tenant, $tenantDataArr should have url and port (set and not null)
             //$httpdConfig: for existing tenant should be not null
