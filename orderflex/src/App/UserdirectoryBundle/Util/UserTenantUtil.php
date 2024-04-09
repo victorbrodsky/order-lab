@@ -725,7 +725,7 @@ class UserTenantUtil
         $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
         $createNewTenantScript = realpath($createNewTenantScript);
 
-        if( file_exists($createNewTenantScript) ) {
+        if( file_exists($createNewTenantScript) === false ) {
             $logger->notice("createNewTenant: file not exists: [$createNewTenantScript]");
         }
 
