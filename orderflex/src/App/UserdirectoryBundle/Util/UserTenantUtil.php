@@ -439,8 +439,10 @@ class UserTenantUtil
             //$httpdConfig: for existing tenant should be not null
             if( $httpdConfig && isset($tenantDataArr[$tenantId]['url']) && isset($tenantDataArr[$tenantId]['port']) ) {
                 //tenant exists
+                $logger->notice("processDBTenants: tenant $tenantId exists");
             } else {
                 //create new tenant
+                $logger->notice("processDBTenants: create new tenant $tenantId");
                 $this->createNewTenant($tenantId);
                 continue;
             }
