@@ -716,7 +716,7 @@ class UserTenantUtil
         // order-lab/utils/executables/create-new-tenant.sh
         $logger = $this->container->get('logger');
 
-        $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
+        $tenant = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
         $url = $tenant->getUrlSlug();
         $port = $tenant->getTenantPort();
         $logger->notice("createNewTenant: create-new-tenant.sh: tenant=[$tenant], url=[$url], port=[$port]");
