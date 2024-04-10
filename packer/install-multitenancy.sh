@@ -413,8 +413,8 @@ f_add_tenant_haproxy() {
 	#add new tenant i.e. '3' to frontend after ###START-FRONTEND-CUSTOM-TENANTS 
 	# acl tenantapp3_url path_beg -i /c/wcm/psychiatry
     # use_backend tenantapp3_backend if tenantapp3_url
-	FRONT_1="\ \ \ \ acl tenantapp$1_url path_beg -i $3 \n"
-	FRONT_2="\ \ \ \ use_backend tenantapp$1_backend if tenantapp$1_url $3"
+	FRONT_1="\ \ \ \ acl tenantapp$1_url path_beg -i /$3 \n"
+	FRONT_2="\ \ \ \ use_backend tenantapp$1_backend if tenantapp$1_url"
 	#FRONT_3="\ \ \ \ ###END-FRONTEND-CUSTOM-TENANTS"
 	FRONTENDSTR="$FRONT_1$FRONT_2"
 	echo FRONTENDSTR=$FRONTENDSTR
