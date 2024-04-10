@@ -411,15 +411,20 @@ f_add_tenant_haproxy() {
 	#add new tenant i.e. '3' to frontend after ###START-FRONTEND-CUSTOM-TENANTS 
 	# acl tenantapp3_url path_beg -i /c/wcm/psychiatry
     # use_backend tenantapp3_backend if tenantapp3url
-	FRONT_1 = "acl tenantapp$1_url path_beg -i $3 \n&"
-	FRONT_2 = "use_backend tenantapp$1_backend if tenantapp$1url $3 \n&"
-	FRONT_3 = "###END-FRONTEND-CUSTOM-TENANTS"
+	FRONT_1="acl tenantapp$1_url path_beg -i $3 \n&"
+	FRONT_2="use_backend tenantapp$1_backend if tenantapp$1url $3 \n&"
+	FRONT_3="###END-FRONTEND-CUSTOM-TENANTS"
 	FRONTENDSTR="$FRONT_1$FRONT_2$FRONT_3"
 	sed -i -e "s,###END-FRONTEND-CUSTOM-TENANTS,$FRONTENDSTR,g" /etc/haproxy/haproxy.cfg
 	
 	#add tenant to backend after ###START-BACKEND-CUSTOM-TENANTS
 	#backend tenantapp3_backend
     #server tenantapp3_server *:8087 check
+	BACK_1="backend tenantapp$1_backend \n&"
+	BACK_2="server tenantapp$1_server *:$3 check \n&"
+	BACK_3="###START-BACKEND-CUSTOM-TENANTS"
+	FRONTENDSTR="$BACK_1$BACK_2$BACK_3"
+	sed -i -e "s,###START-BACKEND-CUSTOM-TENANTS,$FRONTENDSTR,g" /etc/haproxy/haproxy.cfg
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy
