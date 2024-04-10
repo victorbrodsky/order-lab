@@ -738,6 +738,7 @@ class UserTenantUtil
         }
 
         $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
+        $logger->notice("createNewTenant: createNewTenantLog=[$createNewTenantLog]");
         $createNewTenantLog = realpath($createNewTenantLog);
         $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." >> $createNewTenantLog";
         $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
