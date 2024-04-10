@@ -738,6 +738,7 @@ class UserTenantUtil
         }
 
         $createNewTenantLog = $projectRoot."/../../order-lab-$tenantId"."/orderflex/var/log/create_$tenantId.log";
+        $createNewTenantLog = realpath($createNewTenantLog);
         $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." >> $createNewTenantLog";
         $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
         //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
