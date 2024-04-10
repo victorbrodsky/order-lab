@@ -423,8 +423,8 @@ f_add_tenant_haproxy() {
 	BACK_1="backend tenantapp$1_backend \n&"
 	BACK_2="server tenantapp$1_server *:$3 check \n&"
 	BACK_3="###END-BACKEND-CUSTOM-TENANTS"
-	FRONTENDSTR="$BACK_1$BACK_2$BACK_3"
-	sed -i -e "s,###END-BACKEND-CUSTOM-TENANTS,$FRONTENDSTR,g" /etc/haproxy/haproxy.cfg
+	BACKENDSTR="$BACK_1$BACK_2$BACK_3"
+	sed -i -e "s,###END-BACKEND-CUSTOM-TENANTS,$BACKENDSTR,g" /etc/haproxy/haproxy.cfg
 }
 
 #7) Start HAProxy: sudo systemctl restart haproxy

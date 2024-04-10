@@ -729,6 +729,7 @@ class UserTenantUtil
             $logger->notice("createNewTenant: file not exists: [$createNewTenantScript]");
         }
 
+        //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
         $output = $this->runProcessShell('sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url);
         //exit('end runProcessShell, output='.$output);
         return $output;
