@@ -737,7 +737,7 @@ class UserTenantUtil
             $logger->notice("createNewTenant: file does not exist: [$createNewTenantScript]");
         }
 
-        $createNewTenantLog = $projectRoot."/../../order-lab-$tenantId"."/orderflex/var/log/create_$tenantId.log";
+        $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
         $createNewTenantLog = realpath($createNewTenantLog);
         $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." >> $createNewTenantLog";
         $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
