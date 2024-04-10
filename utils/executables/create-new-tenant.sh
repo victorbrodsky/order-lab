@@ -17,12 +17,14 @@ echo PORT=$PORT
 
 source ../../packer/install-multitenancy.sh
 
-#f_create_single_order_instance tenantapp3 8086 c/wcm/informatics
-f_create_single_order_instance "$TENANTID" "$PORT" "$URL"
+#f_create_single_order_instance "$TENANTID" "$PORT" "$URL"
 
-#f_create_single_tenant_htppd tenantapp3 8086 c/wcm/informatics
-f_create_single_tenant_htppd "$TENANTID" "$PORT" "$URL"
+#f_create_single_tenant_htppd "$TENANTID" "$PORT" "$URL"
 
-#f_start_single_httpd tenantapp3 8086 c/wcm/informatics
-f_start_single_httpd "$TENANTID" "$PORT" "$URL"
+#f_start_single_httpd "$TENANTID" "$PORT" "$URL"
+
+f_add_tenant_haproxy "$TENANTID" "$PORT" "$URL"
+
+f_start_haproxy
+f_restart_phpfpm
 
