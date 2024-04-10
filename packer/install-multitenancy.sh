@@ -476,7 +476,7 @@ f_start_haproxy() {
 f_restart_phpfpm() {
 	#Make sure php-fpm is started	
 	echo -e ${COLOR} Make sure php-fpm is started ${NC}
-	sudo systemctl start php-fpm
+	sudo systemctl restart php-fpm
 }
 
 function changedir() {
