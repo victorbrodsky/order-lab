@@ -721,6 +721,7 @@ class UserTenantUtil
         //don't create if already exists, if folder order-lab-$tenantId exists
         $tenantOrderFolder = $projectRoot."/../../order-lab-$tenantId";
         if( file_exists($tenantOrderFolder)===TRUE ) {
+            $logger->notice("createNewTenant: Do not create new tenant $tenantId, it is already existed");
             return "Do not create new tenant $tenantId, it is already existed";
         }
 
