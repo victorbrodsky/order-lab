@@ -407,6 +407,17 @@ f_start_all_httpd() {
 	f_start_single_httpd tenantapp2 8086 c/wcm/psychiatry
 }
 
+f_add_tenant_haproxy() {
+	#add new tenant i.e. '3' to frontend after ###START-FRONTEND-CUSTOM-TENANTS 
+	# acl tenantapp3_url path_beg -i /c/wcm/psychiatry
+    # use_backend tenantapp3_backend if tenantapp3url
+	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" /etc/haproxy/haproxy.cfg
+	
+	#add tenant to backend after ###START-BACKEND-CUSTOM-TENANTS
+	#backend tenantapp3_backend
+    #server tenantapp3_server *:8087 check
+}
+
 #7) Start HAProxy: sudo systemctl restart haproxy
 f_start_haproxy() {
 	#TODO: haproxy is not started?!
