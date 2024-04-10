@@ -430,7 +430,7 @@ f_add_tenant_haproxy() {
 	BACKENDSTR="$BACK_1$BACK_2$BACK_3 \n"
 	echo BACKENDSTR=$BACKENDSTR
 	#sed -i -e "s/###END-BACKEND-CUSTOM-TENANTS/$BACKENDSTR/g" /etc/haproxy/haproxy.cfg
-	sed -i '/###END-BACKEND-CUSTOM-TENANTS/i $BACKENDSTR' /etc/haproxy/haproxy.cfg
+	sed -i '/###END-BACKEND-CUSTOM-TENANTS/i "$BACKENDSTR"' /etc/haproxy/haproxy.cfg
 	#TEST:
 	#sed -i '/###END-BACKEND-CUSTOM-TENANTS/i \ \ BACKENDSTR' /etc/haproxy/haproxy.cfg
 }
