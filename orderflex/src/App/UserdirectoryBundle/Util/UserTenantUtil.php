@@ -734,11 +734,13 @@ class UserTenantUtil
         $createNewTenantScript = realpath($createNewTenantScript);
 
         if( file_exists($createNewTenantScript) === false ) {
-            $logger->notice("createNewTenant: file not exists: [$createNewTenantScript]");
+            $logger->notice("createNewTenant: file does not exist: [$createNewTenantScript]");
         }
 
+        $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url;
+        $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
         //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
-        $output = $this->runProcessShell('sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url);
+        $output = $this->runProcessShell($createCmd);
         //exit('end runProcessShell, output='.$output);
         return "Created new tenant $tenantId ".$output;
     }
