@@ -443,7 +443,8 @@ class UserTenantUtil
             } else {
                 //create new tenant
                 $logger->notice("processDBTenants: create new tenant $tenantId");
-                $this->createNewTenant($tenantId);
+                $msgCreateNewTenant = $this->createNewTenant($tenantId);
+                $resultTenantArr[$tenantId]['message']['success'][] = $msgCreateNewTenant;
                 continue;
             }
 
@@ -715,13 +716,19 @@ class UserTenantUtil
         //create new httpd file, add tenant to haproxy
         // order-lab/utils/executables/create-new-tenant.sh
         $logger = $this->container->get('logger');
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+
+        //don't create if already exists, if folder order-lab-$tenantId exists
+        $tenantOrderFolder = $projectRoot."/../../order-lab-$tenantId";
+        if( file_exists($tenantOrderFolder)===TRUE ) {
+            return "Do not create new tenant $tenantId, it is already existed";
+        }
 
         $tenant = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
         $url = $tenant->getUrlSlug();
         $port = $tenant->getTenantPort();
         $logger->notice("createNewTenant: create-new-tenant.sh: tenant=[$tenant], url=[$url], port=[$port]");
 
-        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
         $createNewTenantScript = realpath($createNewTenantScript);
 
@@ -732,7 +739,7 @@ class UserTenantUtil
         //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
         $output = $this->runProcessShell('sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url);
         //exit('end runProcessShell, output='.$output);
-        return $output;
+        return "Created new tenant $tenantId ".$output;
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
