@@ -414,9 +414,9 @@ f_add_tenant_haproxy() {
 	# acl tenantapp3_url path_beg -i /c/wcm/psychiatry
     # use_backend tenantapp3_backend if tenantapp3url
 	FRONT_1="\ \ \ \ acl tenantapp$1_url path_beg -i $3 \n"
-	FRONT_2="\ \ \ \ use_backend tenantapp$1_backend if tenantapp$1url $3 \n"
+	FRONT_2="\ \ \ \ use_backend tenantapp$1_backend if tenantapp$1url $3"
 	#FRONT_3="\ \ \ \ ###END-FRONTEND-CUSTOM-TENANTS"
-	FRONTENDSTR="$FRONT_1$FRONT_2 \n"
+	FRONTENDSTR="$FRONT_1$FRONT_2"
 	echo FRONTENDSTR=$FRONTENDSTR
 	#sed -i -e "s,###END-FRONTEND-CUSTOM-TENANTS,$FRONTENDSTR,g" /etc/haproxy/haproxy.cfg
 	sed -i "/###END-FRONTEND-CUSTOM-TENANTS/i $FRONTENDSTR" /etc/haproxy/haproxy.cfg
@@ -425,9 +425,9 @@ f_add_tenant_haproxy() {
 	#backend tenantapp3_backend
     #server tenantapp3_server *:8087 check
 	BACK_1="\ \ \ \ backend tenantapp$1_backend \n"
-	BACK_2="\ \ \ \ server tenantapp$1_server *:$2 check \n"
+	BACK_2="\ \ \ \ server tenantapp$1_server *:$2 check"
 	#BACK_3="\ \ \ \ ###END-BACKEND-CUSTOM-TENANTS"
-	BACKENDSTR="$BACK_1$BACK_2 \n"
+	BACKENDSTR="$BACK_1$BACK_2"
 	echo BACKENDSTR=$BACKENDSTR
 	#sed -i -e "s/###END-BACKEND-CUSTOM-TENANTS/$BACKENDSTR/g" /etc/haproxy/haproxy.cfg
 	sed -i "/###END-BACKEND-CUSTOM-TENANTS/i $BACKENDSTR" /etc/haproxy/haproxy.cfg
