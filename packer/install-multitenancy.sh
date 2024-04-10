@@ -180,6 +180,13 @@ f_install_haproxy () {
 
 #2) Create order instances
 f_create_single_order_instance () {
+
+	echo -e ${COLOR} Checkif instance exists: "$1" port "$2" ${NC}
+	if [ -d "/usr/local/bin/order-lab-$1" ]; then
+		echo -e ${COLOR} Directory /usr/local/bin/order-lab-"$1" does exist ${NC}
+		return 0
+	fi
+
 	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
 	#cd /usr/local/bin/
 	changedir /usr/local/bin/
@@ -298,6 +305,13 @@ f_create_tenant_htppd() {
 	sudo systemctl daemon-reload
 }
 f_create_single_tenant_htppd() {
+
+	echo -e ${COLOR} Check if httpd exists: "$1" port "$2" url "$3" ${NC}
+	if [ -d "/etc/httpd/conf/$1-httpd.conf" ]; then
+		echo -e ${COLOR} Httpd /etc/httpd/conf/"$1"-httpd.conf does exist ${NC}
+		return 0
+	fi
+
 	echo -e ${COLOR} Create "$1"-httpd.conf ${NC}
 	cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/"$1"-httpd.conf 
 	
@@ -408,6 +422,15 @@ f_start_all_httpd() {
 }
 
 f_add_tenant_haproxy() {
+	
+	echo -e ${COLOR} Check if HAProxy has tenant: "$1" port "$2" url "$3" ${NC}
+	HAProxyConfig="/etc/haproxy/haproxy.cfg"
+	if grep -q "$1" "$HAProxyConfig"; then
+		echo -e ${COLOR} Do not add tenant to HAProxy "$HAProxyConfig", it is already exist: "$1" port "$2" url "$3" ${NC}
+		return 0
+	fi
+
+
 	#https://stackoverflow.com/questions/15559359/insert-line-after-match-using-sed
 	#sed append before line: i\
 	#add new tenant i.e. '3' to frontend after ###START-FRONTEND-CUSTOM-TENANTS 
