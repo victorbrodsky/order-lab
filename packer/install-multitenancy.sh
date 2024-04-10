@@ -181,19 +181,25 @@ f_install_haproxy () {
 #2) Create order instances
 f_create_single_order_instance () {
 
-	echo -e ${COLOR} Checkif instance exists: "$1" port "$2" ${NC}
+	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
 	if [ -d "/usr/local/bin/order-lab-$1" ]; then
 		echo -e ${COLOR} Directory /usr/local/bin/order-lab-"$1" does exist ${NC}
 		return 0
 	fi
 
-	echo -e ${COLOR} Create instance: "$1" port "$2" ${NC}
+	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
 	#cd /usr/local/bin/
 	changedir /usr/local/bin/
 	echo -e ${COLOR} Current folder: ${NC}
 	pwd
 	
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
+	
+	echo -e ${COLOR} Check if instance has been created: "$1" port "$2" url "$3" ${NC}
+	if [ ! -d "/usr/local/bin/order-lab-$1" ]; then
+		echo -e ${COLOR} Error! Instance /usr/local/bin/order-lab-"$1" has not been created ${NC}
+		return 0
+	fi
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab-"$1"
