@@ -411,7 +411,11 @@ f_add_tenant_haproxy() {
 	#add new tenant i.e. '3' to frontend after ###START-FRONTEND-CUSTOM-TENANTS 
 	# acl tenantapp3_url path_beg -i /c/wcm/psychiatry
     # use_backend tenantapp3_backend if tenantapp3url
-	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" /etc/haproxy/haproxy.cfg
+	FRONT_1 = "acl tenantapp$1_url path_beg -i $3 \n&"
+	FRONT_2 = "use_backend tenantapp$1_backend if tenantapp$1url $3 \n&"
+	FRONT_3 = "###END-FRONTEND-CUSTOM-TENANTS"
+	FRONTENDSTR="$FRONT_1$FRONT_2$FRONT_3"
+	sed -i -e "s,###END-FRONTEND-CUSTOM-TENANTS,$FRONTENDSTR,g" /etc/haproxy/haproxy.cfg
 	
 	#add tenant to backend after ###START-BACKEND-CUSTOM-TENANTS
 	#backend tenantapp3_backend
