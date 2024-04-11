@@ -243,7 +243,7 @@ f_create_single_order_instance () {
 	changedir /usr/local/bin/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before install tenant for order-lab-"$1": ${NC}
 	pwd
-	#COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
+	#COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex --verbose
 	COMPOSER_ALLOW_SUPERUSER=1 composer install --verbose
 	
 	#COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
