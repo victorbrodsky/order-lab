@@ -309,7 +309,7 @@
             var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
             $.ajax({
                 url: url,
-                timeout: 600000, //in milliseconds. sets timeout to 10 minutes
+                timeout: 1800000, //in milliseconds. sets timeout to 33 minutes
                 dataType: 'json',
                 async: true,
             }).done(function(data) {
