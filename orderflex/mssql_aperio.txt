@@ -1,0 +1,5 @@
+Clean tables (confirm):
+Cases - remove if patient name is NULL
+Slide - remove if barcode has 'NYH+'
+Specimen - remove if SurgicalId has 'S24', 'GX24', 'QS24', Collection Date is not NULL
+

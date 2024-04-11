@@ -199,6 +199,8 @@ f_create_single_order_instance () {
 	if [ ! -d "/usr/local/bin/order-lab-$1" ]; then
 		echo -e ${COLOR} Error! Instance /usr/local/bin/order-lab-"$1" has not been created ${NC}
 		return 0
+	else	
+		echo -e ${COLOR} Instance /usr/local/bin/order-lab-"$1" has been created! ${NC}
 	fi
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
@@ -243,6 +245,9 @@ f_create_single_order_instance () {
 	pwd
 	COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
 	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
+	
+	echo -e ${COLOR} List ORDER folder after composer ${NC}
+	ls /usr/local/bin/order-lab-"$1"/orderflex
 	
 	#echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
 	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
