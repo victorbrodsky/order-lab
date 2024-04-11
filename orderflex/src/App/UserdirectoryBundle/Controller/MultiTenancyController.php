@@ -512,10 +512,11 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
+        $commandArr = explode(" ", $createCmd);
         $logDir = $this->container->get('kernel')->getProjectDir();
-        //$process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
-        $process = Process::fromShellCommandline($createCmd);
+        //$process = Process::fromShellCommandline($createCmd);
 
         try {
             $process->mustRun();
