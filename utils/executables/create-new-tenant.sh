@@ -15,9 +15,10 @@ echo URL=$URL
 echo PORT=$PORT
 
 echo "Current script directory"
-pwd
+pwd #/usr/local/bin/order-lab-tenantmanager/orderflex
 
-source ../../packer/install-multitenancy.sh
+#source ../../packer/install-multitenancy.sh
+source ../packer/install-multitenancy.sh
 
 f_create_single_order_instance "$TENANTID" "$PORT" "$URL"
 
