@@ -466,11 +466,7 @@ class MultiTenancyController extends OrderAbstractController
 
         $result = "no testing";
 
-        $testFile = trim((string)$request->get('testFile'));
-
-        $logDir = $this->container->get('kernel')->getProjectDir();
-
-        $envArr = array();
+        //$testFile = trim((string)$request->get('testFile'));
 
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
@@ -502,6 +498,7 @@ class MultiTenancyController extends OrderAbstractController
 
         $userUtil = $this->container->get('user_utility');
         $scheme = $userUtil->getScheme();
+        $envArr = array();
         //exit("scheme=$scheme");
         if( $scheme ) {
             if( strtolower($scheme) == 'http' ) {
@@ -513,7 +510,9 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
+        $logDir = $this->container->get('kernel')->getProjectDir();
         //$process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
         $process = Process::fromShellCommandline($createCmd);
 
         try {
