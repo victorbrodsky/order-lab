@@ -276,6 +276,13 @@
                href="{{ path('employees_tenancy_manager_update_server_config') }}"
             >Update Server Configuration from DB</a>
         </p>
+        <p>
+            <a
+                id="update-server-config-ajax" class="btn btn-danger"
+                onclick="runTenancyUpdateConfigProcess()"
+            >Asynchronously Update Server Configuration from DB</a>
+            <div id="result"></div>
+        </p>
     {% endif %}
 
     {#<br><br>#}
@@ -288,4 +295,40 @@
 
 
 
+{% block additionaljs %}
 
+    <script>
+
+        $(document).ready(function () {
+
+            //runTenancyUpdateConfigProcess();
+        });
+
+        //similar to runTestingProcess
+        function runTenancyUpdateConfigProcess() {
+            var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
+            $.ajax({
+                url: url,
+                timeout: 600000, //in milliseconds. sets timeout to 10 minutes
+                dataType: 'json',
+                async: true,
+            }).done(function(data) {
+
+                $('#result').append(data);
+                console.log("data="+data);
+
+            }).fail(function(jqXHR, textStatus, error) {
+                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
+                        + ", textStatus="
+                        + textStatus
+                        + ", error=" + error;
+                console.log(msg);
+                $('#result').append(msg);
+            }).done(function() {
+                console.log("runTenancyUpdateConfigProcess ajax done");
+                $('#result').append("runTenancyUpdateConfigProcess ajax done");
+            });
+        }
+    </script>
+
+{% endblock %}

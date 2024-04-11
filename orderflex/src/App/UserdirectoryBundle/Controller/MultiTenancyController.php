@@ -451,6 +451,81 @@ class MultiTenancyController extends OrderAbstractController
         return $this->redirect( $this->generateUrl('employees_tenancy_manager_configure') );
     }
 
+    //[Route(path: '/tenant-manager/update-server-config', name: 'employees_tenancy_manager_update_server_config', methods: ['GET', 'POST'])]
+    #[Route(path: '/tenant-manager/update-server-config-ajax', name: 'employees_tenancy_manager_update_server_config_ajax', methods: ['GET'], options: ['expose' => true])]
+    public function updateServerConfigAjaxAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $execTime = 1800; //sec 30 min
+        ini_set('max_execution_time', $execTime);
+
+        $result = "no testing";
+
+        $testFile = trim((string)$request->get('testFile'));
+
+        $logDir = $this->container->get('kernel')->getProjectDir();
+
+        $envArr = array();
+
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        set_time_limit(1800); //1800 seconds => 30 mins
+
+        //Update server configuration files
+        $res = $userTenantUtil->processDBTenants($tenantManager);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+
+
+        $testCmd = "vendor/bin/phpunit";
+        //$envArr = array();
+        $commandArr = array($testCmd,$testFilePath);
+
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getScheme();
+        //exit("scheme=$scheme");
+        if( $scheme ) {
+            if( strtolower($scheme) == 'http' ) {
+                //echo "HTTP";
+                $envArr = array('HTTP' => 1);
+            } else {
+                //echo "HTTPS";
+                //$httpsChannel = true;
+            }
+        }
+
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
+        try {
+            $process->mustRun();
+            $buffer = $process->getOutput();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+        } catch (ProcessFailedException $exception) {
+            $buffer = $exception->getMessage();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
+
     public function removeTenantCollection($originalArr,$currentArr,$entity) {
         $em = $this->getDoctrine()->getManager();
         $removeArr = array();
