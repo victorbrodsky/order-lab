@@ -742,7 +742,8 @@ class UserTenantUtil
         $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." > $createNewTenantLog";
         $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
         //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
-        $output = $this->runProcessShell($createCmd);
+        //$output = $this->runProcessShell($createCmd);
+        $output = $this->runProcessSyncShell($createCmd);
         //exit('end runProcessShell, output='.$output);
         return "Created new tenant $tenantId ".$output;
     }
@@ -949,12 +950,22 @@ class UserTenantUtil
         return $output;
     }
 
-    public function runProcessShell($script, $output=true) {
+    //Run process asynchronously in new console
+    public function runProcessShell($script, $output=true)
+    {
         echo "runProcessShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
         $process->setOptions(['create_new_console' => true]);
         $process->start();
         return null;
+    }
+
+    public function runProcessSyncShell($script, $output=true) {
+        echo "runProcessSyncShell: script=[$script]<br>";
+        $process = Process::fromShellCommandline($script);
+        //$process->setOptions(['create_new_console' => true]);
+        //$process->start();
+        //return null;
 
 
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
@@ -966,7 +977,7 @@ class UserTenantUtil
         }
 
         $logger = $this->container->get('logger');
-        //$process->run();
+        $process->run();
 
         // wait a few seconds for the process to be ready
         //sleep(5);
