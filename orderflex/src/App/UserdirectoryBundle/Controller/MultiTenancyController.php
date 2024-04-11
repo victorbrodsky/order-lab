@@ -521,7 +521,8 @@ class MultiTenancyController extends OrderAbstractController
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
 
         try {
-            $process->mustRun();
+            //$process->mustRun();
+            $process->start();
             $buffer = $process->getOutput();
             $buffer = '<code><pre>'.$buffer.'</pre></code>';
             $response = new Response();
