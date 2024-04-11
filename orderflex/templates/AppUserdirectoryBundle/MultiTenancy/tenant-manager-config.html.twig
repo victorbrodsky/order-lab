@@ -312,7 +312,7 @@
 
             $.ajax({
                 url: url,
-                timeout: 1800000, //in milliseconds. sets timeout to 33 minutes
+                timeout: 18000, //in milliseconds. sets timeout to 33 minutes
                 dataType: 'json',
                 async: true,
             }).done(function(data) {
@@ -320,16 +320,19 @@
                 $('#result').append(data);
                 console.log("data="+data);
 
-            }).fail(function(jqXHR, textStatus, error) {
-                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
-                        + ", textStatus="
-                        + textStatus
-                        + ", error=" + error;
-                console.log(msg);
-                $('#result').append(msg);
-            }).done(function() {
-                console.log("runTenancyUpdateConfigProcess ajax done");
-                $('#result').append("runTenancyUpdateConfigProcess ajax done");
+            })
+//            .fail(function(jqXHR, textStatus, error) {
+//                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
+//                        + ", textStatus="
+//                        + textStatus
+//                        + ", error=" + error;
+//
+//                console.log(msg);
+//                $('#result').append(msg);
+//            })
+            .done(function() {
+                console.log("runTenancyUpdateConfigProcess ajax has started");
+                $('#result').append("Update tenancy configuarion on the server has been started in the background. Please verify the status of the new tenant's url in couple of minutes.");
             });
         }
     </script>

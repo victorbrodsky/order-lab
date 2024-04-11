@@ -739,12 +739,31 @@ class UserTenantUtil
 
         $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
         $logger->notice("createNewTenant: createNewTenantLog=[$createNewTenantLog]");
-        $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." > $createNewTenantLog";
-        $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
-        //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
-        //$output = $this->runProcessShell($createCmd);
-        $output = $this->runProcessSyncShell($createCmd);
-        //exit('end runProcessShell, output='.$output);
+
+        if(0) {
+            $createCmd = 'sudo /bin/bash ' . $createNewTenantScript . ' -t ' . $tenantId . ' -p ' . $port . ' -u ' . $url . " > $createNewTenantLog";
+            $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
+            //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
+            //$output = $this->runProcessShell($createCmd);
+            $output = $this->runProcessSyncShell($createCmd);
+            //exit('end runProcessShell, output='.$output);
+        }
+
+        $commandArr = array(
+            'sudo',
+            '/bin/bash',
+            $createNewTenantScript,
+            '-t',
+            $tenantId,
+            '-p',
+            $port,
+            '-u',
+            $url,
+            '>',
+            $createNewTenantLog
+        );
+        $output = $this->runProcess_new($commandArr);
+
         return "Created new tenant $tenantId ".$output;
     }
 
@@ -934,7 +953,32 @@ class UserTenantUtil
     public function runProcess($commandArr) {
         $logger = $this->container->get('logger');
         $process = new Process($commandArr);
+        $process->setTimeout(3600); //sec; 3600 sec => 60 min
+        $process->setIdleTimeout(1800); //1800 sec => 30 min
         $process->run();
+
+        if (!$process->isSuccessful()) {
+            $logger->notice("runProcess: failed");
+            throw new ProcessFailedException($process);
+        } else {
+            //echo "process successfull <br>";
+            //$logger->notice("runProcess: successfull");
+        }
+        $output = $process->getOutput();
+        $logger->notice("runProcess: output: ".$output);
+
+        echo $output;
+        return $output;
+    }
+
+    public function runProcess_new($commandArr) {
+        $logger = $this->container->get('logger');
+        $process = new Process($commandArr);
+        $process->setTimeout(3600); //sec; 3600 sec => 60 min
+        $process->setIdleTimeout(1800); //1800 sec => 30 min
+        $process->setOptions(['create_new_console' => true]);
+
+        $process->start();
 
         if (!$process->isSuccessful()) {
             $logger->notice("runProcess: failed");
@@ -965,7 +1009,7 @@ class UserTenantUtil
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(3600); //sec; 3600 sec => 60 min
         $process->setIdleTimeout(1800); //1800 sec => 30 min
-        $process->setOptions(['create_new_console' => true]);
+        //$process->setOptions(['create_new_console' => true]);
 
         //Was able to generate vendor
         try {
@@ -977,44 +1021,38 @@ class UserTenantUtil
 
         //$process->start();
 
-//        $process->run();
-//        if (!$process->isSuccessful()) {
-//            throw new ProcessFailedException($process);
-//        }
-//        return $process->getOutput();
-
         return null;
 
 
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-
-        if( $output === false ) {
-            $process->disableOutput();
-            $process->run();
-            return null;
-        }
-
-        $logger = $this->container->get('logger');
-        $logger->notice("runProcessShell: Start script=$script");
-
-        $process->run();
-
-        // wait a few seconds for the process to be ready
-        //sleep(5);
-
-        if (!$process->isSuccessful()) {
-            $logger->notice("runProcessShell: failed, script=$script");
-            throw new ProcessFailedException($process);
-        } else {
-            $logger->notice("runProcessShell: successfull, script=$script");
-        }
-        $output = $process->getOutput();
-        $logger->notice("runProcessShell: finish script=$script, output: ".$output);
-
-        // wait a few seconds for the process to be ready
-        //sleep(5);
-
-        return $output;
+//        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//
+//        if( $output === false ) {
+//            $process->disableOutput();
+//            $process->run();
+//            return null;
+//        }
+//
+//        $logger = $this->container->get('logger');
+//        $logger->notice("runProcessShell: Start script=$script");
+//
+//        $process->run();
+//
+//        // wait a few seconds for the process to be ready
+//        //sleep(5);
+//
+//        if (!$process->isSuccessful()) {
+//            $logger->notice("runProcessShell: failed, script=$script");
+//            throw new ProcessFailedException($process);
+//        } else {
+//            $logger->notice("runProcessShell: successfull, script=$script");
+//        }
+//        $output = $process->getOutput();
+//        $logger->notice("runProcessShell: finish script=$script, output: ".$output);
+//
+//        // wait a few seconds for the process to be ready
+//        //sleep(5);
+//
+//        return $output;
     }
 
     public function runProcessWait($script) {
