@@ -970,7 +970,7 @@ class UserTenantUtil
         $process->setOptions(array(
             //'suppress_errors' => false,
             //'bypass_shell' => false,
-            'blocking_pipes' => true,
+            //'blocking_pipes' => true,
             'create_new_console' => true
         ));
 
