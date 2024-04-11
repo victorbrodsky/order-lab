@@ -974,15 +974,16 @@ class UserTenantUtil
             'create_new_console' => true
         ));
 
-        try {
-            $process->mustRun();
+        //Was able to generate vendor
+//        try {
+//            $process->mustRun();
+//
+//            return $process->getOutput();
+//        } catch (ProcessFailedException $exception) {
+//            return $exception->getMessage();
+//        }
 
-            return $process->getOutput();
-        } catch (ProcessFailedException $exception) {
-            return $exception->getMessage();
-        }
-
-        //$process->start();
+        $process->start();
         //$process->run();
         return null;
 
