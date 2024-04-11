@@ -463,7 +463,7 @@ class MultiTenancyController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $execTime = 1800; //sec 30 min
+        $execTime = 1800000; //sec 30 min
         ini_set('max_execution_time', $execTime);
 
         $result = "no testing";
@@ -473,7 +473,7 @@ class MultiTenancyController extends OrderAbstractController
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
-        set_time_limit(1800); //1800 seconds => 30 mins
+        set_time_limit(1800000); //1800 seconds => 30 mins
 
         //Update server configuration files
         //$res = $userTenantUtil->processDBTenants($tenantManager);
@@ -518,7 +518,7 @@ class MultiTenancyController extends OrderAbstractController
 
         //$process = Process::fromShellCommandline($createCmd);
 
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(1800000); //sec; 1800 sec => 30 min
         $process->setOptions(['create_new_console' => true]);
 
         try {
