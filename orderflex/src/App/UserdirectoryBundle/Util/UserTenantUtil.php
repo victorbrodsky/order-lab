@@ -745,10 +745,10 @@ class UserTenantUtil
             $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
             //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
             //$output = $this->runProcessShell($createCmd);
-            //$output = $this->runProcessSyncShell($createCmd);
+            $output = $this->runProcessSyncShell($createCmd);
             //exit('end runProcessShell, output='.$output);
 
-            $output = $this->runProcessWait($createCmd);
+            //$output = $this->runProcessWait($createCmd);
         }
 
 //        $commandArr = array(

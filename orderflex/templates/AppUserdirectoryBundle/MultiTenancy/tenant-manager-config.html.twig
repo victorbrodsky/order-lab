@@ -279,7 +279,7 @@
         <p>
             <a
                 id="update-server-config-ajax" class="btn btn-danger"
-                onclick="runTenancyUpdateConfigProcess()"
+                onclick="runTenancyUpdateConfigProcess(this)"
             >Asynchronously Update Server Configuration from DB</a>
             <div id="result"></div>
         </p>
@@ -299,16 +299,20 @@
 
     <script>
 
-        $(document).ready(function () {
-
-            //runTenancyUpdateConfigProcess();
-        });
+//        $(document).ready(function () {
+//            //runTenancyUpdateConfigProcess();
+//        });
 
         //similar to runTestingProcess
-        function runTenancyUpdateConfigProcess() {
+        function runTenancyUpdateConfigProcess(btn) {
             var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
             console.log("Start runTenancyUpdateConfigProcess: url="+url);
+
+            var msg = "Update tenancy configuarion on the server has been started in the background."
+                    +" Please verify the status of the new tenant's url in couple of minutes.";
             $('#result').append("Start runTenancyUpdateConfigProcess: url="+url);
+
+            btn.remove();
 
             $.ajax({
                 url: url,
@@ -332,7 +336,7 @@
 //            })
             .done(function() {
                 console.log("runTenancyUpdateConfigProcess ajax has started");
-                $('#result').append("Update tenancy configuarion on the server has been started in the background. Please verify the status of the new tenant's url in couple of minutes.");
+                $('#result').append(msg);
             });
         }
     </script>
