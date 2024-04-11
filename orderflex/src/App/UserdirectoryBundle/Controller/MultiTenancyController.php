@@ -228,6 +228,8 @@ class MultiTenancyController extends OrderAbstractController
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
+        set_time_limit(1800); //1800 seconds => 30 mins
+
         //Update server configuration files
         $res = $userTenantUtil->processDBTenants($tenantManager);
 
