@@ -977,6 +977,8 @@ class UserTenantUtil
         }
 
         $logger = $this->container->get('logger');
+        $logger->notice("runProcessShell: Start script=$script");
+
         $process->run();
 
         // wait a few seconds for the process to be ready
