@@ -15,6 +15,8 @@ use App\UserdirectoryBundle\Entity\TenantList;
 use App\UserdirectoryBundle\Entity\TenantManager;
 use App\UserdirectoryBundle\Form\TenancyManagementType;
 use App\UserdirectoryBundle\Form\TenantManagerType;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -476,17 +478,27 @@ class MultiTenancyController extends OrderAbstractController
         set_time_limit(1800); //1800 seconds => 30 mins
 
         //Update server configuration files
-        $res = $userTenantUtil->processDBTenants($tenantManager);
+        //$res = $userTenantUtil->processDBTenants($tenantManager);
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
-        return $response;
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($res));
+//        return $response;
 
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
-        $testCmd = "vendor/bin/phpunit";
-        //$envArr = array();
-        $commandArr = array($testCmd,$testFilePath);
+        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
+        $createNewTenantScript = realpath($createNewTenantScript);
+        $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
+
+        $tenantId = 'newtenant';
+        $tenant = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
+        $url = $tenant->getUrlSlug();
+        $port = $tenant->getTenantPort();
+
+        $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." > $createNewTenantLog";
+
+        //$commandArr = array($testCmd,$testFilePath);
 
         $userUtil = $this->container->get('user_utility');
         $scheme = $userUtil->getScheme();
@@ -501,7 +513,8 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+        //$process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+        $process = Process::fromShellCommandline($createCmd);
 
         try {
             $process->mustRun();

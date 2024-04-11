@@ -307,6 +307,7 @@
         //similar to runTestingProcess
         function runTenancyUpdateConfigProcess() {
             var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
+            console.log("Start runTenancyUpdateConfigProcess: url="+url);
             $.ajax({
                 url: url,
                 timeout: 1800000, //in milliseconds. sets timeout to 33 minutes
