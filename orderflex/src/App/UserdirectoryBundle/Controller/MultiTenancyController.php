@@ -475,12 +475,12 @@ class MultiTenancyController extends OrderAbstractController
         set_time_limit(1800); //1800 seconds => 30 mins
 
         //Update server configuration files
-        //$res = $userTenantUtil->processDBTenants($tenantManager);
+        $res = $userTenantUtil->processDBTenants($tenantManager);
 
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        $response->setContent(json_encode($res));
-//        return $response;
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
