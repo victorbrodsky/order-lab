@@ -740,29 +740,31 @@ class UserTenantUtil
         $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
         $logger->notice("createNewTenant: createNewTenantLog=[$createNewTenantLog]");
 
-        if(0) {
+        if(1) {
             $createCmd = 'sudo /bin/bash ' . $createNewTenantScript . ' -t ' . $tenantId . ' -p ' . $port . ' -u ' . $url . " > $createNewTenantLog";
             $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
             //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
             //$output = $this->runProcessShell($createCmd);
-            $output = $this->runProcessSyncShell($createCmd);
+            //$output = $this->runProcessSyncShell($createCmd);
             //exit('end runProcessShell, output='.$output);
+
+            $output = $this->runProcessWait($createCmd);
         }
 
-        $commandArr = array(
-            //'sudo',
-            '/bin/bash',
-            $createNewTenantScript,
-            '-t',
-            $tenantId,
-            '-p',
-            $port,
-            '-u',
-            $url,
-            '>',
-            $createNewTenantLog
-        );
-        $output = $this->runProcess_new($commandArr);
+//        $commandArr = array(
+//            //'sudo',
+//            '/bin/bash',
+//            $createNewTenantScript,
+//            '-t',
+//            $tenantId,
+//            '-p',
+//            $port,
+//            '-u',
+//            $url,
+//            '>',
+//            $createNewTenantLog
+//        );
+//        $output = $this->runProcess_new($commandArr);
 
         return "Created new tenant $tenantId ".$output;
     }
@@ -1066,9 +1068,9 @@ class UserTenantUtil
         $process->wait();
         //return null;
 
-        while ($process->isRunning()) {
-            // waiting for process to finish
-        }
+//        while ($process->isRunning()) {
+//            // waiting for process to finish
+//        }
 
         if (!$process->isSuccessful()) {
             $logger->notice("runProcessWait: failed");
