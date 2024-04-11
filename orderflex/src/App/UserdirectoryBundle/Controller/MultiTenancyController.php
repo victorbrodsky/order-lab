@@ -482,6 +482,8 @@ class MultiTenancyController extends OrderAbstractController
         $response->setContent(json_encode($res));
         return $response;
 
+
+        ///// Show result from buffer /////
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
         $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';

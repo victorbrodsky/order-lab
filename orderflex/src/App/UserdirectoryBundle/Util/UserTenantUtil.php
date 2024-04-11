@@ -750,7 +750,7 @@ class UserTenantUtil
         }
 
         $commandArr = array(
-            'sudo',
+            //'sudo',
             '/bin/bash',
             $createNewTenantScript,
             '-t',
