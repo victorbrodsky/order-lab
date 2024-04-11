@@ -967,12 +967,12 @@ class UserTenantUtil
         $process->setIdleTimeout(1800); //1800 sec => 30 min
         //private $options = ['suppress_errors' => true, 'bypass_shell' => true];
         //$process->setOptions(['create_new_console' => true]);
-        $process->setOptions(array(
-            //'suppress_errors' => false,
-            //'bypass_shell' => false,
-            //'blocking_pipes' => true,
-            'create_new_console' => true
-        ));
+//        $process->setOptions(array(
+//            //'suppress_errors' => false,
+//            //'bypass_shell' => false,
+//            //'blocking_pipes' => true,
+//            'create_new_console' => true
+//        ));
 
         //Was able to generate vendor
 //        try {
@@ -983,8 +983,14 @@ class UserTenantUtil
 //            return $exception->getMessage();
 //        }
 
-        $process->start();
-        //$process->run();
+        //$process->start();
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
+
         return null;
 
 
