@@ -979,6 +979,7 @@ class UserTenantUtil
         $process->setOptions(['create_new_console' => true]);
 
         $process->start();
+        return null;
 
         if (!$process->isSuccessful()) {
             $logger->notice("runProcess: failed");
