@@ -979,15 +979,15 @@ class UserTenantUtil
         $process->setOptions(['create_new_console' => true]);
 
         $process->start();
-        return null;
+        //return null;
 
-        if (!$process->isSuccessful()) {
-            $logger->notice("runProcess: failed");
-            throw new ProcessFailedException($process);
-        } else {
-            //echo "process successfull <br>";
-            //$logger->notice("runProcess: successfull");
-        }
+//        if (!$process->isSuccessful()) {
+//            $logger->notice("runProcess: failed");
+//            throw new ProcessFailedException($process);
+//        } else {
+//            //echo "process successfull <br>";
+//            //$logger->notice("runProcess: successfull");
+//        }
         $output = $process->getOutput();
         $logger->notice("runProcess: output: ".$output);
 
