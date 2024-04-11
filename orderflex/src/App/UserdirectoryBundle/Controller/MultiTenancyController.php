@@ -461,6 +461,8 @@ class MultiTenancyController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $execTime = 1800; //sec 30 min
         ini_set('max_execution_time', $execTime);
 
@@ -488,7 +490,7 @@ class MultiTenancyController extends OrderAbstractController
         $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
 
         $tenantId = 'newtenant';
-        $tenant = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
+        $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
         $url = $tenant->getUrlSlug();
         $port = $tenant->getTenantPort();
 
