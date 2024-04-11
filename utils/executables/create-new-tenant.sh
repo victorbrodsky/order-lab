@@ -14,6 +14,8 @@ echo TENANTID=$TENANTID
 echo URL=$URL
 echo PORT=$PORT
 
+echo "Current script directory"
+pwd
 
 source ../../packer/install-multitenancy.sh
 
