@@ -414,14 +414,13 @@ class UserTenantUtil
             $tenantId = $tenant->getName();
 
             //testing
-            if(
-                $tenantId != 'newtenant'
-                //$tenantId != 'tenantapptest'
-            ) { //newtenant tenantapptest
-                continue;
-            }
-
-
+//            if(
+//                $tenantId != 'newtenant'
+//                //$tenantId != 'tenantapptest'
+//            ) { //newtenant tenantapptest
+//                continue;
+//            }
+            
             $haproxyConfig = $this->getHaproxyConfig();
 
             //Enable/Disable => haproxy
