@@ -967,8 +967,9 @@ class UserTenantUtil
         //private $options = ['suppress_errors' => true, 'bypass_shell' => true];
         //$process->setOptions(['create_new_console' => true]);
         $process->setOptions(array(
-            'suppress_errors' => false,
-            'bypass_shell' => false,
+            //'suppress_errors' => false,
+            //'bypass_shell' => false,
+            'blocking_pipes' => true,
             'create_new_console' => true
         ));
 
@@ -977,7 +978,7 @@ class UserTenantUtil
 
             return $process->getOutput();
         } catch (ProcessFailedException $exception) {
-            echo $exception->getMessage();
+            return $exception->getMessage();
         }
 
         //$process->start();
