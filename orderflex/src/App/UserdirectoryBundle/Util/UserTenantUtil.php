@@ -963,9 +963,9 @@ class UserTenantUtil
     public function runProcessSyncShell($script, $output=true) {
         echo "runProcessSyncShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
-        //$process->setOptions(['create_new_console' => true]);
-        //$process->start();
-        //return null;
+        $process->setOptions(['create_new_console' => true]);
+        $process->start();
+        return null;
 
 
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
