@@ -519,10 +519,11 @@ class MultiTenancyController extends OrderAbstractController
         //$process = Process::fromShellCommandline($createCmd);
 
         $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setOptions(['create_new_console' => true]);
 
         try {
             //$process->mustRun();
-            $process->start();
+            $process->run();
             $buffer = $process->getOutput();
             $buffer = '<code><pre>'.$buffer.'</pre></code>';
             $response = new Response();
