@@ -965,31 +965,23 @@ class UserTenantUtil
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(3600); //sec; 3600 sec => 60 min
         $process->setIdleTimeout(1800); //1800 sec => 30 min
-        //private $options = ['suppress_errors' => true, 'bypass_shell' => true];
-        //$process->setOptions(['create_new_console' => true]);
-//        $process->setOptions(array(
-//            //'suppress_errors' => false,
-//            //'bypass_shell' => false,
-//            //'blocking_pipes' => true,
-//            'create_new_console' => true
-//        ));
+        $process->setOptions(['create_new_console' => true]);
 
         //Was able to generate vendor
-//        try {
-//            $process->mustRun();
-//
-//            return $process->getOutput();
-//        } catch (ProcessFailedException $exception) {
-//            return $exception->getMessage();
-//        }
+        try {
+            $process->mustRun();
+            return $process->getOutput();
+        } catch (ProcessFailedException $exception) {
+            return $exception->getMessage();
+        }
 
         //$process->start();
-        $process->run();
 
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        return $process->getOutput();
+//        $process->run();
+//        if (!$process->isSuccessful()) {
+//            throw new ProcessFailedException($process);
+//        }
+//        return $process->getOutput();
 
         return null;
 
