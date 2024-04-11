@@ -227,6 +227,8 @@ class MultiTenancyController extends OrderAbstractController
 
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        //Update server configuration files
         $res = $userTenantUtil->processDBTenants($tenantManager);
 
         //$resultTenantArr['haproxy-message']['error']
