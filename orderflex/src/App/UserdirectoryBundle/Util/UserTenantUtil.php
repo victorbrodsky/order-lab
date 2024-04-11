@@ -963,8 +963,25 @@ class UserTenantUtil
     public function runProcessSyncShell($script, $output=true) {
         echo "runProcessSyncShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
-        $process->setOptions(['create_new_console' => true]);
-        $process->start();
+
+        //private $options = ['suppress_errors' => true, 'bypass_shell' => true];
+        //$process->setOptions(['create_new_console' => true]);
+        $process->setOptions(array(
+            'suppress_errors' => false,
+            'bypass_shell' => false,
+            'create_new_console' => true
+        ));
+
+        try {
+            $process->mustRun();
+
+            return $process->getOutput();
+        } catch (ProcessFailedException $exception) {
+            echo $exception->getMessage();
+        }
+
+        //$process->start();
+        //$process->run();
         return null;
 
 

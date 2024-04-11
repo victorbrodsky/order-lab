@@ -15,7 +15,10 @@ echo URL=$URL
 echo PORT=$PORT
 
 echo "Current script directory"
-pwd #/usr/local/bin/order-lab-tenantmanager/orderflex
+pwd 
+
+#new Process => /usr/local/bin/order-lab-tenantmanager/orderflex
+#fromShellCommandline => /usr/local/bin/order-lab-tenantmanager/orderflex/public
 
 source ../../packer/install-multitenancy.sh
 #source ../packer/install-multitenancy.sh
