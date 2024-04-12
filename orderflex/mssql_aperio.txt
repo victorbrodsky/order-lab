@@ -1,5 +1,55 @@
 Clean tables (confirm):
 Cases - remove if patient name is NULL
-Slide - remove if barcode has 'NYH+'
+Slide - remove if barcode has 'NYH+' (264157 raws)
 Specimen - remove if SurgicalId has 'S24', 'GX24', 'QS24', Collection Date is not NULL
+
+Find references to a table
+SELECT
+    referencing_schema_name, referencing_entity_name, referencing_id,
+    referencing_class_desc, is_caller_dependent
+FROM
+    sys.dm_sql_referencing_entities ('dbo.Slide', 'OBJECT');
+GO
+
+dbo.Slide (292586 rows)
+referencing_schema_name	referencing_entity_name	referencing_id	referencing_class_desc	is_caller_dependent
+Core	SlideBase_AfterDelete	    1051866814	OBJECT_OR_COLUMN	0
+Core	SlideBase_AfterInsert	    1067866871	OBJECT_OR_COLUMN	0
+Core	SlideBase_AfterUpdate	    1083866928	OBJECT_OR_COLUMN	0
+dbo	    Slide_InsteadOfInsert	    704773618	OBJECT_OR_COLUMN	0
+dbo	    UserSlide	                779865845	OBJECT_OR_COLUMN	0 (0 rows)
+dbo	    VwCaseAggregates	        1259867555	OBJECT_OR_COLUMN	0
+dbo	    VwCaseSpecimenFileTransfer	1023342710	OBJECT_OR_COLUMN	0
+dbo	    VwCaseSpecimenSlideFileTransfer	1007342653	OBJECT_OR_COLUMN	0
+dbo	    VwSlideAggregates	        1275867612	OBJECT_OR_COLUMN	0
+dbo	    VwSpecimenAggregates	    1291867669	OBJECT_OR_COLUMN	0 (292586 rows)
+
+VwSlideAggregates:
+292586 rows total
+562 rows where ImageCount = 0
+
+Example: slide ID 339541 has 'NYH+'
+DELETE FROM [Test_Aperio].[dbo].[Slide] WHERE BarcodeId LIKE '%NYH+%';
+
+
+dbo.Case
+referencing_schema_name	referencing_entity_name	referencing_id	referencing_class_desc	is_caller_dependent
+dbo	Case	1028198713	OBJECT_OR_COLUMN	0
+dbo	VwCaseAggregates	1259867555	OBJECT_OR_COLUMN	0
+dbo	VwCaseConsultRequestCompleted	763865788	OBJECT_OR_COLUMN	0
+dbo	VwCaseFileTransfer	1039342767	OBJECT_OR_COLUMN	0
+dbo	VwCaseInfo	731865674	OBJECT_OR_COLUMN	0
+dbo	VwCaseRoutingCurrent	824390006	OBJECT_OR_COLUMN	0
+dbo	VwCaseRoutingHistory	1208391374	OBJECT_OR_COLUMN	0
+dbo	VwCaseSpecimenFileTransfer	1023342710	OBJECT_OR_COLUMN	0
+dbo	VwCaseSpecimenSlideFileTransfer	1007342653	OBJECT_OR_COLUMN	0
+
+
+dbo.Specimen
+referencing_schema_name	referencing_entity_name	referencing_id	referencing_class_desc	is_caller_dependent
+dbo	UserSpecimen	1741249258	OBJECT_OR_COLUMN	0
+dbo	VwCaseAggregates	1259867555	OBJECT_OR_COLUMN	0
+dbo	VwCaseSpecimenFileTransfer	1023342710	OBJECT_OR_COLUMN	0
+dbo	VwCaseSpecimenSlideFileTransfer	1007342653	OBJECT_OR_COLUMN	0
+dbo	VwSpecimenAggregates	1291867669	OBJECT_OR_COLUMN	0
 
