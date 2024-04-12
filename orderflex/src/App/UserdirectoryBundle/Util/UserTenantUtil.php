@@ -1082,4 +1082,22 @@ class UserTenantUtil
         return $output;
     }
 
+    public function isTenantInitialized( $tenant ) {
+        $initialized = false;
+
+        //check if tenant's DB has users
+
+        return $initialized;
+    }
+
+    public function getInitUrl( $tenant ) {
+        //first-time-login-generation-init
+        $url = $this->container->get('router')->generate('first-time-login-generation-init');
+
+        //replace baseUrl with the tenant's baseUrl
+
+        $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
+        return $href;
+    }
+
 }

@@ -122,6 +122,8 @@ class MultiTenancyController extends OrderAbstractController
         //echo "cycle=".$cycle."<br>";
         //exit('111');
 
+        //TODO: check if tenant initialized, if not replace the url with
+        // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
         foreach ($tenantManager->getTenants() as $tenant) {
@@ -140,6 +142,13 @@ class MultiTenancyController extends OrderAbstractController
                     if( !$enabled ) {
                         $tenantBaseUrl = $tenantBaseUrl . " (Disabled)";
                     }
+
+                    //isTenantInitialized
+                    if( $userTenantUtil->isTenantInitialized($tenant) === false ) {
+                        $initializeUrl = $userTenantUtil->getInitUrl($tenant);
+                        $tenantBaseUrl = $tenantBaseUrl . " (".$initializeUrl.")";
+                    }
+
                     $tenantBaseUrlArr[] = $tenantBaseUrl;
                 }
             }
@@ -210,7 +219,8 @@ class MultiTenancyController extends OrderAbstractController
             'cycle' => $cycle
         );
     }
-    
+
+    //This straightforward approach to use processDBTenants causes Gateway timeout
     #[Route(path: '/tenant-manager/update-server-config', name: 'employees_tenancy_manager_update_server_config', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function syncTenantsUpdateServerConfigAction( Request $request, KernelInterface $kernel )
@@ -284,37 +294,102 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-//        if( $res ) {
-//            if ($res['haproxy-error']) {
-//                $this->addFlash(
-//                    'warning',
-//                    $res['haproxy-error']
-//                );
-//            }
-//            if ($res['haproxy-ok']) {
-//                $this->addFlash(
-//                    'notice',
-//                    $res['haproxy-ok']
-//                );
-//            }
-//
-//            if ($res['httpd-error']) {
-//                foreach ($res['httpd-error'] as $tenantId => $errorMessage) {
-//                    //$httpdError = "$tenantId: errorMessage=$errorMessage";
-//                    //echo "$httpdError<br>";
-//                    $this->addFlash(
-//                        'warning',
-//                        "Tenant $tenantId: " . $errorMessage
-//                    );
-//                }
-//            }
-//        }
-
-        //$url = $this->generateUrl('employees_tenancy_manager_configure');
-        //exit("Server config files updated. Please go to the main page.");
-        //sleep(5);
         return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
-        //return $this->redirect( $this->generateUrl('main_common_home') );
+    }
+
+    //Use async javascript approach to use processDBTenants
+    #[Route(path: '/tenant-manager/update-server-config-ajax', name: 'employees_tenancy_manager_update_server_config_ajax', methods: ['GET'], options: ['expose' => true])]
+    public function updateServerConfigAjaxAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $execTime = 1800; //sec 30 min
+        ini_set('max_execution_time', $execTime);
+
+        $result = "no testing";
+
+        //$testFile = trim((string)$request->get('testFile'));
+
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        set_time_limit(1800); //1800 seconds => 30 mins
+
+        //Update server configuration files
+        $res = $userTenantUtil->processDBTenants($tenantManager);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+
+
+        ///// NOT USED BELOW /////
+        ///// Show result from buffer /////
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+
+        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
+        $createNewTenantScript = realpath($createNewTenantScript);
+        $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
+
+        $tenantId = 'newtenant';
+        $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
+        $url = $tenant->getUrlSlug();
+        $port = $tenant->getTenantPort();
+
+        $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." > $createNewTenantLog";
+
+        //$commandArr = array($testCmd,$testFilePath);
+
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getScheme();
+        $envArr = array();
+        //exit("scheme=$scheme");
+        if( $scheme ) {
+            if( strtolower($scheme) == 'http' ) {
+                //echo "HTTP";
+                $envArr = array('HTTP' => 1);
+            } else {
+                //echo "HTTPS";
+                //$httpsChannel = true;
+            }
+        }
+
+        $commandArr = explode(" ", $createCmd);
+        $logDir = $this->container->get('kernel')->getProjectDir();
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
+        //$process = Process::fromShellCommandline($createCmd);
+
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        //$process->setOptions(['create_new_console' => true]);
+
+        try {
+            //$process->mustRun();
+            $process->run();
+            $buffer = $process->getOutput();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+        } catch (ProcessFailedException $exception) {
+            $buffer = $exception->getMessage();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
     }
 
     #[Route(path: '/tenant-manager/update-db-config', name: 'employees_tenancy_manager_update_db_config', methods: ['GET', 'POST'])]
@@ -357,9 +432,8 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-        $tenantBaseUrlArr = array();
-
-        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        //$tenantBaseUrlArr = array();
+        //$baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
         //$tenantBaseUrlArr[] = '<a href="'.$baseUrl.'">'.$baseUrl.'</a> ';
 
         if( $tenantDataArr['existedTenantIds'] ) {
@@ -451,99 +525,6 @@ class MultiTenancyController extends OrderAbstractController
         }//if( $tenantDataArr['existedTenantIds'] )
 
         return $this->redirect( $this->generateUrl('employees_tenancy_manager_configure') );
-    }
-
-    #[Route(path: '/tenant-manager/update-server-config-ajax', name: 'employees_tenancy_manager_update_server_config_ajax', methods: ['GET'], options: ['expose' => true])]
-    public function updateServerConfigAjaxAction(Request $request) {
-
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect($this->generateUrl('employees-nopermission'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $execTime = 1800; //sec 30 min
-        ini_set('max_execution_time', $execTime);
-
-        $result = "no testing";
-
-        //$testFile = trim((string)$request->get('testFile'));
-
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
-
-        set_time_limit(1800); //1800 seconds => 30 mins
-
-        //Update server configuration files
-        $res = $userTenantUtil->processDBTenants($tenantManager);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
-        return $response;
-
-
-        ///// Show result from buffer /////
-        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-
-        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
-        $createNewTenantScript = realpath($createNewTenantScript);
-        $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
-
-        $tenantId = 'newtenant';
-        $tenant = $em->getRepository(TenantList::class)->findOneByName($tenantId);
-        $url = $tenant->getUrlSlug();
-        $port = $tenant->getTenantPort();
-
-        $createCmd = 'sudo /bin/bash '.$createNewTenantScript.' -t '.$tenantId.' -p '.$port.' -u '.$url." > $createNewTenantLog";
-
-        //$commandArr = array($testCmd,$testFilePath);
-
-        $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getScheme();
-        $envArr = array();
-        //exit("scheme=$scheme");
-        if( $scheme ) {
-            if( strtolower($scheme) == 'http' ) {
-                //echo "HTTP";
-                $envArr = array('HTTP' => 1);
-            } else {
-                //echo "HTTPS";
-                //$httpsChannel = true;
-            }
-        }
-
-        $commandArr = explode(" ", $createCmd);
-        $logDir = $this->container->get('kernel')->getProjectDir();
-        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
-
-        //$process = Process::fromShellCommandline($createCmd);
-
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
-        //$process->setOptions(['create_new_console' => true]);
-
-        try {
-            //$process->mustRun();
-            $process->run();
-            $buffer = $process->getOutput();
-            $buffer = '<code><pre>'.$buffer.'</pre></code>';
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode($buffer));
-            return $response;
-        } catch (ProcessFailedException $exception) {
-            $buffer = $exception->getMessage();
-            $buffer = '<code><pre>'.$buffer.'</pre></code>';
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode($buffer));
-            return $response;
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($result));
-        return $response;
     }
 
     public function removeTenantCollection($originalArr,$currentArr,$entity) {

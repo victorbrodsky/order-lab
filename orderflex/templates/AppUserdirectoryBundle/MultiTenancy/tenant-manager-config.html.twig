@@ -270,17 +270,18 @@
                 href="{{ path('employees_tenancy_manager_update_db_config') }}"
             >Update DB Configuration from the server</a>
         </p>
-        <p>
-            <a class="btn btn-danger"
-               general-data-confirm="Are you sure you would like to update server tenancy configuration files from DB?"
-               href="{{ path('employees_tenancy_manager_update_server_config') }}"
-            >Update Server Configuration from DB</a>
-        </p>
+        {#<p>#}
+            {#<a class="btn btn-danger"#}
+               {#general-data-confirm="Are you sure you would like to update server tenancy configuration files from DB?"#}
+               {#href="{{ path('employees_tenancy_manager_update_server_config') }}"#}
+            {#>Update Server Configuration from DB</a>#}
+        {#</p>#}
+        {#Asynchronously update#}
         <p>
             <a
                 id="update-server-config-ajax" class="btn btn-danger"
                 onclick="runTenancyUpdateConfigProcess(this)"
-            >Asynchronously Update Server Configuration from DB</a>
+            >Update Server Configuration from DB</a>
             <div id="result"></div>
         </p>
     {% endif %}
