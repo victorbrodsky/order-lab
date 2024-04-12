@@ -1085,7 +1085,17 @@ class UserTenantUtil
     public function isTenantInitialized( $tenant ) {
         $initialized = false;
 
-        //check if tenant's DB has users
+        //TODO: check if tenant's DB has users
+        $conn = $this->getConnectionTenantDB($tenant);
+        $userSql = "SELECT * FROM " . 'user_fosuser';
+        $userQuery = $conn->executeQuery($userSql);
+        $userRows = $userQuery->fetchAllAssociative();
+        //dump($userRows);
+        //exit();
+        //$id = $hostedGroupRows[0]['id'];
+        if( count($userRows) > 0 ) {
+            $initialized = true;
+        }
 
         return $initialized;
     }
@@ -1094,10 +1104,40 @@ class UserTenantUtil
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
 
-        //replace baseUrl with the tenant's baseUrl
+        //TODO: replace baseUrl with the tenant's baseUrl
 
         $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
         return $href;
+    }
+
+    public function getConnectionTenantDB( $tenant ) {
+
+        $config = new \Doctrine\DBAL\Configuration();
+        $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+
+        $driver = $this->container->getParameter('database_driver');
+        //$host = $container->getParameter('database_host');
+        $port = $this->container->getParameter('database_port');
+        //$dbname = $container->getParameter('database_name');
+        //$user = $container->getParameter('database_user');
+        //$password = $container->getParameter('database_password');
+
+        $host = $tenant->getDatabaseHost();
+        $dbname = $tenant->getDatabaseName();
+        $user = $tenant->getDatabaseUser();
+        $password = $tenant->getDatabasePassword();
+
+        $connectionParams = array(
+            'driver' => $driver,
+            'host' => $host,
+            'port' => $port,
+            'dbname' => $dbname,
+            'user' => $user,
+            'password' => $password
+        );
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        return $conn;
     }
 
 }
