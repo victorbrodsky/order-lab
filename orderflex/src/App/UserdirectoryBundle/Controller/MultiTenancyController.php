@@ -334,7 +334,7 @@ class MultiTenancyController extends OrderAbstractController
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
-        set_time_limit(1800); //1800 seconds => 30 mins
+        //set_time_limit(1800); //1800 seconds => 30 mins
 
         //Update server configuration files
         $res = $userTenantUtil->processDBTenants($tenantManager);
@@ -347,7 +347,7 @@ class MultiTenancyController extends OrderAbstractController
         return $response;
 
 
-        ///// NOT USED BELOW /////
+        ///////////////// NOT USED BELOW /////////////////
         ///// Show result from buffer /////
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
