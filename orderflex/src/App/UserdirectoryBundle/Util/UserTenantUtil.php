@@ -765,7 +765,7 @@ class UserTenantUtil
 //        );
 //        $output = $this->runProcess_new($commandArr);
 
-        return "Created new tenant $tenantId ".$output;
+        return "Created new tenant $tenantId ".$output."; HAProxy has been restarted.";
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
