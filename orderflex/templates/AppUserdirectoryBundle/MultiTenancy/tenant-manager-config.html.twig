@@ -327,22 +327,23 @@
                 console.log("data="+data);
 
             })
-//            .fail(function(jqXHR, textStatus, error) {
-//                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
-//                        + ", textStatus="
-//                        + textStatus
-//                        + ", error=" + error;
-//
-//                console.log(msg);
-//                $('#result').append(msg);
-//            })
+            .fail(function(jqXHR, textStatus, error) {
+                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
+                        + ", textStatus="
+                        + textStatus
+                        + ", error=" + error;
+
+                console.log(msg);
+                //$('#result').append(msg);
+                setTimeout(function(){ location.reload(); }, 5000); //reload after 5 seconds
+            })
             .done(function() {
                 var doneMsg = "runTenancyUpdateConfigProcess ajax has started";
                 console.log(doneMsg);
                 $('#result').append(doneMsg);
             });
 
-            setTimeout(function(){ location.reload(); }, 5000); //reload after 3 seconds
+
         }
     </script>
 
