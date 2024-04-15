@@ -1105,6 +1105,12 @@ class UserTenantUtil
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
 
         //TODO: replace baseUrl with the tenant's baseUrl
+        $tenantUrl = $tenant->getUrlSlug();
+        $tenantUrl = trim($tenantUrl,'/');
+        //replace '/directory' with $tenantUrl.'/directory'
+        $url = str_replace('/directory',$tenantUrl.'/directory',$url);
+        //echo '$url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
+        //exit('111');
 
         $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
         return $href;
