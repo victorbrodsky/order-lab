@@ -443,7 +443,7 @@ class UserTenantUtil
             } else {
                 //create new tenant
                 $logger->notice("processDBTenants: create new tenant $tenantId");
-                $msgCreateNewTenant = $this->createNewTenant($tenantId);
+                $msgCreateNewTenant = $this->createNewTenant($tenant);
                 $resultTenantArr[$tenantId]['message']['success'][] = $msgCreateNewTenant;
                 //$createNewTenants[] = $tenantId;
                 continue;
@@ -700,10 +700,8 @@ class UserTenantUtil
         }
 
         //create new tenants
-        //$msgCreateNewTenant = $this->createNewTenant($tenantId);
-        //$createNewTenants[] = $tenantId;
         //foreach($createNewTenants as $createNewTenant) {
-        //    $msgCreateNewTenant = $this->createNewTenant($tenantId);
+        //    $msgCreateNewTenant = $this->createNewTenant($tenant);
         //}
 
        //exit('111');
@@ -720,10 +718,17 @@ class UserTenantUtil
         return null;
     }
 
-    public function createNewTenant($tenantId) {
+    public function createNewTenant($tenant) {
         //create new httpd file, add tenant to haproxy
         // order-lab/utils/executables/create-new-tenant.sh
         $logger = $this->container->get('logger');
+
+        $tenantId = $tenant->getName();
+
+        if( $tenant->getEnabled() !== true ) {
+            $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
+        }
+
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
         //don't create if already exists, if folder order-lab-$tenantId exists
