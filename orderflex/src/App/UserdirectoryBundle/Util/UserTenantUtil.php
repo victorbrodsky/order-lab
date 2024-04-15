@@ -725,9 +725,9 @@ class UserTenantUtil
 
         $tenantId = $tenant->getName();
 
-        if( $tenant->getEnabled() !== true ) {
-            $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
-        }
+//        if( $tenant->getEnabled() !== true ) {
+//            $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
+//        }
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
