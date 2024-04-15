@@ -1109,7 +1109,7 @@ class UserTenantUtil
         $tenantUrl = $tenant->getUrlSlug();
         $tenantUrl = trim($tenantUrl,'/');
         //replace 'tenant-manager'.'/directory' with $tenantUrl.'/directory'
-        $url = str_replace($tenantManagerUrl.'/directory',$tenantUrl.'/directory/',$url);
+        $url = str_replace($tenantManagerUrl.'/directory',$tenantUrl.'/directory',$url);
         echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
         //exit('111');
 

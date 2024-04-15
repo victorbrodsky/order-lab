@@ -128,6 +128,7 @@ class MultiTenancyController extends OrderAbstractController
             if ($tenant) {
                 if( $tenant->getName() === $tenantManagerName ) {
                     $tenantManagerUrl = $tenant->getUrlSlug();
+                    break;
                 }
             }
         }
