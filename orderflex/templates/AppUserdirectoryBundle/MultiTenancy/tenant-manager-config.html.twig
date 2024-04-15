@@ -337,10 +337,12 @@
 //                $('#result').append(msg);
 //            })
             .done(function() {
-                console.log("runTenancyUpdateConfigProcess ajax has started");
-                //$('#result').append(msg);
-                setTimeout(function(){ location.reload(); }, 3000); //reload after 3 seconds
+                var doneMsg = "runTenancyUpdateConfigProcess ajax has started";
+                console.log(doneMsg);
+                $('#result').append(doneMsg);
             });
+
+            setTimeout(function(){ location.reload(); }, 5000); //reload after 3 seconds
         }
     </script>
 
