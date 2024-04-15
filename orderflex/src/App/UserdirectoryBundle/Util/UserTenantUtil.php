@@ -1119,7 +1119,7 @@ class UserTenantUtil
         return $initialized;
     }
 
-    //$baseUrl - 
+    //TODO: check newtenantt init
     public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
