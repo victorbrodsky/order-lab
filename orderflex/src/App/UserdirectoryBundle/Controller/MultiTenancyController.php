@@ -91,8 +91,9 @@ class MultiTenancyController extends OrderAbstractController
         // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
         // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
 
+        $tenantManagerName = 'tenantmanager';
         $tenantRole = $this->getParameter('tenant_role');
-        if( $tenantRole != 'tenantmanager' ) {
+        if( $tenantRole != $tenantManagerName ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
             }
@@ -122,6 +123,16 @@ class MultiTenancyController extends OrderAbstractController
         //echo "cycle=".$cycle."<br>";
         //exit('111');
 
+        $tenantManagerUrl = null;
+        foreach ($tenantManager->getTenants() as $tenant) {
+            if ($tenant) {
+                if( $tenant->getName() === $tenantManagerName ) {
+                    $tenantManagerUrl = $tenant->getUrlSlug();
+                }
+            }
+        }
+        echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
+
         //TODO: check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
@@ -129,6 +140,7 @@ class MultiTenancyController extends OrderAbstractController
         foreach ($tenantManager->getTenants() as $tenant) {
             if($tenant) {
                 $url = $tenant->getUrlSlug();
+
                 if ($url) {
                     if ($url == '/') {
                         $tenantBaseUrl = $baseUrl;
@@ -145,7 +157,7 @@ class MultiTenancyController extends OrderAbstractController
 
                     //isTenantInitialized
                     if( $userTenantUtil->isTenantInitialized($tenant) === false ) {
-                        $initializeUrl = $userTenantUtil->getInitUrl($tenant);
+                        $initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
                         $tenantBaseUrl = $tenantBaseUrl . " (".$initializeUrl.")";
                     }
 

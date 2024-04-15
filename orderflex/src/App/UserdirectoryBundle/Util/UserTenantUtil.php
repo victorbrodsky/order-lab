@@ -1100,16 +1100,17 @@ class UserTenantUtil
         return $initialized;
     }
 
-    public function getInitUrl( $tenant ) {
+    //$baseUrl - 
+    public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
 
         //TODO: replace baseUrl with the tenant's baseUrl
         $tenantUrl = $tenant->getUrlSlug();
         $tenantUrl = trim($tenantUrl,'/');
-        //replace '/directory' with $tenantUrl.'/directory'
-        $url = str_replace('/directory',$tenantUrl.'/directory',$url);
-        //echo '$url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
+        //replace 'tenant-manager'.'/directory' with $tenantUrl.'/directory'
+        $url = str_replace($tenantManagerUrl.'/directory',$tenantUrl.'/directory/',$url);
+        echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
         //exit('111');
 
         $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
