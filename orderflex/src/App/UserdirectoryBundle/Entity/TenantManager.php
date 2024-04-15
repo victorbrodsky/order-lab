@@ -64,6 +64,7 @@ class TenantManager
 
     // * ListOfHostedTenants as a List of hosted tenants, each one shown as a clickable link
     #[ORM\OneToMany(targetEntity: TenantList::class, mappedBy: 'tenantManager', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $tenants;
 
 
