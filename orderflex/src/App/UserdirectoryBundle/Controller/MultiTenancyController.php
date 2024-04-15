@@ -132,7 +132,7 @@ class MultiTenancyController extends OrderAbstractController
                 }
             }
         }
-        echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
+        //echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
 
         //TODO: check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
