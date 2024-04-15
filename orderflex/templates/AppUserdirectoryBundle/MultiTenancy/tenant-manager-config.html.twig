@@ -312,7 +312,7 @@
             var msg = "Update tenancy configuarion on the server has been started in the background."
                     +" Please verify the status of the new tenant's url in couple of minutes.";
             //$('#result').append("Start runTenancyUpdateConfigProcess: url="+url);
-            $('#result').append(msg);
+            //$('#result').append(msg);
 
             btn.remove();
 
@@ -339,6 +339,7 @@
             .done(function() {
                 console.log("runTenancyUpdateConfigProcess ajax has started");
                 $('#result').append(msg);
+                setTimeout(function(){ location.reload(); }, 3000); //reload after 3 seconds
             });
         }
     </script>

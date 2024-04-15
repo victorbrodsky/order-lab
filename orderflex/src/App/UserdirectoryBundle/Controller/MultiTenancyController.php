@@ -258,54 +258,58 @@ class MultiTenancyController extends OrderAbstractController
         //Update server configuration files
         $res = $userTenantUtil->processDBTenants($tenantManager);
 
-        //$resultTenantArr['haproxy-message']['error']
-        if( isset($res['haproxy-message']['error']) ) {
-            $this->addFlash(
-                'warning',
-                implode("<br>", $res['haproxy-message']['error'])
-            );
-        }
-        //$resultTenantArr['haproxy-message']['success']
-        if( isset($res['haproxy-message']['success']) ) {
-            $this->addFlash(
-                'notice',
-                implode("<br>", $res['haproxy-message']['success'])
-            );
-        }
-
-        //$resultTenantArr['httpd-message']
-        if( isset($res['httpd-message']['success']) ) {
-            $this->addFlash(
-                'notice',
-                implode("<br>", $res['httpd-message']['success'])
-            );
-        }
-        if( isset($res['httpd-message']['error']) ) {
-            $this->addFlash(
-                'warning',
-                implode("<br>", $res['httpd-message']['error'])
-            );
-        }
-
-        //dump($res);
-        //exit('exit processDBTenants');
-
-        //$resultTenantArr[$tenantId]['message']['error']
-        //$resultTenantArr[$tenantId]['message']['success']
-        foreach($res as $tenantId => $tenantInfoArr) {
-            if( isset($tenantInfoArr['message']['success']) ) {
-                $this->addFlash(
-                    'notice',
-                    implode("<br>", $tenantInfoArr['message']['success'])
-                );
-            }
-            if( isset($tenantInfoArr['message']['error']) ) {
+        if(0) {
+            //$resultTenantArr['haproxy-message']['error']
+            if (isset($res['haproxy-message']['error'])) {
                 $this->addFlash(
                     'warning',
-                    implode("<br>", $tenantInfoArr['error']['success'])
+                    implode("<br>", $res['haproxy-message']['error'])
                 );
             }
+            //$resultTenantArr['haproxy-message']['success']
+            if (isset($res['haproxy-message']['success'])) {
+                $this->addFlash(
+                    'notice',
+                    implode("<br>", $res['haproxy-message']['success'])
+                );
+            }
+
+            //$resultTenantArr['httpd-message']
+            if (isset($res['httpd-message']['success'])) {
+                $this->addFlash(
+                    'notice',
+                    implode("<br>", $res['httpd-message']['success'])
+                );
+            }
+            if (isset($res['httpd-message']['error'])) {
+                $this->addFlash(
+                    'warning',
+                    implode("<br>", $res['httpd-message']['error'])
+                );
+            }
+
+            //dump($res);
+            //exit('exit processDBTenants');
+
+            //$resultTenantArr[$tenantId]['message']['error']
+            //$resultTenantArr[$tenantId]['message']['success']
+            foreach ($res as $tenantId => $tenantInfoArr) {
+                if (isset($tenantInfoArr['message']['success'])) {
+                    $this->addFlash(
+                        'notice',
+                        implode("<br>", $tenantInfoArr['message']['success'])
+                    );
+                }
+                if (isset($tenantInfoArr['message']['error'])) {
+                    $this->addFlash(
+                        'warning',
+                        implode("<br>", $tenantInfoArr['error']['success'])
+                    );
+                }
+            }
         }
+
+        $this->flashSessionResults($res);
 
         return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
     }
@@ -334,6 +338,8 @@ class MultiTenancyController extends OrderAbstractController
 
         //Update server configuration files
         $res = $userTenantUtil->processDBTenants($tenantManager);
+
+        $this->flashSessionResults($res);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -403,6 +409,57 @@ class MultiTenancyController extends OrderAbstractController
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($result));
         return $response;
+    }
+
+    public function flashSessionResults( $res ) {
+        //$resultTenantArr['haproxy-message']['error']
+        if( isset($res['haproxy-message']['error']) ) {
+            $this->addFlash(
+                'warning',
+                implode("<br>", $res['haproxy-message']['error'])
+            );
+        }
+        //$resultTenantArr['haproxy-message']['success']
+        if( isset($res['haproxy-message']['success']) ) {
+            $this->addFlash(
+                'notice',
+                implode("<br>", $res['haproxy-message']['success'])
+            );
+        }
+
+        //$resultTenantArr['httpd-message']
+        if( isset($res['httpd-message']['success']) ) {
+            $this->addFlash(
+                'notice',
+                implode("<br>", $res['httpd-message']['success'])
+            );
+        }
+        if( isset($res['httpd-message']['error']) ) {
+            $this->addFlash(
+                'warning',
+                implode("<br>", $res['httpd-message']['error'])
+            );
+        }
+
+        //dump($res);
+        //exit('exit processDBTenants');
+
+        //$resultTenantArr[$tenantId]['message']['error']
+        //$resultTenantArr[$tenantId]['message']['success']
+        foreach($res as $tenantId => $tenantInfoArr) {
+            if( isset($tenantInfoArr['message']['success']) ) {
+                $this->addFlash(
+                    'notice',
+                    implode("<br>", $tenantInfoArr['message']['success'])
+                );
+            }
+            if( isset($tenantInfoArr['message']['error']) ) {
+                $this->addFlash(
+                    'warning',
+                    implode("<br>", $tenantInfoArr['error']['success'])
+                );
+            }
+        }
     }
 
     #[Route(path: '/tenant-manager/update-db-config', name: 'employees_tenancy_manager_update_db_config', methods: ['GET', 'POST'])]

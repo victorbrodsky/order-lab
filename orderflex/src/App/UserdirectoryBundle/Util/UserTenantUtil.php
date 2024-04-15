@@ -396,6 +396,7 @@ class UserTenantUtil
         $resultTenantArr = array();
         $resultTenantArr['haproxy-message'] = null;
         $resultTenantArr['httpd-message'] = null;
+        $createNewTenants = array();
 
         //testing
         if(0) {
@@ -444,6 +445,7 @@ class UserTenantUtil
                 $logger->notice("processDBTenants: create new tenant $tenantId");
                 $msgCreateNewTenant = $this->createNewTenant($tenantId);
                 $resultTenantArr[$tenantId]['message']['success'][] = $msgCreateNewTenant;
+                //$createNewTenants[] = $tenantId;
                 continue;
             }
 
@@ -653,7 +655,7 @@ class UserTenantUtil
             }//if url changes
 
 
-        }//foreach
+        }//foreach tenant
 
         if( $updateHttpd === true || $updateHaproxy === true ) {
             $msg = "Restart haproxy service";
@@ -696,6 +698,13 @@ class UserTenantUtil
 //            );
             $resultTenantArr['haproxy-message']['error'][] = $msg;
         }
+
+        //create new tenants
+        //$msgCreateNewTenant = $this->createNewTenant($tenantId);
+        //$createNewTenants[] = $tenantId;
+        //foreach($createNewTenants as $createNewTenant) {
+        //    $msgCreateNewTenant = $this->createNewTenant($tenantId);
+        //}
 
        //exit('111');
         return $resultTenantArr; //$resultArr;
