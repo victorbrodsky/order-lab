@@ -1096,6 +1096,11 @@ class UserTenantUtil
 
         //TODO: check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
+
+        if( !$conn ) {
+            return $initialized;
+        }
+
         $userSql = "SELECT * FROM " . 'user_fosuser';
         $userQuery = $conn->executeQuery($userSql);
         $userRows = $userQuery->fetchAllAssociative();
@@ -1152,6 +1157,16 @@ class UserTenantUtil
             'password' => $password
         );
         $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        if ($conn) {
+            try {
+                $conn->getDatabase();
+            } catch (\Exception $e) {
+                //exit('NO');
+                //echo "getConnectionTenantDB: Failed to connect to system DB. Use the default DB; " . $e->getMessage() . "<br>";
+                $conn = null;
+            }
+        }
 
         return $conn;
     }
