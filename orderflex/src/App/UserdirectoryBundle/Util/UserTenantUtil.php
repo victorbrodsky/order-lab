@@ -1110,7 +1110,7 @@ class UserTenantUtil
         $tenantUrl = trim($tenantUrl,'/');
         //replace 'tenant-manager'.'/directory' with $tenantUrl.'/directory'
         $url = str_replace($tenantManagerUrl.'/directory',$tenantUrl.'/directory',$url);
-        echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
+        //echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
         //exit('111');
 
         $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
