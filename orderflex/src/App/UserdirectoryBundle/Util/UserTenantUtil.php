@@ -1119,7 +1119,7 @@ class UserTenantUtil
         return $initialized;
     }
 
-    //TODO: check newtenantt init
+    //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok
     public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
