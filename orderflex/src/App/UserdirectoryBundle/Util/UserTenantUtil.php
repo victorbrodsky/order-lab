@@ -1140,10 +1140,13 @@ class UserTenantUtil
             return $initialized;
         }
 
-        $userSql = "SELECT * FROM " . 'user_tenantmanager';
-        $userQuery = $conn->executeQuery($userSql);
-        $userRows = $userQuery->fetchAllAssociative();
-        dump($userRows);
+        //$tenantManagerSql = "SELECT * FROM " . 'user_tenantmanager';
+
+        $tenantsSql = "SELECT * FROM " . 'user_tenantlist' . " WHERE tenantmanager_id=1";
+
+        $tenantsQuery = $conn->executeQuery($tenantsSql);
+        $tenantsRows = $tenantsQuery->fetchAllAssociative();
+        dump($tenantsRows);
         exit('get Tenants From Tenant Manager');
         //$tenant = $hostedGroupRows[0]['id'];
 
