@@ -35,7 +35,14 @@ use Symfony\Bridge\Twig\Attribute\Template;
 
 class HomeController extends OrderAbstractController {
 
-    public function mainCommonHomeAction() {
+    public function mainCommonHomeAction(Request $request) {
+
+        //homepagemanager show a different multi-tenant home page
+        $tenantManagerName = 'homepagemanager';
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != $tenantManagerName ) {
+            return $this->multiTenancyHomePage();
+        }
 
         //$userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -93,6 +100,76 @@ class HomeController extends OrderAbstractController {
 //                'height' => $height
 //            )
 //        );
+    }
+
+    //Header Image : [DropZone field allowing upload of 1 image]
+    //Greeting Text : [free text form field, multi-line, accepts HTML, with default value: “Welcome to the View! The following organizations are hosted on this platform:”]
+    //[List of hosted tenants, each one shown as a clickable link]
+    //Main text [free text form field, multi-line, accepts HTML, with default value: “Please visit the site of the organization of interest to see the available applications.”]
+    //Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
+    //
+    //Add /about-us “About Us” (Multitenant Platform) page config and URL as well (only accessible on the Homepage Manager instance):
+    //About Us Page Header: [DropZone field allowing upload of 1 image]
+    //About Us Page Text: [free text form field, multi-line, accepts HTML, with default value: “This website hosts data for organizations using the Order platform.”]
+    //About Us Page Footer: [free text form field, multi-line, accepts HTML, with default value: “[<a href=”/”>Home</a> | About Us | Follow Us]
+    public function multiTenancyHomePage(Request $request) {
+
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
+        $title = "Multi-tenancy home page";
+
+        $width = "300";
+        $height = "80";
+
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+        $platformLogoPath = null;
+        $platformLogos = $tenantManager->getLogos();
+        if( is_array($platformLogos) && count($platformLogos) > 0 ) {
+            $platformLogo = $platformLogos->first();
+            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+        }
+
+        $tenants = array();
+        $tenantBaseUrlArr = array();
+        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        foreach ($tenantManager->getTenants() as $tenant) {
+            if($tenant) {
+                $url = $tenant->getUrlSlug();
+
+                if ($url) {
+                    if ($url == '/') {
+                        $tenantBaseUrl = $baseUrl;
+                    } else {
+                        $tenantBaseUrl = $baseUrl . '/' . $url;
+                    }
+
+                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+
+                    $enabled = $tenant->getEnabled();
+                    if( !$enabled ) {
+                        $tenantBaseUrl = $tenantBaseUrl . " (Disabled)";
+                    }
+
+                    //isTenantInitialized
+                    if( $userTenantUtil->isTenantInitialized($tenant) === false ) {
+                        $initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
+                        $tenantBaseUrl = $tenantBaseUrl . " (".$initializeUrl.")";
+                    }
+
+                    $tenantBaseUrlArr[] = $tenantBaseUrl;
+                }
+            }
+        }
+
+        return $this->render('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-home.html.twig',
+            array(
+                'title' => $title,
+                'tenantBaseUrlArr' => $tenantBaseUrlArr,
+                'platformLogo' => $platformLogoPath,
+                'width' => $width,
+                'height' => $height
+            )
+        );
     }
 
     #[Route(path: '/maintanencemode', name: 'main_maintenance')]
