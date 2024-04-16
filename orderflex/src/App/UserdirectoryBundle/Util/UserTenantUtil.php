@@ -1121,20 +1121,6 @@ class UserTenantUtil
     }
 
     public function getTenantsFromTenantManager( $tenantManagerName = 'tenantmanager' ) {
-        //1) acces order-lab-tenantmanager and get DB parameters from parameters.yml
-//        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-//        $tenantManagerParam = $projectRoot.'/../../order-lab-homepagemanager/orderflex/config/parameters.yml';
-//
-//        if( file_exists($tenantManagerParam) ) {
-//            $tenantManagerParam = realpath($tenantManagerParam);
-//        } else {
-//            return array();
-//        }
-//
-//        echo "tenantManagerParam=$tenantManagerParam<br>";
-//        $paramText = file_get_contents($tenantManagerParam);
-//        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
@@ -1167,13 +1153,10 @@ class UserTenantUtil
 
         $tenantsQuery = $conn->executeQuery($tenantsSql);
         $tenantsRows = $tenantsQuery->fetchAllAssociative();
-        dump($tenantsRows);
-        exit('get Tenants From Tenant Manager');
+        //dump($tenantsRows);
+        //exit('get Tenants From Tenant Manager');
         //$tenant = $hostedGroupRows[0]['id'];
-
-        $tenants = array();
-
-        return $tenants;
+        return $tenantsRows;
     }
 
     //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok

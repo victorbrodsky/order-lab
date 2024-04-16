@@ -111,6 +111,7 @@ class HomeController extends OrderAbstractController {
         foreach ($tenants as $tenant) {
             if($tenant) {
                 $url = $tenant->getUrlSlug();
+                echo "url=".$url."<br>";
 
                 if ($url) {
                     if ($url == '/') {
