@@ -40,8 +40,8 @@ class HomeController extends OrderAbstractController {
         //homepagemanager show a different multi-tenant home page
         $tenantManagerName = 'homepagemanager';
         $tenantRole = $this->getParameter('tenant_role');
-        if( $tenantRole != $tenantManagerName ) {
-            return $this->multiTenancyHomePage();
+        if( $tenantRole == $tenantManagerName ) {
+            return $this->multiTenancyHomePage($request);
         }
 
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -161,11 +161,18 @@ class HomeController extends OrderAbstractController {
             }
         }
 
+        $greetingText = $tenantManager->getGreeting();
+        $mainText = $tenantManager->getMaintext();
+        $footer = $tenantManager->getFooter();
+
         return $this->render('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-home.html.twig',
             array(
                 'title' => $title,
                 'tenantBaseUrlArr' => $tenantBaseUrlArr,
                 'platformLogo' => $platformLogoPath,
+                'greetingText' => $greetingText,
+                'mainText' => $mainText,
+                'footer' => $footer,
                 'width' => $width,
                 'height' => $height
             )
