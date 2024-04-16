@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Entity\TenantList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LabelType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
@@ -108,9 +109,26 @@ class HomeController extends OrderAbstractController {
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
         $tenants = $userTenantUtil->getTenantsFromTenantManager();
+
+        $tenantManagerName = 'tenantmanager';
+        $tenantManagerUrl = null;
         foreach ($tenants as $tenant) {
-            if($tenant) {
-                $url = $tenant->getUrlSlug();
+            if( $tenant['name'] === $tenantManagerName ) {
+                $tenantManagerUrl = $tenant->getUrlSlug();
+                break;
+            }
+        }
+
+        foreach ($tenants as $tenantArr) {
+            //$tenant as array
+            if($tenantArr) {
+                $tenant = new TenantList();
+                $tenant->setDatabaseHost($tenantArr['databasehost']);
+                $tenant->setDatabaseName($tenantArr['databasename']);
+                $tenant->setDatabaseUser($tenantArr['databaseuser']);
+                $tenant->setDatabasePassword($tenantArr['databasepassword']);
+
+                $url = $tenant->getUrlslug();
                 echo "url=".$url."<br>";
 
                 if ($url) {
