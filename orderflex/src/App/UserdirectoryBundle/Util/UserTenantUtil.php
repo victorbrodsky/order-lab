@@ -1136,16 +1136,17 @@ class UserTenantUtil
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
-        dump($tenantDataArr);
-        exit('111');
+        //dump($tenantDataArr);
+        //exit('111');
 
         $paramText = file_get_contents($tenantManagerParam);
         $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
 
-        $host = $this->container->getParameter('database_host');
-        $dbname = $this->container->getParameter('database_name');
-        $user = $this->container->getParameter('database_user');
-        $password = $this->container->getParameter('database_password');
+        $host = $tenantDataArr[$tenantManagerName]['databaseHost'];
+        $dbname = $tenantDataArr[$tenantManagerName]['databaseName'];
+        $user = $tenantDataArr[$tenantManagerName]['databaseUser'];
+        $password = $tenantDataArr[$tenantManagerName]['databasePassword'];
+        echo "dbname=$dbname<br>";
 
         //create dummy tenantmanager
         $tenantManager = new TenantList();
