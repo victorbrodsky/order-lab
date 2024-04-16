@@ -725,9 +725,10 @@ class UserTenantUtil
 
         $tenantId = $tenant->getName();
 
-//        if( $tenant->getEnabled() !== true ) {
-//            $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
-//        }
+        if( $tenant->getEnabled() !== true ) {
+            $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
+            return "createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.";
+        }
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
@@ -1099,7 +1100,7 @@ class UserTenantUtil
     public function isTenantInitialized( $tenant ) {
         $initialized = false;
 
-        //TODO: check if tenant's DB has users
+        //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
 
         if( !$conn ) {
@@ -1124,7 +1125,7 @@ class UserTenantUtil
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
 
-        //TODO: replace baseUrl with the tenant's baseUrl
+        //replace baseUrl with the tenant's baseUrl
         $tenantUrl = $tenant->getUrlSlug();
         $tenantUrl = trim($tenantUrl,'/');
         //replace 'tenant-manager'.'/directory' with $tenantUrl.'/directory'
@@ -1132,6 +1133,7 @@ class UserTenantUtil
         $url = str_replace($tenantManagerUrl,$tenantUrl,$url);
         //echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
         //exit('111');
+        //url=directory/admin/first-time-login-generation-init
 
         $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
         return $href;

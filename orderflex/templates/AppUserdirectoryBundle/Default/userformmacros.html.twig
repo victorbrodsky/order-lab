@@ -1377,7 +1377,10 @@
         {#baseUrl={{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}#}
         {% if formfield.vars.value %}
             {#{% set tenantUrl = app.request.schemeAndHttpHost ~ app.request.baseUrl ~ '/' ~ formfield.vars.value.urlSlug %}#}
-            {% set tenantUrl = app.request.schemeAndHttpHost ~ '/' ~ formfield.vars.value.urlSlug %}
+            {% set tenantUrl = app.request.schemeAndHttpHost %}
+            {% if formfield.vars.value.urlSlug %}
+                {% set tenantUrl = tenantUrl ~ '/' ~ formfield.vars.value.urlSlug %}
+            {% endif %}
             <a href="{{ tenantUrl }}" target="_blank">{{ tenantUrl }}</a>
         {% endif %}
 
