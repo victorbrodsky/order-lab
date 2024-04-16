@@ -127,6 +127,8 @@ class HomeController extends OrderAbstractController {
                 $tenant->setDatabaseName($tenantArr['databasename']);
                 $tenant->setDatabaseUser($tenantArr['databaseuser']);
                 $tenant->setDatabasePassword($tenantArr['databasepassword']);
+                $tenant->setUrlslug($tenantArr['urlslug']);
+                $tenant->setEnabled($tenantArr['enabled']);
 
                 $url = $tenant->getUrlslug();
                 echo "url=".$url."<br>";
