@@ -1121,6 +1121,27 @@ class UserTenantUtil
     }
 
     public function getTenantsFromTenantManager( $tenantManagerName = 'tenantmanager' ) {
+        //1) acces order-lab-tenantmanager and get DB parameters from parameters.yml
+//        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//        $tenantManagerParam = $projectRoot.'/../../order-lab-homepagemanager/orderflex/config/parameters.yml';
+//
+//        if( file_exists($tenantManagerParam) ) {
+//            $tenantManagerParam = realpath($tenantManagerParam);
+//        } else {
+//            return array();
+//        }
+//
+//        echo "tenantManagerParam=$tenantManagerParam<br>";
+
+        $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
+        $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
+
+        dump($tenantDataArr);
+        exit('111');
+
+        $paramText = file_get_contents($tenantManagerParam);
+        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+
         $host = $this->container->getParameter('database_host');
         $dbname = $this->container->getParameter('database_name');
         $user = $this->container->getParameter('database_user');
