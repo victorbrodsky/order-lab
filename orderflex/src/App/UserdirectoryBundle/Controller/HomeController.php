@@ -114,7 +114,7 @@ class HomeController extends OrderAbstractController {
         $tenantManagerUrl = null;
         foreach ($tenants as $tenant) {
             if( $tenant['name'] === $tenantManagerName ) {
-                $tenantManagerUrl = $tenant->getUrlSlug();
+                $tenantManagerUrl = $tenant['urlslug'];
                 break;
             }
         }
