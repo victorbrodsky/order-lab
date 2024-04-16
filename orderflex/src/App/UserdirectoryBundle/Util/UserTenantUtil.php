@@ -1132,15 +1132,14 @@ class UserTenantUtil
 //        }
 //
 //        echo "tenantManagerParam=$tenantManagerParam<br>";
+//        $paramText = file_get_contents($tenantManagerParam);
+//        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
 
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
         //dump($tenantDataArr);
         //exit('111');
-
-        $paramText = file_get_contents($tenantManagerParam);
-        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
 
         $host = $tenantDataArr[$tenantManagerName]['databaseHost'];
         $dbname = $tenantDataArr[$tenantManagerName]['databaseName'];
