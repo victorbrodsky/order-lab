@@ -71,14 +71,9 @@
         {{ formmacros.field(form.footer) }}
 
 
-        {% if form.tenants is defined %}
-            {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
-            {{ userform.tenantsSection(form.tenants, cycle, employees_sitename, "in", "Tenant(s)",true) }}
-        {% endif %}
-
-
-        {#{% if form.submit is defined %}#}
-            {#{{ form_widget(form.submit) }}#}
+        {#{% if form.tenants is defined %}#}
+            {#{% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}#}
+            {#{{ userform.tenantsSection(form.tenants, cycle, employees_sitename, "in", "Tenant(s)",true) }}#}
         {#{% endif %}#}
 
     {% if form.submit is defined %}
@@ -89,7 +84,7 @@
                 {#{% endif %}#}
             </div>
             <div class="col-xs-6" align="left">
-                <a class="btn btn-default" href="{{ path('employees_tenancy_manager_configure') }}"
+                <a class="btn btn-default" href="{{ path('employees_homepage_manager_configure') }}"
                 >Cancel</a>
             </div>
         </div>
@@ -97,103 +92,12 @@
 
     {{ form_end(form) }}
 
-    {#{% if cycle == 'edit' %}#}
-        {#<p>#}
-            {#<a class="btn btn-warning" href="{{ path('employees_tenancy_manager_configure') }}"#}
-            {#>Cancel</a>#}
-        {#</p>#}
-    {#{% endif %}#}
     {% if cycle == 'show' %}
         <br>
         <p>
-            <a class="btn btn-success" href="{{ path('employees_tenancy_manager_configure_edit') }}"
+            <a class="btn btn-success" href="{{ path('employees_homepage_manager_configure_edit') }}"
             >Edit</a>
         </p>
-        <p>
-            <a
-                class="btn btn-warning"
-                general-data-confirm="Are you sure you would like to update DB tenancy configuration from the server configuration files?"
-                href="{{ path('employees_tenancy_manager_update_db_config') }}"
-            >Update DB Configuration from the server</a>
-        </p>
-        {#<p>#}
-            {#<a class="btn btn-danger"#}
-               {#general-data-confirm="Are you sure you would like to update server tenancy configuration files from DB?"#}
-               {#href="{{ path('employees_tenancy_manager_update_server_config') }}"#}
-            {#>Update Server Configuration from DB</a>#}
-        {#</p>#}
-        {#Asynchronously update#}
-        <p>
-            <a
-                id="update-server-config-ajax" class="btn btn-danger"
-                onclick="runTenancyUpdateConfigProcess(this)"
-            >Update Server Configuration from DB</a>
-            <div id="result"></div>
-        </p>
     {% endif %}
-
-    {#<br><br>#}
-    {#<a#}
-            {#target="_blank" class="btn btn-danger"#}
-            {#href="{{ path('employees_tenancy_management_update') }}"#}
-    {#>Clear Cache and create Databases</a>#}
-
-{% endblock %}
-
-
-
-{% block additionaljs %}
-
-    <script>
-
-//        $(document).ready(function () {
-//            //runTenancyUpdateConfigProcess();
-//        });
-
-        //similar to runTestingProcess
-        function runTenancyUpdateConfigProcess(btn) {
-            var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
-            console.log("Start runTenancyUpdateConfigProcess: url="+url);
-
-            var msg = "Update tenancy configuarion on the server has been started in the background."
-                    +" Please verify the status of the new tenant's url in 15 minutes.";
-                    //+"Please wait, this page will be reloaded shortly.";
-            //$('#result').append("Start runTenancyUpdateConfigProcess: url="+url);
-            $('#result').append(msg);
-
-            btn.remove();
-
-            $.ajax({
-                url: url,
-                timeout: 18000, //in milliseconds. sets timeout to 33 minutes
-                dataType: 'json',
-                async: true,
-            }).done(function(data) {
-
-                $('#result').append(data);
-                console.log("data="+data);
-
-            })
-            .fail(function(jqXHR, textStatus, error) {
-                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
-                        + ", textStatus="
-                        + textStatus
-                        + ", error=" + error;
-
-                console.log(msg);
-                //alert(msg);
-                //$('#result').append(msg);
-                location.reload();
-                //setTimeout(function(){ location.reload(); }, 3000); //5000 - reload after 5 seconds
-            })
-            .done(function() {
-                var doneMsg = "runTenancyUpdateConfigProcess ajax has started";
-                console.log(doneMsg);
-                $('#result').append(doneMsg);
-            });
-
-
-        }
-    </script>
 
 {% endblock %}

@@ -42,50 +42,54 @@ class TenantManagerType extends AbstractType
         //echo "cycle=".$this->params['cycle']."<br>";
         //echo "disabled=".$this->params['disabled']."<br>";
 
-        $builder->add('logos', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Header Image:',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+        if( $this->params['homepagemanager'] ) {
+            $builder->add('logos', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Header Image:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
 
-        $builder->add('greeting',null,array(
-            'label' => 'Greeting text:',
-            'required' => false,
-            'attr' => array('class'=>'form-control textarea')
-        ));
+            $builder->add('greeting', null, array(
+                'label' => 'Greeting text:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
 
-        $builder->add('maintext',null,array(
-            'label' => 'Main text:',
-            'required' => false,
-            'attr' => array('class'=>'form-control textarea')
-        ));
+            $builder->add('maintext', null, array(
+                'label' => 'Main text:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
 
-        $builder->add('footer',null,array(
-            'label' => 'Footer:',
-            'required' => false,
-            'attr' => array('class'=>'form-control textarea')
-        ));
+            $builder->add('footer', null, array(
+                'label' => 'Footer:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+        }
 
-        $builder->add('tenants', CollectionType::class, array(
-            'entry_type' => TenantType::class,
-            //'entry_options' => array(
-            //    'form_custom_value' => $this->params,
-            //    'form_custom_value_mapper' => $this->mapper
-            //),
-            //'form_custom_value' => $this->params,
-            'label' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__tenants__',
-        ));
+        if( $this->params['tenantmanager'] ) {
+            $builder->add('tenants', CollectionType::class, array(
+                'entry_type' => TenantType::class,
+                //'entry_options' => array(
+                //    'form_custom_value' => $this->params,
+                //    'form_custom_value_mapper' => $this->mapper
+                //),
+                //'form_custom_value' => $this->params,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__tenants__',
+            ));
+        }
 
 //        $builder->add('authServerNetwork', EntityType::class, array(
 //            'class' => 'App\UserdirectoryBundle\Entity\AuthServerNetworkList',

@@ -184,6 +184,7 @@ class MultiTenancyController extends OrderAbstractController
         );
         $params['user'] = $user;
         $params['cycle'] = $cycle;
+        $params['tenantRole'] = $tenantRole;
         $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
             'form_custom_value' => $params,
             'disabled' => $disabled,
@@ -944,7 +945,7 @@ class MultiTenancyController extends OrderAbstractController
     //Homepage
     #[Route(path: '/homepage-manager/configure/', name: 'employees_homepage_manager_configure')]
     #[Route(path: '/homepage-manager/configure/edit', name: 'employees_homepage_manager_configure_edit')]
-    #[Template('AppUserdirectoryBundle/MultiTenancy/homepage-config.html.twig')]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/homepage-manager-config.html.twig')]
     public function homepageConfigureAction(Request $request)
     {
         //First show tenancy home page settings (TenantManager)
@@ -981,7 +982,7 @@ class MultiTenancyController extends OrderAbstractController
         $disabled = true;
 
         $routeName = $request->get('_route');
-        if( $routeName == 'employees_tenancy_manager_configure_edit' ) {
+        if( $routeName == 'employees_homepage_manager_configure_edit' ) {
             $cycle = "edit";
             $disabled = false;
         }
@@ -999,7 +1000,7 @@ class MultiTenancyController extends OrderAbstractController
         }
         //echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
 
-        //TODO: check if tenant initialized, if not replace the url with
+        //check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
@@ -1032,12 +1033,6 @@ class MultiTenancyController extends OrderAbstractController
             }
         }
 
-
-        $originalTenants = array();
-        foreach ($tenantManager->getTenants() as $tenant) {
-            $originalTenants[] = $tenant;
-        }
-
         //echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
         //foreach($tenantManager->getTenants() as $tenant) {
         //    echo "tenant=$tenant <br>";
@@ -1049,6 +1044,7 @@ class MultiTenancyController extends OrderAbstractController
         );
         $params['user'] = $user;
         $params['cycle'] = $cycle;
+        $params['tenantRole'] = $tenantRole;
         $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
             'form_custom_value' => $params,
             'disabled' => $disabled,
@@ -1062,18 +1058,7 @@ class MultiTenancyController extends OrderAbstractController
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //exit("tenantManagerConfigureAction: form is valid");
-
-            $removedTenantCollections = array();
-            $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
-            if( $removedInfo ) {
-                $removedTenantCollections[] = $removedInfo;
-                //echo "Remove tenant: ".$removedInfo."<br>";
-                $this->addFlash(
-                    'notice',
-                    "Tenant has been removed from Database: ".$removedInfo
-                );
-            }
+            //exit("HomePageManagerConfigureAction: form is valid");
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
@@ -1081,12 +1066,10 @@ class MultiTenancyController extends OrderAbstractController
 
             $this->addFlash(
                 'notice',
-                "Tenancy configuration have been updated."
+                "Homepage manager configuration have been updated."
             );
 
-            //exit('111');
-            return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
-            //return $this->redirect( $this->generateUrl('main_common_home') );
+            return $this->redirect($this->generateUrl('employees_homepage_manager_configure'));
         }
 
         return array(

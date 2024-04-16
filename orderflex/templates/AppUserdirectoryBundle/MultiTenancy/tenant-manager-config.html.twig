@@ -220,9 +220,15 @@
             </p>
         {% endif %}
 
-        {{ formmacros.field(form.greeting) }}
-        {{ formmacros.field(form.maintext) }}
-        {{ formmacros.field(form.footer) }}
+        {% if form.greeting is defined %}
+            {{ formmacros.field(form.greeting) }}
+        {% endif %}
+        {% if form.maintext is defined %}
+            {{ formmacros.field(form.maintext) }}
+        {% endif %}
+        {% if form.footer is defined %}
+            {{ formmacros.field(form.footer) }}
+        {% endif %}
 
 
         {% if form.tenants is defined %}
