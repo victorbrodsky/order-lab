@@ -42,7 +42,7 @@ class TenantManagerType extends AbstractType
         //echo "cycle=".$this->params['cycle']."<br>";
         //echo "disabled=".$this->params['disabled']."<br>";
 
-        if( $this->params['homepagemanager'] ) {
+        if( $this->params['tenantRole'] == 'homepagemanager' ) {
             $builder->add('logos', CollectionType::class, array(
                 'entry_type' => DocumentType::class,
                 'label' => 'Header Image:',
@@ -73,7 +73,7 @@ class TenantManagerType extends AbstractType
             ));
         }
 
-        if( $this->params['tenantmanager'] ) {
+        if( $this->params['tenantRole'] == 'tenantmanager' ) {
             $builder->add('tenants', CollectionType::class, array(
                 'entry_type' => TenantType::class,
                 //'entry_options' => array(
