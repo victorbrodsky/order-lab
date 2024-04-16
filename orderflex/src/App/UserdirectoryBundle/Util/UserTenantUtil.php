@@ -1122,9 +1122,9 @@ class UserTenantUtil
 
     public function getTenantsFromTenantManager( $tenantManagerName = 'tenantmanager' ) {
         $host = $this->container->getParameter('database_host');
-        $dbname = $container->getParameter('database_name');
-        $user = $container->getParameter('database_user');
-        $password = $container->getParameter('database_password');
+        $dbname = $this->container->getParameter('database_name');
+        $user = $this->container->getParameter('database_user');
+        $password = $this->container->getParameter('database_password');
 
         //create dummy tenantmanager
         $tenantManager = new TenantList();
