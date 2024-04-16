@@ -19,16 +19,12 @@ use Doctrine\ORM\EntityRepository;
 class TenantManagerType extends AbstractType
 {
     protected $params;
+    protected $btnName;
 
     public function formConstructor( $params=null )
     {
         $this->params = $params;
-
-//        $this->mapper = array();
-//        $this->mapper['className'] = "TenantList";
-//        $this->mapper['bundleName'] = "UserdirectoryBundle";
-//        $this->mapper['fullClassName'] = "App\\".$this->mapper['bundleName']."\\Entity\\".$this->mapper['className'];
-//        $this->mapper['entityNamespace'] = "App\\".$this->mapper['bundleName']."\\Entity";
+        $this->btnName = "Update Tenants in DB";
     }
 
     /**
@@ -38,9 +34,6 @@ class TenantManagerType extends AbstractType
     {
 
         $this->formConstructor($options['form_custom_value']);
-
-        //echo "cycle=".$this->params['cycle']."<br>";
-        //echo "disabled=".$this->params['disabled']."<br>";
 
         if( $this->params['tenantRole'] == 'homepagemanager' ) {
             $builder->add('logos', CollectionType::class, array(
@@ -71,16 +64,13 @@ class TenantManagerType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'form-control textarea')
             ));
+
+            $this->btnName = "Update Homepage";
         }
 
         if( $this->params['tenantRole'] == 'tenantmanager' ) {
             $builder->add('tenants', CollectionType::class, array(
                 'entry_type' => TenantType::class,
-                //'entry_options' => array(
-                //    'form_custom_value' => $this->params,
-                //    'form_custom_value_mapper' => $this->mapper
-                //),
-                //'form_custom_value' => $this->params,
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -110,7 +100,7 @@ class TenantManagerType extends AbstractType
 
         if( $this->params['cycle'] == 'edit' ) {
             $builder->add('submit', SubmitType::class, array(
-                'label' => 'Update Tenants in DB',
+                'label' => $this->btnName, //'Update Tenants in DB',
                 'attr' => array('class' => 'btn btn-primary')
             ));
         }
