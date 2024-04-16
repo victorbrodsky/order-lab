@@ -940,4 +940,162 @@ class MultiTenancyController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl('employees_tenancy_management'));
     }
+
+    //Homepage
+    #[Route(path: '/homepage-manager/configure/', name: 'employees_homepage_manager_configure')]
+    #[Route(path: '/homepage-manager/configure/edit', name: 'employees_homepage_manager_configure_edit')]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/homepage-config.html.twig')]
+    public function homepageConfigureAction(Request $request)
+    {
+        //First show tenancy home page settings (TenantManager)
+        //The homepage of the 'TenantManager' has:
+        // * Header Image : [DropZone field allowing upload of 1 image]
+        // * Greeting Text : [free text form field, multi-line, accepts HTML, with default value:
+        //  “Welcome to the View! The following organizations are hosted on this platform:”]
+        // * ListOfHostedTenants as a List of hosted tenants, each one shown as a clickable link
+        // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
+        // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
+
+        $tenantManagerName = 'homepagemanager';
+        $tenantRole = $this->getParameter('tenant_role');
+        if( $tenantRole != $tenantManagerName ) {
+            if( !$tenantRole ) {
+                $tenantRole = 'undefined';
+            }
+            $this->addFlash(
+                'warning',
+                "Home page manager settings is accessible only from home manager system. Current system is $tenantRole"
+            );
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+        //echo "tenantManager ID=".$tenantManager->getId()."<br>";
+
+        $cycle = "show";
+        $disabled = true;
+
+        $routeName = $request->get('_route');
+        if( $routeName == 'employees_tenancy_manager_configure_edit' ) {
+            $cycle = "edit";
+            $disabled = false;
+        }
+        //echo "cycle=".$cycle."<br>";
+        //exit('111');
+
+        $tenantManagerUrl = null;
+        foreach ($tenantManager->getTenants() as $tenant) {
+            if ($tenant) {
+                if( $tenant->getName() === $tenantManagerName ) {
+                    $tenantManagerUrl = $tenant->getUrlSlug();
+                    break;
+                }
+            }
+        }
+        //echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
+
+        //TODO: check if tenant initialized, if not replace the url with
+        // directory/admin/first-time-login-generation-init
+        $tenantBaseUrlArr = array();
+        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        foreach ($tenantManager->getTenants() as $tenant) {
+            if($tenant) {
+                $url = $tenant->getUrlSlug();
+
+                if ($url) {
+                    if ($url == '/') {
+                        $tenantBaseUrl = $baseUrl;
+                    } else {
+                        $tenantBaseUrl = $baseUrl . '/' . $url;
+                    }
+
+                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+
+                    $enabled = $tenant->getEnabled();
+                    if( !$enabled ) {
+                        $tenantBaseUrl = $tenantBaseUrl . " (Disabled)";
+                    }
+
+                    //isTenantInitialized
+                    if( $userTenantUtil->isTenantInitialized($tenant) === false ) {
+                        $initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
+                        $tenantBaseUrl = $tenantBaseUrl . " (".$initializeUrl.")";
+                    }
+
+                    $tenantBaseUrlArr[] = $tenantBaseUrl;
+                }
+            }
+        }
+
+
+        $originalTenants = array();
+        foreach ($tenantManager->getTenants() as $tenant) {
+            $originalTenants[] = $tenant;
+        }
+
+        //echo "0 tenant count=".count($tenantManager->getTenants())."<br>";
+        //foreach($tenantManager->getTenants() as $tenant) {
+        //    echo "tenant=$tenant <br>";
+        //}
+
+        $params = array(
+            //'cycle'=>"edit",
+            //'em'=>$em,
+        );
+        $params['user'] = $user;
+        $params['cycle'] = $cycle;
+        $form = $this->createForm(TenantManagerType::class, $tenantManager, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
+        $form->handleRequest($request);
+
+        //echo "1 tenant count=".count($tenantManager->getTenants())."<br>";
+        //foreach($tenantManager->getTenants() as $tenant) {
+        //    echo "tenant=$tenant <br>";
+        //}
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //exit("tenantManagerConfigureAction: form is valid");
+
+            $removedTenantCollections = array();
+            $removedInfo = $this->removeTenantCollection($originalTenants,$tenantManager->getTenants(),$tenantManager);
+            if( $removedInfo ) {
+                $removedTenantCollections[] = $removedInfo;
+                //echo "Remove tenant: ".$removedInfo."<br>";
+                $this->addFlash(
+                    'notice',
+                    "Tenant has been removed from Database: ".$removedInfo
+                );
+            }
+
+            $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                "Tenancy configuration have been updated."
+            );
+
+            //exit('111');
+            return $this->redirect($this->generateUrl('employees_tenancy_manager_configure'));
+            //return $this->redirect( $this->generateUrl('main_common_home') );
+        }
+
+        return array(
+            'tenantManager' => $tenantManager,
+            'tenantBaseUrlArr' => $tenantBaseUrlArr,
+            'title' => "Tenancy Configuration",
+            'form' => $form->createView(),
+            'cycle' => $cycle
+        );
+    }
+
 }

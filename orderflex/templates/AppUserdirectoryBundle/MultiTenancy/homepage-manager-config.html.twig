@@ -1,0 +1,199 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Available Tenants</div>
+        <div class="panel-body">
+            {% for tenantBaseUrl in tenantBaseUrlArr %}
+                {{ tenantBaseUrl|raw }}<br>
+            {% endfor %}
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {% if form.logos is defined %}
+
+            {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            <p>
+            <div class="well form-element-holder user-logos">
+                <label class="col-xs-12 control-label">Platform Logo Image(s) - the most recent will be used</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.logos,cycle,'noprototype',8,'default','Header Image','asForm') }}
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
+        {{ formmacros.field(form.greeting) }}
+        {{ formmacros.field(form.maintext) }}
+        {{ formmacros.field(form.footer) }}
+
+
+        {% if form.tenants is defined %}
+            {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+            {{ userform.tenantsSection(form.tenants, cycle, employees_sitename, "in", "Tenant(s)",true) }}
+        {% endif %}
+
+
+        {#{% if form.submit is defined %}#}
+            {#{{ form_widget(form.submit) }}#}
+        {#{% endif %}#}
+
+    {% if form.submit is defined %}
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {#{% if form.submit is defined %}#}
+                    {{ form_widget(form.submit) }}
+                {#{% endif %}#}
+            </div>
+            <div class="col-xs-6" align="left">
+                <a class="btn btn-default" href="{{ path('employees_tenancy_manager_configure') }}"
+                >Cancel</a>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    {#{% if cycle == 'edit' %}#}
+        {#<p>#}
+            {#<a class="btn btn-warning" href="{{ path('employees_tenancy_manager_configure') }}"#}
+            {#>Cancel</a>#}
+        {#</p>#}
+    {#{% endif %}#}
+    {% if cycle == 'show' %}
+        <br>
+        <p>
+            <a class="btn btn-success" href="{{ path('employees_tenancy_manager_configure_edit') }}"
+            >Edit</a>
+        </p>
+        <p>
+            <a
+                class="btn btn-warning"
+                general-data-confirm="Are you sure you would like to update DB tenancy configuration from the server configuration files?"
+                href="{{ path('employees_tenancy_manager_update_db_config') }}"
+            >Update DB Configuration from the server</a>
+        </p>
+        {#<p>#}
+            {#<a class="btn btn-danger"#}
+               {#general-data-confirm="Are you sure you would like to update server tenancy configuration files from DB?"#}
+               {#href="{{ path('employees_tenancy_manager_update_server_config') }}"#}
+            {#>Update Server Configuration from DB</a>#}
+        {#</p>#}
+        {#Asynchronously update#}
+        <p>
+            <a
+                id="update-server-config-ajax" class="btn btn-danger"
+                onclick="runTenancyUpdateConfigProcess(this)"
+            >Update Server Configuration from DB</a>
+            <div id="result"></div>
+        </p>
+    {% endif %}
+
+    {#<br><br>#}
+    {#<a#}
+            {#target="_blank" class="btn btn-danger"#}
+            {#href="{{ path('employees_tenancy_management_update') }}"#}
+    {#>Clear Cache and create Databases</a>#}
+
+{% endblock %}
+
+
+
+{% block additionaljs %}
+
+    <script>
+
+//        $(document).ready(function () {
+//            //runTenancyUpdateConfigProcess();
+//        });
+
+        //similar to runTestingProcess
+        function runTenancyUpdateConfigProcess(btn) {
+            var url = Routing.generate('employees_tenancy_manager_update_server_config_ajax');
+            console.log("Start runTenancyUpdateConfigProcess: url="+url);
+
+            var msg = "Update tenancy configuarion on the server has been started in the background."
+                    +" Please verify the status of the new tenant's url in 15 minutes.";
+                    //+"Please wait, this page will be reloaded shortly.";
+            //$('#result').append("Start runTenancyUpdateConfigProcess: url="+url);
+            $('#result').append(msg);
+
+            btn.remove();
+
+            $.ajax({
+                url: url,
+                timeout: 18000, //in milliseconds. sets timeout to 33 minutes
+                dataType: 'json',
+                async: true,
+            }).done(function(data) {
+
+                $('#result').append(data);
+                console.log("data="+data);
+
+            })
+            .fail(function(jqXHR, textStatus, error) {
+                var msg = "runTenancyUpdateConfigProcess: Error: jqXHR.status=" + jqXHR.status
+                        + ", textStatus="
+                        + textStatus
+                        + ", error=" + error;
+
+                console.log(msg);
+                //alert(msg);
+                //$('#result').append(msg);
+                location.reload();
+                //setTimeout(function(){ location.reload(); }, 3000); //5000 - reload after 5 seconds
+            })
+            .done(function() {
+                var doneMsg = "runTenancyUpdateConfigProcess ajax has started";
+                console.log(doneMsg);
+                $('#result').append(doneMsg);
+            });
+
+
+        }
+    </script>
+
+{% endblock %}
