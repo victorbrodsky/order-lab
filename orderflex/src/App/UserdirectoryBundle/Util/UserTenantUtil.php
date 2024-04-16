@@ -1120,6 +1120,38 @@ class UserTenantUtil
         return $initialized;
     }
 
+    public function getTenantsFromTenantManager( $tenantManagerName = 'tenantmanager' ) {
+        $host = $this->container->getParameter('database_host');
+        $dbname = $container->getParameter('database_name');
+        $user = $container->getParameter('database_user');
+        $password = $container->getParameter('database_password');
+
+        //create dummy tenantmanager
+        $tenantManager = new TenantList();
+        $tenantManager->setDatabaseHost($host);
+        $tenantManager->setDatabaseName($dbname);
+        $tenantManager->setDatabaseUser($user);
+        $tenantManager->setDatabasePassword($password);
+
+        //check if tenant's DB has users
+        $conn = $this->getConnectionTenantDB($tenantManager);
+
+        if( !$conn ) {
+            return $initialized;
+        }
+
+        $userSql = "SELECT * FROM " . 'user_tenantmanager';
+        $userQuery = $conn->executeQuery($userSql);
+        $userRows = $userQuery->fetchAllAssociative();
+        dump($userRows);
+        exit('get Tenants From Tenant Manager');
+        //$tenant = $hostedGroupRows[0]['id'];
+
+        $tenants = array();
+
+        return $tenants;
+    }
+
     //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok
     public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init

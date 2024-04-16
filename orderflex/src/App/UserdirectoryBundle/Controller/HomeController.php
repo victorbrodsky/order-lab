@@ -75,31 +75,6 @@ class HomeController extends OrderAbstractController {
                 'height' => $height
             )
         );
-
-//        //Unable to find template "AppUserdirectoryBundle::Default/usermacros.html.twig"
-//        $this->container->get('twig.loader')->addPath('src/App/UserdirectoryBundle/Resources/views/Default/');
-//        return $this->render('main-common-home.html.twig',
-//            array(
-//                'platformLogo' => $platformLogoPath,
-//                'width' => $width,
-//                'height' => $height
-//            )
-//        );
-        //https://github.com/symfony/symfony/issues/1912
-//        return $this->render('App/UserdirectoryBundle/Resources/views/Default/main-common-home.html.twig',
-//            array(
-//                'platformLogo' => $platformLogoPath,
-//                'width' => $width,
-//                'height' => $height
-//            )
-//        );
-//        return $this->render('main-common-home.html.twig',
-//            array(
-//                'platformLogo' => $platformLogoPath,
-//                'width' => $width,
-//                'height' => $height
-//            )
-//        );
     }
 
     //Header Image : [DropZone field allowing upload of 1 image]
@@ -132,7 +107,8 @@ class HomeController extends OrderAbstractController {
         $tenants = array();
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
-        foreach ($tenantManager->getTenants() as $tenant) {
+        $tenants = $userTenantUtil->getTenantsFromTenantManager();
+        foreach ($tenants as $tenant) {
             if($tenant) {
                 $url = $tenant->getUrlSlug();
 
@@ -160,6 +136,7 @@ class HomeController extends OrderAbstractController {
                 }
             }
         }
+        echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
 
         $greetingText = $tenantManager->getGreeting();
         $mainText = $tenantManager->getMaintext();
