@@ -107,7 +107,8 @@ class HomeController extends OrderAbstractController {
             echo "platformLogos is not array<br>";
         }
 
-        if( is_array($platformLogos) && count($platformLogos) > 0 ) {
+        //is_array($platformLogos) && 
+        if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
             echo "2 platformLogos=".count($platformLogos)."<br>";
             echo "platformLogo=".$platformLogo."<br>";
