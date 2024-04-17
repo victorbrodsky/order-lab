@@ -65,6 +65,31 @@ class TenantManagerType extends AbstractType
                 'attr' => array('class' => 'form-control textarea')
             ));
 
+            //About us
+            $builder->add('aboutusLogos', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'About Us Page Logos:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+
+            $builder->add('aboutusText', null, array(
+                'label' => 'About Us Page Text:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+
+            $builder->add('aboutusFooter', null, array(
+                'label' => 'About Us Page Footer:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+
+
             $this->btnName = "Update Homepage";
         }
 

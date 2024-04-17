@@ -81,12 +81,30 @@ class TenantManager
     #[ORM\Column(type: 'text', nullable: true)]
     private $footer;
 
+    //Add /about-us “About Us” (Multitenant Platform) page config
+    //About Us Page Header: [DropZone field allowing upload of 1 image]
+    #[ORM\JoinTable(name: 'user_tenantmanager_aboutuslogo')]
+    #[ORM\JoinColumn(name: 'tenantmanager_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'logo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
+    private $aboutusLogos;
+
+    //About Us Page Text: [free text form field, multi-line, accepts HTML, with default value: “This website hosts data for organizations using the Order platform.”]
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $aboutusText;
+
+    //About Us Page Footer: [free text form field, multi-line, accepts HTML, with default value: “[<a href=”/”>Home</a> | About Us | Follow Us]
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $aboutusFooter;
+
 
     public function __construct( $author=null ) {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
         $this->tenants = new ArrayCollection();
         $this->logos = new ArrayCollection();
+        $this->aboutusLogos = new ArrayCollection();
     }
 
 
@@ -264,4 +282,56 @@ class TenantManager
     }
 
 
+    public function addAboutusLogo($item)
+    {
+        if( $item && !$this->aboutusLogos->contains($item) ) {
+            $this->aboutusLogos->add($item);
+            $item->createUseObject($this);
+        }
+
+        return $this;
+    }
+    public function removeAboutusLogo($item)
+    {
+        $this->aboutusLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getAboutusLogos()
+    {
+        return $this->aboutusLogos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAboutusText()
+    {
+        return $this->aboutusText;
+    }
+
+    /**
+     * @param mixed $aboutusText
+     */
+    public function setAboutusText($aboutusText)
+    {
+        $this->aboutusText = $aboutusText;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAboutusFooter()
+    {
+        return $this->aboutusFooter;
+    }
+
+    /**
+     * @param mixed $aboutusFooter
+     */
+    public function setAboutusFooter($aboutusFooter)
+    {
+        $this->aboutusFooter = $aboutusFooter;
+    }
+
+    
 }
