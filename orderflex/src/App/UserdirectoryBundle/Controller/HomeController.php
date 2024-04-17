@@ -37,6 +37,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 
 class HomeController extends OrderAbstractController {
 
+    //Defined in routes-default.yaml, route name 'main_common_home'
     public function mainCommonHomeAction(Request $request) {
 
         //homepagemanager show a different multi-tenant home page
@@ -147,6 +148,12 @@ class HomeController extends OrderAbstractController {
                 $tenant->setDatabasePassword($tenantArr['databasepassword']);
                 $tenant->setUrlslug($tenantArr['urlslug']);
                 $tenant->setEnabled($tenantArr['enabled']);
+                $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
+
+                $showOnHomepage = $tenant->getShowOnHomepage();
+                if( $showOnHomepage !== true ) {
+                    continue;
+                }
 
                 $url = $tenant->getUrlslug();
                 //echo "url=".$url."<br>";
@@ -204,7 +211,7 @@ class HomeController extends OrderAbstractController {
         );
     }
 
-    //[Route(path: '/about-us', name: 'employees_about_us', methods: ['GET', 'POST'])]
+    //Defined in routes-default.yaml, route name 'multi_tenancy_main_about_us'
     #[Template('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-aboutus.html.twig')]
     public function multiTenancyAboutusAction( Request $request )
     {
