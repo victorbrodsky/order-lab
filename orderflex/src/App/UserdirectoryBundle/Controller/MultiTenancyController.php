@@ -1065,6 +1065,7 @@ class MultiTenancyController extends OrderAbstractController
             //exit("HomePageManagerConfigureAction: form is valid");
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
+            $em->getRepository(Document::class)->processDocuments($tenantManager,"aboutusLogo");
 
             $em->flush();
 
