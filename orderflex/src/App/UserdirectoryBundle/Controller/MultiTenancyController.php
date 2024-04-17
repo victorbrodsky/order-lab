@@ -241,7 +241,7 @@ class MultiTenancyController extends OrderAbstractController
     //This straightforward approach to use processDBTenants causes Gateway timeout
     #[Route(path: '/tenant-manager/update-server-config', name: 'employees_tenancy_manager_update_server_config', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
-    public function syncTenantsUpdateServerConfigAction( Request $request, KernelInterface $kernel )
+    public function syncTenantsUpdateServerConfigAction( Request $request )
     {
         $tenantRole = $this->getParameter('tenant_role');
         if( $tenantRole != 'tenantmanager' ) {
@@ -469,7 +469,7 @@ class MultiTenancyController extends OrderAbstractController
 
     #[Route(path: '/tenant-manager/update-db-config', name: 'employees_tenancy_manager_update_db_config', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
-    public function syncTenantsUpdateDBConfigAction( Request $request, KernelInterface $kernel )
+    public function syncTenantsUpdateDBConfigAction( Request $request )
     {
         $tenantRole = $this->getParameter('tenant_role');
         if( $tenantRole != 'tenantmanager' ) {
@@ -625,6 +625,33 @@ class MultiTenancyController extends OrderAbstractController
         return "New";
     }
 
+    #[Route(path: '/about-us', name: 'employees_about_us', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-aboutus.html.twig')]
+    public function aboutUsAction( Request $request )
+    {
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        $title = "Multi-Tenancy About Us";
+        $width = "300";
+        $height = "80";
+
+        $aboutusLogoPath = null;
+        $aboutusLogos = $tenantManager->getAboutusLogos();
+        //is_array($platformLogos) &&
+        if( count($aboutusLogos) > 0 ) {
+            $aboutusLogo = $aboutusLogos->first();
+            $aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+        }
+
+        return array(
+            'title' => $title,
+            'tenantManager' => $tenantManager,
+            'aboutusLogoPath' => $aboutusLogoPath,
+            'width' => $width,
+            'height' => $height,
+        );
+    }
 
     //////////// OLD ////////////////////////
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
@@ -782,7 +809,6 @@ class MultiTenancyController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl('employees_tenancy_management'));
     }
-
 
 
 
