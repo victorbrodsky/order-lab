@@ -89,12 +89,13 @@
 
         {#Welcome to the O R D E R platform!#}
         <p>
-            {{ greetingText }}
+            {{ greetingText|raw }}
         </p>
         {% for tenant in tenantBaseUrlArr %}
             <p>{{ tenant|raw }}</p>
         {% endfor %}
 
+        <br>
         <p>
             {{ mainText }}
         </p>
@@ -102,7 +103,7 @@
 
         {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
         <div class="footer">
-            {{ footer }}
+            {{ footer|raw }}
         </div>
 
     </div> <!-- /text-center -->
