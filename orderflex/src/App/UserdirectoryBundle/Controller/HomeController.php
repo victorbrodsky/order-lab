@@ -159,7 +159,7 @@ class HomeController extends OrderAbstractController {
                     //isTenantInitialized
                     if( $userTenantUtil->isTenantInitialized($tenant) === false ) {
                         //$initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
-                        $tenantBaseUrl = $tenantBaseUrl . " ("."Not initialized".")";
+                        $tenantBaseUrl = $tenantBaseUrl . " ("."not initialized".")";
                     }
 
                     $tenantBaseUrlArr[] = $tenantBaseUrl;
