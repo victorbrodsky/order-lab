@@ -100,6 +100,7 @@ class HomeController extends OrderAbstractController {
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         $platformLogoPath = null;
         $platformLogos = $tenantManager->getLogos();
+        echo "platformLogos=".count($platformLogos)."<br>";
         if( is_array($platformLogos) && count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
