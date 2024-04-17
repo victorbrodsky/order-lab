@@ -625,34 +625,6 @@ class MultiTenancyController extends OrderAbstractController
         return "New";
     }
 
-    #[Route(path: '/about-us', name: 'employees_about_us', methods: ['GET', 'POST'])]
-    #[Template('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-aboutus.html.twig')]
-    public function aboutUsAction( Request $request )
-    {
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
-
-        $title = "Multi-Tenancy About Us";
-        $width = "300";
-        $height = "80";
-
-        $aboutusLogoPath = null;
-        $aboutusLogos = $tenantManager->getAboutusLogos();
-        //is_array($platformLogos) &&
-        if( count($aboutusLogos) > 0 ) {
-            $aboutusLogo = $aboutusLogos->first();
-            $aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
-        }
-
-        return array(
-            'title' => $title,
-            'tenantManager' => $tenantManager,
-            'aboutusLogoPath' => $aboutusLogoPath,
-            'width' => $width,
-            'height' => $height,
-        );
-    }
-
     //////////// OLD ////////////////////////
     #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]

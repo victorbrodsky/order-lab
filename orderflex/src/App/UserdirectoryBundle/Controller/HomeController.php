@@ -204,6 +204,34 @@ class HomeController extends OrderAbstractController {
         );
     }
 
+    //[Route(path: '/about-us', name: 'employees_about_us', methods: ['GET', 'POST'])]
+    #[Template('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-aboutus.html.twig')]
+    public function multiTenancyAboutusAction( Request $request )
+    {
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+
+        $title = "Multi-Tenancy About Us";
+        $width = "300";
+        $height = "80";
+
+        $aboutusLogoPath = null;
+        $aboutusLogos = $tenantManager->getAboutusLogos();
+        //is_array($platformLogos) &&
+        if( count($aboutusLogos) > 0 ) {
+            $aboutusLogo = $aboutusLogos->first();
+            $aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+        }
+
+        return array(
+            'title' => $title,
+            'tenantManager' => $tenantManager,
+            'aboutusLogoPath' => $aboutusLogoPath,
+            'width' => $width,
+            'height' => $height,
+        );
+    }
+
     #[Route(path: '/maintanencemode', name: 'main_maintenance')]
     public function maintanenceModeAction() {
 

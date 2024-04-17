@@ -14,6 +14,10 @@ main_common_home:
     path:      /
     controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
 
+multi_tenancy_main_about_us:
+    path:      /about-us
+    controller: App\UserdirectoryBundle\Controller\HomeController::multiTenancyAboutusAction
+
 main_under_construction:
     path:      /under-construction
     defaults:  { _controller: AppUserdirectoryBundle:Home:underConstruction }
