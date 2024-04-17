@@ -98,8 +98,8 @@ class HomeController extends OrderAbstractController {
 
         $title = "Multi-tenancy home page";
 
-        $width = "300";
-        $height = "80";
+        //$width = "300";
+        //$height = "80";
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         $platformLogoPath = null;
@@ -136,7 +136,7 @@ class HomeController extends OrderAbstractController {
                 $tenant->setEnabled($tenantArr['enabled']);
 
                 $url = $tenant->getUrlslug();
-                echo "url=".$url."<br>";
+                //echo "url=".$url."<br>";
 
                 if ($url) {
                     if ($url == '/') {
@@ -162,7 +162,7 @@ class HomeController extends OrderAbstractController {
                 }
             }
         }
-        echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
+        //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
 
         $greetingText = $tenantManager->getGreeting();
         $mainText = $tenantManager->getMaintext();
