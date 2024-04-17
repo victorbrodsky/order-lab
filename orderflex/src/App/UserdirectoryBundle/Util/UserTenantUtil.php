@@ -1131,17 +1131,17 @@ class UserTenantUtil
         $dbname = $tenantDataArr[$tenantManagerName]['databaseName'];
         $user = $tenantDataArr[$tenantManagerName]['databaseUser'];
         $password = $tenantDataArr[$tenantManagerName]['databasePassword'];
-        echo "dbname=$dbname<br>";
+        //echo "dbname=$dbname<br>";
 
-        //create dummy tenantmanager
-        $tenantManager = new TenantList();
-        $tenantManager->setDatabaseHost($host);
-        $tenantManager->setDatabaseName($dbname);
-        $tenantManager->setDatabaseUser($user);
-        $tenantManager->setDatabasePassword($password);
+        //create temporary tenant object
+        $tenant = new TenantList();
+        $tenant->setDatabaseHost($host);
+        $tenant->setDatabaseName($dbname);
+        $tenant->setDatabaseUser($user);
+        $tenant->setDatabasePassword($password);
 
         //check if tenant's DB has users
-        $conn = $this->getConnectionTenantDB($tenantManager);
+        $conn = $this->getConnectionTenantDB($tenant);
 
         if( !$conn ) {
             return $initialized;
@@ -1156,6 +1156,10 @@ class UserTenantUtil
         //dump($tenantsRows);
         //exit('get Tenants From Tenant Manager');
         //$tenant = $hostedGroupRows[0]['id'];
+
+        //destroy temporary $tenant
+        unset($tenant);
+
         return $tenantsRows;
     }
 

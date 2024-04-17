@@ -127,6 +127,8 @@ class HomeController extends OrderAbstractController {
         foreach ($tenants as $tenantArr) {
             //$tenant as array
             if($tenantArr) {
+
+                //create temporary tenant object
                 $tenant = new TenantList();
                 $tenant->setDatabaseHost($tenantArr['databasehost']);
                 $tenant->setDatabaseName($tenantArr['databasename']);
@@ -160,6 +162,9 @@ class HomeController extends OrderAbstractController {
 
                     $tenantBaseUrlArr[] = $tenantBaseUrl;
                 }
+
+                //destroy temporary $tenant
+                unset($tenant);
             }
         }
         //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
