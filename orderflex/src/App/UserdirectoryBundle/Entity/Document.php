@@ -561,6 +561,7 @@ class Document {
         $uniquename = $this->getUniquename();
         if( !$uniquename ) {
             //File is erroneous if uniquename is null
+            echo "getAbsoluteUploadFullPath: File is erroneous if uniquename is null <br>";
             return null;
         }
 
@@ -575,7 +576,7 @@ class Document {
         }
 
         $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
-        echo "path=$path <br>";
+        echo "getAbsoluteUploadFullPath: path=$path <br>";
 
         if ($onlyResize == false) {
             if ($size) {
