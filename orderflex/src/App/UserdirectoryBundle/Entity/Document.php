@@ -575,6 +575,7 @@ class Document {
         }
 
         $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        echo "path=$path <br>";
 
         if ($onlyResize == false) {
             if ($size) {
