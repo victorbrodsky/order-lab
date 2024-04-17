@@ -98,8 +98,8 @@ class HomeController extends OrderAbstractController {
 
         $title = "Multi-tenancy home page";
 
-        //$width = "300";
-        //$height = "80";
+        $width = "300";
+        $height = "80";
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         $platformLogoPath = null;
