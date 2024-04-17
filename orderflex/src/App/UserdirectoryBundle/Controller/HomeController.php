@@ -26,6 +26,7 @@ use App\UserdirectoryBundle\Form\LabelType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -53,10 +54,13 @@ class HomeController extends OrderAbstractController {
 
         $platformLogoPath = null;
         $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-        if( is_array($platformLogos) && count($platformLogos) > 0 ) {
+        //echo "mainCommonHomeAction: platformLogos=".count($platformLogos)."<br>";
+        //($platformLogos instanceof ArrayCollection || is_array($platformLogos)) &&
+        if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
+        //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 
 //        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
 //            array(
@@ -100,21 +104,11 @@ class HomeController extends OrderAbstractController {
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         $platformLogoPath = null;
         $platformLogos = $tenantManager->getLogos();
-        echo "1 platformLogos=".count($platformLogos)."<br>";
-        if( is_array($platformLogos) ) {
-            echo "platformLogos is array<br>";
-        } else {
-            echo "platformLogos is not array<br>";
-        }
-
         //is_array($platformLogos) && 
         if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            echo "2 platformLogos=".count($platformLogos)."<br>";
-            echo "platformLogo=".$platformLogo."<br>";
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
-        echo "platformLogoPath=$platformLogoPath<br>";
 
         $tenants = array();
         $tenantBaseUrlArr = array();
