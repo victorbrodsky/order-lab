@@ -91,24 +91,18 @@
         <p>
             {{ greetingText }}
         </p>
+        {% for tenant in tenantBaseUrlArr %}
+            <p>{{ tenant|raw }}</p>
+        {% endfor %}
 
         <p>
             {{ mainText }}
         </p>
 
 
-        <br><br>
-
-        The following tenants are available:
-
-        {% for tenant in tenantBaseUrlArr %}
-            <p>{{ tenant|raw }}</p>
-        {% endfor %}
-
-
         {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
         <div class="footer">
-
+            {{ footer }}
         </div>
 
     </div> <!-- /text-center -->

@@ -83,9 +83,11 @@ class HomeController extends OrderAbstractController {
     }
 
     //Header Image : [DropZone field allowing upload of 1 image]
-    //Greeting Text : [free text form field, multi-line, accepts HTML, with default value: “Welcome to the View! The following organizations are hosted on this platform:”]
+    //Greeting Text : [free text form field, multi-line, accepts HTML, with default value:
+    // “Welcome to the View! The following organizations are hosted on this platform:”]
     //[List of hosted tenants, each one shown as a clickable link]
-    //Main text [free text form field, multi-line, accepts HTML, with default value: “Please visit the site of the organization of interest to see the available applications.”]
+    //Main text [free text form field, multi-line, accepts HTML, with default value:
+    // “Please visit the site of the organization of interest to see the available applications.”]
     //Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
     //
     //Add /about-us “About Us” (Multitenant Platform) page config and URL as well (only accessible on the Homepage Manager instance):
