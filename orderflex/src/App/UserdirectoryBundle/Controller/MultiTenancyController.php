@@ -71,6 +71,10 @@ use Symfony\Component\HttpFoundation\Response;
 //      you already have and show a dialog with a new password saying “Password for the platform administrator account “Administrator” for tenant “Tenant Name” accessible at “/c/link/here” has been reset to “NewPassword”.)
 
 //Make sure php-fpm is started:	sudo systemctl start php-fpm
+//php-fpm.service: A process of this unit has been killed by the OOM killer.
+//sudo systemctl restart haproxy
+//sudo systemctl restart php-fpm
+//sudo systemctl start httpd"$1"
 
 #[Route(path: '/settings')]
 class MultiTenancyController extends OrderAbstractController
@@ -211,7 +215,7 @@ class MultiTenancyController extends OrderAbstractController
                 );
             }
 
-            $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
+            //$em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
 
             $em->flush();
 

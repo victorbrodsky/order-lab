@@ -104,6 +104,7 @@ class HomeController extends OrderAbstractController {
             $platformLogo = $platformLogos->first();
             $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
         }
+        echo "platformLogoPath=$platformLogoPath<br>";
 
         $tenants = array();
         $tenantBaseUrlArr = array();
