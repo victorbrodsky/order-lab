@@ -1,38 +1,7 @@
-
-{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
-{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
-
-{% block title %}
-    {{ title|raw }}
-{% endblock %}
-
-
-{% block content %}
-    <h4 class="text-info" align="center">
-        {{ title }}
-        {#(Matching 1258, Total 1361)#}
-        <div id="matching-info"></div>
-    </h4>
-
-    <input type="hidden" id="antibodies-cycle" value="{{ cycle }}" />
-
-    <div id="root"></div>
-
-{% endblock %}
-
-
-{% block mainjs %}
-
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.min.js') }}"></script>
-
-    {#FOSJsRoutingBundle#}
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-
-{% endblock %}
-
-{% block maincss %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jasny/css/jasny-bootstrap.min.css') }}" />#}
@@ -48,13 +17,31 @@
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/crop-avatar.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/themes/default/style.min.css') }}" />#}
 
-{% endblock %}
+</head>
+<body>
+
+<h4 class="text-info" align="center">
+    {{ title }}
+    {#(Matching 1258, Total 1361)#}
+    <div id="matching-info"></div>
+</h4>
+
+<input type="hidden" id="antibodies-cycle" value="{{ cycle }}" />
+
+<div id="root"></div>
 
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('antibodies-css') }}
-{% endblock %}
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.min.js') }}"></script>
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('antibodies') }}
-{% endblock %}
+{#FOSJsRoutingBundle#}
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+{{ encore_entry_link_tags('antibodies-css') }}
+{{ encore_entry_script_tags('antibodies') }}
+
+</body>
+</html>
+

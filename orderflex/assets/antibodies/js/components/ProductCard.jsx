@@ -20,16 +20,13 @@ const ProductTable = ({ product, setref }) => {
 
         <div className="col">
         <div ref={setref} key={product.pk} className="card h-100" style={cardstyle}>
+
+            {/*
             <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
+             */}
 
             <div className="card-body">
               <div className="card-text">
-
-{/*                {{ product.user }} - Created {{ product.created|date:"d F Y P T" }}
-                if( {product.updated} && {product.updated} != {product.created} ) {
-                    (Updated {product.updated})
-                }
-*/}
 
                 <div className="form-floating mb-3 mt-3">
                   <input type="text" className="form-control" value={ product.name } disabled />

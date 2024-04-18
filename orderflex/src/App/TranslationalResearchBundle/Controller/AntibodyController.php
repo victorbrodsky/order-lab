@@ -727,7 +727,7 @@ class AntibodyController extends OrderAbstractController
 
     //Classical approach using html
     #[Route(path: '/antibodies/public/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public.html.twig')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_orig.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
         $filterType = trim((string)$request->get('public'));
@@ -766,7 +766,7 @@ class AntibodyController extends OrderAbstractController
     }
 
     #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react_2.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
         $filterType = trim((string)$request->get('public'));
@@ -781,7 +781,7 @@ class AntibodyController extends OrderAbstractController
 
         if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
             return $this->redirectToRoute(
-                'translationalresearch_antibodies_public',
+                'translationalresearch_antibodies_public_react',
                 array(
                     'filter[public]' => 'Public',
                     'filter[type][0]' => 'default',
@@ -807,6 +807,7 @@ class AntibodyController extends OrderAbstractController
     #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
 
+        $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
@@ -815,7 +816,7 @@ class AntibodyController extends OrderAbstractController
         $limit = 20; //20;
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'infos.lastName',
+            'defaultSortFieldName' => 'antibody.id',
             'defaultSortDirection' => 'DESC',
             'wrap-queries' => true
         );
@@ -848,7 +849,8 @@ class AntibodyController extends OrderAbstractController
         );
 
         $results = array(
-            'results' => $jsonArray,
+            //'results' => $jsonArray,
+            'products' => $jsonArray,
             'info'    => $info,
             //'totalPages'   => $totalPages,
             //'totalUsers' => $totalCount
