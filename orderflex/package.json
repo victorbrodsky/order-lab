@@ -30,6 +30,7 @@
     "core-js": "^3.26.1",
     "dotenv": "^16.4.5",
     "react-router-dom": "^6.4.4",
+    "reactstrap": "^9.2.2",
     "webpack": "^5.75.0",
     "webpack-notifier": "^1.15.0"
   }

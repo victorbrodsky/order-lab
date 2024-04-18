@@ -24,6 +24,7 @@ use App\TranslationalResearchBundle\Form\AntibodyType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -724,7 +725,8 @@ class AntibodyController extends OrderAbstractController
     }
 
 
-    #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    //Classical approach using html
+    #[Route(path: '/antibodies/public/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
@@ -761,6 +763,106 @@ class AntibodyController extends OrderAbstractController
         $listArr['title'] = "Public ".$listArr['title'];
 
         return $listArr;
+    }
+
+    #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
+    public function indexPublicAntibodiesReactAction(Request $request)
+    {
+        $filterType = trim((string)$request->get('public'));
+
+        $filterPublic = null;
+        $all = $request->query->all();
+        if( isset($all['filter']) && isset($all['filter']['public']) ) {
+            $filterPublic = $all['filter']['public'];
+        }
+        //dump($filterPublic);
+        //exit();
+
+        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
+            return $this->redirectToRoute(
+                'translationalresearch_antibodies_public',
+                array(
+                    'filter[public]' => 'Public',
+                    'filter[type][0]' => 'default',
+                    'filter[type][1]' => 'user-added',
+                )
+            );
+        }
+
+        //$request->request->set('public', 'Public');
+        //$all['filter']['public'] = 'Public';
+        //$request->query->replace($all);
+        //dump($request);
+        //exit();
+
+        $listArr = $this->getList($request);
+        //$listArr['title'] = "Antibodies";
+        $listArr['postPath'] = "_translationalresearch";
+        $listArr['title'] = "Public ".$listArr['title'];
+
+        return $listArr;
+    }
+
+    #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
+    public function getAntibodiesApiAction( Request $request ) {
+
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+
+        $limit = 20; //20;
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'infos.lastName',
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
+        );
+
+        $page = $request->query->get('page', 1);
+
+        $paginator  = $this->container->get('knp_paginator');
+        $antibodies = $paginator->paginate(
+            $query,
+            $page,   /*page number*/
+            $limit,                            /*limit per page*/
+            $paginationParams
+        );
+
+        $jsonArray = array();
+        foreach($antibodies as $antibody) {
+            $jsonArray[] = array(
+                'id'            => $antibody->getId(),
+                'Name'      => $antibody->getName(),
+                'Catalog'     => $antibody->getCatalog(),
+            );
+        }
+
+
+        $info = array(
+            'seed' => "abc",
+            'results' => $limit,
+            'page' => $page,
+            'version' => 1
+        );
+
+        $results = array(
+            'results' => $jsonArray,
+            'info'    => $info,
+            //'totalPages'   => $totalPages,
+            //'totalUsers' => $totalCount
+        );
+
+        //return new JsonResponse($results);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(200);
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setContent(json_encode($results));
+
+        return $response;
     }
 
 }
