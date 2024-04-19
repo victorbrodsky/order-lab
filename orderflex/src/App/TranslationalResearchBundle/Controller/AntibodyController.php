@@ -847,24 +847,25 @@ class AntibodyController extends OrderAbstractController
         $jsonArray = array();
         foreach($antibodies as $antibody) {
 
-            $documentUrlsHtml = null;
+            $documentUrls = array();
             foreach( $antibody->getDocuments() as $document ) {
-                $documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-                $documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+                //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+                //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+                $documentUrls[] = $document->getAbsoluteUploadFullPath();
             }
 
             $jsonArray[] = array(
                 'id'            => $antibody->getId(),
-                'name'          => $antibody->getName(),
-                'description'   => $antibody->getDescription(),
-                'categorytags'  => $antibody->getCategoryTagsStr(),
-                'public'        => $antibody->getOpenToPublic(),
-                'company'       => $antibody->getCompany(),
-                'clone'         => $antibody->getClone(),
-                'host'          => $antibody->getHost(),
-                'reactivity'    => $antibody->getReactivity(),
-                'storage'        => $antibody->getStorage(),
-                'documents'     => $documentUrlsHtml //$antibody->getDocuments()
+                'name'          => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+                'description'   => ($antibody->getDescription()) ? $antibody->getDescription() : '',
+                'categorytags'  => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
+                'public'        => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
+                'company'       => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
+                'clone'         => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
+                'host'          => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
+                'reactivity'    => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
+                'storage'       => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
+                'documents'     => $documentUrls //$antibody->getDocuments()
                 //'unitPrice'     => $antibody->getUnitPrice(),
                 //'Catalog'       => $antibody->getCatalog(),
             );

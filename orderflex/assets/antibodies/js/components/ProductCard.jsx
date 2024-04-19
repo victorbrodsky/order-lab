@@ -17,14 +17,21 @@ const ProductTable = ({ product, setref }) => {
       //marging: "1.5rem",
     };
 
+    //https://sentry.io/answers/react-for-loops/
+    let imageList = [];
+    product.documents.forEach((imageUrl, index) => {
+        imageList.push(
+            // <li key={index}>{imageUrl}</li>
+            <img src={imageUrl} className="card-img-top" alt="Antibody Image"/>
+        );
+    });
+
     return (
 
         <div className="col">
         <div ref={setref} key={product.pk} className="card h-100" style={cardstyle}>
 
-            Image:
-            { product.documents }
-
+            {imageList}
 
             <div className="card-body">
               <div className="card-text">
@@ -32,35 +39,40 @@ const ProductTable = ({ product, setref }) => {
                       <input type="text" className="form-control" value={ product.id } disabled />
                       <label>ID</label>
                     </div>
-                    <div className="form-floating mb-3 mt-3">
+
+                  <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.name } disabled />
                       <label>Name</label>
-                    </div>
-                    <div className="form-floating mb-3 mt-3">
+                  </div>
+
+                  <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.description } disabled />
                       <label>Description</label>
-                    </div>
-                    <div className="form-floating mb-3 mt-3">
+                  </div>
+
+                  <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.categorytags } disabled />
                       <label>Category Tags</label>
-                    </div>
-                    <div className="form-floating mb-3 mt-3">
+                  </div>
+                  <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.company } disabled />
                       <label>Company</label>
-                    </div>
+                  </div>
+
                   <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.host } disabled />
                       <label>Host</label>
                   </div>
+
                   <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.reactivity } disabled />
                       <label>Reactivity</label>
                   </div>
+
                   <div className="form-floating mb-3 mt-3">
                       <input type="text" className="form-control" value={ product.storage } disabled />
                       <label>Storage</label>
                   </div>
-
 
               </div>
 
