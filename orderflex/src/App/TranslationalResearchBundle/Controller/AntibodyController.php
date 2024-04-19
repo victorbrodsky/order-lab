@@ -769,6 +769,7 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
+        //exit('indexPublicAntibodiesReactAction');
         $filterType = trim((string)$request->get('public'));
 
         $filterPublic = null;
