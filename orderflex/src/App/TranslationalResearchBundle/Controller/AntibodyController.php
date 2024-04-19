@@ -766,7 +766,7 @@ class AntibodyController extends OrderAbstractController
     }
 
     #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react_2.html.twig')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
         $filterType = trim((string)$request->get('public'));

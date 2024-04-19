@@ -21,9 +21,9 @@ const ProductTable = ({ product, setref }) => {
         <div className="col">
         <div ref={setref} key={product.pk} className="card h-100" style={cardstyle}>
 
-            {/*
+
             <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
-             */}
+             
 
             <div className="card-body">
               <div className="card-text">
