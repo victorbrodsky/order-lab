@@ -697,6 +697,17 @@ class AntibodyList extends ListAbstract
 
         return $this;
     }
+    public function getCategoryTagsStr() {
+        $tags = $this->getCategoryTags();
+        $tagsStr = "";
+        foreach($tags as $tag) {
+            if( $tagsStr ) {
+                $tagsStr = $tagsStr . ", ";
+            }
+            $tagsStr = $tagsStr . $tag->getName();
+        }
+        return $tagsStr;
+    }
 
     /**
      * @return mixed

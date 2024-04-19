@@ -832,12 +832,41 @@ class AntibodyController extends OrderAbstractController
             $paginationParams
         );
 
+        //Public Antibody List fields:
+        //ID
+        //Name
+        //Description
+        //Category Tags
+        //Public
+        //Company
+        //Clone
+        //Host
+        //Reactivity
+        //Storage
+        //Associated Antibodies
         $jsonArray = array();
         foreach($antibodies as $antibody) {
+
+            $documentUrlsHtml = null;
+            foreach( $antibody->getDocuments() as $document ) {
+                $documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+                $documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+            }
+
             $jsonArray[] = array(
                 'id'            => $antibody->getId(),
-                'Name'      => $antibody->getName(),
-                'Catalog'     => $antibody->getCatalog(),
+                'name'          => $antibody->getName(),
+                'description'   => $antibody->getDescription(),
+                'categorytags'  => $antibody->getCategoryTagsStr(),
+                'public'        => $antibody->getOpenToPublic(),
+                'company'       => $antibody->getCompany(),
+                'clone'         => $antibody->getClone(),
+                'host'          => $antibody->getHost(),
+                'reactivity'    => $antibody->getReactivity(),
+                'storage'        => $antibody->getStorage(),
+                'documents'     => $documentUrlsHtml //$antibody->getDocuments()
+                //'unitPrice'     => $antibody->getUnitPrice(),
+                //'Catalog'       => $antibody->getCatalog(),
             );
         }
 

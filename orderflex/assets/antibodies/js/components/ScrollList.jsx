@@ -76,7 +76,7 @@ const ScrollList = () => {
         if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
             callProduct();
         } else {
-            setMatchMessage("Total matching users " + totalProducts);
+            setMatchMessage("Total matching antibodies " + totalProducts);
         }
     }, [pageNum]);
 

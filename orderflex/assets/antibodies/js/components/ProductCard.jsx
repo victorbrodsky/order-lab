@@ -6,6 +6,7 @@ import '../../css/card.css';
 //import ConfirmRemovalModal from "./ConfirmRemovalModal";
 //https://mdbootstrap.com/docs/standard/extended/card-deck/
 
+//<img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
 //class ProductTable extends Component {
   //render() {
 const ProductTable = ({ product, setref }) => {
@@ -21,25 +22,45 @@ const ProductTable = ({ product, setref }) => {
         <div className="col">
         <div ref={setref} key={product.pk} className="card h-100" style={cardstyle}>
 
+            Image:
+            { product.documents }
 
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
-             
 
             <div className="card-body">
               <div className="card-text">
+                    <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.id } disabled />
+                      <label>ID</label>
+                    </div>
+                    <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.name } disabled />
+                      <label>Name</label>
+                    </div>
+                    <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.description } disabled />
+                      <label>Description</label>
+                    </div>
+                    <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.categorytags } disabled />
+                      <label>Category Tags</label>
+                    </div>
+                    <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.company } disabled />
+                      <label>Company</label>
+                    </div>
+                  <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.host } disabled />
+                      <label>Host</label>
+                  </div>
+                  <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.reactivity } disabled />
+                      <label>Reactivity</label>
+                  </div>
+                  <div className="form-floating mb-3 mt-3">
+                      <input type="text" className="form-control" value={ product.storage } disabled />
+                      <label>Storage</label>
+                  </div>
 
-                <div className="form-floating mb-3 mt-3">
-                  <input type="text" className="form-control" value={ product.name } disabled />
-                  <label>Name</label>
-                </div>
-                <div className="form-floating mb-3 mt-3">
-                  <input type="text" className="form-control" value={ product.description } disabled />
-                  <label>Description</label>
-                </div>
-                <div className="form-floating mb-3 mt-3">
-                  <input type="text" className="form-control" value={ product.unitPrice } disabled />
-                  <label>Price</label>
-                </div>
 
               </div>
 
