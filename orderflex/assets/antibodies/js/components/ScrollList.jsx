@@ -42,7 +42,10 @@ const ScrollList = () => {
     //console.log("url=["+url+"]", ", pageNum="+pageNum);
 
     let queryString = window.location.search;
-    //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
+    if( queryString ) {
+        queryString = queryString.replace('?','');
+    }
+    console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     let apiUrl = Routing.generate('translationalresearch_antibodies_api');
     console.log("apiUrl=["+apiUrl+"]");
@@ -53,7 +56,7 @@ const ScrollList = () => {
         let url = '';
         //let url = API_URL+'?page='+pageNum
         if( queryString ) {
-            queryString = queryString.replace('?','');
+            //queryString = queryString.replace('?','');
             url = apiUrl+'/?page='+pageNum+'&'+queryString
         }
         else {
@@ -65,11 +68,11 @@ const ScrollList = () => {
         let response = await axios.get(
             url
         );
-        //console.log("response",response);
-        //console.log("num_pages",response.data.num_pages);
+        console.log("response",response);
+        console.log("num_pages",response.data.num_pages);
         let all = new Set([...allProducts, ...response.data.products]);
         setAllProducts([...all]);
-        setTotalPages(response.data.num_pages);
+        setTotalPages(response.data.totalPages);
         setLoading(false);
     };
 
@@ -84,7 +87,7 @@ const ScrollList = () => {
     useEffect(() => {
         const currentElement = lastElement;
         const currentObserver = observer.current;
-        //console.log("lastElement",lastElement);
+        console.log("lastElement",lastElement);
 
         if (currentElement) {
             currentObserver.observe(currentElement);
@@ -110,7 +113,7 @@ const ScrollList = () => {
                     (
                         <Grid
                             key={product.id}
-                            item xs={2}
+                            item xs={4}
                         >
                         <ProductCard
                             key={product.id}
@@ -121,7 +124,7 @@ const ScrollList = () => {
                     ) : (
                         <Grid
                             key={product.id}
-                            item xs={2}
+                            item xs={3}
                         >
                         <ProductCard
                             key={product.id}

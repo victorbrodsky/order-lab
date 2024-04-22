@@ -14,30 +14,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-// const images = [
-//     {
-//         label: 'San Francisco – Oakland Bay Bridge, United States',
-//         imgPath:
-//             'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
-//     },
-//     {
-//         label: 'Bird',
-//         imgPath:
-//             'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
-//     },
-//     {
-//         label: 'Bali, Indonesia',
-//         imgPath:
-//             'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250',
-//     },
-//     {
-//         label: 'Goč, Serbia',
-//         imgPath:
-//             'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
-//     },
-// ];
-
-function SwipeableTextMobileStepper({product}) {
+export default function SwipeableTextMobileStepper({ key, product }) {
 
     // const images1 = [
     //     {
@@ -45,42 +22,40 @@ function SwipeableTextMobileStepper({product}) {
     //         imgPath:
     //             'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
     //     },
-    //     {
-    //         label: 'Bird',
-    //         imgPath:
-    //             'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
-    //     },
-    //     {
-    //         label: 'Bali, Indonesia',
-    //         imgPath:
-    //             'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250',
-    //     },
-    //     {
-    //         label: 'Goč, Serbia',
-    //         imgPath:
-    //             'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
-    //     },
     // ];
 
     //https://sentry.io/answers/react-for-loops/
     var images = [];
 
-    var imageEl = {label: 'image', imgPath: 'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60' };
-    images.push(
-        imageEl
-    );
+    // var imageEl = {label: 'image', imgPath: 'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60' };
+    // images.push(
+    //     imageEl
+    // );
 
-    product.documents.forEach((imageUrl, index) => {
-        var imageEl = {label: 'image'+index, imgPath: imageUrl };
+    // product.documents.forEach((imageUrl, index) => {
+    //     var imageEl = {label: 'image'+index, imgPath: imageUrl };
+    //     images.push(
+    //         imageEl
+    //     );
+    // });
+
+    product.documents.forEach((document, index) => {
+        //console.log("document:",document);
+        //var imageEl = {label: document.label, imgPath: document.url };
         images.push(
-            imageEl
+            {id: document.id, label: document.label, imgPath: document.url }
         );
     });
-    console.log("images:",images);
+
+    //console.log("images:",images);
+
+    const maxSteps = images.length;
+    if( maxSteps == 0 ) {
+        return;
+    }
 
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
-    const maxSteps = images.length;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -94,26 +69,33 @@ function SwipeableTextMobileStepper({product}) {
         setActiveStep(step);
     };
 
+    //AutoPlaySwipeableViews -> enableMouseEvents
     return (
-        <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+        <Box
+            sx={{ maxWidth: 400, flexGrow: 1 }}
+            key={product.id}
+        >
             <Paper
                 square
                 elevation={0}
                 sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 50,
-          pl: 2,
-          bgcolor: 'background.default',
-        }}
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: 50,
+                  pl: 2,
+                  bgcolor: 'background.default',
+                }}
             >
-                <Typography>{images[activeStep].label}</Typography>
+                <Typography>
+                    {(maxSteps > 0) ? images[activeStep].label : null}
+                </Typography>
             </Paper>
             <AutoPlaySwipeableViews
                 axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                 index={activeStep}
                 onChangeIndex={handleStepChange}
                 enableMouseEvents
+                interval={100000}
             >
                 {images.map((step, index) => (
                     <div key={step.label}>
@@ -121,12 +103,12 @@ function SwipeableTextMobileStepper({product}) {
                             <Box
                                 component="img"
                                 sx={{
-                  height: 255,
-                  display: 'block',
-                  maxWidth: 400,
-                  overflow: 'hidden',
-                  width: '100%',
-                }}
+                                  height: 255,
+                                  display: 'block',
+                                  maxWidth: 400,
+                                  overflow: 'hidden',
+                                  width: '100%',
+                                }}
                                 src={step.imgPath}
                                 alt={step.label}
                             />
@@ -139,33 +121,37 @@ function SwipeableTextMobileStepper({product}) {
                 position="static"
                 activeStep={activeStep}
                 nextButton={
-          <Button
-            size="small"
-            onClick={handleNext}
-            disabled={activeStep === maxSteps - 1}
-          >
-            Next
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowLeft />
-            ) : (
-              <KeyboardArrowRight />
-            )}
-          </Button>
-        }
+                  <Button
+                    size="small"
+                    onClick={handleNext}
+                    disabled={ activeStep === maxSteps - 1 || maxSteps === 0 }
+                  >
+                    Next
+                    {theme.direction === 'rtl' ? (
+                            <KeyboardArrowLeft />
+                        ) : (
+                            <KeyboardArrowRight />
+                    )}
+                  </Button>
+                }
                 backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowRight />
-            ) : (
-              <KeyboardArrowLeft />
-            )}
-            Back
-          </Button>
-        }
+                    <Button
+                        size="small"
+                        onClick={handleBack}
+                        disabled={ activeStep === 0 || maxSteps === 0 }
+                    >
+                        {theme.direction === 'rtl' ? (
+                          <KeyboardArrowRight />
+                        ) : (
+                          <KeyboardArrowLeft />
+                        )}
+                        Back
+                    </Button>
+                }
             />
         </Box>
     );
 }
 
-export default SwipeableTextMobileStepper;
+//export default SwipeableTextMobileStepper;
 

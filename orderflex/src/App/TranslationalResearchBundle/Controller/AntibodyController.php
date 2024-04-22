@@ -816,13 +816,24 @@ class AntibodyController extends OrderAbstractController
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
+        //$dql->orderBy("antibody.orderinlist","DESC");
+        $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
+
+        $dqlParameters = array();
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
 
         $limit = 20; //20;
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'antibody.id',
-            'defaultSortDirection' => 'DESC',
+            'defaultSortFieldName' => 'antibody.orderinlist',
+            'defaultSortDirection' => 'ASC',
             'wrap-queries' => true
         );
 
@@ -848,16 +859,23 @@ class AntibodyController extends OrderAbstractController
         //Reactivity
         //Storage
         //Associated Antibodies
+        $count = 0;
         $jsonArray = array();
         foreach($antibodies as $antibody) {
-
-            $documentImageUrl = null;
-            $documentUrls = array();
+            $count++;
+            //$documentImageUrl = null;
+            //$documentUrls = array();
+            $imageData = array();
             foreach( $antibody->getDocuments() as $document ) {
                 //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
                 //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-                $documentUrls[] = $document->getAbsoluteUploadFullPath();
-                $documentImageUrl = $document->getAbsoluteUploadFullPath();
+                //$documentUrls[] = $document->getAbsoluteUploadFullPath();
+                //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+                $imageData[] = array(
+                    'key' => $document->getId(),
+                    'label' => $antibody->getName(),
+                    'url' => $document->getAbsoluteUploadFullPath()
+                );
             }
 
             if(0) {
@@ -872,21 +890,25 @@ class AntibodyController extends OrderAbstractController
                     'host' => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
                     'reactivity' => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
                     'storage' => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
-                    'documents' => $documentUrls //$antibody->getDocuments()
+                    //'documents' => $documentUrls //$antibody->getDocuments()
+                    'documents' => $imageData //$antibody->getDocuments()
                     //'unitPrice'     => $antibody->getUnitPrice(),
                     //'Catalog'       => $antibody->getCatalog(),
                 );
             } else {
                 $jsonArray[] = array(
-                    'id' => $antibody->getId(),
+                    'id' => ($antibody->getId()) ? $antibody->getId() : $count."-key",
                     'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
                     'publictext' => $antibody->getPublicText(),
-                    'documents' => $documentUrls, //$antibody->getDocuments()
-                    'image' => $documentImageUrl //$antibody->getDocuments()
+                    'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+                    //'image' => $documentImageUrl //$antibody->getDocuments()
                 );
             }
         }
 
+        $totalCount = $antibodies->getTotalItemCount();
+        //echo "totalCount=$totalCount <br>";
+        $totalPages = ceil($totalCount/$limit);
 
         $info = array(
             'seed' => "abc",
@@ -899,8 +921,8 @@ class AntibodyController extends OrderAbstractController
             //'results' => $jsonArray,
             'products' => $jsonArray,
             'info'    => $info,
-            //'totalPages'   => $totalPages,
-            //'totalUsers' => $totalCount
+            'totalPages'   => $totalPages,
+            'totalProducts' => $totalCount
         );
 
         //return new JsonResponse($results);

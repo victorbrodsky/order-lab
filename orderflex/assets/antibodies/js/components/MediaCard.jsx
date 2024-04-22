@@ -10,17 +10,17 @@ import SwipeableTextMobileStepper from './SwipeableTextMobileStepper'
 //image="/static/images/cards/contemplative-reptile.jpg"
 
 export default function MediaCard({product}) {
-    console.log('id='+product.id+'; image='+product.image);
+    //console.log('id='+product.id+'; image='+product.image);
 
     //image={product.image}
+    // <CardMedia
+    //     sx={{ height: 140 }}
+    //     title="green iguana"
+    //     component='img'
+    // />
 
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-                sx={{ height: 140 }}
-                title="green iguana"
-                component='img'
-            />
+        <Card sx={{ maxWidth: 345, minHeight: 500 }}>
             <CardContent>
                 <SwipeableTextMobileStepper
                     key={product.id}
