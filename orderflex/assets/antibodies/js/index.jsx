@@ -16,6 +16,8 @@ import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/index.css'
 import ScrollList from "./components/ScrollList";
+//import BasicCard from "./components/BasicCard";
+//import MediaCard from "./components/MediaCard";
 
 // order-lab\orderflex\vendor\twbs\bootstrap\dist\js\bootstrap.js
 //import '../../../vendor/twbs/bootstrap/dist/js/bootstrap.js';

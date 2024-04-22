@@ -1046,13 +1046,11 @@ class ListController extends OrderAbstractController
             }
 
             if( method_exists($entity, "getDocuments") ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
                 $em->getRepository(Document::class)->processDocuments($entity, "document");
             }
 
             if( method_exists($entity, "getVisualInfos") ) {
                 foreach( $entity->getVisualInfos() as $visualInfo) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
                     $em->getRepository(Document::class)->processDocuments( $visualInfo, "document" );
                 }
             }

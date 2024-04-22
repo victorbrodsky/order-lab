@@ -413,6 +413,8 @@ class AntibodyController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('antibody new');
 
+            $em->getRepository(Document::class)->processDocuments($antibody, "document");
+
             $removedInfo = $this->removeEmptyVisualInfo($antibody);
 
             $em->persist($antibody);
@@ -465,6 +467,8 @@ class AntibodyController extends OrderAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('antibody edit');
+
+            $em->getRepository(Document::class)->processDocuments($antibody, "document");
 
             $removedInfo1 = $this->removeEmptyVisualInfo($antibody);
             $removedInfo2 = $this->removeVisualInfoCollection($originalVisualInfos,$antibody->getVisualInfos(),$antibody);
@@ -847,28 +851,40 @@ class AntibodyController extends OrderAbstractController
         $jsonArray = array();
         foreach($antibodies as $antibody) {
 
+            $documentImageUrl = null;
             $documentUrls = array();
             foreach( $antibody->getDocuments() as $document ) {
                 //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
                 //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
                 $documentUrls[] = $document->getAbsoluteUploadFullPath();
+                $documentImageUrl = $document->getAbsoluteUploadFullPath();
             }
 
-            $jsonArray[] = array(
-                'id'            => $antibody->getId(),
-                'name'          => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-                'description'   => ($antibody->getDescription()) ? $antibody->getDescription() : '',
-                'categorytags'  => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
-                'public'        => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
-                'company'       => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
-                'clone'         => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
-                'host'          => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
-                'reactivity'    => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
-                'storage'       => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
-                'documents'     => $documentUrls //$antibody->getDocuments()
-                //'unitPrice'     => $antibody->getUnitPrice(),
-                //'Catalog'       => $antibody->getCatalog(),
-            );
+            if(0) {
+                $jsonArray[] = array(
+                    'id' => $antibody->getId(),
+                    'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+                    'description' => ($antibody->getDescription()) ? $antibody->getDescription() : '',
+                    'categorytags' => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
+                    'public' => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
+                    'company' => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
+                    'clone' => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
+                    'host' => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
+                    'reactivity' => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
+                    'storage' => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
+                    'documents' => $documentUrls //$antibody->getDocuments()
+                    //'unitPrice'     => $antibody->getUnitPrice(),
+                    //'Catalog'       => $antibody->getCatalog(),
+                );
+            } else {
+                $jsonArray[] = array(
+                    'id' => $antibody->getId(),
+                    'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+                    'publictext' => $antibody->getPublicText(),
+                    'documents' => $documentUrls, //$antibody->getDocuments()
+                    'image' => $documentImageUrl //$antibody->getDocuments()
+                );
+            }
         }
 
 

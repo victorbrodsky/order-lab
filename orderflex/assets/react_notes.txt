@@ -34,5 +34,14 @@ On deploy, create a production build: yarn encore production
 
 removed: "@symfony/webpack-encore": "^4.1.2",
 
+Use component:
+Material-UI
+Ant Design (AntD)
+React Bootstrap - use this one
+
+Material-UI:
+yarn add @mui/material @emotion/react @emotion/styled
+yarn add @mui/icons-material @mui/material @emotion/styled @emotion/react
+$ yarn add react-swipeable-views
 
 

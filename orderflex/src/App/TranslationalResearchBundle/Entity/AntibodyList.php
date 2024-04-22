@@ -798,6 +798,70 @@ class AntibodyList extends ListAbstract
         return $res;
     }
 
+
+    public function getPublicText()
+    {
+        //Public Antibody List fields:
+        //ID
+        //Name
+        //Description
+        //Category Tags
+        //Public
+        //Company
+        //Clone
+        //Host
+        //Reactivity
+        //Storage
+        //Associated Antibodies
+        $res = "ID#".$this->getId();
+        //$res = $res . ", " . $this->getName();
+
+        $description = $this->getDescription();
+        if( $description ) {
+            $res = $res . ", " . $description;
+        }
+
+        $categoryTagsStr = $this->getCategoryTagsStr();
+        if( $categoryTagsStr ) {
+            $res = $res . ", " . $categoryTagsStr;
+        }
+
+        $company = $this->getCompany();
+        if( $company ) {
+            $res = $res . ", " . $company;
+        }
+
+        $clone = $this->getClone();
+        if( $clone ) {
+            $res = $res . ", " . $clone;
+        }
+
+        $host = $this->getHost();
+        if( $host ) {
+            $res = $res . ", " . $host;
+        }
+
+        $reactivity = $this->getReactivity();
+        if( $reactivity ) {
+            $res = $res . ", " . $reactivity;
+        }
+
+        $storage = $this->getStorage();
+        if( $storage ) {
+            $res = $res . ", " . $storage;
+        }
+
+        $associatesArr = array();
+        foreach($this->getAssociates() as $associate) {
+            $associatesArr[] = $associate->getId()." ".$associate->getName();
+        }
+        if( count($associatesArr) > 0 ) {
+            $res = $res . ", associates:" . implode(", ",$associatesArr);
+        }
+
+        return $res;
+    }
+
 //    public function __toString()
 //    {
 //        $company = $this->getCompany();
@@ -882,5 +946,7 @@ class AntibodyList extends ListAbstract
         
         return $res;
     }
+
+
 
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
+import Grid from '@mui/material/Grid';
 import ProductCard from "./ProductCard";
 import Loading from "./Loading";
 
@@ -98,28 +99,40 @@ const ScrollList = () => {
 
     console.log("ScrollList return");
 
+    //<div className="card-group">
+    //<div className="row row-cols-1 row-cols-md-3 g-4">
+
     return (
-        //<div className="card-group">
-        <div className="row row-cols-1 row-cols-md-3 g-4">
+        <div>
+        <Grid container spacing={2}>
+            {allProducts.length > 0 && allProducts.map((product, i) => {
+                return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                    (
+                        <Grid
+                            key={product.id}
+                            item xs={2}
+                        >
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                            setref={setLastElement}
+                        />
+                        </Grid>
+                    ) : (
+                        <Grid
+                            key={product.id}
+                            item xs={2}
+                        >
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                        />
+                        </Grid>
+                );
+            })}
 
-        {allProducts.length > 0 && allProducts.map((product, i) => {
-            return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                (
-                    <ProductCard
-                        key={product.id}
-                        product={product}
-                        setref={setLastElement}
-                    />
-                ) : (
-                    <ProductCard
-                        key={product.id}
-                        product={product}
-                    />
-            );
-        })}
-
-        {loading && <Loading page={pageNum}/>}
-
+            {loading && <Loading page={pageNum}/>}
+        </Grid>
         </div>
     );
 

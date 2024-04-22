@@ -1,6 +1,13 @@
-"width: 48rem; margin-top: 1rem;"
+/*"width: 48rem; margin-top: 1rem;"*/
 
 .custom-card-product {
     width: 25rem !important;
     margin: 1rem !important;
+}
+
+.card {
+    max-width: 100%;
+}
+.card-text {
+    word-wrap: break-word;
 }
