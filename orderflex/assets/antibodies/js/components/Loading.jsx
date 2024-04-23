@@ -1,9 +1,10 @@
 import React from 'react';
 
-const Loading = ({page}) => {
+const Loading = ({page, pages}) => {
     return (
             <div>
-                Loading page {page}...
+                <br/>
+                Loading page {page} of {pages}...
             </div>
     );
 };

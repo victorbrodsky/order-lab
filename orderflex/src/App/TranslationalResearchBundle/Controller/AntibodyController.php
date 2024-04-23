@@ -818,12 +818,14 @@ class AntibodyController extends OrderAbstractController
         $dql->select('antibody');
         //$dql->orderBy("antibody.orderinlist","DESC");
         $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
+        //$dql->andWhere("antibody.id < 60");
 
         $dqlParameters = array();
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        //$query->setMaxResults(60);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);

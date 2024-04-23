@@ -14,7 +14,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-export default function SwipeableTextMobileStepper({ key, product }) {
+export default function SwipeableTextMobileStepper({ product }) {
 
     // const images1 = [
     //     {
@@ -41,10 +41,12 @@ export default function SwipeableTextMobileStepper({ key, product }) {
 
     product.documents.forEach((document, index) => {
         //console.log("document:",document);
-        //var imageEl = {label: document.label, imgPath: document.url };
-        images.push(
-            {id: document.id, label: document.label, imgPath: document.url }
-        );
+        if( document.id && document.url ) {
+            //var imageEl = {id: document.id, label: document.label, imgPath: document.url};
+            images.push(
+                {id: document.id, label: document.label, imgPath: document.url }
+            );
+        }
     });
 
     //console.log("images:",images);
@@ -73,7 +75,7 @@ export default function SwipeableTextMobileStepper({ key, product }) {
     return (
         <Box
             sx={{ maxWidth: 400, flexGrow: 1 }}
-            key={product.id}
+            key={"swip-"+product.id}
         >
             <Paper
                 square
@@ -98,7 +100,7 @@ export default function SwipeableTextMobileStepper({ key, product }) {
                 interval={100000}
             >
                 {images.map((step, index) => (
-                    <div key={step.label}>
+                    <div key={"image-"+step.id+"-"+step.label}>
                         {Math.abs(activeStep - index) <= 2 ? (
                             <Box
                                 component="img"

@@ -15,7 +15,6 @@ import Loading from "./Loading";
 
 const ScrollList = () => {
 
-    console.log("ScrollList");
     const [loading, setLoading] = useState(true);
     const [allProducts, setAllProducts] = useState([]);
     const [pageNum, setPageNum] = useState(1);
@@ -23,8 +22,10 @@ const ScrollList = () => {
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalProducts, setTotalProducts] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
-    const [rowRefs, setRowRefs] = useState([]);
-    const [isShown, setIsShown] = useState(true);
+    //const [rowRefs, setRowRefs] = useState([]);
+    //const [isShown, setIsShown] = useState(true);
+
+    //console.log("ScrollList: pageNum="+pageNum);
 
     const tableBodyRef = useRef();
     var _counter = 0;
@@ -45,10 +46,10 @@ const ScrollList = () => {
     if( queryString ) {
         queryString = queryString.replace('?','');
     }
-    console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
+    //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     let apiUrl = Routing.generate('translationalresearch_antibodies_api');
-    console.log("apiUrl=["+apiUrl+"]");
+    //console.log("apiUrl=["+apiUrl+"]");
 
     const callProduct = async () => {
         //console.log("callProduct, pageNum="+pageNum);
@@ -63,14 +64,14 @@ const ScrollList = () => {
             url = apiUrl+'/?page='+pageNum
         }
         //url = API_URL;
-        console.log("url=["+url+"]");
+        console.log("callProduct: url=["+url+"]");
 
         let response = await axios.get(
             url
         );
-        console.log("response",response);
-        console.log("totalPages",response.data.totalPages);
-        let all = new Set([...allProducts, ...response.data.products]);
+        //console.log("response",response);
+        console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);
+        let all = new Set([...allProducts, ...response.data.results]);
         setAllProducts([...all]);
         setTotalPages(response.data.totalPages);
         setLoading(false);
@@ -88,7 +89,7 @@ const ScrollList = () => {
     useEffect(() => {
         const currentElement = lastElement;
         const currentObserver = observer.current;
-        console.log("useEffect: lastElement",lastElement);
+        //console.log("useEffect: lastElement",lastElement);
 
         if (currentElement) {
             currentObserver.observe(currentElement);
@@ -101,42 +102,49 @@ const ScrollList = () => {
         };
     }, [lastElement]);
 
-    console.log("ScrollList return");
+    //console.log("ScrollList return");
 
     //<div className="card-group">
     //<div className="row row-cols-1 row-cols-md-3 g-4">
 
     return (
         <div>
-        <Grid container spacing={2}>
-            {allProducts.length > 0 && allProducts.map((product, i) => {
-                return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                    (
-                        <Grid
-                            key={product.id}
-                            item xs={4}
-                        >
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            setref={setLastElement}
-                        />
-                        </Grid>
-                    ) : (
-                        <Grid
-                            key={product.id}
-                            item xs={3}
-                        >
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                        />
-                        </Grid>
-                );
-            })}
+            <Grid container spacing={2}>
+                {allProducts.length > 0 && allProducts.map((product, i) => {
+                    return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                        (
+                            <Grid
+                                key={product.id}
+                                item xs={4}
+                                ref={setLastElement}
+                            >
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                            />
+                            </Grid>
+                        ) : (
+                            <Grid
+                                key={product.id}
+                                item xs={3}
+                            >
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                            />
+                            </Grid>
+                    );
+                })}
 
-            {loading && <Loading page={pageNum}/>}
-        </Grid>
+                {loading && <Loading page={pageNum} pages={TOTAL_PAGES}/>}
+
+                {pageNum - 1 === TOTAL_PAGES && (
+                    <div>
+                        <br/>
+                        <p className='text-center my-10'>End of list</p>
+                    </div>
+                )}
+            </Grid>
         </div>
     );
 

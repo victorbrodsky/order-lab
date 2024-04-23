@@ -433,14 +433,14 @@ const UserTable = ({cycle}) => {
                                     setfunc={setLastElement}
                                 />
                             ) : (
-                            <UserTableRow
-                                data={user}
-                                key={ user.id+'-'+i }
-                                cycle={cycle}
-                                updateDeactivateRowRefs={updateDeactivateRowRefs}
-                                updateModifiedRowRefs={updateModifiedRowRefs}
-                            />
-                        );
+                                <UserTableRow
+                                    data={user}
+                                    key={ user.id+'-'+i }
+                                    cycle={cycle}
+                                    updateDeactivateRowRefs={updateDeactivateRowRefs}
+                                    updateModifiedRowRefs={updateModifiedRowRefs}
+                                />
+                            );
                     })}
 
                     {loading && <Loading page={pageNum}/>}
@@ -454,7 +454,7 @@ const UserTable = ({cycle}) => {
         );
 
     } else {
-        
+        //NOT USED
         var componentid = '3';
         //console.log("users:",allUsers);
         console.log("users len=",allUsers.length);

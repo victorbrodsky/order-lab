@@ -19,35 +19,11 @@ const ProductCard = ({ product, setref }) => {
 
     return (
         <MediaCard
-            key={product.id}
+            key={'mediacard-'+product.id}
             product={product}
         >
         </MediaCard>
     )
-
-    // return (
-    //
-    //     <Card
-    //         style={{ width: '18rem' }}
-    //         bg='light'
-    //         text='dark'
-    //         className="mb-2"
-    //         key={product.id}
-    //     >
-    //         <Card.Body>
-    //             <ProductCarousel
-    //                 key={product.id}
-    //                 product={product}
-    //             ></ProductCarousel>
-    //             <Card.Title>{product.name}</Card.Title>
-    //             <Card.Text>
-    //                 {product.publictext}
-    //             </Card.Text>
-    //             <Button variant="secondary">Go somewhere</Button>
-    //         </Card.Body>
-    //     </Card>
-    // );
-
 }
 
 export default ProductCard;
