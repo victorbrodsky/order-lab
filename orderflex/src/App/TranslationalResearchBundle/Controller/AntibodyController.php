@@ -918,8 +918,8 @@ class AntibodyController extends OrderAbstractController
         );
 
         $results = array(
-            //'results' => $jsonArray,
-            'products' => $jsonArray,
+            'results' => $jsonArray,
+            //'products' => $jsonArray,
             'info'    => $info,
             'totalPages'   => $totalPages,
             'totalProducts' => $totalCount

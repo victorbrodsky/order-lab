@@ -69,7 +69,7 @@ const ScrollList = () => {
             url
         );
         console.log("response",response);
-        console.log("num_pages",response.data.num_pages);
+        console.log("totalPages",response.data.totalPages);
         let all = new Set([...allProducts, ...response.data.products]);
         setAllProducts([...all]);
         setTotalPages(response.data.totalPages);
@@ -77,6 +77,7 @@ const ScrollList = () => {
     };
 
     useEffect(() => {
+        console.log("useEffect: callProduct: pageNum="+pageNum+"; TOTAL_PAGES="+TOTAL_PAGES);
         if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
             callProduct();
         } else {
@@ -87,7 +88,7 @@ const ScrollList = () => {
     useEffect(() => {
         const currentElement = lastElement;
         const currentObserver = observer.current;
-        console.log("lastElement",lastElement);
+        console.log("useEffect: lastElement",lastElement);
 
         if (currentElement) {
             currentObserver.observe(currentElement);
