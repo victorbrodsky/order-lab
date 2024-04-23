@@ -33,11 +33,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 //const element = <h1>Hello, world</h1>;
 //root.render(element);
 
-if(0) {
+if(1) {
     root.render(
         <React.StrictMode>
             <Router>
-                <App />
+                <ScrollList />
             </Router>
         </React.StrictMode>
     );
@@ -45,7 +45,7 @@ if(0) {
     root.render(
         <React.StrictMode>
             <Router>
-                <ScrollList />
+                <App />
             </Router>
         </React.StrictMode>
     );

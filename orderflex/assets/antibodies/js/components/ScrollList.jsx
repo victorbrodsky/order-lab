@@ -13,6 +13,8 @@ import Loading from "./Loading";
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
+//let _fetchedPages = []; //to prevent double fetch for the same page
+
 const ScrollList = () => {
 
     const [loading, setLoading] = useState(true);
@@ -78,12 +80,15 @@ const ScrollList = () => {
     };
 
     useEffect(() => {
-        console.log("useEffect: callProduct: pageNum="+pageNum+"; TOTAL_PAGES="+TOTAL_PAGES);
-        if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
-            callProduct();
-        } else {
-            setMatchMessage("Total matching antibodies " + totalProducts);
-        }
+        console.log("useEffect: callProduct: pageNum=" + pageNum + "; TOTAL_PAGES=" + TOTAL_PAGES);
+        //if( _fetchedPages[pageNum] === undefined ) {
+            if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
+                callProduct();
+                //_fetchedPages[pageNum] = true;
+            } else {
+                setMatchMessage("Total matching antibodies " + totalProducts);
+            }
+        //}
     }, [pageNum]);
 
     useEffect(() => {
