@@ -124,7 +124,6 @@ const ScrollList = () => {
                                 ref={setLastElement}
                             >
                             <ProductCard
-                                key={product.id}
                                 product={product}
                             />
                             </Grid>
@@ -134,7 +133,6 @@ const ScrollList = () => {
                                 item xs={3}
                             >
                             <ProductCard
-                                key={product.id}
                                 product={product}
                             />
                             </Grid>

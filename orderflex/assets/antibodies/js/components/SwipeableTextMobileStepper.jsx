@@ -41,10 +41,10 @@ export default function SwipeableTextMobileStepper({ product }) {
 
     product.documents.forEach((document, index) => {
         //console.log("document:",document);
-        if( document.id && document.url ) {
+        if( document.url ) {
             //var imageEl = {id: document.id, label: document.label, imgPath: document.url};
             images.push(
-                {id: document.id, label: document.label, imgPath: document.url }
+                {id: document.id+"-"+index, label: document.label, imgPath: document.url }
             );
         }
     });

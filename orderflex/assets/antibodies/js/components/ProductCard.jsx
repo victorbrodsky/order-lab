@@ -6,7 +6,7 @@ import MediaCard from "./MediaCard";
 
 //<img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
 
-const ProductCard = ({ product, setref }) => {
+const ProductCard = ({ product }) => {
 
     //https://sentry.io/answers/react-for-loops/
     // let imageList = [];
@@ -19,7 +19,6 @@ const ProductCard = ({ product, setref }) => {
 
     return (
         <MediaCard
-            key={'mediacard-'+product.id}
             product={product}
         >
         </MediaCard>

@@ -26,7 +26,7 @@ export default function MediaCard({product}) {
                     product={product}
                 ></SwipeableTextMobileStepper>
                 <Typography gutterBottom variant="h5" component="div">
-                    {"ID#"+product.id+" "+product.name}
+                    {product.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     {product.publictext}
