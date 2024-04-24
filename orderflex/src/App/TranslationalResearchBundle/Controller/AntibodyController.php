@@ -880,6 +880,9 @@ class AntibodyController extends OrderAbstractController
                 );
             }
 
+            $datasheet = $antibody->getDatasheet();
+
+
             if(0) {
                 $jsonArray[] = array(
                     'id' => $antibody->getId(),
@@ -903,6 +906,7 @@ class AntibodyController extends OrderAbstractController
                     'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
                     'publictext' => $antibody->getPublicText(),
                     'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+                    'datasheet' => $datasheet
                     //'image' => $documentImageUrl //$antibody->getDocuments()
                 );
             }

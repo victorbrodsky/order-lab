@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -19,6 +20,29 @@ export default function MediaCard({product}) {
     //     component='img'
     // />
 
+    return (
+        <Card sx={{ maxWidth: 345, minHeight: 500 }}>
+            <CardContent>
+                <SwipeableTextMobileStepper
+                    product={product}
+                ></SwipeableTextMobileStepper>
+                <Typography variant="body2" color="text.secondary">
+                    {product.publictext}
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small"
+                        href={product.datasheet} variant="contained" target="_blank"
+                        disabled={ !product.datasheet }
+                >Datasheet</Button>
+                <Button
+                    size="small"
+                >Learn More</Button>
+            </CardActions>
+        </Card>
+    );
+
+    if(0)
     return (
         <Card sx={{ maxWidth: 345, minHeight: 500 }}>
             <CardContent>
