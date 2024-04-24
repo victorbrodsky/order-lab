@@ -97,17 +97,8 @@ class MultiTenancyController extends OrderAbstractController
 
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
-//        if( !$userTenantUtil->getTenantRole() ) {
-//            $this->addFlash(
-//                'warning',
-//                "The system's tenant role is not defined"
-//            );
-//            return $this->redirect( $this->generateUrl('employees-nopermission') );
-//        }
-
-        $tenantManagerName = 'tenantmanager';
-        //$tenantRole = $this->getParameter('tenant_role');
         $tenantRole = $userTenantUtil->getTenantRole();
+        $tenantManagerName = 'tenantmanager';
         if( $tenantRole != $tenantManagerName ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -253,7 +244,10 @@ class MultiTenancyController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function syncTenantsUpdateServerConfigAction( Request $request )
     {
-        $tenantRole = $this->getParameter('tenant_role');
+
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -265,7 +259,6 @@ class MultiTenancyController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
         set_time_limit(1800); //1800 seconds => 30 mins
@@ -481,7 +474,8 @@ class MultiTenancyController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/MultiTenancy/tenancy-management.html.twig')]
     public function syncTenantsUpdateDBConfigAction( Request $request )
     {
-        $tenantRole = $this->getParameter('tenant_role');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -494,7 +488,6 @@ class MultiTenancyController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
         //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
@@ -641,7 +634,8 @@ class MultiTenancyController extends OrderAbstractController
     public function tenancyManagementAction( Request $request, KernelInterface $kernel )
     {
         //exit("tenancyManagementAction");
-        $tenantRole = $this->getParameter('tenant_role');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -741,7 +735,8 @@ class MultiTenancyController extends OrderAbstractController
     public function updateTenancyManagementAction( Request $request, KernelInterface $kernel )
     {
         exit('updateTenancyManagementAction');
-        $tenantRole = $this->getParameter('tenant_role');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             $this->addFlash(
                 'warning',
@@ -807,7 +802,8 @@ class MultiTenancyController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function tenancyManagementOrigAction( Request $request, KernelInterface $kernel )
     {
-        $tenantRole = $this->getParameter('tenant_role');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -905,7 +901,8 @@ class MultiTenancyController extends OrderAbstractController
     #[Template('AppSystemBundle/tenancy-management.html.twig')]
     public function updateTenancyManagementOrigAction( Request $request, KernelInterface $kernel )
     {
-        $tenantRole = $this->getParameter('tenant_role');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != 'tenantmanager' ) {
             $this->addFlash(
                 'warning',
@@ -969,8 +966,10 @@ class MultiTenancyController extends OrderAbstractController
         // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
         // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
 
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
         $tenantManagerName = 'homepagemanager';
-        $tenantRole = $this->getParameter('tenant_role');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != $tenantManagerName ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -985,7 +984,6 @@ class MultiTenancyController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
-        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         //echo "tenantManager ID=".$tenantManager->getId()."<br>";

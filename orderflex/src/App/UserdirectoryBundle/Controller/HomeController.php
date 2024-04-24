@@ -40,17 +40,11 @@ class HomeController extends OrderAbstractController {
     //Defined in routes-default.yaml, route name 'main_common_home'
     public function mainCommonHomeAction(Request $request) {
 
-        if( !$userTenantUtil->getTenantRole() ) {
-            $this->addFlash(
-                'warning',
-                "The system's tenant role is not defined"
-            );
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-        
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
         //homepagemanager show a different multi-tenant home page
         $tenantManagerName = 'homepagemanager';
-        $tenantRole = $this->getParameter('tenant_role');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole == $tenantManagerName ) {
             return $this->multiTenancyHomePage($request);
         }
