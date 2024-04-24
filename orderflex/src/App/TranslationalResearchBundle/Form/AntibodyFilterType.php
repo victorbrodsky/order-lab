@@ -210,6 +210,10 @@ class AntibodyFilterType extends AbstractType
             'label' => false,
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Comment'),
         ));
+
+        //Add has document
+        //Add has ROI
+        //Add has WSI (Whole Slide Image)
     }
 
     /**

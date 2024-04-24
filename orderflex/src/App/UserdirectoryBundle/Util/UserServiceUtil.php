@@ -804,6 +804,8 @@ class UserServiceUtil {
     //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once
     //Get single or generate SettingParameter (Singleton)
     public function getSingleSiteSettingParameter( $createIfEmpty=false ) {
+        return null; //testing
+        
         $logger = $this->container->get('logger');
         $entities = $this->em->getRepository(SiteParameters::class)->findAll();
 
