@@ -40,6 +40,13 @@ class UserTenantUtil
         $this->container = $container;
     }
 
+    public function getTenantRole() {
+        if( !$this->container->hasParameter('tenant_role') ) {
+            return null;
+        }
+        return $this->container->getParameter('tenant_role');
+    }
+
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
         $logger = $this->container->get('logger');

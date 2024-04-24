@@ -95,8 +95,19 @@ class MultiTenancyController extends OrderAbstractController
         // * Main text [free text form field, multi-line, accepts HTML, with default value: “Please log in to manage the tenants on this platform.”]
         // * Footer [free text form field, multi-line, accepts HTML, with default value: “[Home | <a href=”/about-us”>About Us</a> | Follow Us]”
 
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
+//        if( !$userTenantUtil->getTenantRole() ) {
+//            $this->addFlash(
+//                'warning',
+//                "The system's tenant role is not defined"
+//            );
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+
         $tenantManagerName = 'tenantmanager';
-        $tenantRole = $this->getParameter('tenant_role');
+        //$tenantRole = $this->getParameter('tenant_role');
+        $tenantRole = $userTenantUtil->getTenantRole();
         if( $tenantRole != $tenantManagerName ) {
             if( !$tenantRole ) {
                 $tenantRole = 'undefined';
@@ -111,7 +122,6 @@ class MultiTenancyController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
-        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         //echo "tenantManager ID=".$tenantManager->getId()."<br>";
