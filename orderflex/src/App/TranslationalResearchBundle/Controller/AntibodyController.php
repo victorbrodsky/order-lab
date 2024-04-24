@@ -874,14 +874,46 @@ class AntibodyController extends OrderAbstractController
                 //$documentUrls[] = $document->getAbsoluteUploadFullPath();
                 //$documentImageUrl = $document->getAbsoluteUploadFullPath();
                 $imageData[] = array(
-                    'key' => $document->getId(),
+                    'key' => 'document-'.$document->getId(),
                     'label' => $antibody->getName(),
                     'url' => $document->getAbsoluteUploadFullPath()
                 );
             }
 
-            $datasheet = $antibody->getDatasheet();
+            foreach( $antibody->getVisualInfos() as $visualInfo ) {
+                $visualInfoROI = false;
+                $visualInfoWSI = false;
+                $uploadedType = $visualInfo->getUploadedType();
 
+//                if( $uploadedType == 'Region Of Interest' ) {
+//                    $visualInfoROI = true;
+//                }
+//                if( $uploadedType == 'Whole Slide Image' ) {
+//                    $visualInfoWSI = true;
+//                }
+
+                //$comment
+                //$catalog
+                //documents
+
+                if( $uploadedType ) {
+                    $uploadedType = $uploadedType . ": ";
+                }
+
+                foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+                    if( $path ) {
+                        $imageData[] = array(
+                            'key' => 'visualinfo-'.$visualInfoDocument->getId(),
+                            'label' => $uploadedType.$visualInfo->getComment(),
+                            'url' => $path,
+                            'comment' => $visualInfo->getComment(),
+                            'catalog' => $visualInfo->getCatalog()
+                        );
+                    }
+                }
+            }
+            
 
             if(0) {
                 $jsonArray[] = array(
@@ -906,7 +938,7 @@ class AntibodyController extends OrderAbstractController
                     'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
                     'publictext' => $antibody->getPublicText(),
                     'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-                    'datasheet' => $datasheet
+                    'datasheet' => $antibody->getDatasheet()
                     //'image' => $documentImageUrl //$antibody->getDocuments()
                 );
             }
