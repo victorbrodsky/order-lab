@@ -112,6 +112,8 @@ const ScrollList = () => {
     //<div className="card-group">
     //<div className="row row-cols-1 row-cols-md-3 g-4">
 
+    //TODO: add filter, add view single antibody details
+
     return (
         <div>
             <Grid container spacing={2}>
