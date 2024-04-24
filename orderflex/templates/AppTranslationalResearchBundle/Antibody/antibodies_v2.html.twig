@@ -142,6 +142,20 @@
                             {{ form_widget(filterform.comment) }}
                         </div>
                     </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.document) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.visual) }}
+                        </div>
+
+                        <div class="col-xs-8">
+                        </div>
+                    </div>
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
             {{ form_rest(filterform) }}

@@ -211,9 +211,39 @@ class AntibodyFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder'=>'Comment'),
         ));
 
+        $booleanChoices = array(
+            //'Not set' => NULL,
+            'Yes' => true,
+            'No' => false,
+        );
+
         //Add has document
-        //Add has ROI
-        //Add has WSI (Whole Slide Image)
+        $builder->add('document', ChoiceType::class, array(
+            'label' => "Has Document(s):",
+            'choices' => $booleanChoices,
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        //Has Visual Info Images
+        $builder->add('visual', ChoiceType::class, array(
+            'label' => "Has Visual Info Image(s):",
+            'choices' => $booleanChoices,
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        //        //Add has ROI
+//        $builder->add('hasRoi', ChoiceType::class, array(
+//            'label' => "Has Region of Interest:",
+//            'choices' => $this->booleanChoices,
+//            'attr' => array('class' => 'form-control')
+//        ));
+//        //Add has WSI (Whole Slide Image)
+//        $builder->add('hasWsi', ChoiceType::class, array(
+//            'label' => "Has Whole Slide Image:",
+//            'choices' => $this->booleanChoices,
+//            'attr' => array('class' => 'form-control')
+//        ));
+
     }
 
     /**

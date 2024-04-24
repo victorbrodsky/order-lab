@@ -20,8 +20,10 @@ export default function MediaCard({product}) {
     //     component='img'
     // />
 
+    //sx={{ maxWidth: 345, minHeight: 500 }}
+
     return (
-        <Card sx={{ maxWidth: 345, minHeight: 500 }}>
+        <Card sx={{ maxWidth: 345 }}>
             <CardContent>
                 <SwipeableTextMobileStepper
                     product={product}

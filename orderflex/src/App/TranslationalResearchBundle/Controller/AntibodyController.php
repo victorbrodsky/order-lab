@@ -136,6 +136,11 @@ class AntibodyController extends OrderAbstractController
         $dilution = $filterform['dilution']->getData();
         $comment = $filterform['comment']->getData();
 
+        $hasDocument = $filterform['document']->getData();
+        $hasVisualInfo = $filterform['visual']->getData();
+        //$hasRoi = $filterform['hasRoi']->getData();
+        //$hasWsi = $filterform['hasWsi']->getData();
+
         //echo "search=".$search."<br>";
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
@@ -277,6 +282,18 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
+        if( $hasDocument ) {
+            //$dql->andWhere("ent.documents IS NOT NULL");
+            $dql->leftJoin("ent.documents", "documents");
+            $dql->andWhere("documents IS NOT NULL");
+            $advancedFilter++;
+        }
+        if( $hasVisualInfo ) {
+            $dql->leftJoin("ent.visualInfos", "visualInfos");
+            $dql->leftJoin("visualInfos.documents", "visualInfosDocuments");
+            $dql->andWhere("visualInfosDocuments IS NOT NULL");
+            $advancedFilter++;
+        }
 
         //echo "dql=".$dql."<br>";
 
