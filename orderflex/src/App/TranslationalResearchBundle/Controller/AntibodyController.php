@@ -49,7 +49,7 @@ class AntibodyController extends OrderAbstractController
 
         return $listArr;
     }
-    public function getList($request, $limit=50) {
+    public function getList($request, $publicPage=false, $limit=50) {
 
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
@@ -110,7 +110,12 @@ class AntibodyController extends OrderAbstractController
 
         $dqlParameters = array();
 
-        $params = array("className" => $mapper['className']);
+        //$publicPage = true;
+        //echo "1 publicPage=".$publicPage."<br>";
+        $params = array(
+            "className" => $mapper['className'],
+            "publicPage" => $publicPage
+        );
         $filterform = $this->createForm(AntibodyFilterType::class, null, array(
             //'action' => $this->generateUrl($routeName),
             'form_custom_value'=>$params,
@@ -122,7 +127,7 @@ class AntibodyController extends OrderAbstractController
         $name = $filterform['name']->getData();
         $description = $filterform['description']->getData();
         $categorytags = $filterform['categorytags']->getData();
-        $public = $filterform['public']->getData();
+        //$public = $filterform['public']->getData();
         //secondary filter
         $clone = $filterform['clone']->getData();
         $host = $filterform['host']->getData();
@@ -145,6 +150,11 @@ class AntibodyController extends OrderAbstractController
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
         //echo "2search=".$search."<br>";
+
+        $public = "public";
+        if( isset($filterform['public']) ) {
+            $public = $filterform['public']->getData();
+        }
 
         $filterTypes = null;
         if( isset($filterform['type']) ) {
@@ -223,7 +233,7 @@ class AntibodyController extends OrderAbstractController
 
         if( $public ) {
             //echo "public=".$public."<br>";
-            if( $public == 'Public' ) {
+            if( strtolower($public) == 'public' ) {
                 $dql->andWhere("ent.openToPublic = TRUE");
             } else {
                 $dql->andWhere("ent.openToPublic IS NULL OR ent.openToPublic = FALSE");
@@ -359,6 +369,7 @@ class AntibodyController extends OrderAbstractController
             'advancedFilter' => $advancedFilter,
             'matchingAntibodyIdsArr' => $matchingAntibodyIdsArr,
             'title' => $title,
+            'limit' => $limit
         );
     }
 
@@ -790,47 +801,49 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
-        $transresUtil = $this->container->get('transres_util');
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(AntibodyList::class);
-        $dql =  $repository->createQueryBuilder("ent");
-        $dql->select('ent');
-        //$dql->orderBy("antibody.orderinlist","DESC");
-        $dql->where("ent.type = :typedef OR ent.type = :typeadd");
-        $dql->andWhere("ent.openToPublic = TRUE");
+        if(0) {
+            $transresUtil = $this->container->get('transres_util');
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(AntibodyList::class);
+            $dql = $repository->createQueryBuilder("ent");
+            $dql->select('ent');
+            //$dql->orderBy("antibody.orderinlist","DESC");
+            $dql->where("ent.type = :typedef OR ent.type = :typeadd");
+            $dql->andWhere("ent.openToPublic = TRUE");
 
-        //$matchingAntibodyIdsArr = $transresUtil->getAntibodyIdsArrByDqlParameters($dql,array());
-        $allGlobalAntibodys = $transresUtil->getTotalAntibodyCount();
-        //echo "matching=".count($matchingAntibodyIdsArr).", allGlobalAntibodys=$allGlobalAntibodys"."<br>";
-        $title = "Public Antibodies";
-        $title = $title . " (Total " . $allGlobalAntibodys . ")";
+            //$matchingAntibodyIdsArr = $transresUtil->getAntibodyIdsArrByDqlParameters($dql,array());
+            $allGlobalAntibodys = $transresUtil->getTotalAntibodyCount();
+            //echo "matching=".count($matchingAntibodyIdsArr).", allGlobalAntibodys=$allGlobalAntibodys"."<br>";
+            $title = "Public Antibodies";
+            $title = $title . " (Total " . $allGlobalAntibodys . ")";
 
-        return array(
-            'cycle' => 'show',
-            'title' => $title //"Public Antibodies";
-        );
-
-        //exit('indexPublicAntibodiesReactAction');
-        $filterType = trim((string)$request->get('public'));
-
-        $filterPublic = null;
-        $all = $request->query->all();
-        if( isset($all['filter']) && isset($all['filter']['public']) ) {
-            $filterPublic = $all['filter']['public'];
-        }
-        //dump($filterPublic);
-        //exit();
-
-        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
-            return $this->redirectToRoute(
-                'translationalresearch_antibodies_public_react',
-                array(
-                    'filter[public]' => 'Public',
-                    'filter[type][0]' => 'default',
-                    'filter[type][1]' => 'user-added',
-                )
+            return array(
+                'cycle' => 'show',
+                'title' => $title //"Public Antibodies";
             );
         }
+
+        //exit('indexPublicAntibodiesReactAction');
+//        $filterType = trim((string)$request->get('public'));
+//
+//        $filterPublic = null;
+//        $all = $request->query->all();
+//        if( isset($all['filter']) && isset($all['filter']['public']) ) {
+//            $filterPublic = $all['filter']['public'];
+//        }
+//        //dump($filterPublic);
+//        //exit();
+//
+//        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
+//            return $this->redirectToRoute(
+//                'translationalresearch_antibodies_public_react',
+//                array(
+//                    'filter[public]' => 'Public',
+//                    'filter[type][0]' => 'default',
+//                    'filter[type][1]' => 'user-added',
+//                )
+//            );
+//        }
 
         //$request->request->set('public', 'Public');
         //$all['filter']['public'] = 'Public';
@@ -838,9 +851,10 @@ class AntibodyController extends OrderAbstractController
         //dump($request);
         //exit();
 
-        $listArr = $this->getList($request);
+        $publicPage = true;
+        $listArr = $this->getList($request,$publicPage);
         //$listArr['title'] = "Antibodies";
-        $listArr['postPath'] = "_translationalresearch";
+        //$listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
 
         return $listArr;
@@ -849,42 +863,52 @@ class AntibodyController extends OrderAbstractController
     #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
 
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(AntibodyList::class);
-        $dql =  $repository->createQueryBuilder("antibody");
-        $dql->select('antibody');
-        //$dql->orderBy("antibody.orderinlist","DESC");
-        $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
-        $dql->andWhere("antibody.openToPublic = TRUE");
+        if(0) {
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(AntibodyList::class);
+            $dql = $repository->createQueryBuilder("antibody");
+            $dql->select('antibody');
+            //$dql->orderBy("antibody.orderinlist","DESC");
+            $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
+            $dql->andWhere("antibody.openToPublic = TRUE");
 
-        $dqlParameters = array();
-        $dqlParameters["typedef"] = 'default';
-        $dqlParameters["typeadd"] = 'user-added';
+            $dqlParameters = array();
+            $dqlParameters["typedef"] = 'default';
+            $dqlParameters["typeadd"] = 'user-added';
 
-        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        //$query->setMaxResults(60);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+            //$query->setMaxResults(60);
 
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            if (count($dqlParameters) > 0) {
+                $query->setParameters($dqlParameters);
+            }
+
+            $limit = 20; //20;
+
+            $paginationParams = array(
+                'defaultSortFieldName' => 'antibody.orderinlist',
+                'defaultSortDirection' => 'ASC',
+                'wrap-queries' => true
+            );
+
+            $page = $request->query->get('page', 1);
+
+            $paginator = $this->container->get('knp_paginator');
+            $antibodies = $paginator->paginate(
+                $query,
+                $page,   /*page number*/
+                $limit,                            /*limit per page*/
+                $paginationParams
+            );
         }
 
-        $limit = 20; //20;
-
-        $paginationParams = array(
-            'defaultSortFieldName' => 'antibody.orderinlist',
-            'defaultSortDirection' => 'ASC',
-            'wrap-queries' => true
-        );
-
-        $page = $request->query->get('page', 1);
-
-        $paginator  = $this->container->get('knp_paginator');
-        $antibodies = $paginator->paginate(
-            $query,
-            $page,   /*page number*/
-            $limit,                            /*limit per page*/
-            $paginationParams
-        );
+        $publicPage = true;
+        $listArr = $this->getList($request,$publicPage);
+        //$listArr = $this->getList($request);
+        $antibodies = $listArr['entities'];
+        //echo "antibodies=".count($antibodies)."<br>";
+        $limit = $listArr['limit'];
+        //echo "limit=".$limit."<br>";
 
         //Public Antibody List fields:
         //ID
@@ -981,21 +1005,25 @@ class AntibodyController extends OrderAbstractController
             }
         }
 
-        $totalCount = $antibodies->getTotalItemCount();
-        //echo "totalCount=$totalCount <br>";
-        $totalPages = ceil($totalCount/$limit);
+        $totalCount = 0;
+        $totalPages = 0;
+        if( count($antibodies) > 0 ) {
+            $totalCount = $antibodies->getTotalItemCount();
+            //echo "totalCount=$totalCount <br>";
+            $totalPages = ceil($totalCount / $limit);
+        }
 
-        $info = array(
-            'seed' => "abc",
-            'results' => $limit,
-            'page' => $page,
-            'version' => 1
-        );
+//        $info = array(
+//            'seed' => "abc",
+//            'results' => $limit,
+//            'page' => $page,
+//            'version' => 1
+//        );
 
         $results = array(
             'results' => $jsonArray,
             //'products' => $jsonArray,
-            'info'    => $info,
+            //'info'    => $info,
             'totalPages'   => $totalPages,
             'totalProducts' => $totalCount
         );

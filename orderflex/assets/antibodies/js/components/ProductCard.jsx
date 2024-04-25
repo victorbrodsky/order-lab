@@ -4,6 +4,8 @@ import React, { Component } from "react";
 import ReactCard from "./ReactCard";
 import MediaCard from "./MediaCard";
 
+//https://react-bootstrap.netlify.app/docs/components/cards
+
 //<img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" className="card-img-top" alt="Hollywood Sign on The Hill" />
 
 const ProductCard = ({ product }) => {

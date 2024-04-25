@@ -76,28 +76,31 @@ class AntibodyFilterType extends AbstractType
         ));
 
         ///// Open to Public ////
+        //echo "publicPage=".$this->params['publicPage']."<br>";
+        if( $this->params['publicPage'] === false ) {
 //        $builder->add('public', CheckboxType::class, array(
 //            'label' => 'Open to public:',
 //            'required' => false,
 //            'attr' => array('style' => 'width: 20px; height: 20px;')
 //        ));
-        $publicTypes = array(
-            "Public" => "Public",
-            "Private" => "Private",
-        );
-        $builder->add('public', ChoiceType::class, array(
-            'label' => false,
-            'choices' => $publicTypes,
-            //'data' => array('default','user-added'),
-            //'choices_as_values' => true,
-            //'multiple' => true,
-            'required' => false,
-            'attr' => array(
-                'class' => 'combobox',
-                'placeholder'=>"Public/Private",
-                //'style' => 'width: 20px; height: 20px;'
-            )
-        ));
+            $publicTypes = array(
+                "Public" => "Public",
+                "Private" => "Private",
+            );
+            $builder->add('public', ChoiceType::class, array(
+                'label' => false,
+                'choices' => $publicTypes,
+                //'data' => array('default','user-added'),
+                //'choices_as_values' => true,
+                //'multiple' => true,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'combobox',
+                    'placeholder' => "Public/Private",
+                    //'style' => 'width: 20px; height: 20px;'
+                )
+            ));
+        }
         ///// EOF Open to Public ////
 
 //        $builder->add('categorytags', ChoiceType::class, array(

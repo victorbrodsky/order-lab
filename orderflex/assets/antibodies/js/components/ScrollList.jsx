@@ -146,7 +146,6 @@ const ScrollList = () => {
 
                 {pageNum - 1 === TOTAL_PAGES && (
                     <div>
-                        <br/>
                         <p className='text-center my-10'>End of list</p>
                     </div>
                 )}

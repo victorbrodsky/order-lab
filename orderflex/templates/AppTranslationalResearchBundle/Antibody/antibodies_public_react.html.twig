@@ -17,101 +17,205 @@
     <input type="hidden" id="antibodies-cycle" value="{{ cycle }}" />
 
     <br>
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+        <div class="row row row-cols-lg-6 g-lg-1">
+            {#<div class="col-12">#}
+
+            <div class="col">
+                {{ form_widget(filterform.search) }}
+            </div>
+
+            <div class="col">
+                {{ form_widget(filterform.name) }}
+            </div>
+
+            <div class="col">
+                {{ form_widget(filterform.description) }}
+            </div>
+
+            <div class="col">
+                {{ form_widget(filterform.categorytags) }}
+            </div>
+
+            {% if filterform.public is defined %}
+                <div class="col">
+                    {{ form_widget(filterform.public) }}
+                    {#{{ formmacros.checkbox(filterform.public) }}#}
+                </div>
+            {% endif %}
+
+            {#<div class="col-xs-1">#}
+            {#<button type="submit" class="btn btn-sm btn-default">Filter</button>#}
+            {#</div>#}
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    {#<button type="button" class="btn btn-light"><i class="fa-solid fa-wrench"></i></button>#}
+                    <button class="btn btn-light" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#transres-AdvancedSearch"
+                            aria-expanded="false" aria-controls="transres-AdvancedSearch">
+                        <i class="fa-solid fa-wrench"></i>
+                    </button>
+                    <button id="filter-btn" type="submit" class="btn btn-light btn-sm">Filter</button>
+                </div>
+                {#<div class="btn-group btn-group-sm">#}
+                            {#<span data-toggle="buttons-checkbox">#}
+                                {#<div#}
+                                        {#data-toggle="collapse"#}
+                                        {#href="#transres-AdvancedSearch"#}
+                                        {#class="btn btn-default btn-sm toggle-btn-state"#}
+                                        {#data-active-class="advance-search-wrench"#}
+                                        {#style="height: 30px;"#}
+                                {#>#}
+                                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                                        {#<i class="bi bi-wrench"></i>#}
+                                        {#<i class="fa fa-file-excel fa-lg"></i>#}
+                                        {#<i class="fa-solid fa-wrench"></i>#}
+                                {#</div>#}
+                            {#</span>#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-light btn-sm">Filter</button>#}
+                {#</div>#}
+            </div>
+
+            {#</div>#}
+        </div>
+
+        {% if advancedFilter %}
+            {% set advacedCollapse = 'in' %}
+        {% else %}
+            {% set advacedCollapse = '' %}
+        {% endif %}
+
+        <div id="transres-AdvancedSearch" class="collapse {{ advacedCollapse }}">
+            <br>
+            <div class="card card-body">
+                <div class="row row-cols-lg-5 g-lg-2">
+                    <div class="col">
+                        {{ form_widget(filterform.type) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.clone) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.host) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.reactivity) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.company) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.catalog) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.control) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.protocol) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.retrieval) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.dilution) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.comment) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.document) }}
+                    </div>
+
+                    <div class="col">
+                        {{ form_widget(filterform.visual) }}
+                    </div>
+
+                    <div class="col">
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+        {{ form_rest(filterform) }}
+        {{ form_end(filterform) }}
+    </div>
+
+    <br><br>
     <div id="root"></div>
 
 {% endblock %}
 
 
 {% block mainjs %}
-
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.min.js') }}"></script>#}
-
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>#}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
-
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.min.js') }}"></script>#}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.bundle.min.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>#}
 
     {#FOSJsRoutingBundle#}
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-    {#<script>#}
-    {#_REQUEST_LOCALE = '{{ app.request.locale }}';#}
-    {#//console.log('_REQUEST_LOCALE='+_REQUEST_LOCALE);#}
-    {#</script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-router-locale-fix.js') }}"></script>#}
-    {#EOF FOSJsRoutingBundle#}
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
 
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
 
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>#}
-
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
 {% endblock %}
 
 
 {% block bootstrapcss %}
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/css/bootstrap.min.css') }}" >
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/css/bootstrap.css') }}" >#}
+
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />#}
+
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
 {% endblock %}
-{#{% block maincss %}#}
 
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jasny/css/jasny-bootstrap.min.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/css/bootstrap.min.css') }}" >#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda-themeless.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/action.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/css/dropzone.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/css/bootstrap-datepicker3.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/typeahead.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/cropper.min.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/crop-avatar.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/themes/default/style.min.css') }}" />#}
-
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />#}
-
-{#{% endblock %}#}
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.7/css/font-awesome.min.css') }}" />
+{% endblock %}
 
 {% block headeradditionaljs %}
 {% endblock %}
