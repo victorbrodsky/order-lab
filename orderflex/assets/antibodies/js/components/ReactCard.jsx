@@ -15,7 +15,7 @@ function ReactCard({product}) {
     return (
         <div>
             <Card
-                style={{ width: '18rem' }}
+                style={{ width: '18rem', height: '30rem' }}
             >
                 <ReactCarousel product={product}/>
                 <Card.Body>

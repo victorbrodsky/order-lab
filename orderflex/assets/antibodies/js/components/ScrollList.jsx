@@ -117,13 +117,13 @@ const ScrollList = () => {
 
     return (
         <div>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 {allProducts.length > 0 && allProducts.map((product, i) => {
                     return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
                         (
                             <Grid
                                 key={"grid-"+product.id}
-                                item xs={4}
+                                item xs={3}
                                 ref={setLastElement}
                             >
                             <ProductCard
