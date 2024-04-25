@@ -18,7 +18,7 @@ function ReactCarousel({product}) {
     //className="d-block w-100"
 
     return (
-        <Carousel fade>
+        <Carousel fade interval={null}>
             {images.map((step, index) => (
                 <Carousel.Item key={"carimage-"+index}>
                     <img
