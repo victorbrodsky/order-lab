@@ -222,14 +222,14 @@ class AntibodyFilterType extends AbstractType
             'label' => "Has Document(s):",
             'choices' => $booleanChoices,
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control', 'placeholder'=>'Has Document(s)')
         ));
         //Has Visual Info Images
         $builder->add('visual', ChoiceType::class, array(
-            'label' => "Has Visual Info Image(s):",
+            'label' => "Has Visual Image(s):",
             'choices' => $booleanChoices,
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control', 'placeholder'=>'Has Visual Image(s)')
         ));
         //        //Add has ROI
 //        $builder->add('hasRoi', ChoiceType::class, array(
