@@ -974,7 +974,13 @@ class AntibodyController extends OrderAbstractController
                     }
                 }
             }
-            
+
+            $disableDatasheet = false;
+            $datasheet = $antibody->getDatasheet();
+            if( !$datasheet || $datasheet == '' ) {
+                $disableDatasheet = true;
+            }
+            //$disableDatasheet = true;
 
             if(0) {
                 $jsonArray[] = array(
@@ -999,7 +1005,8 @@ class AntibodyController extends OrderAbstractController
                     'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
                     'publictext' => $antibody->getPublicText(),
                     'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-                    'datasheet' => $antibody->getDatasheet()
+                    'datasheet' => $datasheet,
+                    'disableDatasheet' => $disableDatasheet
                     //'image' => $documentImageUrl //$antibody->getDocuments()
                 );
             }

@@ -7,6 +7,7 @@ import ReactCarousel from "./ReactCarousel";
 //<ReactCarousel product={product}/>
 
 //style={{ width: '18rem', height: '30rem' }}
+//disabled={ !product.datasheet }
 
 function ReactCard({product}) {
 
@@ -29,7 +30,7 @@ function ReactCard({product}) {
                             href={product.datasheet}
                             variant="light"
                             target="_blank"
-                            disabled={ !product.datasheet }
+                            disabled={product.disableDatasheet}
                     >Datasheet</Button>
                     <Button
                         size="small"
