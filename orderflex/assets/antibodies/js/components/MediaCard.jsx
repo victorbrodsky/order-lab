@@ -21,6 +21,11 @@ export default function MediaCard({product}) {
     // />
 
     //sx={{ maxWidth: 345, minHeight: 500 }}
+    //height: '475px'
+    //minHeight: '475px'
+    
+    const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
+    //console.log('MediaCard: antibodyUrl='+antibodyUrl);
 
     return (
         <Card sx={{ maxWidth: 345 }}>
@@ -39,6 +44,7 @@ export default function MediaCard({product}) {
                 >Datasheet</Button>
                 <Button
                     size="small"
+                    href={antibodyUrl} variant="contained" target="_blank"
                 >Learn More</Button>
             </CardActions>
         </Card>

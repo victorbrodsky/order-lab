@@ -510,7 +510,7 @@ class AntibodyController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/antibody/show/{id}', name: 'translationalresearch_antibody_show', methods: ['GET'])]
+    #[Route(path: '/antibody/show/{id}', name: 'translationalresearch_antibody_show', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
     public function showAction(Request $request, AntibodyList $antibody)
     {
@@ -790,6 +790,26 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
+        $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("ent");
+        $dql->select('ent');
+        //$dql->orderBy("antibody.orderinlist","DESC");
+        $dql->where("ent.type = :typedef OR ent.type = :typeadd");
+        $dql->andWhere("ent.openToPublic = TRUE");
+
+        //$matchingAntibodyIdsArr = $transresUtil->getAntibodyIdsArrByDqlParameters($dql,array());
+        $allGlobalAntibodys = $transresUtil->getTotalAntibodyCount();
+        //echo "matching=".count($matchingAntibodyIdsArr).", allGlobalAntibodys=$allGlobalAntibodys"."<br>";
+        $title = "Public Antibodies";
+        $title = $title . " (Total " . $allGlobalAntibodys . ")";
+
+        return array(
+            'cycle' => 'show',
+            'title' => $title //"Public Antibodies";
+        );
+
         //exit('indexPublicAntibodiesReactAction');
         $filterType = trim((string)$request->get('public'));
 
@@ -835,7 +855,7 @@ class AntibodyController extends OrderAbstractController
         $dql->select('antibody');
         //$dql->orderBy("antibody.orderinlist","DESC");
         $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
-        //$dql->andWhere("antibody.id < 60");
+        $dql->andWhere("antibody.openToPublic = TRUE");
 
         $dqlParameters = array();
         $dqlParameters["typedef"] = 'default';

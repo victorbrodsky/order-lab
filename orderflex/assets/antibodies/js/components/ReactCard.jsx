@@ -1,0 +1,48 @@
+import * as React from 'react';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import ReactCarousel from "./ReactCarousel";
+
+//<Card.Img variant="top" src="holder.js/100px180" />
+//<ReactCarousel product={product}/>
+
+//style={{ width: '18rem', height: '30rem' }}
+
+function ReactCard({product}) {
+
+    const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
+
+    return (
+        <div>
+            <Card
+                style={{ width: '18rem' }}
+            >
+                <ReactCarousel product={product}/>
+                <Card.Body>
+                    <Card.Title>{product.name}</Card.Title>
+                    <Card.Text>
+                        {product.publictext}
+                    </Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                    <Button size="small"
+                            href={product.datasheet}
+                            variant="light"
+                            target="_blank"
+                            disabled={ !product.datasheet }
+                    >Datasheet</Button>
+                    <Button
+                        size="small"
+                        href={antibodyUrl}
+                        variant="light"
+                        target="_blank"
+                        style={{ marginLeft: '0.1rem' }}
+                    >Learn More</Button>
+                </Card.Footer>
+            </Card>
+        </div>
+    );
+}
+
+export default ReactCard;
+

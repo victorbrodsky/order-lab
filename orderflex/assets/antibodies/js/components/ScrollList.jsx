@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import ProductCard from "./ProductCard";
+//import ReactCard from "./ReactCard";
 import Loading from "./Loading";
 
 //import { API_URL } from "../constants";
@@ -121,7 +122,7 @@ const ScrollList = () => {
                     return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
                         (
                             <Grid
-                                key={product.id}
+                                key={"grid-"+product.id}
                                 item xs={4}
                                 ref={setLastElement}
                             >
@@ -131,7 +132,7 @@ const ScrollList = () => {
                             </Grid>
                         ) : (
                             <Grid
-                                key={product.id}
+                                key={"grid-"+product.id}
                                 item xs={3}
                             >
                             <ProductCard
