@@ -1,27 +1,34 @@
 import React from 'react';
 
-const Paginate = ({
+function Paginate({
     postsPerPage,
     totalPosts,
     currentPage,
-    paginate,
+    childToParent,
     previousPage,
-    nextPage,
-}) => {
+    nextPage
+})
+{
     const pageNumbers = [];
 
-    console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage);
+    console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
 
-    let totalPagesNumber = Math.ceil(totalPosts / postsPerPage);
+    let totalPagesNumber = Math.ceil( (totalPosts / postsPerPage) - 1 );
 
     for (let i = 1; i <= totalPagesNumber; i++) {
-        if( i < 3 ) {
+        if( i < 4 ) {
             pageNumbers.push(i);
         }
+        //else
         if( i > totalPagesNumber-3  ) {
             pageNumbers.push(i);
         }
+        //else {
+            //pageNumbers.push('...');
+        //}
     }
+    //console.log("pageNumbers:",pageNumbers);
+
     return (
         <div className="pagination-container">
             <ul className="pagination">
@@ -31,7 +38,7 @@ const Paginate = ({
                 {pageNumbers.map((number) => (
                     <li
                         key={number}
-                        onClick={() => paginate(number)}
+                        onClick={() => childToParent(number)}
                         className={
 							'page-number ' + (number === currentPage ? 'active' : '')
 						}

@@ -31,7 +31,7 @@ const PageList = () => {
     //const [rowRefs, setRowRefs] = useState([]);
     //const [isShown, setIsShown] = useState(true);
 
-    console.log("ScrollList: pageNum="+pageNum);
+    console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
 
     const [postsPerPage] = useState(20);
 
@@ -85,6 +85,7 @@ const PageList = () => {
         setTotalProducts(response.data.totalProducts);
         setTotalPages(response.data.totalPages);
         setLoading(false);
+        console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
     };
 
     useEffect(() => {
@@ -132,52 +133,61 @@ const PageList = () => {
     	}
     };
 
-    const paginate = ({ pageNum }) => {
-        console.log("paginate: pageNum="+pageNum);
-        setPageNum(pageNum + 1);
-        //callProduct();
-    };
+    // const childToParent = ({ paginateNumber  }) => {
+    //     console.log("paginate function: paginateNumber ="+paginateNumber );
+    //     setPageNum(paginateNumber);
+    //     //callProduct();
+    // };
+    const childToParent = (paginateNumber) => {
+        console.log("paginate function: paginateNumber ="+paginateNumber );
+        setPageNum(paginateNumber);
+    }
 
     //TODO: add filter, add view single antibody details
 
     return (
         <div>
-            <Grid container spacing={1}>
-                {allProducts.length > 0 && allProducts.map((product, i) => {
-                    return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                        (
-                            <Grid
-                                key={"grid-"+product.id}
-                                item xs={3}
-                            >
-                            <ProductCard
-                                product={product}
-                            />
-                            </Grid>
-                        ) : (
-                            <Grid
-                                key={"grid-"+product.id}
-                                item xs={3}
-                            >
-                            <ProductCard
-                                product={product}
-                            />
-                            </Grid>
-                    );
-                })}
 
-            </Grid>
+                <div>
+                    <Grid container spacing={1}>
+                        {allProducts.length > 0 && allProducts.map((product, i) => {
+                            return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                                (
+                                    <Grid
+                                        key={"grid-"+product.id}
+                                        item xs={3}
+                                    >
+                                    <ProductCard
+                                        product={product}
+                                    />
+                                    </Grid>
+                                ) : (
+                                    <Grid
+                                        key={"grid-"+product.id}
+                                        item xs={3}
+                                    >
+                                    <ProductCard
+                                        product={product}
+                                    />
+                                    </Grid>
+                            );
+                        })}
 
-            <div>
-                <Paginate
-                    postsPerPage={postsPerPage}
-                    totalPosts={totalProducts}
-                    currentPage={pageNum}
-                    paginate={paginate}
-                    previousPage={previousPage}
-                    nextPage={nextPage}
-                />
-            </div>
+                    </Grid>
+                </div>
+
+                <div>
+                    <Paginate
+                        postsPerPage={postsPerPage}
+                        totalPosts={totalProducts}
+                        currentPage={pageNum}
+                        childToParent={childToParent}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                    />
+                </div>
+
+            
 
         </div>
 

@@ -308,13 +308,16 @@ class AntibodyController extends OrderAbstractController
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $limit = 50;
+        //$limit = 50;
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
         }
+
+        $totalAntibodies = $query->getResult();
+        $totalAntibodiesCount = count($totalAntibodies);
 
         if( $useWalker ) {
             $walker = array('wrap-queries'=>true);
@@ -369,7 +372,8 @@ class AntibodyController extends OrderAbstractController
             'advancedFilter' => $advancedFilter,
             'matchingAntibodyIdsArr' => $matchingAntibodyIdsArr,
             'title' => $title,
-            'limit' => $limit
+            'limit' => $limit,
+            'totalAntibodiesCount' => $totalAntibodiesCount
         );
     }
 
@@ -908,7 +912,9 @@ class AntibodyController extends OrderAbstractController
         $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr = $this->getList($request);
         $antibodies = $listArr['entities'];
+        $totalAntibodiesCount = $listArr['totalAntibodiesCount'];
         //echo "antibodies=".count($antibodies)."<br>";
+        //echo "totalAntibodiesCount=".$totalAntibodiesCount."<br>";
         //$limit = $listArr['limit'];
         //echo "limit=".$limit."<br>";
 
@@ -1021,6 +1027,10 @@ class AntibodyController extends OrderAbstractController
             //echo "totalCount=$totalCount <br>";
             $totalPages = ceil($totalCount / $limit);
         }
+
+        //$paginationData = $antibodies->getPaginationData();
+        //$indexTitle = " (".$paginationData['firstItemNumber']."-". $paginationData['lastItemNumber'];
+        //exit($indexTitle);
 
 //        $info = array(
 //            'seed' => "abc",
