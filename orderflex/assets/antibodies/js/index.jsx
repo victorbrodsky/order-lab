@@ -1,24 +1,12 @@
 //Reference python/pages/frontend/src
 
-//import React from 'react'
-//import ReactDOM from "react-dom/client"
-//import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-//import '../css/index.css'
-//import ScrollList from './components/ScrollList'
-
-//import React, { Component, Fragment } from "react";
-//import Header from "./components/Header";
-//import Home from "./components/Home";
-//import ScrollList from "./components/ScrollList";
-
 import React from 'react'
 import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/index.css'
+import PageList from "./components/PageList";
 import ScrollList from "./components/ScrollList";
 import App from "./components/App";
-//import BasicCard from "./components/BasicCard";
-//import MediaCard from "./components/MediaCard";
 
 // order-lab\orderflex\vendor\twbs\bootstrap\dist\js\bootstrap.js
 //import '../../../vendor/twbs/bootstrap/dist/js/bootstrap.js';
@@ -37,11 +25,21 @@ if(1) {
     root.render(
         <React.StrictMode>
             <Router>
+                <PageList />
+            </Router>
+        </React.StrictMode>
+    );
+}
+if(0) {
+    root.render(
+        <React.StrictMode>
+            <Router>
                 <ScrollList />
             </Router>
         </React.StrictMode>
     );
-} else {
+}
+if(0) {
     root.render(
         <React.StrictMode>
             <Router>
