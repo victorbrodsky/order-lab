@@ -11,21 +11,21 @@ function Paginate({
 {
     const pageNumbers = [];
 
-    console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
+    //console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
 
     let totalPagesNumber = Math.ceil( (totalPosts / postsPerPage) - 1 );
 
-    for (let i = 1; i <= totalPagesNumber; i++) {
-        if( i < 4 ) {
+    if( totalPagesNumber > 0 &&  totalPagesNumber < 5 ) {
+        for (let i = 1; i <= totalPagesNumber; i++) {
             pageNumbers.push(i);
         }
-        //else
-        if( i > totalPagesNumber-3  ) {
-            pageNumbers.push(i);
-        }
-        //else {
-            //pageNumbers.push('...');
-        //}
+    } else {
+        //totalPagesNumber > 5: 1 2 3 ... totalPagesNumber
+        pageNumbers.push(1);
+        pageNumbers.push(2);
+        pageNumbers.push(3);
+        pageNumbers.push('...');
+        pageNumbers.push(totalPagesNumber);
     }
     //console.log("pageNumbers:",pageNumbers);
 
@@ -40,8 +40,8 @@ function Paginate({
                         key={number}
                         onClick={() => childToParent(number)}
                         className={
-							'page-number ' + (number === currentPage ? 'active' : '')
-						}
+                                'page-number ' + (number === currentPage ? 'active' : '')
+                            }
                     >
                         {number}
                     </li>

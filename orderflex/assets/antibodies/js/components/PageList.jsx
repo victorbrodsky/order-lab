@@ -31,7 +31,7 @@ const PageList = () => {
     //const [rowRefs, setRowRefs] = useState([]);
     //const [isShown, setIsShown] = useState(true);
 
-    console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
+    //console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
 
     const [postsPerPage] = useState(20);
 
@@ -60,7 +60,7 @@ const PageList = () => {
     //console.log("apiUrl=["+apiUrl+"]");
 
     const callProduct = async () => {
-        console.log("callProduct, pageNum="+pageNum);
+        //console.log("callProduct, pageNum="+pageNum);
         setLoading(true);
         let url = '';
         //let url = API_URL+'?page='+pageNum
@@ -72,24 +72,24 @@ const PageList = () => {
             url = apiUrl+'/?page='+pageNum
         }
         //url = API_URL;
-        console.log("callProduct: url=["+url+"]");
+        //console.log("callProduct: url=["+url+"]");
 
         let response = await axios.get(
             url
         );
         //console.log("response",response);
-        console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);
+        //console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);
         //let all = new Set([...allProducts, ...response.data.results]);
         //setAllProducts([...all]);
         setAllProducts(response.data.results);
         setTotalProducts(response.data.totalProducts);
         setTotalPages(response.data.totalPages);
         setLoading(false);
-        console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
+        //console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
     };
 
     useEffect(() => {
-        console.log("useEffect: callProduct: pageNum=" + pageNum + "; TOTAL_PAGES=" + TOTAL_PAGES);
+        //console.log("useEffect: callProduct: pageNum=" + pageNum + "; TOTAL_PAGES=" + TOTAL_PAGES);
         //if( _fetchedPages[pageNum] === undefined ) {
             if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
                 callProduct();
@@ -128,7 +128,7 @@ const PageList = () => {
     };
 
     const nextPage = () => {
-    	if (pageNum !== Math.ceil(totalProducts / postsPerPage)) {
+    	if (pageNum !== Math.ceil(totalProducts / postsPerPage) - 1) {
             setPageNum(pageNum + 1);
     	}
     };
@@ -139,55 +139,77 @@ const PageList = () => {
     //     //callProduct();
     // };
     const childToParent = (paginateNumber) => {
-        console.log("paginate function: paginateNumber ="+paginateNumber );
-        setPageNum(paginateNumber);
+        if( paginateNumber !== '...' ) {
+            //console.log("paginate function: paginateNumber =" + paginateNumber);
+            setPageNum(paginateNumber);
+        }
     }
 
     //TODO: add filter, add view single antibody details
 
+    // <div>
+    //     <Paginate
+    //         postsPerPage={postsPerPage}
+    //         totalPosts={totalProducts}
+    //         currentPage={pageNum}
+    //         childToParent={childToParent}
+    //         previousPage={previousPage}
+    //         nextPage={nextPage}
+    //     />
+    // </div>
+
     return (
         <div>
+            <Grid container spacing={1}>
+                {allProducts.length > 0 && allProducts.map((product, i) => {
+                    return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                        (
+                            <Grid
+                                key={"grid-"+product.id}
+                                item xs={3}
+                            >
+                            <ProductCard
+                                product={product}
+                            />
+                            </Grid>
+                        ) : (
+                            <Grid
+                                key={"grid-"+product.id}
+                                item xs={3}
+                            >
+                            <ProductCard
+                                product={product}
+                            />
+                            </Grid>
+                    );
+                })}
 
-                <div>
-                    <Grid container spacing={1}>
-                        {allProducts.length > 0 && allProducts.map((product, i) => {
-                            return i === allProducts.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                                (
-                                    <Grid
-                                        key={"grid-"+product.id}
-                                        item xs={3}
-                                    >
-                                    <ProductCard
-                                        product={product}
-                                    />
-                                    </Grid>
-                                ) : (
-                                    <Grid
-                                        key={"grid-"+product.id}
-                                        item xs={3}
-                                    >
-                                    <ProductCard
-                                        product={product}
-                                    />
-                                    </Grid>
-                            );
-                        })}
+            </Grid>
 
-                    </Grid>
-                </div>
-
-                <div>
-                    <Paginate
-                        postsPerPage={postsPerPage}
-                        totalPosts={totalProducts}
-                        currentPage={pageNum}
-                        childToParent={childToParent}
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                    />
-                </div>
-
-            
+            <div>
+                {(() => {
+                    if( totalProducts === null ) {
+                        <div>Please wait ...</div>
+                    } else {
+                        if( allProducts && allProducts.length > 0 ) {
+                            return (
+                                <Paginate
+                                    postsPerPage={postsPerPage}
+                                    totalPosts={totalProducts}
+                                    currentPage={pageNum}
+                                    childToParent={childToParent}
+                                    previousPage={previousPage}
+                                    nextPage={nextPage}
+                                />
+                            )
+                        } else {
+                            return (
+                                <div>No results found</div>
+                            )
+                        }
+                    }
+                })()}
+            </div>
 
         </div>
 

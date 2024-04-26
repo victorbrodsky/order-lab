@@ -121,30 +121,54 @@ class AntibodyController extends OrderAbstractController
             'form_custom_value'=>$params,
             'method' => 'GET',
         ));
+
+
+        $name = null;
+        $description = null;
+        $categorytags = null;
+        //$public = null;
+        //secondary filter
+        $clone = null;
+        $host = null;
+        $reactivity = null;
+        $company = null;
+        $catalog = null;
+        $control = null;
+        $protocol = null;
+        $retrieval = null;
+        $dilution = null;
+        $comment = null;
+        $hasDocument = null;
+        $hasVisualInfo = null;
+
+
         //$filterform->submit($request);
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
-        $name = $filterform['name']->getData();
-        $description = $filterform['description']->getData();
-        $categorytags = $filterform['categorytags']->getData();
-        //$public = $filterform['public']->getData();
-        //secondary filter
-        $clone = $filterform['clone']->getData();
-        $host = $filterform['host']->getData();
-        $reactivity = $filterform['reactivity']->getData();
-        $company = $filterform['company']->getData();
 
-        $catalog = $filterform['catalog']->getData();
-        $control = $filterform['control']->getData();
-        $protocol = $filterform['protocol']->getData();
-        $retrieval = $filterform['retrieval']->getData();
-        $dilution = $filterform['dilution']->getData();
-        $comment = $filterform['comment']->getData();
+        if( $publicPage === false ) {
+            $name = $filterform['name']->getData();
+            $description = $filterform['description']->getData();
+            $categorytags = $filterform['categorytags']->getData();
+            //$public = $filterform['public']->getData();
+            //secondary filter
+            $clone = $filterform['clone']->getData();
+            $host = $filterform['host']->getData();
+            $reactivity = $filterform['reactivity']->getData();
+            $company = $filterform['company']->getData();
 
-        $hasDocument = $filterform['document']->getData();
-        $hasVisualInfo = $filterform['visual']->getData();
-        //$hasRoi = $filterform['hasRoi']->getData();
-        //$hasWsi = $filterform['hasWsi']->getData();
+            $catalog = $filterform['catalog']->getData();
+            $control = $filterform['control']->getData();
+            $protocol = $filterform['protocol']->getData();
+            $retrieval = $filterform['retrieval']->getData();
+            $dilution = $filterform['dilution']->getData();
+            $comment = $filterform['comment']->getData();
+
+            $hasDocument = $filterform['document']->getData();
+            $hasVisualInfo = $filterform['visual']->getData();
+            //$hasRoi = $filterform['hasRoi']->getData();
+            //$hasWsi = $filterform['hasWsi']->getData();
+        }
 
         //echo "search=".$search."<br>";
         //$search = $request->request->get('filter')['search'];
