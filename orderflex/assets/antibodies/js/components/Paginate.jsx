@@ -10,8 +10,17 @@ const Paginate = ({
 }) => {
     const pageNumbers = [];
 
-    for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
-        pageNumbers.push(i);
+    console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage);
+
+    let totalPagesNumber = Math.ceil(totalPosts / postsPerPage);
+
+    for (let i = 1; i <= totalPagesNumber; i++) {
+        if( i < 3 ) {
+            pageNumbers.push(i);
+        }
+        if( i > totalPagesNumber-3  ) {
+            pageNumbers.push(i);
+        }
     }
     return (
         <div className="pagination-container">

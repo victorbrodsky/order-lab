@@ -851,8 +851,9 @@ class AntibodyController extends OrderAbstractController
         //dump($request);
         //exit();
 
+        $limit = 20;
         $publicPage = true;
-        $listArr = $this->getList($request,$publicPage);
+        $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
@@ -883,7 +884,7 @@ class AntibodyController extends OrderAbstractController
                 $query->setParameters($dqlParameters);
             }
 
-            $limit = 20; //20;
+            $limit = 20;
 
             $paginationParams = array(
                 'defaultSortFieldName' => 'antibody.orderinlist',
@@ -902,12 +903,13 @@ class AntibodyController extends OrderAbstractController
             );
         }
 
+        $limit = 20;
         $publicPage = true;
-        $listArr = $this->getList($request,$publicPage);
+        $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr = $this->getList($request);
         $antibodies = $listArr['entities'];
         //echo "antibodies=".count($antibodies)."<br>";
-        $limit = $listArr['limit'];
+        //$limit = $listArr['limit'];
         //echo "limit=".$limit."<br>";
 
         //Public Antibody List fields:

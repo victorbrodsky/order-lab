@@ -24,14 +24,14 @@ const PageList = () => {
     const [loading, setLoading] = useState(true);
     const [allProducts, setAllProducts] = useState([]);
     const [pageNum, setPageNum] = useState(1);
-    const [lastElement, setLastElement] = useState(null);
+    //const [lastElement, setLastElement] = useState(null);
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalProducts, setTotalProducts] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
     //const [rowRefs, setRowRefs] = useState([]);
     //const [isShown, setIsShown] = useState(true);
 
-    //console.log("ScrollList: pageNum="+pageNum);
+    console.log("ScrollList: pageNum="+pageNum);
 
     const [postsPerPage] = useState(20);
 
@@ -60,7 +60,7 @@ const PageList = () => {
     //console.log("apiUrl=["+apiUrl+"]");
 
     const callProduct = async () => {
-        //console.log("callProduct, pageNum="+pageNum);
+        console.log("callProduct, pageNum="+pageNum);
         setLoading(true);
         let url = '';
         //let url = API_URL+'?page='+pageNum
@@ -79,8 +79,10 @@ const PageList = () => {
         );
         //console.log("response",response);
         console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);
-        let all = new Set([...allProducts, ...response.data.results]);
-        setAllProducts([...all]);
+        //let all = new Set([...allProducts, ...response.data.results]);
+        //setAllProducts([...all]);
+        setAllProducts(response.data.results);
+        setTotalProducts(response.data.totalProducts);
         setTotalPages(response.data.totalPages);
         setLoading(false);
     };
@@ -118,9 +120,22 @@ const PageList = () => {
     //<div className="card-group">
     //<div className="row row-cols-1 row-cols-md-3 g-4">
 
-    const paginate = ({ selected }) => {
-        setPageNum(selected + 1);
-        callProduct();
+    const previousPage = () => {
+    	if (pageNum !== 1) {
+            setPageNum(pageNum - 1);
+    	}
+    };
+
+    const nextPage = () => {
+    	if (pageNum !== Math.ceil(totalProducts / postsPerPage)) {
+            setPageNum(pageNum + 1);
+    	}
+    };
+
+    const paginate = ({ pageNum }) => {
+        console.log("paginate: pageNum="+pageNum);
+        setPageNum(pageNum + 1);
+        //callProduct();
     };
 
     //TODO: add filter, add view single antibody details
@@ -134,7 +149,6 @@ const PageList = () => {
                             <Grid
                                 key={"grid-"+product.id}
                                 item xs={3}
-                                ref={setLastElement}
                             >
                             <ProductCard
                                 product={product}
@@ -152,14 +166,21 @@ const PageList = () => {
                     );
                 })}
 
+            </Grid>
+
+            <div>
                 <Paginate
                     postsPerPage={postsPerPage}
-                    totalPosts={TOTAL_PAGES}
+                    totalPosts={totalProducts}
+                    currentPage={pageNum}
                     paginate={paginate}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
                 />
+            </div>
 
-            </Grid>
         </div>
+
     );
 
 };
