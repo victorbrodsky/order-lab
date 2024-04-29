@@ -6,6 +6,7 @@ import ProductCard from "./ProductCard";
 //import ReactCard from "./ReactCard";
 import Loading from "./Loading";
 import Paginate from './Paginate';
+import ReactPagination from './ReactPagination';
 
 //import { API_URL } from "../constants";
 //export const API_URL = "http://localhost:8000/antibodies/api";
@@ -192,6 +193,7 @@ const PageList = () => {
                         <div>Please wait ...</div>
                     } else {
                         if( allProducts && allProducts.length > 0 ) {
+                            if(0)
                             return (
                                 <Paginate
                                     postsPerPage={postsPerPage}
@@ -202,6 +204,15 @@ const PageList = () => {
                                     nextPage={nextPage}
                                 />
                             )
+                            return (
+                                <ReactPagination
+                                    className="pagination-bar"
+                                    currentPage={pageNum}
+                                    totalCount={totalProducts}
+                                    pageSize={postsPerPage}
+                                    onPageChange={page => childToParent(page)}
+                                />
+                        )
                         } else {
                             return (
                                 <div>No results found</div>

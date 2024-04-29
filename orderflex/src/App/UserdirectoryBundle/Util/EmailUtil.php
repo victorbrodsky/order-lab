@@ -189,7 +189,6 @@ class EmailUtil {
         //$logger->notice("sendEmail: sending email: subject=".$subject."; body=".$body."; fromEmail=".$fromEmail);
 
         //send copy email to siteEmail via bcc
-        $userSecUtil = $this->container->get('user_security_utility');
         $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         //$allEmails = "";
