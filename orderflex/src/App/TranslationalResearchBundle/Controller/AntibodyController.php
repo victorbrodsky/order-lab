@@ -174,6 +174,9 @@ class AntibodyController extends OrderAbstractController
         //$search = $request->request->get('filter')['search'];
         //$search = $request->query->get('search');
         //echo "2search=".$search."<br>";
+        //dump($filterform);
+        //echo "control=".$control."<br>";
+        //exit('111');
 
         $public = "public";
         if( isset($filterform['public']) ) {
@@ -886,7 +889,31 @@ class AntibodyController extends OrderAbstractController
         //$listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
 
+        $tags = array(
+            array("control","Breast cancer"),
+            array("control","Colon cancer"),
+            array("control","Lung cancer"),
+            array("control","Bone marrow"),
+        );
+        $listArr['tags'] = $tags;
+
         return $listArr;
+    }
+
+    //Tags"
+    //http://127.0.0.1/index_dev.php/translational-research/antibodies/?filter%5Bsearch%5D=&filter%5Bname%5D=&filter%5Bdescription%5D=&filter%5Bpublic%5D=&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added&filter%5Bclone%5D=&filter%5Bhost%5D=&filter%5Breactivity%5D=&filter%5Bcompany%5D=&filter%5Bcatalog%5D=&filter%5Bcontrol%5D=breast+cancer&filter%5Bprotocol%5D=&filter%5Bretrieval%5D=&filter%5Bdilution%5D=&filter%5Bcomment%5D=&filter%5Bdocument%5D=&filter%5Bvisual%5D=
+
+    #[Route(path: '/antibodies/public/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
+    public function indexPublicAntibodiesReactFilterTagAction(Request $request)
+    {
+        $all = $request->query->all();
+        dump($all);
+        if( isset($all['filter']) && isset($all['filter']['public']) ) {
+            $filterPublic = $all['filter']['public'];
+        }
+        dump($filterPublic);
+        exit();
     }
 
     #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]

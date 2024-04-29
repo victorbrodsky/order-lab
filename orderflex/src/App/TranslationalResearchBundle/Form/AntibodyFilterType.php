@@ -58,6 +58,12 @@ class AntibodyFilterType extends AbstractType
             ),
         ));
 
+        $builder->add('control', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Control'),
+        ));
+
         if( $this->params['publicPage'] === false ) {
 
             //Filter by Name, Description, Category Tags, Clone, Host, Reactivity, Company

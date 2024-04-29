@@ -20,36 +20,28 @@
     <div class="well form-search">
         {{ form_start(filterform) }}
 
-        {#<div class="row row-cols-lg-12 g-lg-1">#}
-            {#<div class="col">#}
-                {#{{ form_widget(filterform.search) }}#}
-            {#</div>#}
-            {#<div class="col">#}
-                {#<div class="btn-group" role="group" aria-label="Advanced Search">#}
-                    {#<button id="filter-btn" type="submit" class="btn btn-light btn-sm">Filter</button>#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="input-group mb-3">#}
-            {#<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">#}
-            {#{{ form_widget(filterform.search) }}#}
-            {#<div class="input-group-append">#}
-                {#<button class="btn btn-outline-secondary" type="submit">Button</button>#}
-            {#</div>#}
-            {#<div class="input-group-append">#}
-                {#<span class="input-group-text" id="basic-addon2" type="submit">Filter</span>#}
-                {#<input type="submit" class="form-control" aria-label="Filter">#}
-                {#<button id="filter-btn" type="submit" class="input-group-text btn btn-light">Filter</button>#}
-            {#</div>#}
-        {#</div>#}
-
         <div class="input-group mb-3">
             {{ form_widget(filterform.search) }}
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Filter</button>
             </div>
         </div>
+
+        <p>
+            {#filter[control]=breast+cancer#}
+            {#<a href="{{ path(translationalresearch_sitename~'_antibody_filter',{'type':filterTypeUrl}) }}"><span class="badge rounded-pill bg-secondary">Light111</span></a>#}
+            {#<a href="#"><span class="badge rounded-pill bg-secondary">Light111</span></a>#}
+            {#<a href="#"><span class="badge rounded-pill bg-secondary">Light111</span></a>#}
+            {% for tag in tags %}
+                <a class="badge rounded-pill bg-secondary"
+                   style="text-decoration: none;"
+                   href="{{ path(translationalresearch_sitename~'_antibodies_public_react',{'filter[control]': tag[1]}) }}">
+                   {#href="{{ path(translationalresearch_sitename~'_antibody_filter_tag',{'type':tag[0], 'tag': tag[1]}) }}">#}
+                    {#<span class="badge rounded-pill bg-secondary" style="margin:5px;">{{ tag[1] }}</span>#}
+                    {{ tag[1] }}
+                </a>
+            {% endfor %}
+        </p>
 
         {% if 0 %}
         <div class="row row row-cols-lg-6 g-lg-1">
@@ -162,9 +154,9 @@
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
 
-        {% endif %}
+        {% endif %} <!-- if 0 -->
 
-        {{ form_rest(filterform) }}
+        {#{{ form_rest(filterform) }}#}
         {{ form_end(filterform) }}
     </div>
 
