@@ -392,6 +392,7 @@ class AntibodyController extends OrderAbstractController
             //'linkToListId' => $mapper['linkToListId'],
             'pathbase' => $pathbase,
             'withCreateNewEntityLink' => $createNew,
+            'filterFormObject' => $filterform,
             'filterform' => $filterform->createView(),
             'routename' => $routeName,
             //'sitename' => $this->sitename,
@@ -883,19 +884,23 @@ class AntibodyController extends OrderAbstractController
         //exit();
 
         $limit = 20;
-        $publicPage = true;
+        $publicPage = false;
         $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
 
+        $filterFormObject = $listArr['filterFormObject'];
+        $control = $filterFormObject['control']->getData();
         $tags = array(
+            //array("control","All"),
             array("control","Breast cancer"),
             array("control","Colon cancer"),
             array("control","Lung cancer"),
             array("control","Bone marrow"),
         );
         $listArr['tags'] = $tags;
+        $listArr['selectedTag'] = $control;
 
         return $listArr;
     }
@@ -903,18 +908,18 @@ class AntibodyController extends OrderAbstractController
     //Tags"
     //http://127.0.0.1/index_dev.php/translational-research/antibodies/?filter%5Bsearch%5D=&filter%5Bname%5D=&filter%5Bdescription%5D=&filter%5Bpublic%5D=&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added&filter%5Bclone%5D=&filter%5Bhost%5D=&filter%5Breactivity%5D=&filter%5Bcompany%5D=&filter%5Bcatalog%5D=&filter%5Bcontrol%5D=breast+cancer&filter%5Bprotocol%5D=&filter%5Bretrieval%5D=&filter%5Bdilution%5D=&filter%5Bcomment%5D=&filter%5Bdocument%5D=&filter%5Bvisual%5D=
 
-    #[Route(path: '/antibodies/public/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
-    public function indexPublicAntibodiesReactFilterTagAction(Request $request)
-    {
-        $all = $request->query->all();
-        dump($all);
-        if( isset($all['filter']) && isset($all['filter']['public']) ) {
-            $filterPublic = $all['filter']['public'];
-        }
-        dump($filterPublic);
-        exit();
-    }
+//    #[Route(path: '/antibodies/public/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
+//    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
+//    public function indexPublicAntibodiesReactFilterTagAction(Request $request)
+//    {
+//        $all = $request->query->all();
+//        dump($all);
+//        if( isset($all['filter']) && isset($all['filter']['public']) ) {
+//            $filterPublic = $all['filter']['public'];
+//        }
+//        dump($filterPublic);
+//        exit();
+//    }
 
     #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
@@ -959,7 +964,7 @@ class AntibodyController extends OrderAbstractController
         }
 
         $limit = 20;
-        $publicPage = true;
+        $publicPage = false;
         $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr = $this->getList($request);
         $antibodies = $listArr['entities'];
@@ -1108,5 +1113,99 @@ class AntibodyController extends OrderAbstractController
 
         return $response;
     }
+
+    #[Route(path: '/antibody/public/{id}', name: 'translationalresearch_antibody_show_react', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Antibody/new_react.html.twig')]
+    public function showReactAction(Request $request, AntibodyList $antibody)
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $cycle = "show";
+
+        $form = $this->createAntibodyForm($antibody, $cycle); //show
+
+        if(1) {
+            $imageData = array();
+            foreach ($antibody->getDocuments() as $document) {
+                //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+                //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+                //$documentUrls[] = $document->getAbsoluteUploadFullPath();
+                //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+                $imageData[] = array(
+                    'key' => 'document-' . $document->getId(),
+                    'label' => $antibody->getName(),
+                    'url' => $document->getAbsoluteUploadFullPath()
+                );
+            }
+
+            foreach ($antibody->getVisualInfos() as $visualInfo) {
+                $visualInfoROI = false;
+                $visualInfoWSI = false;
+                $uploadedType = $visualInfo->getUploadedType();
+
+                if ($uploadedType) {
+                    $uploadedType = $uploadedType . ": ";
+                }
+
+                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
+                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+                    if ($path) {
+                        $imageData[] = array(
+                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
+                            'label' => $uploadedType . $visualInfo->getComment(),
+                            'url' => $path,
+                            'comment' => $visualInfo->getComment(),
+                            'catalog' => $visualInfo->getCatalog()
+                        );
+                    }
+                }
+            }
+
+            $disableDatasheet = false;
+            $datasheet = $antibody->getDatasheet();
+            if (!$datasheet || $datasheet == '') {
+                $disableDatasheet = true;
+            }
+
+            $jsonArray = array();
+            $jsonArray[] = array(
+                'id' => ($antibody->getId()) ? $antibody->getId() : $count . "-key",
+                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+                'publictext' => $antibody->getPublicText(),
+                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+                'datasheet' => $datasheet,
+                'disableDatasheet' => $disableDatasheet
+                //'image' => $documentImageUrl //$antibody->getDocuments()
+            );
+        }
+
+        return array(
+            'antibody' => $antibody,
+            'jsonArray' => $jsonArray,
+            'form' => $form->createView(),
+            'title' => "Show Antibody ".$antibody,
+            'cycle' => $cycle
+        );
+    }
+
+//    #[Route(path: '/antibody/public/{id}', name: 'translationalresearch_antibody_public', methods: ['GET'], options: ['expose' => true])]
+//    #[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
+//    public function showPublicAction(Request $request, AntibodyList $antibody)
+//    {
+//        $transresUtil = $this->container->get('transres_util');
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $cycle = "show";
+//
+//        $form = $this->createAntibodyForm($antibody, $cycle); //show
+//
+//        return array(
+//            'antibody' => $antibody,
+//            'form' => $form->createView(),
+//            'title' => "Show Antibody ".$antibody,
+//            'cycle' => $cycle
+//        );
+//    }
 
 }

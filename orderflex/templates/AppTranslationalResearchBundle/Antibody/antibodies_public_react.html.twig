@@ -24,6 +24,7 @@
             {{ form_widget(filterform.search) }}
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                <a class="btn btn-outline-secondary" href="{{ path(translationalresearch_sitename~'_antibodies_public_react') }}">Reset Filter</a>
             </div>
         </div>
 
@@ -33,23 +34,37 @@
             {#<a href="#"><span class="badge rounded-pill bg-secondary">Light111</span></a>#}
             {#<a href="#"><span class="badge rounded-pill bg-secondary">Light111</span></a>#}
             {% for tag in tags %}
-                <a class="badge rounded-pill bg-secondary"
-                   style="text-decoration: none;"
-                   href="{{ path(translationalresearch_sitename~'_antibodies_public_react',{'filter[control]': tag[1]}) }}">
-                   {#href="{{ path(translationalresearch_sitename~'_antibody_filter_tag',{'type':tag[0], 'tag': tag[1]}) }}">#}
-                    {#<span class="badge rounded-pill bg-secondary" style="margin:5px;">{{ tag[1] }}</span>#}
-                    {{ tag[1] }}
-                </a>
+                {% if tag[1] == 'All' %}
+                    <a class="badge rounded-pill bg-secondary"
+                       style="text-decoration: none;"
+                       href="{{ path(translationalresearch_sitename~'_antibodies_public_react') }}">
+                        {{ tag[1] }}
+                    </a>
+                {% else %}
+                    {#{% set filterStr = 'filter['~tag[0]~']' %}#}
+                    {#selectedTag={{ selectedTag }}, tag[1]={{ tag[1] }}#}
+                    {% set badgeClass = 'bg-secondary' %}
+                    {% if selectedTag == tag[1] %}
+                        {% set badgeClass = 'bg-primary' %}
+                    {% endif %}
+                    <a class="badge rounded-pill {{ badgeClass }}"
+                       style="text-decoration: none;"
+                       {#href="{{ path(translationalresearch_sitename~'_antibodies_public_react', {'filter[control]': tag[1]}) }}"#}
+                       href="{{ path(translationalresearch_sitename~'_antibodies_public_react', {'filter[control]': tag[1]}) }}"
+                    >
+                        {{ tag[1] }}
+                    </a>
+                {% endif %}
             {% endfor %}
         </p>
 
-        {% if 0 %}
-        <div class="row row row-cols-lg-6 g-lg-1">
+        {% if 1 %}
+        <div class="row row row-cols-lg-6 g-lg-1" hidden>
             {#<div class="col-12">#}
 
-            <div class="col">
-                {{ form_widget(filterform.search) }}
-            </div>
+            {#<div class="col">#}
+                {#{{ form_widget(filterform.search) }}#}
+            {#</div>#}
 
             <div class="col">
                 {{ form_widget(filterform.name) }}
@@ -156,7 +171,7 @@
 
         {% endif %} <!-- if 0 -->
 
-        {#{{ form_rest(filterform) }}#}
+        {{ form_rest(filterform) }}
         {{ form_end(filterform) }}
     </div>
 

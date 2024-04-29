@@ -19,6 +19,7 @@ const ProductCard = ({ product }) => {
     //     );
     // });
 
+    console.log('productid='+product.id);
 
     return (
         <ReactCard

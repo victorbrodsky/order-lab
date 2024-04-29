@@ -119,6 +119,11 @@ class ListType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
         ));
 
+        $timeZone = null;
+        if( isset($this->params['user']) && $this->params['user'] ) {
+            $timeZone = $this->params['user']->getPreferences()->getTimezone();
+        }
+
         $builder->add('createdate', DateType::class, array(
             'label' => 'Creation Date:',
             'widget' => 'single_text',
@@ -126,7 +131,7 @@ class ListType extends AbstractType
             //'disabled' => true,
             'format' => 'MM/dd/yyyy, H:mm:ss',
             'html5' => false,
-            'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
+            'view_timezone' => $timeZone, //$this->params['user']->getPreferences()->getTimezone(),
             'attr' => array('class' => 'form-control', 'readonly'=>true),
         ));
 

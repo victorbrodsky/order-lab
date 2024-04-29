@@ -1,0 +1,100 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+{#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+{#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
+{#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+{#{% import _self as antibodymacros %}#}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{#Bing request:#}
+{#1) Show only Name, Description, Category Tags, Clone, Host, Reactivity, Company#}
+{#2) Filter list by fields in 1#}
+{#3) Change the public view for customer oriented with images with only important info#}
+
+{% block content %}
+
+    <input type="hidden" id="antibody-id" value="{{ antibody.id }}" />
+
+    <div id="root"></div>
+
+{% endblock %}
+
+
+{% block mainjs %}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/js/bootstrap.bundle.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>#}
+
+    {#FOSJsRoutingBundle#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
+{% endblock %}
+
+
+{% block bootstrapcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap-5.3.3/css/bootstrap.min.css') }}" >
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
+{% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.7/css/font-awesome.min.css') }}" />
+{% endblock %}
+
+{% block headeradditionaljs %}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('antibodies-css') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('antibodies-show') }}
+{% endblock %}

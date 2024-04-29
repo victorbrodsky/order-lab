@@ -61,6 +61,7 @@ Encore
     .addEntry('user-uppy-css', './assets/uppy/css/user-uppy-style.scss')
 
     .addEntry('antibodies', './assets/antibodies/js/index.jsx')
+    .addEntry('antibodies-show', './assets/antibodies/js/show.jsx')
     .addEntry('antibodies-css', './assets/antibodies/css/index.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

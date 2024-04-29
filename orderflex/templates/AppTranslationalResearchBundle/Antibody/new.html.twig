@@ -22,10 +22,16 @@
 
     {{ form_start(form) }}
 
+    {% set userId = null %}
+    {% if app.user %}
+        {% set userId = app.user.id %}
+    {% endif %}
+
     <div id="form-prototype-data"
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-         data-userid = "{{ app.user.id }}"
+         {#data-userid = "{{ app.user.id }}"#}
+         data-userid = "{{ userId }}"
     ></div>
 
     {#Antibody important fields#}
@@ -42,7 +48,8 @@
     <div id="form-prototype-data"
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-         data-userid = "{{ app.user.id }}"
+         {#data-userid = "{{ app.user.id }}"#}
+         data-userid = "{{ userId }}"
     ></div>
 
     {#{{ formmacros.field(form.category) }}#}
@@ -72,7 +79,8 @@
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-             data-userid = "{{ app.user.id }}"
+             {#data-userid = "{{ app.user.id }}"#}
+             data-userid = "{{ userId }}"
         ></div>
 
         {% set docLabel = "Document(s)" %}
@@ -305,11 +313,18 @@
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype',true) %}
+
+    {% set userId = null %}
+    {% if app.user %}
+        {% set userId = app.user.id %}
+    {% endif %}
+
     <div id="form-prototype-data2"
          data-prototype-user-visualinfos = "{{ visualInfosPrototype|e }}"
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-         data-userid = "{{ app.user.id }}"
+         {#data-userid = "{{ app.user.id }}"#}
+         data-userid = "{{ userId }}"
     ></div>
 
     {#Holder of elements to add/remove. user-basetitles.js#}

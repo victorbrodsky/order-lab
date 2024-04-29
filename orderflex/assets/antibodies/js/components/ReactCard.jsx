@@ -11,7 +11,8 @@ import ReactCarousel from "./ReactCarousel";
 
 function ReactCard({product}) {
 
-    const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
+    //const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
+    const antibodyUrl = Routing.generate('translationalresearch_antibody_show_react', {id: product.id});
 
     return (
         <div>
