@@ -1,12 +1,16 @@
 //Reference python/pages/frontend/src
 
+import '../css/index.css'
+//import '../css/pagination.css'
+
 import React from 'react'
 import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import '../css/index.css'
 import PageList from "./components/PageList";
 import ScrollList from "./components/ScrollList";
-import App from "./components/App";
+//import App from "./components/App";
+
+
 
 // order-lab\orderflex\vendor\twbs\bootstrap\dist\js\bootstrap.js
 //import '../../../vendor/twbs/bootstrap/dist/js/bootstrap.js';

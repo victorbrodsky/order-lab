@@ -1,75 +1,51 @@
 import React from 'react';
-import classnames from 'classnames';
-import { usePagination, DOTS } from './usePagination';
-import '../../css/pagination.css';
+import ReactPaginate from "react-paginate"; // for pagination
+import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai"; // icons form react-icons
+import { IconContext } from "react-icons"; // for customizing icons
+import { useEffect, useState } from "react"; // useState for storing data and useEffect for changing data on click
+//import "../../css/pagination.css"; // stylesheet
+
+
+//https://dev.to/documatic/building-pagination-in-react-with-react-paginate-4nol
 
 const ReactPagination = props => {
     const {
-        onPageChange,
-        totalCount,
-        siblingCount = 1,
+        postsPerPage,
+        totalPosts,
         currentPage,
-        pageSize,
-        className
+        childToParent,
+        previousPage,
+        nextPage
     } = props;
 
-    const paginationRange = usePagination({
-        currentPage,
-        totalCount,
-        siblingCount,
-        pageSize
-    });
+    const pageCount = Math.ceil(totalPosts / postsPerPage);
 
-    if (currentPage === 0 || paginationRange.length < 2) {
-        return null;
-    }
 
-    const onNext = () => {
-        onPageChange(currentPage + 1);
-    };
-
-    const onPrevious = () => {
-        onPageChange(currentPage - 1);
-    };
-
-    let lastPage = paginationRange[paginationRange.length - 1];
     return (
-        <ul
-            className={classnames('pagination-container', { [className]: className })}
-        >
-            <li
-                className={classnames('pagination-item', {
-          disabled: currentPage === 1
-        })}
-                onClick={onPrevious}
-            >
-                <div className="arrow left" />
-            </li>
-            {paginationRange.map(pageNumber => {
-                if (pageNumber === DOTS) {
-                    return <li className="pagination-item dots">&#8230;</li>;
-                }
-
-                return (
-                    <li
-                        className={classnames('pagination-item', {
-              selected: pageNumber === currentPage
-            })}
-                        onClick={() => onPageChange(pageNumber)}
-                    >
-                        {pageNumber}
-                    </li>
-                );
-            })}
-            <li
-                className={classnames('pagination-item', {
-          disabled: currentPage === lastPage
-        })}
-                onClick={onNext}
-            >
-                <div className="arrow right" />
-            </li>
-        </ul>
+        <div className="pagination-container">
+            <ReactPaginate
+                containerClassName={"pagination"}
+                pageClassName={"page-number"}
+                activeClassName={"active"}
+                onPageChange={(event) => childToParent(event.selected)}
+                pageCount={Math.ceil(totalPosts / postsPerPage)}
+                breakLabel="..."
+                previousLabel={
+                                <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                                    <li className="page-number">
+                                        Prev
+                                    </li>
+                                </IconContext.Provider>
+                              }
+                nextLabel={
+                                <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                                    <div className="page-number">
+                                        Next
+                                    </div>
+                                </IconContext.Provider>
+                           }
+            />
+        </div>
     );
 };
 

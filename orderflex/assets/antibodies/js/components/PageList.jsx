@@ -5,8 +5,13 @@ import Grid from '@mui/material/Grid';
 import ProductCard from "./ProductCard";
 //import ReactCard from "./ReactCard";
 import Loading from "./Loading";
-import Paginate from './Paginate';
+
+import CustomPaginate from './CustomPaginate';
 import ReactPagination from './ReactPagination';
+// import ReactPaginate from "react-paginate"; // for pagination
+// import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai"; // icons form react-icons
+// import { IconContext } from "react-icons"; // for customizing icons
+// import "../../css/pagination.css"; // stylesheet
 
 //import { API_URL } from "../constants";
 //export const API_URL = "http://localhost:8000/antibodies/api";
@@ -193,24 +198,26 @@ const PageList = () => {
                         <div>Please wait ...</div>
                     } else {
                         if( allProducts && allProducts.length > 0 ) {
-                            if(0)
+                            if(0) {
+                                return (
+                                    <CustomPaginate
+                                        postsPerPage={postsPerPage}
+                                        totalPosts={totalProducts}
+                                        currentPage={pageNum}
+                                        childToParent={childToParent}
+                                        previousPage={previousPage}
+                                        nextPage={nextPage}
+                                    />
+                                )
+                            }
                             return (
-                                <Paginate
+                                <ReactPagination
                                     postsPerPage={postsPerPage}
                                     totalPosts={totalProducts}
                                     currentPage={pageNum}
                                     childToParent={childToParent}
                                     previousPage={previousPage}
                                     nextPage={nextPage}
-                                />
-                            )
-                            return (
-                                <ReactPagination
-                                    className="pagination-bar"
-                                    currentPage={pageNum}
-                                    totalCount={totalProducts}
-                                    pageSize={postsPerPage}
-                                    onPageChange={page => childToParent(page)}
                                 />
                         )
                         } else {

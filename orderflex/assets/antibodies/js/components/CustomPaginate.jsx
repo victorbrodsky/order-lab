@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Paginate({
+function CustomPaginate({
     postsPerPage,
     totalPosts,
     currentPage,
@@ -11,7 +11,7 @@ function Paginate({
 {
     const pageNumbers = [];
 
-    //console.log("Paginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
+    //console.log("CustomPaginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
 
     let totalPagesNumber = Math.ceil( (totalPosts / postsPerPage) - 1 );
 
@@ -54,4 +54,4 @@ function Paginate({
     );
 };
 
-export default Paginate;
+export default CustomPaginate;

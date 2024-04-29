@@ -36,6 +36,8 @@
     "core-js": "^3.26.1",
     "dotenv": "^16.4.5",
     "react-bootstrap": "^2.10.2",
+    "react-icons": "^5.1.0",
+    "react-paginate": "^8.2.0",
     "react-router-dom": "^6.4.4",
     "react-swipeable-views": "^0.14.0",
     "reactstrap": "^9.2.2",
