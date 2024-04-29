@@ -21,29 +21,50 @@ const ReactPagination = props => {
     const pageCount = Math.ceil(totalPosts / postsPerPage);
 
 
+    // <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+    //     <li className="page-number">
+    //         Prev
+    //     </li>
+    // </IconContext.Provider>
+
+    // if(0)
+    // return (
+    //     <>
+    //     <ReactPaginate
+    //         nextLabel={"Next"}
+    //         onPageChange={childToParent}
+    //         pageRangeDisplayed={3}
+    //         marginPagesDisplayed={2}
+    //         pageCount={pageCount}
+    //         previousLabel="< previous"
+    //         pageClassName="page-number"
+    //         previousClassName="page-number"
+    //         nextClassName="page-number"
+    //         breakLabel="..."
+    //         breakClassName="page-number"
+    //         containerClassName="pagination"
+    //         activeClassName="active"
+    //         renderOnZeroPageCount={null}
+    //     />
+    //     </>
+    // );
+
     return (
         <div className="pagination-container">
             <ReactPaginate
                 containerClassName={"pagination"}
                 pageClassName={"page-number"}
                 activeClassName={"active"}
+                pageRangeDisplayed={3}
+                marginPagesDisplayed={2}
                 onPageChange={(event) => childToParent(event.selected)}
-                pageCount={Math.ceil(totalPosts / postsPerPage)}
+                pageCount={pageCount}
                 breakLabel="..."
-                previousLabel={
-                                <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                                    <li className="page-number">
-                                        Prev
-                                    </li>
-                                </IconContext.Provider>
-                              }
-                nextLabel={
-                                <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                                    <div className="page-number">
-                                        Next
-                                    </div>
-                                </IconContext.Provider>
-                           }
+                previousClassName="page-number"
+                nextClassName="page-number"
+                previousLabel={ "Prev" }
+                nextLabel={ "Next" }
+
             />
         </div>
     );

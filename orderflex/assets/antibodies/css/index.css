@@ -154,7 +154,7 @@ ul {
     background: #fff;
 }
 
-.pagination .previous:hover {
-    color: #fff;
-    background: #00a8ff;
+.pagination a {
+    text-decoration: none;
 }
+
