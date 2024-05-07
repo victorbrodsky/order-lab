@@ -47,7 +47,7 @@ const PageList = () => {
 
     //console.log("ScrollList: pageNum="+pageNum+", TOTAL_PAGES="+TOTAL_PAGES);
 
-    const [postsPerPage] = useState(20);
+    const [postsPerPage] = useState(20); //20
 
     const tableBodyRef = useRef();
     var _counter = 0;
@@ -147,15 +147,16 @@ const PageList = () => {
     	}
     };
 
-    // const childToParent = ({ paginateNumber  }) => {
+    // const handlePageClick = ({ paginateNumber  }) => {
     //     console.log("paginate function: paginateNumber ="+paginateNumber );
     //     setPageNum(paginateNumber);
     //     //callProduct();
     // };
-    const childToParent = (paginateNumber) => {
+    const handlePageClick = (paginateNumber) => {
+        console.log("handlePageClick: paginateNumber=" + paginateNumber);
         if( paginateNumber !== '...' ) {
-            //console.log("paginate function: paginateNumber =" + paginateNumber);
-            setPageNum(paginateNumber);
+            console.log("paginate function: paginateNumber =" + paginateNumber);
+            setPageNum(paginateNumber+1);
         }
     }
 
@@ -166,14 +167,14 @@ const PageList = () => {
     //         postsPerPage={postsPerPage}
     //         totalPosts={totalProducts}
     //         currentPage={pageNum}
-    //         childToParent={childToParent}
+    //         handlePageClick={handlePageClick}
     //         previousPage={previousPage}
     //         nextPage={nextPage}
     //     />
     // </div>
 
     //Responsive
-    if(0)
+    if(1)
     return (
         <div>
             <CardGroup>
@@ -198,7 +199,7 @@ const PageList = () => {
                                         postsPerPage={postsPerPage}
                                         totalPosts={totalProducts}
                                         currentPage={pageNum}
-                                        childToParent={childToParent}
+                                        handlePageClick={handlePageClick}
                                         previousPage={previousPage}
                                         nextPage={nextPage}
                                     />
@@ -209,7 +210,7 @@ const PageList = () => {
                                     postsPerPage={postsPerPage}
                                     totalPosts={totalProducts}
                                     currentPage={pageNum}
-                                    childToParent={childToParent}
+                                    handlePageClick={handlePageClick}
                                     previousPage={previousPage}
                                     nextPage={nextPage}
                                 />
@@ -243,7 +244,7 @@ const PageList = () => {
         );
 
     //Not responsive
-    if(1)
+    if(0)
     return (
         <div>
             <Grid container spacing={1}>
@@ -284,7 +285,7 @@ const PageList = () => {
                                         postsPerPage={postsPerPage}
                                         totalPosts={totalProducts}
                                         currentPage={pageNum}
-                                        childToParent={childToParent}
+                                        handlePageClick={handlePageClick}
                                         previousPage={previousPage}
                                         nextPage={nextPage}
                                     />
@@ -294,10 +295,7 @@ const PageList = () => {
                                 <ReactPagination
                                     postsPerPage={postsPerPage}
                                     totalPosts={totalProducts}
-                                    currentPage={pageNum}
-                                    childToParent={childToParent}
-                                    previousPage={previousPage}
-                                    nextPage={nextPage}
+                                    handlePageClick={handlePageClick}
                                 />
                         )
                         } else {

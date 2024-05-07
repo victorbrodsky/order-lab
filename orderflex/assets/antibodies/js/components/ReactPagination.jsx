@@ -12,10 +12,7 @@ const ReactPagination = props => {
     const {
         postsPerPage,
         totalPosts,
-        currentPage,
-        childToParent,
-        previousPage,
-        nextPage
+        handlePageClick
     } = props;
 
     const pageCount = Math.ceil(totalPosts / postsPerPage);
@@ -32,7 +29,7 @@ const ReactPagination = props => {
     //     <>
     //     <ReactPaginate
     //         nextLabel={"Next"}
-    //         onPageChange={childToParent}
+    //         onPageChange={handlePageClick}
     //         pageRangeDisplayed={3}
     //         marginPagesDisplayed={2}
     //         pageCount={pageCount}
@@ -49,6 +46,8 @@ const ReactPagination = props => {
     //     </>
     // );
 
+    //marginPagesDisplayed={2}
+
     return (
         <div className="pagination-container">
             <ReactPaginate
@@ -56,8 +55,7 @@ const ReactPagination = props => {
                 pageClassName={"page-number"}
                 activeClassName={"active"}
                 pageRangeDisplayed={3}
-                marginPagesDisplayed={2}
-                onPageChange={(event) => childToParent(event.selected)}
+                onPageChange={(event) => handlePageClick(event.selected)}
                 pageCount={pageCount}
                 breakLabel="..."
                 previousClassName="page-number"

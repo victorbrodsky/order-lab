@@ -963,7 +963,7 @@ class AntibodyController extends OrderAbstractController
             );
         }
 
-        $limit = 20;
+        $limit = 20; //20
         $publicPage = false;
         $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr = $this->getList($request);
@@ -1118,8 +1118,8 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/new_react.html.twig')]
     public function showReactAction(Request $request, AntibodyList $antibody)
     {
-        $transresUtil = $this->container->get('transres_util');
-        $em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
 
         $cycle = "show";
 

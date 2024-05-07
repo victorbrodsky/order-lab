@@ -4,7 +4,7 @@ function CustomPaginate({
     postsPerPage,
     totalPosts,
     currentPage,
-    childToParent,
+    handlePageClick,
     previousPage,
     nextPage
 })
@@ -38,7 +38,7 @@ function CustomPaginate({
                 {pageNumbers.map((number) => (
                     <li
                         key={number}
-                        onClick={() => childToParent(number)}
+                        onClick={() => handlePageClick(number)}
                         className={
                                 'page-number ' + (number === currentPage ? 'active' : '')
                             }

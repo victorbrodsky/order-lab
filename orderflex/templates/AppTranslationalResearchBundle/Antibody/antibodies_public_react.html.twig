@@ -90,8 +90,8 @@
                     {#<button type="button" class="btn btn-light"><i class="fa-solid fa-wrench"></i></button>#}
                     <button class="btn btn-light" type="button"
                             data-bs-toggle="collapse"
-                            data-bs-target="#transres-AdvancedSearch"
-                            aria-expanded="false" aria-controls="transres-AdvancedSearch">
+                            data-bs-target="#transres-advancedsearch"
+                            aria-expanded="false" aria-controls="transres-advancedsearch">
                         <i class="fa-solid fa-wrench"></i>
                     </button>
                     <button id="filter-btn" type="submit" class="btn btn-light btn-sm">Filter</button>
@@ -102,12 +102,12 @@
         </div>
 
         {% if advancedFilter %}
-            {% set advacedCollapse = 'in' %}
+            {% set advancedCollapse = 'in' %}
         {% else %}
-            {% set advacedCollapse = '' %}
+            {% set advancedCollapse = '' %}
         {% endif %}
 
-        <div id="transres-AdvancedSearch" class="collapse {{ advacedCollapse }}">
+        <div id="transres-advancedsearch" class="collapse {{ advancedCollapse }}">
             <br>
             <div class="card card-body">
                 <div class="row row-cols-lg-5 g-lg-2">
