@@ -209,10 +209,7 @@ const PageList = () => {
                                 <ReactPagination
                                     postsPerPage={postsPerPage}
                                     totalPosts={totalProducts}
-                                    currentPage={pageNum}
                                     handlePageClick={handlePageClick}
-                                    previousPage={previousPage}
-                                    nextPage={nextPage}
                                 />
                             )
                         } else {

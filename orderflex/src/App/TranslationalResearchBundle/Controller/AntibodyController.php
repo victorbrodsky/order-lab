@@ -883,7 +883,7 @@ class AntibodyController extends OrderAbstractController
         //dump($request);
         //exit();
 
-        $limit = 20;
+        $limit = 50;
         $publicPage = false;
         $listArr = $this->getList($request,$publicPage,$limit);
         //$listArr['title'] = "Antibodies";
@@ -944,7 +944,7 @@ class AntibodyController extends OrderAbstractController
                 $query->setParameters($dqlParameters);
             }
 
-            $limit = 20;
+            $limit = 50;
 
             $paginationParams = array(
                 'defaultSortFieldName' => 'antibody.orderinlist',
@@ -962,6 +962,16 @@ class AntibodyController extends OrderAbstractController
                 $paginationParams
             );
         }
+
+        //$page = $request->query->get('page');
+        //echo "page=".$page."<br>";
+
+        //pre-set list type
+        $typeArr = array('type'=>array('default','user-added'));
+        $request->query->set('filter', $typeArr);
+
+        //dump($request);
+        //exit('111');
 
         $limit = 20; //20
         $publicPage = false;
