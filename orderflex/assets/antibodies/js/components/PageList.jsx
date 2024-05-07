@@ -1,7 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
+
+//import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
 import Grid from '@mui/material/Grid';
+//import Col from 'react-bootstrap/Col';
+//import Row from 'react-bootstrap/Row';
+//import Container from 'react-bootstrap/Container';
+
+
 import ProductCard from "./ProductCard";
 //import ReactCard from "./ReactCard";
 import Loading from "./Loading";
@@ -164,6 +172,78 @@ const PageList = () => {
     //     />
     // </div>
 
+    //Responsive
+    if(0)
+    return (
+        <div>
+            <CardGroup>
+                {allProducts.length > 0 && allProducts.map((product, i) =>
+                    <div style={{ padding: '0.1rem' }}>
+                        <ProductCard
+                            product={product}
+                        />
+                    </div>
+                )}
+            </CardGroup>
+
+            <div>
+                {(() => {
+                    if( totalProducts === null ) {
+                        <div>Please wait ...</div>
+                    } else {
+                        if( allProducts && allProducts.length > 0 ) {
+                            if(0) {
+                                return (
+                                    <CustomPaginate
+                                        postsPerPage={postsPerPage}
+                                        totalPosts={totalProducts}
+                                        currentPage={pageNum}
+                                        childToParent={childToParent}
+                                        previousPage={previousPage}
+                                        nextPage={nextPage}
+                                    />
+                                )
+                            }
+                            return (
+                                <ReactPagination
+                                    postsPerPage={postsPerPage}
+                                    totalPosts={totalProducts}
+                                    currentPage={pageNum}
+                                    childToParent={childToParent}
+                                    previousPage={previousPage}
+                                    nextPage={nextPage}
+                                />
+                            )
+                        } else {
+                            return (
+                                <div>No results found</div>
+                            )
+                        }
+                    }
+                })()}
+            </div>
+
+        </div>
+    );
+
+    //Not responsive
+    if(0)
+        return (
+            <Container fluid>
+                <Row xs={1} md={4} className="g-4">
+                    {allProducts.length > 0 && allProducts.map((product, i) =>
+                        <Col key={i}>
+                            <ProductCard
+                                product={product}
+                            />
+                        </Col>
+                    )}
+                </Row>
+            </Container>
+        );
+
+    //Not responsive
+    if(1)
     return (
         <div>
             <Grid container spacing={1}>
@@ -229,8 +309,8 @@ const PageList = () => {
                 })()}
             </div>
 
-        </div>
 
+        </div>
     );
 
 };

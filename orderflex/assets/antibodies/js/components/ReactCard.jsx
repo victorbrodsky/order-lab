@@ -14,6 +14,8 @@ function ReactCard({product}) {
     //const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
     const antibodyUrl = Routing.generate('translationalresearch_antibody_show_react', {id: product.id});
 
+    //<div style={{ padding: '3' }}>
+
     return (
         <div>
             <Card
