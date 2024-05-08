@@ -851,15 +851,24 @@ class AntibodyList extends ListAbstract
             $res = $res . ", " . $storage;
         }
 
-        $associatesArr = array();
-        foreach($this->getAssociates() as $associate) {
-            $associatesArr[] = $associate->getId()." ".$associate->getName();
-        }
+//        $associatesArr = array();
+//        foreach($this->getAssociates() as $associate) {
+//            $associatesArr[] = $associate->getId()." ".$associate->getName();
+//        }
+        $associatesArr = $this->getAssociatesObjects();
         if( count($associatesArr) > 0 ) {
             $res = $res . ", associates:" . implode(", ",$associatesArr);
         }
 
         return $res;
+    }
+
+    public function getAssociatesObjects() {
+        $associatesArr = array();
+        foreach($this->getAssociates() as $associate) {
+            $associatesArr[] = $associate->getId()." ".$associate->getName();
+        }
+        return $associatesArr;
     }
 
 //    public function __toString()

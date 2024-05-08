@@ -210,9 +210,10 @@ security:
        - { path: ^.*/translational-research/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/translational-research/reset-password, role: PUBLIC_ACCESS }
 
-       - { path: ^.*/translational-research/antibodies/public, role: PUBLIC_ACCESS }
-       - { path: ^.*/translational-research/antibodies/api, role: PUBLIC_ACCESS }
-       - { path: ^.*/translational-research/antibody/public/, role: PUBLIC_ACCESS }
+#       - { path: ^.*/translational-research/antibodies/public, role: PUBLIC_ACCESS }
+#       - { path: ^.*/translational-research/antibodies/api, role: PUBLIC_ACCESS }
+#       - { path: ^.*/translational-research/antibody/public/, role: PUBLIC_ACCESS }
+       - { path: ^.*/translational-research/public/, role: PUBLIC_ACCESS }
 
 #       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
 #       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }

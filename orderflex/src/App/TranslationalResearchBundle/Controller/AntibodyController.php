@@ -790,7 +790,7 @@ class AntibodyController extends OrderAbstractController
 
 
     //Classical approach using html
-    #[Route(path: '/antibodies/public/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    #[Route(path: '/public/antibodies/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_orig.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
@@ -829,7 +829,7 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    #[Route(path: '/antibodies/public/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
+    #[Route(path: '/public/antibodies/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
@@ -908,7 +908,7 @@ class AntibodyController extends OrderAbstractController
     //Tags"
     //http://127.0.0.1/index_dev.php/translational-research/antibodies/?filter%5Bsearch%5D=&filter%5Bname%5D=&filter%5Bdescription%5D=&filter%5Bpublic%5D=&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added&filter%5Bclone%5D=&filter%5Bhost%5D=&filter%5Breactivity%5D=&filter%5Bcompany%5D=&filter%5Bcatalog%5D=&filter%5Bcontrol%5D=breast+cancer&filter%5Bprotocol%5D=&filter%5Bretrieval%5D=&filter%5Bdilution%5D=&filter%5Bcomment%5D=&filter%5Bdocument%5D=&filter%5Bvisual%5D=
 
-//    #[Route(path: '/antibodies/public/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
+//    #[Route(path: '/public/antibodies/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
 //    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
 //    public function indexPublicAntibodiesReactFilterTagAction(Request $request)
 //    {
@@ -1124,7 +1124,7 @@ class AntibodyController extends OrderAbstractController
         return $response;
     }
 
-    #[Route(path: '/antibody/public/{id}', name: 'translationalresearch_antibody_show_react', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/public/antibody/{id}', name: 'translationalresearch_antibody_show_react', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Antibody/new_react.html.twig')]
     public function showReactAction(Request $request, AntibodyList $antibody)
     {
@@ -1200,7 +1200,7 @@ class AntibodyController extends OrderAbstractController
     }
 
     //#[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
-    #[Route(path: '/antibody/public/api/{id}', name: 'translationalresearch_antibody_public_api', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/public/antibody/api/{id}', name: 'translationalresearch_antibody_public_api', methods: ['GET'], options: ['expose' => true])]
     public function showPublicAction(Request $request, AntibodyList $antibody)
     {
         $transresUtil = $this->container->get('transres_util');
@@ -1257,8 +1257,16 @@ class AntibodyController extends OrderAbstractController
             'publictext' => $antibody->getPublicText(),
             'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
             'datasheet' => $datasheet,
-            'disableDatasheet' => $disableDatasheet
-            //'image' => $documentImageUrl //$antibody->getDocuments()
+            'disableDatasheet' => $disableDatasheet,
+            'description' => $antibody->getDescription(),
+            'tags' => $antibody->getCategoryTagsStr(),
+            'company' => $antibody->getCompany(),
+            'clone' => $antibody->getClone(),
+            'host' => $antibody->getHost(),
+            'reactivity' => $antibody->getReactivity(),
+            'storage' => $antibody->getStorage(),
+            'associates' => $antibody->getCompany(),
+            //'' => $antibody->getCompany(),
         );
 
         $response = new Response();
