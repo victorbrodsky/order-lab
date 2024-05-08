@@ -1180,7 +1180,7 @@ class AntibodyController extends OrderAbstractController
 
             $jsonArray = array();
             $jsonArray[] = array(
-                'id' => ($antibody->getId()) ? $antibody->getId() : $count . "-key",
+                'id' => $antibody->getId(),
                 'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
                 'publictext' => $antibody->getPublicText(),
                 'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
@@ -1199,23 +1199,75 @@ class AntibodyController extends OrderAbstractController
         );
     }
 
-//    #[Route(path: '/antibody/public/{id}', name: 'translationalresearch_antibody_public', methods: ['GET'], options: ['expose' => true])]
-//    #[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
-//    public function showPublicAction(Request $request, AntibodyList $antibody)
-//    {
-//        $transresUtil = $this->container->get('transres_util');
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $cycle = "show";
-//
-//        $form = $this->createAntibodyForm($antibody, $cycle); //show
-//
-//        return array(
-//            'antibody' => $antibody,
-//            'form' => $form->createView(),
-//            'title' => "Show Antibody ".$antibody,
-//            'cycle' => $cycle
-//        );
-//    }
+    //#[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
+    #[Route(path: '/antibody/public/api/{id}', name: 'translationalresearch_antibody_public_api', methods: ['GET'], options: ['expose' => true])]
+    public function showPublicAction(Request $request, AntibodyList $antibody)
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $cycle = "show";
+
+        $imageData = array();
+        foreach ($antibody->getDocuments() as $document) {
+            //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+            //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+            //$documentUrls[] = $document->getAbsoluteUploadFullPath();
+            //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+            $imageData[] = array(
+                'key' => 'document-' . $document->getId(),
+                'label' => $antibody->getName(),
+                'url' => $document->getAbsoluteUploadFullPath()
+            );
+        }
+
+        foreach ($antibody->getVisualInfos() as $visualInfo) {
+            $visualInfoROI = false;
+            $visualInfoWSI = false;
+            $uploadedType = $visualInfo->getUploadedType();
+
+            if ($uploadedType) {
+                $uploadedType = $uploadedType . ": ";
+            }
+
+            foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
+                $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+                if ($path) {
+                    $imageData[] = array(
+                        'key' => 'visualinfo-' . $visualInfoDocument->getId(),
+                        'label' => $uploadedType . $visualInfo->getComment(),
+                        'url' => $path,
+                        'comment' => $visualInfo->getComment(),
+                        'catalog' => $visualInfo->getCatalog()
+                    );
+                }
+            }
+        }
+
+        $disableDatasheet = false;
+        $datasheet = $antibody->getDatasheet();
+        if (!$datasheet || $datasheet == '') {
+            $disableDatasheet = true;
+        }
+
+        $jsonArray = array();
+        $jsonArray[] = array(
+            'id' => $antibody->getId(),
+            'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+            'publictext' => $antibody->getPublicText(),
+            'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+            'datasheet' => $datasheet,
+            'disableDatasheet' => $disableDatasheet
+            //'image' => $documentImageUrl //$antibody->getDocuments()
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(200);
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setContent(json_encode($jsonArray));
+
+        return $response;
+    }
 
 }

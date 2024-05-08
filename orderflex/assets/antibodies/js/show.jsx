@@ -3,7 +3,7 @@ import '../css/index.css'
 import React from 'react'
 import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import ProductCard from "./components/PageList";
+import SingleAntibody from "./components/SingleAntibody";
 
 
 var _antibodyid = $('#antibody-id').val();
@@ -18,7 +18,15 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 //     product={product}
 // />
 
-if(1) {
+root.render(
+    <React.StrictMode>
+        <Router>
+            <SingleAntibody antibodyid={_antibodyid} />
+        </Router>
+    </React.StrictMode>
+);
+
+if(0) {
     root.render(
         <React.StrictMode>
             <Router>
