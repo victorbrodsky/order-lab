@@ -72,33 +72,33 @@ function SingleAntibody({antibodyid}) {
                         )}
                     </CardGroup>
 
-                    <dl class="row boxesText g-1" style={{marginTop: '3rem'}}>
-                        <dt class="col-sm-3">Name</dt>
-                        <dd class="col-sm-9">{product.name}</dd>
+                    <dl className="row boxesText g-1" style={{marginTop: '3rem'}}>
+                        <dt className="col-sm-3">Name</dt>
+                        <dd className="col-sm-9">{product.name}</dd>
 
-                        <dt class="col-sm-3">Description</dt>
-                        <dd class="col-sm-9">{product.description}</dd>
+                        <dt className="col-sm-3">Description</dt>
+                        <dd className="col-sm-9">{product.description}</dd>
 
-                        <dt class="col-sm-3">Tags</dt>
-                        <dd class="col-sm-9">{product.tags}</dd>
+                        <dt className="col-sm-3">Tags</dt>
+                        <dd className="col-sm-9">{product.tags}</dd>
 
-                        <dt class="col-sm-3">Company</dt>
-                        <dd class="col-sm-9">{product.company}</dd>
+                        <dt className="col-sm-3">Company</dt>
+                        <dd className="col-sm-9">{product.company}</dd>
 
-                        <dt class="col-sm-3">Clone</dt>
-                        <dd class="col-sm-9">{product.clone}</dd>
+                        <dt className="col-sm-3">Clone</dt>
+                        <dd className="col-sm-9">{product.clone}</dd>
 
-                        <dt class="col-sm-3">Host</dt>
-                        <dd class="col-sm-9">{product.host}</dd>
+                        <dt className="col-sm-3">Host</dt>
+                        <dd className="col-sm-9">{product.host}</dd>
 
-                        <dt class="col-sm-3">Reactivity</dt>
-                        <dd class="col-sm-9">{product.reactivity}</dd>
+                        <dt className="col-sm-3">Reactivity</dt>
+                        <dd className="col-sm-9">{product.reactivity}</dd>
 
-                        <dt class="col-sm-3">Storage</dt>
-                        <dd class="col-sm-9">{product.storage}</dd>
+                        <dt className="col-sm-3">Storage</dt>
+                        <dd className="col-sm-9">{product.storage}</dd>
 
-                        <dt class="col-sm-3">Associates</dt>
-                        <dd class="col-sm-9">{product.associates}</dd>
+                        <dt className="col-sm-3">Associates</dt>
+                        <dd className="col-sm-9">{product.associates}</dd>
 
                     </dl>
 
