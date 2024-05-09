@@ -867,6 +867,15 @@ class AntibodyList extends ListAbstract
         $associatesArr = array();
         foreach($this->getAssociates() as $associate) {
             $associatesArr[] = $associate->getId()." ".$associate->getName();
+            $associatesArr[$associate->getId()] = $associate->getName();
+        }
+        return $associatesArr;
+    }
+
+    public function getAssociatesObjectsArr() {
+        $associatesArr = array();
+        foreach($this->getAssociates() as $associate) {
+            $associatesArr[] = array('id'=>$associate->getId(), "name"=>$associate->getName());
         }
         return $associatesArr;
     }

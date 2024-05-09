@@ -1265,7 +1265,7 @@ class AntibodyController extends OrderAbstractController
             'host' => $antibody->getHost(),
             'reactivity' => $antibody->getReactivity(),
             'storage' => $antibody->getStorage(),
-            'associates' => $antibody->getCompany(),
+            'associates' => $antibody->getAssociatesObjectsArr(),
             //'' => $antibody->getCompany(),
         );
 

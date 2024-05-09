@@ -5,6 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import ReactCarousel from "./ReactCarousel";
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from "./ProductCard";
@@ -40,6 +43,14 @@ function SingleAntibody({antibodyid}) {
 
     //<div style={{ padding: '3' }}>
 
+    // <Button
+    //     size="small"
+    //     href={Routing.generate('translationalresearch_antibody_public_api', {id: product.associate[i].id})}
+    //     variant="light"
+    //     target="_blank"
+    //     style={{ marginLeft: '0.1rem' }}
+    // >{product.associate[i].name}</Button>
+
     if(1)
     return (
         <div>
@@ -72,36 +83,38 @@ function SingleAntibody({antibodyid}) {
                         )}
                     </CardGroup>
 
-                    <dl className="row boxesText g-1" style={{marginTop: '3rem'}}>
-                        <dt className="col-sm-3">Name</dt>
-                        <dd className="col-sm-9">{product.name}</dd>
+                    <dl className="row" style={{marginTop: '3rem'}}>
+                        <dt className="col-sm-3 text-end">Name</dt>
+                        <dd className="col-sm-9 text-start">{product.name}</dd>
 
-                        <dt className="col-sm-3">Description</dt>
-                        <dd className="col-sm-9">{product.description}</dd>
+                        <dt className="col-sm-3 text-end">Description</dt>
+                        <dd className="col-sm-9 text-start">{product.description}</dd>
 
-                        <dt className="col-sm-3">Tags</dt>
-                        <dd className="col-sm-9">{product.tags}</dd>
+                        <dt className="col-sm-3 text-end">Tags</dt>
+                        <dd className="col-sm-9 text-start">{product.tags}</dd>
 
-                        <dt className="col-sm-3">Company</dt>
-                        <dd className="col-sm-9">{product.company}</dd>
+                        <dt className="col-sm-3 text-end">Company</dt>
+                        <dd className="col-sm-9 text-start">{product.company}</dd>
 
-                        <dt className="col-sm-3">Clone</dt>
-                        <dd className="col-sm-9">{product.clone}</dd>
+                        <dt className="col-sm-3 text-end">Clone</dt>
+                        <dd className="col-sm-9 text-start">{product.clone}</dd>
 
-                        <dt className="col-sm-3">Host</dt>
-                        <dd className="col-sm-9">{product.host}</dd>
+                        <dt className="col-sm-3 text-end">Host</dt>
+                        <dd className="col-sm-9 text-start">{product.host}</dd>
 
-                        <dt className="col-sm-3">Reactivity</dt>
-                        <dd className="col-sm-9">{product.reactivity}</dd>
+                        <dt className="col-sm-3 text-end">Reactivity</dt>
+                        <dd className="col-sm-9 text-start">{product.reactivity}</dd>
 
-                        <dt className="col-sm-3">Storage</dt>
-                        <dd className="col-sm-9">{product.storage}</dd>
+                        <dt className="col-sm-3 text-end">Storage</dt>
+                        <dd className="col-sm-9 text-start">{product.storage}</dd>
 
-                        <dt className="col-sm-3">Associates</dt>
-                        <dd className="col-sm-9">{product.associates}</dd>
-
+                        <dt className="col-sm-3 text-end">Associates</dt>
+                        <dd className="col-sm-9 text-start">
+                            {product.associates.length > 0 && product.associates.map((associate, i) =>
+                                <p>{product.associate.id} - {product.associate.name}</p>
+                            )}
+                        </dd>
                     </dl>
-
 
                 </div>
             }
