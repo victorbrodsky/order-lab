@@ -25,7 +25,10 @@ function SingleAntibody({antibodyid}) {
 
     const callProduct = async () => {
         //console.log("Set product: antibodyUrl="+antibodyUrl);
-        let response = await axios.get(
+        // let response = await axios.get(
+        //     antibodyUrl
+        // );
+        let response = axios.get(
             antibodyUrl
         );
         //console.log("Set product: response:",response);
@@ -35,6 +38,13 @@ function SingleAntibody({antibodyid}) {
         //console.log("product=",product);
         //console.log("product name=",product.name);
     };
+
+    // callProduct() = {
+    //     //urla = Routing.generate('translationalresearch_antibody_public_api', {id: antibodyid});
+    //     axios.get(urla).then(product => {
+    //         this.setProduct({ product: response.data[0], loading: false})
+    //     })
+    // }
 
     callProduct();
 
