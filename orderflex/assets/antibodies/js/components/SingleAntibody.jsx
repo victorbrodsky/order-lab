@@ -54,7 +54,6 @@ function SingleAntibody({antibodyid}) {
     if(1)
     return (
         <div>
-            <p>Show antibody!</p>
             {product &&
                 <div>
                     <p>Documents: {product.documents.length}</p>
