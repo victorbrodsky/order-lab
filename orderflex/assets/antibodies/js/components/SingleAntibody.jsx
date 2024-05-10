@@ -25,12 +25,12 @@ function SingleAntibody({antibodyid}) {
 
     const callProduct = async () => {
         //console.log("Set product: antibodyUrl="+antibodyUrl);
-        // let response = await axios.get(
-        //     antibodyUrl
-        // );
-        let response = axios.get(
+        let response = await axios.get(
             antibodyUrl
         );
+        // let response = axios.get(
+        //     antibodyUrl
+        // );
         //console.log("Set product: response:",response);
         //console.log("Set product: product:",response.data[0]);
         setProduct(response.data[0]);
@@ -60,6 +60,10 @@ function SingleAntibody({antibodyid}) {
     //     target="_blank"
     //     style={{ marginLeft: '0.1rem' }}
     // >{product.associate[i].name}</Button>
+
+    // {typeof product.associates !== 'undefined' && product.associates.length > 0 && product.associates.map((associate, i) =>
+    //     <p>{product.associate.id} - {product.associate.name}</p>
+    // )}
 
     if(1)
     return (
@@ -117,10 +121,20 @@ function SingleAntibody({antibodyid}) {
                         <dt className="col-sm-3 text-end">Storage</dt>
                         <dd className="col-sm-9 text-start">{product.storage}</dd>
 
-                        <dt className="col-sm-3 text-end">Associates</dt>
+                        <dt className="col-sm-3 text-end">
+                            Associates
+                        </dt>
                         <dd className="col-sm-9 text-start">
                             {product.associates.length > 0 && product.associates.map((associate, i) =>
-                                <p>{product.associate.id} - {product.associate.name}</p>
+                                <div key={"saa-"+i}>
+                                    <Button
+                                        size="small"
+                                        href={Routing.generate('translationalresearch_antibody_show_react', {id: associate.id})}
+                                        variant="light"
+                                        target="_blank"
+                                        style={{ marginLeft: '0.1rem' }}
+                                    >{associate.name}</Button>
+                                </div>
                             )}
                         </dd>
                     </dl>
