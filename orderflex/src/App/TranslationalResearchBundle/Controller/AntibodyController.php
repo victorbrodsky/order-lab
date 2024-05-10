@@ -966,6 +966,10 @@ class AntibodyController extends OrderAbstractController
         //$page = $request->query->get('page');
         //echo "page=".$page."<br>";
 
+        //For the sorting function, I would recommend to use built in pre-sorting
+        // so we put the antibodies with pictures, and control slides available for purchase,
+        // pathologist referred, etc in the front.
+
         //pre-set list type
         $typeArr = array('type'=>array('default','user-added'));
         $request->query->set('filter', $typeArr);

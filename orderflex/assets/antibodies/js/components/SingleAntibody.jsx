@@ -70,7 +70,6 @@ function SingleAntibody({antibodyid}) {
         <div>
             {product &&
                 <div>
-                    <p>Documents: {product.documents.length}</p>
                     <CardGroup>
                         {product.documents.length > 0 && product.documents.map((image, i) =>
                             <div style={{ padding: '0.1rem' }} key={"sa-"+i}>
