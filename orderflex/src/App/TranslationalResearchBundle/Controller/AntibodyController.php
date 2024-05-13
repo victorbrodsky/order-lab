@@ -1207,21 +1207,19 @@ class AntibodyController extends OrderAbstractController
     #[Route(path: '/public/antibody/api/{id}', name: 'translationalresearch_antibody_public_api', methods: ['GET'], options: ['expose' => true])]
     public function showPublicAction(Request $request, AntibodyList $antibody)
     {
-        $transresUtil = $this->container->get('transres_util');
-        $em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
 
         $cycle = "show";
 
         $imageData = array();
         foreach ($antibody->getDocuments() as $document) {
-            //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-            //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-            //$documentUrls[] = $document->getAbsoluteUploadFullPath();
-            //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+            $documentImageUrl = $document->getAbsoluteUploadFullPath();
+            //echo "documentImageUrl=[$documentImageUrl] <br>";
             $imageData[] = array(
                 'key' => 'document-' . $document->getId(),
                 'label' => $antibody->getName(),
-                'url' => $document->getAbsoluteUploadFullPath()
+                'url' => $documentImageUrl
             );
         }
 

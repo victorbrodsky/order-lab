@@ -558,6 +558,14 @@ class Document {
             $serverName = "127.0.0.1";
         }
 
+        if( isset($_SERVER['SERVER_PORT']) ) {
+            $serverPort = $_SERVER['SERVER_PORT'];
+            //echo "serverPort=$serverPort <br>";
+            if( $serverPort ) {
+                $serverName = $serverName . ":" . $serverPort;
+            }
+        }
+
         $uniquename = $this->getUniquename();
         if( !$uniquename ) {
             //File is erroneous if uniquename is null

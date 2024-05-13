@@ -179,7 +179,7 @@ const PageList = () => {
         <div>
             <CardGroup>
                 {allProducts.length > 0 && allProducts.map((product, i) =>
-                    <div style={{ padding: '0.1rem' }}>
+                    <div style={{ padding: '0.1rem' }} key={"productcard-"+i}>
                         <ProductCard
                             product={product}
                         />
@@ -193,6 +193,13 @@ const PageList = () => {
                         <div>Please wait ...</div>
                     } else {
                         if( allProducts && allProducts.length > 0 ) {
+                            return (
+                                <ReactPagination
+                                    postsPerPage={postsPerPage}
+                                    totalPosts={totalProducts}
+                                    handlePageClick={handlePageClick}
+                                />
+                            )
                             if(0) {
                                 return (
                                     <CustomPaginate
@@ -205,13 +212,6 @@ const PageList = () => {
                                     />
                                 )
                             }
-                            return (
-                                <ReactPagination
-                                    postsPerPage={postsPerPage}
-                                    totalPosts={totalProducts}
-                                    handlePageClick={handlePageClick}
-                                />
-                            )
                         } else {
                             return (
                                 <div>No results found</div>

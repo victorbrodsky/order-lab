@@ -21,32 +21,32 @@ function SingleAntibody({antibodyid}) {
     //let product = null;
 
     //const antibodyUrl = Routing.generate('translationalresearch_antibody_show', {id: product.id});
-    const antibodyUrl = Routing.generate('translationalresearch_antibody_public_api', {id: antibodyid});
+    const antibodyUrl = Routing.generate(
+        'translationalresearch_antibody_public_api',
+        {id: antibodyid}
+    );
 
-    const callProduct = async () => {
-        //console.log("Set product: antibodyUrl="+antibodyUrl);
-        let response = await axios.get(
-            antibodyUrl
-        );
-        // let response = axios.get(
-        //     antibodyUrl
-        // );
+    const callAntibody = async () => {
+        console.log("callAntibody: antibodyUrl="+antibodyUrl);
+        let response = await axios.get(antibodyUrl);
         //console.log("Set product: response:",response);
         //console.log("Set product: product:",response.data[0]);
         setProduct(response.data[0]);
-        //product = response.data[0];
-        //console.log("product=",product);
-        //console.log("product name=",product.name);
     };
 
-    // callProduct() = {
+    // callAntibody() = {
     //     //urla = Routing.generate('translationalresearch_antibody_public_api', {id: antibodyid});
     //     axios.get(urla).then(product => {
     //         this.setProduct({ product: response.data[0], loading: false})
     //     })
     // }
 
-    callProduct();
+    //callAntibody();
+
+    useEffect(() => {
+        console.log("useEffect: callAntibody");
+        callAntibody();
+    }, []);
 
     //console.log("2 product=",product);
     //console.log("2 product name=",product.name);
