@@ -15,6 +15,7 @@ function ReactCard({product}) {
     const antibodyUrl = Routing.generate('translationalresearch_antibody_show_react', {id: product.id});
 
     //<div style={{ padding: '3' }}>
+    //disabled={product.disableDatasheet}
 
     return (
         <div>
@@ -25,16 +26,18 @@ function ReactCard({product}) {
                 <Card.Body>
                     <Card.Title>{product.name}</Card.Title>
                     <Card.Text>
-                        {product.publictext}
+                        {cardTextTruncate(product.publictext)}
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                    <Button size="small"
-                            href={product.datasheet}
-                            variant="light"
-                            target="_blank"
-                            disabled={product.disableDatasheet}
-                    >Datasheet</Button>
+                    {product.datasheet &&
+                        <Button size="small"
+                                href={product.datasheet}
+                                variant="light"
+                                target="_blank"
+                                disabled={false}
+                        >Datasheet</Button>
+                    }
                     <Button
                         size="small"
                         href={antibodyUrl}
@@ -46,6 +49,11 @@ function ReactCard({product}) {
             </Card>
         </div>
     );
+}
+
+function cardTextTruncate(str) {
+    var maxlen = 90;
+    return str.length > maxlen ? str.substring(0, maxlen) + "..." : str;
 }
 
 export default ReactCard;

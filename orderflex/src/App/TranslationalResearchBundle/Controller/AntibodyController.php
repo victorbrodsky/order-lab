@@ -1246,11 +1246,11 @@ class AntibodyController extends OrderAbstractController
             }
         }
 
-        $disableDatasheet = false;
-        $datasheet = $antibody->getDatasheet();
-        if (!$datasheet || $datasheet == '') {
-            $disableDatasheet = true;
-        }
+//        $disableDatasheet = false;
+//        $datasheet = $antibody->getDatasheet();
+//        if (!$datasheet || $datasheet == '') {
+//            $disableDatasheet = true;
+//        }
 
         $jsonArray = array();
         $jsonArray[] = array(
@@ -1259,7 +1259,7 @@ class AntibodyController extends OrderAbstractController
             'publictext' => $antibody->getPublicText(),
             'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
             'datasheet' => $datasheet,
-            'disableDatasheet' => $disableDatasheet,
+            //'disableDatasheet' => $disableDatasheet,
             'description' => $antibody->getDescription(),
             'tags' => $antibody->getCategoryTagsStr(),
             'company' => $antibody->getCompany(),
