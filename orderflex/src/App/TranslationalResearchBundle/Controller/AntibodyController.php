@@ -1281,4 +1281,42 @@ class AntibodyController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * Download multiple filtered projects
+     */
+    #[Route(path: '/public/download-antibody-spreadsheet-post', methods: ['POST'], name: 'translationalresearch_public_download_antibody_spreadsheet')]
+    public function downloadPublicApplicantListExcelPostAction(Request $request) {
+
+        //$ids = $request->query->get('projectids');
+        $ids = $request->request->get('ids');
+        //exit("ids=".$ids);
+
+        $limit = null;
+        //exit("ids=".$ids);
+        //exit("limit=".$limit);
+
+        if( $ids ) {
+            if( is_array($ids) && count($ids) == 0 ) {
+                exit("No Antibodies to Export to spreadsheet");
+            }
+        }
+
+        if( !$ids ) {
+            exit("No Antibodies to Export to spreadsheet");
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Antibodies-".date('m-d-Y').".xlsx";
+
+        $antibodyIdsArr = explode(',', $ids);
+
+        //Spout uses less memory
+        $transresUtil->createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit,$onlyPublic=true);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        exit();
+    }
+
 }

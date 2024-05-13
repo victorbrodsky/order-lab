@@ -6213,7 +6213,7 @@ class TransResUtil
     //Create spreadsheet by Spout
     //http://opensource.box.com/spout/getting-started/
     //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
-    public function createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit=null) {
+    public function createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit=null,$onlyPublic=false) {
         //echo "antibodys=".count($antibodyIdsArr)."<br>";
         $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToBrowser($fileName);
@@ -6278,6 +6278,12 @@ class TransResUtil
             $antibody = $this->em->getRepository(AntibodyList::class)->find($antibodyId);
             if( !$antibody ) {
                 continue;
+            }
+
+            if( $onlyPublic === true ){
+                if( $antibody->getOpenToPublic() !== true ) {
+                    continue;
+                }
             }
 
             $data[0] = $antibody->getId();
