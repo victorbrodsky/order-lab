@@ -1246,8 +1246,9 @@ class AntibodyController extends OrderAbstractController
             }
         }
 
+
+        $datasheet = $antibody->getDatasheet();
 //        $disableDatasheet = false;
-//        $datasheet = $antibody->getDatasheet();
 //        if (!$datasheet || $datasheet == '') {
 //            $disableDatasheet = true;
 //        }
