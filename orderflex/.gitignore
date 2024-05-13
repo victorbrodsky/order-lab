@@ -9,6 +9,8 @@
 !/.env.test
 !/.envsample
 
+/backup
+
 /public/bundles/
 
 
