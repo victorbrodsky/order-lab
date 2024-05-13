@@ -921,7 +921,7 @@ class AntibodyController extends OrderAbstractController
 //        exit();
 //    }
 
-    #[Route(path: '/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
+    #[Route(path: '/public/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
 
         if(0) {
