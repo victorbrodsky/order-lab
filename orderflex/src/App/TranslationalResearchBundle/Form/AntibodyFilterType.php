@@ -64,7 +64,7 @@ class AntibodyFilterType extends AbstractType
 //            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Control'),
 //        ));
 
-        if( $this->params['publicPage'] === false ) {
+        if( $this->params['publicFormPage'] === false ) {
 
             //Filter by Name, Description, Category Tags, Clone, Host, Reactivity, Company
             $builder->add('name', TextType::class, array(
@@ -84,8 +84,8 @@ class AntibodyFilterType extends AbstractType
             ));
 
             ///// Open to Public ////
-            //echo "publicPage=".$this->params['publicPage']."<br>";
-            if ($this->params['publicPage'] === false) {
+            //echo "publicFormPage=".$this->params['publicFormPage']."<br>";
+            if ($this->params['publicFormPage'] === false) {
 //        $builder->add('public', CheckboxType::class, array(
 //            'label' => 'Open to public:',
 //            'required' => false,

@@ -6335,6 +6335,11 @@ class TransResUtil
         $writer->close();
     }
 
+    //TODO: export list of antibodies to PDF
+    public function createAntibodyPdf($antibodyIdsArr,$fileName,$limit=null,$onlyPublic=false) {
+        return null;
+    }
+
 //    public function getSpecialtyRole($specialtyObject) {
 //        $role = null;
 //        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {

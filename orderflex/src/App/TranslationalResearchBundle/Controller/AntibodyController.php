@@ -49,7 +49,7 @@ class AntibodyController extends OrderAbstractController
 
         return $listArr;
     }
-    public function getList($request, $publicPage=false, $limit=50) {
+    public function getList($request, $onlyPublic=false, $limit=50) {
 
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
@@ -110,11 +110,11 @@ class AntibodyController extends OrderAbstractController
 
         $dqlParameters = array();
 
-        //$publicPage = true;
-        //echo "1 publicPage=".$publicPage."<br>";
+        $publicFormPage = false;
+        //echo "1 publicFormPage=".$publicFormPage."<br>";
         $params = array(
             "className" => $mapper['className'],
-            "publicPage" => $publicPage
+            "publicFormPage" => $publicFormPage
         );
         $filterform = $this->createForm(AntibodyFilterType::class, null, array(
             //'action' => $this->generateUrl($routeName),
@@ -146,7 +146,7 @@ class AntibodyController extends OrderAbstractController
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
 
-        if( $publicPage === false ) {
+        if( $publicFormPage === false ) {
             $name = $filterform['name']->getData();
             $description = $filterform['description']->getData();
             $categorytags = $filterform['categorytags']->getData();
@@ -181,6 +181,10 @@ class AntibodyController extends OrderAbstractController
         $public = "public";
         if( isset($filterform['public']) ) {
             $public = $filterform['public']->getData();
+        }
+        //overwrite $public to show only public antibodies
+        if( $onlyPublic ) {
+            $public = "public";
         }
 
         $filterTypes = null;
@@ -884,8 +888,8 @@ class AntibodyController extends OrderAbstractController
         //exit();
 
         $limit = 50;
-        $publicPage = false;
-        $listArr = $this->getList($request,$publicPage,$limit);
+        $onlyPublic = true;
+        $listArr = $this->getList($request,$onlyPublic,$limit);
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
@@ -978,9 +982,8 @@ class AntibodyController extends OrderAbstractController
         //exit('111');
 
         $limit = 20; //20
-        $publicPage = false;
-        $listArr = $this->getList($request,$publicPage,$limit);
-        //$listArr = $this->getList($request);
+        $onlyPublic = true;
+        $listArr = $this->getList($request,$onlyPublic,$limit);
         $antibodies = $listArr['entities'];
         $totalAntibodiesCount = $listArr['totalAntibodiesCount'];
         //echo "antibodies=".count($antibodies)."<br>";
@@ -1281,9 +1284,6 @@ class AntibodyController extends OrderAbstractController
         return $response;
     }
 
-    /**
-     * Download multiple filtered projects
-     */
     #[Route(path: '/public/download-antibody-spreadsheet-post', methods: ['POST'], name: 'translationalresearch_public_download_antibody_spreadsheet')]
     public function downloadPublicApplicantListExcelPostAction(Request $request) {
 
@@ -1315,6 +1315,41 @@ class AntibodyController extends OrderAbstractController
 
         //Spout uses less memory
         $transresUtil->createAntibodyExcelSpout($antibodyIdsArr,$fileName,$limit,$onlyPublic=true);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        exit();
+    }
+
+    #[Route(path: '/public/download-antibody-pdf-post', methods: ['POST'], name: 'translationalresearch_public_download_antibody_pdf')]
+    public function downloadPublicApplicantListPdfPostAction(Request $request) {
+
+        //$ids = $request->query->get('projectids');
+        $ids = $request->request->get('ids');
+        //exit("ids=".$ids);
+
+        $limit = null;
+        //exit("ids=".$ids);
+        //exit("limit=".$limit);
+
+        if( $ids ) {
+            if( is_array($ids) && count($ids) == 0 ) {
+                exit("No Antibodies to Export to PDF");
+            }
+        }
+
+        if( !$ids ) {
+            exit("No Antibodies to Export to PDF");
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Antibodies-".date('m-d-Y').".pdf";
+
+        $antibodyIdsArr = explode(',', $ids);
+
+        //Spout uses less memory
+        $transresUtil->createAntibodyPdf($antibodyIdsArr,$fileName,$limit,$onlyPublic=true);
         //header('Content-Disposition: attachment;filename="'.$fileName.'"');
         exit();
     }
