@@ -6338,6 +6338,78 @@ class TransResUtil
     //TODO: export list of antibodies to PDF
     public function createAntibodyPdf($antibodyIdsArr,$fileName,$limit=null,$onlyPublic=false) {
         return null;
+
+        $logger = $this->container->get('logger');
+        $router = $this->container->get('router');
+
+        //$url = 'translationalresearch_antibodies_public_react';
+        $url = "translationalresearch_antibodies_public";
+        
+        $pageUrl = $router->generate(
+            $url,
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+
+        $logger->notice("pageUrl= $pageUrl");
+
+        $PHPSESSID = NULL;
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+        if( $session ) {
+            $logger->notice("generateApplicationPdf: has session");
+            //$session = $request->getSession();
+            if( $session && $session->getId() ) {
+                //$logger->notice("1before session save: ".dump($session));
+                $session->save();
+                //$logger->notice("after save session");
+                session_write_close();
+                $logger->notice("after session_write_close");
+                $PHPSESSID = $session->getId();
+            }
+        } else {
+            $logger->notice("generateApplicationPdf: no session");
+            //take care of authentication
+            //$userUtil = $this->container->get('user_utility');
+            //$session = $userUtil->getSession(); //$this->container->get('session');
+            if( $session && $session->getId() ) {
+                //$logger->notice("2before session save: ".dump($session));
+                $session->save();
+                session_write_close();
+                $PHPSESSID = $session->getId();
+            }
+        }
+
+        $uploadAntibodiesPath = "antibodypdfs";
+        $reportPath = $this->container->get('kernel')->getProjectDir() .
+            DIRECTORY_SEPARATOR . 'public' .
+            "Uploaded" . DIRECTORY_SEPARATOR . "transres" .
+            DIRECTORY_SEPARATOR . $uploadAntibodiesPath;
+
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
+        }
+
+        $timestamp = time();
+        $outdir = $reportPath.'/temp_'.$timestamp.'/';
+        $antibodiesPdfPath = $outdir . "antibodies" . ".pdf";
+
+        $logger->notice("antibodiesPdfPath= $antibodiesPdfPath");
+        //$logger->notice("pageUrl= $pageUrl");
+
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $antibodiesPdfPath,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        //array('cookie' => array($session->getName() => $session->getId()))
+        );
+
+        return $antibodiesPdfPath;
     }
 
 //    public function getSpecialtyRole($specialtyObject) {
