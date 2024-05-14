@@ -95,6 +95,7 @@ const PageList = () => {
         //console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);
         //let all = new Set([...allProducts, ...response.data.results]);
         //setAllProducts([...all]);
+        //console.log("totalProducts="+response.data.totalProducts);
         setAllProducts(response.data.results);
         setTotalProducts(response.data.totalProducts);
         setTotalPages(response.data.totalPages);
@@ -144,7 +145,7 @@ const PageList = () => {
     const nextPage = () => {
     	if (pageNum !== Math.ceil(totalProducts / postsPerPage) - 1) {
             setPageNum(pageNum + 1);
-    	}
+        }
     };
 
     // const handlePageClick = ({ paginateNumber  }) => {
@@ -153,9 +154,9 @@ const PageList = () => {
     //     //callProduct();
     // };
     const handlePageClick = (paginateNumber) => {
-        console.log("handlePageClick: paginateNumber=" + paginateNumber);
+        //console.log("handlePageClick: paginateNumber=" + paginateNumber);
         if( paginateNumber !== '...' ) {
-            console.log("paginate function: paginateNumber =" + paginateNumber);
+            //console.log("paginate function: paginateNumber =" + paginateNumber);
             setPageNum(paginateNumber+1);
         }
     }
@@ -193,6 +194,7 @@ const PageList = () => {
                         <div>Please wait ...</div>
                     } else {
                         if( allProducts && allProducts.length > 0 ) {
+                            if(1)
                             return (
                                 <ReactPagination
                                     postsPerPage={postsPerPage}
@@ -276,6 +278,13 @@ const PageList = () => {
                         <div>Please wait ...</div>
                     } else {
                         if( allProducts && allProducts.length > 0 ) {
+                            return (
+                                <ReactPagination
+                                    postsPerPage={postsPerPage}
+                                    totalPosts={totalProducts}
+                                    handlePageClick={handlePageClick}
+                                />
+                            )
                             if(0) {
                                 return (
                                     <CustomPaginate
@@ -288,13 +297,6 @@ const PageList = () => {
                                     />
                                 )
                             }
-                            return (
-                                <ReactPagination
-                                    postsPerPage={postsPerPage}
-                                    totalPosts={totalProducts}
-                                    handlePageClick={handlePageClick}
-                                />
-                        )
                         } else {
                             return (
                                 <div>No results found</div>

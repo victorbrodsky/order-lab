@@ -1096,7 +1096,8 @@ class AntibodyController extends OrderAbstractController
         $totalCount = 0;
         $totalPages = 0;
         if( count($antibodies) > 0 ) {
-            $totalCount = $antibodies->getTotalItemCount();
+            //$totalCount = $antibodies->getTotalItemCount();
+            $totalCount = $totalAntibodiesCount;
             //echo "totalCount=$totalCount <br>";
             $totalPages = ceil($totalCount / $limit);
         }

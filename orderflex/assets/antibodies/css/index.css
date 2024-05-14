@@ -134,6 +134,7 @@ ul {
     color: #00a8ff;
     background: #fff;
     padding: 10px 20px;
+    /*marging: 10px 20px;*/
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.5s ease;

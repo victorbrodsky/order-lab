@@ -13,7 +13,7 @@ function CustomPaginate({
 
     //console.log("CustomPaginate: totalPosts="+totalPosts+", postsPerPage="+postsPerPage+", currentPage="+currentPage);
 
-    let totalPagesNumber = Math.ceil( (totalPosts / postsPerPage) - 1 );
+    let totalPagesNumber = Math.ceil( (totalPosts / postsPerPage) );
 
     if( totalPagesNumber > 0 &&  totalPagesNumber < 5 ) {
         for (let i = 1; i <= totalPagesNumber; i++) {

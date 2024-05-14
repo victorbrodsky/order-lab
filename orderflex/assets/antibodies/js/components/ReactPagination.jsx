@@ -15,8 +15,14 @@ const ReactPagination = props => {
         handlePageClick
     } = props;
 
-    const pageCount = Math.ceil(totalPosts / postsPerPage);
+    //console.log("totalPosts="+totalPosts);
+    //console.log("postsPerPage="+postsPerPage);
+    //console.log("count="+(totalPosts / postsPerPage));
 
+    const pageCount = Math.ceil(totalPosts / postsPerPage);
+    //const pageCount = totalPosts==0 ? 0 : (totalPosts - 1) / postsPerPage + 1;
+    //console.log("pageCount="+pageCount);
+    //If count=62.05 => pageCount = 63
 
     // <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
     //     <li className="page-number">
@@ -48,11 +54,14 @@ const ReactPagination = props => {
 
     //marginPagesDisplayed={2}
 
+    //Use pageLinkClassName instead of pageClassName to make c
+    //lickable the highlighted background of the page buttons.
+
     return (
         <div className="pagination-container">
             <ReactPaginate
                 containerClassName={"pagination"}
-                pageClassName={"page-number"}
+                pageLinkClassName={"page-number"}
                 activeClassName={"active"}
                 pageRangeDisplayed={3}
                 onPageChange={(event) => handlePageClick(event.selected)}
