@@ -833,7 +833,7 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    #[Route(path: '/public/antibodies/', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
+    #[Route(path: '/public-antibody-list', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {
@@ -1132,7 +1132,7 @@ class AntibodyController extends OrderAbstractController
         return $response;
     }
 
-    #[Route(path: '/public/antibody/{id}', name: 'translationalresearch_antibody_show_react', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/public-antibody/{id}', name: 'translationalresearch_antibody_show_react', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Antibody/new_react.html.twig')]
     public function showReactAction(Request $request, AntibodyList $antibody)
     {
