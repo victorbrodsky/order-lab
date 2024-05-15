@@ -1048,20 +1048,8 @@ class SiteParameters {
 //    private $hostedUserGroups;
       //Homepage and About Us Page Content (if Server Role and Network Access field is set to “Internet (Hub)
 
-    //12 - Add a new platform list manager list titled “Data types for interface transfer”
-    // with one value on the list (for now) titled “Antibody List”.
-    // - Add a second new platform list manager list titled “Interface transfer statuses”
-    // with values of “Ready”, “Completed”, “Failed”.
-    // - Add a third new platform list manager list titled “Interface sources and destinations”
-    // with two values of “view.online” and “view.med.cornell.edu”.
-
-    //#[ORM\OneToOne(targetEntity: 'InterfaceTransferSiteParameter', cascade: ['persist', 'remove'])]
+    //#[ORM\OneToOne(targetEntity: 'TransferSiteParameter', cascade: ['persist', 'remove'])]
     //private $interfaceTransfer;
-
-//    //Add a new platform list manager list titled “Data types for interface transfer”
-//    //with one value on the list (for now) titled “Antibody List”.
-//    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthServerNetworkList')]
-//    private $dataTypeTransfer;
 
     function __construct( $addobjects=true )
     {
