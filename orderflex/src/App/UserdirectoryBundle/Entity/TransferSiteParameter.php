@@ -34,6 +34,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 // - In “Source” and “Destination” show a multi-select select2 menu with values from
 // “Interface Sources and Destinations” platform list manager list.
 
+//Cron job is running on host (intranet, internal wcm server) or remote (internet, outside server)? Who will initiate the transfer?
+//If host is initiating the transfer: Observer pattern or
+// Synchronous / Asynchronous, Client/Server / Peer-to-Peer
+//https://stackoverflow.com/questions/413086/client-server-synchronization-pattern-algorithm
+//https://www.geeksforgeeks.org/software-design-patterns/
+//https://www.geeksforgeeks.org/observer-pattern-set-1-introduction/
+
 #[ORM\Table(name: 'user_transfersiteparameter')]
 #[ORM\Entity]
 class TransferSiteParameter
@@ -49,8 +56,8 @@ class TransferSiteParameter
     
 //    //Add a new platform list manager list titled “Data types for interface transfer”
 //    //with one value on the list (for now) titled “Antibody List”.
-//    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\TransferDataType')]
-//    private $transferDataType;
+//    #[ORM\OneToMany(targetEntity: 'App\UserdirectoryBundle\Entity\TransferDataType')]
+//    private $transferDataTypes;
 
     
 
