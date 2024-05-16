@@ -29,6 +29,7 @@ use App\UserdirectoryBundle\Entity\RoleAttributeList; //process.py script: repla
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 use App\UserdirectoryBundle\Entity\ResidencySpecialty; //process.py script: replaced namespace by ::class: added use line for classname=ResidencySpecialty
 use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
 use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
@@ -1665,6 +1666,38 @@ class GenericListType extends AbstractType
 //            ));
 
             $this->hostedGroupHoldersFields($builder);
+        }
+
+        if( strtolower($this->mapper['className']) == strtolower("InterfaceTransferList") ) {
+            $builder->add('transferStatus', EntityType::class, array(
+                'class' => TransferStatusList::class,
+                //'choice_label' => 'getTreeName',
+                'label'=>'Interface transfer status:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('transferSource', null, array(
+                'label' => "Interface Transfer Source:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('transferDestination', null, array(
+                'label' => "Interface Transfer Destination:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
         }
 
     }

@@ -26,6 +26,7 @@ use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
 use App\UserdirectoryBundle\Entity\HostedUserGroupList;
 use App\UserdirectoryBundle\Entity\TenantUrlList;
+use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
 use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
@@ -1098,6 +1099,8 @@ class AdminController extends OrderAbstractController
         //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
         $count_generateTenantUrlList = $this->generateTenantUrlList();
 
+        $count_generateTransferStatusList = $this->generateTransferStatusList();
+
         //exit('testing generateAll()');
 
         $msg =
@@ -1244,6 +1247,9 @@ class AdminController extends OrderAbstractController
             //'generateHostedUserGroupList='.$count_generateHostedUserGroupList.', '.
             'generateTenantUrlList='.$count_generateTenantUrlList.', '.
             'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
+
+            'generateTransferStatusList='.$count_generateTransferStatusList.', '.
+
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8054,7 +8060,8 @@ class AdminController extends OrderAbstractController
             //"hostedusergroups" => array('HostedUserGroupList','hostedusergroups-list','Hosted User Groups'),
             "tenanturls" => array('TenantUrlList','tenanturls-list','Tenant Url List'),
 
-
+            "transferstatus" => array('TransferStatusList','transferstatus-list','Transfer Status List'),
+            "interfacetransfers" => array('InterfaceTransferList','interfacetransfers-list','Interface Transfer List'),
         );
 
         if( $withcustom ) {
@@ -10922,6 +10929,36 @@ class AdminController extends OrderAbstractController
 
             $listEntity->setAbbreviation($abbreviation);
             $listEntity->setOpenToPublic($openToPublic);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransferStatusList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Ready",
+            "Completed",
+            "Failed",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(TransferStatusList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TransferStatusList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
             $em->flush();

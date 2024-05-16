@@ -18,7 +18,8 @@
 namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 //12 - Add a new platform list manager list titled “Data types for interface transfer”
 // with one value on the list (for now) titled “Antibody List”.
@@ -41,50 +42,81 @@ use Symfony\Component\Validator\Constraints as Assert;
 //https://www.geeksforgeeks.org/software-design-patterns/
 //https://www.geeksforgeeks.org/observer-pattern-set-1-introduction/
 
-#[ORM\Table(name: 'user_transfersiteparameter')]
+#[ORM\Table(name: 'user_interfacetransferlist')]
 #[ORM\Entity]
-class TransferSiteParameter
+class InterfaceTransferList extends ListAbstract
 {
 
-    /**
-     * @var integer
-     */
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    #[ORM\OneToMany(targetEntity: 'InterfaceTransferList', mappedBy: 'original')]
+    protected $synonyms;
+
+    #[ORM\ManyToOne(targetEntity: 'InterfaceTransferList', inversedBy: 'synonyms')]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
+    protected $original;
+
+    //Data types for interface transfer => Name of this list
+
+    //Status list: “Ready”, “Completed”, “Failed”
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\TransferStatusList')]
+    #[ORM\JoinColumn(name: 'transferstatus_id', referencedColumnName: 'id')]
+    private $transferStatus;
+
+    //Interface sources and destinations
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $transferSource;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $transferDestination;
+
+
     
-//    //Add a new platform list manager list titled “Data types for interface transfer”
-//    //with one value on the list (for now) titled “Antibody List”.
-//    #[ORM\OneToMany(targetEntity: 'App\UserdirectoryBundle\Entity\TransferDataType')]
-//    private $transferDataTypes;
-
-    
-
-
-    public function __construct() {
+    /**
+     * @return mixed
+     */
+    public function getTransferStatus()
+    {
+        return $this->transferStatus;
     }
 
     /**
-     * @return int
+     * @param mixed $transferStatus
      */
-    public function getId()
+    public function setTransferStatus($transferStatus)
     {
-        return $this->id;
+        $this->transferStatus = $transferStatus;
     }
 
     /**
-     * @param int $id
+     * @return mixed
      */
-    public function setId($id)
+    public function getTransferSource()
     {
-        $this->id = $id;
+        return $this->transferSource;
     }
 
-
-
-    public function __toString() {
-        return "Transfer Site Parameter";
+    /**
+     * @param mixed $transferSource
+     */
+    public function setTransferSource($transferSource)
+    {
+        $this->transferSource = $transferSource;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTransferDestination()
+    {
+        return $this->transferDestination;
+    }
+
+    /**
+     * @param mixed $transferDestination
+     */
+    public function setTransferDestination($transferDestination)
+    {
+        $this->transferDestination = $transferDestination;
+    }
+
 
 }

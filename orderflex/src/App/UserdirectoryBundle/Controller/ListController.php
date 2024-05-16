@@ -307,6 +307,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver-list', methods: ['GET'])]
     #[Route(path: '/list/tenanturls/', name: 'tenanturls-list', methods: ['GET'])]
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag-list', methods: ['GET'])]
+    #[Route(path: '/list/transferstatus/', name: 'transferstatus-list', methods: ['GET'])]
+    #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -1007,6 +1009,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/', name: 'authpartnerserver_create', methods: ['POST'])]
     #[Route(path: '/list/tenanturls/', name: 'tenanturls_create', methods: ['POST'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag_create', methods: ['POST'])]
+    #[Route(path: '/list/transferstatus/', name: 'transferstatus_create', methods: ['POST'])]
+    #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1371,6 +1375,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/new', name: 'authpartnerserver_new', methods: ['GET'])]
     #[Route(path: '/list/tenanturls/new', name: 'tenanturls_new', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/new', name: 'antibodycategorytag_new', methods: ['GET'])]
+    #[Route(path: '/list/transferstatus/new', name: 'transferstatus_new', methods: ['GET'])]
+    #[Route(path: '/list/interfacetransfers/new', name: 'interfacetransfers_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1685,6 +1691,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_show', methods: ['GET'])]
     #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_show', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_show', methods: ['GET'])]
+    #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_show', methods: ['GET'])]
+    #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -1992,6 +2000,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/{id}/edit', name: 'authpartnerserver_edit', methods: ['GET'])]
     #[Route(path: '/list/tenanturls/{id}/edit', name: 'tenanturls_edit', methods: ['GET'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}/edit', name: 'antibodycategorytag_edit', methods: ['GET'])]
+    #[Route(path: '/list/transferstatus/{id}/edit', name: 'transferstatus_edit', methods: ['GET'])]
+    #[Route(path: '/list/interfacetransfers/{id}/edit', name: 'interfacetransfers_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2349,6 +2359,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_update', methods: ['PUT'])]
     #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_update', methods: ['PUT'], options: ['expose' => true])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_update', methods: ['PUT'])]
+    #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_update', methods: ['PUT'])]
+    #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3539,6 +3551,16 @@ class ListController extends OrderAbstractController
                 $bundleName = "DashboardBundle";
                 break;
 
+            case "transferstatus":
+                $className = "TransferStatusList";
+                $displayName = "Transfer Status List";
+                break;
+            case "interfacetransfers":
+                $className = "InterfaceTransferList";
+                $displayName = "Interface Transfer List";
+                break;
+
+
             case "custom000":
                 $className = "Custom000List";
                 $displayName = "Custom000 List";
@@ -4269,6 +4291,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/authpartnerserver/{id}', name: 'authpartnerserver_delete', methods: ['DELETE'])]
     #[Route(path: '/list/tenanturls/{id}', name: 'tenanturls_delete', methods: ['DELETE'])]
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

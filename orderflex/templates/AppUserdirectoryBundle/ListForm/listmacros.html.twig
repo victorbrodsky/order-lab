@@ -1394,6 +1394,15 @@
         {{ formmacros.field(form.observed) }}
     {% endif %}
 
+    {% if form.transferStatus is defined %}
+        {{ formmacros.field(form.transferStatus) }}
+    {% endif %}
+    {% if form.transferSource is defined %}
+        {{ formmacros.field(form.transferSource) }}
+    {% endif %}
+    {% if form.transferDestination is defined %}
+        {{ formmacros.field(form.transferDestination) }}
+    {% endif %}
 
 {% endmacro %}
 
