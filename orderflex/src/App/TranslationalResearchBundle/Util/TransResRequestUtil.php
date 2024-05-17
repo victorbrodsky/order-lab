@@ -97,7 +97,6 @@ class TransResRequestUtil
     public function getTransResRequestTotalFeeHtml( $project ) {
 
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
         $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
@@ -4139,7 +4138,6 @@ class TransResRequestUtil
     }
 
     public function getProjectMiniRequests($projectId) {
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
         $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest.id,transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
@@ -4423,7 +4421,6 @@ class TransResRequestUtil
                 break;
             }
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
             $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if( !$transResRequest ) {
                 continue;
@@ -4715,7 +4712,6 @@ class TransResRequestUtil
                 break;
             }
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
             $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if( !$transResRequest ) {
                 continue;
@@ -4961,7 +4957,6 @@ class TransResRequestUtil
                 break;
             }
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
             $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if (!$transResRequest) {
                 continue;
@@ -7192,6 +7187,29 @@ class TransResRequestUtil
         return $filteredWorkQueues;
     }
 
+    public function findWorkRequestByInvoiceOid( $oid ) {
+        //oid = APCP668-REQ27412-V1
+        //echo '$oid='.$oid.'<br>';
+        $workRequest = null;
+        $reqOid = null;
+        $oidArr = explode("-",$oid);
+        if( count($oidArr) == 3 ) {
+            $reqOid = $oidArr[1];
+        }
+        //echo '$reqOid='.$reqOid.'<br>';
+        if( $reqOid ) {
+            $workRequest = $this->em->getRepository(TransResRequest::class)->findOneByOid($oid);
+        }
+        if( !$workRequest ) {
+            $id = str_replace('REQ','',$reqOid);
+            //echo '$id='.$id.'<br>';
+            if( ctype_digit($id) ) {
+                //echo 'int $id='.$id.'<br>';
+                $workRequest = $this->em->getRepository(TransResRequest::class)->find($id);
+            }
+        }
+        return $workRequest;
+    }
 
     //Custom Excel generation for the Fees
     public function createtFeesListExcelSpout( $repository, $entityClass, $search, $fileName ) {

@@ -15,6 +15,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -1008,11 +1009,46 @@ class InvoiceController extends OrderAbstractController
 
         if( !$invoice ) {
             //2) try to find by id
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
-            $invoice = $em->getRepository(Invoice::class)->find($oid);
+            //First check if id is integer
+            if( ctype_digit($oid) ) {
+                $invoice = $em->getRepository(Invoice::class)->find($oid);
+            }
         }
         if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+            //Get $transresRequest from oid
+            $transresRequest = $transresRequestUtil->findWorkRequestByInvoiceOid($oid);
+            //echo "transresRequest=".$transresRequest."<br>";
+            if( $transresRequest ) {
+                $invoice = $transresRequestUtil->getLatestInvoice($transresRequest);
+            }
+
+            if( $invoice ) {
+                $url = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_show',
+                    array(
+                        'oid' => $invoice->getOid()
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $linkLatestInvoice = "<a target='_blank' " .
+                    "href=" . $url . ">" . $invoice->getOid() . "</a>";
+
+                $invoiceWarningMsg = "The invoice could not be found by ID $oid" .
+                    "<br> To view the latest invoice " . $invoice->getOid() .
+                    " please click here " . $linkLatestInvoice;
+            } else {
+                $invoiceWarningMsg = "The invoice could not be found by ID $oid";
+            }
+
+            //exit('$invoiceWarningMsg='.$invoiceWarningMsg);
+
+            $this->addFlash(
+                'warning',
+                $invoiceWarningMsg
+            );
+
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            //throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
         // Check if user allowed to access by the project's specialty
