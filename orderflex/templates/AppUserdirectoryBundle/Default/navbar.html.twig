@@ -231,7 +231,6 @@
 
                                 {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                     <li><a href="{{ path('employees_logger_allsites') }}">Global Event Log</a></li>
-                                    <li><a href="{{ path('employees_logger_interface') }}">Interface Log</a></li>
                                 {% endif %}
 
                                 {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
@@ -253,6 +252,19 @@
                                         <a href="{{ path(employees_sitename~'_homepage_manager_configure') }}">Multi-Tenancy home page configuration</a>
                                     </li>
                                     <li class="divider"></li>
+
+                                    {% if is_granted('ROLE_PLATFORM_ADMIN') %}
+                                        {#<li>#}
+                                            {#<a href="{{ path('employees_interface_manager') }}">Interface Management</a>#}
+                                        {#</li>#}
+                                        <li>
+                                        <a target="_blank"
+                                           href="{{ user_service_utility.getSiteParamListUrl('InterfaceTransferList')|raw }}"
+                                        >Interface Management</a>
+                                        </li>
+                                        <li><a href="{{ path('employees_logger_interface') }}">Interface Log</a></li>
+                                        <li class="divider"></li>
+                                    {% endif %}
 
                                     {% if is_granted('ROLE_PLATFORM_ADMIN') %}
                                         <li><a

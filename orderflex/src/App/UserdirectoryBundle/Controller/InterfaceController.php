@@ -30,9 +30,9 @@ class InterfaceController extends OrderAbstractController
     
     #[Route(path: '/interface-log', name: 'employees_logger_interface', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
-    public function indexAction(Request $request)
+    public function interfaceLoggerAction(Request $request)
     {
-        exit("Under Construction");
+        exit("interface-log is under Construction");
 
         $params = array(
             'sitename'=>$this->getParameter('employees.sitename')
@@ -40,5 +40,20 @@ class InterfaceController extends OrderAbstractController
         return $this->listLogger($params,$request);
     }
 
+
+
+#[Route(path: '/interface-manager', name: 'employees_interface_manager', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
+    public function interfaceManagerAction(Request $request)
+    {
+        //exit("Under Construction");
+
+
+
+        $params = array(
+            'sitename'=>$this->getParameter('employees.sitename')
+        );
+        return $this->listLogger($params,$request);
+    }
 
 }
