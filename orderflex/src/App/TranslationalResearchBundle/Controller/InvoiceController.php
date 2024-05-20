@@ -1034,8 +1034,7 @@ class InvoiceController extends OrderAbstractController
                     "href=" . $url . ">" . $invoice->getOid() . "</a>";
 
                 $invoiceWarningMsg = "The invoice could not be found by ID $oid" .
-                    "<br> To view the latest invoice " . $invoice->getOid() .
-                    " please click here " . $linkLatestInvoice;
+                    "<br> Please click this link to view the latest invoice " . $linkLatestInvoice;
             } else {
                 $invoiceWarningMsg = "The invoice could not be found by ID $oid";
             }
