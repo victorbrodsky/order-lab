@@ -13,41 +13,36 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *
- *  Created by Oleg Ivanov
  */
 
-namespace App\UserdirectoryBundle\Controller;
+/**
+ * Created by Oleg Ivanov
+ * User: oli2002
+ * Date: 10/4/13
+ * Time: 12:56 PM
+ */
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bridge\Twig\Attribute\Template;
-use Symfony\Component\Routing\Annotation\Route;
-use App\UserdirectoryBundle\Controller\OrderAbstractController;
+namespace App\UserdirectoryBundle\Util;
 
 
-class InterfaceController extends OrderAbstractController
-{
-    
-    #[Route(path: '/interface-log', name: 'employees_logger_interface', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
-    public function interfaceLoggerAction(Request $request)
-    {
-        exit("interface-log is under Construction");
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
-        $params = array(
-            'sitename'=>$this->getParameter('employees.sitename')
-        );
-        return $this->listLogger($params,$request);
+
+class InterfaceTransferUtil {
+
+    protected $em;
+    protected $container;
+    protected $security;
+
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
+        $this->em = $em;
+        $this->container = $container;
+        $this->security = $security;
     }
 
-
-
-    #[Route(path: '/interface-manager', name: 'employees_interface_manager', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
-    public function interfaceManagerAction(Request $request)
-    {
-        exit("Under Construction: interface-manager");
-
+    public function transferFile() {
         //Send file via sftp to server
 
         $strServer = "143.198.22.81";
@@ -72,12 +67,7 @@ class InterfaceController extends OrderAbstractController
         }else{
             echo "Unable to authenticate on server";
         }
-
-
-        $params = array(
-            'sitename'=>$this->getParameter('employees.sitename')
-        );
-        return $this->listLogger($params,$request);
     }
+
 
 }

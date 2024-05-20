@@ -36,6 +36,7 @@ use App\UserdirectoryBundle\Services\MultiDbConnectionWrapper;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
+use App\UserdirectoryBundle\Util\InterfaceTransferUtil;
 use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
@@ -96,6 +97,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['user_manager'] = '?'.UserManager::class;
         $subscribedServices['authenticator_utility'] = '?'.AuthUtil::class;
         $subscribedServices['user_tenant_utility'] = '?'.UserTenantUtil::class;
+        $subscribedServices['interface_transfer_utility'] = '?'.InterfaceTransferUtil::class;
 
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
         $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;

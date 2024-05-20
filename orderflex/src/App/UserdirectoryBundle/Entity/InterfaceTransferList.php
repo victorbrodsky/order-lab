@@ -42,6 +42,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 //https://www.geeksforgeeks.org/software-design-patterns/
 //https://www.geeksforgeeks.org/observer-pattern-set-1-introduction/
 
+//The host server (intranet) will send data to the remote (public) server.
+//First, create immediate upload the data on change.
+// Example: https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+//Second, it is possible to create a table in DB storing ID's of the updates antibodies.
+// Then, the cron job will upload these antibodies to the remote server.
+
 #[ORM\Table(name: 'user_interfacetransferlist')]
 #[ORM\Entity]
 class InterfaceTransferList extends ListAbstract

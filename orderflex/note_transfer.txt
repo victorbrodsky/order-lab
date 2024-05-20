@@ -1,0 +1,7 @@
+Secure Copy Protocol (SCP):
+https://medium.com/@rayansami007/secure-file-transfers-to-remote-server-with-php-ssh2-extension-usage-and-installation-516824440221
+
+Hash and cURL:
+https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+
+SCP and SFTP both are secured based on SSH
