@@ -42,7 +42,12 @@ class InterfaceTransferUtil {
         $this->security = $security;
     }
 
+    //Require ssh
+    //http://pecl.php.net/package/ssh2
+
     public function transferFile() {
+        
+        
         //Send file via sftp to server
 
         $strServer = "143.198.22.81";

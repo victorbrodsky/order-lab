@@ -42,37 +42,14 @@ class InterfaceController extends OrderAbstractController
 
 
 
-    #[Route(path: '/interface-manager', name: 'employees_interface_manager', methods: ['GET'])]
+    #[Route(path: '/interface-test', name: 'employees_interface_test', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
     public function interfaceManagerAction(Request $request)
     {
-        exit("Under Construction: interface-manager");
+        //exit("Under Construction: interface-manager");
 
-        //Send file via sftp to server
-
-        $strServer = "143.198.22.81";
-        $strServerPort = "22";
-        $strServerUsername = "root";
-        $strServerPassword = "mypass";
-        $csv_filename = "test_file.csv";
-
-        //connect to server
-        $resConnection = ssh2_connect($strServer, $strServerPort);
-
-        if(ssh2_auth_password($resConnection, $strServerUsername, $strServerPassword)){
-            //Initialize SFTP subsystem
-
-            echo "connected";
-            $resSFTP = ssh2_sftp($resConnection);
-
-            $resFile = fopen("ssh2.sftp://{$resSFTP}/".$csv_filename, 'w');
-            fwrite($resFile, "Testing");
-            fclose($resFile);
-
-        }else{
-            echo "Unable to authenticate on server";
-        }
-
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+        $interfaceTransferUtil->transferFile();
 
         $params = array(
             'sitename'=>$this->getParameter('employees.sitename')
