@@ -57,40 +57,74 @@ class InterfaceTransferUtil {
         $strServerUsername = $transfer->getSshUsername();
         $strServerPassword = $transfer->getSshPassword();
 
-        $path = "/usr/local/bin/order-lab-homepagemanager/orderflex/";
-        $csv_filename = $path."test_file.txt";
+        $path = DIRECTORY_SEPARATOR.
+            "src".DIRECTORY_SEPARATOR.
+            "App".DIRECTORY_SEPARATOR.
+            "UserdirectoryBundle".DIRECTORY_SEPARATOR.
+            "Temp".DIRECTORY_SEPARATOR
+        ;
+
+        $dstFile = "dst_file.csv";
+        $srcFile = "src_file.csv";
+
+        $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
+        $dstFilePath = $dstPath . $path . $dstFile;
+
+        $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
+        //destination path: src\App\UserdirectoryBundle\Util
+        $srcFilePath = $projectDir . $path . $srcFile;
+        //exit('$srcFilePath='.$srcFilePath);
+        //exit('$dstFilePath='.$dstFilePath);
+        echo "srcFilePath=$srcFilePath <br>";
+
+        $srcFilePath = realpath($srcFilePath);
+
+        if( file_exists($srcFilePath) ) {
+            echo "The file $srcFilePath exists";
+        } else {
+            echo "The file $srcFilePath does not exist";
+            return NULL;
+        }
 
         //connect to server
-        $resConnection = ssh2_connect($strServer, $strServerPort);
+        $dstConnection = ssh2_connect($strServer, $strServerPort);
 
-        if( ssh2_auth_password($resConnection, $strServerUsername, $strServerPassword) ){
+        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
             //Initialize SFTP subsystem
 
             echo "Connected to $strServer <br>";
             try {
-                $resSFTP = ssh2_sftp($resConnection);
-                echo "resSFTP=$resSFTP <br>";
-                //$resSFTP = intval($resSFTP);
-                //echo "resSFTP=$resSFTP <br>";
+                $dstSFTP = ssh2_sftp($dstConnection);
+                echo "dstSFTP=$dstSFTP <br>";
+                //$dstSFTP = intval($dstSFTP);
+                //echo "dstSFTP=$dstSFTP <br>";
 
-                //$resFile = fopen("ssh2.sftp://{$resSFTP}/".$csv_filename, 'w');
+                //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
 
-                $resFile = fopen("ssh2.sftp://" . intval($resSFTP) . "/" . $csv_filename, 'r'); //w or r
-                //dump($resFile);
+                //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
+                //dump($dstFile);
 
-                if ( !$resFile ) {
-                    throw new \Exception('File open failed. file=' . $csv_filename);
+                $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
+
+                if ( !$dstFile ) {
+                    throw new \Exception('File open failed. file=' . $srcFile);
                 }
 
-                $contents = stream_get_contents($resFile);
-                dump($contents);
+                //$contents = stream_get_contents($dstFile);
+                //dump($contents);
 
-                echo "Write <br>";
-                fwrite($resFile, "Testing");
-                echo "Close <br>";
-                fclose($resFile);
+                $srcFile = fopen($srcFilePath, 'r');
+
+                $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+                fclose($dstFile);
+                fclose($srcFile);
+
+                //echo "Write <br>";
+                //fwrite($dstFile, "Testing");
+                //echo "Close <br>";
+                //fclose($dstFile);
             } catch ( Exception $e ) {
-                throw new \Exception('Error to transfer file=' . $csv_filename . '; Error='.$e->getMessage());
+                throw new \Exception('Error to transfer file=' . $srcFile . '; Error='.$e->getMessage());
             }
 
         }else{
