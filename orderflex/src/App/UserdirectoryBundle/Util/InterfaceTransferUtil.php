@@ -57,23 +57,25 @@ class InterfaceTransferUtil {
         $strServerUsername = $transfer->getSshUsername();
         $strServerPassword = $transfer->getSshPassword();
 
-        $path = DIRECTORY_SEPARATOR.
-            "src".DIRECTORY_SEPARATOR.
-            "App".DIRECTORY_SEPARATOR.
-            "UserdirectoryBundle".DIRECTORY_SEPARATOR.
-            "Temp".DIRECTORY_SEPARATOR
-        ;
+//        $path = DIRECTORY_SEPARATOR.
+//            "src".DIRECTORY_SEPARATOR.
+//            "App".DIRECTORY_SEPARATOR.
+//            "UserdirectoryBundle".DIRECTORY_SEPARATOR.
+//            "Temp".DIRECTORY_SEPARATOR
+//        ;
 
         $dstFile = "dst_file.csv";
         $srcFile = "src_file.csv";
 
         $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
-        $dstFilePath = $dstPath . $path . $dstFile;
-        $dstTestFilePath = $dstPath . $path . "test_file.txt";
+        $dstFilePath = $dstPath . $this->getPath("/") . $dstFile;
+
+        $dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
+        //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
 
         $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
         //destination path: src\App\UserdirectoryBundle\Util
-        $srcFilePath = $projectDir . $path . $srcFile;
+        $srcFilePath = $projectDir . $this->getPath("/") . $srcFile;
         //exit('$srcFilePath='.$srcFilePath);
         //exit('$dstFilePath='.$dstFilePath);
         echo "srcFilePath=$srcFilePath <br>";
@@ -83,7 +85,7 @@ class InterfaceTransferUtil {
         $srcFilePath = realpath($srcFilePath);
 
         if( file_exists($srcFilePath) ) {
-            echo "The file $srcFilePath exists";
+            echo "The source file $srcFilePath exists";
         } else {
             echo "The file $srcFilePath does not exist";
             return NULL;
@@ -134,6 +136,16 @@ class InterfaceTransferUtil {
         }else{
             echo "Unable to authenticate on server";
         }
+    }
+
+    public function getPath( $separator=DIRECTORY_SEPARATOR  ) {
+        $path = $separator.
+            "src".$separator.
+            "App".$separator.
+            "UserdirectoryBundle".$separator.
+            "Temp".$separator
+        ;
+        return $path;
     }
 
 
