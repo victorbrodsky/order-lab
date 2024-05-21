@@ -69,6 +69,7 @@ class InterfaceTransferUtil {
 
         $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
         $dstFilePath = $dstPath . $path . $dstFile;
+        $dstTestFilePath = $dstPath . $path . "test_file.txt";
 
         $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
         //destination path: src\App\UserdirectoryBundle\Util
@@ -76,6 +77,8 @@ class InterfaceTransferUtil {
         //exit('$srcFilePath='.$srcFilePath);
         //exit('$dstFilePath='.$dstFilePath);
         echo "srcFilePath=$srcFilePath <br>";
+        echo "dstFilePath=$dstFilePath <br>";
+        echo "dstTestFilePath=$dstTestFilePath <br>";
 
         $srcFilePath = realpath($srcFilePath);
 
@@ -110,8 +113,9 @@ class InterfaceTransferUtil {
                     throw new \Exception('File open failed. file=' . $srcFile);
                 }
 
-                //$contents = stream_get_contents($dstFile);
-                //dump($contents);
+                $dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
+                $contents = stream_get_contents($dstTestFile);
+                dump($contents);
 
                 $srcFile = fopen($srcFilePath, 'r');
 
