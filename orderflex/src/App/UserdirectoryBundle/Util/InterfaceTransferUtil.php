@@ -70,7 +70,7 @@ class InterfaceTransferUtil {
         $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
         $dstFilePath = $dstPath . $this->getPath("/") . $dstFile;
 
-        $dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
+        //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
         //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
 
         $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
@@ -80,7 +80,7 @@ class InterfaceTransferUtil {
         //exit('$dstFilePath='.$dstFilePath);
         echo "srcFilePath=$srcFilePath <br>";
         echo "dstFilePath=$dstFilePath <br>";
-        echo "dstTestFilePath=$dstTestFilePath <br>";
+        //echo "dstTestFilePath=$dstTestFilePath <br>";
 
         $srcFilePath = realpath($srcFilePath);
 
@@ -115,9 +115,9 @@ class InterfaceTransferUtil {
                     throw new \Exception('File open failed. file=' . $srcFile);
                 }
 
-                $dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
-                $contents = stream_get_contents($dstTestFile);
-                dump($contents);
+                //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
+                //$contents = stream_get_contents($dstTestFile);
+                //dump($contents);
 
                 $srcFile = fopen($srcFilePath, 'r');
 
