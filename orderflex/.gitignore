@@ -42,7 +42,7 @@
 /src/App/*/Util/*.xml
 /src/App/*/Util/*.p12
 
-###/src/App/UserdirectoryBundle/Temp/*
+/src/App/UserdirectoryBundle/Temp/*
 
 /src/App/UserdirectoryBundle/Util/Users*.xlsx
 /src/App/UserdirectoryBundle/Util/users.xlsx
