@@ -44,30 +44,54 @@ class InterfaceTransferUtil {
 
     //Require ssh
     //http://pecl.php.net/package/ssh2
+    public function transferFile( $transfer ) {
 
-    public function transferFile() {
-        
-        
+        if( !$transfer ) {
+            return null;
+        }
+
         //Send file via sftp to server
 
-        $strServer = "159.203.95.150";
+        $strServer = $transfer->getTransferDestination();  //"159.203.95.150";
         $strServerPort = "22";
-        $strServerUsername = "root";
-        $strServerPassword = "cinava10";
-        $csv_filename = "test_file.csv";
+        $strServerUsername = $transfer->getSshUsername();
+        $strServerPassword = $transfer->getSshPassword();
+
+        $path = "/usr/local/bin/order-lab-homepagemanager/orderflex/";
+        $csv_filename = $path."test_file.txt";
 
         //connect to server
         $resConnection = ssh2_connect($strServer, $strServerPort);
 
-        if(ssh2_auth_password($resConnection, $strServerUsername, $strServerPassword)){
+        if( ssh2_auth_password($resConnection, $strServerUsername, $strServerPassword) ){
             //Initialize SFTP subsystem
 
-            echo "connected";
-            $resSFTP = ssh2_sftp($resConnection);
+            echo "Connected to $strServer <br>";
+            try {
+                $resSFTP = ssh2_sftp($resConnection);
+                echo "resSFTP=$resSFTP <br>";
+                //$resSFTP = intval($resSFTP);
+                //echo "resSFTP=$resSFTP <br>";
 
-            $resFile = fopen("ssh2.sftp://{$resSFTP}/".$csv_filename, 'w');
-            fwrite($resFile, "Testing");
-            fclose($resFile);
+                //$resFile = fopen("ssh2.sftp://{$resSFTP}/".$csv_filename, 'w');
+
+                $resFile = fopen("ssh2.sftp://" . intval($resSFTP) . "/" . $csv_filename, 'r'); //w or r
+                //dump($resFile);
+
+                if ( !$resFile ) {
+                    throw new \Exception('File open failed. file=' . $csv_filename);
+                }
+
+                $contents = stream_get_contents($resFile);
+                dump($contents);
+
+                echo "Write <br>";
+                fwrite($resFile, "Testing");
+                echo "Close <br>";
+                fclose($resFile);
+            } catch ( Exception $e ) {
+                throw new \Exception('Error to transfer file=' . $csv_filename . '; Error='.$e->getMessage());
+            }
 
         }else{
             echo "Unable to authenticate on server";

@@ -19,6 +19,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,10 @@ class InterfaceController extends OrderAbstractController
     {
         exit("interface-log is under Construction");
 
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
         $params = array(
             'sitename'=>$this->getParameter('employees.sitename')
         );
@@ -46,15 +51,23 @@ class InterfaceController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
     public function interfaceManagerAction(Request $request)
     {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
         //exit("Under Construction: interface-manager");
+        $em = $this->getDoctrine()->getManager();
+        $transfers = $em->getRepository(InterfaceTransferList::class)->findAll();
+
+        $transfer = NULL;
+        if( count($transfers) > 0 ) {
+            $transfer = $transfers[0];
+        }
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
-        $interfaceTransferUtil->transferFile();
+        $interfaceTransferUtil->transferFile($transfer);
 
-        $params = array(
-            'sitename'=>$this->getParameter('employees.sitename')
-        );
-        return $this->listLogger($params,$request);
+        exit();
     }
 
 }
