@@ -1403,6 +1403,12 @@
     {% if form.transferDestination is defined %}
         {{ formmacros.field(form.transferDestination) }}
     {% endif %}
+    {% if form.sshUsername is defined %}
+        {{ formmacros.field(form.sshUsername) }}
+    {% endif %}
+    {% if form.sshPassword is defined %}
+        {{ formmacros.field(form.sshPassword) }}
+    {% endif %}
 
 {% endmacro %}
 

@@ -50,10 +50,10 @@ class InterfaceTransferUtil {
         
         //Send file via sftp to server
 
-        $strServer = "143.198.22.81";
+        $strServer = "159.203.95.150";
         $strServerPort = "22";
         $strServerUsername = "root";
-        $strServerPassword = "mypass";
+        $strServerPassword = "cinava10";
         $csv_filename = "test_file.csv";
 
         //connect to server

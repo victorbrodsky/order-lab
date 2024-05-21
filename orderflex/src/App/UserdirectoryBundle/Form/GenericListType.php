@@ -1698,6 +1698,18 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'form-control'),
             ));
+
+            $builder->add('sshUsername', null, array(
+                'label' => "SSH username:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('sshPassword', null, array(
+                'label' => "SSH password:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
         }
 
     }

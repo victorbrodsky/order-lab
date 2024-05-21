@@ -74,7 +74,13 @@ class InterfaceTransferList extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $transferDestination;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $sshUsername;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $sshPassword;
+
+    
     
     /**
      * @return mixed
@@ -124,5 +130,38 @@ class InterfaceTransferList extends ListAbstract
         $this->transferDestination = $transferDestination;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSshUsername()
+    {
+        return $this->sshUsername;
+    }
+
+    /**
+     * @param mixed $sshUsername
+     */
+    public function setSshUsername($sshUsername)
+    {
+        $this->sshUsername = $sshUsername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSshPassword()
+    {
+        return $this->sshPassword;
+    }
+
+    /**
+     * @param mixed $sshPassword
+     */
+    public function setSshPassword($sshPassword)
+    {
+        $this->sshPassword = $sshPassword;
+    }
+
+    
 
 }
