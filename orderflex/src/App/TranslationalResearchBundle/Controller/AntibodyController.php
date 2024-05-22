@@ -530,7 +530,7 @@ class AntibodyController extends OrderAbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            exit('antibody edit /antibody/edit/');
+            //exit('antibody edit /antibody/edit/');
 
             $em->getRepository(Document::class)->processDocuments($antibody, "document");
 

@@ -10,7 +10,7 @@ Use SFTP - control of the remote file system
 
 Steps:
 1) On the master server, when antibody is updated, add the antibody's ID to the table 'TransferData':
-Entity Info - $entityId, $entityNamespace, $entityName. $entityId - antibody ID
+Entity Info - $entityId, $className. $entityId - antibody ID
 InterfaceTransferList ID
 Status - transfer status (use TransferStatusList)
 Create Date

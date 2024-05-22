@@ -24,7 +24,6 @@
 
 namespace App\UserdirectoryBundle\Services;
 
-use App\TranslationalResearchBundle\Entity\AntibodyList;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 //use Doctrine\ORM\Event\LifecycleEventArgs;
 //use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -40,6 +39,7 @@ use App\OrderformBundle\Entity\PatientLastName;
 use App\OrderformBundle\Entity\PatientFirstName;
 use App\OrderformBundle\Entity\PatientMiddleName;
 
+use App\TranslationalResearchBundle\Entity\AntibodyList;
 
 class DoctrineListener {
 
@@ -137,9 +137,12 @@ class DoctrineListener {
 
     public function setTrabsferable($entity) {
         if( $entity instanceof AntibodyList ) {
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //1) find if TransferData has this antibody with status 'Ready'
-            
+            if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {
+                return false; //do nothing
+            }
 
             //2 add antibody to the TransferData table
 

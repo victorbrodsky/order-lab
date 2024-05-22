@@ -151,51 +151,45 @@ class InterfaceTransferUtil {
         return $path;
     }
 
-    //find if TransferData has this antibody with status 'Ready'
+    //find if TransferData has this antibody with status 'Ready' or 'ready'
     public function findTransferData( $entity, $statusStr ) {
 
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
-        $entityNamespace = $mapper['entityNamespace'];
 
         $repository = $this->em->getRepository(TransferData::class);
         $dql =  $repository->createQueryBuilder("transfer");
-        $dql->addSelect('transfer');
+        $dql->select('transfer');
 
-        $dql->where('transfer.entityId = :entityId AND transfer.entityNamespace = :entityNamespace AND transfer.entityName = :entityName');
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.entityId = :entityId AND transfer.className = :className');
+        $dql->andWhere('LOWER(transferStatus.name) = LOWER(:transferStatus)');
 
         $query = $dql->getQuery();
 
         $query->setParameters(
             array(
                 'entityId' => $entity->getId(),
-                'entityNamespace' => $entityNamespace,
-                'entityName' => $className,
+                'className' => $className,
+                'transferStatus' => $statusStr
             )
         );
 
         $transfer = $query->getSingleResult();
-        
+
+        return $transfer;
     }
 
 
     public function classListMapper( $entity ) {
 
-        //$bundleName = "UserdirectoryBundle";
-        //$entityName = null;
         $className = get_class($entity);
         $entityName = $this->getEntityName($className);
-
-//        if( $entity instanceof AntibodyList ) {
-//            $className = get_class($entity);
-//        }
 
         $res = array();
         $res['className'] = $className; //'App\UserdirectoryBundle\Entity\InterfaceTransferList'
         $res['entityName'] = $entityName; //'InterfaceTransferList'
-        //$res['fullClassName'] = "App\\".$bundleName."\\Entity\\".$entityName;
-        //$res['entityNamespace'] = "App\\".$bundleName."\\Entity";
-        //$res['bundleName'] = $bundleName;
 
         return $res;
     }

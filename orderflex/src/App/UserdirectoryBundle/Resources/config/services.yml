@@ -150,6 +150,9 @@ services:
     user_tenant_utility:
             class: App\UserdirectoryBundle\Util\UserTenantUtil
 
+    interface_transfer_utility:
+            class: App\UserdirectoryBundle\Util\InterfaceTransferUtil
+
 #    user_comment_utility:
 #        class: App\UserdirectoryBundle\Util\UserCommentUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
