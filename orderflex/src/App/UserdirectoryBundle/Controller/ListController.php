@@ -1393,6 +1393,10 @@ class ListController extends OrderAbstractController
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";
 
+        if( $routeName == 'antibodies_new' ) {
+            return $this->redirect( $this->generateUrl('translationalresearch_antibody_new') );
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $mapper= $this->classListMapper($pathbase,$request);
@@ -2008,7 +2012,7 @@ class ListController extends OrderAbstractController
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
-        
+
         return $this->editList($request,$id);
     }
     public function editList( $request, $id ) {
@@ -2016,6 +2020,10 @@ class ListController extends OrderAbstractController
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
+
+        if( $routeName == 'antibodies_edit' ) {
+            return $this->redirect( $this->generateUrl('translationalresearch_antibody_edit', array('id'=>$id)) );
+        }
 
         $em = $this->getDoctrine()->getManager();
 

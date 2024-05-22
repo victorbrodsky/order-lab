@@ -56,7 +56,10 @@ class InterfaceController extends OrderAbstractController
         }
 
         //exit("Under Construction: interface-manager");
+
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
         $em = $this->getDoctrine()->getManager();
+
         $transfers = $em->getRepository(InterfaceTransferList::class)->findAll();
 
         $transfer = NULL;
@@ -64,7 +67,11 @@ class InterfaceController extends OrderAbstractController
             $transfer = $transfers[0];
         }
 
-        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+        $res = $interfaceTransferUtil->classListMapper($transfer);
+        dump($res);
+        exit('111');
+
+
         $interfaceTransferUtil->transferFile($transfer);
 
         exit();

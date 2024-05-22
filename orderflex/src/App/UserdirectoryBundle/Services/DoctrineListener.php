@@ -24,6 +24,7 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use App\TranslationalResearchBundle\Entity\AntibodyList;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 //use Doctrine\ORM\Event\LifecycleEventArgs;
 //use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -77,9 +78,7 @@ class DoctrineListener {
 
         }
 
-        //if( $entity instanceof PatientLastName ) {
-        //}
-        if( $this->setMetaphoneField($entity,true) ) {
+        if( $this->setMetaphoneField($entity) ) {
             $em->flush();
         }
 
@@ -88,6 +87,10 @@ class DoctrineListener {
 //            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
 //            $fellappRepGen->addFellAppReportToQueue( $entity->getId() );
 //        }
+
+        if( $this->setTrabsferable($entity) ) {
+            $em->flush();
+        }
 
 
     }
@@ -104,18 +107,19 @@ class DoctrineListener {
 
         $this->setMetaphoneField($entity);
 
+        $this->setTrabsferable($entity);
     }
 
     public function setMetaphoneField( $entity ) {
 
         if( !$entity instanceof PatientFirstName ) {
-            return;
+            return false;
         }
         if( !$entity instanceof PatientLastName ) {
-            return;
+            return false;
         }
         if( !$entity instanceof PatientMiddleName ) {
-            return;
+            return false;
         }
 
         //$logger = $this->container->get('logger');
@@ -125,8 +129,23 @@ class DoctrineListener {
             $metaphone = $userServiceUtil->getMetaphoneKey($entity->getField());
             $entity->setFieldMetaphone($metaphone);
             //$logger->notice("setFieldMetaphone [ID# " . $entity->getId() . "]:" . $entity->getField() . "=>" . $metaphone);
-            return $metaphone;
+            //return $metaphone;
+            return true;
         }
+        return false;
+    }
+
+    public function setTrabsferable($entity) {
+        if( $entity instanceof AntibodyList ) {
+
+            //1) find if TransferData has this antibody with status 'Ready'
+            
+
+            //2 add antibody to the TransferData table
+
+            return true;
+        }
+
         return false;
     }
 

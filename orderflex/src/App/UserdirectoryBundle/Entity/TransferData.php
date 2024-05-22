@@ -42,6 +42,7 @@ class TransferData {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedate;
 
+    //Status list: “Ready”, “Completed”, “Failed”
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\TransferStatusList')]
     #[ORM\JoinColumn(name: 'transferstatus_id', referencedColumnName: 'id')]
     private $transferStatus;
@@ -54,13 +55,18 @@ class TransferData {
     //use instead linking to the antibody object
     ///// Object Data /////
     #[ORM\Column(type: 'string', nullable: true)]
-    protected $entityId;
+    private $entityId;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    protected $entityNamespace;
+    private $entityNamespace;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    protected $entityName;
+    private $entityName;
+
+    //Full class name i.e. 'App\UserdirectoryBundle\Entity\AntibodyList'
+    //Obtain by php function: get_class($entity)
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $className;
     ///// EOF Object Data /////
 
     
@@ -218,18 +224,20 @@ class TransferData {
     /**
      * @return mixed
      */
-    public function getCreator()
+    public function getClassName()
     {
-        return $this->creator;
+        return $this->className;
     }
 
     /**
-     * @param mixed $creator
+     * @param mixed $className
      */
-    public function setCreator($creator)
+    public function setClassName($className)
     {
-        $this->creator = $creator;
+        $this->className = $className;
     }
+
+
 
 
 

@@ -25,6 +25,8 @@
 namespace App\UserdirectoryBundle\Util;
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\UserdirectoryBundle\Entity\TransferData;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -149,5 +151,60 @@ class InterfaceTransferUtil {
         return $path;
     }
 
+    //find if TransferData has this antibody with status 'Ready'
+    public function findTransferData( $entity, $statusStr ) {
+
+        $mapper = $this->classListMapper($entity);
+        $className = $mapper['className'];
+        $entityNamespace = $mapper['entityNamespace'];
+
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->addSelect('transfer');
+
+        $dql->where('transfer.entityId = :entityId AND transfer.entityNamespace = :entityNamespace AND transfer.entityName = :entityName');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'entityId' => $entity->getId(),
+                'entityNamespace' => $entityNamespace,
+                'entityName' => $className,
+            )
+        );
+
+        $transfer = $query->getSingleResult();
+        
+    }
+
+
+    public function classListMapper( $entity ) {
+
+        //$bundleName = "UserdirectoryBundle";
+        //$entityName = null;
+        $className = get_class($entity);
+        $entityName = $this->getEntityName($className);
+
+//        if( $entity instanceof AntibodyList ) {
+//            $className = get_class($entity);
+//        }
+
+        $res = array();
+        $res['className'] = $className; //'App\UserdirectoryBundle\Entity\InterfaceTransferList'
+        $res['entityName'] = $entityName; //'InterfaceTransferList'
+        //$res['fullClassName'] = "App\\".$bundleName."\\Entity\\".$entityName;
+        //$res['entityNamespace'] = "App\\".$bundleName."\\Entity";
+        //$res['bundleName'] = $bundleName;
+
+        return $res;
+    }
+
+    //https://www.php.net/manual/en/function.get-class.php
+    function getEntityName($classname)
+    {
+        if ($pos = strrpos($classname, '\\')) return substr($classname, $pos + 1);
+        return $pos;
+    }
 
 }
