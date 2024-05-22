@@ -122,6 +122,7 @@ class InterfaceTransferUtil {
                 $srcFile = fopen($srcFilePath, 'r');
 
                 $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+                echo "writtenBytes=$writtenBytes <br>";
                 fclose($dstFile);
                 fclose($srcFile);
 
