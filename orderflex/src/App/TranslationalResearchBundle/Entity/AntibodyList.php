@@ -967,11 +967,11 @@ class AntibodyList extends ListAbstract
 
     public function toJson() {
 
-        $disableDatasheet = false;
+        //$disableDatasheet = false;
         $datasheet = $this->getDatasheet();
-        if( !$datasheet || $datasheet == '' ) {
-            $disableDatasheet = true;
-        }
+        //if( !$datasheet || $datasheet == '' ) {
+        //    $disableDatasheet = true;
+        //}
 
         $json = array(
             'id' => ($this->getId()) ? $this->getId() : "unidentified",

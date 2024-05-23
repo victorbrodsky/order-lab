@@ -263,7 +263,7 @@ class InterfaceTransferUtil {
 
         if( str_contains($className, 'UserdirectoryBundle') && str_contains($className, 'AntibodyList') ) {
             //make json from AntibodyList entity
-            $name = $transferableEntity->getName();
+            $jsonFile = $transferableEntity->toJson();
         }
 
         return $jsonFile;
