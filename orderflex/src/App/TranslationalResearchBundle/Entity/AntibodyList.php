@@ -965,7 +965,7 @@ class AntibodyList extends ListAbstract
         return $res;
     }
 
-    public function toJson( $key=0 ) {
+    public function toJson() {
 
         $disableDatasheet = false;
         $datasheet = $this->getDatasheet();
@@ -974,12 +974,20 @@ class AntibodyList extends ListAbstract
         }
 
         $json = array(
-            'id' => ($this->getId()) ? $this->getId() : $key."-key",
+            'id' => ($this->getId()) ? $this->getId() : "unidentified",
             'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'publictext' => $this->getPublicText(),
             'documents' => $this->getImageData(),
             'datasheet' => $datasheet,
-            'disableDatasheet' => $disableDatasheet
+            //'disableDatasheet' => $disableDatasheet,
+            'description' => $this->getDescription(),
+            'tags' => $this->getCategoryTagsStr(),
+            'company' => $this->getCompany(),
+            'clone' => $this->getClone(),
+            'host' => $this->getHost(),
+            'reactivity' => $this->getReactivity(),
+            'storage' => $this->getStorage(),
+            'associates' => $this->getAssociatesObjectsArr(),
         );
 
         return $json;

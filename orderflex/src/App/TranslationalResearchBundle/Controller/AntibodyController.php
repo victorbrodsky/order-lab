@@ -1003,98 +1003,98 @@ class AntibodyController extends OrderAbstractController
         //Reactivity
         //Storage
         //Associated Antibodies
-        $count = 0;
+        //$count = 0;
         $jsonArray = array();
         foreach($antibodies as $antibody) {
-            $count++;
+            //$count++;
 
-            $jsonArray[] = $antibody->toJson($count);
+            $jsonArray[] = $antibody->toJson(); //$count
 
-            if(0) {
-                //$documentImageUrl = null;
-                //$documentUrls = array();
-                $imageData = array();
-                foreach ($antibody->getDocuments() as $document) {
-                    //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-                    //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-                    //$documentUrls[] = $document->getAbsoluteUploadFullPath();
-                    //$documentImageUrl = $document->getAbsoluteUploadFullPath();
-                    $imageData[] = array(
-                        'key' => 'document-' . $document->getId(),
-                        'label' => $antibody->getName(),
-                        'url' => $document->getAbsoluteUploadFullPath()
-                    );
-                }
-
-                foreach ($antibody->getVisualInfos() as $visualInfo) {
-                    $visualInfoROI = false;
-                    $visualInfoWSI = false;
-                    $uploadedType = $visualInfo->getUploadedType();
-
-//                if( $uploadedType == 'Region Of Interest' ) {
-//                    $visualInfoROI = true;
+//            if(0) {
+//                //$documentImageUrl = null;
+//                //$documentUrls = array();
+//                $imageData = array();
+//                foreach ($antibody->getDocuments() as $document) {
+//                    //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+//                    //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+//                    //$documentUrls[] = $document->getAbsoluteUploadFullPath();
+//                    //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+//                    $imageData[] = array(
+//                        'key' => 'document-' . $document->getId(),
+//                        'label' => $antibody->getName(),
+//                        'url' => $document->getAbsoluteUploadFullPath()
+//                    );
 //                }
-//                if( $uploadedType == 'Whole Slide Image' ) {
-//                    $visualInfoWSI = true;
+//
+//                foreach ($antibody->getVisualInfos() as $visualInfo) {
+//                    $visualInfoROI = false;
+//                    $visualInfoWSI = false;
+//                    $uploadedType = $visualInfo->getUploadedType();
+//
+////                if( $uploadedType == 'Region Of Interest' ) {
+////                    $visualInfoROI = true;
+////                }
+////                if( $uploadedType == 'Whole Slide Image' ) {
+////                    $visualInfoWSI = true;
+////                }
+//
+//                    //$comment
+//                    //$catalog
+//                    //documents
+//
+//                    if ($uploadedType) {
+//                        $uploadedType = $uploadedType . ": ";
+//                    }
+//
+//                    foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
+//                        $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+//                        if ($path) {
+//                            $imageData[] = array(
+//                                'key' => 'visualinfo-' . $visualInfoDocument->getId(),
+//                                'label' => $uploadedType . $visualInfo->getComment(),
+//                                'url' => $path,
+//                                'comment' => $visualInfo->getComment(),
+//                                'catalog' => $visualInfo->getCatalog()
+//                            );
+//                        }
+//                    }
 //                }
-
-                    //$comment
-                    //$catalog
-                    //documents
-
-                    if ($uploadedType) {
-                        $uploadedType = $uploadedType . ": ";
-                    }
-
-                    foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-                        $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-                        if ($path) {
-                            $imageData[] = array(
-                                'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-                                'label' => $uploadedType . $visualInfo->getComment(),
-                                'url' => $path,
-                                'comment' => $visualInfo->getComment(),
-                                'catalog' => $visualInfo->getCatalog()
-                            );
-                        }
-                    }
-                }
-
-                $disableDatasheet = false;
-                $datasheet = $antibody->getDatasheet();
-                if (!$datasheet || $datasheet == '') {
-                    $disableDatasheet = true;
-                }
-                //$disableDatasheet = true;
-
-                if (0) {
-                    $jsonArray[] = array(
-                        'id' => $antibody->getId(),
-                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-                        'description' => ($antibody->getDescription()) ? $antibody->getDescription() : '',
-                        'categorytags' => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
-                        'public' => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
-                        'company' => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
-                        'clone' => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
-                        'host' => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
-                        'reactivity' => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
-                        'storage' => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
-                        //'documents' => $documentUrls //$antibody->getDocuments()
-                        'documents' => $imageData //$antibody->getDocuments()
-                        //'unitPrice'     => $antibody->getUnitPrice(),
-                        //'Catalog'       => $antibody->getCatalog(),
-                    );
-                } else {
-                    $jsonArray[] = array(
-                        'id' => ($antibody->getId()) ? $antibody->getId() : $count . "-key",
-                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-                        'publictext' => $antibody->getPublicText(),
-                        'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-                        'datasheet' => $datasheet,
-                        'disableDatasheet' => $disableDatasheet
-                    );
-                }
-            }
+//
+//                $disableDatasheet = false;
+//                $datasheet = $antibody->getDatasheet();
+//                if (!$datasheet || $datasheet == '') {
+//                    $disableDatasheet = true;
+//                }
+//                //$disableDatasheet = true;
+//
+//                if (0) {
+//                    $jsonArray[] = array(
+//                        'id' => $antibody->getId(),
+//                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+//                        'description' => ($antibody->getDescription()) ? $antibody->getDescription() : '',
+//                        'categorytags' => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
+//                        'public' => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
+//                        'company' => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
+//                        'clone' => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
+//                        'host' => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
+//                        'reactivity' => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
+//                        'storage' => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
+//                        //'documents' => $documentUrls //$antibody->getDocuments()
+//                        'documents' => $imageData //$antibody->getDocuments()
+//                        //'unitPrice'     => $antibody->getUnitPrice(),
+//                        //'Catalog'       => $antibody->getCatalog(),
+//                    );
+//                } else {
+//                    $jsonArray[] = array(
+//                        'id' => ($antibody->getId()) ? $antibody->getId() : $count . "-key",
+//                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+//                        'publictext' => $antibody->getPublicText(),
+//                        'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+//                        'datasheet' => $datasheet,
+//                        'disableDatasheet' => $disableDatasheet
+//                    );
+//                }
+//            }
         }
 
         $totalCount = 0;
@@ -1150,60 +1150,60 @@ class AntibodyController extends OrderAbstractController
         $jsonArray = array();
         $jsonArray[] = $antibody->toJson();
 
-        if(0) {
-            $imageData = array();
-            foreach ($antibody->getDocuments() as $document) {
-                //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-                //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-                //$documentUrls[] = $document->getAbsoluteUploadFullPath();
-                //$documentImageUrl = $document->getAbsoluteUploadFullPath();
-                $imageData[] = array(
-                    'key' => 'document-' . $document->getId(),
-                    'label' => $antibody->getName(),
-                    'url' => $document->getAbsoluteUploadFullPath()
-                );
-            }
-
-            foreach ($antibody->getVisualInfos() as $visualInfo) {
-                $visualInfoROI = false;
-                $visualInfoWSI = false;
-                $uploadedType = $visualInfo->getUploadedType();
-
-                if ($uploadedType) {
-                    $uploadedType = $uploadedType . ": ";
-                }
-
-                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-                    if ($path) {
-                        $imageData[] = array(
-                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-                            'label' => $uploadedType . $visualInfo->getComment(),
-                            'url' => $path,
-                            'comment' => $visualInfo->getComment(),
-                            'catalog' => $visualInfo->getCatalog()
-                        );
-                    }
-                }
-            }
-
-            $disableDatasheet = false;
-            $datasheet = $antibody->getDatasheet();
-            if (!$datasheet || $datasheet == '') {
-                $disableDatasheet = true;
-            }
-
-            $jsonArray = array();
-            $jsonArray[] = array(
-                'id' => $antibody->getId(),
-                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-                'publictext' => $antibody->getPublicText(),
-                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-                'datasheet' => $datasheet,
-                'disableDatasheet' => $disableDatasheet
-                //'image' => $documentImageUrl //$antibody->getDocuments()
-            );
-        }
+//        if(0) {
+//            $imageData = array();
+//            foreach ($antibody->getDocuments() as $document) {
+//                //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
+//                //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
+//                //$documentUrls[] = $document->getAbsoluteUploadFullPath();
+//                //$documentImageUrl = $document->getAbsoluteUploadFullPath();
+//                $imageData[] = array(
+//                    'key' => 'document-' . $document->getId(),
+//                    'label' => $antibody->getName(),
+//                    'url' => $document->getAbsoluteUploadFullPath()
+//                );
+//            }
+//
+//            foreach ($antibody->getVisualInfos() as $visualInfo) {
+//                $visualInfoROI = false;
+//                $visualInfoWSI = false;
+//                $uploadedType = $visualInfo->getUploadedType();
+//
+//                if ($uploadedType) {
+//                    $uploadedType = $uploadedType . ": ";
+//                }
+//
+//                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
+//                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+//                    if ($path) {
+//                        $imageData[] = array(
+//                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
+//                            'label' => $uploadedType . $visualInfo->getComment(),
+//                            'url' => $path,
+//                            'comment' => $visualInfo->getComment(),
+//                            'catalog' => $visualInfo->getCatalog()
+//                        );
+//                    }
+//                }
+//            }
+//
+//            $disableDatasheet = false;
+//            $datasheet = $antibody->getDatasheet();
+//            if (!$datasheet || $datasheet == '') {
+//                $disableDatasheet = true;
+//            }
+//
+//            $jsonArray = array();
+//            $jsonArray[] = array(
+//                'id' => $antibody->getId(),
+//                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+//                'publictext' => $antibody->getPublicText(),
+//                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+//                'datasheet' => $datasheet,
+//                'disableDatasheet' => $disableDatasheet
+//                //'image' => $documentImageUrl //$antibody->getDocuments()
+//            );
+//        }
 
         return array(
             'antibody' => $antibody,
@@ -1221,67 +1221,72 @@ class AntibodyController extends OrderAbstractController
         //$transresUtil = $this->container->get('transres_util');
         //$em = $this->getDoctrine()->getManager();
 
-        $cycle = "show";
-
-        $imageData = array();
-        foreach ($antibody->getDocuments() as $document) {
-            $documentImageUrl = $document->getAbsoluteUploadFullPath();
-            //echo "documentImageUrl=[$documentImageUrl] <br>";
-            $imageData[] = array(
-                'key' => 'document-' . $document->getId(),
-                'label' => $antibody->getName(),
-                'url' => $documentImageUrl
-            );
-        }
-
-        foreach ($antibody->getVisualInfos() as $visualInfo) {
-            $visualInfoROI = false;
-            $visualInfoWSI = false;
-            $uploadedType = $visualInfo->getUploadedType();
-
-            if ($uploadedType) {
-                $uploadedType = $uploadedType . ": ";
-            }
-
-            foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-                $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-                if ($path) {
-                    $imageData[] = array(
-                        'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-                        'label' => $uploadedType . $visualInfo->getComment(),
-                        'url' => $path,
-                        'comment' => $visualInfo->getComment(),
-                        'catalog' => $visualInfo->getCatalog()
-                    );
-                }
-            }
-        }
-
-
-        $datasheet = $antibody->getDatasheet();
-//        $disableDatasheet = false;
-//        if (!$datasheet || $datasheet == '') {
-//            $disableDatasheet = true;
-//        }
-
         $jsonArray = array();
-        $jsonArray[] = array(
-            'id' => $antibody->getId(),
-            'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-            'publictext' => $antibody->getPublicText(),
-            'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-            'datasheet' => $datasheet,
-            //'disableDatasheet' => $disableDatasheet,
-            'description' => $antibody->getDescription(),
-            'tags' => $antibody->getCategoryTagsStr(),
-            'company' => $antibody->getCompany(),
-            'clone' => $antibody->getClone(),
-            'host' => $antibody->getHost(),
-            'reactivity' => $antibody->getReactivity(),
-            'storage' => $antibody->getStorage(),
-            'associates' => $antibody->getAssociatesObjectsArr(),
-            //'' => $antibody->getCompany(),
-        );
+        $jsonArray[] = $antibody->toJson();
+
+//        if(0) {
+//            $cycle = "show";
+//
+//            $imageData = array();
+//            foreach ($antibody->getDocuments() as $document) {
+//                $documentImageUrl = $document->getAbsoluteUploadFullPath();
+//                //echo "documentImageUrl=[$documentImageUrl] <br>";
+//                $imageData[] = array(
+//                    'key' => 'document-' . $document->getId(),
+//                    'label' => $antibody->getName(),
+//                    'url' => $documentImageUrl
+//                );
+//            }
+//
+//            foreach ($antibody->getVisualInfos() as $visualInfo) {
+//                $visualInfoROI = false;
+//                $visualInfoWSI = false;
+//                $uploadedType = $visualInfo->getUploadedType();
+//
+//                if ($uploadedType) {
+//                    $uploadedType = $uploadedType . ": ";
+//                }
+//
+//                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
+//                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+//                    if ($path) {
+//                        $imageData[] = array(
+//                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
+//                            'label' => $uploadedType . $visualInfo->getComment(),
+//                            'url' => $path,
+//                            'comment' => $visualInfo->getComment(),
+//                            'catalog' => $visualInfo->getCatalog()
+//                        );
+//                    }
+//                }
+//            }
+//
+//
+//            $datasheet = $antibody->getDatasheet();
+////        $disableDatasheet = false;
+////        if (!$datasheet || $datasheet == '') {
+////            $disableDatasheet = true;
+////        }
+//
+//            $jsonArray = array();
+//            $jsonArray[] = array(
+//                'id' => $antibody->getId(),
+//                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
+//                'publictext' => $antibody->getPublicText(),
+//                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
+//                'datasheet' => $datasheet,
+//                //'disableDatasheet' => $disableDatasheet,
+//                'description' => $antibody->getDescription(),
+//                'tags' => $antibody->getCategoryTagsStr(),
+//                'company' => $antibody->getCompany(),
+//                'clone' => $antibody->getClone(),
+//                'host' => $antibody->getHost(),
+//                'reactivity' => $antibody->getReactivity(),
+//                'storage' => $antibody->getStorage(),
+//                'associates' => $antibody->getAssociatesObjectsArr(),
+//                //'' => $antibody->getCompany(),
+//            );
+//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
