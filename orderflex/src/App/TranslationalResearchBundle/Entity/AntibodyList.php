@@ -965,6 +965,61 @@ class AntibodyList extends ListAbstract
         return $res;
     }
 
+    public function toJson( $key=0 ) {
+
+        $disableDatasheet = false;
+        $datasheet = $this->getDatasheet();
+        if( !$datasheet || $datasheet == '' ) {
+            $disableDatasheet = true;
+        }
+
+        $json = array(
+            'id' => ($this->getId()) ? $this->getId() : $key."-key",
+            'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
+            'publictext' => $this->getPublicText(),
+            'documents' => $this->getImageData(),
+            'datasheet' => $datasheet,
+            'disableDatasheet' => $disableDatasheet
+        );
+
+        return $json;
+    }
+
+    public function getImageData() {
+        $imageData = array();
+        foreach( $this->getDocuments() as $document ) {
+            $imageData[] = array(
+                'key' => 'document-'.$document->getId(),
+                'label' => $this->getName(),
+                'url' => $document->getAbsoluteUploadFullPath()
+            );
+        }
+
+        foreach( $this->getVisualInfos() as $visualInfo ) {
+            //$visualInfoROI = false;
+            //$visualInfoWSI = false;
+            $uploadedType = $visualInfo->getUploadedType();
+
+            if( $uploadedType ) {
+                $uploadedType = $uploadedType . ": ";
+            }
+
+            foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+                $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+                if( $path ) {
+                    $imageData[] = array(
+                        'key' => 'visualinfo-'.$visualInfoDocument->getId(),
+                        'label' => $uploadedType.$visualInfo->getComment(),
+                        'url' => $path,
+                        'comment' => $visualInfo->getComment(),
+                        'catalog' => $visualInfo->getCatalog()
+                    );
+                }
+            }
+        }
+
+        return $imageData;
+    }
 
 
 }

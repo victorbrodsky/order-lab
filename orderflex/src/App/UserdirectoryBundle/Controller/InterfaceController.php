@@ -70,8 +70,7 @@ class InterfaceController extends OrderAbstractController
         //$res = $interfaceTransferUtil->classListMapper($transfer);
         //dump($res);
         //exit('111');
-
-
+        
         $interfaceTransferUtil->transferFile($transfer);
 
         exit();

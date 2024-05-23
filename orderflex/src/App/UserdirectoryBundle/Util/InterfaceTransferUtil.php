@@ -48,7 +48,7 @@ class InterfaceTransferUtil {
 
     //Require ssh
     //http://pecl.php.net/package/ssh2
-    public function transferFile( $transfer ) {
+    public function transferFile( InterfaceTransferList $transfer ) {
 
         if( !$transfer ) {
             return null;
@@ -141,6 +141,156 @@ class InterfaceTransferUtil {
         }else{
             echo "Unable to authenticate on server";
         }
+    }
+
+    public function makeTransfer() {
+        //1) get data from TransferData
+        $transferDatas = $this->getTransfers('Ready');
+
+        foreach($transferDatas as $transferData) {
+            $this->makeSingleTransfer($transferData);
+        }
+    }
+
+    public function makeSingleTransfer( TransferData $transferData ) {
+
+        if( $transferData->getTransferStatus() != 'Ready' ) {
+            return null;
+        }
+
+        $interfaceTransfer = $transferData->getInterfaceTransfer();
+
+        if( !$interfaceTransfer ) {
+            return null;
+        }
+
+        //Get antibody
+        $className = $transferData->getClassName();
+        $entityId = $transferData->getEntityId();
+        if( $className && $entityId ) {
+            $transferableEntity = $this->em->getRepository($className)->find($entityId);
+        }
+
+        //Create json with antibody data
+        $jsonFileName = $this->createJsonFile($transferableEntity, $className);
+
+        dump($jsonFileName);
+        exit('111');
+
+        //Send file via sftp to server
+        $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        $strServerPort = "22";
+        $strServerUsername = $interfaceTransfer->getSshUsername();
+        $strServerPassword = $interfaceTransfer->getSshPassword();
+
+        $dstFile = "dst_file.csv";
+        $srcFile = "src_file.csv";
+
+        $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
+        $dstFilePath = $dstPath . $this->getPath("/") . $dstFile;
+
+        //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
+        //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
+
+        $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
+        //destination path: src\App\UserdirectoryBundle\Util
+        $srcFilePath = $projectDir . $this->getPath("/") . $srcFile;
+        //exit('$srcFilePath='.$srcFilePath);
+        //exit('$dstFilePath='.$dstFilePath);
+        echo "srcFilePath=$srcFilePath <br>";
+        echo "dstFilePath=$dstFilePath <br>";
+        //echo "dstTestFilePath=$dstTestFilePath <br>";
+
+        $srcFilePath = realpath($srcFilePath);
+
+        if( file_exists($srcFilePath) ) {
+            echo "The source file $srcFilePath exists";
+        } else {
+            echo "The file $srcFilePath does not exist";
+            return NULL;
+        }
+
+        //connect to server
+        $dstConnection = ssh2_connect($strServer, $strServerPort);
+
+        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+            //Initialize SFTP subsystem
+
+            echo "Connected to $strServer <br>";
+            try {
+                $dstSFTP = ssh2_sftp($dstConnection);
+                echo "dstSFTP=$dstSFTP <br>";
+                //$dstSFTP = intval($dstSFTP);
+                //echo "dstSFTP=$dstSFTP <br>";
+
+                //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
+
+                //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
+                //dump($dstFile);
+
+                $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
+
+                if ( !$dstFile ) {
+                    throw new \Exception('File open failed. file=' . $srcFile);
+                }
+
+                //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
+                //$contents = stream_get_contents($dstTestFile);
+                //dump($contents);
+
+                $srcFile = fopen($srcFilePath, 'r');
+
+                $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+                echo "writtenBytes=$writtenBytes <br>";
+                fclose($dstFile);
+                fclose($srcFile);
+
+                //echo "Write <br>";
+                //fwrite($dstFile, "Testing");
+                //echo "Close <br>";
+                //fclose($dstFile);
+            } catch ( Exception $e ) {
+                throw new \Exception('Error to transfer file=' . $srcFile . '; Error='.$e->getMessage());
+            }
+
+        }else{
+            echo "Unable to authenticate on server";
+        }
+    }
+
+    public function createJsonFile( $transferableEntity, $className ) {
+        $jsonFile = null;
+
+        if( str_contains($className, 'UserdirectoryBundle') && str_contains($className, 'AntibodyList') ) {
+            //make json from AntibodyList entity
+            $name = $transferableEntity->getName();
+        }
+
+        return $jsonFile;
+    }
+
+
+
+    public function getTransfers( $statusStr ) {
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('LOWER(transferStatus.name) = LOWER(:transferStatus)');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'transferStatus' => $statusStr
+            )
+        );
+
+        $transferDatas = $query->getResult();
+
+        return $transferDatas;
     }
 
     public function getPath( $separator=DIRECTORY_SEPARATOR  ) {
