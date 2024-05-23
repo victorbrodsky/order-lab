@@ -240,7 +240,7 @@ class InterfaceTransferUtil {
         //$this->em->flush();
 
         $transfers = $this->em->getRepository(TransferData::class)->findAll();
-        echo "transfer=".count($transfers)."<br>";
+        //echo "transfer=".count($transfers)."<br>";
 
         //exit("transfer=".$transfer->getId());
 

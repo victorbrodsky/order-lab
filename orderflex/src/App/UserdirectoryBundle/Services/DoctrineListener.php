@@ -112,7 +112,6 @@ class DoctrineListener {
         if( $transfer = $this->setTrabsferable($entity) ) {
             $em = $args->getObjectManager();
             $em->flush();
-            //exit('preUpdate');
         }
     }
 
