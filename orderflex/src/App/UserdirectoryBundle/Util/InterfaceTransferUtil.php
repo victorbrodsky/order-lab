@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\UserdirectoryBundle\Entity\TransferData;
+use App\UserdirectoryBundle\Entity\TransferStatusList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -176,7 +177,18 @@ class InterfaceTransferUtil {
             )
         );
 
-        $transfer = $query->getSingleResult();
+        $transfers = $query->getResult();
+
+        $transfer = NULL;
+
+        if( count($transfers) > 0 ) {
+            //Can we have the same multiple transfers?
+            $transfer = $transfers[0];
+        }
+
+        if( count($transfers) == 1 ) {
+            $transfer = $transfers[0];
+        }
 
         return $transfer;
     }
@@ -201,4 +213,29 @@ class InterfaceTransferUtil {
         return $pos;
     }
 
+    public function createTransferData( $entity, $status='Ready' ) {
+        $user = $this->security->getUser();
+        $transfer = new TransferData($user);
+
+        $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
+        if( $status ) {
+            $transfer->setTransferStatus($status);
+        }
+
+        $mapper = $this->classListMapper($entity);
+        $className = $mapper['className'];
+        $entityName = $mapper['entityName'];
+
+        $transfer->setClassName($className);
+
+        $transfer->setEntityId($entity->getId());
+
+        $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
+        if( $interfaceTransfer ) {
+            $transfer->setInterfaceTransfer($interfaceTransfer);
+        }
+
+        return $transfer;
+    }
+    
 }

@@ -52,16 +52,17 @@ class TransferData {
     #[ORM\JoinColumn(name: 'interfacetransfer_id', referencedColumnName: 'id')]
     private $interfaceTransfer;
 
-    //use instead linking to the antibody object
+    //use instead linking directly to the antibody object.
+    //We can use the transfer for any other entities.
     ///// Object Data /////
     #[ORM\Column(type: 'string', nullable: true)]
     private $entityId;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    private $entityNamespace;
+    //#[ORM\Column(type: 'string', nullable: true)]
+    //private $entityNamespace;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    private $entityName;
+    //#[ORM\Column(type: 'string', nullable: true)]
+    //private $entityName;
 
     //Full class name i.e. 'App\UserdirectoryBundle\Entity\AntibodyList'
     //Obtain by php function: get_class($entity)
@@ -71,7 +72,10 @@ class TransferData {
 
     
 
-    public function __construct(Document $document) {
+    public function __construct( $creator=NULL ) {
+        if( $creator ) {
+            $this->setCreator($creator);
+        }
         $this->setCreationdate(new \DateTime());
     }
 
@@ -157,37 +161,37 @@ class TransferData {
         $this->entityId = $entityId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEntityNamespace()
-    {
-        return $this->entityNamespace;
-    }
-
-    /**
-     * @param mixed $entityNamespace
-     */
-    public function setEntityNamespace($entityNamespace)
-    {
-        $this->entityNamespace = $entityNamespace;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * @param mixed $entityName
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getEntityNamespace()
+//    {
+//        return $this->entityNamespace;
+//    }
+//
+//    /**
+//     * @param mixed $entityNamespace
+//     */
+//    public function setEntityNamespace($entityNamespace)
+//    {
+//        $this->entityNamespace = $entityNamespace;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getEntityName()
+//    {
+//        return $this->entityName;
+//    }
+//
+//    /**
+//     * @param mixed $entityName
+//     */
+//    public function setEntityName($entityName)
+//    {
+//        $this->entityName = $entityName;
+//    }
 
     /**
      * @return mixed

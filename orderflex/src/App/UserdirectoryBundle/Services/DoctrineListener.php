@@ -145,8 +145,11 @@ class DoctrineListener {
             }
 
             //2 add antibody to the TransferData table
+            $transfer = $interfaceTransferUtil->createTransferData($entity,$status='Ready');
 
-            return true;
+            if( $transfer ) {
+                return true;
+            }
         }
 
         return false;

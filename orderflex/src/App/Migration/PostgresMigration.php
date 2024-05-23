@@ -25,30 +25,22 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //Delete Unavailable Migrations or before migrate again:
 // php bin/console doctrine:migrations:version DoctrineMigrations\\YYYYMMDDHHMMSS --delete
 
-//1) Pre-Generating: php bin/console cache:clear
-//2) Pre-Generating: php bin/console doctrine:cache:clear-metadata
-//3) Pre-Generating: php bin/console doctrine:schema:validate
-//1,2,3) bash prepare_migration.sh
+//1) bash prepare_migration.sh
+//2) Status: php bin/console doctrine:migrations:status
+//3) Generate: php bin/console doctrine:migrations:diff
 
-//4) Status: php bin/console doctrine:migrations:status
-//5) Generate: php bin/console doctrine:migrations:diff
+//4)
+//In newly generated VersionYYYYMMDDHHMM.php
+//a) Add "use App\Migration\PostgresMigration;"
+//b) Rename after extends "AbstractMigration" to "PostgresMigration":
 
-//6) Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
+//5) Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
 
+//Notes:
 //Skip:         php bin/console doctrine:migrations:version DoctrineMigrations\\Version20230901140854 --add
 //Skip all:     php bin/console doctrine:migrations:version --add --all
 //If error "The metadata storage is not up to date..":   php bin/console doctrine:migration:sync-metadata-storage
 
-
-//In VersionYYYYMMDDHHMM.php
-//1) Add "use App\Migration\PostgresMigration;"
-//2) Rename after extends "AbstractMigration" to "PostgresMigration":
-//   sed -i -e "s/AbstractMigration/PostgresMigration/g" Version....php
-
-//deprecation.INFO: User Deprecated: The "App\Migration\PostgresMigration" class implements "Symfony\Component\DependencyInjection\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead
-//remove: implements ContainerAwareInterface
-
-//class PostgresMigration extends AbstractMigration implements ContainerAwareInterface
 class PostgresMigration extends AbstractMigration
 {
 
