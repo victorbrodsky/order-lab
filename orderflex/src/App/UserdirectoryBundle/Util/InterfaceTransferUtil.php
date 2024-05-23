@@ -143,6 +143,8 @@ class InterfaceTransferUtil {
         }
     }
 
+    //TODO: create transfer interface page and call this function makeTransfer
+    //Get all transfers from TransferData with status 'Ready' and make sftp transfer to the remote server
     public function makeTransfer() {
         //1) get data from TransferData
         $transferDatas = $this->getTransfers('Ready');
