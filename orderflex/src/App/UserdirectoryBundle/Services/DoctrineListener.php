@@ -24,6 +24,7 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 //use Doctrine\ORM\Event\LifecycleEventArgs;
 //use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -89,6 +90,7 @@ class DoctrineListener {
 //        }
 
         if( $this->setTrabsferable($entity) ) {
+            //exit('postPersist');
             $em->flush();
         }
 
@@ -107,8 +109,27 @@ class DoctrineListener {
 
         $this->setMetaphoneField($entity);
 
-        $this->setTrabsferable($entity);
+        if( $transfer = $this->setTrabsferable($entity) ) {
+            $em = $args->getObjectManager();
+            $em->flush();
+            //exit('preUpdate');
+        }
     }
+
+//    public function postUpdate( PostUpdateEventArgs  $args )
+//    {
+//        //exit("DoctrineListener->postUpdate");
+//        $em = $args->getObjectManager();
+//        $entity = $args->getObjectManager()
+//
+//        //$logger = $this->container->get('logger');
+//        //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
+//
+//        if( $this->setTrabsferable($entity) ) {
+//            $em->flush();
+//            exit('postFlush');
+//        }
+//    }
 
     public function setMetaphoneField( $entity ) {
 
@@ -137,6 +158,12 @@ class DoctrineListener {
 
     public function setTrabsferable($entity) {
         if( $entity instanceof AntibodyList ) {
+
+            //check if public
+            if( $entity->getOpenToPublic() !== true ) {
+                return false;
+            }
+
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //1) find if TransferData has this antibody with status 'Ready'

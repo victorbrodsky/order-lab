@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
 use App\UserdirectoryBundle\Entity\TransferStatusList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -234,6 +235,14 @@ class InterfaceTransferUtil {
         if( $interfaceTransfer ) {
             $transfer->setInterfaceTransfer($interfaceTransfer);
         }
+
+        $this->em->persist($transfer);
+        //$this->em->flush();
+
+        $transfers = $this->em->getRepository(TransferData::class)->findAll();
+        echo "transfer=".count($transfers)."<br>";
+
+        //exit("transfer=".$transfer->getId());
 
         return $transfer;
     }
