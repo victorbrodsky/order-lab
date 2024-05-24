@@ -27,9 +27,69 @@
     </h4>
     <br>
 
-    {% for transferData in transferDatas %}
-        {{ transferData.id }}<br>
-    {% endfor %}
+    {#{% for transferData in transferDatas %}#}
+        {#{{ transferData.id }}<br>#}
+    {#{% endfor %}#}
+
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Created', 'ent.creator') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Updated', 'ent.updatedate') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Status', 'ent.transferStatus') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Object ID', 'ent.entityId') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Object ID', 'ent.className') }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
+        {% for ent in entities %}
+
+            <tr>
+                <td>
+                    {{ ent.id }}
+                </td>
+
+                <td>
+                    {{ ent.creator }}
+                </td>
+
+                <td>
+                    {{ ent.updatedate }}
+                </td>
+
+                <td>
+                    {{ ent.transferStatus }}
+                </td>
+
+                <td>
+                    {{ ent.entityId }}
+                </td>
+
+                <td>
+                    {{ ent.className }}
+                </td>
+
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
 
 
 {% endblock %}

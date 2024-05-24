@@ -89,12 +89,11 @@ class InterfaceController extends OrderAbstractController
         $title = "Transfer Interface Manager";
 
         //List of items to transfer from TransferData
-        $transferDatas = $interfaceTransferUtil->getTransfers('Ready');
-
+        $transferDatas = $interfaceTransferUtil->getTransfers('Ready',true,$request);
 
         return array(
             'title' => $title,
-            'transferDatas' => $transferDatas
+            'entities' => $transferDatas
         );
     }
 

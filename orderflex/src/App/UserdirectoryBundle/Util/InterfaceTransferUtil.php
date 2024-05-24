@@ -273,7 +273,7 @@ class InterfaceTransferUtil {
 
 
 
-    public function getTransfers( $statusStr ) {
+    public function getTransfers( $statusStr, $paginator=false, $request=null ) {
         $repository = $this->em->getRepository(TransferData::class);
         $dql =  $repository->createQueryBuilder("transfer");
         $dql->select('transfer');
@@ -283,16 +283,71 @@ class InterfaceTransferUtil {
         $dql->where('LOWER(transferStatus.name) = LOWER(:transferStatus)');
 
         $query = $dql->getQuery();
-
         $query->setParameters(
             array(
                 'transferStatus' => $statusStr
             )
         );
 
-        $transferDatas = $query->getResult();
+        if( $paginator === true && $request ) {
+            $limit = 20;
+            //$query = $dql->getQuery();
+            $paginator  = $this->container->get('knp_paginator');
+            $transferDatas = $paginator->paginate(
+                $query,
+                $request->query->get('page', 1), /*page number*/
+                $limit,     /*limit per page*/
+                array(
+                    'defaultSortFieldName' => 'transfer.updatedate',
+                    'defaultSortDirection' => 'DESC',
+                    'wrap-queries'=>true
+                )
+            );
+        } else {
+            $transferDatas = $query->getResult();
+        }
 
         return $transferDatas;
+    }
+
+    public function getTransfersPages() {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $repository = $this->getDoctrine()->getRepository(AccessRequest::class);
+        $dql =  $repository->createQueryBuilder("accreq");
+        $dql->select('accreq');
+        $dql->leftJoin('accreq.user','user');
+        $dql->leftJoin('user.infos','infos');
+        $dql->leftJoin('user.keytype','keytype');
+        $dql->leftJoin('accreq.updatedby','updatedby');
+        $dql->leftJoin('updatedby.infos','updatedbyinfos');
+        $dql->where("accreq.siteName = '" . $sitename . "'" );
+        //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
+
+        //$request = $this->container->get('request');
+        $postData = $request->query->all();
+
+        if( !isset($postData['sort']) ) {
+            $dql->orderBy("accreq.status","DESC");
+        }
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+//		if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
+
+        $limit = 30;
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+        $paginator  = $this->container->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1), /*page number*/
+            $limit,     /*limit per page*/
+            array(
+                'defaultSortFieldName' => 'accreq.createdate',
+                'defaultSortDirection' => 'DESC',
+                'wrap-queries'=>true
+            )
+        );
     }
 
     public function getPath( $separator=DIRECTORY_SEPARATOR  ) {
