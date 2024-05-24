@@ -112,6 +112,7 @@ class DoctrineListener {
         if( $transfer = $this->setTrabsferable($entity) ) {
             $em = $args->getObjectManager();
             $em->flush();
+            //exit('preUpdate');
         }
     }
 
@@ -156,10 +157,14 @@ class DoctrineListener {
     }
 
     public function setTrabsferable($entity) {
+
+        //echo "classname=".get_class($entity)."<br>";
         if( $entity instanceof AntibodyList ) {
+            //exit('AntibodyList, ID='.$entity->getId());
 
             //check if public
             if( $entity->getOpenToPublic() !== true ) {
+                //exit('not public');
                 return false;
             }
 
@@ -167,6 +172,7 @@ class DoctrineListener {
 
             //1) find if TransferData has this antibody with status 'Ready'
             if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {
+                //exit('Already in TransferData');
                 return false; //do nothing
             }
 
@@ -176,8 +182,11 @@ class DoctrineListener {
             if( $transfer ) {
                 return true;
             }
+        } else {
+            //exit('not AntibodyList');
         }
 
+        //exit('EOF setTrabsferable');
         return false;
     }
 

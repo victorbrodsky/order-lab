@@ -76,7 +76,7 @@ class InterfaceController extends OrderAbstractController
         exit();
     }
 
-    #[Route(path: '/transfer-interface', name: 'employees_interface_manager', methods: ['GET'])]
+    #[Route(path: '/transfer-manager', name: 'employees_interface_manager', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
     public function transferInterfaceManagerAction(Request $request)
     {
@@ -94,6 +94,31 @@ class InterfaceController extends OrderAbstractController
         return array(
             'title' => $title,
             'entities' => $transferDatas
+        );
+    }
+
+    #[Route(path: '/start-transfer', name: 'employees_start_transfer', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
+    public function startTransferAction(Request $request)
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //List of items to transfer from TransferData
+        $transferDatas = $interfaceTransferUtil->makeTransfer();
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            "Transfer completed"
+        );
+
+        return $this->redirect(
+            $this->generateUrl(
+                $this->getParameter('employees_interface_manager')
+            )
         );
     }
 

@@ -148,13 +148,18 @@ class InterfaceTransferUtil {
     public function makeTransfer() {
         //1) get data from TransferData
         $transferDatas = $this->getTransfers('Ready');
+        echo "transferDatas=".count($transferDatas)."<br>";
 
         foreach($transferDatas as $transferData) {
             $this->makeSingleTransfer($transferData);
         }
+
+        exit('EOF makeTransfer');
     }
 
     public function makeSingleTransfer( TransferData $transferData ) {
+
+        echo "transferStatus=".$transferData->getTransferStatus()."<br>";
 
         if( $transferData->getTransferStatus() != 'Ready' ) {
             return null;
@@ -163,6 +168,7 @@ class InterfaceTransferUtil {
         $interfaceTransfer = $transferData->getInterfaceTransfer();
 
         if( !$interfaceTransfer ) {
+            echo "interface transfer is null <br>";
             return null;
         }
 
@@ -174,9 +180,9 @@ class InterfaceTransferUtil {
         }
 
         //Create json with antibody data
-        $jsonFileName = $this->createJsonFile($transferableEntity, $className);
+        $jsonFile= $this->createJsonFile($transferableEntity, $className);
 
-        dump($jsonFileName);
+        dump($jsonFile);
         exit('111');
 
         //Send file via sftp to server
@@ -262,11 +268,15 @@ class InterfaceTransferUtil {
 
     public function createJsonFile( $transferableEntity, $className ) {
         $jsonFile = null;
+        //echo "createJsonFile: className=$className <br>";
 
-        if( str_contains($className, 'UserdirectoryBundle') && str_contains($className, 'AntibodyList') ) {
-            //make json from AntibodyList entity
+        //Case: AntibodyList
+        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
+            //make json from TranslationalResearchBundle AntibodyList entity
             $jsonFile = $transferableEntity->toJson();
         }
+
+        //Case: some other transferable object
 
         return $jsonFile;
     }
@@ -308,46 +318,6 @@ class InterfaceTransferUtil {
         }
 
         return $transferDatas;
-    }
-
-    public function getTransfersPages() {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
-        $repository = $this->getDoctrine()->getRepository(AccessRequest::class);
-        $dql =  $repository->createQueryBuilder("accreq");
-        $dql->select('accreq');
-        $dql->leftJoin('accreq.user','user');
-        $dql->leftJoin('user.infos','infos');
-        $dql->leftJoin('user.keytype','keytype');
-        $dql->leftJoin('accreq.updatedby','updatedby');
-        $dql->leftJoin('updatedby.infos','updatedbyinfos');
-        $dql->where("accreq.siteName = '" . $sitename . "'" );
-        //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
-
-        //$request = $this->container->get('request');
-        $postData = $request->query->all();
-
-        if( !isset($postData['sort']) ) {
-            $dql->orderBy("accreq.status","DESC");
-        }
-
-        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
-//		if( isset($postData['sort']) ) {
-//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
-//        }
-
-        $limit = 30;
-        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $paginator  = $this->container->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->get('page', 1), /*page number*/
-            $limit,     /*limit per page*/
-            array(
-                'defaultSortFieldName' => 'accreq.createdate',
-                'defaultSortDirection' => 'DESC',
-                'wrap-queries'=>true
-            )
-        );
     }
 
     public function getPath( $separator=DIRECTORY_SEPARATOR  ) {
@@ -438,17 +408,18 @@ class InterfaceTransferUtil {
 
         $transfer->setEntityId($entity->getId());
 
+        //echo "entityName=$entityName <br>";
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
         if( $interfaceTransfer ) {
+            //echo "added interfaceTransfer with ID=".$interfaceTransfer->getId()."<br>";
             $transfer->setInterfaceTransfer($interfaceTransfer);
         }
 
         $this->em->persist($transfer);
         //$this->em->flush();
 
-        $transfers = $this->em->getRepository(TransferData::class)->findAll();
+        //$transfers = $this->em->getRepository(TransferData::class)->findAll();
         //echo "transfer=".count($transfers)."<br>";
-
         //exit("transfer=".$transfer->getId());
 
         return $transfer;

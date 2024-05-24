@@ -31,6 +31,7 @@
         {#{{ transferData.id }}<br>#}
     {#{% endfor %}#}
 
+    {#TODO: add checkmark to transfer. Similarly as in send-rejection-emails#}
 
     <table class="table table-hover table-condensed text-left">
         <thead>
@@ -40,12 +41,13 @@
             <th>{{ knp_pagination_sortable(entities, 'Updated', 'ent.updatedate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Status', 'ent.transferStatus') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Object ID', 'ent.entityId') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Object ID', 'ent.className') }}</th>
-            <th>Actions</th>
+            <th>{{ knp_pagination_sortable(entities, 'Object Class Name', 'ent.className') }}</th>
+            {#<th>Actions</th>#}
         </tr>
         </thead>
 
-        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
+        {#data-link="row" class="rowlink" data-target="a.list-row-mainlink"#}
+        <tbody>
         {% for ent in entities %}
 
             <tr>
@@ -74,13 +76,13 @@
                 </td>
 
 
-                <td class="rowlink-skip">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            Action <span class="caret"></span>
-                        </button>
-                    </div>
-                </td>
+                {#<td class="rowlink-skip">#}
+                    {#<div class="btn-group">#}
+                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                            {#Action <span class="caret"></span>#}
+                        {#</button>#}
+                    {#</div>#}
+                {#</td>#}
             </tr>
         {% endfor %}
         </tbody>
@@ -91,6 +93,9 @@
         {{ knp_pagination_render(entities) }}
     </div>
 
+
+    {#Button Transfer#}
+    <a class="btn btn-danger btn-sm" href="{{ path('employees_start_transfer') }}">Transfer all listed objects</a>
 
 {% endblock %}
 
