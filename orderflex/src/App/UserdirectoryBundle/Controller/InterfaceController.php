@@ -76,4 +76,26 @@ class InterfaceController extends OrderAbstractController
         exit();
     }
 
+    #[Route(path: '/transfer-interface', name: 'employees_interface_manager', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
+    public function transferInterfaceManagerAction(Request $request)
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+        
+        $title = "Transfer Interface Manager";
+
+        //List of items to transfer from TransferData
+        $transferDatas = $interfaceTransferUtil->getTransfers('Ready');
+
+
+        return array(
+            'title' => $title,
+            'transferDatas' => $transferDatas
+        );
+    }
+
 }
