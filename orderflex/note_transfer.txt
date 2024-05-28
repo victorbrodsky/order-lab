@@ -3,6 +3,9 @@ https://medium.com/@rayansami007/secure-file-transfers-to-remote-server-with-php
 
 Hash and cURL:
 https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+https://stackoverflow.com/questions/17823900/how-to-send-and-receive-json-data-between-two-servers-via-php
+https://stackoverflow.com/questions/53285645/how-to-use-curl-over-ssh-and-get-the-file-as-well-as-the-return-value
+https://blog.magepsycho.com/sending-json-data-remote-server/
 
 SCP and SFTP both are secured based on SSH
 

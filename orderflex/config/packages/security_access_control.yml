@@ -80,6 +80,8 @@ security:
 #       - { path: ^/(_locale)/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
        - { path: ^.*/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
+       - { path: ^.*/directory/receive-transfer/, role: PUBLIC_ACCESS }
+
        ############################## SCAN SITE SETTINGS ##############################
        - { path: ^.*/scan/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^.*/scan/login, role: PUBLIC_ACCESS }

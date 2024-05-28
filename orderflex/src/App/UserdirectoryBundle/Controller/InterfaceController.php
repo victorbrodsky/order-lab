@@ -122,4 +122,41 @@ class InterfaceController extends OrderAbstractController
         );
     }
 
+    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['POST'])]
+    #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
+    public function receiveTransferAction(Request $request)
+    {
+        //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        //    return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        //}
+
+
+        $res = "OK";
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+
+
+        $post_data = json_decode($request->getContent(), true);
+        dump();
+
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //List of items to transfer from TransferData
+        $transferDatas = $interfaceTransferUtil->makeTransfer();
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            "Transfer completed"
+        );
+
+        return $this->redirect(
+            $this->generateUrl(
+                $this->getParameter('employees_interface_manager')
+            )
+        );
+    }
+
 }

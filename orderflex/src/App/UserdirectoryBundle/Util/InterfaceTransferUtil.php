@@ -182,88 +182,39 @@ class InterfaceTransferUtil {
         //Create json with antibody data
         $jsonFile= $this->createJsonFile($transferableEntity, $className);
 
-        dump($jsonFile);
-        exit('111');
+        //dump($jsonFile);
+        //exit('111');
 
-        //Send file via sftp to server
+        //Send data with curl and secret key
+        //$secretKey = $transfer->getSshPassword(); //use SshPassword for now
+
+        $this->sendDataCurl($interfaceTransfer,$jsonFile);
+
+
+    }
+
+    public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
+        $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $strServerPort = "22";
-        $strServerUsername = $interfaceTransfer->getSshUsername();
-        $strServerPassword = $interfaceTransfer->getSshPassword();
+        $url = 'http://'.$strServer.'/directory/receive-transfer';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            '"Content-Length: ' . strlen($data_string) . '"'
+        ));
 
-        $dstFile = "dst_file.csv";
-        $srcFile = "src_file.csv";
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch);
+        curl_close($ch);
 
-        $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
-        $dstFilePath = $dstPath . $this->getPath("/") . $dstFile;
+        dump($result);
+        exit('222');
 
-        //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
-        //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
-
-        $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
-        //destination path: src\App\UserdirectoryBundle\Util
-        $srcFilePath = $projectDir . $this->getPath("/") . $srcFile;
-        //exit('$srcFilePath='.$srcFilePath);
-        //exit('$dstFilePath='.$dstFilePath);
-        echo "srcFilePath=$srcFilePath <br>";
-        echo "dstFilePath=$dstFilePath <br>";
-        //echo "dstTestFilePath=$dstTestFilePath <br>";
-
-        $srcFilePath = realpath($srcFilePath);
-
-        if( file_exists($srcFilePath) ) {
-            echo "The source file $srcFilePath exists";
-        } else {
-            echo "The file $srcFilePath does not exist";
-            return NULL;
-        }
-
-        //connect to server
-        $dstConnection = ssh2_connect($strServer, $strServerPort);
-
-        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
-            //Initialize SFTP subsystem
-
-            echo "Connected to $strServer <br>";
-            try {
-                $dstSFTP = ssh2_sftp($dstConnection);
-                echo "dstSFTP=$dstSFTP <br>";
-                //$dstSFTP = intval($dstSFTP);
-                //echo "dstSFTP=$dstSFTP <br>";
-
-                //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
-
-                //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
-                //dump($dstFile);
-
-                $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
-
-                if ( !$dstFile ) {
-                    throw new \Exception('File open failed. file=' . $srcFile);
-                }
-
-                //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
-                //$contents = stream_get_contents($dstTestFile);
-                //dump($contents);
-
-                $srcFile = fopen($srcFilePath, 'r');
-
-                $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
-                echo "writtenBytes=$writtenBytes <br>";
-                fclose($dstFile);
-                fclose($srcFile);
-
-                //echo "Write <br>";
-                //fwrite($dstFile, "Testing");
-                //echo "Close <br>";
-                //fclose($dstFile);
-            } catch ( Exception $e ) {
-                throw new \Exception('Error to transfer file=' . $srcFile . '; Error='.$e->getMessage());
-            }
-
-        }else{
-            echo "Unable to authenticate on server";
-        }
+        $result = json_decode($result);
     }
 
     public function createJsonFile( $transferableEntity, $className ) {
