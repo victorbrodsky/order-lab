@@ -214,6 +214,9 @@ class InterfaceTransferUtil {
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
 
+        //dump($jsonFile);
+        //exit('111');
+
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
         $secretKey = $_ENV['APP_SECRET']; //get .env parameter
@@ -245,14 +248,21 @@ class InterfaceTransferUtil {
         }
 
         $result = curl_exec($ch);
-        $status = curl_getinfo($ch);
+        //$status = curl_getinfo($ch);
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('222');
+        //dump($result);
+        //exit('222');
 
         $result = json_decode($result);
+        $checksum = $result['checksum'];
+        $valid = $result['valid'];
+        if( $checksum === $hash && $valid === true ) {
+            echo "Successefully sent: ".$jsonFile['className'].", ID=".$jsonFile['id']." <br>";
+        }
+
+        exit('222');
     }
 
     public function createJsonFile( $transferableEntity, $className ) {

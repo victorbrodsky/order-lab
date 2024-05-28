@@ -157,10 +157,14 @@ class InterfaceController extends OrderAbstractController
             $valid = false;
         }
 
-        $post_str = implode(',', $input);
-        $logger->notice('receiveTransferAction: input='.$post_str);
+        //$post_str = implode(',', $input);
+        //$logger->notice('receiveTransferAction: input='.$post_str);
+        //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
 
-        $res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
+        $res = array(
+            "checksum" => $checksum,
+            "valid" => $valid
+        );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
