@@ -129,10 +129,18 @@ class InterfaceController extends OrderAbstractController
         //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
         //    return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         //}
-
         //exit('receive!!!');
 
-        $res = "OK";
+        $logger = $this->container->get('logger');
+
+        $post_data = json_decode($request->getContent(), true);
+
+        $logger->notice('receiveTransferAction: post_data='.count($post_data));
+
+        $post_str = implode(',', $post_data);
+        $logger->notice('receiveTransferAction: post_str='.$post_str);
+
+        $res = "OK; ".$post_data; //"OK";
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -140,8 +148,7 @@ class InterfaceController extends OrderAbstractController
         return $response;
 
 
-        $post_data = json_decode($request->getContent(), true);
-        dump();
+
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
