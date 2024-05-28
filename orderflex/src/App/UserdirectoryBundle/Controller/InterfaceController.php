@@ -139,6 +139,7 @@ class InterfaceController extends OrderAbstractController
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
         $secretKey = $_ENV['APP_SECRET']; //get .env parameter
 
+        $checksum = NULL;
         $input = array();
         foreach ($post_data as $key => $value) {
             if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
@@ -149,15 +150,15 @@ class InterfaceController extends OrderAbstractController
         }
 
         $valid = NULL;
-        $hash = hash('sha512', $secretKey . serialize($post_data));
+        $hash = hash('sha512', $secretKey . serialize($input));
         if ($hash === $checksum) {
             $valid = true;
         } else {
             $valid = false;
         }
 
-        $post_str = implode(',', $post_data);
-        $logger->notice('receiveTransferAction: post_str='.$post_str);
+        $post_str = implode(',', $input);
+        $logger->notice('receiveTransferAction: input='.$post_str);
 
         $res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
 
