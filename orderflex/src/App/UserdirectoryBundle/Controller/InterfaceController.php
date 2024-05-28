@@ -149,7 +149,7 @@ class InterfaceController extends OrderAbstractController
         }
 
         $valid = NULL;
-        $hash = hash('sha512', $secretKey . serialize($input));
+        $hash = hash('sha512', $secretKey . serialize($post_data));
         if ($hash === $checksum) {
             $valid = true;
         } else {
