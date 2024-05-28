@@ -22,6 +22,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
@@ -122,14 +123,14 @@ class InterfaceController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['POST'])]
-    #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
+    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['GET'])]
     public function receiveTransferAction(Request $request)
     {
         //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
         //    return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         //}
 
+        //exit('receive!!!');
 
         $res = "OK";
 

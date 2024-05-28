@@ -31,6 +31,8 @@ security:
        - { path: ^.*/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
 
+       - { path: ^.*/directory/receive-transfer/, role: PUBLIC_ACCESS }
+
        - { path: ^.*/access-requests/change-status/, role: ROLE_EDITOR }
 
        ############################## common idle time out logic ##############################
@@ -79,8 +81,6 @@ security:
   #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
 #       - { path: ^/(_locale)/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
        - { path: ^.*/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
-
-       - { path: ^.*/directory/receive-transfer/, role: PUBLIC_ACCESS }
 
        ############################## SCAN SITE SETTINGS ##############################
        - { path: ^.*/scan/access-requests/new/, role: PUBLIC_ACCESS }
