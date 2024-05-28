@@ -123,7 +123,7 @@ class InterfaceController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['GET'])]
+    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['POST'])]
     public function receiveTransferAction(Request $request)
     {
         //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
