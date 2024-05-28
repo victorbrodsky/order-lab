@@ -140,7 +140,7 @@ class InterfaceController extends OrderAbstractController
         $post_str = implode(',', $post_data);
         $logger->notice('receiveTransferAction: post_str='.$post_str);
 
-        $res = "OK; ".$post_data; //"OK";
+        $res = "OK; ".$post_str; //"OK";
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

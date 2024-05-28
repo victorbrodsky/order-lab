@@ -242,7 +242,7 @@ class InterfaceTransferUtil {
         $status = curl_getinfo($ch);
         curl_close($ch);
 
-        dump($status);
+        //dump($status);
         dump($result);
         exit('222');
 
