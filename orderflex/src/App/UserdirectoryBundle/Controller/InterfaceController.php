@@ -132,15 +132,34 @@ class InterfaceController extends OrderAbstractController
         //exit('receive!!!');
 
         $logger = $this->container->get('logger');
-
         $post_data = json_decode($request->getContent(), true);
+        $logger->notice('receiveTransferAction: post_data count='.count($post_data));
 
-        $logger->notice('receiveTransferAction: post_data='.count($post_data));
+        //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+
+        $input = array();
+        foreach ($post_data as $key => $value) {
+            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
+                $checksum = $value;
+            } else {
+                $input[$key] = $value;
+            }
+        }
+
+        $valid = NULL;
+        $hash = hash('sha512', $secretKey . serialize($input));
+        if ($hash === $checksum) {
+            $valid = true;
+        } else {
+            $valid = false;
+        }
 
         $post_str = implode(',', $post_data);
         $logger->notice('receiveTransferAction: post_str='.$post_str);
 
-        $res = "OK; ".$post_str; //"OK";
+        $res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

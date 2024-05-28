@@ -185,9 +185,6 @@ class InterfaceTransferUtil {
         //dump($jsonFile);
         //exit('111');
 
-        //Send data with curl and secret key
-        //$secretKey = $transfer->getSshPassword(); //use SshPassword for now
-
         $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
 
@@ -216,6 +213,15 @@ class InterfaceTransferUtil {
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
+
+        //Send data with curl and secret key
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+
+        //Add hash and security key
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $jsonFile['hash'] = $hash;
+
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
         $url = 'http://'.$strServer.'/directory/receive-transfer';
@@ -257,6 +263,7 @@ class InterfaceTransferUtil {
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
             //make json from TranslationalResearchBundle AntibodyList entity
             $jsonFile = $transferableEntity->toJson();
+            $jsonFile['className'] = $className;
         }
 
         //Case: some other transferable object
