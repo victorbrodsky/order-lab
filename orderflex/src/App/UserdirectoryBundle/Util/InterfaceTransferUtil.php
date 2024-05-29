@@ -151,13 +151,13 @@ class InterfaceTransferUtil {
         echo "transferDatas=".count($transferDatas)."<br>";
 
         foreach($transferDatas as $transferData) {
-            $this->makeSingleTransfer($transferData);
+            $this->sendSingleTransfer($transferData);
         }
 
         exit('EOF sendTransfer');
     }
 
-    public function makeSingleTransfer( TransferData $transferData ) {
+    public function sendSingleTransfer( TransferData $transferData ) {
 
         echo "transferStatus=".$transferData->getTransferStatus()."<br>";
 
@@ -172,7 +172,7 @@ class InterfaceTransferUtil {
             return null;
         }
 
-        //Get antibody
+        //Get $transferableEntity (i.e. antibody)
         $className = $transferData->getClassName();
         $entityId = $transferData->getEntityId();
         if( $className && $entityId ) {
@@ -185,9 +185,26 @@ class InterfaceTransferUtil {
         //dump($jsonFile);
         //exit('111');
 
-        $this->sendDataCurl($interfaceTransfer,$jsonFile);
+        $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
+        $status = NULL;
+        if( $res ) {
+            //set status to 'Completed'
+            $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Completed');
 
+        } else {
+            //Failed
+            $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Failed');
+        }
+
+        if( $status ) {
+            $transferData->setTransferStatus($status);
+            $this->em->flush();
+
+            //TODO: Add to EventLog
+        }
+
+        return $res;
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
@@ -234,15 +251,18 @@ class InterfaceTransferUtil {
         $result = json_decode($result,true);
         $checksum = $result['checksum'];
         $valid = $result['valid'];
+        $transferResult = $result['transferResult'];
 
         //dump($result);
         //exit('222');
 
-        if( $checksum === $hash && $valid === true ) {
+        if( $checksum === $hash && $valid === true && $transferResult === true ) {
             echo "Successefully sent: ".$jsonFile['className'].", ID=".$jsonFile['id']." <br>";
+            return true;
         }
 
-        exit('222');
+        //exit('222');
+        return false;
     }
 
     public function createJsonFile( $transferableEntity, $className ) {
@@ -430,6 +450,7 @@ class InterfaceTransferUtil {
             }
         }
 
+        return true;
     }
     
 }

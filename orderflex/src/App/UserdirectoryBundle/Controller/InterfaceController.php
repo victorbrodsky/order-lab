@@ -157,9 +157,10 @@ class InterfaceController extends OrderAbstractController
             $valid = false;
         }
 
+        $transferResult = NULL;
         if( $valid ) {
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
-            $interfaceTransferUtil->receiveTransfer($input);
+            $transferResult = $interfaceTransferUtil->receiveTransfer($input);
         }
 
         //$post_str = implode(',', $input);
@@ -168,32 +169,14 @@ class InterfaceController extends OrderAbstractController
 
         $res = array(
             "checksum" => $checksum,
-            "valid" => $valid
+            "valid" => $valid,
+            "transferResult" => $transferResult
         );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($res));
         return $response;
-
-
-
-
-        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
-
-        //List of items to transfer from TransferData
-        $transferDatas = $interfaceTransferUtil->sendTransfer();
-
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            "Transfer completed"
-        );
-
-        return $this->redirect(
-            $this->generateUrl(
-                $this->getParameter('employees_interface_manager')
-            )
-        );
     }
 
 }
