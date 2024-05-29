@@ -758,6 +758,13 @@ class AntibodyList extends ListAbstract
             $item->removeAssociate($this);
         }
     }
+    public function removeAllAssociates()
+    {
+        $this->getAssociates()->clear();
+//        foreach( $this->associates as $associate) {
+//            $this->removeAssociate($associate);
+//        }
+    }
 
 //    /**
 //     * @return mixed
@@ -997,6 +1004,7 @@ class AntibodyList extends ListAbstract
         $imageData = array();
         foreach( $this->getDocuments() as $document ) {
             $imageData[] = array(
+                'id' => $document->getId(),
                 'key' => 'document-'.$document->getId(),
                 'label' => $this->getName(),
                 'url' => $document->getAbsoluteUploadFullPath()
@@ -1016,6 +1024,7 @@ class AntibodyList extends ListAbstract
                 $path = $visualInfoDocument->getAbsoluteUploadFullPath();
                 if( $path ) {
                     $imageData[] = array(
+                        'id' => $visualInfoDocument->getId(),
                         'key' => 'visualinfo-'.$visualInfoDocument->getId(),
                         'label' => $uploadedType.$visualInfo->getComment(),
                         'url' => $path,
@@ -1029,5 +1038,69 @@ class AntibodyList extends ListAbstract
         return $imageData;
     }
 
+    public function updateByJson( $json, $em, $className ) {
+//        $json = array(
+//            'id' => ($this->getId()) ? $this->getId() : "unidentified",
+//            'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
+//            'publictext' => $this->getPublicText(),
+//            'documents' => $this->getImageData(),
+//            'datasheet' => $datasheet,
+//            //'disableDatasheet' => $disableDatasheet,
+//            'description' => $this->getDescription(),
+//            'tags' => $this->getCategoryTagsStr(),
+//            'company' => $this->getCompany(),
+//            'clone' => $this->getClone(),
+//            'host' => $this->getHost(),
+//            'reactivity' => $this->getReactivity(),
+//            'storage' => $this->getStorage(),
+//            'associates' => $this->getAssociatesObjectsArr(),
+//        );
+
+        $name = $json['name'];
+        $this->setName($name);
+
+        $datasheet = $json['datasheet'];
+        $this->setDatasheet($datasheet);
+
+        $description = $json['name'];
+        $this->setDescription($description);
+
+        //Entity AntibodyCategoryTagList
+        //Remove all $tags
+//        $this->getCategoryTags()->clear();
+//        $tags = $json['tags'];
+//        foreach($tags as $tag) {
+//            if( $tagEntity ) {
+//                $this->addCategoryTag($tagEntity);
+//            }
+//        }
+
+        $company = $json['company'];
+        $this->setCompany($company);
+
+        $clone = $json['clone'];
+        $this->setClone($clone);
+
+        $host = $json['host'];
+        $this->setHost($host);
+
+        $reactivity = $json['reactivity'];
+        $this->setReactivity($reactivity);
+
+        $storage = $json['storage'];
+        $this->setStorage($storage);
+
+        //Entity this list
+        //Remove all $associates
+        $this->removeAllAssociates();
+        $associates = $json['associates'];
+        foreach($associates as $associate) {
+            $associateId = $associate['id'];
+            $associateEntity = $em->getRepository($className)->find($associateId);
+            $this->addAssociate($associateEntity);
+        }
+
+        return true;
+    }
 
 }

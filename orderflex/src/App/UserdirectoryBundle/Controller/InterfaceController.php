@@ -109,7 +109,7 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //List of items to transfer from TransferData
-        $transferDatas = $interfaceTransferUtil->makeTransfer();
+        $transferDatas = $interfaceTransferUtil->sendTransfer();
 
         $request->getSession()->getFlashBag()->add(
             'notice',
@@ -157,6 +157,11 @@ class InterfaceController extends OrderAbstractController
             $valid = false;
         }
 
+        if( $valid ) {
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+            $interfaceTransferUtil->receiveTransfer($input);
+        }
+
         //$post_str = implode(',', $input);
         //$logger->notice('receiveTransferAction: input='.$post_str);
         //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
@@ -177,7 +182,7 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //List of items to transfer from TransferData
-        $transferDatas = $interfaceTransferUtil->makeTransfer();
+        $transferDatas = $interfaceTransferUtil->sendTransfer();
 
         $request->getSession()->getFlashBag()->add(
             'notice',

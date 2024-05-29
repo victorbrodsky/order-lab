@@ -143,9 +143,9 @@ class InterfaceTransferUtil {
         }
     }
 
-    //TODO: create transfer interface page and call this function makeTransfer
+    //TODO: create transfer interface page and call this function sendTransfer
     //Get all transfers from TransferData with status 'Ready' and make sftp transfer to the remote server
-    public function makeTransfer() {
+    public function sendTransfer() {
         //1) get data from TransferData
         $transferDatas = $this->getTransfers('Ready');
         echo "transferDatas=".count($transferDatas)."<br>";
@@ -154,7 +154,7 @@ class InterfaceTransferUtil {
             $this->makeSingleTransfer($transferData);
         }
 
-        exit('EOF makeTransfer');
+        exit('EOF sendTransfer');
     }
 
     public function makeSingleTransfer( TransferData $transferData ) {
@@ -188,28 +188,6 @@ class InterfaceTransferUtil {
         $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
 
-    }
-
-    public function sendDataCurl_TEST( InterfaceTransferList $interfaceTransfer, $jsonFile )
-    {
-        $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $url = 'http://' . $strServer . '/directory/receive-transfer';
-        //$hash = hash('sha512','UPbztBfJEY7FjDjUZ7kd');
-
-        $fields_string = http_build_query($jsonFile);
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, count($jsonFile));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-        $result = curl_exec($ch);
-        $status = curl_getinfo($ch);
-        //dump($status);
-        curl_close($ch);
-
-        dump($result);
-        exit('222');
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
@@ -425,6 +403,33 @@ class InterfaceTransferUtil {
         //exit("transfer=".$transfer->getId());
 
         return $transfer;
+    }
+
+    public function receiveTransfer($receiveData) {
+        $className = $receiveData['className'];
+        //$entityName = $this->getEntityName($className);
+
+        //Case: AntibodyList
+        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
+            $entityId = $receiveData['id'];
+            if( $className && $entityId ) {
+                $transferableEntity = $this->em->getRepository($className)->find($entityId);
+                if( $transferableEntity ) {
+                    $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                    if( $update ) {
+                        //$this->em->flush();
+                    }
+                } else {
+                    //create new entity
+                    $transferableEntity = new $className();
+                    $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                    if( $update ) {
+                        //$this->em->flush();
+                    }
+                }
+            }
+        }
+
     }
     
 }
