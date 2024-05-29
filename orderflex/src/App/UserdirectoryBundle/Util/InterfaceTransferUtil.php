@@ -252,12 +252,14 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
+
+        $result = json_decode($result,true);
+        $checksum = $result['checksum'];
+        $valid = $result['valid'];
+
         //dump($result);
         //exit('222');
 
-        $result = json_decode($result);
-        $checksum = $result['checksum'];
-        $valid = $result['valid'];
         if( $checksum === $hash && $valid === true ) {
             echo "Successefully sent: ".$jsonFile['className'].", ID=".$jsonFile['id']." <br>";
         }
