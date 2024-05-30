@@ -198,6 +198,8 @@ class InterfaceTransferUtil {
 
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
+        //TODO: send associated files (i.e. documents)
+
         $msg = "";
         $status = NULL;
         if( $res === true ) {

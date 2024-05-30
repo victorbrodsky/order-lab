@@ -991,17 +991,18 @@ class AntibodyList extends ListAbstract
             'id' => ($this->getId()) ? $this->getId() : "unidentified",
             'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'publictext' => $this->getPublicText(),
-            'documents' => $this->getImageData(),
+            'documents' => $this->getImageData(), //array of document's data
+            //'documentsArr' => $this->getDocumentsArr(),
             'datasheet' => $datasheet,
             //'disableDatasheet' => $disableDatasheet,
             'description' => $this->getDescription(),
-            'tags' => $this->getCategoryTagsStr(),
+            'tags' => $this->getCategoryTagsStr(), //tag object
             'company' => $this->getCompany(),
             'clone' => $this->getClone(),
             'host' => $this->getHost(),
             'reactivity' => $this->getReactivity(),
             'storage' => $this->getStorage(),
-            'associates' => $this->getAssociatesObjectsArr(),
+            'associates' => $this->getAssociatesObjectsArr(), //self associated objects
             'comment' => $this->getComment()
         );
 
@@ -1045,6 +1046,45 @@ class AntibodyList extends ListAbstract
 
         return $imageData;
     }
+
+//    public function getDocumentsArr() {
+//        $documentsArr = array();
+//
+//        foreach( $this->getDocuments() as $document ) {
+//            $imageData[] = array(
+//                'id' => $document->getId(),
+//                'key' => 'document-'.$document->getId(),
+//                'label' => $this->getName(),
+//                'url' => $document->getAbsoluteUploadFullPath()
+//            );
+//        }
+//
+//        foreach( $this->getVisualInfos() as $visualInfo ) {
+//            //$visualInfoROI = false;
+//            //$visualInfoWSI = false;
+//            $uploadedType = $visualInfo->getUploadedType();
+//
+//            if( $uploadedType ) {
+//                $uploadedType = $uploadedType . ": ";
+//            }
+//
+//            foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+//                $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+//                if( $path ) {
+//                    $imageData[] = array(
+//                        'id' => $visualInfoDocument->getId(),
+//                        'key' => 'visualinfo-'.$visualInfoDocument->getId(),
+//                        'label' => $uploadedType.$visualInfo->getComment(),
+//                        'url' => $path,
+//                        'comment' => $visualInfo->getComment(),
+//                        'catalog' => $visualInfo->getCatalog()
+//                    );
+//                }
+//            }
+//        }
+//
+//        return $documentsArr;
+//    }
 
     public function updateByJson( $json, $em, $className ) {
 //        $json = array(
