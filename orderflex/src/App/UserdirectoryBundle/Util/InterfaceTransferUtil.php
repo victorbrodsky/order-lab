@@ -450,14 +450,14 @@ class InterfaceTransferUtil {
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
-                        //$this->em->flush();
+                        $this->em->flush();
                     }
                 } else {
                     //create new entity
                     $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
-                        //$this->em->flush();
+                        $this->em->flush();
                     }
                 }
             }
