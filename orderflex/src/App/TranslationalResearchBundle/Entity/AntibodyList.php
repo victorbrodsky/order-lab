@@ -265,6 +265,14 @@ class AntibodyList extends ListAbstract
         //$this->myAssociates = new ArrayCollection();
     }
 
+    
+//    #[ORM\PostUpdate]
+//    public function setUpdatedon()
+//    {
+//        $this->updatedon = new \DateTime();
+//    }
+
+
     /**
      * @return mixed
      */

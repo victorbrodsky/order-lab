@@ -24,6 +24,7 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 //use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -110,23 +111,34 @@ class DoctrineListener {
 
         $this->setMetaphoneField($entity);
 
+//        if( $this->setTrabsferable($entity) ) {
+//            $em = $args->getObjectManager();
+//            $em->flush();
+//            //exit('preUpdate: setTrabsferable yes');
+//        }
+    }
+
+    public function postUpdate( PostUpdateEventArgs  $args )
+    {
+        //exit("DoctrineListener->postUpdate");
+        $em = $args->getObjectManager();
+        $entity = $args->getObject();
+
+        //exit("DoctrineListener->postUpdate: "."classname=".get_class($entity));
+
+        //$logger = $this->container->get('logger');
+        //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
+
         if( $this->setTrabsferable($entity) ) {
-            //$em = $args->getObjectManager();
-            //$em->flush();
-            //exit('preUpdate: setTrabsferable yes');
-        } else {
-            //exit('preUpdate: setTrabsferable no');
+            $em->flush();
+            //exit('postUpdate');
         }
     }
 
-//    public function postUpdate( PostUpdateEventArgs  $args )
-//    {
-//        //exit("DoctrineListener->postUpdate");
+//    public function postFlush(PostFlushEventArgs $args) {
+//        $entity = $args->getObjectManager();
 //        $em = $args->getObjectManager();
-//        $entity = $args->getObjectManager()
-//
-//        //$logger = $this->container->get('logger');
-//        //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
+//        //exit("DoctrineListener->postFlush: "."classname=".get_class($entity));
 //
 //        if( $this->setTrabsferable($entity) ) {
 //            $em->flush();
@@ -162,8 +174,8 @@ class DoctrineListener {
     public function setTrabsferable($entity) {
 
         //echo "classname=".get_class($entity)."<br>";
-        $logger = $this->container->get('logger');
-        $logger->notice("classname=".get_class($entity));
+        //$logger = $this->container->get('logger');
+        //$logger->notice("classname=".get_class($entity));
 
         if( $entity instanceof AntibodyList ) {
             //exit('AntibodyList, ID='.$entity->getId());

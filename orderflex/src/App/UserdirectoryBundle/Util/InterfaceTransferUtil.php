@@ -466,8 +466,9 @@ class InterfaceTransferUtil {
                     $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
-                        $logger->notice('receiveTransfer: create new AntibodyList flush: id='.$transferableEntity->getId());
+                        $this->em->persist($transferableEntity);
                         $this->em->flush();
+                        $logger->notice('receiveTransfer: after creation new AntibodyList flush: id='.$transferableEntity->getId());
                     }
                 }
             }

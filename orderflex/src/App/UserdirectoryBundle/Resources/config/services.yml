@@ -113,6 +113,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: preUpdate, connection: default }
+            - { name: doctrine.event_listener, event: postUpdate, connection: default }
 
 #    foscomment.listener:
 #        class: App\UserdirectoryBundle\Services\FosCommentListener
