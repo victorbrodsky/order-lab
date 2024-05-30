@@ -250,7 +250,7 @@ class AntibodyList extends ListAbstract
     private $associates;
     /////// EOF “Associated Antibodies” multi-select Select2 ///////
 
-
+    //Add Original ID (oid) to match the unique transferable entity between source and destination servers?
 
 
     public function __construct($author=null) {
@@ -1002,6 +1002,7 @@ class AntibodyList extends ListAbstract
             'reactivity' => $this->getReactivity(),
             'storage' => $this->getStorage(),
             'associates' => $this->getAssociatesObjectsArr(),
+            'comment' => $this->getComment()
         );
 
         return $json;

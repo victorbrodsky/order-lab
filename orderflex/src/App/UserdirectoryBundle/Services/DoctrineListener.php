@@ -183,9 +183,9 @@ class DoctrineListener {
 
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
-            //TODO: make sure it does not fired on the slave (remote) server
-            $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByName("AntibodyList");
-            if( !$interfaceTransfer ) {
+            //make sure it does not fired on the slave (remote) server
+            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+            if( !$masterTransferServer ) {
                 return false;
             }
 

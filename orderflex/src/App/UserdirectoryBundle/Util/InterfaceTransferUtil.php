@@ -447,6 +447,21 @@ class InterfaceTransferUtil {
         return $interfaceTransfer;
     }
 
+    public function isMasterTransferServer( $entity ) {
+        $mapper = $this->classListMapper($entity);
+        //$className = $mapper['className'];
+        $entityName = $mapper['entityName'];
+
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            if( $interfaceTransfer->getTransferDestination() ) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     public function receiveTransfer($receiveData) {
         $logger = $this->container->get('logger');
 
@@ -457,15 +472,27 @@ class InterfaceTransferUtil {
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
             $logger->notice('AntibodyList: className='.$className);
             $entityId = $receiveData['id'];
-            $name = $receiveData['name'];
+            
             if( $className && $entityId ) {
                 $logger->notice('AntibodyList: entityId='.$entityId);
-                //find existing antibody by name and description and comment
-                $transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+                //find unique existing antibody by name and description and comment
+                //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+                
+                $name = $receiveData['name'];
+                $description = $receiveData['description'];
+                $comment = $receiveData['comment'];
+                
+                $matchingArr = array(
+                    'name' => $name,
+                    //'description' => $description,
+                    //'comment' => $comment
+                );
+                $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
                         $transferableEntity->setOpenToPublic(true);
+                        $transferableEntity->setType('user-added');
                         $this->em->flush();
                     }
                 } else {
@@ -475,6 +502,7 @@ class InterfaceTransferUtil {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
                         $transferableEntity->setOpenToPublic(true);
+                        $transferableEntity->setType('user-added');
                         $this->em->persist($transferableEntity);
                         $this->em->flush();
                         $logger->notice('receiveTransfer: after creation new AntibodyList flush: id='.$transferableEntity->getId());
@@ -484,6 +512,40 @@ class InterfaceTransferUtil {
         }
 
         return true;
+    }
+
+    ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
+    public function findExistingTransferableEntity( $className, $matchingArr ) {
+        //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+
+        $repository = $this->em->getRepository($className);
+        $dql =  $repository->createQueryBuilder("entity");
+        $dql->select('entity');
+
+        $parameters = array();
+
+        foreach($matchingArr as $key=>$value) {
+            $dql->andWhere('entity.'.$key.' = :entity'.$key);
+            $parameters['entity.'.$key] = $value;
+        }
+
+        $query = $dql->getQuery();
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $entities = $query->getResult();
+
+        if( count($entities) === 1 ) {
+            return $entities[0];
+        }
+
+        if( count($entities) > 0 ) {
+            return $entities[0];
+        }
+
+        return null;
     }
     
 }

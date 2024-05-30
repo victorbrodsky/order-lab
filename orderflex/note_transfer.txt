@@ -31,3 +31,8 @@ of the successfully processed antibodies IDs (via the same TransferData or as a 
 
 6) The master server will get the list of successfully processed antibodies IDs
 from remote server and update the status of the records in the TransferData table.
+
+TODO:
+1) Add secret key to the site settings
+2) Add some variable on the server to indicate that this server is a master and will transfer data to other server
+3) Add Original ID (oid) to match the unique transferable entity between source and destination servers?
