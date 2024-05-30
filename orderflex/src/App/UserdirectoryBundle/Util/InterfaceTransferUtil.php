@@ -443,7 +443,7 @@ class InterfaceTransferUtil {
     }
 
     public function getInterfaceTransferByName( $name ) {
-        $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
+        $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($name);
         return $interfaceTransfer;
     }
 
@@ -457,12 +457,15 @@ class InterfaceTransferUtil {
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
             $logger->notice('AntibodyList: className='.$className);
             $entityId = $receiveData['id'];
+            $name = $receiveData['name'];
             if( $className && $entityId ) {
                 $logger->notice('AntibodyList: entityId='.$entityId);
-                $transferableEntity = $this->em->getRepository($className)->find($entityId);
+                //find existing antibody by name and description and comment
+                $transferableEntity = $this->em->getRepository($className)->findOneByName($name);
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
+                        $transferableEntity->setOpenToPublic(true);
                         $this->em->flush();
                     }
                 } else {
@@ -471,6 +474,7 @@ class InterfaceTransferUtil {
                     $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
+                        $transferableEntity->setOpenToPublic(true);
                         $this->em->persist($transferableEntity);
                         $this->em->flush();
                         $logger->notice('receiveTransfer: after creation new AntibodyList flush: id='.$transferableEntity->getId());
