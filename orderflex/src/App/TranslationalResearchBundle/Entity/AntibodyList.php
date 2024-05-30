@@ -265,7 +265,6 @@ class AntibodyList extends ListAbstract
         //$this->myAssociates = new ArrayCollection();
     }
 
-
     /**
      * @return mixed
      */

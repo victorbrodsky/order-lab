@@ -439,13 +439,17 @@ class InterfaceTransferUtil {
     }
 
     public function receiveTransfer($receiveData) {
+        $logger = $this->container->get('logger');
+
         $className = $receiveData['className'];
         //$entityName = $this->getEntityName($className);
 
         //Case: AntibodyList
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
+            $logger->note('AntibodyList: className='.$className);
             $entityId = $receiveData['id'];
             if( $className && $entityId ) {
+                $logger->note('AntibodyList: entityId='.$entityId);
                 $transferableEntity = $this->em->getRepository($className)->find($entityId);
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
@@ -454,9 +458,11 @@ class InterfaceTransferUtil {
                     }
                 } else {
                     //create new entity
+                    $logger->note('receiveTransfer: create new AntibodyList');
                     $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
+                        $logger->note('receiveTransfer: create new AntibodyList flush');
                         $this->em->flush();
                     }
                 }

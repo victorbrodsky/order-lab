@@ -98,6 +98,7 @@ class DoctrineListener {
     }
 
 
+    //preUpdate is firing only if there is a change in the entity
     public function preUpdate( PreUpdateEventArgs $args )
     {
         //exit("DoctrineListener->preUpdate");
@@ -109,10 +110,12 @@ class DoctrineListener {
 
         $this->setMetaphoneField($entity);
 
-        if( $transfer = $this->setTrabsferable($entity) ) {
-            $em = $args->getObjectManager();
-            $em->flush();
-            //exit('preUpdate');
+        if( $this->setTrabsferable($entity) ) {
+            //$em = $args->getObjectManager();
+            //$em->flush();
+            //exit('preUpdate: setTrabsferable yes');
+        } else {
+            //exit('preUpdate: setTrabsferable no');
         }
     }
 
@@ -159,6 +162,9 @@ class DoctrineListener {
     public function setTrabsferable($entity) {
 
         //echo "classname=".get_class($entity)."<br>";
+        $logger = $this->container->get('logger');
+        $logger->notice("classname=".get_class($entity));
+
         if( $entity instanceof AntibodyList ) {
             //exit('AntibodyList, ID='.$entity->getId());
 
@@ -176,11 +182,15 @@ class DoctrineListener {
                 return false; //do nothing
             }
 
+            //exit('before createTransferData');
             //2 add antibody to the TransferData table
             $transfer = $interfaceTransferUtil->createTransferData($entity,$status='Ready');
+            //exit('after createTransferData');
 
             if( $transfer ) {
                 return true;
+            } else {
+                //exit('createTransferData failed');
             }
         } else {
             //exit('not AntibodyList');

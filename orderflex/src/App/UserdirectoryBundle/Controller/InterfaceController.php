@@ -155,6 +155,7 @@ class InterfaceController extends OrderAbstractController
 
         $transferResult = NULL;
         if( $valid ) {
+            $logger->notice('receiveTransferAction: checksum valid');
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
             $transferResult = $interfaceTransferUtil->receiveTransfer($input);
         }
