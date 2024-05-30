@@ -260,20 +260,22 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('222');
-
-        $result = json_decode($result,true);
-        $checksum = $result['checksum'];
-        $valid = $result['valid'];
-        $transferResult = $result['transferResult'];
-
         //dump($result);
         //exit('222');
 
-        if( $checksum === $hash && $valid === true && $transferResult === true ) {
-            echo "Successefully sent: ".$jsonFile['className'].", ID=".$jsonFile['id']." <br>";
-            return true;
+        if( $result ) {
+            $result = json_decode($result, true);
+            $checksum = $result['checksum'];
+            $valid = $result['valid'];
+            $transferResult = $result['transferResult'];
+
+            //dump($result);
+            //exit('222');
+
+            if ($checksum === $hash && $valid === true && $transferResult === true) {
+                echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+                return true;
+            }
         }
 
         //exit('222');
