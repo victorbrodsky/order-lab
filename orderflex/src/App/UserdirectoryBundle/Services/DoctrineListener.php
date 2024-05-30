@@ -24,6 +24,7 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -179,6 +180,13 @@ class DoctrineListener {
 
         if( $entity instanceof AntibodyList ) {
             //exit('AntibodyList, ID='.$entity->getId());
+
+            //TODO: make sure it does not fired on the slave (remote) server
+            $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName("AntibodyList");
+            if( !$interfaceTransfer ) {
+                return false;
+            }
+
 
             //check if public
             if( $entity->getOpenToPublic() !== true ) {
