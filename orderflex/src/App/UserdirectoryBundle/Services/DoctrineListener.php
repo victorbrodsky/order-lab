@@ -181,8 +181,10 @@ class DoctrineListener {
         if( $entity instanceof AntibodyList ) {
             //exit('AntibodyList, ID='.$entity->getId());
 
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
             //TODO: make sure it does not fired on the slave (remote) server
-            $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName("AntibodyList");
+            $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByName("AntibodyList");
             if( !$interfaceTransfer ) {
                 return false;
             }
@@ -193,8 +195,6 @@ class DoctrineListener {
                 //exit('not public');
                 return false;
             }
-
-            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //1) find if TransferData has this antibody with status 'Ready'
             if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {

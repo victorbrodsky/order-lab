@@ -442,6 +442,11 @@ class InterfaceTransferUtil {
         return $transfer;
     }
 
+    public function getInterfaceTransferByName( $name ) {
+        $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
+        return $interfaceTransfer;
+    }
+
     public function receiveTransfer($receiveData) {
         $logger = $this->container->get('logger');
 
