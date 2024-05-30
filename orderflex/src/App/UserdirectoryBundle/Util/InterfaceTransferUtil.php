@@ -196,9 +196,14 @@ class InterfaceTransferUtil {
         //dump($jsonFile);
         //exit('111');
 
+        //Step 1: send data with curl
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
-        //TODO: send associated files (i.e. documents)
+        //Step 2: send files with sftp
+        if( $res === true ) {
+            //TODO: send associated files (i.e. documents) transferFile
+
+        }
 
         $msg = "";
         $status = NULL;
