@@ -260,6 +260,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
+        dump($result);
+        exit('222');
 
         $result = json_decode($result,true);
         $checksum = $result['checksum'];
@@ -446,10 +448,10 @@ class InterfaceTransferUtil {
 
         //Case: AntibodyList
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
-            $logger->note('AntibodyList: className='.$className);
+            $logger->notice('AntibodyList: className='.$className);
             $entityId = $receiveData['id'];
             if( $className && $entityId ) {
-                $logger->note('AntibodyList: entityId='.$entityId);
+                $logger->notice('AntibodyList: entityId='.$entityId);
                 $transferableEntity = $this->em->getRepository($className)->find($entityId);
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
@@ -458,11 +460,11 @@ class InterfaceTransferUtil {
                     }
                 } else {
                     //create new entity
-                    $logger->note('receiveTransfer: create new AntibodyList');
+                    $logger->notice('receiveTransfer: create new AntibodyList');
                     $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
-                        $logger->note('receiveTransfer: create new AntibodyList flush');
+                        $logger->notice('receiveTransfer: create new AntibodyList flush');
                         $this->em->flush();
                     }
                 }
