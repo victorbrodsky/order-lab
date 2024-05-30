@@ -113,14 +113,10 @@ class InterfaceController extends OrderAbstractController
 
         $request->getSession()->getFlashBag()->add(
             'notice',
-            "Transfer completed"
+            $transferDatas
         );
 
-        return $this->redirect(
-            $this->generateUrl(
-                $this->getParameter('employees_interface_manager')
-            )
-        );
+        return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
     #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['POST'])]

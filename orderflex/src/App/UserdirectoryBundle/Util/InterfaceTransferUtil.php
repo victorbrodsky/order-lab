@@ -150,11 +150,21 @@ class InterfaceTransferUtil {
         $transferDatas = $this->getTransfers('Ready');
         echo "transferDatas=".count($transferDatas)."<br>";
 
+        $resArr = array();
         foreach($transferDatas as $transferData) {
-            $this->sendSingleTransfer($transferData);
+            $singleTransferRes = $this->sendSingleTransfer($transferData);
+            $resArr[] = $singleTransferRes;
         }
 
-        exit('EOF sendTransfer');
+        $resStr = NULL;
+        if( count($resArr) > 0 ) {
+            $resStr = "Transfer completed: " . implode("; ",$resArr);
+        } else {
+            $resStr = "Transfer not completed: nothing to transfer.";
+        }
+
+        return $resStr;
+        //exit('EOF sendTransfer');
     }
 
     public function sendSingleTransfer( TransferData $transferData ) {
@@ -166,6 +176,7 @@ class InterfaceTransferUtil {
         }
 
         $interfaceTransfer = $transferData->getInterfaceTransfer();
+        $strServer = $interfaceTransfer->getTransferDestination();
 
         if( !$interfaceTransfer ) {
             echo "interface transfer is null <br>";
@@ -187,14 +198,16 @@ class InterfaceTransferUtil {
 
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
+        $msg = "";
         $status = NULL;
-        if( $res ) {
+        if( $res === true ) {
             //set status to 'Completed'
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Completed');
-
+            $msg = "Entity ".$className." with ID ". $entityId ." has been successfully transfered to the remote server ".$strServer;
         } else {
             //Failed
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Failed');
+            $msg = "Entity ".$className." with ID ". $entityId ." failed to transfer to the remote server ".$strServer;
         }
 
         if( $status ) {
@@ -204,7 +217,7 @@ class InterfaceTransferUtil {
             //TODO: Add to EventLog
         }
 
-        return $res;
+        return $msg;
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
