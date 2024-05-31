@@ -196,14 +196,17 @@ class InterfaceTransferUtil {
         //dump($jsonFile);
         //exit('111');
 
+        //Step 2: send files with sftp
+        //if( $res === true ) {
+        //send associated files (i.e. documents) transferFile
+        $resFiles = $this->sendAssociatedFiles($interfaceTransfer,$jsonFile);
+
+        //add files path to $jsonFile
+        $jsonFile['files'] = $resFiles;
+        //}
+
         //Step 1: send data with curl
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
-
-        //Step 2: send files with sftp
-        if( $res === true ) {
-            //TODO: send associated files (i.e. documents) transferFile
-            $resFiles = $this->sendAssociatedFiles($interfaceTransfer,$jsonFile);
-        }
 
         $msg = "";
         $status = NULL;
@@ -219,7 +222,7 @@ class InterfaceTransferUtil {
 
         if( $status ) {
             $transferData->setTransferStatus($status);
-            $this->em->flush();
+            //$this->em->flush(); //testing
 
             //TODO: Add to EventLog
         }
@@ -228,7 +231,7 @@ class InterfaceTransferUtil {
     }
 
     public function sendAssociatedFiles( InterfaceTransferList $transfer, $jsonFile ) {
-        //dump($jsonFile);
+        dump($jsonFile);
         //exit('111');
 
         $strServer = $transfer->getTransferDestination();  //"159.203.95.150";
@@ -241,28 +244,40 @@ class InterfaceTransferUtil {
 
         if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
             //Ok, continue
+            echo "Connected to $strServer <br>";
         } else {
             exit("Unable to connect to the remote server");
         }
 
+        $resArr = array();
         foreach( $jsonFile['documents'] as $document ) {
-            $url = $document['url'];
+            $path = $document['path'];
             $label = $document['label'];
-            $this->sendSingleFile($dstConnection,$url);
+            $uniqueId = $jsonFile['id']."-".$document['id'];
+            $sentFile = $this->sendSingleFile($dstConnection,$path,$uniqueId);
+            if( $sentFile ) {
+                $resArr[] = $sentFile;
+            }
         }
 
-
+        return $resArr;
+        exit("EOF sendAssociatedFiles");
     }
 
     //Require ssh
     //http://pecl.php.net/package/ssh2
-    public function sendSingleFile( $dstConnection, $fileUrl ) {
+    public function sendSingleFile( $dstConnection, $filePath, $uniqueId ) {
 
-        $dstFile = "dst_file.csv";
-        $srcFile = "src_file.csv";
+        //$filePath: http://127.0.0.1:8000\Uploaded/directory/documents\65663c5c4180e.jpg
+        $dstFile = basename($filePath);
+        echo "dstFile=$dstFile <br>";
+
+        //$dstFile = "dst_file.csv";
+        //$srcFile = "src_file.csv";
 
         $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
-        $dstFilePath = $dstPath . $this->getPath("/") . $dstFile;
+        $dstFullPath = $dstPath . $this->getPath("/") . $uniqueId . "/";
+        $dstFilePath = $dstFullPath . $dstFile;
 
         //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
         //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
@@ -270,7 +285,7 @@ class InterfaceTransferUtil {
         //$projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
         //destination path: src\App\UserdirectoryBundle\Util
         //$srcFilePath = $projectDir . $this->getPath("/") . $srcFile;
-        $srcFilePath = $fileUrl;
+        $srcFilePath = $filePath;
         //exit('$srcFilePath='.$srcFilePath);
         //exit('$dstFilePath='.$dstFilePath);
         echo "srcFilePath=$srcFilePath <br>";
@@ -280,13 +295,12 @@ class InterfaceTransferUtil {
         $srcFilePath = realpath($srcFilePath);
 
         if( file_exists($srcFilePath) ) {
-            echo "The source file $srcFilePath exists";
+            echo "The source file $srcFilePath exists <br>";
         } else {
-            echo "The file $srcFilePath does not exist";
+            echo "The file $srcFilePath does not exist <br>";
             return NULL;
         }
 
-        echo "Connected to $strServer <br>";
         try {
             $dstSFTP = ssh2_sftp($dstConnection);
             echo "dstSFTP=$dstSFTP <br>";
@@ -298,10 +312,16 @@ class InterfaceTransferUtil {
             //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
             //dump($dstFile);
 
+            if (file_exists('ssh2.sftp://' . $dstFullPath)) {
+                //OK
+            } else {
+                ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0700, true);
+            }
+
             $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
 
             if ( !$dstFile ) {
-                throw new \Exception('File open failed. file=' . $srcFile);
+                throw new \Exception('File open failed. file=' . $srcFilePath);
             }
 
             //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
@@ -310,8 +330,8 @@ class InterfaceTransferUtil {
 
             $srcFile = fopen($srcFilePath, 'r');
 
-            $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
-            echo "writtenBytes=$writtenBytes <br>";
+            //$writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+            //echo "writtenBytes=$writtenBytes <br>";
             fclose($dstFile);
             fclose($srcFile);
 
@@ -319,17 +339,21 @@ class InterfaceTransferUtil {
             //fwrite($dstFile, "Testing");
             //echo "Close <br>";
             //fclose($dstFile);
+
+            return $dstFilePath;
+
         } catch ( Exception $e ) {
             throw new \Exception('Error to transfer file=' . $srcFile . '; Error='.$e->getMessage());
         }
 
+        return NULL;
+        exit("EOF sendSingleFile");
     }
-
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
 
-        //dump($jsonFile);
-        //exit('111');
+        dump($jsonFile);
+        exit('111');
 
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
@@ -444,11 +468,13 @@ class InterfaceTransferUtil {
     }
 
     public function getPath( $separator=DIRECTORY_SEPARATOR  ) {
+        ///var/temp/
         $path = $separator.
-            "src".$separator.
-            "App".$separator.
-            "UserdirectoryBundle".$separator.
-            "Temp".$separator
+            //"src".$separator.
+            //"App".$separator.
+            //"UserdirectoryBundle".$separator.
+            "var".$separator.
+            "temp".$separator
         ;
         return $path;
     }
