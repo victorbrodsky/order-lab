@@ -198,18 +198,15 @@ class InterfaceTransferUtil {
         //exit('111');
 
         //Step 2: send files with sftp
-        //if( $res === true ) {
         //send associated files (i.e. documents) transferFile
         $resFiles = $this->sendAssociatedFiles($interfaceTransfer,$jsonFile);
 
         //add files path to $jsonFile
         $jsonFile['files'] = $resFiles;
-        //}
 
         //Step 1: send data with curl
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
-        $msg = "";
         $status = NULL;
         if( $res === true ) {
             //set status to 'Completed'
@@ -266,7 +263,7 @@ class InterfaceTransferUtil {
         }
 
         return $resArr;
-        exit("EOF sendAssociatedFiles");
+        //exit("EOF sendAssociatedFiles");
     }
 
     //Require ssh
@@ -352,13 +349,13 @@ class InterfaceTransferUtil {
         }
 
         return NULL;
-        exit("EOF sendSingleFile");
+        //exit("EOF sendSingleFile");
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
 
         dump($jsonFile);
-        exit('111');
+        //exit('111');
 
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
@@ -400,6 +397,9 @@ class InterfaceTransferUtil {
 
         if( $result ) {
             $result = json_decode($result, true);
+            if( !$result ) {
+                return false;
+            }
             $checksum = $result['checksum'];
             $valid = $result['valid'];
             $transferResult = $result['transferResult'];
@@ -648,6 +648,7 @@ class InterfaceTransferUtil {
 
                 //Attach documents
                 //1) remove all existing documents and attach new
+                $logger->notice('receiveTransfer: transferableEntity ID='.$transferableEntity->getId());
                 $transferableEntity->clearDocuments();
                 $documentDatas = $receiveData['files'];
                 foreach($documentDatas as $documentArr) {
