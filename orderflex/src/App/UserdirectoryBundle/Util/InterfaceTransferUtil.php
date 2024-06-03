@@ -683,7 +683,8 @@ class InterfaceTransferUtil {
         $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
         $filesize = null;
-        $filepath = realpath($filepath);
+        //$filepath = realpath($filepath);
+        //$logger->notice("createAssociatedDocument: after realpath filepath=$filepath");
         if( $filepath ) {
             if( file_exists($filepath) ) {
                 $filesize = $filepath->getFileSize();
