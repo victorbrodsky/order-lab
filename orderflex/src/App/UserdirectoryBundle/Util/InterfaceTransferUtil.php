@@ -257,7 +257,9 @@ class InterfaceTransferUtil {
                 $resArr[] = array(
                     'uniqueid' => $uniqueId,
                     'filepath' => $sentFile,
-                    'label' => $label
+                    'label' => $label,
+                    'uniquename' => $document['uniquename'],
+                    'originalnameclean' => $document['originalnameclean']
                 );
             }
         }
