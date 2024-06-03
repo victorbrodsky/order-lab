@@ -723,7 +723,7 @@ class InterfaceTransferUtil {
 
         foreach($matchingArr as $key=>$value) {
             $dql->andWhere('entity.'.$key.' = :entity'.$key);
-            $parameters['entity.'.$key] = $value;
+            $parameters['entity'.$key] = $value;
         }
 
         $query = $dql->getQuery();
