@@ -1020,7 +1020,10 @@ class AntibodyList extends ListAbstract
                 'key' => 'document-'.$document->getId(),
                 'label' => $this->getName(),
                 'url' => $document->getAbsoluteUploadFullPath(),
-                'path' => $document->getFullServerPath()
+                'path' => $document->getFullServerPath(),
+                'uniqueid' => $document->getUniqueid(),
+                'uniquename' => $document->getUniquename(),
+                'cleanoriginalname' => $document->getCleanOriginalname(),
             );
         }
 

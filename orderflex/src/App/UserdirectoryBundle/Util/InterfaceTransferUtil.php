@@ -673,7 +673,10 @@ class InterfaceTransferUtil {
         $logger = $this->container->get('logger');
         $uniqueId = $documentArr['uniqueid'];
         $filepath = $documentArr['filepath'];
-        $label = $documentArr['label'];
+        //$label = $documentArr['label'];
+        $uniquename = $documentArr['uniquename'];
+        $cleanoriginalname = $documentArr['cleanoriginalname'];
+
         $author = null;
         $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
@@ -690,8 +693,8 @@ class InterfaceTransferUtil {
         $logger->notice("createAssociatedDocument: filepath=$filepath, filesize=$filesize");
 
         $object = new Document($author);
-        $object->setName($label);
-        $object->setCleanOriginalname($label);
+        $object->setUniquename($uniquename);
+        $object->setCleanOriginalname($cleanoriginalname);
         //$object->setTitle($uniqueTitle);
         $object->setUniqueid($uniqueId);
         //$object->setUniquename($fileUniqueName);
