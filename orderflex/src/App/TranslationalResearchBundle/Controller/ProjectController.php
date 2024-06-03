@@ -1327,11 +1327,23 @@ class ProjectController extends OrderAbstractController
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
 
+        //add a support email address on the bottom of this page to contact TRP support if having technical issues
+        $trpAdminEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',null);
+        if( !$trpAdminEmail ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $trpAdminEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        }
+        $supportNote = NULL;
+        if( $trpAdminEmail ) {
+            $supportNote = "If you encounter any technical issues, please email TRP support $trpAdminEmail";
+        }
+
         return array(
             'specialties' => $specialtiesFiltered,
             'collDivsFiltered' => $collDivsFiltered,
             'requesterGroups' => $requesterGroups,
-            'title' => "New Project Request"
+            'title' => "New Project Request",
+            'supportNote' => $supportNote
         );
     }
 

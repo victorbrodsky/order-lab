@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
 use App\UserdirectoryBundle\Entity\TransferStatusList;
@@ -654,7 +655,10 @@ class InterfaceTransferUtil {
 //                    'filepath' => $sentFile,
 //                    'label' => $label
                     $document = $this->createAssociatedDocument($documentArr);
+                    $logger->notice('receiveTransfer: document id='.$document->getId());
                     $transferableEntity->addDocument($document);
+                    $this->em->flush();
+                    $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
                 }
 
 
@@ -665,11 +669,14 @@ class InterfaceTransferUtil {
     }
 
     public function createAssociatedDocument($documentArr) {
+        $logger = $this->container->get('logger');
         $uniqueId = $documentArr['uniqueid'];
         $filepath = $documentArr['filepath'];
         $label = $documentArr['label'];
         $author = null;
+        $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
+        $filesize = null;
         $filepath = realpath($filepath);
         if( $filepath ) {
             if( file_exists($filepath) ) {
@@ -679,6 +686,7 @@ class InterfaceTransferUtil {
                 }
             }
         }
+        $logger->notice("createAssociatedDocument: filepath=$filepath, filesize=$filesize");
 
         $object = new Document($author);
         $object->setName($label);
@@ -696,6 +704,8 @@ class InterfaceTransferUtil {
 //        if( $documentTypeObject ) {
 //            $object->setType($documentTypeObject);
 //        }
+
+        $this->em->persist($object);
 
         return $object;
     }

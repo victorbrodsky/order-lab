@@ -58,6 +58,12 @@
 
     {% endfor %}
 
+    {% if supportNote %}
+        <p>
+            {{ supportNote|raw }}
+        </p>
+    {% endif %}
+
 {% endblock %}
 
 {#{% block maincss %}#}
