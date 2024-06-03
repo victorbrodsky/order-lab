@@ -1023,7 +1023,7 @@ class AntibodyList extends ListAbstract
                 'path' => $document->getFullServerPath(),
                 'uniqueid' => $document->getUniqueid(),
                 'uniquename' => $document->getUniquename(),
-                'cleanoriginalname' => $document->getCleanOriginalname(),
+                'originalnameclean' => $document->getOriginalnameClean(),
             );
         }
 

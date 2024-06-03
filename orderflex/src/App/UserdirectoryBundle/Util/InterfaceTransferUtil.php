@@ -675,7 +675,7 @@ class InterfaceTransferUtil {
         $filepath = $documentArr['filepath'];
         //$label = $documentArr['label'];
         $uniquename = $documentArr['uniquename'];
-        $cleanoriginalname = $documentArr['cleanoriginalname'];
+        $originalnameclean = $documentArr['originalnameclean'];
 
         $author = null;
         $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
@@ -694,7 +694,7 @@ class InterfaceTransferUtil {
 
         $object = new Document($author);
         $object->setUniquename($uniquename);
-        $object->setCleanOriginalname($cleanoriginalname);
+        $object->setCleanOriginalname($originalnameclean);
         //$object->setTitle($uniqueTitle);
         $object->setUniqueid($uniqueId);
         //$object->setUniquename($fileUniqueName);
