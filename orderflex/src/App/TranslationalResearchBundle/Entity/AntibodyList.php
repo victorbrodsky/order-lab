@@ -293,6 +293,9 @@ class AntibodyList extends ListAbstract
         $this->documents->removeElement($item);
         $item->clearUseObject();
     }
+    public function clearDocuments() {
+        $this->documents->clear();
+    }
 
     /**
      * @return string

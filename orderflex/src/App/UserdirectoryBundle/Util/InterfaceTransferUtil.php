@@ -253,10 +253,14 @@ class InterfaceTransferUtil {
         foreach( $jsonFile['documents'] as $document ) {
             $path = $document['path'];
             $label = $document['label'];
-            $uniqueId = $jsonFile['id']."-".$document['id'];
+            $uniqueId = $jsonFile['id']."-".$document['id']; //$jsonFile['id'] - transferable entity ID
             $sentFile = $this->sendSingleFile($dstConnection,$path,$uniqueId);
             if( $sentFile ) {
-                $resArr[] = $sentFile;
+                $resArr[] = array(
+                    'uniqueid' => $uniqueId,
+                    'filepath' => $sentFile,
+                    'label' => $label
+                );
             }
         }
 
@@ -640,10 +644,60 @@ class InterfaceTransferUtil {
                         $logger->notice('receiveTransfer: after creation new AntibodyList flush: id='.$transferableEntity->getId());
                     }
                 }
+
+                //Attach documents
+                //1) remove all existing documents and attach new
+                $transferableEntity->clearDocuments();
+                $documentDatas = $receiveData['files'];
+                foreach($documentDatas as $documentArr) {
+//                    'uniqueid' => $uniqueId,
+//                    'filepath' => $sentFile,
+//                    'label' => $label
+                    $document = $this->createAssociatedDocument($documentArr);
+                    $transferableEntity->addDocument($document);
+                }
+
+
             }
         }
 
         return true;
+    }
+
+    public function createAssociatedDocument($documentArr) {
+        $uniqueId = $documentArr['uniqueid'];
+        $filepath = $documentArr['filepath'];
+        $label = $documentArr['label'];
+        $author = null;
+
+        $filepath = realpath($filepath);
+        if( $filepath ) {
+            if( file_exists($filepath) ) {
+                $filesize = $filepath->getFileSize();
+                if (!$filesize) {
+                    $filesize = filesize($filepath);
+                }
+            }
+        }
+
+        $object = new Document($author);
+        $object->setName($label);
+        $object->setCleanOriginalname($label);
+        //$object->setTitle($uniqueTitle);
+        $object->setUniqueid($uniqueId);
+        //$object->setUniquename($fileUniqueName);
+        //$object->setUploadDirectory($path);
+        $object->setSize($filesize);
+
+//        $documentType = 'Antibody Image'
+//        $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+//        $documentType = trim((string)$documentType);
+//        $documentTypeObject = $transformer->reverseTransform($documentType);
+//        if( $documentTypeObject ) {
+//            $object->setType($documentTypeObject);
+//        }
+
+        return $object;
     }
 
     ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
