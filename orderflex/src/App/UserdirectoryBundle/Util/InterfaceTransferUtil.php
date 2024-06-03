@@ -625,6 +625,7 @@ class InterfaceTransferUtil {
                     //'comment' => $comment
                 );
                 $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
+                $logger->notice('receiveTransfer: transferableEntity ID='.$transferableEntity->getId());
                 if( $transferableEntity ) {
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
@@ -648,7 +649,6 @@ class InterfaceTransferUtil {
 
                 //Attach documents
                 //1) remove all existing documents and attach new
-                $logger->notice('receiveTransfer: transferableEntity ID='.$transferableEntity->getId());
                 $transferableEntity->clearDocuments();
                 $documentDatas = $receiveData['files'];
                 foreach($documentDatas as $documentArr) {
