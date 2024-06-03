@@ -319,7 +319,7 @@ class InterfaceTransferUtil {
             if (file_exists('ssh2.sftp://' . $dstFullPath)) {
                 //OK
             } else {
-                ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0700, true);
+                ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0755, true);
             }
 
             $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
