@@ -774,11 +774,14 @@ class InterfaceTransferUtil {
         }
 
         if( $filepath && file_exists($filepath) ) {
+            //TODO: permission denied (0755?)
             $logger->notice("AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
             rename($filepath, $uploadPath."/".$uniquename);
             //TODO: Delete in temp folder 4-25234
             //Delete '4-25234' in /usr/local/bin/order-lab-homepagemanager/orderflex/var/temp/4-25234/
-            $this->deleteDir( dirname($filepath) );
+            $tempFilepath = dirname($filepath);
+            $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
+            $this->deleteDir( $tempFilepath );
 
             $filepath = $uploadPath."/".$uniquename;
         }
