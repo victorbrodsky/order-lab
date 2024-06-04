@@ -31,7 +31,8 @@ security:
        - { path: ^.*/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/admin/install-certbot/, role: PUBLIC_ACCESS }
 
-       - { path: ^.*/directory/receive-transfer, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/transfer-interface/receive-transfer, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/transfer-interface/get-app-path, role: PUBLIC_ACCESS }
 
        - { path: ^.*/access-requests/change-status/, role: ROLE_EDITOR }
 

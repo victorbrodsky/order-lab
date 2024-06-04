@@ -119,7 +119,7 @@ class InterfaceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
-    #[Route(path: '/receive-transfer', name: 'employees_receive_transfer', methods: ['POST'])]
+    #[Route(path: '/transfer-interface/receive-transfer', name: 'employees_transfer_interface_receive_transfer', methods: ['POST'])]
     public function receiveTransferAction(Request $request)
     {
         //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -176,7 +176,7 @@ class InterfaceController extends OrderAbstractController
         return $response;
     }
 
-    #[Route(path: '/get-app-path', name: 'employees_get_app_path', methods: ['POST'])]
+    #[Route(path: '/transfer-interface/get-app-path', name: 'employees_transfer_interface_get_app_path', methods: ['POST'])]
     public function getAppPathAction(Request $request)
     {
         $logger = $this->container->get('logger');

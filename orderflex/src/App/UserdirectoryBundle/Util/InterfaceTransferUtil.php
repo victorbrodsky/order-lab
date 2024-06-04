@@ -377,7 +377,7 @@ class InterfaceTransferUtil {
 
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $url = 'http://'.$strServer.'/directory/receive-transfer';
+        $url = 'http://'.$strServer.'/directory/transfer-interface/receive-transfer';
         echo "url=$url <br>";
         $ch = curl_init($url);
 
@@ -440,7 +440,7 @@ class InterfaceTransferUtil {
 
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $url = 'http://'.$strServer.'/directory/get-app-path';
+        $url = 'http://'.$strServer.'/directory/transfer-interface/get-app-path';
         echo "url=$url <br>";
         $ch = curl_init($url);
 
@@ -456,6 +456,9 @@ class InterfaceTransferUtil {
         //$status = curl_getinfo($ch);
         curl_close($ch);
 
+        dump($result);
+        exit('111');
+
         if( $result ) {
             $result = json_decode($result, true);
             if( !$result ) {
@@ -466,8 +469,8 @@ class InterfaceTransferUtil {
             $transferResult = $result['transferResult'];
             $apppath = $result['apppath'];
 
-            //dump($result);
-            //exit('222');
+            dump($result);
+            exit('222');
 
             if ($checksum === $hash && $valid === true && $transferResult === true) {
                 echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
