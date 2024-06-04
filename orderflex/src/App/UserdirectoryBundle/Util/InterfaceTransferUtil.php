@@ -215,11 +215,11 @@ class InterfaceTransferUtil {
         if( $res === true ) {
             //set status to 'Completed'
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Completed');
-            $msg = "Entity ".$className." with ID ". $entityId .", name ".$jsonFile['name']." has been successfully transfered to the remote server ".$strServer;
+            $msg = "Entity ".$className." ID ". $entityId .", name ".$jsonFile['name']." has been successfully transfered to the remote server ".$strServer;
         } else {
             //Failed
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Failed');
-            $msg = "Entity ".$className." with ID ". $entityId .", name ".$jsonFile['name']." failed to transfer to the remote server ".$strServer;
+            $msg = "Entity ".$className." ID ". $entityId .", name ".$jsonFile['name']." failed to transfer to the remote server ".$strServer;
         }
 
         if( $status ) {
@@ -760,11 +760,13 @@ class InterfaceTransferUtil {
             $uploadPath = "TransferableUploads";
             $logger->warning('Upload path is not defined. Use default "'.$uploadPath.'" folder.');
         }
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $uploadDir = 'Uploaded';
-        $uploadPath = $uploadDir.'/'.$uploadPath;
+        $uploadPath = $projectRoot.'/public/'.$uploadDir.'/'.$uploadPath;
 
         if( $filepath && file_exists($filepath) ) {
-            $logger->notice("AssociatedDocument: move to=".$uploadPath."/".$uniquename);
+            $logger->notice("AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
             rename($filepath, $uploadPath."/".$uniquename);
             //TODO: Delete in temp folder 4-25234
             $filepath = $uploadPath."/".$uniquename;
