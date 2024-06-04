@@ -170,6 +170,7 @@ class InterfaceTransferUtil {
 
     public function sendSingleTransfer( TransferData $transferData ) {
 
+        $logger = $this->container->get('logger');
         echo "transferStatus=".$transferData->getTransferStatus()."<br>";
 
         if( $transferData->getTransferStatus() != 'Ready' ) {
@@ -199,6 +200,7 @@ class InterfaceTransferUtil {
 
         //Step 1: get application path with curl
         $remoteAppPath = $this->getAppPathCurl($interfaceTransfer,$jsonFile);
+        $logger->notice('remoteAppPath='.$remoteAppPath);
         $jsonFile['apppath'] = $remoteAppPath;
 
         //Step 2: send files with sftp
@@ -290,9 +292,6 @@ class InterfaceTransferUtil {
         //$dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
         $dstFullPath = $appPath . $this->getPath("/") . $uniqueId . "/";
         $dstFilePath = $dstFullPath . $dstFile;
-
-        //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
-        //$dstTestFilePath = $dstPath . "/" . "test_file.txt";
 
         //$projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
         //destination path: src\App\UserdirectoryBundle\Util
