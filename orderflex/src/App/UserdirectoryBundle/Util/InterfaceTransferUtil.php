@@ -170,7 +170,7 @@ class InterfaceTransferUtil {
 
     public function sendSingleTransfer( TransferData $transferData ) {
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         echo "transferStatus=".$transferData->getTransferStatus()."<br>";
 
         if( $transferData->getTransferStatus() != 'Ready' ) {
@@ -200,8 +200,8 @@ class InterfaceTransferUtil {
 
         //Step 1: get application path with curl
         $remoteAppPath = $this->getAppPathCurl($interfaceTransfer,$jsonFile);
-        $logger->notice('remoteAppPath='.$remoteAppPath);
-        exit('remoteAppPath='.$remoteAppPath);
+        //$logger->notice('remoteAppPath='.$remoteAppPath);
+        //exit('remoteAppPath='.$remoteAppPath);
         $jsonFile['apppath'] = $remoteAppPath;
 
         //Step 2: send files with sftp
@@ -445,6 +445,7 @@ class InterfaceTransferUtil {
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -456,8 +457,8 @@ class InterfaceTransferUtil {
         //$status = curl_getinfo($ch);
         curl_close($ch);
 
-        dump($result);
-        exit('111');
+        //dump($result);
+        //exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -768,10 +769,16 @@ class InterfaceTransferUtil {
         $uploadDir = 'Uploaded';
         $uploadPath = $projectRoot.'/public/'.$uploadDir.'/'.$uploadPath;
 
+        if( !file_exists($uploadPath) ) {
+            mkdir($uploadPath, 0755, true);
+        }
+
         if( $filepath && file_exists($filepath) ) {
             $logger->notice("AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
             rename($filepath, $uploadPath."/".$uniquename);
             //TODO: Delete in temp folder 4-25234
+            $this->deleteDir($filepath);
+
             $filepath = $uploadPath."/".$uniquename;
         }
 
@@ -809,6 +816,24 @@ class InterfaceTransferUtil {
         $this->em->persist($object);
 
         return $object;
+    }
+
+    function deleteDir(string $dirPath): void {
+        if (! is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
     }
 
     ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
