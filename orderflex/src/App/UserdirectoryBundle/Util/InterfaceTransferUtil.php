@@ -666,7 +666,7 @@ class InterfaceTransferUtil {
 
                 //TODO: check $transferableEntity how many documents
                 foreach( $transferableEntity->getImageData() as $image) {
-                    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']);
+                    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
                 }
 
             }
