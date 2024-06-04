@@ -211,11 +211,11 @@ class InterfaceTransferUtil {
         if( $res === true ) {
             //set status to 'Completed'
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Completed');
-            $msg = "Entity ".$className." with ID ". $entityId ." has been successfully transfered to the remote server ".$strServer;
+            $msg = "Entity ".$className." with ID ". $entityId .", name ".$jsonFile['name']." has been successfully transfered to the remote server ".$strServer;
         } else {
             //Failed
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Failed');
-            $msg = "Entity ".$className." with ID ". $entityId ." failed to transfer to the remote server ".$strServer;
+            $msg = "Entity ".$className." with ID ". $entityId .", name ".$jsonFile['name']." failed to transfer to the remote server ".$strServer;
         }
 
         if( $status ) {
@@ -686,23 +686,23 @@ class InterfaceTransferUtil {
         $originalnameclean = $documentArr['originalnameclean'];
 
         $author = null;
-        $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
+        $logger->notice("create AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
         $filesize = null;
         $filepath = realpath($filepath);
-        //$logger->notice("createAssociatedDocument: after realpath filepath=$filepath");
+        //$logger->notice("create AssociatedDocument: after realpath filepath=$filepath");
         if( $filepath ) {
             if( file_exists($filepath) ) {
-                $logger->notice("createAssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
+                $logger->notice("create AssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
                 //$filesize = $filepath->getFileSize();
                 //if (!$filesize) {
                     $filesize = filesize($filepath);
                 //}
             } else {
-                $logger->notice("createAssociatedDocument: filepath does not exist=$filepath");
+                $logger->notice("create AssociatedDocument: filepath does not exist=$filepath");
             }
         }
-        $logger->notice("createAssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
+        $logger->notice("create AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
 
         $object = new Document($author);
         $object->setUniquename($uniquename);
