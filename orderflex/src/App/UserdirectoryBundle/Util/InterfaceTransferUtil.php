@@ -197,6 +197,10 @@ class InterfaceTransferUtil {
         //dump($jsonFile);
         //exit('111');
 
+        //Step 1: get application path with curl
+        $remoteAppPath = $this->getAppPathCurl($interfaceTransfer,$jsonFile);
+        $jsonFile['apppath'] = $remoteAppPath;
+
         //Step 2: send files with sftp
         //send associated files (i.e. documents) transferFile
         $resFiles = $this->sendAssociatedFiles($interfaceTransfer,$jsonFile);
@@ -204,7 +208,7 @@ class InterfaceTransferUtil {
         //add files path to $jsonFile
         $jsonFile['files'] = $resFiles;
 
-        //Step 1: send data with curl
+        //Step 3: send data with curl
         $res = $this->sendDataCurl($interfaceTransfer,$jsonFile);
 
         $status = NULL;
@@ -229,7 +233,7 @@ class InterfaceTransferUtil {
     }
 
     public function sendAssociatedFiles( InterfaceTransferList $transfer, $jsonFile ) {
-        dump($jsonFile);
+        //dump($jsonFile);
         //exit('111');
 
         $strServer = $transfer->getTransferDestination();  //"159.203.95.150";
@@ -247,12 +251,14 @@ class InterfaceTransferUtil {
             exit("Unable to connect to the remote server");
         }
 
+        $appPath = $jsonFile['apppath'];
+
         $resArr = array();
         foreach( $jsonFile['documents'] as $document ) {
             $path = $document['path'];
             $label = $document['label'];
             $uniqueId = $jsonFile['id']."-".$document['id']; //$jsonFile['id'] - transferable entity ID
-            $sentFile = $this->sendSingleFile($dstConnection,$path,$uniqueId);
+            $sentFile = $this->sendSingleFile($dstConnection,$appPath,$path,$uniqueId);
             if( $sentFile ) {
                 $resArr[] = array(
                     'uniqueid' => $uniqueId,
@@ -270,7 +276,7 @@ class InterfaceTransferUtil {
 
     //Require ssh
     //http://pecl.php.net/package/ssh2
-    public function sendSingleFile( $dstConnection, $filePath, $uniqueId ) {
+    public function sendSingleFile( $dstConnection, $appPath, $filePath, $uniqueId ) {
 
         //$filePath: http://127.0.0.1:8000\Uploaded/directory/documents\65663c5c4180e.jpg
         $dstFile = basename($filePath);
@@ -279,8 +285,10 @@ class InterfaceTransferUtil {
         //$dstFile = "dst_file.csv";
         //$srcFile = "src_file.csv";
 
-        $dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
-        $dstFullPath = $dstPath . $this->getPath("/") . $uniqueId . "/";
+        //TODO: get remote server full url for upload path:
+        //Use curl
+        //$dstPath = "/usr/local/bin/order-lab-homepagemanager/orderflex";
+        $dstFullPath = $appPath . $this->getPath("/") . $uniqueId . "/";
         $dstFilePath = $dstFullPath . $dstFile;
 
         //$dstTestFilePath = $dstPath . $this->getPath("/") . "test_file.txt";
@@ -356,7 +364,7 @@ class InterfaceTransferUtil {
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
 
-        dump($jsonFile);
+        //dump($jsonFile);
         //exit('111');
 
         //Send data with curl and secret key
@@ -417,6 +425,57 @@ class InterfaceTransferUtil {
 
         //exit('222');
         return false;
+    }
+
+    public function getAppPathCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
+        $remoteAppPath = NULL;
+
+        //Send data with curl and secret key
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+
+        //Add hash and security key
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $jsonFile['hash'] = $hash;
+
+        $data_string = json_encode($jsonFile);
+        $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        $url = 'http://'.$strServer.'/directory/get-app-path';
+        echo "url=$url <br>";
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)
+        ));
+
+        $result = curl_exec($ch);
+        //$status = curl_getinfo($ch);
+        curl_close($ch);
+
+        if( $result ) {
+            $result = json_decode($result, true);
+            if( !$result ) {
+                return NULL;
+            }
+            $checksum = $result['checksum'];
+            $valid = $result['valid'];
+            $transferResult = $result['transferResult'];
+            $apppath = $result['apppath'];
+
+            //dump($result);
+            //exit('222');
+
+            if ($checksum === $hash && $valid === true && $transferResult === true) {
+                echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+                return $apppath;
+            }
+        }
+
+        return NULL;
     }
 
     public function createJsonFile( $transferableEntity, $className ) {
@@ -657,7 +716,7 @@ class InterfaceTransferUtil {
 //                    'uniqueid' => $uniqueId,
 //                    'filepath' => $sentFile,
 //                    'label' => $label
-                    $document = $this->createAssociatedDocument($documentArr,$className);
+                    $document = $this->receiveAssociatedDocument($documentArr,$className);
                     $logger->notice('receiveTransfer: document id='.$document->getId());
                     $transferableEntity->addDocument($document);
                     $this->em->flush();
@@ -675,7 +734,7 @@ class InterfaceTransferUtil {
         return true;
     }
 
-    public function createAssociatedDocument( $documentArr, $className ) {
+    public function receiveAssociatedDocument( $documentArr, $className ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
 
@@ -686,23 +745,23 @@ class InterfaceTransferUtil {
         $originalnameclean = $documentArr['originalnameclean'];
 
         $author = null;
-        $logger->notice("create AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
+        $logger->notice("AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
         $filesize = null;
         $filepath = realpath($filepath);
-        //$logger->notice("create AssociatedDocument: after realpath filepath=$filepath");
+        //$logger->notice("AssociatedDocument: after realpath filepath=$filepath");
         if( $filepath ) {
             if( file_exists($filepath) ) {
-                $logger->notice("create AssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
+                $logger->notice("AssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
                 //$filesize = $filepath->getFileSize();
                 //if (!$filesize) {
                     $filesize = filesize($filepath);
                 //}
             } else {
-                $logger->notice("create AssociatedDocument: filepath does not exist=$filepath");
+                $logger->notice("AssociatedDocument: filepath does not exist=$filepath");
             }
         }
-        $logger->notice("create AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
+        $logger->notice("AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
 
         $object = new Document($author);
         $object->setUniquename($uniquename);

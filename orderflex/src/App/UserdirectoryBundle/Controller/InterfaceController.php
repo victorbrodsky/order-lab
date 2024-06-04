@@ -176,4 +176,58 @@ class InterfaceController extends OrderAbstractController
         return $response;
     }
 
+    #[Route(path: '/get-app-path', name: 'employees_get_app_path', methods: ['POST'])]
+    public function getAppPathAction(Request $request)
+    {
+        $logger = $this->container->get('logger');
+        $post_data = json_decode($request->getContent(), true);
+        $logger->notice('receiveTransferAction: post_data count='.count($post_data));
+
+        //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+
+        $checksum = NULL;
+        $input = array();
+        foreach ($post_data as $key => $value) {
+            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
+                $checksum = $value;
+            } else {
+                $input[$key] = $value;
+            }
+        }
+
+        $valid = NULL;
+        $hash = hash('sha512', $secretKey . serialize($input));
+        if ($hash === $checksum) {
+            $valid = true;
+        } else {
+            $valid = false;
+        }
+
+        $transferResult = NULL;
+        if( $valid ) {
+            $logger->notice('receiveTransferAction: checksum valid');
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+            $transferResult = $interfaceTransferUtil->receiveTransfer($input);
+        }
+
+        //$post_str = implode(',', $input);
+        //$logger->notice('receiveTransferAction: input='.$post_str);
+        //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+
+        $res = array(
+            "checksum" => $checksum,
+            "valid" => $valid,
+            "transferResult" => $transferResult,
+            "apppath" => $projectRoot
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
 }
