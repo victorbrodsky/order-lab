@@ -777,7 +777,8 @@ class InterfaceTransferUtil {
             $logger->notice("AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
             rename($filepath, $uploadPath."/".$uniquename);
             //TODO: Delete in temp folder 4-25234
-            $this->deleteDir($filepath);
+            //Delete '4-25234' in /usr/local/bin/order-lab-homepagemanager/orderflex/var/temp/4-25234/
+            $this->deleteDir( dirname($filepath) );
 
             $filepath = $uploadPath."/".$uniquename;
         }
