@@ -1044,6 +1044,10 @@ class AntibodyList extends ListAbstract
                         'key' => 'visualinfo-'.$visualInfoDocument->getId(),
                         'label' => $uploadedType.$visualInfo->getComment(),
                         'url' => $path,
+                        'path' => $visualInfo->getFullServerPath(),
+                        'uniqueid' => $visualInfo->getUniqueid(),
+                        'uniquename' => $visualInfo->getUniquename(),
+                        'originalnameclean' => $visualInfo->getOriginalnameClean(),
                         'comment' => $visualInfo->getComment(),
                         'catalog' => $visualInfo->getCatalog()
                     );
