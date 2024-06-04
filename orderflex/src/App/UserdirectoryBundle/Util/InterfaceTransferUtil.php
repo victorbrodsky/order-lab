@@ -826,6 +826,14 @@ class InterfaceTransferUtil {
         if (! is_dir($dirPath)) {
             throw new InvalidArgumentException("$dirPath must be a directory");
         }
+        array_map('unlink', glob("$dirPath/*.*"));
+        rmdir($dirPath);
+    }
+
+    function deleteDir_2(string $dirPath): void {
+        if (! is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
         if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
             $dirPath .= '/';
         }
