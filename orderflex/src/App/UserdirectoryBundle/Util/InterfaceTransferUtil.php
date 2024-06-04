@@ -201,6 +201,7 @@ class InterfaceTransferUtil {
         //Step 1: get application path with curl
         $remoteAppPath = $this->getAppPathCurl($interfaceTransfer,$jsonFile);
         $logger->notice('remoteAppPath='.$remoteAppPath);
+        exit('remoteAppPath='.$remoteAppPath);
         $jsonFile['apppath'] = $remoteAppPath;
 
         //Step 2: send files with sftp
@@ -455,8 +456,8 @@ class InterfaceTransferUtil {
         //$status = curl_getinfo($ch);
         curl_close($ch);
 
-        //dump($result);
-        //exit('111');
+        dump($result);
+        exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);

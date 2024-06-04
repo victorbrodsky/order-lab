@@ -181,7 +181,7 @@ class InterfaceController extends OrderAbstractController
     {
         $logger = $this->container->get('logger');
         $post_data = json_decode($request->getContent(), true);
-        $logger->notice('receiveTransferAction: post_data count='.count($post_data));
+        $logger->notice('getAppPathAction: post_data count='.count($post_data));
 
         //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
@@ -217,6 +217,7 @@ class InterfaceController extends OrderAbstractController
         //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $logger->notice('getAppPathAction: projectRoot='.$projectRoot);
 
         $res = array(
             "checksum" => $checksum,
