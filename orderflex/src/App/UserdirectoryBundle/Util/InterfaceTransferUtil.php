@@ -749,6 +749,27 @@ class InterfaceTransferUtil {
 
         $filesize = null;
         $filepath = realpath($filepath);
+
+        //move file from $this->getPath("/") to $uploadPath
+        $uploadPath = NULL;
+        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
+            //move to Uploaded\transres\documents
+            $uploadPath = $userSecUtil->getSiteSettingParameter('transresuploadpath');
+        }
+        if( !$uploadPath ) {
+            $uploadPath = "TransferableUploads";
+            $logger->warning('Upload path is not defined. Use default "'.$uploadPath.'" folder.');
+        }
+        $uploadDir = 'Uploaded';
+        $uploadPath = $uploadDir.'/'.$uploadPath;
+
+        if( $filepath && file_exists($filepath) ) {
+            $logger->notice("AssociatedDocument: move to=".$uploadPath."/".$uniquename);
+            rename($filepath, $uploadPath."/".$uniquename);
+            //TODO: Delete in temp folder 4-25234
+            $filepath = $uploadPath."/".$uniquename;
+        }
+
         //$logger->notice("AssociatedDocument: after realpath filepath=$filepath");
         if( $filepath ) {
             if( file_exists($filepath) ) {
@@ -778,17 +799,6 @@ class InterfaceTransferUtil {
 //            $object->setType($documentTypeObject);
 //        }
 
-        $uploadPath = NULL;
-        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
-            //move to Uploaded\transres\documents
-            $uploadPath = $userSecUtil->getSiteSettingParameter('transresuploadpath');
-        }
-        if( !$uploadPath ) {
-            $uploadPath = "TransferableUploads";
-            $logger->warning('Upload path is not defined. Use default "'.$uploadPath.'" folder.');
-        }
-        $uploadDir = 'Uploaded';
-        $uploadPath = $uploadDir.'/'.$uploadPath;
         $object->setUploadDirectory($uploadPath);
 
         $this->em->persist($object);
