@@ -657,7 +657,7 @@ class InterfaceTransferUtil {
 //                    'uniqueid' => $uniqueId,
 //                    'filepath' => $sentFile,
 //                    'label' => $label
-                    $document = $this->createAssociatedDocument($documentArr);
+                    $document = $this->createAssociatedDocument($documentArr,$className);
                     $logger->notice('receiveTransfer: document id='.$document->getId());
                     $transferableEntity->addDocument($document);
                     $this->em->flush();
@@ -675,8 +675,10 @@ class InterfaceTransferUtil {
         return true;
     }
 
-    public function createAssociatedDocument($documentArr) {
+    public function createAssociatedDocument( $documentArr, $className ) {
+        $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
+
         $uniqueId = $documentArr['uniqueid'];
         $filepath = $documentArr['filepath'];
         //$label = $documentArr['label'];
@@ -707,8 +709,6 @@ class InterfaceTransferUtil {
         $object->setCleanOriginalname($originalnameclean);
         //$object->setTitle($uniqueTitle);
         $object->setUniqueid($uniqueId);
-        //$object->setUniquename($fileUniqueName);
-        //$object->setUploadDirectory($path);
         $object->setSize($filesize);
 
 //        $documentType = 'Antibody Image'
@@ -718,6 +718,19 @@ class InterfaceTransferUtil {
 //        if( $documentTypeObject ) {
 //            $object->setType($documentTypeObject);
 //        }
+
+        $uploadPath = NULL;
+        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
+            //move to Uploaded\transres\documents
+            $uploadPath = $userSecUtil->getSiteSettingParameter('transresuploadpath');
+        }
+        if( !$uploadPath ) {
+            $uploadPath = "TransferableUploads";
+            $logger->warning('Upload path is not defined. Use default "'.$uploadPath.'" folder.');
+        }
+        $uploadDir = 'Uploaded';
+        $uploadPath = $uploadDir.'/'.$uploadPath;
+        $object->setUploadDirectory($uploadPath);
 
         $this->em->persist($object);
 
