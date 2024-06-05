@@ -224,6 +224,14 @@ class AntibodyList extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $openToPublic;
 
+    //Keep the original id from the source
+    /**
+     * @var string
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $sourceOriginalId;
+
+
     /////// “Associated Antibodies” multi-select Select2 ///////
     // https://www.doctrine-project.org/projects/doctrine-orm/en/2.16/reference/association-mapping.html#many-to-many-self-referencing
     // https://stackoverflow.com/questions/21244816/doctrines-many-to-many-self-referencing-and-reciprocity
@@ -736,6 +744,22 @@ class AntibodyList extends ListAbstract
     }
 
     /**
+     * @return string
+     */
+    public function getSourceOriginalId()
+    {
+        return $this->sourceOriginalId;
+    }
+
+    /**
+     * @param string $sourceOriginalId
+     */
+    public function setSourceOriginalId($sourceOriginalId)
+    {
+        $this->sourceOriginalId = $sourceOriginalId;
+    }
+
+    /**
      * @return mixed
      */
     public function getAssociates()
@@ -992,6 +1016,7 @@ class AntibodyList extends ListAbstract
 
         $json = array(
             'id' => ($this->getId()) ? $this->getId() : "unidentified",
+            'sourceOriginalId' => $this->getSourceOriginalId(),
             'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'publictext' => $this->getPublicText(),
             'documents' => $this->getImageData(), //array of document's data
@@ -1045,13 +1070,13 @@ class AntibodyList extends ListAbstract
                         'type' => 'visualinfo',
                         'key' => 'visualinfo-'.$visualInfoDocument->getId(),
                         'label' => $uploadedType.$visualInfo->getComment(),
-                        'url' => $path,
-                        'path' => $visualInfo->getFullServerPath(),
-                        'uniqueid' => $visualInfo->getUniqueid(),
-                        'uniquename' => $visualInfo->getUniquename(),
-                        'originalnameclean' => $visualInfo->getOriginalnameClean(),
                         'comment' => $visualInfo->getComment(),
-                        'catalog' => $visualInfo->getCatalog()
+                        'catalog' => $visualInfo->getCatalog(),
+                        'url' => $path,
+                        'path' => $visualInfoDocument->getFullServerPath(),
+                        'uniqueid' => $visualInfoDocument->getUniqueid(),
+                        'uniquename' => $visualInfoDocument->getUniquename(),
+                        'originalnameclean' => $visualInfoDocument->getOriginalnameClean()
                     );
                 }
             }
@@ -1120,6 +1145,9 @@ class AntibodyList extends ListAbstract
 //            'storage' => $this->getStorage(),
 //            'associates' => $this->getAssociatesObjectsArr(),
 //        );
+
+        $sourceOriginalId = $json['sourceOriginalId'];
+        $this->getSourceOriginalId($sourceOriginalId);
 
         $name = $json['name'];
         $this->setName($name);

@@ -682,13 +682,15 @@ class InterfaceTransferUtil {
                 $logger->notice('AntibodyList: entityId='.$entityId);
                 //find unique existing antibody by name and description and comment
                 //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
-                
-                $name = $receiveData['name'];
-                $description = $receiveData['description'];
-                $comment = $receiveData['comment'];
+
+                $sourceOriginalId = $receiveData['sourceOriginalId'];
+                //$name = $receiveData['name'];
+                //$description = $receiveData['description'];
+                //$comment = $receiveData['comment'];
                 
                 $matchingArr = array(
-                    'name' => $name,
+                    'sourceOriginalId' => $sourceOriginalId
+                    //'name' => $name,
                     //'description' => $description,
                     //'comment' => $comment
                 );
