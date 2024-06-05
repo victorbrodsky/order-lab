@@ -328,7 +328,8 @@ class InterfaceTransferUtil {
                 //OK
             } else {
                 ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0755, true);
-                $stream = ssh2_exec($dstConnection, 'chown -R apache:apache '.$dstFullPath);
+                $stream = ssh2_exec($dstConnection, 'chown apache '.$dstFullPath);
+                $stream = ssh2_exec($dstConnection, 'chgrp apache '.$dstFullPath);
             }
 
             $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
