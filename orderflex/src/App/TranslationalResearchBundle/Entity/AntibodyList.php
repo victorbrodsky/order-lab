@@ -1018,7 +1018,7 @@ class AntibodyList extends ListAbstract
 
         $json = array(
             'id' => ($this->getId()) ? $this->getId() : "unidentified",
-            'sourceId' => $this->getId(), //$this->getSourceOriginalId(), //to identify the antibody on the remote server
+            'sourceId' => $this->getId(), //$this->getSourceId(), //to identify the antibody on the remote server
             'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'publictext' => $this->getPublicText(),
             'documents' => $this->getImageData(), //array of document's data
@@ -1149,7 +1149,7 @@ class AntibodyList extends ListAbstract
 //        );
 
         $sourceId = $json['sourceId'];
-        $this->getSourceOriginalId($sourceId);
+        $this->getSourceId($sourceId);
 
         $name = $json['name'];
         $this->setName($name);

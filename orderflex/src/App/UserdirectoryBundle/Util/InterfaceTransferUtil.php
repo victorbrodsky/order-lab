@@ -401,12 +401,12 @@ class InterfaceTransferUtil {
         }
 
         $result = curl_exec($ch);
-        //$status = curl_getinfo($ch);
+        $status = curl_getinfo($ch);
         curl_close($ch);
 
-        //dump($status);
-        //dump($result);
-        //exit('222');
+        dump($status);
+        dump($result);
+        exit('222');
 
         if( $result ) {
             $result = json_decode($result, true);
