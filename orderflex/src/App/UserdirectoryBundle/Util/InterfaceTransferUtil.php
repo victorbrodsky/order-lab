@@ -327,9 +327,12 @@ class InterfaceTransferUtil {
             if (file_exists('ssh2.sftp://' . $dstFullPath)) {
                 //OK
             } else {
+                //exit('$dstFullPath='.$dstFullPath);
                 ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0755, true);
-                $stream = ssh2_exec($dstConnection, 'chown apache '.$dstFullPath);
-                $stream = ssh2_exec($dstConnection, 'chgrp apache '.$dstFullPath);
+                //ssh2_sftp_chown
+                $stream = ssh2_exec($dstConnection, 'chown apache:apache '.$dstFullPath);
+                //exit('$stream='.$stream);
+                //$stream = ssh2_exec($dstConnection, 'chgrp apache '.$dstFullPath);
             }
 
             $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
@@ -751,7 +754,7 @@ class InterfaceTransferUtil {
         $originalnameclean = $documentArr['originalnameclean'];
 
         $author = null;
-        $logger->notice("AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
+        $logger->notice("receive AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath");
 
         $filesize = null;
         $filepath = realpath($filepath);
@@ -777,13 +780,13 @@ class InterfaceTransferUtil {
 
         if( $filepath && file_exists($filepath) ) {
             //TODO: permission denied (0755?)
-            $logger->notice("AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
+            $logger->notice("receive AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
             rename($filepath, $uploadPath."/".$uniquename);
             //TODO: Delete in temp folder 4-25234
             //Delete '4-25234' in /usr/local/bin/order-lab-homepagemanager/orderflex/var/temp/4-25234/
             $tempFilepath = dirname($filepath);
             $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
-            $this->deleteDir( $tempFilepath );
+            //$this->deleteDir( $tempFilepath );
 
             $filepath = $uploadPath."/".$uniquename;
         }
@@ -791,16 +794,16 @@ class InterfaceTransferUtil {
         //$logger->notice("AssociatedDocument: after realpath filepath=$filepath");
         if( $filepath ) {
             if( file_exists($filepath) ) {
-                $logger->notice("AssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
+                $logger->notice("receive AssociatedDocument: filepath exists: uniqueId=$uniqueId, filepath=$filepath");
                 //$filesize = $filepath->getFileSize();
                 //if (!$filesize) {
                     $filesize = filesize($filepath);
                 //}
             } else {
-                $logger->notice("AssociatedDocument: filepath does not exist=$filepath");
+                $logger->notice("receive AssociatedDocument: filepath does not exist=$filepath");
             }
         }
-        $logger->notice("AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
+        $logger->notice("receive AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
 
         $object = new Document($author);
         $object->setUniquename($uniquename);
