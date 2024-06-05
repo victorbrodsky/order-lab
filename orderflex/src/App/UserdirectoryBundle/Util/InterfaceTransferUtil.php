@@ -787,6 +787,7 @@ class InterfaceTransferUtil {
             $tempFilepath = dirname($filepath);
             $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
             //$this->deleteDir( $tempFilepath );
+            rmdir($tempFilepath);
 
             $filepath = $uploadPath."/".$uniquename;
         }
@@ -831,7 +832,7 @@ class InterfaceTransferUtil {
         if (! is_dir($dirPath)) {
             throw new InvalidArgumentException("$dirPath must be a directory");
         }
-        array_map('unlink', glob("$dirPath/*.*"));
+        //array_map('unlink', glob("$dirPath/*.*"));
         rmdir($dirPath);
     }
 
