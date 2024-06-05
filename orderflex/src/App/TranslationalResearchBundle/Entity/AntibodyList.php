@@ -1017,6 +1017,7 @@ class AntibodyList extends ListAbstract
         foreach( $this->getDocuments() as $document ) {
             $imageData[] = array(
                 'id' => $document->getId(),
+                'type' => 'document',
                 'key' => 'document-'.$document->getId(),
                 'label' => $this->getName(),
                 'url' => $document->getAbsoluteUploadFullPath(),
@@ -1041,6 +1042,7 @@ class AntibodyList extends ListAbstract
                 if( $path ) {
                     $imageData[] = array(
                         'id' => $visualInfoDocument->getId(),
+                        'type' => 'visualinfo',
                         'key' => 'visualinfo-'.$visualInfoDocument->getId(),
                         'label' => $uploadedType.$visualInfo->getComment(),
                         'url' => $path,
@@ -1057,6 +1059,10 @@ class AntibodyList extends ListAbstract
 
         return $imageData;
     }
+
+//    public function clearImageData( $em ) {
+//
+//    }
 
 //    public function getDocumentsArr() {
 //        $documentsArr = array();

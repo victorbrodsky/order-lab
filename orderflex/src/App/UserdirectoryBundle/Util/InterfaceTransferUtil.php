@@ -717,7 +717,26 @@ class InterfaceTransferUtil {
 
                 //Attach documents
                 //1) remove all existing documents and attach new
-                $transferableEntity->clearDocuments();
+                //$transferableEntity->clearDocuments();
+                //Remove entity document by ID and delete file
+                //$transferableEntity->clearImageData();
+                $projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
+                foreach($transferableEntity->getDocuments() as $document) {
+                    //remove file
+                    //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
+                    $file = $document->getFullServerPath();
+                    unlink($file);
+                    $this->em->remove($document);
+                }
+                foreach($transferableEntity->getVisualInfos() as $visualInfo) {
+                    foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+                        $file = $visualInfoDocument->getFullServerPath();
+                        unlink($file);
+                        $this->em->remove($visualInfoDocument);
+                    }
+                    $this->em->remove($visualInfo);
+                }
+                
                 $documentDatas = $receiveData['files'];
                 foreach($documentDatas as $documentArr) {
 //                    'uniqueid' => $uniqueId,
