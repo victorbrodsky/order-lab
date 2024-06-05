@@ -829,6 +829,7 @@ class InterfaceTransferUtil {
         }
         $logger->notice("receive AssociatedDocument: uniqueId=$uniqueId, filepath=$filepath, filesize=$filesize");
 
+        //TODO: create document and VisualInfo according to the $documentArr
         $object = new Document($author);
         $object->setUniquename($uniquename);
         $object->setCleanOriginalname($originalnameclean);
