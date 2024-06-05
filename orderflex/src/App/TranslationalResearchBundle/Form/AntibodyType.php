@@ -242,6 +242,11 @@ class AntibodyType extends AbstractType
             'attr' => array('style' => 'width: 20px; height: 20px;')
         ));
 
+        $builder->add('sourceId', null, array(
+            'label' => 'Source Original Id:',
+            'required' => false,
+            'attr' => array('style' => 'form-control')
+        ));
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {

@@ -683,13 +683,13 @@ class InterfaceTransferUtil {
                 //find unique existing antibody by name and description and comment
                 //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
 
-                $sourceOriginalId = $receiveData['sourceOriginalId'];
+                $sourceId = $receiveData['sourceId'];
                 //$name = $receiveData['name'];
                 //$description = $receiveData['description'];
                 //$comment = $receiveData['comment'];
                 
                 $matchingArr = array(
-                    'sourceOriginalId' => $sourceOriginalId
+                    'sourceId' => $sourceId
                     //'name' => $name,
                     //'description' => $description,
                     //'comment' => $comment

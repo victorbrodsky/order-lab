@@ -229,7 +229,7 @@ class AntibodyList extends ListAbstract
      * @var string
      */
     #[ORM\Column(type: 'string', nullable: true)]
-    private $sourceOriginalId;
+    private $sourceId;
 
 
     /////// “Associated Antibodies” multi-select Select2 ///////
@@ -746,18 +746,20 @@ class AntibodyList extends ListAbstract
     /**
      * @return string
      */
-    public function getSourceOriginalId()
+    public function getSourceId()
     {
-        return $this->sourceOriginalId;
+        return $this->sourceId;
     }
 
     /**
-     * @param string $sourceOriginalId
+     * @param string $sourceId
      */
-    public function setSourceOriginalId($sourceOriginalId)
+    public function setSourceId($sourceId)
     {
-        $this->sourceOriginalId = $sourceOriginalId;
+        $this->sourceId = $sourceId;
     }
+
+    
 
     /**
      * @return mixed
@@ -1016,7 +1018,7 @@ class AntibodyList extends ListAbstract
 
         $json = array(
             'id' => ($this->getId()) ? $this->getId() : "unidentified",
-            'sourceOriginalId' => $this->getSourceOriginalId(),
+            'sourceId' => $this->getId(), //$this->getSourceOriginalId(), //to identify the antibody on the remote server
             'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'publictext' => $this->getPublicText(),
             'documents' => $this->getImageData(), //array of document's data
@@ -1146,8 +1148,8 @@ class AntibodyList extends ListAbstract
 //            'associates' => $this->getAssociatesObjectsArr(),
 //        );
 
-        $sourceOriginalId = $json['sourceOriginalId'];
-        $this->getSourceOriginalId($sourceOriginalId);
+        $sourceId = $json['sourceId'];
+        $this->getSourceOriginalId($sourceId);
 
         $name = $json['name'];
         $this->setName($name);
