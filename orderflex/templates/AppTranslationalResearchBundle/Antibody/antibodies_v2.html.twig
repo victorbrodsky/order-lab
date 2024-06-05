@@ -199,8 +199,13 @@
         <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
         {% for ent in entities %}
 
+            {% set sourceIdTooltip = null %}
+            {% if ent.sourceId %}
+                {% set sourceIdTooltip = 'Source Original ID ' ~ ent.sourceId %}
+            {% endif %}
+
             <tr>
-                <td>
+                <td data-toggle="tooltip" title="{{ sourceIdTooltip }}">
                     {#{{ ent.id }}#}
                     <a class="list-row-mainlink"
                        href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"
