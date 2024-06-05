@@ -704,13 +704,14 @@ class InterfaceTransferUtil {
                         $this->em->flush();
                     }
                 } else {
-                    if(0) {
+                    if(1) {
                         //create new entity
                         $logger->notice('receiveTransfer: create new AntibodyList');
                         $transferableEntity = new $className();
                         $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                         if ($update) {
                             $transferableEntity->setOpenToPublic(true);
+                            $transferableEntity->setSourceId($sourceId);
                             $transferableEntity->setType('user-added');
                             $this->em->persist($transferableEntity);
                             $this->em->flush();
