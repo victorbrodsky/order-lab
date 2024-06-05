@@ -785,7 +785,7 @@ class InterfaceTransferUtil {
             $tempFilepath = dirname($filepath);
             $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
             //$this->deleteDir( $tempFilepath );
-            rmdir($tempFilepath); //testing
+            //rmdir($tempFilepath); //testing
 
             $filepath = $uploadPath."/".$uniquename;
         }
