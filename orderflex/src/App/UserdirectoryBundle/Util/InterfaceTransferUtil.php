@@ -769,8 +769,8 @@ class InterfaceTransferUtil {
         }
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $uploadDir = 'Uploaded';
-        $uploadPath = $projectRoot.'/public/'.$uploadDir.'/'.$uploadPath;
+        $uploadDir = 'Uploaded'.'/'.$uploadPath;
+        $uploadPath = $projectRoot.'/public/'.$uploadDir;
 
         if( !file_exists($uploadPath) ) {
             mkdir($uploadPath, 0755, true);
@@ -819,7 +819,8 @@ class InterfaceTransferUtil {
 //            $object->setType($documentTypeObject);
 //        }
 
-        $object->setUploadDirectory($uploadPath);
+        //$uploadPath should be Uploaded/transres/documents
+        $object->setUploadDirectory($uploadDir);
 
         $this->em->persist($object);
 
