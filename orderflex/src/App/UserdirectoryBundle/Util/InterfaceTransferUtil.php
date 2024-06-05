@@ -695,8 +695,8 @@ class InterfaceTransferUtil {
                     //'comment' => $comment
                 );
                 $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
-                $logger->notice('receiveTransfer: transferableEntity ID='.$transferableEntity->getId());
                 if( $transferableEntity ) {
+                    $logger->notice('receiveTransfer: found transferableEntity ID='.$transferableEntity->getId());
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
                     if( $update ) {
                         $transferableEntity->setOpenToPublic(true);
@@ -722,7 +722,7 @@ class InterfaceTransferUtil {
                 //$transferableEntity->clearDocuments();
                 //Remove entity document by ID and delete file
                 //$transferableEntity->clearImageData();
-                $projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
+                //$projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
                 foreach($transferableEntity->getDocuments() as $document) {
                     //remove file
                     //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
@@ -793,6 +793,7 @@ class InterfaceTransferUtil {
         $uploadDir = 'Uploaded'.'/'.$uploadPath;
         $uploadPath = $projectRoot.'/public/'.$uploadDir;
 
+        //create upload folder if does not exist
         if( !file_exists($uploadPath) ) {
             mkdir($uploadPath, 0755, true);
         }
@@ -848,31 +849,31 @@ class InterfaceTransferUtil {
         return $object;
     }
 
-    function deleteDir(string $dirPath): void {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
-        }
-        //array_map('unlink', glob("$dirPath/*.*"));
-        rmdir($dirPath);
-    }
-
-    function deleteDir_2(string $dirPath): void {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
-        }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
-        }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                deleteDir($file);
-            } else {
-                unlink($file);
-            }
-        }
-        rmdir($dirPath);
-    }
+//    function deleteDir(string $dirPath): void {
+//        if (! is_dir($dirPath)) {
+//            throw new InvalidArgumentException("$dirPath must be a directory");
+//        }
+//        //array_map('unlink', glob("$dirPath/*.*"));
+//        rmdir($dirPath);
+//    }
+//
+//    function deleteDir_2(string $dirPath): void {
+//        if (! is_dir($dirPath)) {
+//            throw new InvalidArgumentException("$dirPath must be a directory");
+//        }
+//        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+//            $dirPath .= '/';
+//        }
+//        $files = glob($dirPath . '*', GLOB_MARK);
+//        foreach ($files as $file) {
+//            if (is_dir($file)) {
+//                deleteDir($file);
+//            } else {
+//                unlink($file);
+//            }
+//        }
+//        rmdir($dirPath);
+//    }
 
     ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
     public function findExistingTransferableEntity( $className, $matchingArr ) {
