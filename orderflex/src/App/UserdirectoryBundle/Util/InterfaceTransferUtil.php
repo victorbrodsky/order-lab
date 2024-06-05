@@ -404,9 +404,9 @@ class InterfaceTransferUtil {
         $status = curl_getinfo($ch);
         curl_close($ch);
 
-        dump($status);
-        dump($result);
-        exit('222');
+        //dump($status);
+        //dump($result);
+        //exit('222');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -704,16 +704,18 @@ class InterfaceTransferUtil {
                         $this->em->flush();
                     }
                 } else {
-                    //create new entity
-                    $logger->notice('receiveTransfer: create new AntibodyList');
-                    $transferableEntity = new $className();
-                    $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
-                    if( $update ) {
-                        $transferableEntity->setOpenToPublic(true);
-                        $transferableEntity->setType('user-added');
-                        $this->em->persist($transferableEntity);
-                        $this->em->flush();
-                        $logger->notice('receiveTransfer: after creation new AntibodyList flush: id='.$transferableEntity->getId());
+                    if(0) {
+                        //create new entity
+                        $logger->notice('receiveTransfer: create new AntibodyList');
+                        $transferableEntity = new $className();
+                        $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                        if ($update) {
+                            $transferableEntity->setOpenToPublic(true);
+                            $transferableEntity->setType('user-added');
+                            $this->em->persist($transferableEntity);
+                            $this->em->flush();
+                            $logger->notice('receiveTransfer: after creation new AntibodyList flush: id=' . $transferableEntity->getId());
+                        }
                     }
                 }
 
@@ -877,7 +879,7 @@ class InterfaceTransferUtil {
 
     ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
     public function findExistingTransferableEntity( $className, $matchingArr ) {
-        //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+        $logger = $this->container->get('logger');
 
         $repository = $this->em->getRepository($className);
         $dql =  $repository->createQueryBuilder("entity");
@@ -888,6 +890,7 @@ class InterfaceTransferUtil {
         foreach($matchingArr as $key=>$value) {
             $dql->andWhere('entity.'.$key.' = :entity'.$key);
             $parameters['entity'.$key] = $value;
+            $logger->notice('findExistingTransferableEntity: entity'.$key.'=>'.$value);
         }
 
         $query = $dql->getQuery();
