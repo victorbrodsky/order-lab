@@ -329,10 +329,8 @@ class InterfaceTransferUtil {
             } else {
                 //exit('$dstFullPath='.$dstFullPath);
                 ssh2_sftp_mkdir($dstSFTP, $dstFullPath, 0755, true);
-                //ssh2_sftp_chown
-                $stream = ssh2_exec($dstConnection, 'chown apache:apache '.$dstFullPath);
+                ssh2_exec($dstConnection, 'chown apache:apache '.$dstFullPath);
                 //exit('$stream='.$stream);
-                //$stream = ssh2_exec($dstConnection, 'chgrp apache '.$dstFullPath);
             }
 
             $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstFilePath, 'w');
@@ -779,15 +777,15 @@ class InterfaceTransferUtil {
         }
 
         if( $filepath && file_exists($filepath) ) {
-            //TODO: permission denied (0755?)
+            //Move to Upload folder
             $logger->notice("receive AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
-            rename($filepath, $uploadPath."/".$uniquename);
-            //TODO: Delete in temp folder 4-25234
+//            rename($filepath, $uploadPath."/".$uniquename);
+            //Delete temp folder 4-25234
             //Delete '4-25234' in /usr/local/bin/order-lab-homepagemanager/orderflex/var/temp/4-25234/
             $tempFilepath = dirname($filepath);
             $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
             //$this->deleteDir( $tempFilepath );
-            rmdir($tempFilepath);
+//            rmdir($tempFilepath);
 
             $filepath = $uploadPath."/".$uniquename;
         }
