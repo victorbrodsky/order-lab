@@ -345,8 +345,8 @@ class InterfaceTransferUtil {
 
             $srcFile = fopen($srcFilePath, 'r');
 
-            //$writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
-            //echo "writtenBytes=$writtenBytes <br>";
+            $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+            echo "writtenBytes=$writtenBytes <br>";
             fclose($dstFile);
             fclose($srcFile);
 
@@ -779,13 +779,13 @@ class InterfaceTransferUtil {
         if( $filepath && file_exists($filepath) ) {
             //Move to Upload folder
             $logger->notice("receive AssociatedDocument: move from=$filepath, to=".$uploadPath."/".$uniquename);
-//            rename($filepath, $uploadPath."/".$uniquename);
+            rename($filepath, $uploadPath."/".$uniquename); //testing
             //Delete temp folder 4-25234
             //Delete '4-25234' in /usr/local/bin/order-lab-homepagemanager/orderflex/var/temp/4-25234/
             $tempFilepath = dirname($filepath);
             $logger->notice("AssociatedDocument: tempFilepath=$tempFilepath");
             //$this->deleteDir( $tempFilepath );
-//            rmdir($tempFilepath);
+            rmdir($tempFilepath); //testing
 
             $filepath = $uploadPath."/".$uniquename;
         }
