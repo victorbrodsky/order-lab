@@ -59,7 +59,6 @@ class InvoiceType extends AbstractType
         if( $this->params['principalInvestigators'] && count($this->params['principalInvestigators']) > 0 ) {
             //show only request's the first PI user
             $builder->add('principalInvestigator', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                 'class' => User::class,
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
@@ -70,11 +69,11 @@ class InvoiceType extends AbstractType
         } else {
             //show all users with set invoice's PI
             $builder->add('principalInvestigator', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                 'class' => User::class,
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
+                //'choice_label' => 'getUsername',
                 'attr' => array('class' => 'combobox transres-invoice-principalInvestigator'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -86,6 +85,7 @@ class InvoiceType extends AbstractType
                         ->orderBy("infos.displayName", "ASC");
                 },
             ));
+
         }
 
         $builder->add('billingContact', EntityType::class, array(

@@ -35,4 +35,8 @@ from remote server and update the status of the records in the TransferData tabl
 TODO:
 1) Add secret key to the site settings
 2) Add some variable on the server to indicate that this server is a master and will transfer data to other server
-3) Add Original ID (oid) to match the unique transferable entity between source and destination servers?
+3) Add Original ID (oid) to match the unique transferable entity between source and destination servers? (done - sourceId)
+
+TODO:
+test baseurl if no port provided (done)
+update view servers with DB and composer (done)
