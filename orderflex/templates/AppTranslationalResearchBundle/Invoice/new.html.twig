@@ -228,20 +228,7 @@
 
         <div class="invoice-financial-fields">
 
-
-            {#{{ transresRequestMacros.invoiceItemSectionsOriginal(form,cycle,sitename) }}#}
-            {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
-
-            {#<hr />#}
-
-            {#<div class="row">#}
-                {#<div class="col-xs-12">#}
-                    {#<button class = "btn btn-default" onclick="transresUpdateTotal(this);">#}
-                        {#Recalculate#}
-                    {#</button>#}
-                {#</div>#}
-            {#</div>#}
-
+            {#{{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}#}
 
             {#{{ formmacros.field(form.subTotal) }}#}
             <p>
