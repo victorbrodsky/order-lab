@@ -63,6 +63,7 @@ class InvoiceType extends AbstractType
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
+                'choice_label' => 'getUsername',
                 'attr' => array('class' => 'combobox transres-invoice-principalInvestigator'), //, 'readonly'=>'readonly'
                 'choices' => $this->params['principalInvestigators'],
             ));
@@ -73,7 +74,7 @@ class InvoiceType extends AbstractType
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
-                //'choice_label' => 'getUsername',
+                'choice_label' => 'getUsername',
                 'attr' => array('class' => 'combobox transres-invoice-principalInvestigator'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -94,6 +95,7 @@ class InvoiceType extends AbstractType
             'label'=> "PI's Billing Contact:",
             'required'=> false,
             'multiple' => false,
+            'choice_label' => 'getUsername',
             'attr' => array('class'=>'combobox transres-invoice-billingContact'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -113,6 +115,7 @@ class InvoiceType extends AbstractType
             //'disabled' => true,
             'required' => false,
             'multiple' => false,
+            'choice_label' => 'getUsername',
             'attr' => array('class' => 'combobox'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -134,6 +137,7 @@ class InvoiceType extends AbstractType
                 'disabled' => true,
                 'required' => false,
                 'multiple' => false,
+                'choice_label' => 'getUsername',
                 'attr' => array('class' => 'combobox'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
