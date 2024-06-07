@@ -1,0 +1,11 @@
+{
+  "builders": [
+    {
+      "type": "digitalocean",
+      "ssh_username": "root",
+      "api_token": "YOUR_DIGITALOCEAN_API_TOKEN",
+      "image": "centos-7-x64",
+      "region": "nyc1",
+      "size": "512mb"
+    }]
+}
