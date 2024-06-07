@@ -4856,6 +4856,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function isDbInitialized( $locale=null ) {
+        //return false;//testing
         //echo "isDbInitialized: locale=".$locale."<br>";
         if( !$locale ) {
             //$userSecUtil = $this->container->get('user_security_utility');

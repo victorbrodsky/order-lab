@@ -1709,6 +1709,8 @@ class UserSecurityUtil {
 
     public function getSiteSettingParameter( $parameter, $sitename=null ) {
 
+        //return null; //testing
+
 //        if( $this->siteSettingsParam === null ) {
 //
 //            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
@@ -3614,39 +3616,39 @@ class UserSecurityUtil {
         return $locale;
     }
 
-    //NOT USED
-    public function switchDb()
-    {
-        $connection = $this->em->getConnection();
-        $request = $this->requestStack->getCurrentRequest();
-        //$session = $request->getSession();
-        $uri = $request->getUri();
-
-        if (str_contains($uri, 'c/lmh/pathology')) {
-            $dbName = 'Tenant2';
-        } else {
-            return false;
-        }
-
-        $params = $connection->getParams();
-
-        if ($connection->isConnected()) {
-            $connection->close();
-        }
-
-        $params['dbname'] = $dbName;
-
-        $connection->__construct(
-            $params, $connection->getDriver(), $connection->getConfiguration(),
-            $connection->getEventManager()
-        );
-
-        try {
-            $connection->connect();
-        } catch (Exception $e) {
-            // log and handle exception
-        }
-        return true;
-    }
+//    //NOT USED
+//    public function switchDb()
+//    {
+//        $connection = $this->em->getConnection();
+//        $request = $this->requestStack->getCurrentRequest();
+//        //$session = $request->getSession();
+//        $uri = $request->getUri();
+//
+//        if (str_contains($uri, 'c/lmh/pathology')) {
+//            $dbName = 'Tenant2';
+//        } else {
+//            return false;
+//        }
+//
+//        $params = $connection->getParams();
+//
+//        if ($connection->isConnected()) {
+//            $connection->close();
+//        }
+//
+//        $params['dbname'] = $dbName;
+//
+//        $connection->__construct(
+//            $params, $connection->getDriver(), $connection->getConfiguration(),
+//            $connection->getEventManager()
+//        );
+//
+//        try {
+//            $connection->connect();
+//        } catch (Exception $e) {
+//            // log and handle exception
+//        }
+//        return true;
+//    }
 
 }

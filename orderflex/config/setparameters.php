@@ -20,97 +20,38 @@ require 'base.php';
 
 echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 
-//$host = $container->getParameter('database_host');
-//$driver = $container->getParameter('database_driver');
-//$dbname = $container->getParameter('database_name');
-//$user = $container->getParameter('database_user');
-//$password = $container->getParameter('database_password');
-//
-///////// Check if system DB exists ///////
-//$host_systemdb = $container->getParameter('database_host_systemdb');
-//$driver_systemdb = $container->getParameter('database_driver_systemdb');
-//$dbname_systemdb = $container->getParameter('database_name_systemdb');
-//$user_systemdb = $container->getParameter('database_user_systemdb');
-//$password_systemdb = $container->getParameter('database_password_systemdb');
+$useDb = true;
+//$useDb = false; //use when new fields are added to the "SiteParameters" entity
+//TODO: why getSiteSettingParameter (or getSingleSiteSettingParameter) is called when clear cache
+//TODO: PdfUtil calls getSiteSettingParameter in construct!
 
-///////// Connect DB //////////
-$container->setParameter('systemdb',false);
 $conn = null;
 
-$config = new \Doctrine\DBAL\Configuration();
-$config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+///////// Connect DB //////////
+if( $useDb ) {
+    //$container->setParameter('systemdb',false);
 
-if(0) {
-// Check if system DB exists. Multi-tenancy is only available when System DB exists.
-//Connection parameters for system DB must be defined in parameters.yml file.
-//If System DB does not exist, but connections paramteres defined in parameters.yml file then:
-//In the project console (/order-lab/orderflex) run:
-//1) php bin/console doctrine:database:create --connection=systemdb --if-not-exists
-//2) php bin/console doctrine:schema:update --em=systemdb --complete --force
-//3) php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
-//4) php bin/console doctrine:migration:version --em=systemdb --add --all
-//5) bash deploy.ch
-//6) Run: /system/directory/admin/first-time-login-generation-init/
-//7) Run on the settings page: 1) Populate Country and City Lists and 2) Populate All Lists with Default Values (Part A)
-    $driver_systemdb = $container->getParameter('database_driver_systemdb');
-    $host_systemdb = $container->getParameter('database_host_systemdb');
-    $port_systemdb = $container->getParameter('database_port_systemdb');
-    $dbname = $dbname_systemdb = $container->getParameter('database_name_systemdb');
-    $user_systemdb = $container->getParameter('database_user_systemdb');
-    $password_systemdb = $container->getParameter('database_password_systemdb');
-//$wrapper_class_systemdb = $container->getParameter('wrapper_class');
-//exit('$driver_systemdb=['.$driver_systemdb.']');
-    if ($host_systemdb && $dbname_systemdb && $user_systemdb && $password_systemdb && $driver_systemdb) {
-        $container->setParameter('systemdb', true);
-        $systemdbConnectionParams = array(
-            'driver' => $driver_systemdb,
-            'host' => $host_systemdb,
-            'port' => $port_systemdb,
-            'dbname' => $dbname_systemdb,
-            'user' => $user_systemdb,
-            'password' => $password_systemdb,
-            //'wrapper_class' => $wrapper_class_systemdb
+    $config = new \Doctrine\DBAL\Configuration();
+    $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+
+    /////// EOF Check if system DB exists ///////
+    if (!$conn) {
+        //system DB does not exists => use default DB
+        $driver = $container->getParameter('database_driver');
+        $host = $container->getParameter('database_host');
+        $port = $container->getParameter('database_port');
+        $dbname = $container->getParameter('database_name');
+        $user = $container->getParameter('database_user');
+        $password = $container->getParameter('database_password');
+        $connectionParams = array(
+            'driver' => $driver,
+            'host' => $host,
+            'port' => $port,
+            'dbname' => $dbname,
+            'user' => $user,
+            'password' => $password
         );
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($systemdbConnectionParams, $config);
-
-        //Set DB connection paraneters for system
-        $tenantUrl = 'system';
-        $container->setParameter($tenantUrl . "-id", null);
-        $container->setParameter($tenantUrl . "-databaseDriver", $container->getParameter('database_driver_systemdb'));
-        $container->setParameter($tenantUrl . "-databaseHost", $container->getParameter('database_host_systemdb'));
-        $container->setParameter($tenantUrl . "-databasePort", $container->getParameter('database_port_systemdb'));
-        $container->setParameter($tenantUrl . "-databaseName", $container->getParameter('database_name_systemdb'));
-        $container->setParameter($tenantUrl . "-databaseUser", $container->getParameter('database_user_systemdb'));
-        $container->setParameter($tenantUrl . "-databasePassword", $container->getParameter('database_password_systemdb'));
-
-//    if( $conn && $conn->isConnected() ) {
-//        $dbname = null;
-//        try {
-//            $dbname = $conn->getDatabase();
-//        } catch (Exception $e) {
-//            exit('NO');
-//            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
-//            $conn = null;
-//            $container->setParameter('systemdb',false);
-//        }
-//    }
-
-        //exit('111');
-        //$schemaManager = $conn->getSchemaManager();
-        //dump($schemaManager);
-        //exit('222');
-//    if( !$conn ) {
-//        if( !$conn->isConnected() ) {
-//            echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r<br>";
-//            $conn = null;
-//            $container->setParameter('systemdb',false);
-//        }
-//    } else {
-//        echo "<br>*** siteparameters.php: Connected to system DB ***\n\r<br>";
-//    }
-
-        //exit('111');
-        //$conn->getDatabase();
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
         if ($conn) {
             $dbname = null;
@@ -118,63 +59,25 @@ if(0) {
                 $dbname = $conn->getDatabase();
             } catch (Exception $e) {
                 //exit('NO');
-                echo "<br>*** siteparameters.php: Failed to connect to system DB. Use the default DB ***\n\r" . $e->getMessage() . "<br>";
+                echo "<br>*** siteparameters.php: Failed to connect to default Database. DB has not been created yet, use default site settings. ***\n\r" . "<br>";
+                //echo "<br>*** siteparameters.php: Ignore the following error message ***\n\r" . $e->getMessage() . "<br>";
                 $conn = null;
-                $container->setParameter('systemdb', false);
             }
         } else {
-            echo "<br>*** siteparameters.php: system DB conn is null ***\n\r <br>";
-            $conn = null;
-            $container->setParameter('systemdb', false);
-        }
-
-        //exit('Yes: '.$dbname);
-    }
-}//if systemdb
-
-/////// EOF Check if system DB exists ///////
-if( !$conn ) {
-    //system DB does not exists => use default DB
-    $driver = $container->getParameter('database_driver');
-    $host = $container->getParameter('database_host');
-    $port = $container->getParameter('database_port');
-    $dbname = $container->getParameter('database_name');
-    $user = $container->getParameter('database_user');
-    $password = $container->getParameter('database_password');
-    $connectionParams = array(
-        'driver' => $driver,
-        'host' => $host,
-        'port' => $port,
-        'dbname' => $dbname,
-        'user' => $user,
-        'password' => $password
-    );
-    $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-
-    if( $conn ) {
-        $dbname = null;
-        try {
-            $dbname = $conn->getDatabase();
-        } catch (Exception $e) {
-            //exit('NO');
-            echo "<br>*** siteparameters.php: Failed to connect to default Database. DB has not been created yet, use default site settings. ***\n\r" . "<br>";
-            //echo "<br>*** siteparameters.php: Ignore the following error message ***\n\r" . $e->getMessage() . "<br>";
+            echo "<br>*** siteparameters.php: default DB conn is null ***\n\r <br>";
             $conn = null;
         }
-    } else {
-        echo "<br>*** siteparameters.php: default DB conn is null ***\n\r <br>";
-        $conn = null;
-    }
 
-//    echo "isConnected=".$conn->isConnected()."<br>";
-//    if( !$conn ) {
-//    //if( !$conn->isConnected() ) {
-//        //$conn = null;
-//        echo "<br>*** Warning: No connection to defaulat DB!!! ***\n<br>";
-//    } else {
-//        echo "<br>*** Connection to defaulat DB!!! ***\n<br>";
-//    }
-}
+    //    echo "isConnected=".$conn->isConnected()."<br>";
+    //    if( !$conn ) {
+    //    //if( !$conn->isConnected() ) {
+    //        //$conn = null;
+    //        echo "<br>*** Warning: No connection to defaulat DB!!! ***\n<br>";
+    //    } else {
+    //        echo "<br>*** Connection to defaulat DB!!! ***\n<br>";
+    //    }
+    }
+} //if $useDb
 ///////// EOF Connect DB //////////
 
 $connection_channel = $container->getParameter('connection_channel');
@@ -182,16 +85,6 @@ if( !$connection_channel ) {
     $connection_channel = 'http';
 }
 //echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
-
-//echo "driver=".$driver."<br>";
-//echo "host=".$host."<br>";
-//echo "dbname=".$dbname."<br>";
-//echo "user=".$user."<br>";
-//echo "password=".$password."<br>";
-
-//upload paths can't be NULL
-//$tenantprefix = '';
-//$container->setParameter('tenantprefix', $tenantprefix);
 
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";
@@ -224,95 +117,10 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null");
 
-//Set default container parameters for multitenancy
-#initRequiredMultitenancy($container);
-
-//Enable system DB
-//checkAndEnableSystemDB($container, $conn);
-
-//if(0) {
-//    $config = new \Doctrine\DBAL\Configuration();
-//    $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
-//
-//    $connectionParams = array(
-//        'dbname' => $dbname,
-//        'user' => $user,
-//        'password' => $password,
-//        'host' => $host,
-//        'driver' => $driver,
-//        //'port' => 3306
-//    );
-//
-////exit("1");
-//    if ($useDb) {
-//        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-//    } else {
-//        $conn = NULL;
-//    }
-////exit("2");
-//}
-
-
-/// TEST ///
-if(0) {
-    $container->setParameter('defaultlocale', 'system');
-    $container->setParameter('locdel', '/'); //locale delimeter '/'
-    $multitenancy = 'multitenancy'; //USed by CustomTenancyLoader
-    $container->setParameter('multitenancy', $multitenancy);
-    $multilocales = 'c/wcm/pathology|c/lmh/pathology';
-    $multilocales = 'c/wcm/pathology';
-//$multilocales = 'system';
-    echo "\n<br>" . "Use system DB: multilocales=$multilocales <br>";
-//$container->setParameter('multilocales', 'main|'.$multilocales);
-    $container->setParameter('multilocales', 'system|' . $multilocales);
-//$container->setParameter('multilocales', 'system');
-    $container->setParameter('multilocales-urls', $multilocales);
-
-//Set id of this hosted user group
-    $tenantUrl = 'system';
-    $hostedGroupHolderRow = array();
-    $hostedGroupHolderRow['id'] = 1;
-    $hostedGroupHolderRow['databasehost'] = 'localhost';
-    $hostedGroupHolderRow['databaseport'] = 5432;
-    $hostedGroupHolderRow['databaseuser'] = 'symfony';
-    $hostedGroupHolderRow['databasepassword'] = 'symfony';
-    $hostedGroupHolderRow['databasename'] = 'ScanOrderSystem';
-    $container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
-    $container->setParameter($tenantUrl . "-databaseHost", $hostedGroupHolderRow['databasehost']);
-    $container->setParameter($tenantUrl . "-databasePort", $hostedGroupHolderRow['databaseport']);
-    $container->setParameter($tenantUrl . "-databaseName", $hostedGroupHolderRow['databasename']);
-    $container->setParameter($tenantUrl . "-databaseUser", $hostedGroupHolderRow['databaseuser']);
-    $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
-
-    $tenantUrl = 'c/wcm/pathology';
-    $hostedGroupHolderRow['id'] = 2;
-    $hostedGroupHolderRow['databasename'] = 'ScanOrder';
-    $container->setParameter($tenantUrl . "-id", $hostedGroupHolderRow['id']);
-    $container->setParameter($tenantUrl . "-databaseHost", $hostedGroupHolderRow['databasehost']);
-    $container->setParameter($tenantUrl . "-databasePort", $hostedGroupHolderRow['databaseport']);
-    $container->setParameter($tenantUrl . "-databaseName", $hostedGroupHolderRow['databasename']);
-    $container->setParameter($tenantUrl . "-databaseUser", $hostedGroupHolderRow['databaseuser']);
-    $container->setParameter($tenantUrl . "-databasePassword", $hostedGroupHolderRow['databasepassword']);
-}
-/// EOF TEST ///
-
-//testing
-//$connected = $conn->connect();
-//echo "connected=".$connected."<br>";
-//echo "conn name=".$conn->getName()."<br>"; // connection 1
 
 if( $conn ) {
-    //echo "DB name=".$conn->getDatabase()."<br>";
     echo "*** siteparameters.php: Connection to DB established. DB name=[".$conn->getDatabase()."] ***\n";
-    #echo "<br>*** systemdb=[".$container->getParameter('systemdb')."] ***\n<br>";
-    #echo "<br>*** multilocales=[".$container->getParameter('multilocales')."] ***\n<br>";
 
-    //TODO: if system DB exists but 'user_siteparameters' table does not exists => init system DB
-    //1) by this script
-    //2) by temporary set container to multitenancy with default '/system' and use it to run
-    //3) /order/system/admin/first-time-login-generation-init/
-
-    //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
 
     //$schemaManager = $conn->getSchemaManager();
@@ -362,14 +170,6 @@ if( $conn ) {
 
             echo "*** siteparameters.php: DB is not empty. Overwrite container's parameters ***\n";
             //exit('111');
-
-//        $aDLDAPServerAddress = null;
-//        $aDLDAPServerPort = null;
-//        $aDLDAPServerOu = null;
-//        $aDLDAPServerAccountUserName = null;
-//        $aDLDAPServerAccountPassword = null;
-//        $ldapExePath = null;
-//        $ldapExeFilename = null;
 
             $smtpServerAddress = null;
             $defaultSiteEmail = null;
@@ -589,11 +389,6 @@ if( $conn ) {
 else {
     echo "*** siteparameters.php: No connection to DB ***\n";
 }
-
-//echo "*** locale_get_default=".locale_get_default() ."***\n";
-echo "1 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
-\Symfony\Component\Intl\Locale::setDefault('en');
-echo "2 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
 
 #printSettings($container);
 

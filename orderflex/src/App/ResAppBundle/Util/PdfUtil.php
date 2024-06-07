@@ -73,10 +73,11 @@ class PdfUtil {
 
         $this->uploadDir = 'Uploaded';
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
-        $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
-        $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
+//        //$resappuploadpath = 'resapp/documents';
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
+//        $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+//        $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
     }
 
     public function getExistingApplicationsByPdf( $pdfFiles ) {
@@ -2662,6 +2663,13 @@ class PdfUtil {
 
                 //1) create temp dir
                 //Uploaded\resapp\documents
+
+                //$resappuploadpath = 'resapp/documents';
+                //$userSecUtil = $this->container->get('user_security_utility');
+                $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
+                $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+                $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
+
                 $uploadedFolder = realpath($this->uploadPath);
                 //echo "destinationFolder=".$destinationFolder."<br>";
                 if( !file_exists($uploadedFolder) ) {
