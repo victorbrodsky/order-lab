@@ -1036,6 +1036,9 @@ class SiteParameters {
     //////// EOF Fields for Server Instance connection ////////
 
 //    #[ORM\Column(type: 'text', nullable: true)]
+//    private $secretKey;
+
+//    #[ORM\Column(type: 'text', nullable: true)]
 //    private $tenantPrefixUrlSlug;
 
     //Move to AuthServerNetworkList
@@ -4304,6 +4307,24 @@ class SiteParameters {
     {
         $this->authPartnerServer = $authPartnerServer;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSecretKey()
+    {
+        return $this->secretKey;
+    }
+
+    /**
+     * @param mixed $secretKey
+     */
+    public function setSecretKey($secretKey)
+    {
+        $this->secretKey = $secretKey;
+    }
+
+
 
 //    /**
 //     * @return mixed

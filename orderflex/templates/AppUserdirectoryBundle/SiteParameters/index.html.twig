@@ -208,6 +208,11 @@
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
+            {#<tr>#}
+                {#<td>Secret Key</td>#}
+                {#<td>{{ entity.secretKey }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'secretKey'}) }}">Edit</a></td>#}
+            {#</tr>#}
             <tr>
                 <td>User Group</td>
                 <td>{{ entity.authUserGroup }}</td>
