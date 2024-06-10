@@ -93,10 +93,10 @@ class ImportFromOldSystem {
 //            exit("Source folder does not exist. path=[".$this->path."]<br>");
 //        }
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
-        $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
-        $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
+//        $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+//        $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
     }
 
     //http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
@@ -631,7 +631,12 @@ class ImportFromOldSystem {
 
         //copy file to resapp folder
         //$destinationFolder = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->uploadPath;
-        $destinationFolder = realpath($this->uploadPath);
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
+        $uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+
+        $destinationFolder = realpath($uploadPath);
         //echo "destinationFolder=".$destinationFolder."<br>";
         if( !file_exists($destinationFolder) ) {
             //echo "Create destination folder <br>";
@@ -650,7 +655,7 @@ class ImportFromOldSystem {
         $document = new Document($author);
         $document->setUniqueid($fileUniqueName);
         $document->setUniquename($fileUniqueName);
-        $document->setUploadDirectory($this->uploadPath);
+        $document->setUploadDirectory($uploadPath);
         $document->setSize($inputFileSize);
 
         $document->setCleanOriginalname($fileOriginalName);

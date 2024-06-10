@@ -62,7 +62,7 @@ class PdfUtil {
     protected $container;
     //protected $session;
     protected $uploadDir;
-    protected $uploadPath;
+    //protected $uploadPath;
 
 
     //public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
@@ -2667,10 +2667,10 @@ class PdfUtil {
                 //$resappuploadpath = 'resapp/documents';
                 //$userSecUtil = $this->container->get('user_security_utility');
                 $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
-                $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
-                $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
+                $uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+                //$this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
 
-                $uploadedFolder = realpath($this->uploadPath);
+                $uploadedFolder = realpath($uploadPath);
                 //echo "destinationFolder=".$destinationFolder."<br>";
                 if( !file_exists($uploadedFolder) ) {
                     echo "Create destination folder [$uploadedFolder]<br>";

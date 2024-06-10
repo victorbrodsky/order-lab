@@ -2444,16 +2444,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.358.0",
+            "version": "v0.359.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd"
+                "reference": "e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd",
-                "reference": "a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338",
+                "reference": "e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338",
                 "shasum": ""
             },
             "require": {
@@ -2482,9 +2482,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.358.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.359.0"
             },
-            "time": "2024-06-03T01:02:16+00:00"
+            "time": "2024-06-10T01:02:17+00:00"
         },
         {
             "name": "google/auth",
@@ -3099,16 +3099,16 @@
         },
         {
             "name": "knplabs/knp-snappy-bundle",
-            "version": "v1.10.1",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpSnappyBundle.git",
-                "reference": "24c61f0b52e8fff60b42b9fac5f2e776e22177e3"
+                "reference": "39ffad9e7294e3c9d87ee5de7da7e4495b055126"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/24c61f0b52e8fff60b42b9fac5f2e776e22177e3",
-                "reference": "24c61f0b52e8fff60b42b9fac5f2e776e22177e3",
+                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/39ffad9e7294e3c9d87ee5de7da7e4495b055126",
+                "reference": "39ffad9e7294e3c9d87ee5de7da7e4495b055126",
                 "shasum": ""
             },
             "require": {
@@ -3151,9 +3151,9 @@
             ],
             "support": {
                 "issues": "https://github.com/KnpLabs/KnpSnappyBundle/issues",
-                "source": "https://github.com/KnpLabs/KnpSnappyBundle/tree/v1.10.1"
+                "source": "https://github.com/KnpLabs/KnpSnappyBundle/tree/v1.10.2"
             },
-            "time": "2024-04-19T09:05:01+00:00"
+            "time": "2024-06-10T12:38:45+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -11267,16 +11267,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.3",
+            "version": "1.11.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e64220a05c1209fc856d58e789c3b7a32c0bb9a5"
+                "reference": "9100a76ce8015b9aa7125b9171ae3a76887b6c82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e64220a05c1209fc856d58e789c3b7a32c0bb9a5",
-                "reference": "e64220a05c1209fc856d58e789c3b7a32c0bb9a5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9100a76ce8015b9aa7125b9171ae3a76887b6c82",
+                "reference": "9100a76ce8015b9aa7125b9171ae3a76887b6c82",
                 "shasum": ""
             },
             "require": {
@@ -11321,7 +11321,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-31T13:53:37+00:00"
+            "time": "2024-06-06T12:19:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -13043,16 +13043,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.59.1",
+            "version": "v1.60.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "b87b1b25c607a8a50832395bc751c784946a0350"
+                "reference": "c305a02a22974670f359d4274c9431e1a191f559"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/b87b1b25c607a8a50832395bc751c784946a0350",
-                "reference": "b87b1b25c607a8a50832395bc751c784946a0350",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/c305a02a22974670f359d4274c9431e1a191f559",
+                "reference": "c305a02a22974670f359d4274c9431e1a191f559",
                 "shasum": ""
             },
             "require": {
@@ -13115,7 +13115,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.59.1"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.60.0"
             },
             "funding": [
                 {
@@ -13131,7 +13131,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-06T03:59:59+00:00"
+            "time": "2024-06-10T06:03:18+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
