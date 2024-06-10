@@ -356,11 +356,11 @@
             <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
             <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
-            {#{% do invoiceItem.setRendered %}#}
-            {% if 0 %}
+            {% if 1 %}
                 {#hidden#}
                 {{ form_widget(forminvoiceItem.id) }}
                 {{ form_widget(forminvoiceItem.product) }}
+                {#{% do forminvoiceItem.product.setRendered %}#}
             {% else %}
                 {% do forminvoiceItem.id.setRendered %}
                 {% do forminvoiceItem.product.setRendered %}
