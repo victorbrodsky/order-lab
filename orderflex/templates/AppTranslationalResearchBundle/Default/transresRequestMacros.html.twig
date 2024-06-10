@@ -356,20 +356,18 @@
             <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
             <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
-            {% if 1 %}
-                {#hidden#}
-                {{ form_widget(forminvoiceItem.id) }}
 
-                {#Why do we need constantly growing the list of all products here? classname='invoiceitem-product' is not used anywehere#}
-                {% if forminvoiceItem.product is defined %}
-                    {{ form_widget(forminvoiceItem.product) }}
-                {% endif %}
-            {% else %}
-                {% do forminvoiceItem.id.setRendered %}
-                {% do forminvoiceItem.product.setRendered %}
+            {#hidden#}
+            {{ form_widget(forminvoiceItem.id) }}
+
+            {#  Removed forminvoiceItem.product:
+                Why do we need constantly growing the list of all products here?
+                classname='invoiceitem-product' is not used anywehere.
+            #}
+            {% if forminvoiceItem.product is defined %}
+                {{ form_widget(forminvoiceItem.product) }}
             {% endif %}
 
-            {% if 1 %}
             <div class="row">
                 <div class="col-xs-6">
                     {{ form_widget(forminvoiceItem.description) }}
@@ -395,7 +393,7 @@
 
                     {{ form_widget(forminvoiceItem.total) }}
                 </div>
-                {% endif %}
+
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}
                         <button type="button" class="btn btn-default btn-sm"
