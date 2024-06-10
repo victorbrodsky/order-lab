@@ -379,8 +379,8 @@
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
                 <div class="col-xs-2" style="margin-top: 2%;">
-                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
-                    {% do forminvoiceItem.itemCode.setRendered %}
+                    {{ form_widget(forminvoiceItem.itemCode) }}
+                    {#{% do forminvoiceItem.itemCode.setRendered %}#}
                 </div>
                 <div class="col-xs-1 text-left">
                     {{ form_widget(forminvoiceItem.unitPrice) }}
