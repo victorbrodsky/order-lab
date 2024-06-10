@@ -359,10 +359,11 @@
             {% if 1 %}
                 {#hidden#}
                 {{ form_widget(forminvoiceItem.id) }}
+
+                {#Why do we need constantly growing the list of all products here? classname='invoiceitem-product' is not used anywehere#}
                 {% if forminvoiceItem.product is defined %}
                     {{ form_widget(forminvoiceItem.product) }}
                 {% endif %}
-                {#{% do forminvoiceItem.product.setRendered %}#}
             {% else %}
                 {% do forminvoiceItem.id.setRendered %}
                 {% do forminvoiceItem.product.setRendered %}

@@ -46,6 +46,7 @@ class InvoiceItemType extends AbstractType
         ));
 
         if(0) {
+            //This will render the list of all products. This list is growing constantly. Why do we need the list of all products here?
             $builder->add('product', null, array(
                 'attr' => array('class' => 'invoiceitem-product', 'style' => 'display:none;'),
             ));
