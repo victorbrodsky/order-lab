@@ -313,11 +313,11 @@
     {#{% endif %}#}
 
 {% endmacro %}
-{% macro invoiceItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro invoiceItemForm_test( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     TESTING...
     {% do invoiceItem.setRendered %}
 {% endmacro %}
-{% macro invoiceItemForm_orig( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro invoiceItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
