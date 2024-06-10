@@ -313,7 +313,7 @@
     {#{% endif %}#}
 
 {% endmacro %}
-{% macro invoiceItemForm_test( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro invoiceItemForm_testing( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     TESTING...
     {% do invoiceItem.setRendered %}
 {% endmacro %}
@@ -353,22 +353,20 @@
 
         {% if secondRaw %}
 
-            {#{% if prototype == "prototype" %}#}
-                {#{% set forminvoiceItem = invoiceItem.vars.prototype %}#}
-            {#{% else %}#}
-                {#$quantityFirst = 1;#}
-                {#$quantityAdditional = $quantity - 1;#}
-                {#{% set quantityFirst = 1 %}#}
-                {#{% set additionalQuantity = forminvoiceItem.quantity.vars.value - 1 %}#}
-            {#{% endif %}#}
-
             <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
             <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
-            {#hidden#}
-            {{ form_widget(forminvoiceItem.id) }}
-            {{ form_widget(forminvoiceItem.product) }}
+            {#{% do invoiceItem.setRendered %}#}
+            {% if 0 %}
+                {#hidden#}
+                {{ form_widget(forminvoiceItem.id) }}
+                {{ form_widget(forminvoiceItem.product) }}
+            {% else %}
+                {% do forminvoiceItem.id.setRendered %}
+                {% do forminvoiceItem.product.setRendered %}
+            {% endif %}
 
+            {% if 1 %}
             <div class="row">
                 <div class="col-xs-6">
                     {{ form_widget(forminvoiceItem.description) }}
@@ -380,7 +378,6 @@
                 </div>
                 <div class="col-xs-2" style="margin-top: 2%;">
                     {{ form_widget(forminvoiceItem.itemCode) }}
-                    {#{% do forminvoiceItem.itemCode.setRendered %}#}
                 </div>
                 <div class="col-xs-1 text-left">
                     {{ form_widget(forminvoiceItem.unitPrice) }}
@@ -395,15 +392,9 @@
 
                     {{ form_widget(forminvoiceItem.total) }}
                 </div>
-                {#<div class="col-xs-1">#}
-                    {#calculated total#}
-                    {#{{ form_widget(forminvoiceItem.total) }}#}
-                {#</div>#}
+                {% endif %}
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}
-                        {#<button type="button" class="btn btn-default btn-sm"#}
-                                {#onClick="removeExistingObject(this,'{{ classname }}')"#}
-                        {#><span class="glyphicon glyphicon-remove"></span></button>#}
                         <button type="button" class="btn btn-default btn-sm"
                                 onClick="removeInvoiceItemExistingObject(this,'{{ classname }}')"
                         ><span class="glyphicon glyphicon-remove"></span></button>
