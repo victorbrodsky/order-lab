@@ -359,7 +359,9 @@
             {% if 1 %}
                 {#hidden#}
                 {{ form_widget(forminvoiceItem.id) }}
-                {{ form_widget(forminvoiceItem.product) }}
+                {% if forminvoiceItem.product is defined %}
+                    {{ form_widget(forminvoiceItem.product) }}
+                {% endif %}
                 {#{% do forminvoiceItem.product.setRendered %}#}
             {% else %}
                 {% do forminvoiceItem.id.setRendered %}

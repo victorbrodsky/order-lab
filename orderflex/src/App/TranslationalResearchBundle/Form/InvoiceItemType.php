@@ -44,10 +44,12 @@ class InvoiceItemType extends AbstractType
         $builder->add('id', HiddenType::class, array(
             'attr' => array('class'=>'invoiceitem-id'),
         ));
-        
-        $builder->add('product', null, array(
-            'attr' => array('class'=>'invoiceitem-product', 'style'=>'display:none;'),
-        ));
+
+        if(0) {
+            $builder->add('product', null, array(
+                'attr' => array('class' => 'invoiceitem-product', 'style' => 'display:none;'),
+            ));
+        }
 
         $builder->add('quantity', NumberType::class, array(
             'label' => "Quantity",
