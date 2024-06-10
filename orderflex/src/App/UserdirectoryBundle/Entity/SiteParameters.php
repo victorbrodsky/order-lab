@@ -1035,8 +1035,9 @@ class SiteParameters {
     private $authPartnerServer;
     //////// EOF Fields for Server Instance connection ////////
 
-//    #[ORM\Column(type: 'text', nullable: true)]
-//    private $mySecretKey;
+    //Secret key for transfer
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $secretKey;
 
 //    #[ORM\Column(type: 'text', nullable: true)]
 //    private $tenantPrefixUrlSlug;

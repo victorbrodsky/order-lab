@@ -372,7 +372,11 @@ class InterfaceTransferUtil {
 
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
-        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        //Use the same secret for now.
+        //It is better to use $interfaceTransfer secretKey (add field) which should be the same as a receiver' app secret key
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         //Add hash and security key
         $hash = hash('sha512', $secretKey . serialize($jsonFile));
@@ -435,7 +439,9 @@ class InterfaceTransferUtil {
 
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
-        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         //Add hash and security key
         $hash = hash('sha512', $secretKey . serialize($jsonFile));

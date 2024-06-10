@@ -133,7 +133,9 @@ class InterfaceController extends OrderAbstractController
 
         //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
-        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         $checksum = NULL;
         $input = array();
@@ -185,7 +187,9 @@ class InterfaceController extends OrderAbstractController
 
         //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
-        $secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         $checksum = NULL;
         $input = array();

@@ -1314,12 +1314,12 @@ class SiteParametersType extends AbstractType
         }
         //////// EOF fields for Server Instance connection ////////
 
-//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'secretKey' ) {
-//            $builder->add('secretKey', null, array(
-//                'label' => 'Secret Key:',
-//                'attr' => array('class' => 'form-control')
-//            ));
-//        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'secretKey' ) {
+            $builder->add('secretKey', null, array(
+                'label' => 'Secret Key:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'hostedUserGroups' ) {
 //            $builder->add('hostedUserGroups', EntityType::class, array(
