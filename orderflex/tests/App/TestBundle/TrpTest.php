@@ -426,7 +426,7 @@ class TrpTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Update and Regenerate PDF Invoice")')->count()
+            $crawler->filter('html:contains("Regenerate PDF Invoice")')->count()
         );
         $this->assertGreaterThan(
             0,
