@@ -179,7 +179,7 @@ class DoctrineListener {
         //$logger->notice("classname=".get_class($entity));
 
         if( $entity instanceof AntibodyList ) {
-            //exit('AntibodyList, ID='.$entity->getId());
+            exit('AntibodyList, ID='.$entity->getId());
 
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
