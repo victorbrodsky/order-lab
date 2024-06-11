@@ -1015,10 +1015,10 @@ class InterfaceTransferUtil {
         }
 
         $result = curl_exec($ch);
-        $status = curl_getinfo($ch);
+        //$status = curl_getinfo($ch);
         curl_close($ch);
 
-        dump($status);
+        //dump($status);
         dump($result);
         exit('111');
 
@@ -1053,7 +1053,9 @@ class InterfaceTransferUtil {
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
 
-        $json = array();
+        $jsonRes = array();
+        $jsonRes['count'] = count($transferDatas);
+
         foreach($transferDatas as $transferData) {
             $id = $transferData->getEntityId();
             $className = $transferData->getClassName();
@@ -1064,17 +1066,17 @@ class InterfaceTransferUtil {
             );
             $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
 
-            $json['sourceId'] = $id;
-            $jsonFile['className'] = $className;
-
-
             //$jsonFile = $transferableEntity->toJson();
-            $jsonFile = $serializer->serialize($transferableEntity, 'json');
+            //$json = array();
+            $json = $serializer->serialize($transferableEntity, 'json');
+            $json['sourceId'] = $id;
+            $json['className'] = $className;
+            $jsonRes[] = $json;
 
             //opposite: $person = $serializer->deserialize($data, Person::class, 'xml');
         }
 
-        return $jsonFile;
+        return $jsonRes;
     }
 
 
