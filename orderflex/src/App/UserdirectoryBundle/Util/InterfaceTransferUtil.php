@@ -976,8 +976,9 @@ class InterfaceTransferUtil {
 
         if(1) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            //curl_setopt($ch, CURLOPT_GETFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
