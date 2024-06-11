@@ -264,6 +264,7 @@ class InterfaceController extends OrderAbstractController
     public function sendSlaveToMasterTransferAction(Request $request)
     {
 
+        exit('sendSlaveToMasterTransferAction');
         //Testing
         $res = array(
             "checksum" => '123',
