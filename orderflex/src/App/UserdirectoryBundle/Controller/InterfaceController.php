@@ -259,14 +259,10 @@ class InterfaceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
-    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_transfer_interface_receive_transfer', methods: ['GET'])]
+    //Public
+    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['GET'])]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
-        //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-        //    return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
-        //}
-        //exit('receive!!!');
-
         $logger = $this->container->get('logger');
         $post_data = json_decode($request->getContent(), true);
         $logger->notice('sendSlaveToMasterTransferAction: post_data count='.count($post_data));
