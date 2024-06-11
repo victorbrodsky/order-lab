@@ -564,7 +564,7 @@ class InterfaceTransferUtil {
     }
 
     //find if TransferData has this antibody with status 'Ready' or 'ready'
-    public function findTransferData( $entity, $statusStr, $single=true ) {
+    public function findTransferData( $entity, $statusStr ) {
 
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
@@ -590,10 +590,6 @@ class InterfaceTransferUtil {
 
         $transfers = $query->getResult();
 
-        if( $single === FALSE ) {
-            return $transfers;
-        }
-
         //Get single transfer data
         $transfer = NULL;
         if (count($transfers) > 0) {
@@ -605,6 +601,30 @@ class InterfaceTransferUtil {
         }
 
         return $transfer;
+    }
+
+    public function findAllTransferDataByClassname( $className, $statusStr ) {
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.className = :className');
+        $dql->andWhere('LOWER(transferStatus.name) = LOWER(:transferStatus)');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'className' => $className,
+                'transferStatus' => $statusStr
+            )
+        );
+
+        $transfers = $query->getResult();
+
+        return $transfers;
     }
 
 
@@ -1027,7 +1047,7 @@ class InterfaceTransferUtil {
     public function sendSlavetoMasterTransfer( $jsonFile ) {
         //1) get TransferData
         $className = $jsonFile['className'];
-        $transferDatas = $this->findTransferData($className,'Ready',$single=FALSE);
+        $transferDatas = $this->findAllTransferDataByClassname($className,'Ready',$single=FALSE);
 
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -1056,6 +1076,8 @@ class InterfaceTransferUtil {
 
         return $jsonFile;
     }
+
+
 
 
 }
