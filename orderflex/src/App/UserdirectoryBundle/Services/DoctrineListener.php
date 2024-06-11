@@ -176,33 +176,37 @@ class DoctrineListener {
     public function setTrabsferable($entity) {
 
         //echo "classname=".get_class($entity)."<br>";
-        //$logger = $this->container->get('logger');
-        //$logger->notice("classname=".get_class($entity));
+        $logger = $this->container->get('logger');
+        $logger->notice("classname=".get_class($entity));
 
         if(
             $entity instanceof AntibodyList ||
             $entity instanceof Project
         ) {
-            //exit('AntibodyList, ID='.$entity->getId());
+            //exit('setTrabsferable, ID='.$entity->getId());
+            $logger->notice('setTrabsferable, ID='.$entity->getId());
 
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //make sure it does not fired on the slave (remote) server
             $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
             if( !$masterTransferServer ) {
+                $logger->notice('setTrabsferable: Is not masterTransferServer');
                 return false;
             }
 
-
-            //check if public
-            if( $entity->getOpenToPublic() !== true ) {
-                //exit('not public');
-                return false;
+            if( $entity instanceof AntibodyList ) {
+                //check if public
+                if ($entity->getOpenToPublic() !== true) {
+                    //exit('not public');
+                    return false;
+                }
             }
 
             //1) find if TransferData has this antibody with status 'Ready'
             if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {
                 //exit('Already in TransferData');
+                $logger->notice('setTrabsferable: Already in TransferData');
                 return false; //do nothing
             }
 
