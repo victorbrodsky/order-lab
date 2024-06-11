@@ -179,10 +179,7 @@ class DoctrineListener {
         $logger = $this->container->get('logger');
         $logger->notice("classname=".get_class($entity));
 
-        if(
-            $entity instanceof AntibodyList ||
-            $entity instanceof Project
-        ) {
+        if( $entity instanceof AntibodyList ) {
             //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, ID='.$entity->getId());
 
@@ -222,6 +219,39 @@ class DoctrineListener {
             }
         } else {
             //exit('not AntibodyList');
+        }
+
+        if( $entity instanceof Project ) {
+            //exit('setTrabsferable, ID='.$entity->getId());
+            $logger->notice('setTrabsferable, ID='.$entity->getId());
+
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+            //Remove for Project, if Project should be sync both ways
+            //make sure it does not fired on the slave (remote) server
+            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+            if( $masterTransferServer ) {
+                $logger->notice('setTrabsferable: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
+                return false;
+            }
+
+            //1) find if TransferData has this antibody with status 'Ready'
+            if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {
+                //exit('Already in TransferData');
+                $logger->notice('setTrabsferable: Already in TransferData');
+                return false; //do nothing
+            }
+
+            //exit('before createTransferData');
+            //2 add antibody to the TransferData table
+            $transfer = $interfaceTransferUtil->createTransferData($entity,$status='Ready');
+            //exit('after createTransferData');
+
+            if( $transfer ) {
+                return true;
+            } else {
+                //exit('createTransferData failed');
+            }
         }
 
         //exit('EOF setTrabsferable');

@@ -687,6 +687,9 @@ class InterfaceTransferUtil {
         return $interfaceTransfer;
     }
 
+    //Add to InterfaceTransfer the way to distiguish if it should be added to the TransferData:
+    // AntibodyList -> server should be master (master to slave)
+    // Project -> server should be slave (slave to master)
     public function isMasterTransferServer( $entity ) {
         $mapper = $this->classListMapper($entity);
         //$className = $mapper['className'];
