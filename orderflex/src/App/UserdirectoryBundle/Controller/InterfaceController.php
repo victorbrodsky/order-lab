@@ -263,9 +263,6 @@ class InterfaceController extends OrderAbstractController
     #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['POST'])]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
-        $logger = $this->container->get('logger');
-        $post_data = json_decode($request->getContent(), true);
-        $logger->notice('sendSlaveToMasterTransferAction: post_data count='.count($post_data));
 
         //Testing
         $res = array(
@@ -277,6 +274,10 @@ class InterfaceController extends OrderAbstractController
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($res));
         return $response;
+
+        $logger = $this->container->get('logger');
+        $post_data = json_decode($request->getContent(), true);
+        $logger->notice('sendSlaveToMasterTransferAction: post_data count='.count($post_data));
 
         //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
