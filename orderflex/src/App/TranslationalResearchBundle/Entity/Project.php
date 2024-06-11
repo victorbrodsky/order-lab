@@ -3571,6 +3571,28 @@ class Project {
         return $expDateStr;
     }
 
+    //serialize
+    public function toJson() {
+
+        //$disableDatasheet = false;
+        $datasheet = $this->getDatasheet();
+        //if( !$datasheet || $datasheet == '' ) {
+        //    $disableDatasheet = true;
+        //}
+
+        $json = array(
+            'id' => ($this->getId()) ? $this->getId() : "unidentified",
+            'sourceId' => $this->getId(), //$this->getSourceId(), //to identify the antibody on the remote server
+            'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
+            'title' => $this->getTitle(),
+            //'documents' => $this->getImageData(), //array of document's data
+            'description' => $this->getDescription(),
+            'irbNumber' => $this->getIrbNumber()
+        );
+
+        return $json;
+    }
+
     public function getEntityName() {
         return "Project";
     }

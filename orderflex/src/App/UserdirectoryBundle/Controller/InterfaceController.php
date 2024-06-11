@@ -72,7 +72,7 @@ class InterfaceController extends OrderAbstractController
         //dump($res);
         //exit('111');
         
-        $interfaceTransferUtil->transferFile($transfer);
+        $interfaceTransferUtil->testTransferFile($transfer);
 
         exit();
     }
@@ -235,4 +235,87 @@ class InterfaceController extends OrderAbstractController
         $response->setContent(json_encode($res));
         return $response;
     }
+
+
+    //Get data from slave to master
+    #[Route(path: '/get-transfer', name: 'employees_get_transfer', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
+    public function getSlaveToMasterTransferAction(Request $request)
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //List of items to transfer from TransferData
+        $transferDatas = $interfaceTransferUtil->getSlaveToMasterTransfer();
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            $transferDatas
+        );
+
+        return $this->redirect($this->generateUrl('employees_interface_manager'));
+    }
+
+    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_transfer_interface_receive_transfer', methods: ['GET'])]
+    public function sendSlaveToMasterTransferAction(Request $request)
+    {
+        //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        //    return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        //}
+        //exit('receive!!!');
+
+        $logger = $this->container->get('logger');
+        $post_data = json_decode($request->getContent(), true);
+        $logger->notice('sendSlaveToMasterTransferAction: post_data count='.count($post_data));
+
+        //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        $checksum = NULL;
+        $input = array();
+        foreach ($post_data as $key => $value) {
+            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
+                $checksum = $value;
+            } else {
+                $input[$key] = $value;
+            }
+        }
+
+        $valid = NULL;
+        $hash = hash('sha512', $secretKey . serialize($input));
+        if ($hash === $checksum) {
+            $valid = true;
+        } else {
+            $valid = false;
+        }
+
+        $transferResult = NULL;
+        if( $valid ) {
+            $logger->notice('sendSlaveToMasterTransferAction: checksum valid');
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+            $transferResult = $interfaceTransferUtil->sendSlavetoMasterTransfer($input);
+        }
+
+        //$post_str = implode(',', $input);
+        //$logger->notice('receiveTransferAction: input='.$post_str);
+        //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
+
+        $res = array(
+            "checksum" => $checksum,
+            "valid" => $valid,
+            "transferResult" => $transferResult
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+    
 }

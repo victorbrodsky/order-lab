@@ -95,7 +95,13 @@
 
 
     {#Button Transfer#}
-    <a class="btn btn-danger btn-sm" href="{{ path('employees_start_transfer') }}">Transfer all listed objects</a>
+    <p>
+        <a class="btn btn-danger btn-sm" href="{{ path('employees_start_transfer') }}">Transfer all listed objects</a>
+    </p>
+
+    <p>
+        <a class="btn btn-danger btn-sm" href="{{ path('employees_get_transfer') }}">Get from remote (slave)</a>
+    </p>
 
 {% endblock %}
 

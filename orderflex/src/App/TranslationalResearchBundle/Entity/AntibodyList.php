@@ -1008,6 +1008,7 @@ class AntibodyList extends ListAbstract
         return $res;
     }
 
+    //serialize
     public function toJson() {
 
         //$disableDatasheet = false;

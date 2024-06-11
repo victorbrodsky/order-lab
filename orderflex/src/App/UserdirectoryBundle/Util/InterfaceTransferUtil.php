@@ -34,6 +34,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
 
 class InterfaceTransferUtil {
 
@@ -49,7 +54,7 @@ class InterfaceTransferUtil {
 
     //Require ssh
     //http://pecl.php.net/package/ssh2
-    public function transferFile( InterfaceTransferList $transfer ) {
+    public function testTransferFile( InterfaceTransferList $transfer ) {
 
         if( !$transfer ) {
             return null;
@@ -159,9 +164,9 @@ class InterfaceTransferUtil {
 
         $resStr = NULL;
         if( count($resArr) > 0 ) {
-            $resStr = "Transfer completed: " . implode("; ",$resArr);
+            $resStr = "Send transfer completed: " . implode("; ",$resArr);
         } else {
-            $resStr = "Transfer not completed: nothing to transfer.";
+            $resStr = "Send transfer not completed: nothing to transfer.";
         }
 
         return $resStr;
@@ -205,7 +210,7 @@ class InterfaceTransferUtil {
         $jsonFile['apppath'] = $remoteAppPath;
 
         //Step 2: send files with sftp
-        //send associated files (i.e. documents) transferFile
+        //send associated files (i.e. documents)
         $resFiles = $this->sendAssociatedFiles($interfaceTransfer,$jsonFile);
 
         //add files path to $jsonFile
@@ -559,7 +564,7 @@ class InterfaceTransferUtil {
     }
 
     //find if TransferData has this antibody with status 'Ready' or 'ready'
-    public function findTransferData( $entity, $statusStr ) {
+    public function findTransferData( $entity, $statusStr, $single=true ) {
 
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
@@ -585,14 +590,17 @@ class InterfaceTransferUtil {
 
         $transfers = $query->getResult();
 
-        $transfer = NULL;
+        if( $single === FALSE ) {
+            return $transfers;
+        }
 
-        if( count($transfers) > 0 ) {
+        //Get single transfer data
+        $transfer = NULL;
+        if (count($transfers) > 0) {
             //Can we have the same multiple transfers?
             $transfer = $transfers[0];
         }
-
-        if( count($transfers) == 1 ) {
+        if (count($transfers) == 1) {
             $transfer = $transfers[0];
         }
 
@@ -653,6 +661,7 @@ class InterfaceTransferUtil {
         return $transfer;
     }
 
+    //TODO: get InterfaceTransferList by full classname
     public function getInterfaceTransferByName( $name ) {
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($name);
         return $interfaceTransfer;
@@ -919,5 +928,131 @@ class InterfaceTransferUtil {
 
         return null;
     }
-    
+
+
+
+
+    //TODO: create transfer interface page and call this function getTransfer
+    //Get all transfers from TransferData with status 'Ready' and make sftp transfer from the remote (slave) server to internal (master)
+    public function getSlaveToMasterTransfer() {
+        //1) send CURL request to slave to transfer data
+        $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
+
+        $resArr = array();
+        foreach($transferDatas as $transferData) {
+            echo "transferData=".$transferData."<br>";
+        }
+
+        $resStr = NULL;
+        if( count($resArr) > 0 ) {
+            $resStr = "Get transfer completed: " . implode("; ",$resArr);
+        } else {
+            $resStr = "Get transfer not completed: nothing to transfer.";
+        }
+
+        return $resStr;
+        //exit('EOF sendTransfer');
+    }
+
+    public function getSlaveToMasterTransferCurl($className) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        $entityName = $this->getEntityName($className);
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            if( $interfaceTransfer->getTransferDestination() ) {
+                return true;
+            }
+        }
+
+        //Add hash and security key
+        $jsonFile = array();
+        $jsonFile['className'] = $className;
+
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $jsonFile['hash'] = $hash;
+
+        $data_string = json_encode($jsonFile);
+        $strServer = $interfaceTransfer->getTransferSource();  //view.online
+        $url = 'http://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
+        echo "url=$url <br>";
+        $ch = curl_init($url);
+
+        if(1) {
+            //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string)
+            ));
+        }
+
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch);
+        curl_close($ch);
+
+        dump($status);
+        dump($result);
+        exit('111');
+
+        if( $result ) {
+            $result = json_decode($result, true);
+            if( !$result ) {
+                return false;
+            }
+            $checksum = $result['checksum'];
+            $valid = $result['valid'];
+            $transferResult = $result['transferResult'];
+
+            //dump($result);
+            //exit('222');
+
+            if ($checksum === $hash && $valid === true && $transferResult === true) {
+                echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+                return true;
+            }
+        }
+
+        //exit('222');
+        return false;
+    }
+
+    public function sendSlavetoMasterTransfer( $jsonFile ) {
+        //1) get TransferData
+        $className = $jsonFile['className'];
+        $transferDatas = $this->findTransferData($className,'Ready',$single=FALSE);
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $json = array();
+        foreach($transferDatas as $transferData) {
+            $id = $transferData->getEntityId();
+            $className = $transferData->getClassName();
+
+            //find entity
+            $matchingArr = array(
+                'sourceId' => $id
+            );
+            $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
+
+            $json['sourceId'] = $id;
+            $jsonFile['className'] = $className;
+
+
+            //$jsonFile = $transferableEntity->toJson();
+            $jsonFile = $serializer->serialize($transferableEntity, 'json');
+
+            //opposite: $person = $serializer->deserialize($data, Person::class, 'xml');
+        }
+
+        return $jsonFile;
+    }
+
+
 }
