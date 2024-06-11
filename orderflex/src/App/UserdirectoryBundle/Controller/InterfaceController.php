@@ -259,8 +259,8 @@ class InterfaceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
-    //Public
-    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['POST'])]
+    //Public , methods: ['POST']
+    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer')]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
 
