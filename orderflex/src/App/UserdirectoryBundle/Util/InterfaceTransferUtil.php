@@ -970,7 +970,9 @@ class InterfaceTransferUtil {
 
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
-        $url = 'http://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
+
+        //http://127.0.0.1:8000/directory/transfer-interface/slave-to-master-transfer
+        $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
         echo "url=$url <br>";
         $ch = curl_init($url);
 
