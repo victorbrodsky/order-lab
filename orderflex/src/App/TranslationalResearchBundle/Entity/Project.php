@@ -762,8 +762,13 @@ class Project {
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $projectPdfs;
     ////////////// EOF #295 //////////////
-
-
+    
+//    //Keep the original id from the source
+//    /**
+//     * @var string
+//     */
+//    #[ORM\Column(type: 'string', nullable: true)]
+//    private $sourceId;
 
     public function __construct($user=null) {
 

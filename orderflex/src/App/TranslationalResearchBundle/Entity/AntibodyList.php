@@ -224,7 +224,8 @@ class AntibodyList extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $openToPublic;
 
-    //Keep the original id from the source
+    //TODO: Keep the original id from the source in another mapper table originalId -> sourceId
+    //It's not good to modify DB every time we add new transferable
     /**
      * @var string
      */
