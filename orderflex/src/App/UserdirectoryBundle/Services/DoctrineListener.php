@@ -24,6 +24,7 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use App\TranslationalResearchBundle\Entity\Project;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
@@ -178,7 +179,10 @@ class DoctrineListener {
         //$logger = $this->container->get('logger');
         //$logger->notice("classname=".get_class($entity));
 
-        if( $entity instanceof AntibodyList ) {
+        if(
+            $entity instanceof AntibodyList ||
+            $entity instanceof Project
+        ) {
             //exit('AntibodyList, ID='.$entity->getId());
 
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
