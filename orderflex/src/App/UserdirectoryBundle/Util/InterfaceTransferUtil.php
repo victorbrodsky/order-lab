@@ -971,8 +971,9 @@ class InterfaceTransferUtil {
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
 
-        //http://127.0.0.1:8000/directory/transfer-interface/slave-to-master-transfer
+        //http://view.online/directory/transfer-interface/slave-to-master-transfer
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
+
         echo "url=$url <br>";
         $ch = curl_init($url);
 
@@ -985,6 +986,12 @@ class InterfaceTransferUtil {
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($data_string)
             ));
+
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            //https://stackoverflow.com/questions/4372710/php-curl-https
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
+            //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
+            //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
         }
 
         $result = curl_exec($ch);

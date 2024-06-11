@@ -263,19 +263,17 @@ class InterfaceController extends OrderAbstractController
     #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer')]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
-
-        exit('sendSlaveToMasterTransferAction');
-        //Testing
-        $res = array(
-            "checksum" => '123',
-            "valid" => true,
-            "transferResult" => 'OK'
-        );
-        $res = 'OK';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
-        return $response;
+//        //exit('sendSlaveToMasterTransferAction');
+//        //Testing
+//        $res = array(
+//            "checksum" => '123',
+//            "valid" => true,
+//            "transferResult" => 'OK'
+//        );
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($res));
+//        return $response;
 
         $logger = $this->container->get('logger');
         $post_data = json_decode($request->getContent(), true);
