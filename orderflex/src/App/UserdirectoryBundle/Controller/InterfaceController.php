@@ -260,7 +260,7 @@ class InterfaceController extends OrderAbstractController
     }
 
     //Public
-    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer'), methods: ['POST'])]
+    #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['POST'])]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
 //        //exit('sendSlaveToMasterTransferAction');
