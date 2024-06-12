@@ -1545,12 +1545,13 @@ class InterfaceTransferUtil {
 
             $json['globalId'] = $globalId;
             $json['className'] = $className;
+
+            $logger->notice('$json:',print_r($json));
+
             $jsonRes[] = $json;
 
             //opposite: $person = $serializer->deserialize($data, Person::class, 'xml');
         }
-
-        $logger->notice('$jsonRes:',print_r($jsonRes));
 
         return $jsonRes;
     }
