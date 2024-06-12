@@ -52,24 +52,18 @@ class TransferData {
     #[ORM\JoinColumn(name: 'interfacetransfer_id', referencedColumnName: 'id')]
     private $interfaceTransfer;
 
-    //use instead linking directly to the antibody object.
-    //We can use the transfer for any other entities.
-    ///// Object Data /////
-    //Local ID
-    #[ORM\Column(type: 'string', nullable: true)]
-    private $entityId;
-
-    //#[ORM\Column(type: 'string', nullable: true)]
-    //private $entityNamespace;
-
-    //#[ORM\Column(type: 'string', nullable: true)]
-    //private $entityName;
-
     //Full class name i.e. 'App\UserdirectoryBundle\Entity\AntibodyList'
     //Obtain by php function: get_class($entity)
     #[ORM\Column(type: 'string', nullable: true)]
     private $className;
-    ///// EOF Object Data /////
+
+    //Local ID
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $localId;
+
+    //Global ID localId@instanceId
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $globalId;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private $instanceId;
@@ -156,54 +150,6 @@ class TransferData {
     /**
      * @return mixed
      */
-    public function getEntityId()
-    {
-        return $this->entityId;
-    }
-
-    /**
-     * @param mixed $entityId
-     */
-    public function setEntityId($entityId)
-    {
-        $this->entityId = $entityId;
-    }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getEntityNamespace()
-//    {
-//        return $this->entityNamespace;
-//    }
-//
-//    /**
-//     * @param mixed $entityNamespace
-//     */
-//    public function setEntityNamespace($entityNamespace)
-//    {
-//        $this->entityNamespace = $entityNamespace;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getEntityName()
-//    {
-//        return $this->entityName;
-//    }
-//
-//    /**
-//     * @param mixed $entityName
-//     */
-//    public function setEntityName($entityName)
-//    {
-//        $this->entityName = $entityName;
-//    }
-
-    /**
-     * @return mixed
-     */
     public function getTransferStatus()
     {
         return $this->transferStatus;
@@ -265,9 +211,42 @@ class TransferData {
         $this->instanceId = $instanceId;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLocalId()
+    {
+        return $this->localId;
+    }
+
+    /**
+     * @param mixed $localId
+     */
+    public function setLocalId($localId)
+    {
+        $this->localId = $localId;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGlobalId()
     {
-        return $this->getEntityId().'@'.$this->getInstanceId();
+        return $this->globalId;
+    }
+
+    /**
+     * @param mixed $globalId
+     */
+    public function setGlobalId($globalId)
+    {
+        $this->globalId = $globalId;
+    }
+
+
+    public function createGlobalId()
+    {
+        return $this->getLocalId().'@'.$this->getInstanceId();
     }
 
 

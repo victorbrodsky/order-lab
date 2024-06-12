@@ -192,13 +192,17 @@ class InterfaceTransferUtil {
 
         //Get $transferableEntity (i.e. antibody)
         $className = $transferData->getClassName();
-        $entityId = $transferData->getEntityId();
-        if( $className && $entityId ) {
-            $transferableEntity = $this->em->getRepository($className)->find($entityId);
+        $localId = $transferData->getLocalId();
+        if( $className && $localId ) {
+            $transferableEntity = $this->em->getRepository($className)->find($localId);
         }
+        //$transferableEntity = $this->findExistingTransferableEntity($entityId,$globalId,$className);
 
         //Create json with antibody data
-        $jsonFile= $this->createJsonFile($transferableEntity, $className);
+        $jsonFile = $this->createJsonFile($transferableEntity, $className);
+
+        $instanceId = $transferData->getInstanceId();
+        $jsonFile['instanceId'] = $instanceId;
 
         //dump($jsonFile);
         //exit('111');
@@ -624,19 +628,95 @@ class InterfaceTransferUtil {
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
 
+        return $this->findTransferDataByLocalId($entity->getId(),$className);
+
+//        $repository = $this->em->getRepository(TransferData::class);
+//        $dql =  $repository->createQueryBuilder("transfer");
+//        $dql->select('transfer');
+//
+//        $dql->leftJoin('transfer.transferStatus','transferStatus');
+//
+//        $dql->where('transfer.localId = :localId AND transfer.className = :className');
+//        $dql->andWhere('transfer.instanceId = :instanceId');
+//
+//        $query = $dql->getQuery();
+//
+//        //$userSecUtil = $this->container->get('user_security_utility');
+//        //$instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+//
+//        $query->setParameters(
+//            array(
+//                'localId' => $entity->getId(),
+//                //'instanceId' => $instanceId,
+//                'className' => $className,
+//            )
+//        );
+//
+//        $transfers = $query->getResult();
+//
+//        //Get single transfer data
+//        $transfer = NULL;
+//        if (count($transfers) > 0) {
+//            //Can we have the same multiple transfers?
+//            $transfer = $transfers[0];
+//        }
+//        if (count($transfers) == 1) {
+//            $transfer = $transfers[0];
+//        }
+//
+//        return $transfer;
+    }
+
+    public function findTransferDataByLocalId( $localId, $className ) {
         $repository = $this->em->getRepository(TransferData::class);
         $dql =  $repository->createQueryBuilder("transfer");
         $dql->select('transfer');
 
         $dql->leftJoin('transfer.transferStatus','transferStatus');
 
-        $dql->where('transfer.entityId = :entityId AND transfer.className = :className');
+        $dql->where('transfer.localId = :localId AND transfer.className = :className');
 
         $query = $dql->getQuery();
 
         $query->setParameters(
             array(
-                'entityId' => $entity->getId(),
+                'localId' => $localId,
+                'className' => $className,
+            )
+        );
+
+        $transfers = $query->getResult();
+
+        //Get single transfer data
+        $transfer = NULL;
+        if (count($transfers) > 0) {
+            //Can we have the same multiple transfers?
+            $transfer = $transfers[0];
+        }
+        if (count($transfers) == 1) {
+            $transfer = $transfers[0];
+        }
+
+        return $transfer;
+    }
+
+    public function findTransferDataByGlobalId( $globalId, $className ) {
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.globalId = :globalId AND transfer.className = :className');
+
+        $query = $dql->getQuery();
+
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+
+        $query->setParameters(
+            array(
+                'globalId' => $globalId,
                 'className' => $className,
             )
         );
@@ -680,6 +760,40 @@ class InterfaceTransferUtil {
         return $transfers;
     }
 
+    public function findTransferDataByObjectAndGlobalId( $entityId, $globalId, $className ) {
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.globalId = :globalId AND transfer.className = :className AND transfer.instanceId = :instanceId');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'entityId' => $entityId,
+                'globalId' => $globalId,
+                'className' => $className,
+            )
+        );
+
+        $transfers = $query->getResult();
+
+        //Get single transfer data
+        $transfer = NULL;
+        if (count($transfers) > 0) {
+            //Can we have the same multiple transfers?
+            $transfer = $transfers[0];
+        }
+        if (count($transfers) == 1) {
+            $transfer = $transfers[0];
+        }
+
+        return $transfer;
+    }
+
 
     public function classListMapper( $entity ) {
 
@@ -717,13 +831,16 @@ class InterfaceTransferUtil {
 
         $transfer->setClassName($className);
 
-        $transfer->setEntityId($entity->getId());
+        $transfer->setLocalId($entity->getId());
 
         $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
         if( !$instanceId ) {
             $instanceId = 'NA';
         }
-        $transfer->setInstanceId($instanceId);
+        $transfer->setInstanceId($instanceId); //Server ID
+
+        $globalId = $transfer->createGlobalId(); //$globalId = $localId.'@'.$instanceId
+        $transfer->setGlobalId($globalId);
 
         //echo "entityName=$entityName <br>";
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
@@ -767,102 +884,300 @@ class InterfaceTransferUtil {
         return false;
     }
 
-    public function receiveTransfer($receiveData) {
+    public function receiveTransfer( $receiveData ) {
         $logger = $this->container->get('logger');
 
         $className = $receiveData['className'];
         //$entityName = $this->getEntityName($className);
+        $transferableEntity = NULL;
 
         //Case: AntibodyList
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'AntibodyList') ) {
-            $logger->notice('AntibodyList: className='.$className);
-            $entityId = $receiveData['id'];
-            
-            if( $className && $entityId ) {
-                $logger->notice('AntibodyList: entityId='.$entityId);
-                //find unique existing antibody by name and description and comment
-                //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
 
-                $sourceId = $receiveData['sourceId'];
-                //$name = $receiveData['name'];
-                //$description = $receiveData['description'];
-                //$comment = $receiveData['comment'];
-                
-                $matchingArr = array(
-                    'sourceId' => $sourceId
-                    //'name' => $name,
-                    //'description' => $description,
-                    //'comment' => $comment
-                );
-                $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
-                if( $transferableEntity ) {
-                    $logger->notice('receiveTransfer: found transferableEntity ID='.$transferableEntity->getId());
+            $transferableEntity = $this->receiveAntibody($receiveData);
+
+//            $logger->notice('AntibodyList: className='.$className);
+//            $entityId = $receiveData['id'];
+//
+//            if( $className && $entityId ) {
+//                $logger->notice('AntibodyList: entityId='.$entityId);
+//                //find unique existing antibody by name and description and comment
+//                //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+//
+//                //$sourceId = $receiveData['sourceId'];
+//                $globalId = $receiveData['globalId'];
+//                //$name = $receiveData['name'];
+//                //$description = $receiveData['description'];
+//                //$comment = $receiveData['comment'];
+//
+////                $matchingArr = array(
+////                    //'sourceId' => $sourceId
+////                    'instanceId' => $instanceId
+////                    //'name' => $name,
+////                    //'description' => $description,
+////                    //'comment' => $comment
+////                );
+////                $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
+//
+//                $transferableEntity = $this->findExistingTransferableEntity($entityId,$globalId,$className);
+//
+//                if( $transferableEntity ) {
+//                    $logger->notice('receiveTransfer: found transferableEntity ID='.$transferableEntity->getId());
+//                    $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+//                    if( $update ) {
+//
+//                        $updated = false;
+//                        if( method_exists($transferableEntity, 'setOpenToPublic') ) {
+//                            $transferableEntity->setOpenToPublic(true);
+//                            $updated = true;
+//                        }
+//                        if( method_exists($transferableEntity, 'setType') ) {
+//                            $transferableEntity->setType('user-added');
+//                            $updated = true;
+//                        }
+//
+//                        if( $updated ) {
+//                            $this->em->flush();
+//                        }
+//                    }
+//                } else {
+//                    if(1) {
+//                        //create new entity
+//                        $logger->notice('receiveTransfer: create new AntibodyList, Project ...');
+//                        $transferableEntity = new $className();
+//                        $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+//                        if ($update) {
+//                            $transferableEntity->setOpenToPublic(true);
+//                            //$transferableEntity->setSourceId($sourceId);
+//                            $transferableEntity->setType('user-added');
+//                            $this->em->persist($transferableEntity);
+//                            $this->em->flush();
+//                            $logger->notice('receiveTransfer: after creation new AntibodyList flush: id=' . $transferableEntity->getId());
+//                        }
+//                    }
+//                }
+//
+//                //Attach documents
+//                //1) remove all existing documents and attach new
+//                //$transferableEntity->clearDocuments();
+//                //Remove entity document by ID and delete file
+//                //$transferableEntity->clearImageData();
+//                //$projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
+//                foreach($transferableEntity->getDocuments() as $document) {
+//                    //remove file
+//                    //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
+//                    $file = $document->getFullServerPath();
+//                    unlink($file);
+//                    $this->em->remove($document);
+//                }
+//                foreach($transferableEntity->getVisualInfos() as $visualInfo) {
+//                    foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+//                        $file = $visualInfoDocument->getFullServerPath();
+//                        unlink($file);
+//                        $this->em->remove($visualInfoDocument);
+//                    }
+//                    $this->em->remove($visualInfo);
+//                }
+//
+//                $documentDatas = $receiveData['files'];
+//                foreach($documentDatas as $documentArr) {
+////                    'uniqueid' => $uniqueId,
+////                    'filepath' => $sentFile,
+////                    'label' => $label
+//                    $document = $this->receiveAssociatedDocument($documentArr,$className);
+//                    $logger->notice('receiveTransfer: document id='.$document->getId());
+//                    $transferableEntity->addDocument($document);
+//                    $this->em->flush();
+//                    $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
+//                }
+//
+//                //TODO: check $transferableEntity how many documents
+//                foreach( $transferableEntity->getImageData() as $image) {
+//                    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
+//                }
+//
+//            }
+        }
+
+        //Case: AntibodyList
+        if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'Project') ) {
+            $transferableEntity = $this->receiveProject($receiveData);
+        }
+
+        //$transferData = $interfaceTransferUtil->findCreateTransferData($entity);
+
+        return $transferableEntity;
+    }
+
+    public function receiveAntibody($receiveData) {
+        $logger = $this->container->get('logger');
+        $className = $receiveData['className'];
+        $logger->notice('AntibodyList: className='.$className);
+        $entityId = $receiveData['id'];
+        $transferableEntity = NULL;
+
+        if( $className && $entityId ) {
+            $logger->notice('AntibodyList: entityId='.$entityId);
+            //find unique existing antibody by name and description and comment
+            //$transferableEntity = $this->em->getRepository($className)->findOneByName($name);
+
+            //$sourceId = $receiveData['sourceId'];
+            $globalId = $receiveData['globalId'];
+            //$name = $receiveData['name'];
+            //$description = $receiveData['description'];
+            //$comment = $receiveData['comment'];
+
+//                $matchingArr = array(
+//                    //'sourceId' => $sourceId
+//                    'instanceId' => $instanceId
+//                    //'name' => $name,
+//                    //'description' => $description,
+//                    //'comment' => $comment
+//                );
+//                $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
+
+            $transferableEntity = $this->findExistingTransferableEntity($entityId,$globalId,$className);
+
+            if( $transferableEntity ) {
+                $logger->notice('receiveTransfer: found transferableEntity ID='.$transferableEntity->getId());
+                $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                if( $update ) {
+                    $transferableEntity->setOpenToPublic(true);
+                    $transferableEntity->setType('user-added');
+                    $this->em->flush();
+                }
+            } else {
+                if(1) {
+                    //create new entity
+                    $logger->notice('receiveTransfer: create new AntibodyList');
+                    $transferableEntity = new $className();
                     $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
-                    if( $update ) {
+                    if ($update) {
                         $transferableEntity->setOpenToPublic(true);
+                        //$transferableEntity->setSourceId($sourceId);
                         $transferableEntity->setType('user-added');
+                        $this->em->persist($transferableEntity);
                         $this->em->flush();
-                    }
-                } else {
-                    if(1) {
-                        //create new entity
-                        $logger->notice('receiveTransfer: create new AntibodyList');
-                        $transferableEntity = new $className();
-                        $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
-                        if ($update) {
-                            $transferableEntity->setOpenToPublic(true);
-                            $transferableEntity->setSourceId($sourceId);
-                            $transferableEntity->setType('user-added');
-                            $this->em->persist($transferableEntity);
-                            $this->em->flush();
-                            $logger->notice('receiveTransfer: after creation new AntibodyList flush: id=' . $transferableEntity->getId());
-                        }
+                        $logger->notice('receiveTransfer: after creation new AntibodyList flush: id=' . $transferableEntity->getId());
                     }
                 }
+            }
 
-                //Attach documents
-                //1) remove all existing documents and attach new
-                //$transferableEntity->clearDocuments();
-                //Remove entity document by ID and delete file
-                //$transferableEntity->clearImageData();
-                //$projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
-                foreach($transferableEntity->getDocuments() as $document) {
-                    //remove file
-                    //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
-                    $file = $document->getFullServerPath();
+            //Attach documents
+            //1) remove all existing documents and attach new
+            //$transferableEntity->clearDocuments();
+            //Remove entity document by ID and delete file
+            //$transferableEntity->clearImageData();
+            //$projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
+            foreach($transferableEntity->getDocuments() as $document) {
+                //remove file
+                //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
+                $file = $document->getFullServerPath();
+                unlink($file);
+                $this->em->remove($document);
+            }
+            foreach($transferableEntity->getVisualInfos() as $visualInfo) {
+                foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+                    $file = $visualInfoDocument->getFullServerPath();
                     unlink($file);
-                    $this->em->remove($document);
+                    $this->em->remove($visualInfoDocument);
                 }
-                foreach($transferableEntity->getVisualInfos() as $visualInfo) {
-                    foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
-                        $file = $visualInfoDocument->getFullServerPath();
-                        unlink($file);
-                        $this->em->remove($visualInfoDocument);
-                    }
-                    $this->em->remove($visualInfo);
-                }
-                
-                $documentDatas = $receiveData['files'];
-                foreach($documentDatas as $documentArr) {
+                $this->em->remove($visualInfo);
+            }
+
+            $documentDatas = $receiveData['files'];
+            foreach($documentDatas as $documentArr) {
 //                    'uniqueid' => $uniqueId,
 //                    'filepath' => $sentFile,
 //                    'label' => $label
-                    $document = $this->receiveAssociatedDocument($documentArr,$className);
-                    $logger->notice('receiveTransfer: document id='.$document->getId());
-                    $transferableEntity->addDocument($document);
-                    $this->em->flush();
-                    $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
-                }
-
-                //TODO: check $transferableEntity how many documents
-                foreach( $transferableEntity->getImageData() as $image) {
-                    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
-                }
-
+                $document = $this->receiveAssociatedDocument($documentArr,$className);
+                $logger->notice('receiveTransfer: document id='.$document->getId());
+                $transferableEntity->addDocument($document);
+                $this->em->flush();
+                $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
             }
+
+            //TODO: check $transferableEntity how many documents
+            //foreach( $transferableEntity->getImageData() as $image) {
+            //    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
+            //}
+
         }
 
-        return true;
+        return $transferableEntity;
+    }
+
+    public function receiveProject($receiveData) {
+        $logger = $this->container->get('logger');
+        $className = $receiveData['className'];
+        $logger->notice('Project: className='.$className);
+        $entityId = $receiveData['id'];
+
+        if( $className && $entityId ) {
+            $logger->notice('Project: entityId='.$entityId);
+            $globalId = $receiveData['globalId'];
+            $transferableEntity = $this->findExistingTransferableEntity($entityId,$globalId,$className);
+
+            if( $transferableEntity ) {
+                $logger->notice('receiveTransfer: found transferableEntity ID='.$transferableEntity->getId());
+                $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                if( $update ) {
+                    $this->em->flush();
+                }
+            } else {
+                if(1) {
+                    //create new entity
+                    $logger->notice('receiveTransfer: create new Project');
+                    $transferableEntity = new $className();
+                    $update = $transferableEntity->updateByJson($receiveData, $this->em, $className);
+                    if ($update) {
+                        $this->em->persist($transferableEntity);
+                        $this->em->flush();
+                        $logger->notice('receiveTransfer: after creation new AntibodyList flush: id=' . $transferableEntity->getId());
+                    }
+                }
+            }
+
+            //Attach documents
+            //1) remove all existing documents and attach new
+            //$transferableEntity->clearDocuments();
+            //Remove entity document by ID and delete file
+            //$transferableEntity->clearImageData();
+            //$projectRoot = $this->container->get('kernel')->getProjectDir(); //\order-lab\orderflex
+            foreach($transferableEntity->getDocuments() as $document) {
+                //remove file
+                //$file = $projectRoot."/"."public"."/".$document->getUploadDirectory();
+                $file = $document->getFullServerPath();
+                unlink($file);
+                $this->em->remove($document);
+            }
+            foreach($transferableEntity->getVisualInfos() as $visualInfo) {
+                foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
+                    $file = $visualInfoDocument->getFullServerPath();
+                    unlink($file);
+                    $this->em->remove($visualInfoDocument);
+                }
+                $this->em->remove($visualInfo);
+            }
+
+            $documentDatas = $receiveData['files'];
+            foreach($documentDatas as $documentArr) {
+//                    'uniqueid' => $uniqueId,
+//                    'filepath' => $sentFile,
+//                    'label' => $label
+                $document = $this->receiveAssociatedDocument($documentArr,$className);
+                $logger->notice('receiveTransfer: document id='.$document->getId());
+                $transferableEntity->addDocument($document);
+                $this->em->flush();
+                $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
+            }
+
+            //TODO: check $transferableEntity how many documents
+            foreach( $transferableEntity->getImageData() as $image) {
+                $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
+            }
+
+        }
     }
 
     public function receiveAssociatedDocument( $documentArr, $className ) {
@@ -979,8 +1294,23 @@ class InterfaceTransferUtil {
 //        rmdir($dirPath);
 //    }
 
-    ////Add Original ID (oid) to match the unique transferable entity between source and destination servers?
-    public function findExistingTransferableEntity( $className, $matchingArr ) {
+    public function findExistingTransferableEntity( $entityId, $globalId, $className ) {
+        //$logger = $this->container->get('logger');
+
+        //1) get transferData by $entityId, $instanceId, $className
+        $transferData = $this->findTransferDataByObjectAndGlobalId($entityId,$globalId,$className);
+
+        if( !$transferData ) {
+            return NULL;
+        }
+
+        $localId = $transferData->getLocalId();
+
+        $transferableEntity = $this->em->getRepository($className)->find($localId);
+
+        return $transferableEntity;
+    }
+    public function findExistingTransferableEntity_ORIG( $className, $matchingArr ) {
         $logger = $this->container->get('logger');
 
         $repository = $this->em->getRepository($className);

@@ -3587,8 +3587,6 @@ class Project {
 
         $json = array(
             'id' => ($this->getId()) ? $this->getId() : "unidentified",
-            'sourceId' => $this->getId(), //$this->getSourceId(), //to identify the antibody on the remote server
-            'name' => ($this->getName()) ? $this->getName() : '', //$antibody->getName(),
             'title' => $this->getTitle(),
             //'documents' => $this->getImageData(), //array of document's data
             'description' => $this->getDescription(),
@@ -3596,6 +3594,19 @@ class Project {
         );
 
         return $json;
+    }
+
+    public function updateByJson( $json, $em, $className ) {
+        $title = $json['title'];
+        $this->setTitle($title);
+
+        $description = $json['description'];
+        $this->setDescription($description);
+
+        $irbNumber = $json['irbNumber'];
+        $this->setIrbNumber($irbNumber);
+
+        return true;
     }
 
     public function getEntityName() {
