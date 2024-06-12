@@ -1386,9 +1386,14 @@ class InterfaceTransferUtil {
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
+        $jsonRes = $transferDatas['transferResult'];
+
         $resArr = array();
-        foreach($transferDatas as $transferData) {
-            echo "transferData=".$transferData."<br>";
+        foreach($jsonRes as $jsonObject) {
+            //echo "transferData=".$jsonObject."<br>";
+            $title = $jsonObject['title'];
+            echo "title=$title <br>";
+            $resArr[] = $title;
         }
 
         $resStr = NULL;
@@ -1448,14 +1453,14 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('111');
+        //dump($result);
+        //exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
-            if( !$result ) {
-                return false;
-            }
+            //if( !$result ) {
+            //    return false;
+            //}
             $checksum = $result['checksum'];
             $valid = $result['valid'];
             $transferResult = $result['transferResult'];
@@ -1465,7 +1470,7 @@ class InterfaceTransferUtil {
 
             if ($checksum === $hash && $valid === true && $transferResult === true) {
                 echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
-                return true;
+                return $result;
             }
         }
 
@@ -1485,7 +1490,7 @@ class InterfaceTransferUtil {
         $serializer = new Serializer($normalizers, $encoders);
 
         $jsonRes = array();
-        $jsonRes['count'] = count($transferDatas);
+        //$jsonRes['count'] = count($transferDatas);
 
         foreach($transferDatas as $transferData) {
             $localId = $transferData->getLocalId();
