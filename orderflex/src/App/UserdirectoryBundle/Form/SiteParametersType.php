@@ -1321,6 +1321,13 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'instanceId' ) {
+            $builder->add('instanceId', null, array(
+                'label' => 'Instance ID [6 letters]:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'hostedUserGroups' ) {
 //            $builder->add('hostedUserGroups', EntityType::class, array(
 //                'class' => 'App\UserdirectoryBundle\Entity\HostedUserGroupList',

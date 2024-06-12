@@ -1039,6 +1039,10 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $secretKey;
 
+    //Instance ID [6 letters]
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $instanceId;
+
 //    #[ORM\Column(type: 'text', nullable: true)]
 //    private $tenantPrefixUrlSlug;
 
@@ -4324,6 +4328,24 @@ class SiteParameters {
     {
         $this->secretKey = $secretKey;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInstanceId()
+    {
+        return $this->instanceId;
+    }
+
+    /**
+     * @param mixed $instanceId
+     */
+    public function setInstanceId($instanceId)
+    {
+        $this->instanceId = $instanceId;
+    }
+
+    
 
 
 

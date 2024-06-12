@@ -209,6 +209,11 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Instance ID [6 letters]</td>
+                <td>{{ entity.instanceId }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'instanceId'}) }}">Edit</a></td>
+            </tr>
+            <tr>
                 <td>Secret Key</td>
                 <td>{{ entity.secretKey }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'secretKey'}) }}">Edit</a></td>

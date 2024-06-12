@@ -55,6 +55,7 @@ class TransferData {
     //use instead linking directly to the antibody object.
     //We can use the transfer for any other entities.
     ///// Object Data /////
+    //Local ID
     #[ORM\Column(type: 'string', nullable: true)]
     private $entityId;
 
@@ -70,7 +71,11 @@ class TransferData {
     private $className;
     ///// EOF Object Data /////
 
-    
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $instanceId;
+
+    //'Global ID' is the unique id containing 'Local ID' and 'Instance ID' (i.e. 67@WCMINT - we can omit the 'APCP' prefix here)
+    //we can omit the redundant 'Global ID' field because we already have local ID and instance ID
 
     public function __construct( $creator=NULL ) {
         if( $creator ) {
@@ -239,6 +244,22 @@ class TransferData {
     public function setClassName($className)
     {
         $this->className = $className;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstanceId()
+    {
+        return $this->instanceId;
+    }
+
+    /**
+     * @param mixed $instanceId
+     */
+    public function setInstanceId($instanceId)
+    {
+        $this->instanceId = $instanceId;
     }
 
 
