@@ -1492,8 +1492,7 @@ class InterfaceTransferUtil {
             $globalId = $transferData->getGlobalId();
             $className = $transferData->getClassName();
 
-            //$transferableEntity = $this->findExistingTransferableEntity($className);
-            $transferableEntity = $this->findTransferDataByObjectAndLocalId($localId,$className);
+            $transferableEntity = $this->em->getRepository($className)->find($localId);
             $logger->notice('$transferableEntity ID='.$transferableEntity->getId());
 
             //$jsonFile = $transferableEntity->toJson();
