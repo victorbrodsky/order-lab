@@ -1530,10 +1530,13 @@ class InterfaceTransferUtil {
 //                ]
 //            );
 
+            $serilizeType = 'json';
+            $serilizeType = NULL;
+
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
                 $transferableEntity,
-                'json',
+                $serilizeType, //'json',
                 [AbstractNormalizer::ATTRIBUTES => [
                     'id',
                     'title',
