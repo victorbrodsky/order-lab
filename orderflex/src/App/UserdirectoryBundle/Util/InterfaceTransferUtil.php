@@ -1549,8 +1549,8 @@ class InterfaceTransferUtil {
             $json['globalId'] = $globalId;
             $json['className'] = $className;
 
-            $logger->notice('$json:');
-            $logger->notice(print_r($json));
+            //$logger->notice('$json:');
+            //$logger->notice(print_r($json));
 
             $jsonRes[] = $json;
 
