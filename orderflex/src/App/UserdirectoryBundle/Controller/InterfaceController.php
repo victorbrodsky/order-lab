@@ -259,7 +259,7 @@ class InterfaceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
-    //Public
+    //Running on remote to send transferable in the response
     #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['POST'])]
     public function sendSlaveToMasterTransferAction(Request $request)
     {

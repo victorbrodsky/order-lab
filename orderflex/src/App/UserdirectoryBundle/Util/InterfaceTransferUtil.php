@@ -227,11 +227,11 @@ class InterfaceTransferUtil {
         if( $res === true ) {
             //set status to 'Completed'
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Completed');
-            $msg = "Entity ".$className." ID ". $entityId .", name ".$jsonFile['name']." has been successfully transfered to the remote server ".$strServer;
+            $msg = "Entity ".$className." ID ". $localId .", name ".$jsonFile['name']." has been successfully transfered to the remote server ".$strServer;
         } else {
             //Failed
             $status = $this->em->getRepository(TransferStatusList::class)->findOneByName('Failed');
-            $msg = "Entity ".$className." ID ". $entityId .", name ".$jsonFile['name']." failed to transfer to the remote server ".$strServer;
+            $msg = "Entity ".$className." ID ". $localId .", name ".$jsonFile['name']." failed to transfer to the remote server ".$strServer;
         }
 
         if( $status ) {
@@ -760,21 +760,53 @@ class InterfaceTransferUtil {
         return $transfers;
     }
 
-    public function findTransferDataByObjectAndGlobalId( $entityId, $globalId, $className ) {
+    public function findTransferDataByObjectAndGlobalId( $globalId, $className ) {
         $repository = $this->em->getRepository(TransferData::class);
         $dql =  $repository->createQueryBuilder("transfer");
         $dql->select('transfer');
 
         $dql->leftJoin('transfer.transferStatus','transferStatus');
 
-        $dql->where('transfer.globalId = :globalId AND transfer.className = :className AND transfer.instanceId = :instanceId');
+        $dql->where('transfer.globalId = :globalId AND transfer.className = :className');
 
         $query = $dql->getQuery();
 
         $query->setParameters(
             array(
-                'entityId' => $entityId,
                 'globalId' => $globalId,
+                'className' => $className,
+            )
+        );
+
+        $transfers = $query->getResult();
+
+        //Get single transfer data
+        $transfer = NULL;
+        if (count($transfers) > 0) {
+            //Can we have the same multiple transfers?
+            $transfer = $transfers[0];
+        }
+        if (count($transfers) == 1) {
+            $transfer = $transfers[0];
+        }
+
+        return $transfer;
+    }
+
+    public function findTransferDataByObjectAndLocalId( $localId, $className ) {
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.localId = :localId AND transfer.className = :className');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'localId' => $localId,
                 'className' => $className,
             )
         );
@@ -1297,8 +1329,8 @@ class InterfaceTransferUtil {
     public function findExistingTransferableEntity( $entityId, $globalId, $className ) {
         //$logger = $this->container->get('logger');
 
-        //1) get transferData by $entityId, $instanceId, $className
-        $transferData = $this->findTransferDataByObjectAndGlobalId($entityId,$globalId,$className);
+        //1) get transferData by $globalId, $className
+        $transferData = $this->findTransferDataByObjectAndGlobalId($globalId,$className);
 
         if( !$transferData ) {
             return NULL;
@@ -1369,6 +1401,7 @@ class InterfaceTransferUtil {
         //exit('EOF sendTransfer');
     }
 
+    //send request to remote server to send all transferable in the response
     public function getSlaveToMasterTransferCurl($className) {
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
@@ -1442,7 +1475,7 @@ class InterfaceTransferUtil {
     public function sendSlavetoMasterTransfer( $jsonFile ) {
         //1) get TransferData
         $className = $jsonFile['className'];
-        $transferDatas = $this->findAllTransferDataByClassname($className,'Ready',$single=FALSE);
+        $transferDatas = $this->findAllTransferDataByClassname($className,'Ready');
 
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -1452,19 +1485,17 @@ class InterfaceTransferUtil {
         $jsonRes['count'] = count($transferDatas);
 
         foreach($transferDatas as $transferData) {
-            $id = $transferData->getEntityId();
+            $localId = $transferData->getLocalId();
+            $globalId = $transferData->getGlobalId();
             $className = $transferData->getClassName();
 
-            //find entity
-            $matchingArr = array(
-                'sourceId' => $id
-            );
-            $transferableEntity = $this->findExistingTransferableEntity($className,$matchingArr);
+            //$transferableEntity = $this->findExistingTransferableEntity($className);
+            $transferableEntity = $this->findTransferDataByObjectAndLocalId($localId,$className);
 
             //$jsonFile = $transferableEntity->toJson();
             //$json = array();
             $json = $serializer->serialize($transferableEntity, 'json');
-            $json['sourceId'] = $id;
+            $json['globalId'] = $globalId;
             $json['className'] = $className;
             $jsonRes[] = $json;
 
