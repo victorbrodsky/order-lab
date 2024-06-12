@@ -256,6 +256,9 @@ class InterfaceController extends OrderAbstractController
             $transferDatas
         );
 
+        //dump($transferDatas);
+        //exit('EOF getSlaveToMasterTransferAction');
+
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 

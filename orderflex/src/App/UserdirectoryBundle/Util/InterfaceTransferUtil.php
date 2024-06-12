@@ -1394,6 +1394,10 @@ class InterfaceTransferUtil {
             $title = $jsonObject['title'];
             echo "title=$title <br>";
             $resArr[] = $title;
+
+            //TODO: deserialize
+            dump($jsonObject);
+            exit('deserialize');
         }
 
         $resStr = NULL;
@@ -1466,15 +1470,16 @@ class InterfaceTransferUtil {
             $transferResult = $result['transferResult'];
 
             //dump($result);
+            //echo 'hash='.$hash.'<br>';
             //exit('222');
 
-            if ($checksum === $hash && $valid === true && $transferResult === true) {
-                echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+            if ($checksum === $hash && $valid === true && $transferResult) {
+                echo "Successefully sent: " . $jsonFile['className'] . " <br>";
                 return $result;
             }
         }
 
-        //exit('222');
+        exit('getSlaveToMasterTransferCurl false');
         return false;
     }
 
