@@ -1495,38 +1495,50 @@ class InterfaceTransferUtil {
 
             //$jsonFile = $transferableEntity->toJson();
             //$json = array();
-            $json = $serializer->serialize(
+//            $json = $serializer->serialize(
+//                $transferableEntity,
+//                'json',
+//                [AbstractNormalizer::IGNORED_ATTRIBUTES =>
+//                    [
+//                        'submitter',
+//                        'updateUser',
+//                        'institution',
+//                        'messageCategory',
+//                        'principalInvestigators',
+//                        'principalIrbInvestigator',
+//                        'coInvestigators',
+//                        'pathologists',
+//                        'contacts',
+//                        'billingContact',
+//                        'irbReviews',
+//                        'adminReviews',
+//                        'committeeReviews',
+//                        'finalReviews',
+//                        'documents',
+//                        'irbApprovalLetters',
+//                        'humanTissueForms',
+//                        'requests',
+//                        'exemptIrbApproval',
+//                        'exemptIACUCApproval',
+//                        'tissueProcessingServices',
+//                        'restrictedServices',
+//                        'priceList',
+//                        'targetStateRequester'
+//                    ]
+//                ]
+//            );
+
+            $json = $serializer->normalize(
                 $transferableEntity,
                 'json',
-                [AbstractNormalizer::IGNORED_ATTRIBUTES =>
-                    [
-                        'submitter',
-                        'updateUser',
-                        'institution',
-                        'messageCategory',
-                        'principalInvestigators',
-                        'principalIrbInvestigator',
-                        'coInvestigators',
-                        'pathologists',
-                        'contacts',
-                        'billingContact',
-                        'irbReviews',
-                        'adminReviews',
-                        'committeeReviews',
-                        'finalReviews',
-                        'documents',
-                        'irbApprovalLetters',
-                        'humanTissueForms',
-                        'requests',
-                        'exemptIrbApproval',
-                        'exemptIACUCApproval',
-                        'tissueProcessingServices',
-                        'restrictedServices',
-                        'priceList',
-                        'targetStateRequester'
-                    ]
-                ]
-            );
+                [AbstractNormalizer::ATTRIBUTES => [
+                    'id',
+                    'title',
+                    'description',
+                    'irbNumber',
+                    'submitter' => ['username','email']
+                ]]);
+
             $json['globalId'] = $globalId;
             $json['className'] = $className;
             $jsonRes[] = $json;
