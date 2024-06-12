@@ -1474,6 +1474,8 @@ class InterfaceTransferUtil {
     }
 
     public function sendSlavetoMasterTransfer( $jsonFile ) {
+        $logger = $this->container->get('logger');
+
         //1) get TransferData
         $className = $jsonFile['className'];
         $transferDatas = $this->findAllTransferDataByClassname($className,'Ready');
@@ -1492,6 +1494,7 @@ class InterfaceTransferUtil {
 
             //$transferableEntity = $this->findExistingTransferableEntity($className);
             $transferableEntity = $this->findTransferDataByObjectAndLocalId($localId,$className);
+            $logger->notice('$transferableEntity ID='.$transferableEntity->getId());
 
             //$jsonFile = $transferableEntity->toJson();
             //$json = array();
@@ -1528,6 +1531,7 @@ class InterfaceTransferUtil {
 //                ]
 //            );
 
+            //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
                 $transferableEntity,
                 'json',
@@ -1545,6 +1549,8 @@ class InterfaceTransferUtil {
 
             //opposite: $person = $serializer->deserialize($data, Person::class, 'xml');
         }
+
+        $logger->notice('$jsonRes:',print_r($jsonRes));
 
         return $jsonRes;
     }
