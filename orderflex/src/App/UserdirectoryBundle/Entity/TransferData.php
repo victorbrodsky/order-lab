@@ -74,6 +74,9 @@ class TransferData {
     #[ORM\Column(type: 'string', nullable: true)]
     private $instanceId;
 
+    //#[ORM\Column(type: 'string', nullable: true)]
+    //private $globalId;
+
     //'Global ID' is the unique id containing 'Local ID' and 'Instance ID' (i.e. 67@WCMINT - we can omit the 'APCP' prefix here)
     //we can omit the redundant 'Global ID' field because we already have local ID and instance ID
 
@@ -262,7 +265,10 @@ class TransferData {
         $this->instanceId = $instanceId;
     }
 
-
+    public function getGlobalId()
+    {
+        return $this->getEntityId().'@'.$this->getInstanceId();
+    }
 
 
 

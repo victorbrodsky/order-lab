@@ -564,8 +564,7 @@ class InterfaceTransferUtil {
     }
 
     //find if TransferData has this antibody with status 'Ready' or 'ready'
-    public function findTransferData( $entity, $statusStr ) {
-
+    public function findTransferData_ORIG( $entity, $statusStr ) {
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
 
@@ -585,6 +584,60 @@ class InterfaceTransferUtil {
                 'entityId' => $entity->getId(),
                 'className' => $className,
                 'transferStatus' => $statusStr
+            )
+        );
+
+        $transfers = $query->getResult();
+
+        //Get single transfer data
+        $transfer = NULL;
+        if (count($transfers) > 0) {
+            //Can we have the same multiple transfers?
+            $transfer = $transfers[0];
+        }
+        if (count($transfers) == 1) {
+            $transfer = $transfers[0];
+        }
+
+        return $transfer;
+    }
+
+    //find or create if TransferData has this antibody, project ...
+    public function findCreateTransferData( $entity ) {
+
+        $transferData = $this->findTransferData($entity);
+
+        if( $transferData ) {
+            //set status to 'Ready'
+            $statusReady = $this->em->getRepository(TransferStatusList::class)->findOneByName('Ready');
+            $transferData->setTransferStatus($statusReady);
+        } else {
+            //Create TransferData
+            $transferData = $this->createTransferData($entity,$status='Ready');
+        }
+
+        return $transferData;
+    }
+
+    public function findTransferData( $entity ) {
+
+        $mapper = $this->classListMapper($entity);
+        $className = $mapper['className'];
+
+        $repository = $this->em->getRepository(TransferData::class);
+        $dql =  $repository->createQueryBuilder("transfer");
+        $dql->select('transfer');
+
+        $dql->leftJoin('transfer.transferStatus','transferStatus');
+
+        $dql->where('transfer.entityId = :entityId AND transfer.className = :className');
+
+        $query = $dql->getQuery();
+
+        $query->setParameters(
+            array(
+                'entityId' => $entity->getId(),
+                'className' => $className,
             )
         );
 
@@ -648,7 +701,9 @@ class InterfaceTransferUtil {
     }
 
     public function createTransferData( $entity, $status='Ready' ) {
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
+
         $transfer = new TransferData($user);
 
         $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
@@ -663,6 +718,12 @@ class InterfaceTransferUtil {
         $transfer->setClassName($className);
 
         $transfer->setEntityId($entity->getId());
+
+        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+        if( !$instanceId ) {
+            $instanceId = 'NA';
+        }
+        $transfer->setInstanceId($instanceId);
 
         //echo "entityName=$entityName <br>";
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
@@ -687,9 +748,10 @@ class InterfaceTransferUtil {
         return $interfaceTransfer;
     }
 
-    //Add to InterfaceTransfer the way to distiguish if it should be added to the TransferData:
+    //Add to InterfaceTransfer the way to distinguish if it should be added to the TransferData:
     // AntibodyList -> server should be master (master to slave)
     // Project -> server should be slave (slave to master)
+    //TODO: add to InterfaceTransfer sync direction: local to remote, remote to local, both
     public function isMasterTransferServer( $entity ) {
         $mapper = $this->classListMapper($entity);
         //$className = $mapper['className'];

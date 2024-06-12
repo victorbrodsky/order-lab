@@ -181,6 +181,73 @@ class DoctrineListener {
 
         if( $entity instanceof AntibodyList ) {
             //exit('setTrabsferable, ID='.$entity->getId());
+            $logger->notice('setTrabsferable, AntibodyList ID='.$entity->getId());
+
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+            //make sure it does not fired on the slave (remote) server
+            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+            if( !$masterTransferServer ) {
+                $logger->notice('setTrabsferable: AntibodyList: is not masterTransferServer');
+                return false;
+            }
+
+            if( $entity instanceof AntibodyList ) {
+                //check if public
+                if ($entity->getOpenToPublic() !== true) {
+                    //exit('not public');
+                    return false;
+                }
+            }
+
+            //2) find if TransferData has this object with status 'Ready'
+            $transferData = $interfaceTransferUtil->findCreateTransferData($entity);
+
+            if( $transferData ) {
+                return true;
+            } else {
+                //exit('createTransferData Antibody failed');
+            }
+        } else {
+            //exit('not AntibodyList');
+        }
+
+        if( $entity instanceof Project ) {
+            //exit('setTrabsferable, ID='.$entity->getId());
+            $logger->notice('setTrabsferable, Project ID='.$entity->getId());
+
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+            //Remove for Project, if Project should be sync both ways
+            //1) make sure it does not fired on the slave (remote) server
+            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+            if( $masterTransferServer ) {
+                $logger->notice('setTrabsferable: Project: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
+                return false;
+            }
+
+            //2) find if TransferData has this object with status 'Ready'
+            $transferData = $interfaceTransferUtil->findCreateTransferData($entity);
+
+            if( $transferData ) {
+                return true;
+            } else {
+                //exit('createTransferData Project failed');
+            }
+        }
+
+        //exit('EOF setTrabsferable');
+        return false;
+    }
+
+    public function setTrabsferable_ORIG($entity) {
+
+        //echo "classname=".get_class($entity)."<br>";
+        $logger = $this->container->get('logger');
+        $logger->notice("classname=".get_class($entity));
+
+        if( $entity instanceof AntibodyList ) {
+            //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, ID='.$entity->getId());
 
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
