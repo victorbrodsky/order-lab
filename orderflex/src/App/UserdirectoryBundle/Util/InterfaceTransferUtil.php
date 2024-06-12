@@ -36,6 +36,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -1494,7 +1495,38 @@ class InterfaceTransferUtil {
 
             //$jsonFile = $transferableEntity->toJson();
             //$json = array();
-            $json = $serializer->serialize($transferableEntity, 'json');
+            $json = $serializer->serialize(
+                $transferableEntity,
+                'json',
+                [AbstractNormalizer::IGNORED_ATTRIBUTES =>
+                    [
+                        'submitter',
+                        'updateUser',
+                        'institution',
+                        'messageCategory',
+                        'principalInvestigators',
+                        'principalIrbInvestigator',
+                        'coInvestigators',
+                        'pathologists',
+                        'contacts',
+                        'billingContact',
+                        'irbReviews',
+                        'adminReviews',
+                        'committeeReviews',
+                        'finalReviews',
+                        'documents',
+                        'irbApprovalLetters',
+                        'humanTissueForms',
+                        'requests',
+                        'exemptIrbApproval',
+                        'exemptIACUCApproval',
+                        'tissueProcessingServices',
+                        'restrictedServices',
+                        'priceList',
+                        'targetStateRequester'
+                    ]
+                ]
+            );
             $json['globalId'] = $globalId;
             $json['className'] = $className;
             $jsonRes[] = $json;
