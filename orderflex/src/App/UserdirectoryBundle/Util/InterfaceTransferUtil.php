@@ -1381,12 +1381,21 @@ class InterfaceTransferUtil {
 
 
     //TODO: create transfer interface page and call this function getTransfer
-    //Get all transfers from TransferData with status 'Ready' and make sftp transfer from the remote (slave) server to internal (master)
+    //Handle the repsonse from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
         $jsonRes = $transferDatas['transferResult'];
+
+        // $loader is any of the valid loaders explained later in this article
+//        $classMetadataFactory = new ClassMetadataFactory($loader);
+//        $normalizer = new ObjectNormalizer($classMetadataFactory);
+//        $serializer = new Serializer([$normalizer]);
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
 
         $resArr = array();
         foreach($jsonRes as $jsonObject) {
@@ -1395,7 +1404,16 @@ class InterfaceTransferUtil {
             echo "title=$title <br>";
             $resArr[] = $title;
 
+            $className = $jsonObject['className'];
+
             //TODO: deserialize
+            dump($jsonObject);
+            exit('deserialize');
+
+            $jsonObjectStr = json_encode($jsonObject);
+            $transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
+
+            echo "transferableEntity ID=".$transferableEntity->getId()."<br>";
             dump($jsonObject);
             exit('deserialize');
         }
@@ -1552,7 +1570,7 @@ class InterfaceTransferUtil {
                     'id',
                     //'irbNumber',
                     'submitter' => ['username','email'],
-                    'exemptIrbApproval' => ['name'],
+                    'exemptIrbApproval',// => ['name'],
                     'irbNumber',
                     'irbExpirationDate',
                     'irbStatusList' => ['name'],
