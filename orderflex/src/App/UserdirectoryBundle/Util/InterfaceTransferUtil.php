@@ -1405,34 +1405,51 @@ class InterfaceTransferUtil {
             $title = $jsonObject['title'];
             echo "title=$title <br>";
 
+            $globalId = $jsonObject['globalId'];
             $className = $jsonObject['className'];
+            $transferableEntity = NULL;
+
+            //Find if exists by $globalId
+            //$transferData = $this->findCreateTransferData($transferableEntity);
+            $transferData = $this->findTransferDataByGlobalId($globalId,$className);
+
+            if( $transferData ) {
+                $localId = $transferData->getLocalId();
+                $transferableEntity = $this->em->getRepository($className)->find($localId);
+                //AbstractNormalizer::OBJECT_TO_POPULATE => $person
+                $resStr = "Update existing Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+            }
 
             //TODO: deserialize
             //dump($jsonObject);
             //exit('deserialize');
+            $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer,$transferableEntity);
+            $this->em->persist($transferableEntity);
+            $this->em->flush();
 
-            $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer);
+            if( !$transferData ) {
+                $resStr = "Create new Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+            }
 
             if( $transferableEntity ) {
                 //add to TransferData
                 $status = 'Completed';
-                $globalId = $jsonObject['globalId'];
-                //$transferData = $this->findCreateTransferData($transferableEntity);
-                $transferData = $this->findTransferDataByGlobalId($globalId,$className);
 
                 //$localId = $jsonObject['id'];
                 //$transferData = $this->findTransferDataByLocalId($localId,$className);
 
                 if( !$transferData ) {
                     $transferData = $this->createTransferData($transferableEntity,$status);
+                    $resTransferDataStr = "Create new TranferData with ID ".$transferData->getId();
+                } else {
+                    $resTransferDataStr = "TranferData with ID ".$transferData->getId();
                 }
 
                 $transferData->setTransferStatus($status);
-
-                $this->em->persist($transferData);
+                $transferData->setLocalId($transferableEntity->getId());
                 $this->em->flush();
 
-                $resArr[] = $title . ", ID=" . $transferableEntity->getId()."; TranferData=".$transferData->getId();
+                $resArr[] = $resStr . "; " . $resTransferDataStr;
             }
         }
 
@@ -1447,7 +1464,7 @@ class InterfaceTransferUtil {
         //exit('EOF sendTransfer');
     }
 
-    public function deserializeObject( $jsonObject, $className, $serializer ) {
+    public function deserializeObject( $jsonObject, $className, $serializer, $objectToPopulate=null ) {
         $transferableEntity = NULL;
         $serilizeFormat = 'xml';
 
@@ -1455,21 +1472,41 @@ class InterfaceTransferUtil {
         if( $className && $className == 'App\TranslationalResearchBundle\Entity\Project' ) {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
-            $transferableEntity = $serializer->denormalize(
-                $jsonObject,
-                $className,
-                $serilizeFormat,
-//                [
-//                    AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => false,
-//                ]
-                [AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                    'submitter',
-                    'irbExpirationDate',
-                    'exemptIrbApproval',
-                    'exemptIACUCApproval',
-                    'irbStatusList'
-                ]]
-            );
+
+            if( $objectToPopulate ) {
+                $transferableEntity = $serializer->denormalize(
+                    $jsonObject,
+                    $className,
+                    $serilizeFormat,
+                    [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                            'submitter',
+                            'irbExpirationDate',
+                            'exemptIrbApproval',
+                            'exemptIACUCApproval',
+                            'irbStatusList'
+                        ],
+                        AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
+                    ]
+                );
+            } else {
+                $transferableEntity = $serializer->denormalize(
+                    $jsonObject,
+                    $className,
+                    $serilizeFormat,
+                    [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                            'submitter',
+                            'irbExpirationDate',
+                            'exemptIrbApproval',
+                            'exemptIACUCApproval',
+                            'irbStatusList'
+                        ]
+                    ]
+                );
+            }
+
+
 
             //submitter
             $submitterEmail = $jsonObject['submitter']['email'];
