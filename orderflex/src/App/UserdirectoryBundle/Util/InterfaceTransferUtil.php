@@ -1570,7 +1570,7 @@ class InterfaceTransferUtil {
                     'id',
                     //'irbNumber',
                     'submitter' => ['username','email'],
-                    'exemptIrbApproval' => 'name',
+                    'exemptIrbApproval' => ['name'],
                     'irbNumber',
                     'irbExpirationDate',
                     'irbStatusList' => ['name'],
