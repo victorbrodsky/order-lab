@@ -1430,9 +1430,9 @@ class InterfaceTransferUtil {
                 $transferData->setTransferStatus($status);
 
                 $this->em->persist($transferData);
-                //$this->em->flush();
+                $this->em->flush();
 
-                $resArr[] = $title . ", ID=" . $transferableEntity->getId();
+                $resArr[] = $title . ", ID=" . $transferableEntity->getId()."; TranferData=".$transferData->getId();
             }
         }
 
