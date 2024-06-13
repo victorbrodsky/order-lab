@@ -26,6 +26,8 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Entity\IrbStatusList;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
@@ -1402,20 +1404,36 @@ class InterfaceTransferUtil {
             //echo "transferData=".$jsonObject."<br>";
             $title = $jsonObject['title'];
             echo "title=$title <br>";
-            $resArr[] = $title;
 
             $className = $jsonObject['className'];
 
             //TODO: deserialize
-            dump($jsonObject);
-            exit('deserialize');
+            //dump($jsonObject);
+            //exit('deserialize');
 
-            $jsonObjectStr = json_encode($jsonObject);
-            $transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
+            $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer);
 
-            echo "transferableEntity ID=".$transferableEntity->getId()."<br>";
-            dump($jsonObject);
-            exit('deserialize');
+            if( $transferableEntity ) {
+                //add to TransferData
+                $status = 'Completed';
+                $globalId = $jsonObject['globalId'];
+                //$transferData = $this->findCreateTransferData($transferableEntity);
+                $transferData = $this->findTransferDataByGlobalId($globalId,$className);
+
+                //$localId = $jsonObject['id'];
+                //$transferData = $this->findTransferDataByLocalId($localId,$className);
+
+                if( !$transferData ) {
+                    $transferData = $this->createTransferData($transferableEntity,$status);
+                }
+
+                $transferData->setTransferStatus($status);
+
+                $this->em->persist($transferData);
+                //$this->em->flush();
+
+                $resArr[] = $title . ", ID=" . $transferableEntity->getId();
+            }
         }
 
         $resStr = NULL;
@@ -1427,6 +1445,84 @@ class InterfaceTransferUtil {
 
         return $resStr;
         //exit('EOF sendTransfer');
+    }
+
+    public function deserializeObject( $jsonObject, $className, $serializer ) {
+        $transferableEntity = NULL;
+        $serilizeFormat = 'xml';
+
+        //Case Project
+        if( $className && $className == 'App\TranslationalResearchBundle\Entity\Project' ) {
+            //$jsonObjectStr = json_encode($jsonObject);
+            //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
+            $transferableEntity = $serializer->denormalize(
+                $jsonObject,
+                $className,
+                $serilizeFormat,
+//                [
+//                    AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => false,
+//                ]
+                [AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                    'submitter',
+                    'irbExpirationDate',
+                    'exemptIrbApproval',
+                    'exemptIACUCApproval',
+                    'irbStatusList'
+                ]]
+            );
+
+            //submitter
+            $submitterEmail = $jsonObject['submitter']['email'];
+            $submitterUsername = $jsonObject['submitter']['username'];
+            //Search user by email and create if not found
+            //addNewUserAjax
+
+            //irbExpirationDate
+            $irbExpirationDateTimestamp = $jsonObject['irbExpirationDate']['timestamp'];
+            echo "irbExpirationDateTimestamp=".$irbExpirationDateTimestamp."<br>";
+            $timezone = $jsonObject['irbExpirationDate']['timezone']['name'];
+            //$date = date('m/d/Y', $irbExpirationDateTimestamp);
+            //echo "irbExpirationDateTimestamp=".$date."<br>";
+            //$date = new \DateTime();
+            //If you must have use time zones
+            $date = new \DateTime('now', new \DateTimeZone($timezone));
+            $date->setTimestamp($irbExpirationDateTimestamp);
+            $transferableEntity->setIrbExpirationDate($date);
+            echo "irbExpirationDate=".$transferableEntity->getIrbExpirationDate()->format('m/d/Y')."<br>";
+
+            //exemptIrbApproval
+            $exemptIrbApprovalName = $jsonObject['exemptIrbApproval']['name'];
+            echo "exemptIrbApprovalName=".$exemptIrbApprovalName."<br>";
+            //Find one by name IrbApprovalTypeList
+            $exemptIrbApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIrbApprovalName);
+            $transferableEntity->setExemptIrbApproval($exemptIrbApprovalEntity);
+
+            //exemptIACUCApproval
+            $exemptIACUCApprovalName = $jsonObject['exemptIACUCApproval']['name'];
+            echo "exemptIACUCApprovalName=".$exemptIACUCApprovalName."<br>";
+            //Find one by name IrbApprovalTypeList, the same as exemptIrbApproval
+            $exemptIACUCApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIACUCApprovalName);
+            $transferableEntity->setExemptIACUCApproval($exemptIACUCApprovalEntity);
+
+            //irbStatusList
+            $irbStatusListName = $jsonObject['irbStatusList']['name'];
+            echo "irbStatusList=".$irbStatusListName."<br>";
+            $irbStatusListEntity = $this->em->getRepository(IrbStatusList::class)->findOneByName($irbStatusListName);
+            $transferableEntity->setIrbStatusList($irbStatusListEntity);
+
+            echo $className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
+
+            //$submitter = $transferableEntity->getSubmitter();
+            //echo "submitter=".print_r($submitter)."<br>";
+
+            $irbExpirationDate = $transferableEntity->getIrbExpirationDate();
+            echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
+
+            //dump($jsonObject);
+            //exit('deserialize');
+        }
+
+        return $transferableEntity;
     }
 
     //send request to remote server to send all transferable in the response
@@ -1603,7 +1699,8 @@ class InterfaceTransferUtil {
                     'fundDescription',
                     'otherResource'
 
-                ]]);
+                ]]
+            );
 
             $json['globalId'] = $globalId;
             $json['className'] = $className;
