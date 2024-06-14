@@ -132,10 +132,10 @@ class DoctrineListener {
         //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
 
         //TODO: looping for Project
-        //if( $this->setTrabsferable($entity) ) {
-        //    $em->flush();
+        if( $this->setTrabsferable($entity) ) {
+            $em->flush();
             //exit('postUpdate');
-        //}
+        }
     }
 
 //    public function postFlush(PostFlushEventArgs $args) {
