@@ -1388,7 +1388,7 @@ class InterfaceTransferUtil {
     //Handle the repsonse from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
         $testing = true;
-        $testing = false;
+        //$testing = false;
 
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
@@ -1434,7 +1434,7 @@ class InterfaceTransferUtil {
 
             if( !$transferableEntity ) {
                 $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
-                $resStr = "Update existing Project found by OID $oid, with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+                $resStr = "Update existing Project found by OID $oid, title " . $title;
             }
             echo "Final transferableEntity=".$transferableEntity."<br>";
             echo "Final resStr=$resStr <br>";
@@ -1446,16 +1446,33 @@ class InterfaceTransferUtil {
             //DETAIL: Key (id)=(1) already exists.
             if( $transferableEntity ) {
                 $resStr = "Get transfer not completed: Project ".$transferableEntity->getOid()." already exists.";
-                return $resStr;
+                //return $resStr;
+                $resArr[] = $resStr;
+                continue;
             }
 
             //TODO: deserialize
             //dump($jsonObject);
             //exit('deserialize');
             $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer,$transferableEntity);
-            $this->em->persist($transferableEntity);
-            if( $testing === false ) {
-                $this->em->flush(); //testing
+            if( $transferableEntity ) {
+                echo "PrePersist: transferableEntity ID=".$transferableEntity->getId().", title=".$transferableEntity->getTitle()."<br>";
+
+                //dump($transferableEntity);
+                //exit('123');
+
+                $this->em->persist($transferableEntity);
+                if ($testing === false) {
+                    //set export ID or use TransferData to get it
+                    //$transferableEntity->setExportId($localId);
+                    //$description = $transferableEntity->getDescription();
+                    //$transferableEntity->getDescription($description . "\n "." Transfered with Gloabl ID=".$globalId);
+
+                    $this->em->flush(); //testing
+
+                    $transferableEntity->generateOid();
+                    $this->em->flush();
+                }
             }
 
             if( !$transferData ) {
@@ -1512,124 +1529,126 @@ class InterfaceTransferUtil {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
 
-            if( $objectToPopulate ) {
-                $transferableEntity = $serializer->denormalize(
-                    $jsonObject,
-                    $className,
-                    $serilizeFormat,
-                    [
-                        AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                            'submitter',
-                            'irbExpirationDate',
-                            'exemptIrbApproval',
-                            'exemptIACUCApproval',
-                            'irbStatusList'
-                        ],
-                        AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
-                    ]
-                );
-            } else {
-                $transferableEntity = $serializer->denormalize(
-                    $jsonObject,
-                    $className,
-                    $serilizeFormat,
-                    [
-                        AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                            'submitter',
-                            'createDate',
-                            'updateUser',
-                            'updateDate',
-                            'projectSpecialty',
-                            'irbExpirationDate',
-                            'exemptIrbApproval',
-                            'exemptIACUCApproval',
-                            'irbStatusList'
+            if(0) {
+                if ($objectToPopulate) {
+                    echo "deserializeObject: Update project " . $objectToPopulate->getOid() . "<br>";
+                    $transferableEntity = $serializer->denormalize(
+                        $jsonObject,
+                        $className,
+                        $serilizeFormat,
+                        [
+                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                                'submitter',
+                                'createDate',
+                                'updateUser',
+                                'updateDate',
+                                'projectSpecialty',
+                                'irbExpirationDate',
+                                'exemptIrbApproval',
+                                'exemptIACUCApproval',
+                                'irbStatusList'
+                            ],
+                            AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
-                    ]
-                );
+                    );
+                } else {
+                    echo "deserializeObject: Create new project <br>";
+                    $transferableEntity = $serializer->denormalize(
+                        $jsonObject,
+                        $className,
+                        $serilizeFormat,
+                        [
+                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                                'submitter',
+                                'createDate',
+                                'updateUser',
+                                'updateDate',
+                                'projectSpecialty',
+                                'irbExpirationDate',
+                                'exemptIrbApproval',
+                                'exemptIACUCApproval',
+                                'irbStatusList'
+                            ]
+                        ]
+                    );
+                }
             }
 
+            $transferableEntity = $serializer->denormalize(
+                $jsonObject,
+                $className,
+                $serilizeFormat,
+                [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                        'exemptIrbApproval',
+                        'exemptIACUCApproval',
+                        'irbStatusList'
+                    ]
+                ]
+            );
+
             //submitter
-            $submitterEmail = $jsonObject['submitter']['email'];
-            $submitterUsername = $jsonObject['submitter']['username'];
+            //$submitterEmail = $jsonObject['submitter']['email'];
+            //$submitterUsername = $jsonObject['submitter']['username'];
             //Search user by email and create if not found
             //addNewUserAjax
             //constractNewUser
             $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'submitter');
 
             //updateUser
-            //$updateUserEmail = $jsonObject['updateUser']['email'];
-            //$updateUserUsername = $jsonObject['updateUser']['username'];
             $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'updateUser');
 
             //createDate
-//            $createDateTimestamp = $jsonObject['createDate'];
-//            echo "createDateTimestamp=".$createDateTimestamp."<br>";
-//            $timezone = $jsonObject['createDate']['timezone']['name'];
-//            $date = new \DateTime('now', new \DateTimeZone($timezone));
-//            $date->setTimestamp($createDateTimestamp);
-//            $transferableEntity->setCreateDate($date);
-//            echo "createDate=".$transferableEntity->getCreateDate()->format('m/d/Y')."<br>";
             $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'createDate');
 
             //updateDate
-//            $createDateTimestamp = $jsonObject['updateDate'];
-//            echo "createDateTimestamp=".$createDateTimestamp."<br>";
-//            $timezone = $jsonObject['createDate']['timezone']['name'];
-//            $date = new \DateTime('now', new \DateTimeZone($timezone));
-//            $date->setTimestamp($createDateTimestamp);
-//            $transferableEntity->setCreateDate($date);
-//            echo "createDate=".$transferableEntity->getCreateDate()->format('m/d/Y')."<br>";
             $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'updateDate');
 
             //irbExpirationDate
-//            $irbExpirationDateTimestamp = $jsonObject['irbExpirationDate']['timestamp'];
-//            echo "irbExpirationDateTimestamp=".$irbExpirationDateTimestamp."<br>";
-//            $timezone = $jsonObject['irbExpirationDate']['timezone']['name'];
-//            //$date = date('m/d/Y', $irbExpirationDateTimestamp);
-//            //echo "irbExpirationDateTimestamp=".$date."<br>";
-//            //$date = new \DateTime();
-//            //If you must have use time zones
-//            $date = new \DateTime('now', new \DateTimeZone($timezone));
-//            $date->setTimestamp($irbExpirationDateTimestamp);
-//            $transferableEntity->setIrbExpirationDate($date);
-//            echo "irbExpirationDate=".$transferableEntity->getIrbExpirationDate()->format('m/d/Y')."<br>";
             $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
 
             //projectSpecialty
-            $projectSpecialtyName = $jsonObject['projectSpecialty']['name'];
-            echo "projectSpecialtyName=".$projectSpecialtyName."<br>";
-            //Find one by name SpecialtyList
-            $projectSpecialtyEntity = $this->em->getRepository(SpecialtyList::class)->findOneByName($projectSpecialtyName);
-            $transferableEntity->setProjectSpecialty($projectSpecialtyEntity);
+            if( isset($jsonObject['projectSpecialty']) ) {
+                $projectSpecialtyName = $jsonObject['projectSpecialty']['name'];
+                echo "projectSpecialtyName=" . $projectSpecialtyName . "<br>";
+                //Find one by name SpecialtyList
+                $projectSpecialtyEntity = $this->em->getRepository(SpecialtyList::class)->findOneByName($projectSpecialtyName);
+                $transferableEntity->setProjectSpecialty($projectSpecialtyEntity);
+            }
 
             //exemptIrbApproval
-            $exemptIrbApprovalName = $jsonObject['exemptIrbApproval']['name'];
-            echo "exemptIrbApprovalName=".$exemptIrbApprovalName."<br>";
-            //Find one by name IrbApprovalTypeList
-            $exemptIrbApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIrbApprovalName);
-            $transferableEntity->setExemptIrbApproval($exemptIrbApprovalEntity);
+            if( isset($jsonObject['exemptIrbApproval']) ) {
+                $exemptIrbApprovalName = $jsonObject['exemptIrbApproval']['name'];
+                echo "exemptIrbApprovalName=" . $exemptIrbApprovalName . "<br>";
+                //Find one by name IrbApprovalTypeList
+                $exemptIrbApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIrbApprovalName);
+                $transferableEntity->setExemptIrbApproval($exemptIrbApprovalEntity);
+            }
 
             //exemptIACUCApproval
-            $exemptIACUCApprovalName = $jsonObject['exemptIACUCApproval']['name'];
-            echo "exemptIACUCApprovalName=".$exemptIACUCApprovalName."<br>";
-            //Find one by name IrbApprovalTypeList, the same as exemptIrbApproval
-            $exemptIACUCApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIACUCApprovalName);
-            $transferableEntity->setExemptIACUCApproval($exemptIACUCApprovalEntity);
+            if( isset($jsonObject['exemptIACUCApproval']) ) {
+                $exemptIACUCApprovalName = $jsonObject['exemptIACUCApproval']['name'];
+                echo "exemptIACUCApprovalName=" . $exemptIACUCApprovalName . "<br>";
+                //Find one by name IrbApprovalTypeList, the same as exemptIrbApproval
+                $exemptIACUCApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIACUCApprovalName);
+                $transferableEntity->setExemptIACUCApproval($exemptIACUCApprovalEntity);
+            }
 
             //irbStatusList
-            $irbStatusListName = $jsonObject['irbStatusList']['name'];
-            echo "irbStatusList=".$irbStatusListName."<br>";
-            $irbStatusListEntity = $this->em->getRepository(IrbStatusList::class)->findOneByName($irbStatusListName);
-            $transferableEntity->setIrbStatusList($irbStatusListEntity);
+            if( isset($jsonObject['irbStatusList']) ) {
+                $irbStatusListName = $jsonObject['irbStatusList']['name'];
+                echo "irbStatusList=" . $irbStatusListName . "<br>";
+                $irbStatusListEntity = $this->em->getRepository(IrbStatusList::class)->findOneByName($irbStatusListName);
+                $transferableEntity->setIrbStatusList($irbStatusListEntity);
+            }
 
-            echo $className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
+            echo "deserializeObject: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 
             //$submitter = $transferableEntity->getSubmitter();
             //echo "submitter=".print_r($submitter)."<br>";
 
-            $irbExpirationDate = $transferableEntity->getIrbExpirationDate();
-            echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
+            //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
+           //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
             //dump($jsonObject);
             //exit('deserialize');
@@ -1689,6 +1708,11 @@ class InterfaceTransferUtil {
     }
 
     public function convertDate( $jsonObject, $transferableEntity, $fieldName ) {
+        if( isset($jsonObject[$fieldName]) && isset($jsonObject[$fieldName]['timestamp']) ) {
+            //OK
+        } else {
+            return $transferableEntity;
+        }
         $dateTimestamp = $jsonObject[$fieldName]['timestamp'];
         echo $fieldName.": dateTimestamp=".$dateTimestamp."<br>";
         $timezone = $jsonObject[$fieldName]['timezone']['name'];
@@ -1795,41 +1819,6 @@ class InterfaceTransferUtil {
             $transferableEntity = $this->em->getRepository($className)->find($localId);
             $logger->notice('$transferableEntity ID='.$transferableEntity->getId());
 
-            //$jsonFile = $transferableEntity->toJson();
-            //$json = array();
-//            $json = $serializer->serialize(
-//                $transferableEntity,
-//                'json',
-//                [AbstractNormalizer::IGNORED_ATTRIBUTES =>
-//                    [
-//                        'submitter',
-//                        'updateUser',
-//                        'institution',
-//                        'messageCategory',
-//                        'principalInvestigators',
-//                        'principalIrbInvestigator',
-//                        'coInvestigators',
-//                        'pathologists',
-//                        'contacts',
-//                        'billingContact',
-//                        'irbReviews',
-//                        'adminReviews',
-//                        'committeeReviews',
-//                        'finalReviews',
-//                        'documents',
-//                        'irbApprovalLetters',
-//                        'humanTissueForms',
-//                        'requests',
-//                        'exemptIrbApproval',
-//                        'exemptIACUCApproval',
-//                        'tissueProcessingServices',
-//                        'restrictedServices',
-//                        'priceList',
-//                        'targetStateRequester'
-//                    ]
-//                ]
-//            );
-
             //$serilizeFormat = 'json';
             $serilizeFormat = 'xml';
             //$serilizeFormat = NULL;
@@ -1840,46 +1829,45 @@ class InterfaceTransferUtil {
                 $serilizeFormat, //'json',
                 [AbstractNormalizer::ATTRIBUTES => [
                     'id',
-                    'oid',
-                    'createDate',
-                    //'irbNumber',
-                    'submitter' => ['username','email'],
-                    'updateUser' => ['username','email'],
-                    'updateDate',
-                    'state',
-                    'projectSpecialty' => ['name'],
+//                    'oid',
+//                    'createDate',
+//                    'submitter' => ['username','email'],
+//                    'updateUser' => ['username','email'],
+//                    'updateDate',
+//                    'state',
+                    'title',
+//                    'projectSpecialty' => ['name'],
                     'exemptIrbApproval' => ['name'],
-                    'irbNumber',
-                    'irbExpirationDate',
+//                    'irbNumber',
+//                    'irbExpirationDate',
                     'irbStatusList' => ['name'],
                     'exemptIACUCApproval' => ['name'],
-                    'iacucNumber',
-                    'iacucExpirationDate',
-                    'title',
-                    'projectType' => ['name'],
-                    'description',
-                    'collDivs' => ['name'],
-                    'hypothesis',
-                    'needStatSupport',
-                    'amountStatSupport',
-                    'needInfSupport',
-                    'amountInfSupport',
-                    'studyPopulation',
-                    'numberPatient',
-                    'numberLabReport',
-                    'studyDuration',
-                    'priceList' => ['name'],
-                    'funded',
-                    'collDepartment',
-                    'collInst',
-                    'collInstPi',
-                    'essentialInfo',
-                    'objective',
-                    'strategy',
-                    'expectedResults',
-                    'fundByPath',
-                    'fundDescription',
-                    'otherResource'
+//                    'iacucNumber',
+//                    'iacucExpirationDate',
+//                    'projectType' => ['name'],
+//                    'description',
+//                    'collDivs' => ['name'],
+//                    'hypothesis',
+//                    'needStatSupport',
+//                    'amountStatSupport',
+//                    'needInfSupport',
+//                    'amountInfSupport',
+//                    'studyPopulation',
+//                    'numberPatient',
+//                    'numberLabReport',
+//                    'studyDuration',
+//                    'priceList' => ['name'],
+//                    'funded',
+//                    'collDepartment',
+//                    'collInst',
+//                    'collInstPi',
+//                    'essentialInfo',
+//                    'objective',
+//                    'strategy',
+//                    'expectedResults',
+//                    'fundByPath',
+//                    'fundDescription',
+//                    'otherResource'
 
                 ]]
             );
