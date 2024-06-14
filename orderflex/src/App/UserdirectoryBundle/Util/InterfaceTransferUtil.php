@@ -28,10 +28,12 @@ namespace App\UserdirectoryBundle\Util;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\IrbStatusList;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
 use App\UserdirectoryBundle\Entity\TransferStatusList;
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -1385,6 +1387,9 @@ class InterfaceTransferUtil {
     //TODO: create transfer interface page and call this function getTransfer
     //Handle the repsonse from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
+        $testing = true;
+        $testing = false;
+
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
@@ -1402,22 +1407,46 @@ class InterfaceTransferUtil {
         $resArr = array();
         foreach($jsonRes as $jsonObject) {
             //echo "transferData=".$jsonObject."<br>";
+            $oid = $jsonObject['oid'];
             $title = $jsonObject['title'];
             echo "title=$title <br>";
 
             $globalId = $jsonObject['globalId'];
             $className = $jsonObject['className'];
             $transferableEntity = NULL;
+            $resStr = "";
 
             //Find if exists by $globalId
             //$transferData = $this->findCreateTransferData($transferableEntity);
             $transferData = $this->findTransferDataByGlobalId($globalId,$className);
+            echo "transferData=".$transferData."<br>";
 
             if( $transferData ) {
                 $localId = $transferData->getLocalId();
                 $transferableEntity = $this->em->getRepository($className)->find($localId);
+                if( !$transferableEntity ) {
+                    $transferableEntity = $this->em->getRepository($className)->find($globalId);
+                }
+                echo "transferData exists: transferableEntity=".$transferableEntity->getId()."<br>";
                 //AbstractNormalizer::OBJECT_TO_POPULATE => $person
                 $resStr = "Update existing Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+            }
+
+            if( !$transferableEntity ) {
+                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
+                $resStr = "Update existing Project found by OID $oid, with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+            }
+            echo "Final transferableEntity=".$transferableEntity."<br>";
+            echo "Final resStr=$resStr <br>";
+
+            //TODO: fix update Project
+            //An exception occurred while executing a query: SQLSTATE[23505]:
+            // Unique violation: 7 ERROR: duplicate key value violates
+            // unique constraint "pk__transres__3213e83f716f45b5"
+            //DETAIL: Key (id)=(1) already exists.
+            if( $transferableEntity ) {
+                $resStr = "Get transfer not completed: Project ".$transferableEntity->getOid()." already exists.";
+                return $resStr;
             }
 
             //TODO: deserialize
@@ -1425,7 +1454,9 @@ class InterfaceTransferUtil {
             //exit('deserialize');
             $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer,$transferableEntity);
             $this->em->persist($transferableEntity);
-            $this->em->flush();
+            if( $testing === false ) {
+                $this->em->flush(); //testing
+            }
 
             if( !$transferData ) {
                 $resStr = "Create new Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
@@ -1445,9 +1476,15 @@ class InterfaceTransferUtil {
                     $resTransferDataStr = "TranferData with ID ".$transferData->getId();
                 }
 
-                $transferData->setTransferStatus($status);
+                $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
+                if( $status ) {
+                    $transferData->setTransferStatus($status);
+                }
+
                 $transferData->setLocalId($transferableEntity->getId());
-                $this->em->flush();
+                if( $testing === false ) {
+                    $this->em->flush(); //testing
+                }
 
                 $resArr[] = $resStr . "; " . $resTransferDataStr;
             }
@@ -1460,8 +1497,10 @@ class InterfaceTransferUtil {
             $resStr = "Get transfer not completed: nothing to transfer.";
         }
 
+        if( $testing ) {
+            exit('EOF getSlaveToMasterTransfer: ' . $resStr);
+        }
         return $resStr;
-        //exit('EOF sendTransfer');
     }
 
     public function deserializeObject( $jsonObject, $className, $serializer, $objectToPopulate=null ) {
@@ -1497,6 +1536,10 @@ class InterfaceTransferUtil {
                     [
                         AbstractNormalizer::IGNORED_ATTRIBUTES => [
                             'submitter',
+                            'createDate',
+                            'updateUser',
+                            'updateDate',
+                            'projectSpecialty',
                             'irbExpirationDate',
                             'exemptIrbApproval',
                             'exemptIACUCApproval',
@@ -1506,26 +1549,59 @@ class InterfaceTransferUtil {
                 );
             }
 
-
-
             //submitter
             $submitterEmail = $jsonObject['submitter']['email'];
             $submitterUsername = $jsonObject['submitter']['username'];
             //Search user by email and create if not found
             //addNewUserAjax
+            //constractNewUser
+            $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'submitter');
+
+            //updateUser
+            //$updateUserEmail = $jsonObject['updateUser']['email'];
+            //$updateUserUsername = $jsonObject['updateUser']['username'];
+            $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'updateUser');
+
+            //createDate
+//            $createDateTimestamp = $jsonObject['createDate'];
+//            echo "createDateTimestamp=".$createDateTimestamp."<br>";
+//            $timezone = $jsonObject['createDate']['timezone']['name'];
+//            $date = new \DateTime('now', new \DateTimeZone($timezone));
+//            $date->setTimestamp($createDateTimestamp);
+//            $transferableEntity->setCreateDate($date);
+//            echo "createDate=".$transferableEntity->getCreateDate()->format('m/d/Y')."<br>";
+            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'createDate');
+
+            //updateDate
+//            $createDateTimestamp = $jsonObject['updateDate'];
+//            echo "createDateTimestamp=".$createDateTimestamp."<br>";
+//            $timezone = $jsonObject['createDate']['timezone']['name'];
+//            $date = new \DateTime('now', new \DateTimeZone($timezone));
+//            $date->setTimestamp($createDateTimestamp);
+//            $transferableEntity->setCreateDate($date);
+//            echo "createDate=".$transferableEntity->getCreateDate()->format('m/d/Y')."<br>";
+            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'updateDate');
 
             //irbExpirationDate
-            $irbExpirationDateTimestamp = $jsonObject['irbExpirationDate']['timestamp'];
-            echo "irbExpirationDateTimestamp=".$irbExpirationDateTimestamp."<br>";
-            $timezone = $jsonObject['irbExpirationDate']['timezone']['name'];
-            //$date = date('m/d/Y', $irbExpirationDateTimestamp);
-            //echo "irbExpirationDateTimestamp=".$date."<br>";
-            //$date = new \DateTime();
-            //If you must have use time zones
-            $date = new \DateTime('now', new \DateTimeZone($timezone));
-            $date->setTimestamp($irbExpirationDateTimestamp);
-            $transferableEntity->setIrbExpirationDate($date);
-            echo "irbExpirationDate=".$transferableEntity->getIrbExpirationDate()->format('m/d/Y')."<br>";
+//            $irbExpirationDateTimestamp = $jsonObject['irbExpirationDate']['timestamp'];
+//            echo "irbExpirationDateTimestamp=".$irbExpirationDateTimestamp."<br>";
+//            $timezone = $jsonObject['irbExpirationDate']['timezone']['name'];
+//            //$date = date('m/d/Y', $irbExpirationDateTimestamp);
+//            //echo "irbExpirationDateTimestamp=".$date."<br>";
+//            //$date = new \DateTime();
+//            //If you must have use time zones
+//            $date = new \DateTime('now', new \DateTimeZone($timezone));
+//            $date->setTimestamp($irbExpirationDateTimestamp);
+//            $transferableEntity->setIrbExpirationDate($date);
+//            echo "irbExpirationDate=".$transferableEntity->getIrbExpirationDate()->format('m/d/Y')."<br>";
+            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
+
+            //projectSpecialty
+            $projectSpecialtyName = $jsonObject['projectSpecialty']['name'];
+            echo "projectSpecialtyName=".$projectSpecialtyName."<br>";
+            //Find one by name SpecialtyList
+            $projectSpecialtyEntity = $this->em->getRepository(SpecialtyList::class)->findOneByName($projectSpecialtyName);
+            $transferableEntity->setProjectSpecialty($projectSpecialtyEntity);
 
             //exemptIrbApproval
             $exemptIrbApprovalName = $jsonObject['exemptIrbApproval']['name'];
@@ -1559,6 +1635,69 @@ class InterfaceTransferUtil {
             //exit('deserialize');
         }
 
+        return $transferableEntity;
+    }
+
+    public function convertUser( $jsonObject, $transferableEntity, $fieldName ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $email = $jsonObject['submitter']['email'];
+        $username = $jsonObject['submitter']['username'];
+
+        echo "convertUser: $username, $email"."<br>";
+        $logger->notice("convertUser: $username, $email");
+
+        $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
+
+        if(1) {
+            if (!$user) {
+                $users = $this->em->getRepository(User::class)->findUserByUserInfoEmail($email);
+                if (count($users) > 0) {
+                    $user = $users[0];
+                }
+            }
+            if (!$user) {
+                //Check if username is email
+                $user = $userSecUtil->findUserByUsernameAsEmail($username);
+            }
+            if (!$user) {
+                $user = $userSecUtil->getUserByUserstr($username);
+            }
+        }
+
+        if( !$user ) {
+            $user = $userSecUtil->constractNewUser($username);
+
+            //$systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $user->setEmail($username);
+            $user->setEmailCanonical($email);
+            $user->setCreatedby('system');
+            $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+            $user->setEnabled(false);
+            //$user->setLocked(true);
+        }
+
+        if( $user ) {
+            $setter = 'set'.$fieldName;
+            $transferableEntity->$setter($user);
+
+            echo "User added ".$user."<br>";
+        }
+
+        return $transferableEntity;
+    }
+
+    public function convertDate( $jsonObject, $transferableEntity, $fieldName ) {
+        $dateTimestamp = $jsonObject[$fieldName]['timestamp'];
+        echo $fieldName.": dateTimestamp=".$dateTimestamp."<br>";
+        $timezone = $jsonObject[$fieldName]['timezone']['name'];
+        $date = new \DateTime('now', new \DateTimeZone($timezone));
+        $date->setTimestamp($dateTimestamp);
+        $setterMethod = 'set'.$fieldName;
+        $getterMethod = 'get'.$fieldName;
+        $transferableEntity->$setterMethod($date);
+        echo $fieldName.": date=".$transferableEntity->$getterMethod()->format('m/d/Y')."<br>";
         return $transferableEntity;
     }
 
