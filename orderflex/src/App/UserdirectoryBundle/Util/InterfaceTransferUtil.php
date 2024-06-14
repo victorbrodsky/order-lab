@@ -1529,7 +1529,7 @@ class InterfaceTransferUtil {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
 
-            if(0) {
+            if(1) {
                 if ($objectToPopulate) {
                     echo "deserializeObject: Update project " . $objectToPopulate->getOid() . "<br>";
                     $transferableEntity = $serializer->denormalize(
@@ -1574,18 +1574,18 @@ class InterfaceTransferUtil {
                 }
             }
 
-            $transferableEntity = $serializer->denormalize(
-                $jsonObject,
-                $className,
-                $serilizeFormat,
-                [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                        'exemptIrbApproval',
-                        'exemptIACUCApproval',
-                        'irbStatusList'
-                    ]
-                ]
-            );
+//            $transferableEntity = $serializer->denormalize(
+//                $jsonObject,
+//                $className,
+//                $serilizeFormat,
+//                [
+//                    AbstractNormalizer::IGNORED_ATTRIBUTES => [
+//                        'exemptIrbApproval',
+//                        'exemptIACUCApproval',
+//                        'irbStatusList'
+//                    ]
+//                ]
+//            );
 
             //submitter
             //$submitterEmail = $jsonObject['submitter']['email'];
@@ -1829,45 +1829,45 @@ class InterfaceTransferUtil {
                 $serilizeFormat, //'json',
                 [AbstractNormalizer::ATTRIBUTES => [
                     'id',
-//                    'oid',
-//                    'createDate',
-//                    'submitter' => ['username','email'],
-//                    'updateUser' => ['username','email'],
-//                    'updateDate',
-//                    'state',
+                    'oid',
+                    'createDate',
+                    'submitter' => ['username','email'],
+                    'updateUser' => ['username','email'],
+                    'updateDate',
+                    'state',
                     'title',
-//                    'projectSpecialty' => ['name'],
+                    'projectSpecialty' => ['name'],
                     'exemptIrbApproval' => ['name'],
-//                    'irbNumber',
-//                    'irbExpirationDate',
+                    'irbNumber',
+                    'irbExpirationDate',
                     'irbStatusList' => ['name'],
                     'exemptIACUCApproval' => ['name'],
-//                    'iacucNumber',
-//                    'iacucExpirationDate',
-//                    'projectType' => ['name'],
-//                    'description',
-//                    'collDivs' => ['name'],
-//                    'hypothesis',
-//                    'needStatSupport',
-//                    'amountStatSupport',
-//                    'needInfSupport',
-//                    'amountInfSupport',
-//                    'studyPopulation',
-//                    'numberPatient',
-//                    'numberLabReport',
-//                    'studyDuration',
-//                    'priceList' => ['name'],
-//                    'funded',
-//                    'collDepartment',
-//                    'collInst',
-//                    'collInstPi',
-//                    'essentialInfo',
-//                    'objective',
-//                    'strategy',
-//                    'expectedResults',
-//                    'fundByPath',
-//                    'fundDescription',
-//                    'otherResource'
+                    'iacucNumber',
+                    'iacucExpirationDate',
+                    'projectType' => ['name'],
+                    'description',
+                    'collDivs' => ['name'],
+                    'hypothesis',
+                    'needStatSupport',
+                    'amountStatSupport',
+                    'needInfSupport',
+                    'amountInfSupport',
+                    'studyPopulation',
+                    'numberPatient',
+                    'numberLabReport',
+                    'studyDuration',
+                    'priceList' => ['name'],
+                    'funded',
+                    'collDepartment',
+                    'collInst',
+                    'collInstPi',
+                    'essentialInfo',
+                    'objective',
+                    'strategy',
+                    'expectedResults',
+                    'fundByPath',
+                    'fundDescription',
+                    'otherResource'
 
                 ]]
             );
