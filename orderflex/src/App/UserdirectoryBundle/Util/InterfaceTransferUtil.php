@@ -1461,6 +1461,7 @@ class InterfaceTransferUtil {
                 //dump($transferableEntity);
                 //exit('123');
 
+                //TODO: error: spl_object_id(): Argument #1 ($object) must be of type object, array given
                 $this->em->persist($transferableEntity);
                 if ($testing === false) {
                     //set export ID or use TransferData to get it
@@ -1470,14 +1471,19 @@ class InterfaceTransferUtil {
 
                     $this->em->flush(); //testing
 
-                    $transferableEntity->generateOid();
-                    $this->em->flush();
+                    //$transferableEntity->generateOid();
+                    //$this->em->flush();
                 }
             }
+
+            exit('EOF getSlaveToMasterTransfer: ' . $resStr);
 
             if( !$transferData ) {
                 $resStr = "Create new Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
             }
+
+            //TODO: add globalId and sourceId to the Project
+            //Use TransferData just o keep transfer info if transfer is ready, failed or complete
 
             if( $transferableEntity ) {
                 //add to TransferData
@@ -1593,19 +1599,19 @@ class InterfaceTransferUtil {
             //Search user by email and create if not found
             //addNewUserAjax
             //constractNewUser
-            $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'submitter');
+            $this->convertUser($jsonObject,$transferableEntity,'submitter');
 
             //updateUser
-            $transferableEntity = $this->convertUser($jsonObject,$transferableEntity,'updateUser');
+            $this->convertUser($jsonObject,$transferableEntity,'updateUser');
 
             //createDate
-            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'createDate');
+            $this->convertDate($jsonObject,$transferableEntity,'createDate');
 
             //updateDate
-            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'updateDate');
+            $this->convertDate($jsonObject,$transferableEntity,'updateDate');
 
             //irbExpirationDate
-            $transferableEntity = $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
+            $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
 
             //projectSpecialty
             if( isset($jsonObject['projectSpecialty']) ) {
@@ -1658,11 +1664,17 @@ class InterfaceTransferUtil {
     }
 
     public function convertUser( $jsonObject, $transferableEntity, $fieldName ) {
+
+        if( !isset($jsonObject[$fieldName]) ) {
+            return $transferableEntity;
+        }
+
+
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $email = $jsonObject['submitter']['email'];
-        $username = $jsonObject['submitter']['username'];
+        $email = $jsonObject[$fieldName]['email'];
+        $username = $jsonObject[$fieldName]['username'];
 
         echo "convertUser: $username, $email"."<br>";
         $logger->notice("convertUser: $username, $email");

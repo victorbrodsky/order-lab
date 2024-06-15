@@ -175,6 +175,7 @@ class DoctrineListener {
     }
 
     public function setTrabsferable($entity) {
+        //return false;
 
         //echo "classname=".get_class($entity)."<br>";
         $logger = $this->container->get('logger');
