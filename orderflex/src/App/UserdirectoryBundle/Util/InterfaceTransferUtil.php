@@ -1944,7 +1944,7 @@ class InterfaceTransferUtil {
                 'iacucExpirationDate',
                 'projectType' => ['name'],
                 'description',
-                //'collDivs' => ['name'],
+                'collDivs' => ['name'],
                 //'hypothesis',
                 //'needStatSupport',
                 //'amountStatSupport',
