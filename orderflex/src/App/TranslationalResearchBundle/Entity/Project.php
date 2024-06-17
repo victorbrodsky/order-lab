@@ -766,7 +766,7 @@ class Project {
 
     //Add globalId and sourceId
     //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
-    //and the “Source ID” on the view.med.cornell.edu will be “3@WCMEXT”.
+    //and the “Source ID” on the internal will be “3@WCMEXT”.
     /**
      * @var string
      */
@@ -3049,7 +3049,7 @@ class Project {
         $this->globalId = $globalId;
     }
 
-    
+
 
     public function incrementExpirationNotifyCounter() {
         $counter = $this->getExpirationNotifyCounter();

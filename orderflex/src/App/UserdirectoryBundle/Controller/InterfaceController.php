@@ -337,5 +337,65 @@ class InterfaceController extends OrderAbstractController
         $response->setContent(json_encode($res));
         return $response;
     }
+
+    //Running on remote Slave
+    //send confirmationResponse back to source server to assign Global ID
+    #[Route(path: '/transfer-interface/confirmation-master-to-slave', name: 'employees_confirmation_master_to_slave', methods: ['POST'])]
+    public function confirmationMasterToSlaveAction(Request $request)
+    {
+
+        $logger = $this->container->get('logger');
+        $post_data = json_decode($request->getContent(), true);
+        $logger->notice('sendSlaveToMasterTransferAction: post_data count='.count($post_data));
+
+        //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        $checksum = NULL;
+        $input = array();
+        foreach ($post_data as $key => $value) {
+            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
+                $checksum = $value;
+            } else {
+                $input[$key] = $value;
+            }
+        }
+
+        $valid = NULL;
+        $hash = hash('sha512', $secretKey . serialize($input));
+        if ($hash === $checksum) {
+            $valid = true;
+        } else {
+            $valid = false;
+        }
+
+        $transferResult = NULL;
+        if( $valid ) {
+            $logger->notice('sendSlaveToMasterTransferAction: checksum valid');
+            $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+            $transferResult = $interfaceTransferUtil->receiveConfirmationOnSlave($input);
+        }
+
+        //dump($transferResult);
+        //exit('sendSlaveToMasterTransferAction');
+
+        //$post_str = implode(',', $input);
+        //$logger->notice('receiveTransferAction: input='.$post_str);
+        //$res = "OK; ".$post_str . "; VALID=$valid"; //"OK";
+
+        $res = array(
+            "checksum" => $checksum,
+            "valid" => $valid,
+            "transferResult" => $transferResult
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
     
 }

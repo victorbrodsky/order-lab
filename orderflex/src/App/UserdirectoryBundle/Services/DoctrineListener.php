@@ -131,7 +131,7 @@ class DoctrineListener {
         //$logger = $this->container->get('logger');
         //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
 
-        //TODO: looping for Project
+        //TODO: looping for Project ?
         if( $this->setTrabsferable($entity) ) {
             $em->flush();
             //exit('postUpdate');

@@ -614,7 +614,7 @@ class InterfaceTransferUtil {
         return $transfer;
     }
 
-    //find or create if TransferData has this antibody, project ...
+    //Used by DoctrineListener->setTrabsferable() find or create if TransferData has this antibody, project ...
     public function findCreateTransferData( $entity ) {
 
         $transferData = $this->findTransferData($entity);
@@ -680,7 +680,7 @@ class InterfaceTransferUtil {
         $dql =  $repository->createQueryBuilder("transfer");
         $dql->select('transfer');
 
-        $dql->leftJoin('transfer.transferStatus','transferStatus');
+        //$dql->leftJoin('transfer.transferStatus','transferStatus');
 
         $dql->where('transfer.localId = :localId AND transfer.className = :className');
 
@@ -713,7 +713,7 @@ class InterfaceTransferUtil {
         $dql =  $repository->createQueryBuilder("transfer");
         $dql->select('transfer');
 
-        $dql->leftJoin('transfer.transferStatus','transferStatus');
+        //$dql->leftJoin('transfer.transferStatus','transferStatus');
 
         $dql->where('transfer.globalId = :globalId AND transfer.className = :className');
 
@@ -766,39 +766,6 @@ class InterfaceTransferUtil {
         $transfers = $query->getResult();
 
         return $transfers;
-    }
-
-    public function findTransferDataByObjectAndGlobalId( $globalId, $className ) {
-        $repository = $this->em->getRepository(TransferData::class);
-        $dql =  $repository->createQueryBuilder("transfer");
-        $dql->select('transfer');
-
-        $dql->leftJoin('transfer.transferStatus','transferStatus');
-
-        $dql->where('transfer.globalId = :globalId AND transfer.className = :className');
-
-        $query = $dql->getQuery();
-
-        $query->setParameters(
-            array(
-                'globalId' => $globalId,
-                'className' => $className,
-            )
-        );
-
-        $transfers = $query->getResult();
-
-        //Get single transfer data
-        $transfer = NULL;
-        if (count($transfers) > 0) {
-            //Can we have the same multiple transfers?
-            $transfer = $transfers[0];
-        }
-        if (count($transfers) == 1) {
-            $transfer = $transfers[0];
-        }
-
-        return $transfer;
     }
 
     public function findTransferDataByObjectAndLocalId( $localId, $className ) {
@@ -1039,9 +1006,9 @@ class InterfaceTransferUtil {
 //            }
         }
 
-        //Case: AntibodyList
+        //Case: Project
         if( str_contains($className, 'TranslationalResearchBundle') && str_contains($className, 'Project') ) {
-            $transferableEntity = $this->receiveProject($receiveData);
+            //$transferableEntity = $this->receiveProject($receiveData);
         }
 
         //$transferData = $interfaceTransferUtil->findCreateTransferData($entity);
@@ -1338,7 +1305,7 @@ class InterfaceTransferUtil {
         //$logger = $this->container->get('logger');
 
         //1) get transferData by $globalId, $className
-        $transferData = $this->findTransferDataByObjectAndGlobalId($globalId,$className);
+        $transferData = $this->findTransferDataByGlobalId($globalId,$className);
 
         if( !$transferData ) {
             return NULL;
@@ -1388,12 +1355,20 @@ class InterfaceTransferUtil {
 
 
     //TODO: create transfer interface page and call this function getTransfer
+    //Run on internal (master)
+    //Send request to the external asking to send back all new/updated projects
     //Handle the response from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
-        $testing = true;
+        //$testing = true;
         $testing = false;
 
-        //1) send CURL request to slave to transfer data
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+        if( !$instanceId ) {
+            $instanceId = 'NA';
+        }
+
+        //1) send CURL request to slave to transfer data and receive projects as $transferDatas
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
         if( !$transferDatas ) {
@@ -1401,6 +1376,7 @@ class InterfaceTransferUtil {
             return $resStr;
         }
 
+        //Array of new/updated projects
         $jsonRes = $transferDatas['transferResult'];
         //dump($jsonRes);
         //exit('getSlaveToMasterTransfer: jsonRes');
@@ -1409,6 +1385,8 @@ class InterfaceTransferUtil {
 //        $classMetadataFactory = new ClassMetadataFactory($loader);
 //        $normalizer = new ObjectNormalizer($classMetadataFactory);
 //        $serializer = new Serializer([$normalizer]);
+
+        $confirmationResponse = array();
 
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -1425,6 +1403,8 @@ class InterfaceTransferUtil {
             $title = $jsonObject['title'];
             echo "title=$title <br>";
 
+            $localId = $jsonObject['id'];
+            $sourceId = $jsonObject['sourceId'];
             $globalId = $jsonObject['globalId'];
             $className = $jsonObject['className'];
             $transferableEntity = NULL;
@@ -1432,28 +1412,32 @@ class InterfaceTransferUtil {
 
             //Find if exists by $globalId
             //$transferData = $this->findCreateTransferData($transferableEntity);
-            $transferData = $this->findTransferDataByGlobalId($globalId,$className);
-            echo "transferData=".$transferData."<br>";
+//            $transferData = $this->findTransferDataByGlobalId($globalId,$className);
+//            echo "transferData=".$transferData."<br>";
+//
+//            if( $transferData ) {
+//                $localId = $transferData->getLocalId();
+//                $transferableEntity = $this->em->getRepository($className)->find($localId);
+//                if( !$transferableEntity ) {
+//                    $transferableEntity = $this->em->getRepository($className)->find($globalId);
+//                }
+//                echo "transferData exists: transferableEntity=".$transferableEntity->getId()."<br>";
+//                //AbstractNormalizer::OBJECT_TO_POPULATE => $person
+//                $resStr = "Update existing Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+//            }
 
-            if( $transferData ) {
-                $localId = $transferData->getLocalId();
-                $transferableEntity = $this->em->getRepository($className)->find($localId);
-                if( !$transferableEntity ) {
-                    $transferableEntity = $this->em->getRepository($className)->find($globalId);
-                }
-                echo "transferData exists: transferableEntity=".$transferableEntity->getId()."<br>";
-                //AbstractNormalizer::OBJECT_TO_POPULATE => $person
-                $resStr = "Update existing Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
+            if( $globalId ) {
+                $transferableEntity = $this->em->getRepository($className)->findOneByGlobalId($globalId);
             }
 
-            if( !$transferableEntity ) {
-                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
-                $resStr = "Update existing Project found by OID $oid, title " . $title;
-            }
+//            if( !$transferableEntity ) {
+//                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
+//                $resStr = "Update existing Project found by OID $oid, title " . $title;
+//            }
             echo "Final transferableEntity=".$transferableEntity."<br>";
             echo "Final resStr=$resStr <br>";
 
-            //TODO: fix update Project
+            //TODO: fix update Project, now only create New Project
             //An exception occurred while executing a query: SQLSTATE[23505]:
             // Unique violation: 7 ERROR: duplicate key value violates
             // unique constraint "pk__transres__3213e83f716f45b5"
@@ -1485,8 +1469,20 @@ class InterfaceTransferUtil {
 
                     $this->em->flush(); //testing
 
+                    $globalId = $transferableEntity->getId().'@'.$instanceId;
+                    $transferableEntity->setGlobalId($globalId);
+                    $transferableEntity->setSourceId($sourceId);
+
                     $transferableEntity->generateOid();
                     $this->em->flush();
+
+                    $confirmationResponse[] = array(
+                        'className' => $className,
+                        'localId' => $localId,
+                        'oid' => $oid,
+                        'sourceId' => $sourceId,
+                        'globalId' => $globalId
+                    );
 
                     $resStr = "Create new Project with ID " . $transferableEntity->getId()
                         . "; OID=" . $transferableEntity->getOid()
@@ -1497,44 +1493,47 @@ class InterfaceTransferUtil {
             $resArr[] = $resStr;
             //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
 
-            if(0) {
-                if (!$transferData) {
-                    $resStr = "Create new Project with ID " . $transferableEntity->getId() . ", title " . $transferableEntity->getTitle();
-                }
-
-                //TODO: add globalId and sourceId to the Project
-                //Use TransferData just o keep transfer info if transfer is ready, failed or complete
-
-                if ($transferableEntity) {
-                    //add to TransferData
-                    $status = 'Completed';
-
-                    //$localId = $jsonObject['id'];
-                    //$transferData = $this->findTransferDataByLocalId($localId,$className);
-
-                    if (!$transferData) {
-                        $transferData = $this->createTransferData($transferableEntity, $status);
-                        $resTransferDataStr = "Create new TranferData with ID " . $transferData->getId();
-                    } else {
-                        $resTransferDataStr = "TranferData with ID " . $transferData->getId();
-                    }
-
-                    $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
-                    if ($status) {
-                        $transferData->setTransferStatus($status);
-                    }
-
-                    $transferData->setLocalId($transferableEntity->getId());
-                    if ($testing === false) {
-                        $this->em->flush(); //testing
-                    }
-
-                    $resArr[] = $resStr . "; " . $resTransferDataStr;
-                }
-            }//if 0
+//            if(0) {
+//                if (!$transferData) {
+//                    $resStr = "Create new Project with ID " . $transferableEntity->getId() . ", title " . $transferableEntity->getTitle();
+//                }
+//
+//                //TODO: add globalId and sourceId to the Project
+//                //Use TransferData just o keep transfer info if transfer is ready, failed or complete
+//
+//                if ($transferableEntity) {
+//                    //add to TransferData
+//                    $status = 'Completed';
+//
+//                    //$localId = $jsonObject['id'];
+//                    //$transferData = $this->findTransferDataByLocalId($localId,$className);
+//
+//                    if (!$transferData) {
+//                        $transferData = $this->createTransferData($transferableEntity, $status);
+//                        $resTransferDataStr = "Create new TranferData with ID " . $transferData->getId();
+//                    } else {
+//                        $resTransferDataStr = "TranferData with ID " . $transferData->getId();
+//                    }
+//
+//                    $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
+//                    if ($status) {
+//                        $transferData->setTransferStatus($status);
+//                    }
+//
+//                    $transferData->setLocalId($transferableEntity->getId());
+//                    if ($testing === false) {
+//                        $this->em->flush(); //testing
+//                    }
+//
+//                    $resArr[] = $resStr . "; " . $resTransferDataStr;
+//                }
+//            }//if 0
         } //foreach $jsonObject
 
-        //TODO: send OIDs to slave
+        //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
+        //and the “Source ID” on the internal will be “3@WCMEXT”.
+        //TODO: send Global IDs (“Global ID” of “101@WCMINT”) to slave as confirmation
+        $this->sendGlobalIdToSourceServer($confirmationResponse); //$transferableEntity,$jsonObject['localId']);
 
         $resStr = NULL;
         if( count($resArr) > 0 ) {
@@ -1902,6 +1901,12 @@ class InterfaceTransferUtil {
     public function sendSlavetoMasterTransfer( $jsonFile ) {
         $logger = $this->container->get('logger');
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+        if( !$instanceId ) {
+            $instanceId = 'NA';
+        }
+
         //1) get TransferData
         $className = $jsonFile['className'];
         $transferDatas = $this->findAllTransferDataByClassname($className,'Ready');
@@ -1916,11 +1921,19 @@ class InterfaceTransferUtil {
 
         foreach($transferDatas as $transferData) {
             $localId = $transferData->getLocalId();
-            $globalId = $transferData->getGlobalId();
+            //$globalId = $transferData->getGlobalId();
             $className = $transferData->getClassName();
+            $sourceId = $localId."@".$instanceId;
 
             $transferableEntity = $this->em->getRepository($className)->find($localId);
-            $logger->notice('$transferableEntity ID='.$transferableEntity->getId());
+            $globalId = $transferableEntity->getGlobalId();
+            $logger->notice('$transferableEntity ID='.$transferableEntity->getId()."; globalId=".$globalId);
+
+            //set sourceId if not set yet
+            if( !$transferableEntity->getSourceId() ) {
+                $transferableEntity->setSourceId($sourceId);
+                $this->em->flush();
+            }
 
             //$serilizeFormat = 'json';
             $serilizeFormat = 'xml';
@@ -2029,7 +2042,9 @@ class InterfaceTransferUtil {
 //                ]]
             );
 
-            $json['globalId'] = $globalId;
+            //$json['sourceId'] = $sourceId;
+            //$json['globalId'] = $globalId; //if transfer is the first time, than $globalId is NULL
+            $json['instanceId'] = $instanceId;
             $json['className'] = $className;
 
             //dump($json);
@@ -2046,7 +2061,124 @@ class InterfaceTransferUtil {
         return $jsonRes;
     }
 
+    public function sendGlobalIdToSourceServer( $confirmationResponse ) { //$transferableEntity, $localId ) {
 
+        if( count($confirmationResponse) == 0 ) {
+            return null;
+        }
 
+        $className = $confirmationResponse[0]['className'];
+        $entityName = $this->getEntityName($className);
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+
+        //Add hash and security key
+        $jsonFile = array();
+        $jsonFile['className'] = $className;
+
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $jsonFile['hash'] = $hash;
+
+        //$jsonFile['localId'] = $transferableEntity->getGlobalId(); //original source id
+        //$jsonFile['globalId'] = $transferableEntity->getGlobalId();
+        $jsonFile['confirmationResponse'] = $confirmationResponse;
+
+        $data_string = json_encode($jsonFile);
+        $strServer = $interfaceTransfer->getTransferSource();  //view.online
+
+        //http://view.online/directory/transfer-interface/slave-to-master-transfer
+        //Send back to slave (external) global ID of newly generated Project
+        $url = 'https://'.$strServer.'/directory/transfer-interface/confirmation-master-to-slave';
+
+        echo "url=$url <br>";
+        $ch = curl_init($url);
+
+        if(1) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string)
+            ));
+
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            //https://stackoverflow.com/questions/4372710/php-curl-https
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
+            //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
+            //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+        }
+
+        $result = curl_exec($ch);
+        //$status = curl_getinfo($ch);
+        curl_close($ch);
+
+        //dump($status);
+        //dump($result);
+        //exit('111');
+
+        if( $result ) {
+            $result = json_decode($result, true);
+            //if( !$result ) {
+            //    return false;
+            //}
+            $checksum = $result['checksum'];
+            $valid = $result['valid'];
+            $transferResult = $result['transferResult'];
+
+            //dump($result);
+            //echo 'hash='.$hash.'<br>';
+            //exit('222');
+
+            if ($checksum === $hash && $valid === true && $transferResult) {
+                echo "Successefully sent: " . $jsonFile['className'] . " <br>";
+                return $result;
+            }
+        }
+
+        //exit('get SlaveToMasterTransferCurl false');
+        return false;
+    }
+
+    //Running on external slave
+    public function receiveConfirmationOnSlave( $confirmationJsonFile ) {
+//        $confirmationResponse[] = array(
+//            'className' => $className,
+//            'localId' => $localId,
+//            'oid' => $oid,
+//            'sourceId' => $sourceId,
+//            'globalId' => $globalId
+//        );
+
+        foreach($confirmationJsonFile as $singleConfirmationJsonFile) {
+
+            $className = $singleConfirmationJsonFile['className'];
+            $localId = $singleConfirmationJsonFile['localId'];
+            $globalId = $singleConfirmationJsonFile['globalId'];
+
+            $transferableEntity = $this->em->getRepository($className)->find($localId);
+            if ($transferableEntity) {
+                if ($globalId) {
+                    if (!$transferableEntity->getGlobalId()) {
+                        $transferableEntity->setGlobalId($globalId);
+
+                        //set TransferData status to "Completed"
+                        $transferData = $this->findTransferDataByLocalId($localId, $className);
+
+                        $status = $this->em->getRepository(TransferStatusList::class)->findOneByName("Completed");
+                        $transferData->setTransferStatus($status);
+
+                        $this->em->flush();
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 
 }
