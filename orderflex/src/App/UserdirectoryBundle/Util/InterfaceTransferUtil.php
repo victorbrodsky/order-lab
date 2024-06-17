@@ -1614,7 +1614,7 @@ class InterfaceTransferUtil {
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
                                 'irbStatusList',
-                                'className',
+                                //'collDivs'
                             ]
                         ]
                     );
@@ -1899,7 +1899,7 @@ class InterfaceTransferUtil {
                 'iacucExpirationDate',
                 'projectType' => ['name'],
                 'description',
-                'collDivs' => ['name'],
+                //'collDivs' => ['name'],
                 'hypothesis',
                 'needStatSupport',
                 'amountStatSupport',
@@ -1923,38 +1923,38 @@ class InterfaceTransferUtil {
                 'otherResource'
             ]];
 
-            $attributes = [AbstractNormalizer::ATTRIBUTES => [
-                'id',
-                'oid',
-                'sourceId',
-                'globalId',
-                'createDate',
-                'submitter' => ['username','email'],
-                'updateUser' => ['username','email'],
-                'updateDate',
-                'state',
-                'title',
-                'projectSpecialty' => ['name'],
-                'exemptIrbApproval' => ['name'],
-                'irbNumber',
-                'irbExpirationDate',
-                'irbStatusList' => ['name'],
-                'exemptIACUCApproval' => ['name'],
-                'iacucNumber',
-                'iacucExpirationDate',
-                'projectType' => ['name'],
-                'description',
-                'collDivs' => ['name'],
-                //'hypothesis',
-                //'needStatSupport',
-                //'amountStatSupport',
-                //'needInfSupport',
-                //'amountInfSupport',
-                //'studyPopulation',
-                //'numberPatient',
-                //'numberLabReport',
-                //'studyDuration',
-            ]];
+//            $attributes = [AbstractNormalizer::ATTRIBUTES => [
+//                'id',
+//                'oid',
+//                'sourceId',
+//                'globalId',
+//                'createDate',
+//                'submitter' => ['username','email'],
+//                'updateUser' => ['username','email'],
+//                'updateDate',
+//                'state',
+//                'title',
+//                'projectSpecialty' => ['name'],
+//                'exemptIrbApproval' => ['name'],
+//                'irbNumber',
+//                'irbExpirationDate',
+//                'irbStatusList' => ['name'],
+//                'exemptIACUCApproval' => ['name'],
+//                'iacucNumber',
+//                'iacucExpirationDate',
+//                'projectType' => ['name'],
+//                'description',
+//                'collDivs' => ['name'],
+//                //'hypothesis',
+//                //'needStatSupport',
+//                //'amountStatSupport',
+//                //'needInfSupport',
+//                //'amountInfSupport',
+//                //'studyPopulation',
+//                //'numberPatient',
+//                //'numberLabReport',
+//                //'studyDuration',
+//            ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
