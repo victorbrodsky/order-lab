@@ -1949,10 +1949,10 @@ class InterfaceTransferUtil {
                 'needStatSupport',
                 'amountStatSupport',
                 'needInfSupport',
-                'amountInfSupport',
-                'studyPopulation',
-                'numberPatient',
-                'numberLabReport',
+                //'amountInfSupport',
+                //'studyPopulation',
+                //'numberPatient',
+                //'numberLabReport',
                 //'studyDuration',
             ]];
 
