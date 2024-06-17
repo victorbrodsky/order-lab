@@ -1393,7 +1393,14 @@ class InterfaceTransferUtil {
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
+        if( !$transferDatas ) {
+            $resStr = "Get transfer not completed: response is null";
+            return $resStr;
+        }
+
         $jsonRes = $transferDatas['transferResult'];
+        dump($jsonRes);
+        exit('getSlaveToMasterTransfer: jsonRes');
 
         // $loader is any of the valid loaders explained later in this article
 //        $classMetadataFactory = new ClassMetadataFactory($loader);
@@ -1737,6 +1744,7 @@ class InterfaceTransferUtil {
         return $transferableEntity;
     }
 
+
     //send request to remote server to send all transferable in the response
     public function getSlaveToMasterTransferCurl($className) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1805,7 +1813,7 @@ class InterfaceTransferUtil {
             }
         }
 
-        exit('getSlaveToMasterTransferCurl false');
+        //exit('get SlaveToMasterTransferCurl false');
         return false;
     }
 

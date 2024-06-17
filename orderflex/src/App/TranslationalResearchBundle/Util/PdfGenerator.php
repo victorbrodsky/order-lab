@@ -754,6 +754,8 @@ class PdfGenerator
     //TODO: test the generation time. knp_snappy has a time delay
     public function generateAndSaveProjectPdf( $project, $authorUser=null, $request=null ) {
 
+        //return null;
+
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
 
@@ -810,8 +812,17 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $project->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generateProjectPdf($project,$applicationFilePath,$request); //this does not work with https
+        $applicationFilePath = $this->generateProjectPdf($project,$applicationFilePath,$request); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+        if( !$applicationFilePath ) {
+            $res = array(
+                'filename' => null,
+                'pdf' => null,
+                'size' => null
+            );
+            return $res;
+        }
 
         //4) add PDF to project DB
         $filesize = filesize($applicationFilePath);
@@ -868,10 +879,9 @@ class PdfGenerator
         $userSecUtil = $this->container->get('user_security_utility');
 
         //Make sure $wkhtmltopdfpath correctly set in the site setting
-        $wkhtmltopdfpath = $userSecUtil->getSiteSettingParameter('wkhtmltopdfpath');
-        $wkhtmltopdfpath = str_replace('"','',$wkhtmltopdfpath);
-        $wkhtmltopdfpath = realpath($wkhtmltopdfpath);
-        if (file_exists($wkhtmltopdfpath)) {
+        $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
+        if (file_exists($wkhtmltopdfpathClean)) {
             //echo "The file $wkhtmltopdfpath exists <br>";
         } else {
             //echo "The file [$wkhtmltopdfpath] does not exist <br>";
