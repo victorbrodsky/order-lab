@@ -1930,7 +1930,12 @@ class InterfaceTransferUtil {
             $json = $serializer->normalize(
                 $transferableEntity,
                 $serilizeFormat, //'json',
-                [AbstractNormalizer::ATTRIBUTES => $attributes]
+                [AbstractNormalizer::ATTRIBUTES => [
+                    'id',
+                    'oid',
+                    'title',
+                    'irbNumber'
+                ]]
 //                [AbstractNormalizer::ATTRIBUTES => [
 //                    'id',
 //                    'oid',
