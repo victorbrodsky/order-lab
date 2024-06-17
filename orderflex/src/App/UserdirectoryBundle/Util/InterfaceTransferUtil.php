@@ -1936,12 +1936,6 @@ class InterfaceTransferUtil {
                     'title',
                     'irbNumber'
                 ]]
-//                [AbstractNormalizer::ATTRIBUTES => [
-//                    'id',
-//                    'oid',
-//                    'title',
-//                    'irbNumber'
-//                ]]
             );
 
             $json['globalId'] = $globalId;
@@ -1950,7 +1944,7 @@ class InterfaceTransferUtil {
             //dump($json);
             //exit('sendSlavetoMasterTransfer');
 
-            $logger->notice('$json:');
+            $logger->notice('$json: id='.$json['id']);
             $logger->notice(print_r($json));
 
             $jsonRes[] = $json;
