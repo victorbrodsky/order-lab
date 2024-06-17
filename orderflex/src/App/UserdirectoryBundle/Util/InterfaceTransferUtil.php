@@ -1934,6 +1934,14 @@ class InterfaceTransferUtil {
                 'updateDate',
                 'state',
                 'title',
+                'projectSpecialty' => ['name'],
+                'exemptIrbApproval' => ['name'],
+                'irbNumber',
+                'irbExpirationDate',
+                'irbStatusList' => ['name'],
+                'exemptIACUCApproval' => ['name'],
+                'iacucNumber',
+                'iacucExpirationDate',
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
