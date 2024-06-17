@@ -1399,8 +1399,8 @@ class InterfaceTransferUtil {
         }
 
         $jsonRes = $transferDatas['transferResult'];
-        dump($jsonRes);
-        exit('getSlaveToMasterTransfer: jsonRes');
+        //dump($jsonRes);
+        //exit('getSlaveToMasterTransfer: jsonRes');
 
         // $loader is any of the valid loaders explained later in this article
 //        $classMetadataFactory = new ClassMetadataFactory($loader);
@@ -1537,50 +1537,75 @@ class InterfaceTransferUtil {
         $transferableEntity = NULL;
         $serilizeFormat = 'xml';
 
+        //dump($jsonObject);
+        //exit('deserialize Object');
+
         //Case Project
         if( $className && $className == 'App\TranslationalResearchBundle\Entity\Project' ) {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
 
+            $ignoreFields = array(
+                'submitter',
+                'createDate',
+                'updateUser',
+                'updateDate',
+                'projectSpecialty',
+                'irbExpirationDate',
+                'exemptIrbApproval',
+                'exemptIACUCApproval',
+                'irbStatusList',
+                'className',
+            );
+
+            $ignoreFields = array(
+                'id',
+                'oid',
+                'title',
+                'irbNumber'
+            );
+
             if(1) {
                 if ($objectToPopulate) {
-                    echo "deserializeObject: Update project " . $objectToPopulate->getOid() . "<br>";
+                    echo "deserialize Object: Update project " . $objectToPopulate->getOid() . "<br>";
                     $transferableEntity = $serializer->denormalize(
                         $jsonObject,
                         $className,
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                                'submitter',
-                                'createDate',
-                                'updateUser',
-                                'updateDate',
-                                'projectSpecialty',
-                                'irbExpirationDate',
-                                'exemptIrbApproval',
-                                'exemptIACUCApproval',
-                                'irbStatusList'
+//                                'submitter',
+//                                'createDate',
+//                                'updateUser',
+//                                'updateDate',
+//                                'projectSpecialty',
+//                                'irbExpirationDate',
+//                                'exemptIrbApproval',
+//                                'exemptIACUCApproval',
+//                                'irbStatusList',
+                                $ignoreFields
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
                     );
                 } else {
-                    echo "deserializeObject: Create new project <br>";
+                    echo "deserialize Object: Create new project <br>";
                     $transferableEntity = $serializer->denormalize(
                         $jsonObject,
                         $className,
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                                'submitter',
-                                'createDate',
-                                'updateUser',
-                                'updateDate',
-                                'projectSpecialty',
-                                'irbExpirationDate',
-                                'exemptIrbApproval',
-                                'exemptIACUCApproval',
-                                'irbStatusList'
+//                                'submitter',
+//                                'createDate',
+//                                'updateUser',
+//                                'updateDate',
+//                                'projectSpecialty',
+//                                'irbExpirationDate',
+//                                'exemptIrbApproval',
+//                                'exemptIACUCApproval',
+//                                'irbStatusList'
+                                $ignoreFields
                             ]
                         ]
                     );
@@ -1655,7 +1680,7 @@ class InterfaceTransferUtil {
                 $transferableEntity->setIrbStatusList($irbStatusListEntity);
             }
 
-            echo "deserializeObject: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
+            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 
             //$submitter = $transferableEntity->getSubmitter();
             //echo "submitter=".print_r($submitter)."<br>";
@@ -1843,52 +1868,62 @@ class InterfaceTransferUtil {
             $serilizeFormat = 'xml';
             //$serilizeFormat = NULL;
 
+            $attributes = array(
+                'id',
+                'oid',
+                'createDate',
+                'submitter' => ['username','email'],
+                'updateUser' => ['username','email'],
+                'updateDate',
+                'state',
+                'title',
+                'projectSpecialty' => ['name'],
+                'exemptIrbApproval' => ['name'],
+                'irbNumber',
+                'irbExpirationDate',
+                'irbStatusList' => ['name'],
+                'exemptIACUCApproval' => ['name'],
+                'iacucNumber',
+                'iacucExpirationDate',
+                'projectType' => ['name'],
+                'description',
+                'collDivs' => ['name'],
+                'hypothesis',
+                'needStatSupport',
+                'amountStatSupport',
+                'needInfSupport',
+                'amountInfSupport',
+                'studyPopulation',
+                'numberPatient',
+                'numberLabReport',
+                'studyDuration',
+                'priceList' => ['name'],
+                'funded',
+                'collDepartment',
+                'collInst',
+                'collInstPi',
+                'essentialInfo',
+                'objective',
+                'strategy',
+                'expectedResults',
+                'fundByPath',
+                'fundDescription',
+                'otherResource'
+            );
+
+            $attributes = array(
+                'id',
+                'oid',
+                'title',
+                'irbNumber'
+            );
+
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
                 $transferableEntity,
                 $serilizeFormat, //'json',
                 [AbstractNormalizer::ATTRIBUTES => [
-                    'id',
-                    'oid',
-                    'createDate',
-                    'submitter' => ['username','email'],
-                    'updateUser' => ['username','email'],
-                    'updateDate',
-                    'state',
-                    'title',
-                    'projectSpecialty' => ['name'],
-                    'exemptIrbApproval' => ['name'],
-                    'irbNumber',
-                    'irbExpirationDate',
-                    'irbStatusList' => ['name'],
-                    'exemptIACUCApproval' => ['name'],
-                    'iacucNumber',
-                    'iacucExpirationDate',
-                    'projectType' => ['name'],
-                    'description',
-                    'collDivs' => ['name'],
-                    'hypothesis',
-                    'needStatSupport',
-                    'amountStatSupport',
-                    'needInfSupport',
-                    'amountInfSupport',
-                    'studyPopulation',
-                    'numberPatient',
-                    'numberLabReport',
-                    'studyDuration',
-                    'priceList' => ['name'],
-                    'funded',
-                    'collDepartment',
-                    'collInst',
-                    'collInstPi',
-                    'essentialInfo',
-                    'objective',
-                    'strategy',
-                    'expectedResults',
-                    'fundByPath',
-                    'fundDescription',
-                    'otherResource'
-
+                    $attributes
                 ]]
             );
 
