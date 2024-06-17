@@ -1861,6 +1861,7 @@ class InterfaceTransferUtil {
 
         $jsonRes = array();
         //$jsonRes['count'] = count($transferDatas);
+        $logger->notice('$transferableEntity count='.count($transferDatas));
 
         foreach($transferDatas as $transferData) {
             $localId = $transferData->getLocalId();
