@@ -1923,12 +1923,18 @@ class InterfaceTransferUtil {
                 'otherResource'
             ]];
 
-//            $attributes = [AbstractNormalizer::ATTRIBUTES => [
-//                'id',
-//                'oid',
-//                'title',
-//                'irbNumber'
-//            ]];
+            $attributes = [AbstractNormalizer::ATTRIBUTES => [
+                'id',
+                'oid',
+                'sourceId',
+                'globalId',
+                'createDate',
+                'submitter' => ['username','email'],
+                'updateUser' => ['username','email'],
+                'updateDate',
+                'state',
+                'title',
+            ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
