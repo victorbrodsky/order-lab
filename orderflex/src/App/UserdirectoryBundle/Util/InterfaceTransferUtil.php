@@ -1878,7 +1878,7 @@ class InterfaceTransferUtil {
             $serilizeFormat = 'xml';
             //$serilizeFormat = NULL;
 
-            $attributes = [AbstractNormalizer::ATTRIBUTES => [
+            $attributes = [
                 'id',
                 'oid',
                 'sourceId',
@@ -1899,7 +1899,7 @@ class InterfaceTransferUtil {
                 'iacucExpirationDate',
                 'projectType' => ['name'],
                 'description',
-                //'collDivs' => ['name'],
+                'collDivs' => ['name'],
                 'hypothesis',
                 'needStatSupport',
                 'amountStatSupport',
@@ -1921,9 +1921,54 @@ class InterfaceTransferUtil {
                 'fundByPath',
                 'fundDescription',
                 'otherResource'
+            ];
+            $context = [AbstractNormalizer::ATTRIBUTES => [
+                $attributes
+//                'id',
+//                'oid',
+//                'sourceId',
+//                'globalId',
+//                'createDate',
+//                'submitter' => ['username','email'],
+//                'updateUser' => ['username','email'],
+//                'updateDate',
+//                'state',
+//                'title',
+//                'projectSpecialty' => ['name'],
+//                'exemptIrbApproval' => ['name'],
+//                'irbNumber',
+//                'irbExpirationDate',
+//                'irbStatusList' => ['name'],
+//                'exemptIACUCApproval' => ['name'],
+//                'iacucNumber',
+//                'iacucExpirationDate',
+//                'projectType' => ['name'],
+//                'description',
+//                'collDivs' => ['name'],
+//                'hypothesis',
+//                'needStatSupport',
+//                'amountStatSupport',
+//                'needInfSupport',
+//                'amountInfSupport',
+//                'studyPopulation',
+//                'numberPatient',
+//                'numberLabReport',
+//                'studyDuration',
+//                'priceList' => ['name'],
+//                'funded',
+//                'collDepartment',
+//                'collInst',
+//                'collInstPi',
+//                'essentialInfo',
+//                'objective',
+//                'strategy',
+//                'expectedResults',
+//                'fundByPath',
+//                'fundDescription',
+//                'otherResource'
             ]];
 
-//            $attributes = [AbstractNormalizer::ATTRIBUTES => [
+//            $context = [AbstractNormalizer::ATTRIBUTES => [
 //                'id',
 //                'oid',
 //                'sourceId',
@@ -1960,7 +2005,7 @@ class InterfaceTransferUtil {
             $json = $serializer->normalize(
                 $transferableEntity,
                 $serilizeFormat, //'json',
-                $attributes
+                $context
 //                [AbstractNormalizer::ATTRIBUTES => [
 //                    'id',
 //                    'oid',
