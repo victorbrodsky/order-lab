@@ -1414,8 +1414,8 @@ class InterfaceTransferUtil {
         $resArr = array();
         foreach($jsonRes as $jsonObject) {
 
-            dump($jsonObject);
-            exit('getSlaveToMasterTransfer: $jsonObject');
+            //dump($jsonObject);
+            //exit('getSlaveToMasterTransfer: $jsonObject');
 
             //echo "transferData=".$jsonObject."<br>";
             $oid = $jsonObject['oid'];
@@ -1825,8 +1825,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('111');
+        //dump($result);
+        //exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -1923,12 +1923,12 @@ class InterfaceTransferUtil {
                 'otherResource'
             ]];
 
-            $attributes = [AbstractNormalizer::ATTRIBUTES => [
-                'id',
-                'oid',
-                'title',
-                'irbNumber'
-            ]];
+//            $attributes = [AbstractNormalizer::ATTRIBUTES => [
+//                'id',
+//                'oid',
+//                'title',
+//                'irbNumber'
+//            ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
