@@ -1942,6 +1942,18 @@ class InterfaceTransferUtil {
                 'exemptIACUCApproval' => ['name'],
                 'iacucNumber',
                 'iacucExpirationDate',
+                'projectType' => ['name'],
+                'description',
+                'collDivs' => ['name'],
+                'hypothesis',
+                'needStatSupport',
+                'amountStatSupport',
+                'needInfSupport',
+                'amountInfSupport',
+                'studyPopulation',
+                'numberPatient',
+                'numberLabReport',
+                'studyDuration',
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
