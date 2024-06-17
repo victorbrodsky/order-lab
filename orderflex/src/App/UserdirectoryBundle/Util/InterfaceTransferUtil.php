@@ -1532,7 +1532,9 @@ class InterfaceTransferUtil {
                     $resArr[] = $resStr . "; " . $resTransferDataStr;
                 }
             }//if 0
-        }
+        } //foreach $jsonObject
+
+        //TODO: send OIDs to slave
 
         $resStr = NULL;
         if( count($resArr) > 0 ) {
