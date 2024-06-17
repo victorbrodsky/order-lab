@@ -1549,27 +1549,30 @@ class InterfaceTransferUtil {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
 
-            $ignoreFields = array(
-                'submitter',
-                'createDate',
-                'updateUser',
-                'updateDate',
-                'projectSpecialty',
-                'irbExpirationDate',
-                'exemptIrbApproval',
-                'exemptIACUCApproval',
-                'irbStatusList',
-                'className',
-            );
-
-            $ignoreFields = array(
-                'id',
-                'oid',
-                'sourceId',
-                'globalId',
-                'title',
-                'irbNumber'
-            );
+//            $context = [AbstractNormalizer::IGNORED_ATTRIBUTES => [
+//                'submitter',
+//                'createDate',
+//                'updateUser',
+//                'updateDate',
+//                'projectSpecialty',
+//                'irbExpirationDate',
+//                'exemptIrbApproval',
+//                'exemptIACUCApproval',
+//                'irbStatusList',
+//                'className',
+//            ]];
+//
+//            $context = [
+//                AbstractNormalizer::IGNORED_ATTRIBUTES => [
+//                    'id',
+//                    'oid',
+//                    'sourceId',
+//                    'globalId',
+//                    'title',
+//                    'irbNumber'
+//                ],
+//                AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
+//            ];
 
             if(1) {
                 if ($objectToPopulate) {
@@ -1580,16 +1583,16 @@ class InterfaceTransferUtil {
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                                'submitter',
-//                                'createDate',
-//                                'updateUser',
-//                                'updateDate',
-//                                'projectSpecialty',
-//                                'irbExpirationDate',
-//                                'exemptIrbApproval',
-//                                'exemptIACUCApproval',
-//                                'irbStatusList',
-                                $ignoreFields
+                                'submitter',
+                                'createDate',
+                                'updateUser',
+                                'updateDate',
+                                'projectSpecialty',
+                                'irbExpirationDate',
+                                'exemptIrbApproval',
+                                'exemptIACUCApproval',
+                                'irbStatusList',
+                                'className',
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
@@ -1602,16 +1605,16 @@ class InterfaceTransferUtil {
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                                'submitter',
-//                                'createDate',
-//                                'updateUser',
-//                                'updateDate',
-//                                'projectSpecialty',
-//                                'irbExpirationDate',
-//                                'exemptIrbApproval',
-//                                'exemptIACUCApproval',
-//                                'irbStatusList'
-                                $ignoreFields
+                                'submitter',
+                                'createDate',
+                                'updateUser',
+                                'updateDate',
+                                'projectSpecialty',
+                                'irbExpirationDate',
+                                'exemptIrbApproval',
+                                'exemptIACUCApproval',
+                                'irbStatusList',
+                                'className',
                             ]
                         ]
                     );
@@ -1875,7 +1878,7 @@ class InterfaceTransferUtil {
             $serilizeFormat = 'xml';
             //$serilizeFormat = NULL;
 
-            $attributes = array(
+            $attributes = [AbstractNormalizer::ATTRIBUTES => [
                 'id',
                 'oid',
                 'sourceId',
@@ -1918,25 +1921,26 @@ class InterfaceTransferUtil {
                 'fundByPath',
                 'fundDescription',
                 'otherResource'
-            );
+            ]];
 
-            $attributes = array(
+            $attributes = [AbstractNormalizer::ATTRIBUTES => [
                 'id',
                 'oid',
                 'title',
                 'irbNumber'
-            );
+            ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
             $json = $serializer->normalize(
                 $transferableEntity,
                 $serilizeFormat, //'json',
-                [AbstractNormalizer::ATTRIBUTES => [
-                    'id',
-                    'oid',
-                    'title',
-                    'irbNumber'
-                ]]
+                $attributes
+//                [AbstractNormalizer::ATTRIBUTES => [
+//                    'id',
+//                    'oid',
+//                    'title',
+//                    'irbNumber'
+//                ]]
             );
 
             $json['globalId'] = $globalId;
