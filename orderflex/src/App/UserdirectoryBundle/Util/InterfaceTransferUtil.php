@@ -1385,7 +1385,7 @@ class InterfaceTransferUtil {
 
 
     //TODO: create transfer interface page and call this function getTransfer
-    //Handle the repsonse from the slave server (external) and add/update the project on the master server (internal)
+    //Handle the response from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
         $testing = true;
         //$testing = false;
@@ -1413,6 +1413,10 @@ class InterfaceTransferUtil {
 
         $resArr = array();
         foreach($jsonRes as $jsonObject) {
+
+            dump($jsonObject);
+            exit('getSlaveToMasterTransfer: $jsonObject');
+
             //echo "transferData=".$jsonObject."<br>";
             $oid = $jsonObject['oid'];
             $title = $jsonObject['title'];
@@ -1930,8 +1934,11 @@ class InterfaceTransferUtil {
             $json['globalId'] = $globalId;
             $json['className'] = $className;
 
-            //$logger->notice('$json:');
-            //$logger->notice(print_r($json));
+            //dump($json);
+            //exit('sendSlavetoMasterTransfer');
+
+            $logger->notice('$json:');
+            $logger->notice(print_r($json));
 
             $jsonRes[] = $json;
 

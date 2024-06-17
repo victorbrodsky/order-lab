@@ -237,7 +237,7 @@ class InterfaceController extends OrderAbstractController
     }
 
 
-    
+
     /////////////////////////////////////
     ///////// Project transfer //////////
     /////////////////////////////////////
@@ -318,6 +318,9 @@ class InterfaceController extends OrderAbstractController
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
             $transferResult = $interfaceTransferUtil->sendSlavetoMasterTransfer($input);
         }
+
+        //dump($transferResult);
+        //exit('sendSlaveToMasterTransferAction');
 
         //$post_str = implode(',', $input);
         //$logger->notice('receiveTransferAction: input='.$post_str);
