@@ -1565,6 +1565,8 @@ class InterfaceTransferUtil {
             $ignoreFields = array(
                 'id',
                 'oid',
+                'sourceId',
+                'globalId',
                 'title',
                 'irbNumber'
             );
@@ -1875,6 +1877,8 @@ class InterfaceTransferUtil {
             $attributes = array(
                 'id',
                 'oid',
+                'sourceId',
+                'globalId',
                 'createDate',
                 'submitter' => ['username','email'],
                 'updateUser' => ['username','email'],
@@ -1926,9 +1930,13 @@ class InterfaceTransferUtil {
             $json = $serializer->normalize(
                 $transferableEntity,
                 $serilizeFormat, //'json',
-                [AbstractNormalizer::ATTRIBUTES => [
-                    $attributes
-                ]]
+                [AbstractNormalizer::ATTRIBUTES => $attributes]
+//                [AbstractNormalizer::ATTRIBUTES => [
+//                    'id',
+//                    'oid',
+//                    'title',
+//                    'irbNumber'
+//                ]]
             );
 
             $json['globalId'] = $globalId;
