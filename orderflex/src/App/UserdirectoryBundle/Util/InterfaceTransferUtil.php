@@ -1390,7 +1390,7 @@ class InterfaceTransferUtil {
     //Handle the response from the slave server (external) and add/update the project on the master server (internal)
     public function getSlaveToMasterTransfer() {
         $testing = true;
-        //$testing = false;
+        $testing = false;
 
         //1) send CURL request to slave to transfer data
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
@@ -1484,46 +1484,53 @@ class InterfaceTransferUtil {
 
                     $this->em->flush(); //testing
 
-                    //$transferableEntity->generateOid();
-                    //$this->em->flush();
+                    $transferableEntity->generateOid();
+                    $this->em->flush();
+
+                    $resStr = "Create new Project with ID " . $transferableEntity->getId()
+                        . "; OID=" . $transferableEntity->getOid()
+                        . ", title " . $transferableEntity->getTitle();
                 }
             }
 
-            exit('EOF getSlaveToMasterTransfer: ' . $resStr);
+            $resArr[] = $resStr;
+            //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
 
-            if( !$transferData ) {
-                $resStr = "Create new Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
-            }
-
-            //TODO: add globalId and sourceId to the Project
-            //Use TransferData just o keep transfer info if transfer is ready, failed or complete
-
-            if( $transferableEntity ) {
-                //add to TransferData
-                $status = 'Completed';
-
-                //$localId = $jsonObject['id'];
-                //$transferData = $this->findTransferDataByLocalId($localId,$className);
-
-                if( !$transferData ) {
-                    $transferData = $this->createTransferData($transferableEntity,$status);
-                    $resTransferDataStr = "Create new TranferData with ID ".$transferData->getId();
-                } else {
-                    $resTransferDataStr = "TranferData with ID ".$transferData->getId();
+            if(0) {
+                if (!$transferData) {
+                    $resStr = "Create new Project with ID " . $transferableEntity->getId() . ", title " . $transferableEntity->getTitle();
                 }
 
-                $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
-                if( $status ) {
-                    $transferData->setTransferStatus($status);
-                }
+                //TODO: add globalId and sourceId to the Project
+                //Use TransferData just o keep transfer info if transfer is ready, failed or complete
 
-                $transferData->setLocalId($transferableEntity->getId());
-                if( $testing === false ) {
-                    $this->em->flush(); //testing
-                }
+                if ($transferableEntity) {
+                    //add to TransferData
+                    $status = 'Completed';
 
-                $resArr[] = $resStr . "; " . $resTransferDataStr;
-            }
+                    //$localId = $jsonObject['id'];
+                    //$transferData = $this->findTransferDataByLocalId($localId,$className);
+
+                    if (!$transferData) {
+                        $transferData = $this->createTransferData($transferableEntity, $status);
+                        $resTransferDataStr = "Create new TranferData with ID " . $transferData->getId();
+                    } else {
+                        $resTransferDataStr = "TranferData with ID " . $transferData->getId();
+                    }
+
+                    $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
+                    if ($status) {
+                        $transferData->setTransferStatus($status);
+                    }
+
+                    $transferData->setLocalId($transferableEntity->getId());
+                    if ($testing === false) {
+                        $this->em->flush(); //testing
+                    }
+
+                    $resArr[] = $resStr . "; " . $resTransferDataStr;
+                }
+            }//if 0
         }
 
         $resStr = NULL;
@@ -1694,12 +1701,18 @@ class InterfaceTransferUtil {
             }
 
             //collDivs CollDivList
+            //dump($jsonObject);
+            //exit('collDivs='.print_r($jsonObject['collDivs']));
             if( isset($jsonObject['collDivs']) ) {
-                $collDivsName = $jsonObject['collDivs']['name'];
-                echo "collDivsName=" . $collDivsName . "<br>";
-                $collDivsEntity = $this->em->getRepository(CollDivList::class)->findOneByName($collDivsName);
-                $transferableEntity->addCollDiv($collDivsEntity);
+                $collDivsArr = $jsonObject['collDivs'];
+                //echo "collDivsArr=" . $collDivsArr . "<br>";
+                foreach($collDivsArr as $collDivs) {
+                    $collDivsName = $collDivs['name'];
+                    $collDivsEntity = $this->em->getRepository(CollDivList::class)->findOneByName($collDivsName);
+                    $transferableEntity->addCollDiv($collDivsEntity);
+                }
             }
+            //exit('collDivs='.print_r($jsonObject['collDivs']));
 
             //priceList PriceTypeList
             if( isset($jsonObject['priceList']) ) {
