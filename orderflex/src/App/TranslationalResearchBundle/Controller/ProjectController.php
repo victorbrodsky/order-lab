@@ -1782,11 +1782,8 @@ class ProjectController extends OrderAbstractController
 
             //$project->autoPopulateApprovedProjectBudget(); //edit
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project, "document");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project, "irbApprovalLetter");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project, "humanTissueForm");
 
             //Change review's decision according to the state (if state has been changed manually)

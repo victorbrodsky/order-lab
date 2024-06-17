@@ -57,6 +57,7 @@ class TransferData {
     #[ORM\Column(type: 'string', nullable: true)]
     private $className;
 
+    //Move sourceId and globalId to the transferable object (Project)
     //Local ID
     #[ORM\Column(type: 'string', nullable: true)]
     private $localId;

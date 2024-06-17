@@ -867,6 +867,20 @@ class PdfGenerator
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
 
+        //Make sure $wkhtmltopdfpath correctly set in the site setting
+        $wkhtmltopdfpath = $userSecUtil->getSiteSettingParameter('wkhtmltopdfpath');
+        $wkhtmltopdfpath = str_replace('"','',$wkhtmltopdfpath);
+        $wkhtmltopdfpath = realpath($wkhtmltopdfpath);
+        if (file_exists($wkhtmltopdfpath)) {
+            //echo "The file $wkhtmltopdfpath exists <br>";
+        } else {
+            //echo "The file [$wkhtmltopdfpath] does not exist <br>";
+            //exit("The file [$wkhtmltopdfpath] does not exist");
+            $logger->notice("generateProjectPdf: Error - ignore PDF generation, wkhtmltopdfpath path does not exists");
+            return null;
+        }
+        //exit("wkhtmltopdfpath=[$wkhtmltopdfpath]");
+
         if( file_exists($applicationOutputFilePath) ) {
             //return;
             $logger->notice("generateProjectPdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -907,6 +921,7 @@ class PdfGenerator
             //$context->setBaseUrl('/order');
         }
 
+        //$logger->notice("generateProjectPdf: before Page URL");
         //Project download
         $pageUrl = $router->generate('translationalresearch_project_show_simple_pdf',
             array(
@@ -914,6 +929,8 @@ class PdfGenerator
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
+        //$logger->notice("generateProjectPdf: Page URL=".$pageUrl);
+
 
         //take care of authentication
         $session = $request->getSession();
@@ -921,6 +938,7 @@ class PdfGenerator
         session_write_close();
         $PHPSESSID = $session->getId();
 
+        $logger->notice("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
         //knp_snappy
         //$snappy->setTimeout(300);
         //https://github.com/KnpLabs/KnpSnappyBundle
@@ -934,6 +952,7 @@ class PdfGenerator
                 )
             )
         );
+        $logger->notice("generateProjectPdf: after knp_snappy");
 
         if( $replaceContext ) {
             //set back to original context

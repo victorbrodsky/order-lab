@@ -147,7 +147,7 @@ class Project {
     #[ORM\InverseJoinColumn(name: 'contact_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $contacts;
-    
+
     /**
      * user who will process the billing invoice (who will pay) for this PI's project
      */
@@ -254,7 +254,7 @@ class Project {
      */
     #[ORM\Column(type: 'string', nullable: true)]
     private $totalCost;
-    
+
     /**
      * Approved Project Budget
      */
@@ -444,7 +444,7 @@ class Project {
      */
     #[ORM\Column(type: 'date', nullable: true)]
     private $expectedExpirationDate;
-    
+
     /**
      * Reason for status change or closure:
      */
@@ -762,13 +762,25 @@ class Project {
     #[ORM\OrderBy(['createdate' => 'ASC'])]
     private $projectPdfs;
     ////////////// EOF #295 //////////////
-    
-//    //Keep the original id from the source
-//    /**
-//     * @var string
-//     */
-//    #[ORM\Column(type: 'string', nullable: true)]
-//    private $sourceId;
+
+
+    //Add globalId and sourceId
+    //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
+    //and the “Source ID” on the view.med.cornell.edu will be “3@WCMEXT”.
+    /**
+     * @var string
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $sourceId;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $globalId;
+
+
+
 
     public function __construct($user=null) {
 
@@ -3004,6 +3016,40 @@ class Project {
     {
         $this->autoClosureCounter = $autoClosureCounter;
     }
+
+    /**
+     * @return string
+     */
+    public function getSourceId()
+    {
+        return $this->sourceId;
+    }
+
+    /**
+     * @param string $sourceId
+     */
+    public function setSourceId($sourceId)
+    {
+        $this->sourceId = $sourceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGlobalId()
+    {
+        return $this->globalId;
+    }
+
+    /**
+     * @param string $globalId
+     */
+    public function setGlobalId($globalId)
+    {
+        $this->globalId = $globalId;
+    }
+
+    
 
     public function incrementExpirationNotifyCounter() {
         $counter = $this->getExpirationNotifyCounter();

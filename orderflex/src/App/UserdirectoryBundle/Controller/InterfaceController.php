@@ -237,7 +237,8 @@ class InterfaceController extends OrderAbstractController
     }
 
 
-    //Get data from slave to master
+    //Get data from external (slave) to intranet (master)
+    //Send request to the external asking to send back all new/updated projects
     #[Route(path: '/get-transfer', name: 'employees_get_transfer', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
     public function getSlaveToMasterTransferAction(Request $request)
