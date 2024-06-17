@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\CollDivList;
+use App\TranslationalResearchBundle\Entity\CollLabList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\IrbStatusList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
@@ -1602,6 +1603,7 @@ class InterfaceTransferUtil {
                                 'exemptIACUCApproval',
                                 'irbStatusList',
                                 'collDivs',
+                                'collLabs',
                                 'priceList'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
@@ -1625,6 +1627,7 @@ class InterfaceTransferUtil {
                                 'exemptIACUCApproval',
                                 'irbStatusList',
                                 'collDivs',
+                                'collLabs',
                                 'priceList'
                             ]
                         ]
@@ -1713,6 +1716,16 @@ class InterfaceTransferUtil {
                 }
             }
             //exit('collDivs='.print_r($jsonObject['collDivs']));
+
+            //collLabs CollLabList
+            if( isset($jsonObject['collLabs']) ) {
+                $collLabsArr = $jsonObject['collLabs'];
+                foreach($collLabsArr as $collLabs) {
+                    $collLabsName = $collLabs['name'];
+                    $collLabsEntity = $this->em->getRepository(CollLabList::class)->findOneByName($collLabsName);
+                    $transferableEntity->addCollLab($collLabsEntity);
+                }
+            }
 
             //priceList PriceTypeList
             if( isset($jsonObject['priceList']) ) {
@@ -1977,6 +1990,7 @@ class InterfaceTransferUtil {
                 'projectType' => ['name'],
                 'description',
                 'collDivs' => ['name'],
+                'collLabs' => ['name'],
                 'hypothesis',
                 'needStatSupport',
                 'amountStatSupport',
