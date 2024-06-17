@@ -1953,7 +1953,7 @@ class InterfaceTransferUtil {
                 'studyPopulation',
                 'numberPatient',
                 'numberLabReport',
-                'studyDuration',
+                //'studyDuration',
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
