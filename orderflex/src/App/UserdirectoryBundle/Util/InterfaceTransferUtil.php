@@ -1945,7 +1945,7 @@ class InterfaceTransferUtil {
             //dump($json);
             //exit('sendSlavetoMasterTransfer');
 
-            $logger->notice('$json: id='.$json['id']);
+            $logger->notice('$json: id='.$json['id'].", oid=".$json['oid']);
             $logger->notice(print_r($json));
 
             $jsonRes[] = $json;
