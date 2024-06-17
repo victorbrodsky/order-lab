@@ -26,8 +26,10 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\CollDivList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\IrbStatusList;
+use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
@@ -1592,7 +1594,8 @@ class InterfaceTransferUtil {
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
                                 'irbStatusList',
-                                'className',
+                                'collDivs',
+                                'priceList'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
@@ -1614,7 +1617,8 @@ class InterfaceTransferUtil {
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
                                 'irbStatusList',
-                                //'collDivs'
+                                'collDivs',
+                                'priceList'
                             ]
                         ]
                     );
@@ -1687,6 +1691,22 @@ class InterfaceTransferUtil {
                 echo "irbStatusList=" . $irbStatusListName . "<br>";
                 $irbStatusListEntity = $this->em->getRepository(IrbStatusList::class)->findOneByName($irbStatusListName);
                 $transferableEntity->setIrbStatusList($irbStatusListEntity);
+            }
+
+            //collDivs CollDivList
+            if( isset($jsonObject['collDivs']) ) {
+                $collDivsName = $jsonObject['collDivs']['name'];
+                echo "collDivsName=" . $collDivsName . "<br>";
+                $collDivsEntity = $this->em->getRepository(CollDivList::class)->findOneByName($collDivsName);
+                $transferableEntity->addCollDiv($collDivsEntity);
+            }
+
+            //priceList PriceTypeList
+            if( isset($jsonObject['priceList']) ) {
+                $priceListName = $jsonObject['priceList']['name'];
+                echo "priceListName=" . $priceListName . "<br>";
+                $priceListEntity = $this->em->getRepository(PriceTypeList::class)->findOneByName($priceListName);
+                $transferableEntity->setPriceList($priceListEntity);
             }
 
             echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
