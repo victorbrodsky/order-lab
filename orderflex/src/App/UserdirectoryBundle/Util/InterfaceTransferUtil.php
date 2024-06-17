@@ -1825,8 +1825,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        //dump($result);
-        //exit('111');
+        dump($result);
+        exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -1950,7 +1950,7 @@ class InterfaceTransferUtil {
             //exit('sendSlavetoMasterTransfer');
 
             $logger->notice('$json: id='.$json['id'].", oid=".$json['oid']);
-            $logger->notice(print_r($json));
+            //$logger->notice(print_r($json));
 
             $jsonRes[] = $json;
 
