@@ -349,6 +349,8 @@ class InterfaceController extends OrderAbstractController
         $post_data = json_decode($request->getContent(), true);
         $logger->notice('confirmationMasterToSlaveAction: post_data count='.count($post_data));
 
+        $logger->notice("confirmationMasterToSlaveAction:",dump($post_data));
+
         //https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
         //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
