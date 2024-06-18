@@ -28,10 +28,14 @@ namespace App\UserdirectoryBundle\Util;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\CollDivList;
 use App\TranslationalResearchBundle\Entity\CollLabList;
+use App\TranslationalResearchBundle\Entity\CompCategoryList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\IrbStatusList;
+use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
+use App\TranslationalResearchBundle\Entity\ProjectTypeList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
@@ -1334,7 +1338,8 @@ class InterfaceTransferUtil {
         $transferDatas = $this->getSlaveToMasterTransferCurl('App\TranslationalResearchBundle\Entity\Project');
 
         if( !$transferDatas ) {
-            $resStr = "Get transfer not completed: response is null";
+            //$resStr = "Get transfer not completed: response is null";
+            $resStr = "Nothing to transfer";
             return $resStr;
         }
 
@@ -1678,12 +1683,50 @@ class InterfaceTransferUtil {
                 }
             }
 
+            //compTypes CompCategoryList
+            if( isset($jsonObject['compTypes']) ) {
+                $compTypesArr = $jsonObject['compTypes'];
+                foreach($compTypesArr as $compTypes) {
+                    $compTypesName = $compTypes['name'];
+                    $compTypesEntity = $this->em->getRepository(CompCategoryList::class)->findOneByName($compTypesName);
+                    $transferableEntity->addCompType($compTypesEntity);
+                }
+            }
+
+            //tissueProcessingServices TissueProcessingServiceList
+            if( isset($jsonObject['tissueProcessingServices']) ) {
+                $itemsArr = $jsonObject['tissueProcessingServices'];
+                foreach($itemsArr as $item) {
+                    $itemName = $item['name'];
+                    $itemEntity = $this->em->getRepository(TissueProcessingServiceList::class)->findOneByName($itemName);
+                    $transferableEntity->addTissueProcessingService($itemEntity);
+                }
+            }
+
+            //restrictedServices OtherRequestedServiceList
+            if( isset($jsonObject['restrictedServices']) ) {
+                $itemsArr = $jsonObject['restrictedServices'];
+                foreach($itemsArr as $item) {
+                    $itemName = $item['name'];
+                    $itemEntity = $this->em->getRepository(OtherRequestedServiceList::class)->findOneByName($itemName);
+                    $transferableEntity->addRestrictedService($itemEntity);
+                }
+            }
+
             //priceList PriceTypeList
             if( isset($jsonObject['priceList']) ) {
                 $priceListName = $jsonObject['priceList']['name'];
                 echo "priceListName=" . $priceListName . "<br>";
                 $priceListEntity = $this->em->getRepository(PriceTypeList::class)->findOneByName($priceListName);
                 $transferableEntity->setPriceList($priceListEntity);
+            }
+
+            //projectType ProjectTypeList
+            if( isset($jsonObject['projectType']) ) {
+                $projectTypeName = $jsonObject['projectType']['name'];
+                echo "projectTypeName=" . $projectTypeName . "<br>";
+                $projectTypeListEntity = $this->em->getRepository(ProjectTypeList::class)->findOneByName($projectTypeName);
+                $transferableEntity->setProjectType($projectTypeListEntity);
             }
 
             echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
@@ -1908,6 +1951,7 @@ class InterfaceTransferUtil {
                 'irbNumber',
                 'irbExpirationDate',
                 'irbStatusList' => ['name'],
+                'irbStatusExplain',
                 'exemptIACUCApproval' => ['name'],
                 'iacucNumber',
                 'iacucExpirationDate',
@@ -1915,6 +1959,7 @@ class InterfaceTransferUtil {
                 'description',
                 'collDivs' => ['name'],
                 'collLabs' => ['name'],
+                'compTypes' => ['name'],
                 'hypothesis',
                 'needStatSupport',
                 'amountStatSupport',
@@ -1941,9 +1986,23 @@ class InterfaceTransferUtil {
                 'noBudgetLimit',
                 'approvedProjectBudget',
                 'expectedExpirationDate',
-                //'involveHumanTissue',
-                //'requireTissueProcessing',
-                //'requireArchivalProcessing'
+                'involveHumanTissue',
+                'requireTissueProcessing',
+                'totalNumberOfPatientsProcessing',
+                'totalNumberOfSpecimensProcessing',
+                'tissueNumberOfBlocksPerCase',
+                'tissueProcessingServices',
+                'requireArchivalProcessing',
+                'totalNumberOfPatientsArchival',
+                'totalNumberOfSpecimensArchival',
+                'totalNumberOfBlocksPerCase',
+                'quantityOfSlidesPerBlockStained',
+                'quantityOfSlidesPerBlockUnstained',
+                'quantityOfSlidesPerBlockUnstainedIHC',
+                'quantityOfSpecialStainsPerBlock',
+                'quantityOfParaffinSectionsRnaDnaPerBlock',
+                'quantityOfTmaCoresRnaDnaAnalysisPerBlock',
+                'restrictedServices',
                 'tissueFormComment'
             ]];
 
