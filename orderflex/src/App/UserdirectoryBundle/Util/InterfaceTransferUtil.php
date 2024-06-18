@@ -1554,7 +1554,6 @@ class InterfaceTransferUtil {
                                 'updateUser',
                                 'updateDate',
                                 'projectSpecialty',
-                                'irbExpirationDate',
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
                                 'irbStatusList',
@@ -1564,7 +1563,10 @@ class InterfaceTransferUtil {
                                 'compTypes',
                                 'tissueProcessingServices',
                                 'restrictedServices',
-                                'projectType'
+                                'projectType',
+                                'irbExpirationDate',
+                                'expectedExpirationDate',
+                                'iacucExpirationDate'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
