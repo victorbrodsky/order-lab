@@ -1394,6 +1394,11 @@ class InterfaceTransferUtil {
                 $transferableEntity = $this->em->getRepository($className)->findOneByGlobalId($globalId);
             }
 
+            //Additional check if Project already exists by the source ID
+            if( !$transferableEntity ) {
+                //$transferableEntity = $this->em->getRepository($className)->findOneBySourceId($sourceId);
+            }
+
 //            if( !$transferableEntity ) {
 //                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
 //                $resStr = "Update existing Project found by OID $oid, title " . $title;
@@ -1430,7 +1435,7 @@ class InterfaceTransferUtil {
                     //$description = $transferableEntity->getDescription();
                     //$transferableEntity->getDescription($description . "\n "." Transfered with Gloabl ID=".$globalId);
 
-                    $this->em->flush();
+                    //$this->em->flush(); //disable for testing
 
                     //post create/update
                     $postUpdate = false;
@@ -1450,7 +1455,7 @@ class InterfaceTransferUtil {
                     }
 
                     if( $postUpdate ) {
-                        $this->em->flush();
+                        //$this->em->flush(); //disable for testing
                     }
 
                     $confirmationResponse[] = array(
@@ -1473,47 +1478,12 @@ class InterfaceTransferUtil {
             $resArr[] = $resStr;
             //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
 
-//            if(0) {
-//                if (!$transferData) {
-//                    $resStr = "Create new Project with ID " . $transferableEntity->getId() . ", title " . $transferableEntity->getTitle();
-//                }
-//
-//                //TODO: add globalId and sourceId to the Project
-//                //Use TransferData just o keep transfer info if transfer is ready, failed or complete
-//
-//                if ($transferableEntity) {
-//                    //add to TransferData
-//                    $status = 'Completed';
-//
-//                    //$localId = $jsonObject['id'];
-//                    //$transferData = $this->findTransferDataByLocalId($localId,$className);
-//
-//                    if (!$transferData) {
-//                        $transferData = $this->createTransferData($transferableEntity, $status);
-//                        $resTransferDataStr = "Create new TranferData with ID " . $transferData->getId();
-//                    } else {
-//                        $resTransferDataStr = "TranferData with ID " . $transferData->getId();
-//                    }
-//
-//                    $status = $this->em->getRepository(TransferStatusList::class)->findOneByName($status);
-//                    if ($status) {
-//                        $transferData->setTransferStatus($status);
-//                    }
-//
-//                    $transferData->setLocalId($transferableEntity->getId());
-//                    if ($testing === false) {
-//                        $this->em->flush(); //testing
-//                    }
-//
-//                    $resArr[] = $resStr . "; " . $resTransferDataStr;
-//                }
-//            }//if 0
         } //foreach $jsonObject
 
         //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
         //and the “Source ID” on the internal will be “3@WCMEXT”.
         //send Global IDs (“Global ID” of “101@WCMINT”) to slave as confirmation
-        $this->sendGlobalIdToSourceServer($confirmationResponse); //$transferableEntity,$jsonObject['localId']);
+        $this->sendConfirmationToSourceServer($confirmationResponse); //$transferableEntity,$jsonObject['localId']);
 
         $resStr = NULL;
         if( count($resArr) > 0 ) {
@@ -1965,7 +1935,16 @@ class InterfaceTransferUtil {
                 'expectedResults',
                 'fundByPath',
                 'fundDescription',
-                'otherResource'
+                'otherResource',
+                'fundedAccountNumber',
+                'totalCost',
+                'noBudgetLimit',
+                'approvedProjectBudget',
+                'expectedExpirationDate',
+                //'involveHumanTissue',
+                //'requireTissueProcessing',
+                //'requireArchivalProcessing'
+                'tissueFormComment'
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
@@ -1999,7 +1978,7 @@ class InterfaceTransferUtil {
     }
 
     //Run on internal (master)
-    public function sendGlobalIdToSourceServer( $confirmationResponse ) { //$transferableEntity, $localId ) {
+    public function sendConfirmationToSourceServer( $confirmationResponse ) { //$transferableEntity, $localId ) {
 
         if( count($confirmationResponse) == 0 ) {
             return null;
@@ -2007,7 +1986,7 @@ class InterfaceTransferUtil {
 
         $className = $confirmationResponse[0]['className'];
         $entityName = $this->getEntityName($className);
-        echo "sendGlobalIdToSourceServer: className=$className, $entityName <br>";
+        echo "send ConfirmationToSourceServer: className=$className, $entityName <br>";
 
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');

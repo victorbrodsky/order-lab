@@ -218,6 +218,10 @@ class DoctrineListener {
             //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, Project ID='.$entity->getId());
 
+            if( $entity->getState() != 'irb_review' ) {
+                return false;
+            }
+
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //Remove for Project, if Project should be sync both ways
