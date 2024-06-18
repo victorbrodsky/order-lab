@@ -1845,7 +1845,7 @@ class InterfaceTransferUtil {
 
         $userInfos = NULL;
         if( isset($singleUser['infos']) ) {
-            $userInfos = $singleUser['infos'];
+            $userInfos = $singleUser['infos'][0];
         }
 
         echo "convertUser: $username, $email"."<br>";
@@ -1919,12 +1919,15 @@ class InterfaceTransferUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         foreach($jsonObject[$fieldName] as $singleUser) {
+            //dump($singleUser);
+            //exit('111');
+
             $email = $singleUser['email'];
             $username = $singleUser['username'];
 
             $userInfos = NULL;
             if( isset($singleUser['infos']) ) {
-                $userInfos = $singleUser['infos'];
+                $userInfos = $singleUser['infos'][0];
             }
 
             echo "convertUsers: $username, $email"."<br>";
