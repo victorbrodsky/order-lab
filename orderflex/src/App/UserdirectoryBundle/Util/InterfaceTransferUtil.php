@@ -1999,7 +1999,7 @@ class InterfaceTransferUtil {
                 'totalNumberOfPatientsProcessing',
                 'totalNumberOfSpecimensProcessing',
                 'tissueNumberOfBlocksPerCase',
-                'tissueProcessingServices',
+                'tissueProcessingServices' => ['name'],
                 'requireArchivalProcessing',
                 'totalNumberOfPatientsArchival',
                 'totalNumberOfSpecimensArchival',
@@ -2010,7 +2010,7 @@ class InterfaceTransferUtil {
                 'quantityOfSpecialStainsPerBlock',
                 'quantityOfParaffinSectionsRnaDnaPerBlock',
                 'quantityOfTmaCoresRnaDnaAnalysisPerBlock',
-                'restrictedServices',
+                'restrictedServices' => ['name'],
                 'tissueFormComment'
             ]];
 
