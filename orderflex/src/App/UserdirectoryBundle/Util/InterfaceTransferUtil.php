@@ -1554,6 +1554,17 @@ class InterfaceTransferUtil {
                                 'createDate',
                                 'updateUser',
                                 'updateDate',
+
+                                //Requesters
+                                'principalInvestigators',
+                                'principalIrbInvestigator',
+                                'coInvestigators',
+                                'pathologists',
+                                'contacts',
+                                'billingContact',
+                                'targetStateRequester',
+                                'submitInvestigators',
+
                                 'requesterGroup',
                                 'projectSpecialty',
                                 'exemptIrbApproval',
@@ -1586,6 +1597,17 @@ class InterfaceTransferUtil {
                                 'createDate',
                                 'updateUser',
                                 'updateDate',
+
+                                //Requesters
+                                'principalInvestigators',
+                                'principalIrbInvestigator',
+                                'coInvestigators',
+                                'pathologists',
+                                'contacts',
+                                'billingContact',
+                                'targetStateRequester',
+                                'submitInvestigators',
+
                                 'requesterGroup',
                                 'projectSpecialty',
                                 'exemptIrbApproval',
@@ -1631,6 +1653,31 @@ class InterfaceTransferUtil {
 
             //updateUser
             $this->convertUser($jsonObject,$transferableEntity,'updateUser');
+
+            //principalInvestigators
+            $this->convertUsers($jsonObject,$transferableEntity,'principalInvestigators','principalInvestigator');
+
+//            'principalIrbInvestigator' => ['username','email'],
+            $this->convertUser($jsonObject,$transferableEntity,'principalIrbInvestigator');
+
+//            'coInvestigators' => ['username','email'],
+            $this->convertUsers($jsonObject,$transferableEntity,'coInvestigators','coInvestigator');
+
+//            'pathologists' => ['username','email'],
+            $this->convertUsers($jsonObject,$transferableEntity,'pathologists','pathologist');
+
+//            'contacts' => ['username','email'],
+            $this->convertUsers($jsonObject,$transferableEntity,'contacts','contact');
+
+//            'billingContact' => ['username','email'],
+            $this->convertUser($jsonObject,$transferableEntity,'billingContact');
+
+//            'targetStateRequester' => ['username','email'],
+            $this->convertUser($jsonObject,$transferableEntity,'targetStateRequester');
+
+//             'submitInvestigators' => ['username','email'],
+            $this->convertUsers($jsonObject,$transferableEntity,'submitInvestigators','submitInvestigator');
+
 
             //createDate
             $this->convertDate($jsonObject,$transferableEntity,'createDate');
@@ -1784,7 +1831,6 @@ class InterfaceTransferUtil {
             return $transferableEntity;
         }
 
-
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -1831,6 +1877,64 @@ class InterfaceTransferUtil {
             echo "User added ".$user."<br>";
         } else {
             echo "User not found: $username, $email"."<br>";
+        }
+
+        return $transferableEntity;
+    }
+
+    public function convertUsers( $jsonObject, $transferableEntity, $fieldName, $setterBaseName ) {
+        if( !isset($jsonObject[$fieldName]) ) {
+            return $transferableEntity;
+        }
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        foreach($jsonObject[$fieldName] as $singleUser) {
+            $email = $singleUser['email'];
+            $username = $singleUser['username'];
+
+            echo "convertUsers: $username, $email"."<br>";
+            $logger->notice("convertUsers: $username, $email");
+
+            $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
+
+            if(1) {
+                if (!$user) {
+                    $users = $this->em->getRepository(User::class)->findUserByUserInfoEmail($email);
+                    if (count($users) > 0) {
+                        $user = $users[0];
+                    }
+                }
+                if (!$user) {
+                    //Check if username is email
+                    $user = $userSecUtil->findUserByUsernameAsEmail($username);
+                }
+                if (!$user) {
+                    $user = $userSecUtil->getUserByUserstr($username);
+                }
+            }
+
+            if( !$user ) {
+                $user = $userSecUtil->constractNewUser($username);
+
+                //$systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                $user->setEmail($username);
+                $user->setEmailCanonical($email);
+                $user->setCreatedby('system');
+                $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+                $user->setEnabled(false);
+                //$user->setLocked(true);
+            }
+
+            if( $user ) {
+                $setter = 'add'.$setterBaseName;
+                $transferableEntity->$setter($user);
+
+                echo "User added ".$user."<br>";
+            } else {
+                echo "User not found: $username, $email"."<br>";
+            }
         }
 
         return $transferableEntity;
@@ -1980,6 +2084,17 @@ class InterfaceTransferUtil {
                 'submitter' => ['username','email'],
                 'updateUser' => ['username','email'],
                 'updateDate',
+
+                //Requesters
+                'principalInvestigators' => ['username','email'],
+                'principalIrbInvestigator' => ['username','email'],
+                'coInvestigators' => ['username','email'],
+                'pathologists' => ['username','email'],
+                'contacts' => ['username','email'],
+                'billingContact' => ['username','email'],
+                'targetStateRequester' => ['username','email'],
+                'submitInvestigators' => ['username','email'],
+
                 'requesterGroup' => ['name'],
                 'state',
                 'title',
