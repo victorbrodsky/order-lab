@@ -1815,6 +1815,11 @@ class InterfaceTransferUtil {
             $submitter = $transferableEntity->getSubmitter();
             echo "submitter=".$submitter."<br>";
 
+            $pis = $transferableEntity->getPrincipalInvestigators();
+            foreach($pis as $pi) {
+                echo "pi=".$pi."<br>";
+            }
+            
             //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
            //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
