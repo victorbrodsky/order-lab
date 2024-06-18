@@ -34,6 +34,7 @@ use App\TranslationalResearchBundle\Entity\IrbStatusList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\ProjectTypeList;
+use App\TranslationalResearchBundle\Entity\RequesterGroupList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
 use App\UserdirectoryBundle\Entity\Document;
@@ -1553,6 +1554,7 @@ class InterfaceTransferUtil {
                                 'createDate',
                                 'updateUser',
                                 'updateDate',
+                                'requesterGroup',
                                 'projectSpecialty',
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
@@ -1566,7 +1568,8 @@ class InterfaceTransferUtil {
                                 'projectType',
                                 'irbExpirationDate',
                                 'expectedExpirationDate',
-                                'iacucExpirationDate'
+                                'iacucExpirationDate',
+                                'studyDuration'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
@@ -1583,6 +1586,7 @@ class InterfaceTransferUtil {
                                 'createDate',
                                 'updateUser',
                                 'updateDate',
+                                'requesterGroup',
                                 'projectSpecialty',
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
@@ -1681,6 +1685,14 @@ class InterfaceTransferUtil {
                 $transferableEntity->setIrbStatusList($irbStatusListEntity);
             }
 
+            //requesterGroup RequesterGroupList
+            if( isset($jsonObject['requesterGroup']) ) {
+                $listName = $jsonObject['requesterGroup']['name'];
+                echo "requesterGroup=" . $listName . "<br>";
+                $listEntity = $this->em->getRepository(RequesterGroupList::class)->findOneByName($listName);
+                $transferableEntity->setRequesterGroup($listEntity);
+            }
+
             //collDivs CollDivList
             //dump($jsonObject);
             //exit('collDivs='.print_r($jsonObject['collDivs']));
@@ -1753,14 +1765,14 @@ class InterfaceTransferUtil {
 
             echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 
-            //$submitter = $transferableEntity->getSubmitter();
-            //echo "submitter=".print_r($submitter)."<br>";
+            $submitter = $transferableEntity->getSubmitter();
+            echo "submitter=".$submitter."<br>";
 
             //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
            //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
             //dump($jsonObject);
-            //exit('deserialize');
+            exit('deserialize');
         }
 
         return $transferableEntity;
@@ -1817,6 +1829,8 @@ class InterfaceTransferUtil {
             $transferableEntity->$setter($user);
 
             echo "User added ".$user."<br>";
+        } else {
+            echo "User not found: $username, $email"."<br>";
         }
 
         return $transferableEntity;
@@ -1966,6 +1980,7 @@ class InterfaceTransferUtil {
                 'submitter' => ['username','email'],
                 'updateUser' => ['username','email'],
                 'updateDate',
+                'requesterGroup' => ['name'],
                 'state',
                 'title',
                 'projectSpecialty' => ['name'],
@@ -2176,7 +2191,7 @@ class InterfaceTransferUtil {
                         $transferableEntity->setGlobalId($globalId);
                     }
 
-                    $this->em->flush(); //disable for testing
+                    //$this->em->flush(); //disable for testing
                     $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
                 }
             }
