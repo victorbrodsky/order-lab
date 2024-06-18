@@ -357,19 +357,19 @@ class InterfaceController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
-        $checksum = NULL;
-        $input = array();
-        foreach ($post_data as $key => $value) {
-            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
-                $checksum = $value;
-            } else {
-                $input[$key] = $value;
-            }
-        }
+//        $checksum = NULL;
+//        $input = array();
+//        foreach ($post_data as $key => $value) {
+//            if ($key === 'hash') {     // Checksum value is separate from all other fields and shouldn't be included in the hash
+//                $checksum = $value;
+//            } else {
+//                $input[$key] = $value;
+//            }
+//        }
 
-
+        $checksum = $post_data['hash'];
         $input = $post_data['confirmationResponse'];
-        $input[] = '1';
+        //$input[] = '1';
 
         $valid = NULL;
         $hash = hash('sha512', $secretKey . serialize($input));

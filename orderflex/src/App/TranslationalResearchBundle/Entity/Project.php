@@ -3201,6 +3201,27 @@ class Project {
      */
     public function generateOid()
     {
+//        $projectSpecialty = $this->getProjectSpecialty();
+//        if( $projectSpecialty ) {
+//            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+//            if( $projectSpecialtyAbbreviation == "hematopathology" ) {
+//                //$projectSpecialtyAbbreviation = "HEMEPATH";
+//                $projectSpecialtyAbbreviation = "HP";
+//            }
+//            if( $projectSpecialtyAbbreviation == "covid19" ) {
+//                //$projectSpecialtyAbbreviation = "HEMEPATH";
+//                //use ShortName for this
+//                $projectSpecialtyAbbreviation = "COVID";
+//            }
+//            $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
+//            $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
+//        }
+//        $oid = $projectSpecialtyStr . $this->getId();
+//        //echo "oid=$oid <br>";
+        $oid = $this->createAndGetOid();
+        $this->setOid($oid);
+    }
+    public function createAndGetOid() {
         $projectSpecialty = $this->getProjectSpecialty();
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
@@ -3218,7 +3239,7 @@ class Project {
         }
         $oid = $projectSpecialtyStr . $this->getId();
         //echo "oid=$oid <br>";
-        $this->setOid($oid);
+        return $oid;
     }
 
     //Project request APCP1 'Project Title' submitted by FirstName LastName on MM/DD/YYYY

@@ -1361,11 +1361,12 @@ class InterfaceTransferUtil {
             //exit('getSlaveToMasterTransfer: $jsonObject');
 
             //echo "transferData=".$jsonObject."<br>";
-            $oid = $jsonObject['oid'];
             $title = $jsonObject['title'];
             echo "title=$title <br>";
 
+            //IDs on external server
             $localId = $jsonObject['id'];
+            $oid = $jsonObject['oid'];
             $sourceId = $jsonObject['sourceId'];
             $globalId = $jsonObject['globalId'];
             $className = $jsonObject['className'];
@@ -1443,7 +1444,7 @@ class InterfaceTransferUtil {
                         $transferableEntity->setSourceId($sourceId);
                         $postUpdate = true;
                     }
-                    if( !$transferableEntity->getOid() ) {
+                    if( !$transferableEntity->getOid() || ($transferableEntity->getOid() != $transferableEntity->createAndGetOid() ) ) {
                         $transferableEntity->generateOid();
                         $postUpdate = true;
                     }
@@ -1805,7 +1806,7 @@ class InterfaceTransferUtil {
     }
 
 
-    //Running on internal (master) server
+    //Run on internal (master) server
     //send request to remote server to send all transferable in the response
     public function getSlaveToMasterTransferCurl($className) {
         $userSecUtil = $this->container->get('user_security_utility');
