@@ -42,6 +42,7 @@ use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use App\UserdirectoryBundle\Entity\TransferData;
 use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\UserInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -1842,6 +1843,11 @@ class InterfaceTransferUtil {
         $email = $jsonObject[$fieldName]['email'];
         $username = $jsonObject[$fieldName]['username'];
 
+        $userInfos = NULL;
+        if( isset($singleUser['infos']) ) {
+            $userInfos = $singleUser['infos'];
+        }
+
         echo "convertUser: $username, $email"."<br>";
         $logger->notice("convertUser: $username, $email");
 
@@ -1873,6 +1879,23 @@ class InterfaceTransferUtil {
             $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
             $user->setEnabled(false);
             //$user->setLocked(true);
+
+            //TODO: fix user info details
+            if( $userInfos ) {
+                if( !$user->getUserInfo() ) {
+                    $userInfo = new UserInfo();
+                    $user->addInfo($userInfo);
+                }
+                //$userInfoEntity = new UserInfo();
+                $user->setFirstName( $userInfos['firstName'] );
+                $user->setLastName( $userInfos['lastName'] );
+                $user->setMiddleName( $userInfos['middleName'] );
+                $user->setDisplayName( $userInfos['displayName'] );
+                $user->setPreferredPhone( $userInfos['preferredPhone'] );
+                $user->setPreferredMobilePhone( $userInfos['preferredMobilePhone'] );
+            }
+
+            $this->em->persist($user);
         }
 
         if( $user ) {
@@ -1899,6 +1922,11 @@ class InterfaceTransferUtil {
             $email = $singleUser['email'];
             $username = $singleUser['username'];
 
+            $userInfos = NULL;
+            if( isset($singleUser['infos']) ) {
+                $userInfos = $singleUser['infos'];
+            }
+
             echo "convertUsers: $username, $email"."<br>";
             $logger->notice("convertUsers: $username, $email");
 
@@ -1924,12 +1952,29 @@ class InterfaceTransferUtil {
                 $user = $userSecUtil->constractNewUser($username);
 
                 //$systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-                $user->setEmail($username);
+                $user->setEmail($email);
                 $user->setEmailCanonical($email);
                 $user->setCreatedby('system');
                 $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
                 $user->setEnabled(false);
                 //$user->setLocked(true);
+
+                //TODO: fix user info details
+                if( $userInfos ) {
+                    if( !$user->getUserInfo() ) {
+                        $userInfo = new UserInfo();
+                        $user->addInfo($userInfo);
+                    }
+                    //$userInfoEntity = new UserInfo();
+                    $user->setFirstName( $userInfos['firstName'] );
+                    $user->setLastName( $userInfos['lastName'] );
+                    $user->setMiddleName( $userInfos['middleName'] );
+                    $user->setDisplayName( $userInfos['displayName'] );
+                    $user->setPreferredPhone( $userInfos['preferredPhone'] );
+                    $user->setPreferredMobilePhone( $userInfos['preferredMobilePhone'] );
+                }
+
+                $this->em->persist($user);
             }
 
             if( $user ) {
@@ -2091,7 +2136,18 @@ class InterfaceTransferUtil {
                 'updateDate',
 
                 //Requesters
-                'principalInvestigators' => ['username','email'],
+                'principalInvestigators' => [
+                    'username',
+                    'email',
+                    'infos'=>[
+                        'firstName',
+                        'middleName',
+                        'lastName',
+                        'displayName',
+                        'preferredPhone',
+                        'preferredMobilePhone'
+                    ]
+                ],
                 'principalIrbInvestigator' => ['username','email'],
                 'coInvestigators' => ['username','email'],
                 'pathologists' => ['username','email'],
