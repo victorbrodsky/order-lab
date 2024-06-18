@@ -1582,7 +1582,6 @@ class InterfaceTransferUtil {
                                 'updateUser',
                                 'updateDate',
                                 'projectSpecialty',
-                                'irbExpirationDate',
                                 'exemptIrbApproval',
                                 'exemptIACUCApproval',
                                 'irbStatusList',
@@ -1593,6 +1592,7 @@ class InterfaceTransferUtil {
                                 'tissueProcessingServices',
                                 'restrictedServices',
                                 'projectType',
+                                'irbExpirationDate',
                                 'expectedExpirationDate',
                                 'iacucExpirationDate'
                             ]
@@ -1632,13 +1632,13 @@ class InterfaceTransferUtil {
             $this->convertDate($jsonObject,$transferableEntity,'updateDate');
 
             //irbExpirationDate
-            $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
+            //$this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
 
             //expectedExpirationDate
-            $this->convertDate($jsonObject,$transferableEntity,'expectedExpirationDate');
+            //$this->convertDate($jsonObject,$transferableEntity,'expectedExpirationDate');
 
             //iacucExpirationDate
-            $this->convertDate($jsonObject,$transferableEntity,'iacucExpirationDate');
+            //$this->convertDate($jsonObject,$transferableEntity,'iacucExpirationDate');
 
             //projectSpecialty
             if( isset($jsonObject['projectSpecialty']) ) {
