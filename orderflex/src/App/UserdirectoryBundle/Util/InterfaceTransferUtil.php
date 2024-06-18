@@ -2006,6 +2006,7 @@ class InterfaceTransferUtil {
 
         $className = $confirmationResponse[0]['className'];
         $entityName = $this->getEntityName($className);
+        echo "sendGlobalIdToSourceServer: className=$className, $entityName <br>";
 
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
@@ -2024,6 +2025,9 @@ class InterfaceTransferUtil {
         $jsonFile['confirmationResponse'] = $confirmationResponse;
 
         $data_string = json_encode($jsonFile);
+        //dump($data_string);
+        //exit('111');
+
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer

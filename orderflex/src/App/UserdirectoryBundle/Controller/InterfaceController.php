@@ -343,8 +343,9 @@ class InterfaceController extends OrderAbstractController
     #[Route(path: '/transfer-interface/confirmation-master-to-slave', name: 'employees_confirmation_master_to_slave', methods: ['POST'])]
     public function confirmationMasterToSlaveAction(Request $request)
     {
-
         $logger = $this->container->get('logger');
+        $logger->notice('confirmationMasterToSlaveAction: start');
+
         $post_data = json_decode($request->getContent(), true);
         $logger->notice('confirmationMasterToSlaveAction: post_data count='.count($post_data));
 
@@ -366,6 +367,9 @@ class InterfaceController extends OrderAbstractController
 
         $valid = NULL;
         $hash = hash('sha512', $secretKey . serialize($input));
+
+        $logger->notice("confirmationMasterToSlaveAction: [$hash] =? [$checksum]");
+
         if ($hash === $checksum) {
             $valid = true;
         } else {
