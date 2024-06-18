@@ -1584,7 +1584,10 @@ class InterfaceTransferUtil {
                                 'irbStatusList',
                                 'collDivs',
                                 'collLabs',
-                                'priceList'
+                                'priceList',
+                                'compTypes',
+                                'tissueProcessingServices',
+                                'restrictedServices'
                             ]
                         ]
                     );
