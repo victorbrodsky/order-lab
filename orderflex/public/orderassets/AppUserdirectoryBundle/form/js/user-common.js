@@ -2083,7 +2083,7 @@ function setKeytypeByEmailListener(modalHtml) {
 function setKeytypeByEmail(modalHtml,email) {
     //console.log("2 email changed");
     //var email = $(this).val();
-    if( email && emailUsernametypeMap ) {
+    if( email && emailUsernametypeMap && emailUsernametypeMap.length > 0 ) {
         var sEmails = email.split("@");
         if( sEmails.length == 2 ) {
             //var use=sEmails[0];

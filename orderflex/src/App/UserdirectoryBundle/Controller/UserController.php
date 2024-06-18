@@ -2017,7 +2017,7 @@ class UserController extends OrderAbstractController
         //$em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $resArr = null;
+        $resArr = array();
 
         $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
         if( $emailMapperPostfix1 ) {
