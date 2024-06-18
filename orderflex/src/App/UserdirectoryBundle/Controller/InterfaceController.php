@@ -369,6 +369,7 @@ class InterfaceController extends OrderAbstractController
 
 
         $input = $post_data['confirmationResponse'];
+        $input[] = '1';
 
         $valid = NULL;
         $hash = hash('sha512', $secretKey . serialize($input));
