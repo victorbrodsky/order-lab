@@ -2095,7 +2095,7 @@ class InterfaceTransferUtil {
                         $transferableEntity->setGlobalId($globalId);
                     }
 
-                    $this->em->flush();
+                    //$this->em->flush(); //disabled for testing
                     $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
                 }
             }
