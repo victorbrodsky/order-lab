@@ -2092,6 +2092,7 @@ class InterfaceTransferUtil {
 //            'globalId' => $globalId
 //        );
 
+        $res = array();
         foreach($confirmationJsonFile as $singleConfirmationJsonFile) {
             $className = $singleConfirmationJsonFile['className'];
             $localId = $singleConfirmationJsonFile['localId'];
@@ -2100,22 +2101,23 @@ class InterfaceTransferUtil {
             $transferableEntity = $this->em->getRepository($className)->find($localId);
             if ($transferableEntity) {
                 if ($globalId) {
+
+                    //set TransferData status to "Completed"
+                    $transferData = $this->findTransferDataByLocalId($localId, $className);
+                    $status = $this->em->getRepository(TransferStatusList::class)->findOneByName("Completed");
+                    $transferData->setTransferStatus($status);
+
                     if (!$transferableEntity->getGlobalId()) {
                         $transferableEntity->setGlobalId($globalId);
-
-                        //set TransferData status to "Completed"
-                        $transferData = $this->findTransferDataByLocalId($localId, $className);
-
-                        $status = $this->em->getRepository(TransferStatusList::class)->findOneByName("Completed");
-                        $transferData->setTransferStatus($status);
-
-                        $this->em->flush();
                     }
+
+                    $this->em->flush();
+                    $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
                 }
             }
         }
 
-        return true;
+        return $res;
     }
 
 }

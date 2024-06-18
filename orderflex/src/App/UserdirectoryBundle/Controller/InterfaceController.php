@@ -374,7 +374,7 @@ class InterfaceController extends OrderAbstractController
 
         $transferResult = NULL;
         if( $valid ) {
-            $logger->notice('sendSlaveToMasterTransferAction: checksum valid');
+            $logger->notice('confirmationMasterToSlaveAction: checksum valid');
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
             $transferResult = $interfaceTransferUtil->receiveConfirmationOnSlave($input);
         }
