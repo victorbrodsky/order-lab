@@ -242,7 +242,7 @@ class InterfaceController extends OrderAbstractController
     ///////// Project transfer //////////
     /////////////////////////////////////
 
-    //Get data from external (slave) to intranet (master)
+    //Run on internal (master). Get data from external (slave) to intranet (master)
     //Send request to the external asking to send back all new/updated projects
     #[Route(path: '/get-transfer', name: 'employees_get_transfer', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
@@ -268,7 +268,7 @@ class InterfaceController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_interface_manager'));
     }
 
-    //Running on remote to send transferable in the response
+    //Run on external (slave) to send transferable objects in the response
     #[Route(path: '/transfer-interface/slave-to-master-transfer', name: 'employees_slave_to_master_transfer', methods: ['POST'])]
     public function sendSlaveToMasterTransferAction(Request $request)
     {
@@ -338,7 +338,7 @@ class InterfaceController extends OrderAbstractController
         return $response;
     }
 
-    //Running on remote Slave
+    //Run on external (slave)
     //send confirmationResponse back to source server to assign Global ID
     #[Route(path: '/transfer-interface/confirmation-master-to-slave', name: 'employees_confirmation_master_to_slave', methods: ['POST'])]
     public function confirmationMasterToSlaveAction(Request $request)

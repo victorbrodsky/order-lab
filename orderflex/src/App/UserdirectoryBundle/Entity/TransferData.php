@@ -62,10 +62,12 @@ class TransferData {
     #[ORM\Column(type: 'string', nullable: true)]
     private $localId;
 
+    //NOT USED
     //Global ID localId@instanceId
     #[ORM\Column(type: 'string', nullable: true)]
     private $globalId;
 
+    //NOT USED
     #[ORM\Column(type: 'string', nullable: true)]
     private $instanceId;
 

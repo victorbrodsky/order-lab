@@ -632,47 +632,9 @@ class InterfaceTransferUtil {
     }
 
     public function findTransferData( $entity ) {
-
         $mapper = $this->classListMapper($entity);
         $className = $mapper['className'];
-
         return $this->findTransferDataByLocalId($entity->getId(),$className);
-
-//        $repository = $this->em->getRepository(TransferData::class);
-//        $dql =  $repository->createQueryBuilder("transfer");
-//        $dql->select('transfer');
-//
-//        $dql->leftJoin('transfer.transferStatus','transferStatus');
-//
-//        $dql->where('transfer.localId = :localId AND transfer.className = :className');
-//        $dql->andWhere('transfer.instanceId = :instanceId');
-//
-//        $query = $dql->getQuery();
-//
-//        //$userSecUtil = $this->container->get('user_security_utility');
-//        //$instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
-//
-//        $query->setParameters(
-//            array(
-//                'localId' => $entity->getId(),
-//                //'instanceId' => $instanceId,
-//                'className' => $className,
-//            )
-//        );
-//
-//        $transfers = $query->getResult();
-//
-//        //Get single transfer data
-//        $transfer = NULL;
-//        if (count($transfers) > 0) {
-//            //Can we have the same multiple transfers?
-//            $transfer = $transfers[0];
-//        }
-//        if (count($transfers) == 1) {
-//            $transfer = $transfers[0];
-//        }
-//
-//        return $transfer;
     }
 
     public function findTransferDataByLocalId( $localId, $className ) {
@@ -822,7 +784,7 @@ class InterfaceTransferUtil {
     }
 
     public function createTransferData( $entity, $status='Ready' ) {
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
         $transfer = new TransferData($user);
@@ -840,14 +802,14 @@ class InterfaceTransferUtil {
 
         $transfer->setLocalId($entity->getId());
 
-        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
-        if( !$instanceId ) {
-            $instanceId = 'NA';
-        }
-        $transfer->setInstanceId($instanceId); //Server ID
-
-        $globalId = $transfer->createGlobalId(); //$globalId = $localId.'@'.$instanceId
-        $transfer->setGlobalId($globalId);
+        //NOT USED $globalId, $instanceId
+//        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+//        if( !$instanceId ) {
+//            $instanceId = 'NA';
+//        }
+//        $transfer->setInstanceId($instanceId); //Server ID
+//        $globalId = $transfer->createGlobalId(); //$globalId = $localId.'@'.$instanceId
+//        $transfer->setGlobalId($globalId);
 
         //echo "entityName=$entityName <br>";
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName($entityName);
@@ -1011,7 +973,7 @@ class InterfaceTransferUtil {
             //$transferableEntity = $this->receiveProject($receiveData);
         }
 
-        //$transferData = $interfaceTransferUtil->findCreateTransferData($entity);
+        //$transferData = $interfaceTransferUtil->find CreateTransferData($entity);
 
         return $transferableEntity;
     }
@@ -1411,7 +1373,7 @@ class InterfaceTransferUtil {
             $resStr = "";
 
             //Find if exists by $globalId
-            //$transferData = $this->findCreateTransferData($transferableEntity);
+            //$transferData = $this->find CreateTransferData($transferableEntity);
 //            $transferData = $this->findTransferDataByGlobalId($globalId,$className);
 //            echo "transferData=".$transferData."<br>";
 //
@@ -1426,6 +1388,7 @@ class InterfaceTransferUtil {
 //                $resStr = "Update existing Project with ID ".$transferableEntity->getId().", title " . $transferableEntity->getTitle();
 //            }
 
+            //globalId is set if the object has been transferred previously. In this case the object will be updated
             if( $globalId ) {
                 $transferableEntity = $this->em->getRepository($className)->findOneByGlobalId($globalId);
             }
@@ -1449,7 +1412,6 @@ class InterfaceTransferUtil {
                 continue;
             }
 
-            //TODO: deserialize
             //dump($jsonObject);
             //exit('deserialize');
             $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer,$transferableEntity);
@@ -1467,25 +1429,42 @@ class InterfaceTransferUtil {
                     //$description = $transferableEntity->getDescription();
                     //$transferableEntity->getDescription($description . "\n "." Transfered with Gloabl ID=".$globalId);
 
-                    $this->em->flush(); //testing
-
-                    $globalId = $transferableEntity->getId().'@'.$instanceId;
-                    $transferableEntity->setGlobalId($globalId);
-                    $transferableEntity->setSourceId($sourceId);
-
-                    $transferableEntity->generateOid();
                     $this->em->flush();
+
+                    //post create/update
+                    $postUpdate = false;
+                    if( !$transferableEntity->getGlobalId() ) {
+                        //Global ID is the same on all servers
+                        $globalId = $transferableEntity->getId() . '@' . $instanceId;
+                        $transferableEntity->setGlobalId($globalId);
+                        $postUpdate = true;
+                    }
+                    if( !$transferableEntity->getSourceId() ) {
+                        $transferableEntity->setSourceId($sourceId);
+                        $postUpdate = true;
+                    }
+                    if( !$transferableEntity->getOid() ) {
+                        $transferableEntity->generateOid();
+                        $postUpdate = true;
+                    }
+
+                    if( $postUpdate ) {
+                        $this->em->flush();
+                    }
 
                     $confirmationResponse[] = array(
                         'className' => $className,
-                        'localId' => $localId,
-                        'oid' => $oid,
-                        'sourceId' => $sourceId,
-                        'globalId' => $globalId
+                        'localId' => $localId,      //id on the external (slave)
+                        'sourceId' => $sourceId,    //source id on the external (slave)
+                        'oid' => $oid,              //oid on the internal (master)
+                        'globalId' => $globalId     //global id on the internal (master) for newly created, or updated objects
                     );
 
-                    $resStr = "Create new Project with ID " . $transferableEntity->getId()
-                        . "; OID=" . $transferableEntity->getOid()
+                    $resStr = "Create new Project with "
+                        . "id=". $transferableEntity->getId()
+                        . "; sourceId=" . $transferableEntity->getSourceId()
+                        . "; oid=" . $transferableEntity->getOid()
+                        . "; globalId=" . $transferableEntity->getGlobalId()
                         . ", title " . $transferableEntity->getTitle();
                 }
             }
@@ -1532,7 +1511,7 @@ class InterfaceTransferUtil {
 
         //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
         //and the “Source ID” on the internal will be “3@WCMEXT”.
-        //TODO: send Global IDs (“Global ID” of “101@WCMINT”) to slave as confirmation
+        //send Global IDs (“Global ID” of “101@WCMINT”) to slave as confirmation
         $this->sendGlobalIdToSourceServer($confirmationResponse); //$transferableEntity,$jsonObject['localId']);
 
         $resStr = NULL;
@@ -1826,6 +1805,7 @@ class InterfaceTransferUtil {
     }
 
 
+    //Running on internal (master) server
     //send request to remote server to send all transferable in the response
     public function getSlaveToMasterTransferCurl($className) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1898,6 +1878,7 @@ class InterfaceTransferUtil {
         return false;
     }
 
+    //Run on external (slave)
     public function sendSlavetoMasterTransfer( $jsonFile ) {
         $logger = $this->container->get('logger');
 
@@ -1939,50 +1920,7 @@ class InterfaceTransferUtil {
             $serilizeFormat = 'xml';
             //$serilizeFormat = NULL;
 
-//            $attributes = [
-//                'id',
-//                'oid',
-//                'sourceId',
-//                'globalId',
-//                'createDate',
-//                'submitter' => ['username','email'],
-//                'updateUser' => ['username','email'],
-//                'updateDate',
-//                'state',
-//                'title',
-//                'projectSpecialty' => ['name'],
-//                'exemptIrbApproval' => ['name'],
-//                'irbNumber',
-//                'irbExpirationDate',
-//                'irbStatusList' => ['name'],
-//                'exemptIACUCApproval' => ['name'],
-//                'iacucNumber',
-//                'iacucExpirationDate',
-//                'projectType' => ['name'],
-//                'description',
-//                'collDivs' => ['name'],
-//                'hypothesis',
-//                'needStatSupport',
-//                'amountStatSupport',
-//                'needInfSupport',
-//                'amountInfSupport',
-//                'studyPopulation',
-//                'numberPatient',
-//                'numberLabReport',
-//                'studyDuration',
-//                'priceList' => ['name'],
-//                'funded',
-//                'collDepartment',
-//                'collInst',
-//                'collInstPi',
-//                'essentialInfo',
-//                'objective',
-//                'strategy',
-//                'expectedResults',
-//                'fundByPath',
-//                'fundDescription',
-//                'otherResource'
-//            ];
+            //context for Project
             $context = [AbstractNormalizer::ATTRIBUTES => [
                 'id',
                 'oid',
@@ -2054,13 +1992,12 @@ class InterfaceTransferUtil {
             //$logger->notice(print_r($json));
 
             $jsonRes[] = $json;
-
-            //opposite: $person = $serializer->deserialize($data, Person::class, 'xml');
         }
 
         return $jsonRes;
     }
 
+    //Run on internal (master)
     public function sendGlobalIdToSourceServer( $confirmationResponse ) { //$transferableEntity, $localId ) {
 
         if( count($confirmationResponse) == 0 ) {
@@ -2144,7 +2081,8 @@ class InterfaceTransferUtil {
         return false;
     }
 
-    //Running on external slave
+    //Run on external (slave)
+    //$confirmationJsonFile includes only successfully transferred objects
     public function receiveConfirmationOnSlave( $confirmationJsonFile ) {
 //        $confirmationResponse[] = array(
 //            'className' => $className,

@@ -92,7 +92,7 @@ class DoctrineListener {
 //            $fellappRepGen->addFellAppReportToQueue( $entity->getId() );
 //        }
 
-        if( $this->setTrabsferable($entity) ) {
+        if( $this->setTrabsferable($entity,$event='create') ) {
             //exit('postPersist');
             $em->flush();
         }
@@ -131,8 +131,7 @@ class DoctrineListener {
         //$logger = $this->container->get('logger');
         //$logger->notice("doctrine listener postUpdate: ".get_class($entity));
 
-        //TODO: looping for Project ?
-        if( $this->setTrabsferable($entity) ) {
+        if( $this->setTrabsferable($entity, $event='update') ) {
             $em->flush();
             //exit('postUpdate');
         }
@@ -174,7 +173,7 @@ class DoctrineListener {
         return false;
     }
 
-    public function setTrabsferable($entity) {
+    public function setTrabsferable( $entity, $event ) {
         //return false;
 
         //echo "classname=".get_class($entity)."<br>";
@@ -214,7 +213,8 @@ class DoctrineListener {
             //exit('not AntibodyList');
         }
 
-        if( $entity instanceof Project ) {
+        //Only create new project for now
+        if( $entity instanceof Project && $event === 'create' ) {
             //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, Project ID='.$entity->getId());
 
