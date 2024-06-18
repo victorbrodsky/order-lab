@@ -2055,8 +2055,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        //dump($result);
-        //exit('111');
+        dump($result);
+        exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -2093,7 +2093,6 @@ class InterfaceTransferUtil {
 //        );
 
         foreach($confirmationJsonFile as $singleConfirmationJsonFile) {
-
             $className = $singleConfirmationJsonFile['className'];
             $localId = $singleConfirmationJsonFile['localId'];
             $globalId = $singleConfirmationJsonFile['globalId'];
