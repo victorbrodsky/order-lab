@@ -244,7 +244,7 @@ class InterfaceTransferUtil {
 
         if( $status ) {
             $transferData->setTransferStatus($status);
-            //$this->em->flush(); //testing
+            $this->em->flush(); //testing
 
             //TODO: Add to EventLog
         }
@@ -1435,7 +1435,7 @@ class InterfaceTransferUtil {
                     //$description = $transferableEntity->getDescription();
                     //$transferableEntity->getDescription($description . "\n "." Transfered with Gloabl ID=".$globalId);
 
-                    //$this->em->flush(); //disable for testing
+                    $this->em->flush(); //disable for testing
 
                     //post create/update
                     $postUpdate = false;
@@ -1455,7 +1455,7 @@ class InterfaceTransferUtil {
                     }
 
                     if( $postUpdate ) {
-                        //$this->em->flush(); //disable for testing
+                        $this->em->flush(); //disable for testing
                     }
 
                     $confirmationResponse[] = array(
@@ -2039,8 +2039,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('111');
+        //dump($result);
+        //exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -2095,7 +2095,7 @@ class InterfaceTransferUtil {
                         $transferableEntity->setGlobalId($globalId);
                     }
 
-                    //$this->em->flush(); //disabled for testing
+                    $this->em->flush(); //disable for testing
                     $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
                 }
             }

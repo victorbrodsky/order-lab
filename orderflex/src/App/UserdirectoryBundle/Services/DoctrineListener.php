@@ -217,7 +217,7 @@ class DoctrineListener {
         if( $entity instanceof Project ) {
 
             if( $event !== 'create' ) {
-                //return false;
+                return false;
             }
 
             //exit('setTrabsferable, ID='.$entity->getId());
