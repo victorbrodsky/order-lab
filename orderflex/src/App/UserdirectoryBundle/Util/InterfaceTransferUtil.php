@@ -1657,25 +1657,25 @@ class InterfaceTransferUtil {
             //principalInvestigators
             $this->convertUsers($jsonObject,$transferableEntity,'principalInvestigators','principalInvestigator');
 
-//            'principalIrbInvestigator' => ['username','email'],
+            //'principalIrbInvestigator' => ['username','email'],
             $this->convertUser($jsonObject,$transferableEntity,'principalIrbInvestigator');
 
-//            'coInvestigators' => ['username','email'],
+            //'coInvestigators' => ['username','email'],
             $this->convertUsers($jsonObject,$transferableEntity,'coInvestigators','coInvestigator');
 
-//            'pathologists' => ['username','email'],
+            //'pathologists' => ['username','email'],
             $this->convertUsers($jsonObject,$transferableEntity,'pathologists','pathologist');
 
-//            'contacts' => ['username','email'],
+            //'contacts' => ['username','email'],
             $this->convertUsers($jsonObject,$transferableEntity,'contacts','contact');
 
-//            'billingContact' => ['username','email'],
+            //'billingContact' => ['username','email'],
             $this->convertUser($jsonObject,$transferableEntity,'billingContact');
 
-//            'targetStateRequester' => ['username','email'],
+            //'targetStateRequester' => ['username','email'],
             $this->convertUser($jsonObject,$transferableEntity,'targetStateRequester');
 
-//             'submitInvestigators' => ['username','email'],
+             //'submitInvestigators' => ['username','email'],
             $this->convertUsers($jsonObject,$transferableEntity,'submitInvestigators','submitInvestigator');
 
 
@@ -1810,21 +1810,21 @@ class InterfaceTransferUtil {
                 $transferableEntity->setProjectType($projectTypeListEntity);
             }
 
-            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
+//            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
+//
+//            $submitter = $transferableEntity->getSubmitter();
+//            echo "submitter=".$submitter."<br>";
+//
+//            $pis = $transferableEntity->getPrincipalInvestigators();
+//            foreach($pis as $pi) {
+//                echo "pi=".$pi."<br>";
+//            }
 
-            $submitter = $transferableEntity->getSubmitter();
-            echo "submitter=".$submitter."<br>";
-
-            $pis = $transferableEntity->getPrincipalInvestigators();
-            foreach($pis as $pi) {
-                echo "pi=".$pi."<br>";
-            }
-            
             //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
            //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
             //dump($jsonObject);
-            exit('deserialize');
+            //exit('deserialize');
         }
 
         return $transferableEntity;
@@ -2311,7 +2311,7 @@ class InterfaceTransferUtil {
                         $transferableEntity->setGlobalId($globalId);
                     }
 
-                    //$this->em->flush(); //disable for testing
+                    $this->em->flush(); //disable for testing
                     $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
                 }
             }
