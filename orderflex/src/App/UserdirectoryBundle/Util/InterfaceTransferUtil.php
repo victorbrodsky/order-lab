@@ -1560,7 +1560,11 @@ class InterfaceTransferUtil {
                                 'irbStatusList',
                                 'collDivs',
                                 'collLabs',
-                                'priceList'
+                                'priceList',
+                                'compTypes',
+                                'tissueProcessingServices',
+                                'restrictedServices',
+                                'projectType'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
@@ -1587,7 +1591,8 @@ class InterfaceTransferUtil {
                                 'priceList',
                                 'compTypes',
                                 'tissueProcessingServices',
-                                'restrictedServices'
+                                'restrictedServices',
+                                'projectType'
                             ]
                         ]
                     );
