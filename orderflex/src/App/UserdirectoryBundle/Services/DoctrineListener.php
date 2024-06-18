@@ -214,7 +214,12 @@ class DoctrineListener {
         }
 
         //Only create new project for now
-        if( $entity instanceof Project && $event === 'create' ) {
+        if( $entity instanceof Project ) {
+
+            if( $event !== 'create' ) {
+                //return false;
+            }
+
             //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, Project ID='.$entity->getId());
 
