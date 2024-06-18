@@ -1592,7 +1592,9 @@ class InterfaceTransferUtil {
                                 'compTypes',
                                 'tissueProcessingServices',
                                 'restrictedServices',
-                                'projectType'
+                                'projectType',
+                                'expectedExpirationDate',
+                                'iacucExpirationDate'
                             ]
                         ]
                     );
@@ -1631,6 +1633,12 @@ class InterfaceTransferUtil {
 
             //irbExpirationDate
             $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
+
+            //expectedExpirationDate
+            $this->convertDate($jsonObject,$transferableEntity,'expectedExpirationDate');
+
+            //iacucExpirationDate
+            $this->convertDate($jsonObject,$transferableEntity,'iacucExpirationDate');
 
             //projectSpecialty
             if( isset($jsonObject['projectSpecialty']) ) {
