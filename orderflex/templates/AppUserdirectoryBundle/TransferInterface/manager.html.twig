@@ -41,6 +41,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Updated', 'ent.updatedate') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Status', 'ent.transferStatus') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Local ID', 'ent.localId') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Source ID', 'ent.sourceId') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Global ID', 'ent.globalId') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Object Class Name', 'ent.className') }}</th>
             {#<th>Actions</th>#}
@@ -73,7 +74,11 @@
                 </td>
 
                 <td>
-                    {{ ent.globalId }}
+                    {{ ent.localId }}
+                </td>
+
+                <td>
+                    {{ ent.sourceId }}
                 </td>
 
                 <td>
