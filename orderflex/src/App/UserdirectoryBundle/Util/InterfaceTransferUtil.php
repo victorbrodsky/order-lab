@@ -1596,7 +1596,8 @@ class InterfaceTransferUtil {
                                 'projectType',
                                 'irbExpirationDate',
                                 'expectedExpirationDate',
-                                'iacucExpirationDate'
+                                'iacucExpirationDate',
+                                'studyDuration'
                             ]
                         ]
                     );
@@ -1634,13 +1635,16 @@ class InterfaceTransferUtil {
             $this->convertDate($jsonObject,$transferableEntity,'updateDate');
 
             //irbExpirationDate
-            //$this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
+            $this->convertDate($jsonObject,$transferableEntity,'irbExpirationDate');
 
             //expectedExpirationDate
-            //$this->convertDate($jsonObject,$transferableEntity,'expectedExpirationDate');
+            $this->convertDate($jsonObject,$transferableEntity,'expectedExpirationDate');
+
+            //studyDuration
+            $this->convertDate($jsonObject,$transferableEntity,'studyDuration');
 
             //iacucExpirationDate
-            //$this->convertDate($jsonObject,$transferableEntity,'iacucExpirationDate');
+            $this->convertDate($jsonObject,$transferableEntity,'iacucExpirationDate');
 
             //projectSpecialty
             if( isset($jsonObject['projectSpecialty']) ) {
