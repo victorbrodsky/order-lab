@@ -2017,7 +2017,7 @@ class InterfaceTransferUtil {
         $jsonFile = array();
         $jsonFile['className'] = $className;
 
-        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $hash = hash('sha512', $secretKey . serialize($confirmationResponse));
         $jsonFile['hash'] = $hash;
 
         //$jsonFile['localId'] = $transferableEntity->getGlobalId(); //original source id
