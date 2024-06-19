@@ -1550,31 +1550,7 @@ class InterfaceTransferUtil {
             //$jsonObjectStr = json_encode($jsonObject);
             //$transferableEntity = $serializer->deserialize($jsonObjectStr, $className, 'json');
 
-//            $context = [AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                'submitter',
-//                'createDate',
-//                'updateUser',
-//                'updateDate',
-//                'projectSpecialty',
-//                'irbExpirationDate',
-//                'exemptIrbApproval',
-//                'exemptIACUCApproval',
-//                'irbStatusList',
-//                'className',
-//            ]];
-//
-//            $context = [
-//                AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                    'id',
-//                    'oid',
-//                    'sourceId',
-//                    'globalId',
-//                    'title',
-//                    'irbNumber'
-//                ],
-//                AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
-//            ];
-
+            //IGNORED_ATTRIBUTES
             $contextIGNOREDArr = [
                 'submitter',
                 'createDate',
@@ -1623,44 +1599,6 @@ class InterfaceTransferUtil {
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => $contextIGNOREDArr,
-//                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                                'submitter',
-//                                'createDate',
-//                                'updateUser',
-//                                'updateDate',
-//
-//                                //Requesters
-//                                'principalInvestigators',
-//                                'principalIrbInvestigator',
-//                                'coInvestigators',
-//                                'pathologists',
-//                                'contacts',
-//                                'billingContact',
-//                                'targetStateRequester',
-//                                'submitInvestigators',
-//
-//                                'requesterGroup',
-//                                'projectSpecialty',
-//                                'exemptIrbApproval',
-//                                'exemptIACUCApproval',
-//                                'irbStatusList',
-//                                'collDivs',
-//                                'collLabs',
-//                                'priceList',
-//                                'compTypes',
-//                                'tissueProcessingServices',
-//                                'restrictedServices',
-//                                'projectType',
-//                                'irbExpirationDate',
-//                                'expectedExpirationDate',
-//                                'iacucExpirationDate',
-//                                'studyDuration',
-//
-//                                //Files
-//                                'documents',
-//                                'irbApprovalLetters',
-//                                'humanTissueForms'
-//                            ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
                     );
@@ -1672,44 +1610,6 @@ class InterfaceTransferUtil {
                         $serilizeFormat,
                         [
                             AbstractNormalizer::IGNORED_ATTRIBUTES => $contextIGNOREDArr
-//                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
-//                                'submitter',
-//                                'createDate',
-//                                'updateUser',
-//                                'updateDate',
-//
-//                                //Requesters
-//                                'principalInvestigators',
-//                                'principalIrbInvestigator',
-//                                'coInvestigators',
-//                                'pathologists',
-//                                'contacts',
-//                                'billingContact',
-//                                'targetStateRequester',
-//                                'submitInvestigators',
-//
-//                                'requesterGroup',
-//                                'projectSpecialty',
-//                                'exemptIrbApproval',
-//                                'exemptIACUCApproval',
-//                                'irbStatusList',
-//                                'collDivs',
-//                                'collLabs',
-//                                'priceList',
-//                                'compTypes',
-//                                'tissueProcessingServices',
-//                                'restrictedServices',
-//                                'projectType',
-//                                'irbExpirationDate',
-//                                'expectedExpirationDate',
-//                                'iacucExpirationDate',
-//                                'studyDuration',
-//
-//                                //Files
-//                                'documents',
-//                                'irbApprovalLetters',
-//                                'humanTissueForms'
-//                            ]
                         ]
                     );
                 }
@@ -2418,6 +2318,7 @@ class InterfaceTransferUtil {
             //$json['globalId'] = $globalId; //if transfer is the first time, than $globalId is NULL
             $json['instanceId'] = $instanceId;
             $json['className'] = $className;
+            $json['apppath'] = $this->container->get('kernel')->getProjectDir();;
 
             //dump($json);
             //exit('sendSlavetoMasterTransfer');
