@@ -1622,44 +1622,45 @@ class InterfaceTransferUtil {
                         $className,
                         $serilizeFormat,
                         [
-                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                                'submitter',
-                                'createDate',
-                                'updateUser',
-                                'updateDate',
-
-                                //Requesters
-                                'principalInvestigators',
-                                'principalIrbInvestigator',
-                                'coInvestigators',
-                                'pathologists',
-                                'contacts',
-                                'billingContact',
-                                'targetStateRequester',
-                                'submitInvestigators',
-
-                                'requesterGroup',
-                                'projectSpecialty',
-                                'exemptIrbApproval',
-                                'exemptIACUCApproval',
-                                'irbStatusList',
-                                'collDivs',
-                                'collLabs',
-                                'priceList',
-                                'compTypes',
-                                'tissueProcessingServices',
-                                'restrictedServices',
-                                'projectType',
-                                'irbExpirationDate',
-                                'expectedExpirationDate',
-                                'iacucExpirationDate',
-                                'studyDuration',
-
-                                //Files
-                                'documents',
-                                'irbApprovalLetters',
-                                'humanTissueForms'
-                            ],
+                            AbstractNormalizer::IGNORED_ATTRIBUTES => $contextIGNOREDArr,
+//                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+//                                'submitter',
+//                                'createDate',
+//                                'updateUser',
+//                                'updateDate',
+//
+//                                //Requesters
+//                                'principalInvestigators',
+//                                'principalIrbInvestigator',
+//                                'coInvestigators',
+//                                'pathologists',
+//                                'contacts',
+//                                'billingContact',
+//                                'targetStateRequester',
+//                                'submitInvestigators',
+//
+//                                'requesterGroup',
+//                                'projectSpecialty',
+//                                'exemptIrbApproval',
+//                                'exemptIACUCApproval',
+//                                'irbStatusList',
+//                                'collDivs',
+//                                'collLabs',
+//                                'priceList',
+//                                'compTypes',
+//                                'tissueProcessingServices',
+//                                'restrictedServices',
+//                                'projectType',
+//                                'irbExpirationDate',
+//                                'expectedExpirationDate',
+//                                'iacucExpirationDate',
+//                                'studyDuration',
+//
+//                                //Files
+//                                'documents',
+//                                'irbApprovalLetters',
+//                                'humanTissueForms'
+//                            ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
                     );
@@ -1896,6 +1897,7 @@ class InterfaceTransferUtil {
 
             //Files
             if(0) {
+                //uploadDirectory='Uploaded/transres/documents'
                 //'documents',
                 if (isset($jsonObject['documents'])) {
                     $this->downloadFile($jsonObject, $transferableEntity, 'documents');
