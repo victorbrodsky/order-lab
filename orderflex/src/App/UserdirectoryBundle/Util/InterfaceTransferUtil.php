@@ -44,6 +44,10 @@ use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserInfo;
 use Doctrine\ORM\EntityManagerInterface;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Net\SFTP;
+use phpseclib3\Net\SSH2;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -386,6 +390,35 @@ class InterfaceTransferUtil {
 
         return NULL;
         //exit("EOF sendSingleFile");
+    }
+
+    //https://stackoverflow.com/questions/28256655/connect-to-sftp-using-php-and-private-key
+    //https://phpseclib.com/docs/why
+    public function sendSingleFilePhpseclib() {
+        $sftp = new SFTP('sftp.server.com');
+
+        $privateKey = RSA::createKey();
+        $public = $privateKey->getPublicKey();
+
+        // in case that key has a password
+        $privateKey->setPassword('private key password');
+
+        // load the private key
+        $privateKey->loadKey(file_get_contents('/path/to/privatekey.pem'));
+
+        // login via sftp
+        if (!$sftp->login('username', $privateKey)) {
+            throw new Exception('sFTP login failed');
+        }
+
+        // now you can list what's in here
+        $filesAndFolders = $sftp->nlist();
+
+        // you can change directory
+        $sftp->chdir('coolstuffdir');
+
+        // get a file
+        $sftp->get('remoteFile', 'localFile');
     }
 
     public function sendDataCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
@@ -1542,6 +1575,45 @@ class InterfaceTransferUtil {
 //                AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
 //            ];
 
+            $contextIGNOREDArr = [
+                'submitter',
+                'createDate',
+                'updateUser',
+                'updateDate',
+
+                //Requesters
+                'principalInvestigators',
+                'principalIrbInvestigator',
+                'coInvestigators',
+                'pathologists',
+                'contacts',
+                'billingContact',
+                'targetStateRequester',
+                'submitInvestigators',
+
+                'requesterGroup',
+                'projectSpecialty',
+                'exemptIrbApproval',
+                'exemptIACUCApproval',
+                'irbStatusList',
+                'collDivs',
+                'collLabs',
+                'priceList',
+                'compTypes',
+                'tissueProcessingServices',
+                'restrictedServices',
+                'projectType',
+                'irbExpirationDate',
+                'expectedExpirationDate',
+                'iacucExpirationDate',
+                'studyDuration',
+
+                //Files
+                'documents',
+                'irbApprovalLetters',
+                'humanTissueForms'
+            ];
+
             if(1) {
                 if ($objectToPopulate) {
                     echo "deserialize Object: Update project " . $objectToPopulate->getOid() . "<br>";
@@ -1581,7 +1653,12 @@ class InterfaceTransferUtil {
                                 'irbExpirationDate',
                                 'expectedExpirationDate',
                                 'iacucExpirationDate',
-                                'studyDuration'
+                                'studyDuration',
+
+                                //Files
+                                'documents',
+                                'irbApprovalLetters',
+                                'humanTissueForms'
                             ],
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
@@ -1593,39 +1670,45 @@ class InterfaceTransferUtil {
                         $className,
                         $serilizeFormat,
                         [
-                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                                'submitter',
-                                'createDate',
-                                'updateUser',
-                                'updateDate',
-
-                                //Requesters
-                                'principalInvestigators',
-                                'principalIrbInvestigator',
-                                'coInvestigators',
-                                'pathologists',
-                                'contacts',
-                                'billingContact',
-                                'targetStateRequester',
-                                'submitInvestigators',
-
-                                'requesterGroup',
-                                'projectSpecialty',
-                                'exemptIrbApproval',
-                                'exemptIACUCApproval',
-                                'irbStatusList',
-                                'collDivs',
-                                'collLabs',
-                                'priceList',
-                                'compTypes',
-                                'tissueProcessingServices',
-                                'restrictedServices',
-                                'projectType',
-                                'irbExpirationDate',
-                                'expectedExpirationDate',
-                                'iacucExpirationDate',
-                                'studyDuration'
-                            ]
+                            AbstractNormalizer::IGNORED_ATTRIBUTES => $contextIGNOREDArr
+//                            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+//                                'submitter',
+//                                'createDate',
+//                                'updateUser',
+//                                'updateDate',
+//
+//                                //Requesters
+//                                'principalInvestigators',
+//                                'principalIrbInvestigator',
+//                                'coInvestigators',
+//                                'pathologists',
+//                                'contacts',
+//                                'billingContact',
+//                                'targetStateRequester',
+//                                'submitInvestigators',
+//
+//                                'requesterGroup',
+//                                'projectSpecialty',
+//                                'exemptIrbApproval',
+//                                'exemptIACUCApproval',
+//                                'irbStatusList',
+//                                'collDivs',
+//                                'collLabs',
+//                                'priceList',
+//                                'compTypes',
+//                                'tissueProcessingServices',
+//                                'restrictedServices',
+//                                'projectType',
+//                                'irbExpirationDate',
+//                                'expectedExpirationDate',
+//                                'iacucExpirationDate',
+//                                'studyDuration',
+//
+//                                //Files
+//                                'documents',
+//                                'irbApprovalLetters',
+//                                'humanTissueForms'
+//                            ]
                         ]
                     );
                 }
@@ -1811,6 +1894,20 @@ class InterfaceTransferUtil {
                 $transferableEntity->setProjectType($projectTypeListEntity);
             }
 
+            //Files
+            //'documents',
+            if( isset($jsonObject['documents']) ) {
+                $this->downloadFile($jsonObject,$transferableEntity,'documents');
+            }
+            //'irbApprovalLetters',
+            if( isset($jsonObject['irbApprovalLetters']) ) {
+                $this->downloadFile($jsonObject,$transferableEntity,'irbApprovalLetters');
+            }
+            //'humanTissueForms'
+            if( isset($jsonObject['humanTissueForms']) ) {
+                $this->downloadFile($jsonObject,$transferableEntity,'humanTissueForms');
+            }
+
 //            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 //
 //            $submitter = $transferableEntity->getSubmitter();
@@ -1824,8 +1921,8 @@ class InterfaceTransferUtil {
             //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
            //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
-            //dump($jsonObject);
-            //exit('deserialize');
+            dump($jsonObject);
+            exit('deserialize');
         }
 
         return $transferableEntity;
@@ -2011,6 +2108,79 @@ class InterfaceTransferUtil {
         return $transferableEntity;
     }
 
+    //TODO: CURL encrypt - decrypt json
+    //$ciphertext = $private->getPublicKey()->encrypt($plaintext);
+    //echo $private->decrypt($ciphertext);
+    //ssh2 https://phpseclib.com/docs/why
+    //The public key can be used to encrypt messages that only the private key can decrypt.
+    //Therefore: 1) place public key on external server and use this key to ecrypt file
+    //2) place private key on internal server and use it to decrypt the file
+    public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+
+        $ssh = new SSH2('68.183.144.189');
+        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+        $ssh->login('root', PublicKeyLoader::load(file_get_contents($privateKeyFilePath)));
+
+        echo $ssh->exec('ls -la');
+        exit('222');
+
+        $privateKey = RSA::createKey();
+        $public = $privateKey->getPublicKey();
+
+        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
+
+        // in case that key has a password
+        $privateKey->withPassword('private key password');
+
+        // load the private key
+        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
+        echo "privateKey=".$privateKey."<br>";
+
+        $mapper = $this->classListMapper($transferableEntity);
+        //$className = $mapper['className'];
+        $entityName = $mapper['entityName'];
+
+        $strServer = NULL;
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+        } else {
+            return false;
+        }
+
+        // login via sftp
+        if (!$sftp->login('username', $privateKey)) {
+            throw new Exception('sFTP login failed');
+        }
+
+        // now you can list what's in here
+        $filesAndFolders = $sftp->nlist();
+
+        $ssh = new SSH2($strServer);
+        $ssh->login(
+            'username',
+            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
+        );
+
+        $strServerPort = "22";
+        $strServerUsername = $interfaceTransfer->getSshUsername();
+        $strServerPassword = $interfaceTransfer->getSshPassword();
+
+        //connect to server
+        $dstConnection = ssh2_connect($strServer, $strServerPort);
+
+        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+            //Ok, continue
+            echo "Connected to $strServer <br>";
+        } else {
+            exit("Unable to connect to the remote server");
+        }
+
+        //$ssh = new SSH2('domain.tld');
+        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
+
+    }
 
     //Run on internal (master) server
     //send request to remote server to send all transferable in the response
@@ -2219,7 +2389,12 @@ class InterfaceTransferUtil {
                 'quantityOfParaffinSectionsRnaDnaPerBlock',
                 'quantityOfTmaCoresRnaDnaAnalysisPerBlock',
                 'restrictedServices' => ['name'],
-                'tissueFormComment'
+                'tissueFormComment',
+                
+                //Files
+                'documents' => ['uploadDirectory','originalname','uniqueid'],
+                'irbApprovalLetters' => ['uploadDirectory','originalname','uniqueid'],
+                'humanTissueForms' => ['uploadDirectory','originalname','uniqueid'],
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
@@ -2378,5 +2553,7 @@ class InterfaceTransferUtil {
 
         return $res;
     }
+
+
 
 }
