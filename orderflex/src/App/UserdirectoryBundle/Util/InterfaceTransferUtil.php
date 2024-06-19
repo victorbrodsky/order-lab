@@ -1895,17 +1895,19 @@ class InterfaceTransferUtil {
             }
 
             //Files
-            //'documents',
-            if( isset($jsonObject['documents']) ) {
-                $this->downloadFile($jsonObject,$transferableEntity,'documents');
-            }
-            //'irbApprovalLetters',
-            if( isset($jsonObject['irbApprovalLetters']) ) {
-                $this->downloadFile($jsonObject,$transferableEntity,'irbApprovalLetters');
-            }
-            //'humanTissueForms'
-            if( isset($jsonObject['humanTissueForms']) ) {
-                $this->downloadFile($jsonObject,$transferableEntity,'humanTissueForms');
+            if(0) {
+                //'documents',
+                if (isset($jsonObject['documents'])) {
+                    $this->downloadFile($jsonObject, $transferableEntity, 'documents');
+                }
+                //'irbApprovalLetters',
+                if (isset($jsonObject['irbApprovalLetters'])) {
+                    $this->downloadFile($jsonObject, $transferableEntity, 'irbApprovalLetters');
+                }
+                //'humanTissueForms'
+                if (isset($jsonObject['humanTissueForms'])) {
+                    $this->downloadFile($jsonObject, $transferableEntity, 'humanTissueForms');
+                }
             }
 
 //            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
