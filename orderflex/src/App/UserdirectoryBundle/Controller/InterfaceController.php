@@ -254,8 +254,8 @@ class InterfaceController extends OrderAbstractController
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
-        $interfaceTransferUtil->downloadFile(null,null,null);
-        exit('111');
+        //$interfaceTransferUtil->downloadFile(null,null,null);
+        //exit('111');
 
         //List of items to transfer from TransferData
         $transferDatas = $interfaceTransferUtil->getSlaveToMasterTransfer();
