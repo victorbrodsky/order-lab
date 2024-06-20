@@ -1519,23 +1519,23 @@ class InterfaceTransferUtil {
                         . "; oid=" . $transferableEntity->getOid()
                         . "; globalId=" . $transferableEntity->getGlobalId()
                         . ", title " . $transferableEntity->getTitle();
+
+                    //Event Log
+                    $eventType = "Project Transferred";
+                    //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $resStr, null, null, null, $eventType);
+                    $userSecUtil->createUserEditEvent(
+                        $this->container->getParameter('translationalresearch.sitename'),
+                        $resStr,
+                        null,
+                        $transferableEntity,
+                        null,
+                        $eventType
+                    );
                 }
             }
 
             $resArr[] = $resStr;
             //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
-
-            //Event Log
-            $eventType = "Project Transfered";
-            //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $resStr, null, null, null, $eventType);
-            $userSecUtil->createUserEditEvent(
-                $this->container->getParameter('translationalresearch.sitename'),
-                $resStr,
-                null,
-                $transferableEntity,
-                null,
-                $eventType
-            );
 
         } //foreach $jsonObject
 
@@ -2554,6 +2554,8 @@ class InterfaceTransferUtil {
 //            'globalId' => $globalId
 //        );
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         $res = array();
         foreach($confirmationJsonFile as $singleConfirmationJsonFile) {
             $className = $singleConfirmationJsonFile['className'];
@@ -2574,7 +2576,21 @@ class InterfaceTransferUtil {
                     }
 
                     $this->em->flush(); //disable for testing
-                    $res[] = "Confirmed transfer in external: globalId=$globalId ($className)";
+
+                    $transferMsg = "Transfer confirmed on the external server: globalId=$globalId ($className)";
+                    $res[] = $transferMsg;
+
+                    //Event Log
+                    $eventType = "Project Transferred";
+                    //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $resStr, null, null, null, $eventType);
+                    $userSecUtil->createUserEditEvent(
+                        $this->container->getParameter('translationalresearch.sitename'),
+                        $transferMsg,
+                        null,
+                        $transferableEntity,
+                        null,
+                        $eventType
+                    );
                 }
             }
         }
