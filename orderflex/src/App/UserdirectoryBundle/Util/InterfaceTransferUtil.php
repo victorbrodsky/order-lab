@@ -1525,6 +1525,18 @@ class InterfaceTransferUtil {
             $resArr[] = $resStr;
             //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
 
+            //Event Log
+            $eventType = "Project Transfered";
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $resStr, null, null, null, $eventType);
+            $userSecUtil->createUserEditEvent(
+                $this->container->getParameter('translationalresearch.sitename'),
+                $resStr,
+                null,
+                $transferableEntity,
+                null,
+                $eventType
+            );
+
         } //foreach $jsonObject
 
         //Both internal and external servers would have a “Global ID” of “101@WCMINT”,
