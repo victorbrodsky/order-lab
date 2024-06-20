@@ -237,16 +237,11 @@
 
                     {{ formmacros.field(form.title) }}
 
-                    {#{{ formmacros.field(form.irbNumber) }}#}
-
-                    {#{{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}#}
-
                     {{ formmacros.field(form.projectType) }}
 
                     {{ formmacros.field(form.description)|raw }}
 
                     {#immediately under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”#}
-                    {#{{ formmacros.field(form.collDivs) }}#}
                     {{ transres.collDivs(form,project,cycle) }}
 
                     {#Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”#}

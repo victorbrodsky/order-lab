@@ -62,7 +62,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ProjectType extends AbstractType
+class ProjectMisiType extends AbstractType
 {
 
     protected $project;
@@ -80,6 +80,7 @@ class ProjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //exit('ProjectMisiType');
         $this->formConstructor($options['form_custom_value']);
 
         //$user_tz = $this->params['user']->getPreferences()->getTimezone();
@@ -490,9 +491,8 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
-
+        
         $builder->add('principalIrbInvestigator', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
             'required' => false,

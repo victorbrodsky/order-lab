@@ -379,7 +379,15 @@ function transresShowHideYes() {
 //
 function transresValidateProjectForm() {
 
-    //console.log("Validate project");
+    console.log("transres.js: Validate project");
+
+    // var visible = $('#tissueRequestDetails').is(":visible");
+    // console.log('visible',visible);
+    // if( visible ) {
+    //     console.log('tissueRequestDetails is visible');
+    // } else {
+    //     console.log('tissueRequestDetails is not visible');
+    // }
 
     transresHideBtn();
 
@@ -452,66 +460,71 @@ function transresValidateProjectForm() {
         return false;
     }
 
-    //involveHumanTissue
-    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
-    //console.log("involveHumanTissue="+involveHumanTissue);
-    if( !involveHumanTissue ) {
-        //console.log("Error: involveHumanTissue is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will this project involve human tissue?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
-
-        //validated = false;
-        transresShowBtn();
-        return false;
-    }
-
-    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
-    if( involveHumanTissue == "Yes" ) {
-        var showlink = $(".user-humanTissueForms").find(".dz-preview");
-        if( !showlink || showlink.length == 0 ) {
-            var msg = "Please upload a completed human tissue form";
+    var visible = $('#tissueRequestDetailsHeading').is(":visible");
+    if( visible ) {
+        //involveHumanTissue
+        var involveHumanTissue =
+            $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
+        //console.log("involveHumanTissue=" + involveHumanTissue);
+        if (!involveHumanTissue) {
+            //console.log("Error: involveHumanTissue is NULL!");
+            //var msg = "Please upload a completed human tissue form";
+            var msg = "Please answer the required question: 'Will this project involve human tissue?'";
             $("#projectError").show();
             $("#projectError").html(msg);
 
+            //validated = false;
             transresShowBtn();
             return false;
         }
-    }
 
-    //requireTissueProcessing
-    var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
-    //console.log("requireTissueProcessing="+requireTissueProcessing);
-    if( !requireTissueProcessing ) {
-        //console.log("Error: requireTissueProcessing is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will this project require tissue procurement/processing?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
+        var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
+        if (involveHumanTissue == "Yes") {
+            var showlink = $(".user-humanTissueForms").find(".dz-preview");
+            if (!showlink || showlink.length == 0) {
+                var msg = "Please upload a completed human tissue form";
+                $("#projectError").show();
+                $("#projectError").html(msg);
 
-        //validated = false;
-        transresShowBtn();
-        return false;
-    } else {
-        //validate fields
-    }
+                transresShowBtn();
+                return false;
+            }
+        }
 
-    //requireArchivalProcessing
-    var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
-    //console.log("requireArchivalProcessing="+requireArchivalProcessing);
-    if( !requireArchivalProcessing ) {
-        //console.log("Error: requireArchivalProcessing is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will this project require archival specimens?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
 
-        //validated = false;
-        transresShowBtn();
-        return false;
-    } else {
-        //validate fields
+        //requireTissueProcessing
+        var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
+        //console.log("requireTissueProcessing="+requireTissueProcessing);
+        if (!requireTissueProcessing) {
+            //console.log("Error: requireTissueProcessing is NULL!");
+            //var msg = "Please upload a completed human tissue form";
+            var msg = "Please answer the required question: 'Will this project require tissue procurement/processing?'";
+            $("#projectError").show();
+            $("#projectError").html(msg);
+
+            //validated = false;
+            transresShowBtn();
+            return false;
+        } else {
+            //validate fields
+        }
+
+        //requireArchivalProcessing
+        var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
+        //console.log("requireArchivalProcessing="+requireArchivalProcessing);
+        if (!requireArchivalProcessing) {
+            //console.log("Error: requireArchivalProcessing is NULL!");
+            //var msg = "Please upload a completed human tissue form";
+            var msg = "Please answer the required question: 'Will this project require archival specimens?'";
+            $("#projectError").show();
+            $("#projectError").html(msg);
+
+            //validated = false;
+            transresShowBtn();
+            return false;
+        } else {
+            //validate fields
+        }
     }
 
     // //needStatSupport
@@ -583,7 +596,7 @@ function transresValidateProjectForm() {
 
     //"Closed" -> Any except "Canceled" => check exp date (only non-funded projects)
     var projectFundedValue = $("#oleg_translationalresearchbundle_project_funded").is(":checked");
-    console.log("projectFundedValue="+projectFundedValue);
+    //console.log("projectFundedValue="+projectFundedValue);
     if( !projectFundedValue ) {
         //var projectOriginalState = $("#projectOriginalState").val(); //Closed
         var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
@@ -591,7 +604,7 @@ function transresValidateProjectForm() {
         //var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
         //var projectCurrentStateValue = projectCurrentStateData.text; //Closed
         //console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
-        console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
+        //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
         if (projectOriginalState != projectCurrentStateValue) {
             if (projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled") {
                 //Create exp date object
@@ -601,10 +614,10 @@ function transresValidateProjectForm() {
                 var today = new Date();
                 var todayPlusSevenDaysObject = new Date();
                 todayPlusSevenDaysObject.setDate(today.getDate() + 7);
-                console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
+                //console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
                 if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
                     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
-                    console.log("show msg="+msg);
+                    //console.log("show msg="+msg);
                     $("#projectError").show();
                     $("#projectError").html(msg);
                     transresShowBtn();
@@ -614,7 +627,7 @@ function transresValidateProjectForm() {
         }
     }
 
-    console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectOriginalState="+projectOriginalState);
+    //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectOriginalState="+projectOriginalState);
     var projectChangeStateData = $('#project-change-state-data');
     if( projectChangeStateData.length && projectOriginalState == "Closed" && projectOriginalState != projectCurrentStateValue ) {
         //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
@@ -622,7 +635,7 @@ function transresValidateProjectForm() {
         //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
 
         //show state change modal
-        console.log("show state change modal");
+        //console.log("show state change modal");
 
         //change project state back to the original
         var modalTitle = "Are you sure you would like to change the status of this project from "
@@ -630,7 +643,7 @@ function transresValidateProjectForm() {
         projectChangeStateData.attr('trp-closure-title-data', modalTitle);
 
         var title = $('#project-change-state-data').attr('trp-closure-title-data');
-        console.log("new title="+title);
+        //console.log("new title="+title);
         
         trpConstructClosureProjectModal(projectChangeStateData,false,'afterFunctionEditPage');
         transresShowBtn();

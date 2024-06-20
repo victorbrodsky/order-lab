@@ -1,0 +1,89 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+{% import "AppTranslationalResearchBundle/Default/transres-misi.html.twig" as transresmisi %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <div id="add-new-user-modal-prototype"></div>
+
+    {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% if messageToUsers is defined and messageToUsers %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h5>
+    {% endif %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <p>
+        <i>
+            Please make sure to save your Project Request as a draft or submit it for review prior leaving this page.
+        </i>
+    </p>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ form_start(form,{'attr':{'onsubmit':'return transresValidateProjectForm();', novalidate: 'novalidate'}}) }}
+
+        {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
+
+        {{ transresmisi.projectRequesters(form,project,cycle) }}
+
+        {{ transresmisi.projectBodyFormFields(form,project,cycle) }}
+
+        {% if transres_permission_util.hasProjectPermission('review',project) %}
+            {{ transres.projectReviews(form,cycle,sitename) }}
+        {% endif %}
+
+
+        {% if form.updateDate is defined or form.updateUser is defined  %}
+            <div class="well well-sm">
+                {% if form.updateDate is defined %}
+                    {{ formmacros.field(form.updateDate) }}
+                {% endif %}
+                {% if form.updateUser is defined %}
+                    {{ formmacros.field(form.updateUser) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+
+        {% if form.saveAsDraft is defined %}
+            {{ form_widget(form.saveAsDraft) }}
+        {% endif %}
+        {% if form.submitIrbReview is defined %}
+            {{ form_widget(form.submitIrbReview) }}
+        {% endif %}
+
+        <div id="please-wait" style="display: none;">Please Wait ...</div>
+
+    {{ form_end(form) }}
+
+    <br>
+
+    <div id="projectError" class="alert alert-danger" style="display: none;"></div>
+
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the project list</a>
+    </p>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {#import using webpack transres.js (assets/transres/js/index.jsx)#}
+    {{ encore_entry_script_tags('transresjs') }}
+{% endblock %}

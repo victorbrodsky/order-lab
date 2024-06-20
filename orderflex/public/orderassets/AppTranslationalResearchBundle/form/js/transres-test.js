@@ -237,7 +237,7 @@ export function transresShowHideProjectAdditionalDetails() {
 //
 export function transresValidateProjectForm() {
 
-    //console.log("Validate project");
+    console.log("transres-test: Validate project");
 
     transresHideBtn();
 
@@ -312,7 +312,7 @@ export function transresValidateProjectForm() {
 
     //involveHumanTissue
     var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
-    //console.log("involveHumanTissue="+involveHumanTissue);
+    console.log("test: involveHumanTissue="+involveHumanTissue);
     if( !involveHumanTissue ) {
         //console.log("Error: involveHumanTissue is NULL!");
         //var msg = "Please upload a completed human tissue form";

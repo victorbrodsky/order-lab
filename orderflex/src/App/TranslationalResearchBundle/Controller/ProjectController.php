@@ -22,6 +22,7 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IrbApprovalTypeList
 
 
+use App\TranslationalResearchBundle\Form\ProjectMisiType;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
 
@@ -1463,6 +1464,14 @@ class ProjectController extends OrderAbstractController
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
+        if( $cycle == 'new' && $project->getProjectSpecialtyStr() == 'MISI' ) {
+            //exit('new MISI');
+            $project->setFunded(true);
+            $exemptIrbApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Exempt");
+            $project->setExemptIrbApproval($exemptIrbApproval);
+            $project->setInvolveHumanTissue('No'); //involveHumanTissue
+        }
+
         $form = $this->createProjectForm($project,$cycle,$request); //new
 
         $messageTypeId = true;//testing
@@ -1618,7 +1627,7 @@ class ProjectController extends OrderAbstractController
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
 
-        return array(
+        $templateParams = array(
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
@@ -1626,6 +1635,20 @@ class ProjectController extends OrderAbstractController
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId
         );
+
+        if( $cycle == 'new' && $project->getProjectSpecialtyStr() == 'MISI' ) {
+            return $this->render('AppTranslationalResearchBundle/Project/new-misi.html.twig', $templateParams);
+        }
+
+        return $templateParams;
+//        return array(
+//            'project' => $project,
+//            'form' => $form->createView(),
+//            'cycle' => $cycle,
+//            'title' => $specialty->getName()." Project Request",
+//            'formnodetrigger' => $formnodetrigger,
+//            'formnodeTopHolderId' => $formnodeTopHolderId
+//        );
     }
 
 
@@ -2536,10 +2559,17 @@ class ProjectController extends OrderAbstractController
         //echo "1specialExtraProjectSpecialty=".$specialExtraProjectSpecialty."<br>";
         $params['specialExtraProjectSpecialty'] = $specialExtraProjectSpecialty;
 
-        $form = $this->createForm(ProjectType::class, $project, array(
-            'form_custom_value' => $params,
-            'disabled' => $disabled,
-        ));
+        if( 0 && $project->getProjectSpecialty()->getAbbreviation() == 'misi' ) {
+            $form = $this->createForm(ProjectMisiType::class, $project, array(
+                'form_custom_value' => $params,
+                'disabled' => $disabled,
+            ));
+        } else {
+            $form = $this->createForm(ProjectType::class, $project, array(
+                'form_custom_value' => $params,
+                'disabled' => $disabled,
+            ));
+        }
 
         return $form;
     }

@@ -1,0 +1,354 @@
+
+{% macro projectRequesters( form, project, cycle ) %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+
+    {#Show full requester info#}
+    {#{% if cycle == "pdf" %}#}
+        {#{% set cycle = "show" %}#}
+    {#{% endif %}#}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectRequestersHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">
+                        Project's Requester(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.requesterGroup) }}
+
+                    {% if cycle == "show" %}
+                        {% set principalInvestigators = project.principalInvestigators %}
+                    {% else %}
+                        {% set principalInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set principalIrbInvestigators = project.getPrincipalIrbInvestigators() %}
+                    {% else %}
+                        {% set principalIrbInvestigators = null %}
+                    {% endif %}
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.principalIrbInvestigator.setRendered %}
+                    {% else %}
+                        {{ transres.usersInfo(form.principalIrbInvestigator,principalIrbInvestigators,cycle) }}
+                    {% endif %}
+
+                    {% if cycle == "show" %}
+                        {% set submitInvestigators = project.submitInvestigators %}
+                    {% else %}
+                        {% set submitInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.submitInvestigators,submitInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set pathologists = project.pathologists %}
+                    {% else %}
+                        {% set pathologists = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.pathologists,pathologists,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set coInvestigators = project.coInvestigators %}
+                    {% else %}
+                        {% set coInvestigators = null %}
+                    {% endif %}
+                    {#{{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}#}
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI'%}
+                        {% do form.coInvestigators.setRendered %}
+                    {% else %}
+                        {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
+                    {% endif %}
+
+                    {% if cycle == "show" %}
+                        {% set contacts = project.contacts %}
+                    {% else %}
+                        {% set contacts = null %}
+                    {% endif %}
+                    {#{{ transres.usersInfo(form.contacts,contacts,cycle) }}#}
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI'%}
+                        {% do form.contacts.setRendered %}
+                    {% else %}
+                        {{ transres.usersInfo(form.contacts,contacts,cycle) }}
+                    {% endif %}
+
+                    {#{% if cycle == "show" %}#}
+                        {#<div class="well well-sm">#}
+                        {#<div style="text-align: center;">#}
+                            {#<p>#}
+                                {#<strong>{{ form.billingContact.vars.label|raw }}</strong>#}
+                                {#{% if project.billingContact %}#}
+                                    {#{{ usermacros.personInfo(project.billingContact, cycle, 'translationalresearch') }}#}
+                                {#{% else %}#}
+                                    {#None#}
+                                {#{% endif %}#}
+                            {#</p>#}
+                        {#</div>#}
+                        {#</div>#}
+                        {#{% do form.billingContact.setRendered %}#}
+                    {#{% else %}#}
+                        {#{{ formmacros.field(form.billingContact) }}#}
+                        {#<p>#}
+                        {#<div class="row">#}
+                            {#<div class="col-xs-6" align="right">#}
+                                {#<strong>{{ form.billingContact.vars.label|raw }}</strong>#}
+                            {#</div>#}
+                            {#<div class="col-xs-6" align="left">#}
+                                {#{{ form_widget(form.billingContact) }}#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#</p>#}
+                    {#{% endif %}#}
+
+                    {% if cycle == "show" %}
+                        {% set billingContacts = project.getBillingContacts() %}
+                    {% else %}
+                        {% set billingContacts = null %}
+                    {% endif %}
+                    {#{{ transres.usersInfo(form.billingContact,billingContacts,cycle,'required') }}#}
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI'%}
+                        {% do form.billingContact.setRendered %}
+                    {% else %}
+                        {{ transres.usersInfo(form.billingContact,billingContacts,cycle,'required') }}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro projectBodyFormFields( form, project, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+        {% do form.irbApprovalLetters.setRendered %}
+        {#exemptIrbApproval set to exempt#}
+        {% do form.exemptIrbApproval.setRendered %}
+        {% do form.irbNumber.setRendered %}
+        {% do form.irbExpirationDate.setRendered %}
+        {% do form.irbStatusList.setRendered %}
+        {% do form.irbStatusExplain.setRendered %}
+    {% else %}
+        {{ transres.projectIrbInfo(form,project,cycle) }}
+    {% endif %}
+
+    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+        {#exemptIrbApproval set to exempt#}
+        {% do form.exemptIACUCApproval.setRendered %}
+        {% do form.iacucNumber.setRendered %}
+        {% do form.iacucExpirationDate.setRendered %}
+    {% else %}
+        {{ transres.projectIACUCInfo(form,project,cycle) }}
+    {% endif %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectContent" aria-expanded="true">
+                        Project
+                    </a>
+                </h4>
+            </div>
+            <div id="projectContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectContentHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.title) }}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.projectType.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.projectType) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.description)|raw }}
+
+                    {#immediately under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”#}
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.collDivs.setRendered %}
+                        {% do form.collLabs.setRendered %}
+                        {% do form.compTypes.setRendered %}
+                    {% else %}
+                        {{ transres.collDivs(form,project,cycle) }}
+                    {% endif %}
+
+                    {#Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”#}
+                    {#{% if form.collLabs is defined %}#}
+                    {#{{ formmacros.field(form.collLabs) }}#}
+                    {#{% endif %}#}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.hypothesis.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.hypothesis) }}
+                    {% endif %}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.needStatSupport.setRendered %}
+                        {% do form.amountStatSupport.setRendered %}
+                    {% else %}
+                        {{ transres.needStatSupport(form,project,cycle) }}
+                    {% endif %}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.needInfSupport.setRendered %}
+                        {% do form.amountInfSupport.setRendered %}
+                    {% else %}
+                        {{ transres.needInfSupport(form,project,cycle) }}
+                    {% endif %}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.studyPopulation.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.studyPopulation) }}
+                    {% endif %}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.numberPatient.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.numberPatient) }}
+                    {% endif %}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.numberLabReport.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.numberLabReport) }}
+                    {% endif %}
+
+                    {{ formmacros.fieldDateLabel(form.studyDuration,'allow-future-date') }}
+
+                    {% if form.priceList is defined %}
+                        {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                            {% do form.priceList.setRendered %}
+                        {% else %}
+                            {{ formmacros.field(form.priceList) }}
+                        {% endif %}
+                    {% endif %}
+
+                    {#default check mark for MISI#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            {{ form_label(form.funded) }}
+                        </div>
+                        <div class="col-xs-6 text-center" align="left">
+                            <div class="radio_inline">
+                                {{ form_widget(form.funded) }}
+                                {% if project.getFunded() %}
+                                    <label id="label-funded" for="oleg_translationalresearchbundle_project_funded">Yes</label>
+                                {% else %}
+                                    <label id="label-funded" for="oleg_translationalresearchbundle_project_funded"></label>
+                                {% endif %}
+                            </div>
+                            {#</div>#}
+                        </div>
+                    </div>
+                    </p>
+
+                    {{ transres.projectAdditionalDetails(form,project,cycle) }}
+
+                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                        {% do form.fundedAccountNumber.setRendered %}
+                    {% else %}
+                        {{ formmacros.field(form.fundedAccountNumber) }}
+                    {% endif %}
+
+                    {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
+                    {% if form.budgetSummary is defined %}
+                        {{ formmacros.field(form.budgetSummary) }}
+
+                        {#{{ formmacros.field(form.hypothesis) }}#}
+                        {{ formmacros.field(form.objective) }}
+                        {{ formmacros.field(form.expectedResults) }}
+
+                        {{ formmacros.field(form.numberOfCases) }}
+                        {{ formmacros.field(form.numberOfCohorts) }}
+
+                        {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
+                    {% endif %}
+                    {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
+
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <label class="required">{{ form.totalCost.vars.label|raw }}</label>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            {{ form_widget(form.totalCost) }}
+                        </div>
+                    </div>
+                    </p>
+
+                    {% if form.noBudgetLimit is defined %}
+                        {{ formmacros.checkbox(form.noBudgetLimit) }}
+                    {% endif %}
+
+                    {% if form.approvedProjectBudget is defined %}
+                        {{ formmacros.field(form.approvedProjectBudget) }}
+                    {% endif %}
+
+                    {% if form.expectedExpirationDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.expectedExpirationDate,'allow-future-date') }}
+                    {% endif %}
+
+                    {% if form.reasonForStatusChange is defined %}
+                        {{ formmacros.field_notempty(form.reasonForStatusChange,cycle) }}
+                    {% endif %}
+
+                    {{ transres.projectDocument(form,project,cycle) }}
+
+                    {% if cycle != "new" %}
+                        {% set projectMergeInfo = project.mergeHiddenFields() %}
+                        {% if projectMergeInfo %}
+                            {{ formmacros.simplefield( "Previously used in the project fields (currently hidden):", projectMergeInfo|raw, "", "disabled" ) }}
+                        {% endif %}
+
+                        {% if project.expectedCompletionDate %}
+                            <p>
+                                {{ formmacros.simplefield( "Expected Completion Date:", project.expectedCompletionDate|date('m/d/Y'), "", "disabled" ) }}
+                            </p>
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+        {% do form.humanTissueForms.setRendered %}
+        {% do form.involveHumanTissue.setRendered %}
+        {% do form.restrictedServices.setRendered %}
+        {% do form.tissueFormComment.setRendered %}
+        {#tissueProcurement#}
+        {% do form.requireTissueProcessing.setRendered %}
+        {% do form.totalNumberOfPatientsProcessing.setRendered %}
+        {% do form.totalNumberOfSpecimensProcessing.setRendered %}
+        {% do form.tissueNumberOfBlocksPerCase.setRendered %}
+        {% do form.tissueProcessingServices.setRendered %}
+        {#archivalSpecimens#}
+        {% do form.requireArchivalProcessing.setRendered %}
+        {% do form.totalNumberOfPatientsArchival.setRendered %}
+        {% do form.totalNumberOfSpecimensArchival.setRendered %}
+        {% do form.totalNumberOfBlocksPerCase.setRendered %}
+        {% do form.quantityOfSlidesPerBlockStained.setRendered %}
+        {% do form.quantityOfSlidesPerBlockUnstained.setRendered %}
+        {% do form.quantityOfSlidesPerBlockUnstainedIHC.setRendered %}
+        {% do form.quantityOfSpecialStainsPerBlock.setRendered %}
+        {% do form.quantityOfParaffinSectionsRnaDnaPerBlock.setRendered %}
+        {% do form.quantityOfTmaCoresRnaDnaAnalysisPerBlock.setRendered %}
+    {% else %}
+        {{ transres.tissueRequestDetails(form,project,cycle) }}
+    {% endif %}
+{% endmacro %}
+
