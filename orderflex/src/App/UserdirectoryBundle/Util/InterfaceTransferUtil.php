@@ -2176,6 +2176,7 @@ class InterfaceTransferUtil {
                 'warning',
                 "Please create transfer interface with source and destination information"
             );
+            return false;
         }
 
         //Add hash and security key
