@@ -3708,8 +3708,11 @@ class Project {
         $res = $this->getOid();
         if( $this->getGlobalId() ) {
             $gid = strtok($this->getGlobalId(), '@');
+            $arr = explode("@", $this->getGlobalId(), 2);
+            $gid = $arr[0];
+            $instanceId = $arr[1];
             if( $gid != $this->getId() ) {
-                $res = $gid . $this->getProjectSpecialtyStr();
+                $res = $this->getProjectSpecialtyStr().$gid."@".$instanceId;
             }
         }
 
