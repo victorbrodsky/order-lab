@@ -84,7 +84,7 @@ class ProjectType extends AbstractType
 
         //$user_tz = $this->params['user']->getPreferences()->getTimezone();
 
-        if( $this->params['cycle'] != 'new' && $this->params['cycle'] != 'pdf' ) {
+        if ($this->params['cycle'] != 'new' && $this->params['cycle'] != 'pdf') {
 
             $builder->add('state', ChoiceType::class, array(
                 'label' => 'Status:',
@@ -374,9 +374,9 @@ class ProjectType extends AbstractType
             }
         }
 
-        if( $this->params['cycle'] == "show" || $this->params['cycle'] == "review" || $this->params['cycle'] == "pdf" ) {
+        if ($this->params['cycle'] == "show" || $this->params['cycle'] == "review" || $this->params['cycle'] == "pdf") {
             $builder->add('projectType', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
+                //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
                 'class' => ProjectTypeList::class,
                 'label' => 'Project Type:',
                 'required' => false,
@@ -411,7 +411,7 @@ class ProjectType extends AbstractType
         }
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
             'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?:',
             'required' => true,
@@ -429,7 +429,7 @@ class ProjectType extends AbstractType
 
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
             'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?:',
             'required' => true,
@@ -482,7 +482,7 @@ class ProjectType extends AbstractType
         }
 
         $builder->add('principalInvestigators', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Principal Investigator(s) for the project$addUserOnFly:",
             'required' => true,
@@ -492,7 +492,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('principalIrbInvestigator', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
             'required' => false,
@@ -503,7 +503,7 @@ class ProjectType extends AbstractType
 
         //Add submitInvestigators similar to coInvestigators
         $builder->add('submitInvestigators', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
             'required' => false,
@@ -513,7 +513,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('coInvestigators', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Co-Investigator(s)$addUserOnFly:",
             'required' => false,
@@ -523,7 +523,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('pathologists', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => $this->params['institutionName'] . " Pathologist(s) Involved$addUserOnFly:",
             'required' => false,
@@ -533,7 +533,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('contacts', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Contact(s)$addUserOnFly:",
             'required' => true,
@@ -543,7 +543,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('billingContact', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => "Billing Contact$addUserOnFly:",
             'required' => false,
@@ -654,12 +654,12 @@ class ProjectType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
                         $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                    //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
                     $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
                 }
 
@@ -744,15 +744,15 @@ class ProjectType extends AbstractType
         //involveHumanTissue
         //ONLY for CP: For the following question: Will this project involve human tissue?
         //a) Change the answer “No” to “No (this project will only involve human fluid specimens or no human tissue at all)”
-        if( $this->params['specialProjectSpecialty'] == true ) {
+        if ($this->params['specialProjectSpecialty'] == true) {
             //CP project
             $requireArchivalProcessingLabel = array(
-                "Yes"=>"Yes",
-                "No (this project will only involve human fluid specimens or no human tissue at all)"=>"No"
+                "Yes" => "Yes",
+                "No (this project will only involve human fluid specimens or no human tissue at all)" => "No"
             );
         } else {
             //All other projects
-            $requireArchivalProcessingLabel = array("Yes"=>"Yes", "No"=>"No");
+            $requireArchivalProcessingLabel = array("Yes" => "Yes", "No" => "No");
         }
         $builder->add('involveHumanTissue', ChoiceType::class, array( //flipped
             'label' => 'Will this project involve human tissue?',
@@ -766,42 +766,42 @@ class ProjectType extends AbstractType
 
 
         //Histology Tissue Procurement/Processing
-        $builder->add('requireTissueProcessing',ChoiceType::class,array(
+        $builder->add('requireTissueProcessing', ChoiceType::class, array(
             'label' => "Will this project require tissue procurement/processing?:",
-            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'choices' => array("Yes" => "Yes", "No" => "No"),
             'multiple' => false,
             'required' => true,
             'expanded' => true,
-            'attr' => array('class'=>'horizontal_type requireTissueProcessing')
+            'attr' => array('class' => 'horizontal_type requireTissueProcessing')
         ));
-        $builder->add('totalNumberOfPatientsProcessing',TextType::class,array(
+        $builder->add('totalNumberOfPatientsProcessing', TextType::class, array(
             'label' => "Total number of patients:",
             'required' => false,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+            'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
         ));
-        $builder->add('totalNumberOfSpecimensProcessing',TextType::class,array(
+        $builder->add('totalNumberOfSpecimensProcessing', TextType::class, array(
             'label' => "Total number of patient cases:",
             'required' => false,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+            'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
         ));
-        $builder->add('tissueNumberOfBlocksPerCase',TextType::class,array(
+        $builder->add('tissueNumberOfBlocksPerCase', TextType::class, array(
             'label' => "Number of blocks per case:",
             'required' => false,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+            'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
         ));
-        $builder->add( 'tissueProcessingServices', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TissueProcessingServiceList'] by [TissueProcessingServiceList::class]
+        $builder->add('tissueProcessingServices', EntityType::class, array(
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TissueProcessingServiceList'] by [TissueProcessingServiceList::class]
             'class' => TissueProcessingServiceList::class,
-            'label'=>'Services:',
-            'required'=>false,
+            'label' => 'Services:',
+            'required' => false,
             'multiple' => true,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type tissueProcessingServices'),
-            'query_builder' => function(EntityRepository $er) {
+            'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
                         'typedef' => 'default',
                         'typeadd' => 'user-added',
                     ));
@@ -812,29 +812,29 @@ class ProjectType extends AbstractType
         //ONLY for CP and AP/CP
         //echo "specialExtraProjectSpecialty=".$this->params['specialExtraProjectSpecialty']."<br>";
 //        if( $this->params['specialExtraProjectSpecialty'] == true ) {
-            $builder->add('collLabs', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollLabList'] by [CollLabList::class]
-                'class' => CollLabList::class,
-                'label' => 'Which labs within Clinical Pathology are you collaborating with, if any?:',
-                'required' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'attr' => array('class' => 'horizontal_type collLabs'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                }
-            ));
+        $builder->add('collLabs', EntityType::class, array(
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollLabList'] by [CollLabList::class]
+            'class' => CollLabList::class,
+            'label' => 'Which labs within Clinical Pathology are you collaborating with, if any?:',
+            'required' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type collLabs'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
 //        }
 
         //For ALL “New Project Request Forms” (not just for CP)
         $builder->add('collDivs', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
             'class' => CollDivList::class,
             'label' => 'Which division(s) are you collaborating with?:',
             'required' => false,
@@ -852,13 +852,13 @@ class ProjectType extends AbstractType
             }
         ));
 
-        $builder->add('hypothesis',null,array(
+        $builder->add('hypothesis', null, array(
             'label' => "Hypothesis:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('irbStatusList', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbStatusList'] by [IrbStatusList::class]
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbStatusList'] by [IrbStatusList::class]
             'class' => IrbStatusList::class,
             'label' => 'IRB Approval Status:',
             'required' => false,
@@ -873,10 +873,10 @@ class ProjectType extends AbstractType
                     ));
             },
         ));
-        $builder->add('irbStatusExplain',null,array(
+        $builder->add('irbStatusExplain', null, array(
             'label' => "Please explain why the IRB submission is not applicable:",
             'required' => false,
-            'attr' => array('class'=>'textarea form-control transres-project-irbStatusExplain')
+            'attr' => array('class' => 'textarea form-control transres-project-irbStatusExplain')
         ));
 
         //https://stackoverflow.com/questions/39272733/boolean-values-and-choice-symfony-type
@@ -890,11 +890,11 @@ class ProjectType extends AbstractType
             'required' => false,
             'expanded' => true,
             'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class'=>'horizontal_type needStatSupport')
+            'attr' => array('class' => 'horizontal_type needStatSupport')
         ));
-        $builder->add('amountStatSupport',null,array(
+        $builder->add('amountStatSupport', null, array(
             'label' => "What is the estimated quantity of needed statistical support hours?:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('needInfSupport', ChoiceType::class, array(
@@ -907,34 +907,34 @@ class ProjectType extends AbstractType
             'required' => false,
             'expanded' => true,
             'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class'=>'horizontal_type needInfSupport')
+            'attr' => array('class' => 'horizontal_type needInfSupport')
         ));
-        $builder->add('amountInfSupport',null,array(
+        $builder->add('amountInfSupport', null, array(
             'label' => "Please describe the data and the needed analysis:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('studyPopulation',null,array(
+        $builder->add('studyPopulation', null, array(
             'label' => "Study population (include a brief description such as health status or primary diagnosis):",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('numberPatient',null,array(
+        $builder->add('numberPatient', null, array(
             'label' => "Number of involved patients:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('numberLabReport',null,array(
+        $builder->add('numberLabReport', null, array(
             'label' => "Number of involved lab result reports:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('studyDuration',null,array(
+        $builder->add('studyDuration', null, array(
             'label' => "Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
-            'attr' => array('class'=>'datepicker form-control')
+            'attr' => array('class' => 'datepicker form-control')
         ));
 
         //Add submitInvestigators similar to coInvestigators. Added above
@@ -943,15 +943,15 @@ class ProjectType extends AbstractType
         //always show if new, edit
         //hide if show, review and empty
         $hideAdditionalDetails = false;
-        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'review' || $this->params['cycle'] == 'pdf' ) {
-            if( $this->params['project']->hasAdditionalDetails() === false ) {
+        if ($this->params['cycle'] == 'show' || $this->params['cycle'] == 'review' || $this->params['cycle'] == 'pdf') {
+            if ($this->params['project']->hasAdditionalDetails() === false) {
                 $hideAdditionalDetails = true;
             }
         }
-        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
+        if ($this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit') {
             $hideAdditionalDetails = false;
         }
-        if( $hideAdditionalDetails === false ) {
+        if ($hideAdditionalDetails === false) {
             $builder->add('collDepartment', null, array(
                 'label' => "Which department(s) outside of pathology are you collaborating with?:",
                 'attr' => array('class' => 'textarea form-control')
@@ -1024,7 +1024,7 @@ class ProjectType extends AbstractType
         ////////////// EOF Additional fields from #294 //////////////
 
         ////////////// Additional fields from #294 //////////////
-        if( $this->params['cycle'] != 'new' ) {
+        if ($this->params['cycle'] != 'new') {
             $builder->add('progressUpdate', null, array(
                 'label' => "Progress Updates:",
                 'attr' => array('class' => 'textarea form-control')
@@ -1032,21 +1032,23 @@ class ProjectType extends AbstractType
         }
         ////////////// EOF Additional fields from #294 //////////////
 
-        $builder->add('requesterGroup', EntityType::class, array(
-            'class' => RequesterGroupList::class,
-            'label' => 'Requester group:',
-            'required' => false,
-            'attr' => array('class' => 'combobox transres-project-requesterGroup'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' && $this->params['cycle'] == 'new' && $this->params['admin'] ) {
+            $builder->add('requesterGroup', EntityType::class, array(
+                'class' => RequesterGroupList::class,
+                'label' => 'Requester group:',
+                'required' => false,
+                'attr' => array('class' => 'combobox transres-project-requesterGroup'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         $builder->add('compTypes', EntityType::class, array(
             'class' => CompCategoryList::class,

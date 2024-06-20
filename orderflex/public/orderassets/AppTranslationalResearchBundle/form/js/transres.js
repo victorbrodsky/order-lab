@@ -525,7 +525,7 @@ function transresValidateProjectForm() {
         } else {
             //validate fields
         }
-    }
+    } //if visible
 
     // //needStatSupport
     // var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();

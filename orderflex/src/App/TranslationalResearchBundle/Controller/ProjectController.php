@@ -2559,17 +2559,22 @@ class ProjectController extends OrderAbstractController
         //echo "1specialExtraProjectSpecialty=".$specialExtraProjectSpecialty."<br>";
         $params['specialExtraProjectSpecialty'] = $specialExtraProjectSpecialty;
 
-        if( 0 && $project->getProjectSpecialty()->getAbbreviation() == 'misi' ) {
-            $form = $this->createForm(ProjectMisiType::class, $project, array(
-                'form_custom_value' => $params,
-                'disabled' => $disabled,
-            ));
-        } else {
-            $form = $this->createForm(ProjectType::class, $project, array(
-                'form_custom_value' => $params,
-                'disabled' => $disabled,
-            ));
-        }
+//        if( 0 && $project->getProjectSpecialty()->getAbbreviation() == 'misi' ) {
+//            $form = $this->createForm(ProjectMisiType::class, $project, array(
+//                'form_custom_value' => $params,
+//                'disabled' => $disabled,
+//            ));
+//        } else {
+//            $form = $this->createForm(ProjectType::class, $project, array(
+//                'form_custom_value' => $params,
+//                'disabled' => $disabled,
+//            ));
+//        }
+
+        $form = $this->createForm(ProjectType::class, $project, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
 
         return $form;
     }
