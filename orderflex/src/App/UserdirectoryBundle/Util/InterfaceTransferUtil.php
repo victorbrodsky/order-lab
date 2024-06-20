@@ -2163,18 +2163,37 @@ class InterfaceTransferUtil {
     //Run on internal (master) server
     //send request to remote server to send all transferable in the response
     public function getSlaveToMasterTransferCurl($className) {
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
         $userSecUtil = $this->container->get('user_security_utility');
+
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        if( !$secretKey ) {
+            $session->getFlashBag()->add(
+                'warning',
+                "Please set a Secret Key in the site settings"
+            );
+            return false;
+        }
 
         $entityName = $this->getEntityName($className);
         $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
 
         if( !$interfaceTransfer ) {
-            $userUtil = $this->container->get('user_utility');
-            $session = $userUtil->getSession(); //$this->container->get('session');
             $session->getFlashBag()->add(
                 'warning',
-                "Please create transfer interface with source and destination information"
+                "Please create a transfer interface with the source and destination information"
+            );
+            return false;
+        }
+
+        //Check if $instanceId is set
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+        if( !$instanceId ) {
+            $session->getFlashBag()->add(
+                'warning',
+                "Please set an Instance ID in the site settings"
             );
             return false;
         }
