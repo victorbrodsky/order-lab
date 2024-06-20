@@ -873,16 +873,23 @@ class InterfaceTransferUtil {
         return $interfaceTransfer;
     }
 
+    public function getInterfaceTransferByEntity( $entity ) {
+        $mapper = $this->classListMapper($entity);
+        $entityName = $mapper['entityName'];
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        return $interfaceTransfer;
+    }
+
     //Add to InterfaceTransfer the way to distinguish if it should be added to the TransferData:
     // AntibodyList -> server should be master (master to slave)
     // Project -> server should be slave (slave to master)
     //TODO: add to InterfaceTransfer sync direction: local to remote, remote to local, both
     public function isMasterTransferServer( $entity ) {
-        $mapper = $this->classListMapper($entity);
-        //$className = $mapper['className'];
-        $entityName = $mapper['entityName'];
-
-        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+//        $mapper = $this->classListMapper($entity);
+//        //$className = $mapper['className'];
+//        $entityName = $mapper['entityName'];
+//        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        $interfaceTransfer = getInterfaceTransferByEntity($entity);
         if( $interfaceTransfer ) {
             if( $interfaceTransfer->getTransferDestination() ) {
                 return true;

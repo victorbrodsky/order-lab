@@ -307,10 +307,19 @@ class DoctrineListener {
 
             //Remove for Project, if Project should be sync both ways
             //make sure it does not fired on the slave (remote) server
-            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
-            if( $masterTransferServer ) {
-                $logger->notice('setTrabsferable: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
-                return false;
+//            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+//            if( $masterTransferServer ) {
+//                $logger->notice('setTrabsferable: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
+//                return false;
+//            }
+            $interfaceTransfer = getInterfaceTransferByEntity($entity);
+            if( $interfaceTransfer ) {
+                if( $interfaceTransfer->getTransferSource() ) {
+                    $logger->notice(
+                        'setTrabsferable: Project should be transferred from Slave to Master,'.
+                        ' therefore, do not add to TransferData if the source is set');
+                    return false;
+                }
             }
 
             //1) find if TransferData has this antibody with status 'Ready'
