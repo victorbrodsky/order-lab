@@ -216,6 +216,7 @@ class DoctrineListener {
         //Only create new project for now
         if( $entity instanceof Project ) {
 
+            //TODO: add project to TransferData if status changed from draft to irb_review
             if( $event !== 'create' ) {
                 return false;
             }

@@ -1469,7 +1469,7 @@ class ProjectController extends OrderAbstractController
             $project->setFunded(true);
             $exemptIrbApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Exempt");
             $project->setExemptIrbApproval($exemptIrbApproval);
-            $project->setInvolveHumanTissue('No'); //involveHumanTissue
+            $project->setInvolveHumanTissue('No'); //involveHumanTissue (Not working?)
         }
 
         $form = $this->createProjectForm($project,$cycle,$request); //new
