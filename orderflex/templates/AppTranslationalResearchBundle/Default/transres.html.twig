@@ -947,7 +947,9 @@ Show this accordion by default in an open + visible state.
             <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
                 <div class="panel-body">
 
-                    {{ formmacros.field(form.requesterGroup) }}
+                    {% if form.requesterGroup is defined %}
+                        {{ formmacros.field(form.requesterGroup) }}
+                    {% endif %}
 
                     {% if cycle == "show" %}
                         {% set principalInvestigators = project.principalInvestigators %}
