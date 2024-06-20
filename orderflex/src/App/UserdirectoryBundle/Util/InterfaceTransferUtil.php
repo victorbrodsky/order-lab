@@ -2169,6 +2169,15 @@ class InterfaceTransferUtil {
         $entityName = $this->getEntityName($className);
         $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
 
+        if( !$interfaceTransfer ) {
+            $userUtil = $this->container->get('user_utility');
+            $session = $userUtil->getSession(); //$this->container->get('session');
+            $session->getFlashBag()->add(
+                'warning',
+                "Please create transfer interface with source and destination information"
+            );
+        }
+
         //Add hash and security key
         $jsonFile = array();
         $jsonFile['className'] = $className;
