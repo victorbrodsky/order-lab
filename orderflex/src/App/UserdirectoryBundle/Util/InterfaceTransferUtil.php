@@ -2167,6 +2167,7 @@ class InterfaceTransferUtil {
         $session = $userUtil->getSession();
         $userSecUtil = $this->container->get('user_security_utility');
 
+        //TODO: move secret key to the Transfer Interface for each source or destination server
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
         if( !$secretKey ) {
             $session->getFlashBag()->add(
