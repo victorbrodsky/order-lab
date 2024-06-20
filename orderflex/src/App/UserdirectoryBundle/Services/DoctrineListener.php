@@ -245,7 +245,7 @@ class DoctrineListener {
                     return false;
                 }
             }
-            exit('doctrine listener');
+            //exit('doctrine listener');
 
             //2) find if TransferData has this object with status 'Ready'
             $transferData = $interfaceTransferUtil->findCreateTransferData($entity);
