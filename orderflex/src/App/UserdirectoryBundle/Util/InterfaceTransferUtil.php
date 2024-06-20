@@ -1825,8 +1825,8 @@ class InterfaceTransferUtil {
             //$irbExpirationDate = $transferableEntity->getIrbExpirationDate();
            //echo "irbExpirationDate=".print_r($irbExpirationDate)."<br>";
 
-            dump($jsonObject);
-            exit('deserialize');
+            //dump($jsonObject);
+            //exit('deserialize');
         }
 
         return $transferableEntity;
@@ -2021,11 +2021,85 @@ class InterfaceTransferUtil {
     //2) place private key on internal server and use it to decrypt the file
     public function downloadFile( $jsonObject, $transferableEntity, $field ) {
 
-        $ssh = new SSH2('68.183.144.189');
-        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
-        $ssh->login('root', PublicKeyLoader::load(file_get_contents($privateKeyFilePath)));
+        $server_address = '68.183.144.189';
+        $port = 22;
+        $username = 'root';
+        $public_key_path = "path/pubkey.pub";
+        $private_key_path = "path/privakey";
+        $private_key_path = '/path/privakey.';
+        $public_key_path = "/path/pubkey.pub";
+        $password = '';
+        $local_file = 'path/test.txt';
+
+        //$ssh = new SSH2($server_address);
+        //if (!$ssh->login('username', 'mypass')) {
+        //    throw new \Exception('Login failed');
+        //}
+
+        $conn_id = ftp_connect($server_address);
+
+        // login with username and password
+        $login_result = ftp_login($conn_id, $username, 'mypass');
+
+        // try to download $server_file and save to $local_file
+        if (ftp_get($conn_id, $local_file, $private_key_path, FTP_BINARY)) {
+            echo "Successfully written to $local_file\n";
+        }
+        else {
+            echo "There was a problem\n";
+        }
+// close the connection
+        ftp_close($conn_id);
+        exit('111');
+
+        //change root password: passwd
+        $dstConnection = ssh2_connect($server_address, $port);
+        if( ssh2_auth_password($dstConnection, $username, 'mypass') ){
+            //Ok, continue
+            echo "Connected to $server_address <br>";
+        } else {
+            exit("Unable to connect to the remote server");
+        }
+        exit('111');
+
+        $ssh = new SSH2($server_address);
+        $ssh->login('root');
+        $ssh->read('User Name:');
+        $ssh->write("username\n");
+        $ssh->read('Password:');
+        $ssh->write("password\n");
+
+        $ssh->setTimeout(1);
+        $ssh->read();
+        $ssh->write("ls -la\n");
+        echo $ssh->read();
+        exit('111');
+
+        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
+        $ssh = new SSH2($server_address);
+        if (!$ssh->login('root', $key)) {
+            throw new \Exception('Login failed');
+        }
+
+        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
+
+        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
+        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
+        {
+            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
+        } else {
+            echo '<h3 class="success">Authenticated.</h3>';
+        }
+        exit('222');
+
+        $ssh = new SSH2($server_address);
+        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
+        print_r($ssh->getErrors());
+        //print_r($ssh->getLastError());
 
         echo $ssh->exec('ls -la');
+
         exit('222');
 
         $privateKey = RSA::createKey();
@@ -2318,7 +2392,7 @@ class InterfaceTransferUtil {
             //$json['globalId'] = $globalId; //if transfer is the first time, than $globalId is NULL
             $json['instanceId'] = $instanceId;
             $json['className'] = $className;
-            $json['apppath'] = $this->container->get('kernel')->getProjectDir();;
+            $json['apppath'] = $this->container->get('kernel')->getProjectDir(); ///usr/local/bin/order-lab/orderflex
 
             //dump($json);
             //exit('sendSlavetoMasterTransfer');
