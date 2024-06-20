@@ -3643,7 +3643,7 @@ class Project {
         return $expDateStr;
     }
 
-    //serialize
+    //NOT USED
     public function toJson() {
 
         //$disableDatasheet = false;
@@ -3663,6 +3663,7 @@ class Project {
         return $json;
     }
 
+    //NOT USED
     public function updateByJson( $json, $em, $className ) {
         $title = $json['title'];
         $this->setTitle($title);
@@ -3674,6 +3675,13 @@ class Project {
         $this->setIrbNumber($irbNumber);
 
         return true;
+    }
+
+    public function getGloablSourceInfo() {
+        //if( $this->getGlobalId() && $this->getSourceId() ) {
+            $res = "Global ID=".$this->getGlobalId().", Source ID=".$this->getSourceId();
+        //}
+        return " (".$res.")";
     }
 
     public function getEntityName() {

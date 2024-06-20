@@ -375,7 +375,7 @@
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
                        target="_blank"
                        style="color:{{ idColor }}"
-                    >{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
+                    >{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}{{ project.getGloablSourceInfo }}</a>
                 </td>
 
                 <td>
