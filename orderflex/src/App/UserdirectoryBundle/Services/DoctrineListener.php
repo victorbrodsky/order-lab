@@ -316,7 +316,7 @@ class DoctrineListener {
             if( $interfaceTransfer ) {
                 if( $interfaceTransfer->getTransferSource() ) {
                     $logger->notice(
-                        'setTrabsferable: Project should be transferred from Slave to Master,'.
+                        'setTrabsferable: Project should be transferred from external (slave, source) to internal (master, destination),'.
                         ' therefore, do not add to TransferData if the source is set');
                     return false;
                 }
