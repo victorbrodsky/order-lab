@@ -3222,6 +3222,29 @@ class Project {
         $this->setOid($oid);
     }
     public function createAndGetOid() {
+//        $projectSpecialtyStr = "";
+//        $projectSpecialty = $this->getProjectSpecialty();
+//        if( $projectSpecialty ) {
+//            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+//            if( $projectSpecialtyAbbreviation == "hematopathology" ) {
+//                //$projectSpecialtyAbbreviation = "HEMEPATH";
+//                $projectSpecialtyAbbreviation = "HP";
+//            }
+//            if( $projectSpecialtyAbbreviation == "covid19" ) {
+//                //$projectSpecialtyAbbreviation = "HEMEPATH";
+//                //use ShortName for this
+//                $projectSpecialtyAbbreviation = "COVID";
+//            }
+//            $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
+//            $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
+//        }
+        $projectSpecialtyStr = $this->getProjectSpecialtyStr();
+        $oid = $projectSpecialtyStr . $this->getId();
+        //echo "oid=$oid <br>";
+        return $oid;
+    }
+    public function getProjectSpecialtyStr() {
+        $projectSpecialtyStr = "";
         $projectSpecialty = $this->getProjectSpecialty();
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
@@ -3237,9 +3260,7 @@ class Project {
             $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
             $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
         }
-        $oid = $projectSpecialtyStr . $this->getId();
-        //echo "oid=$oid <br>";
-        return $oid;
+        return $projectSpecialtyStr;
     }
 
     //Project request APCP1 'Project Title' submitted by FirstName LastName on MM/DD/YYYY
@@ -3679,8 +3700,19 @@ class Project {
 
     public function getGloablSourceInfo() {
         //if( $this->getGlobalId() && $this->getSourceId() ) {
-            $res = "Global ID=".$this->getGlobalId().", Source ID=".$this->getSourceId();
+            //$res = "Global ID=".$this->getGlobalId().", Source ID=".$this->getSourceId();
         //}
+
+        //if id in global id == oid => show oid only
+        //if id in global id != oid => show global id and local id only
+        $res = $this->getOid();
+        if( $this->getGlobalId() ) {
+            $gid = strtok($this->getGlobalId(), '@');
+            if( $gid != $this->getId() ) {
+                $res = $gid . $this->getProjectSpecialtyStr();
+            }
+        }
+
         return " (".$res.")";
     }
 
