@@ -889,7 +889,7 @@ class InterfaceTransferUtil {
 //        //$className = $mapper['className'];
 //        $entityName = $mapper['entityName'];
 //        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
-        $interfaceTransfer = getInterfaceTransferByEntity($entity);
+        $interfaceTransfer = $this->getInterfaceTransferByEntity($entity);
         if( $interfaceTransfer ) {
             if( $interfaceTransfer->getTransferDestination() ) {
                 return true;

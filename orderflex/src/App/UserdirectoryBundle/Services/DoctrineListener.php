@@ -312,7 +312,7 @@ class DoctrineListener {
 //                $logger->notice('setTrabsferable: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
 //                return false;
 //            }
-            $interfaceTransfer = getInterfaceTransferByEntity($entity);
+            $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByEntity($entity);
             if( $interfaceTransfer ) {
                 if( $interfaceTransfer->getTransferSource() ) {
                     $logger->notice(
