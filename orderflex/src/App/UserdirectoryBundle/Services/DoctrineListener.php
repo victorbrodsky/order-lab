@@ -230,12 +230,22 @@ class DoctrineListener {
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
             //Remove for Project, if Project should be sync both ways
-            //1) make sure it does not fired on the slave (remote) server
-            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
-            if( $masterTransferServer ) {
-                $logger->notice('setTrabsferable: Project: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
-                return false;
+            //1) make sure it does not fired on the internal (master) server
+//            $masterTransferServer = $interfaceTransferUtil->isMasterTransferServer($entity);
+//            if( $masterTransferServer ) {
+//                $logger->notice('setTrabsferable: Project: is masterTransferServer, however, for now, Project should be transferred from Slave to Master');
+//                return false;
+//            }
+            $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByEntity($entity);
+            if( $interfaceTransfer ) {
+                if( $interfaceTransfer->getTransferSource() ) {
+                    $logger->notice(
+                        'setTrabsferable: Project should be transferred from external (slave, source) to internal (master, destination),'.
+                        ' therefore, do not add to TransferData if the source is set');
+                    return false;
+                }
             }
+            exit('doctrine listener');
 
             //2) find if TransferData has this object with status 'Ready'
             $transferData = $interfaceTransferUtil->findCreateTransferData($entity);
