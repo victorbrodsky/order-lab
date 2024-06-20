@@ -1032,7 +1032,8 @@ class ProjectType extends AbstractType
         }
         ////////////// EOF Additional fields from #294 //////////////
 
-        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' && $this->params['cycle'] == 'new' && $this->params['admin'] ) {
+        //(!$this->params['admin'] && $this->params['project']->getProjectSpecialtyStr() != 'MISI' && $this->params['cycle'] == 'new')
+        if( $this->params['admin'] ) {
             $builder->add('requesterGroup', EntityType::class, array(
                 'class' => RequesterGroupList::class,
                 'label' => 'Requester group:',
