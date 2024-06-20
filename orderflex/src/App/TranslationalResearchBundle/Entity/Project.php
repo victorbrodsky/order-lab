@@ -1746,6 +1746,21 @@ class Project {
      */
     public function getOid($withExportId=true)
     {
+//        if( $this->getGlobalId() ) {
+//            //$gid = strtok($this->getGlobalId(), '@');
+//            $arr = explode("@", $this->getGlobalId(), 2);
+//            $gid = $arr[0];
+//            $instanceId = $arr[1];
+//            if( $gid != $this->getId() ) {
+//                $resOid = $this->getProjectSpecialtyStr().$gid."@".$instanceId;
+//                return $resOid;
+//            }
+//        }
+        $globalIdInfo = $this->getGloablIdInfo();
+        if( $globalIdInfo ) {
+            return $globalIdInfo;
+        }
+
         if( $this->getExportId() && $withExportId ) {
             return $this->oid . " (".$this->getExportId().")";
         }
@@ -3698,25 +3713,21 @@ class Project {
         return true;
     }
 
-    public function getGloablSourceInfo() {
-        //if( $this->getGlobalId() && $this->getSourceId() ) {
-            //$res = "Global ID=".$this->getGlobalId().", Source ID=".$this->getSourceId();
-        //}
-
+    public function getGloablIdInfo() {
         //if id in global id == oid => show oid only
         //if id in global id != oid => show global id and local id only
-        $res = $this->getOid();
+        //$res = $this->getOid();
         if( $this->getGlobalId() ) {
-            $gid = strtok($this->getGlobalId(), '@');
+            //$gid = strtok($this->getGlobalId(), '@');
             $arr = explode("@", $this->getGlobalId(), 2);
             $gid = $arr[0];
             $instanceId = $arr[1];
             if( $gid != $this->getId() ) {
-                $res = $this->getProjectSpecialtyStr().$gid."@".$instanceId;
+                $resId = $this->getProjectSpecialtyStr().$gid."@".$instanceId;
+                return $resId;
             }
         }
-
-        return " (".$res.")";
+        return NULL;
     }
 
     public function getEntityName() {
