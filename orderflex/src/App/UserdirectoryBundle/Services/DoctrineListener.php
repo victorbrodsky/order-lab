@@ -321,6 +321,7 @@ class DoctrineListener {
                     return false;
                 }
             }
+            exit('doctrine listener');
 
             //1) find if TransferData has this antibody with status 'Ready'
             if( $interfaceTransferUtil->findTransferData($entity,'Ready') ) {
