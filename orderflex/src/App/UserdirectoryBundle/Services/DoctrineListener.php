@@ -217,14 +217,15 @@ class DoctrineListener {
         if( $entity instanceof Project ) {
 
             //TODO: add project to TransferData if status changed from draft to irb_review
-            if( $event !== 'create' ) {
-                return false;
-            }
+            //if( $event !== 'create' ) {
+            //    return false;
+            //}
 
             //exit('setTrabsferable, ID='.$entity->getId());
             $logger->notice('setTrabsferable, Project ID='.$entity->getId());
 
-            if( $entity->getState() != 'irb_review' ) {
+            //if not 'irb_review'
+            if( $entity->getState() == 'draft' ) {
                 return false;
             }
 
