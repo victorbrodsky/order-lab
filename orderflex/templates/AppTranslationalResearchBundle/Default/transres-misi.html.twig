@@ -198,6 +198,9 @@
                     {% if project.getProjectSpecialtyStr == 'MISI' %}
                         {{ formmacros.field(form.dataAnalysis)|raw }}
                         {{ formmacros.field(form.softwareTool)|raw }}
+                    {% else %}
+                        {% do form.dataAnalysis.setRendered %}
+                        {% do form.softwareTool.setRendered %}
                     {% endif %}
 
                     {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
