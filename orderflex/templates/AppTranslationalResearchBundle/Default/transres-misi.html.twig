@@ -195,12 +195,18 @@
                         {{ formmacros.field(form.hypothesis) }}
                     {% endif %}
 
-                    {% if project.getProjectSpecialtyStr == 'MISI' %}
+                    {#{% if project.getProjectSpecialtyStr == 'MISI' %}#}
+                        {#{{ formmacros.field(form.dataAnalysis)|raw }}#}
+                        {#{{ formmacros.field(form.softwareTool)|raw }}#}
+                    {#{% else %}#}
+                        {#{% do form.dataAnalysis.setRendered %}#}
+                        {#{% do form.softwareTool.setRendered %}#}
+                    {#{% endif %}#}
+                    {% if form.dataAnalysis is defined %}
                         {{ formmacros.field(form.dataAnalysis)|raw }}
+                    {% endif %}
+                    {% if form.softwareTool is defined %}
                         {{ formmacros.field(form.softwareTool)|raw }}
-                    {% else %}
-                        {% do form.dataAnalysis.setRendered %}
-                        {% do form.softwareTool.setRendered %}
                     {% endif %}
 
                     {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
