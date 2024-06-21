@@ -780,7 +780,14 @@ class Project {
     private $globalId;
 
 
+    //Before “Will you need department statistical support”: add two text fields (…Downstream analysis):
+    //Is there a bioinformatician on your team to analyze your data?  Please describe your plan for downstream data analysis.
+    //Do you have access to software tools for data visualization and/or analysis of your images? Please describe the tools you plan to use.
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $dataAnalysis;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $softwareTool;
 
     public function __construct($user=null) {
 
@@ -3064,6 +3071,38 @@ class Project {
         $this->globalId = $globalId;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDataAnalysis()
+    {
+        return $this->dataAnalysis;
+    }
+
+    /**
+     * @param mixed $dataAnalysis
+     */
+    public function setDataAnalysis($dataAnalysis)
+    {
+        $this->dataAnalysis = $dataAnalysis;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoftwareTool()
+    {
+        return $this->softwareTool;
+    }
+
+    /**
+     * @param mixed $softwareTool
+     */
+    public function setSoftwareTool($softwareTool)
+    {
+        $this->softwareTool = $softwareTool;
+    }
+    
 
 
     public function incrementExpirationNotifyCounter() {
