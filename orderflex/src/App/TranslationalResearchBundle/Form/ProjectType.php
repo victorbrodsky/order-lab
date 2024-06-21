@@ -1169,19 +1169,22 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control textarea')
         ));
 
-        $builder->add('dataAnalysis',null,array(
-            'label' => "Is there a bioinformatician on your team to analyze your data?".
-                " Please describe your plan for downstream data analysis:",
-            'required' => false,
-            'attr' => array('class'=>'textarea form-control')
-        ));
 
-        $builder->add('softwareTool',null,array(
-            'label' => "Do you have access to software tools for data visualization and/or analysis of your images?".
-                " Please describe the tools you plan to use:",
-            'required' => false,
-            'attr' => array('class'=>'textarea form-control')
-        ));
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+            $builder->add('dataAnalysis', null, array(
+                'label' => "Is there a bioinformatician on your team to analyze your data?" .
+                    " Please describe your plan for downstream data analysis:",
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('softwareTool', null, array(
+                'label' => "Do you have access to software tools for data visualization and/or analysis of your images?" .
+                    " Please describe the tools you plan to use:",
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control')
+            ));
+        }
 
 
         if( $this->params['saveAsDraft'] === true ) {
