@@ -251,6 +251,13 @@
 
                     {{ formmacros.field(form.hypothesis) }}
 
+                    {% if form.dataAnalysis is defined %}
+                        {{ formmacros.field(form.dataAnalysis)|raw }}
+                    {% endif %}
+                    {% if form.softwareTool is defined %}
+                        {{ formmacros.field(form.softwareTool)|raw }}
+                    {% endif %}
+
                     {#{{ formmacros.checkbox(form.needStatSupport) }}#}
                     {#show if condition#}
                     {#{{ formmacros.field(form.amountStatSupport) }}#}
