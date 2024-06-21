@@ -538,16 +538,13 @@ class ProjectController extends OrderAbstractController
         }
 
         if ($searchId) {
-            //echo "testing where searchId <br>";
-            //echo "searchId=$searchId<br>";
             $dql->andWhere("(LOWER(project.oid) LIKE LOWER(:oid) OR LOWER(project.globalId) LIKE LOWER(:globalId) OR LOWER(project.sourceId) LIKE LOWER(:sourceId))");
-            //$dql->andWhere("project.oid LIKE :oid");
             $dqlParameters["oid"] = "%" . $searchId . "%";
+            $dqlParameters["sourceId"] = "%" . $searchId . "%";
 
-            //Remove APCP or MISI from searchId: APCP3366 => 3366
+            //For global id, remove project sepcialty string such as APCP or MISI from searchId: APCP3366 => 3366
             $searchIdDigits = preg_replace('/[^0-9.]+/', '', $searchId);
             $dqlParameters["globalId"] = "%" . $searchIdDigits . "%";
-            $dqlParameters["sourceId"] = "%" . $searchIdDigits . "%";
         }
 
         if ($exportId) {
