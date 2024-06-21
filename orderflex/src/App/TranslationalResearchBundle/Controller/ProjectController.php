@@ -540,9 +540,11 @@ class ProjectController extends OrderAbstractController
         if ($searchId) {
             //echo "testing where searchId <br>";
             //echo "searchId=$searchId<br>";
-            $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid)");
+            $dql->andWhere("(LOWER(project.oid) LIKE LOWER(:oid) OR LOWER(project.globalId) LIKE LOWER(:globalId) OR LOWER(project.sourceId) LIKE LOWER(:sourceId))");
             //$dql->andWhere("project.oid LIKE :oid");
             $dqlParameters["oid"] = "%" . $searchId . "%";
+            $dqlParameters["globalId"] = "%" . $searchId . "%";
+            $dqlParameters["sourceId"] = "%" . $searchId . "%";
         }
 
         if ($exportId) {
