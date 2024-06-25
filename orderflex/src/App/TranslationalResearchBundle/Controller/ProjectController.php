@@ -2059,9 +2059,9 @@ class ProjectController extends OrderAbstractController
 
         //Testing
         //generate project PDF
-        $transresPdfUtil = $this->container->get('transres_pdf_generator');
-        $user = $this->getUser();
-        $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
+        //$transresPdfUtil = $this->container->get('transres_pdf_generator');
+        //$user = $this->getUser();
+        //$transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
 
         //$cycle = "show";
 

@@ -231,10 +231,27 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+
+        //For MISI project submission form only, make two fields:
+        // “IRB Expiration Date:“ and “IRB Approval Status:”required IF “Not exempt” is selected.
+        $irbNumberRequired = false;
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+            $irbNumberRequired = true;
+        }
         $builder->add('irbNumber', null, array(
             'label' => $this->params['transresUtil']->getHumanName() . ' Number:',
-            'required' => false,
+            'required' => $irbNumberRequired, //false,
             'attr' => array('class' => 'form-control'),
+        ));
+        $builder->add('irbExpirationDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => $this->params['transresUtil']->getHumanName() . " Expiration Date:",
+            'format' => 'MM/dd/yyyy',
+            'html5' => false,
+            'required' => $irbNumberRequired, //false,
+            //'view_timezone' => $user_tz,
+            //'model_timezone' => $user_tz,
+            'attr' => array('class' => 'datepicker form-control transres-project-irbExpirationDate')
         ));
 
 //        $builder->add('funded', CheckboxType::class, array(
@@ -260,17 +277,6 @@ class ProjectType extends AbstractType
             'label' => 'If funded, please provide account number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
-        ));
-
-        $builder->add('irbExpirationDate', DateType::class, array(
-            'widget' => 'single_text',
-            'label' => $this->params['transresUtil']->getHumanName() . " Expiration Date:",
-            'format' => 'MM/dd/yyyy',
-            'html5' => false,
-            //'view_timezone' => $user_tz,
-            //'model_timezone' => $user_tz,
-            'attr' => array('class' => 'datepicker form-control transres-project-irbExpirationDate'),
-            'required' => false,
         ));
 
         if ($this->params['cycle'] != 'new' && $this->params['admin']) {
@@ -411,7 +417,6 @@ class ProjectType extends AbstractType
         }
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
             'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?:',
             'required' => true,
@@ -429,7 +434,6 @@ class ProjectType extends AbstractType
 
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
             'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?:',
             'required' => true,

@@ -132,17 +132,18 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
-    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
-        {% do form.irbApprovalLetters.setRendered %}
+    {#{% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}#}
+        {#{% do form.irbApprovalLetters.setRendered %}#}
         {#exemptIrbApproval set to exempt#}
-        {% do form.exemptIrbApproval.setRendered %}
-        {% do form.irbNumber.setRendered %}
-        {% do form.irbExpirationDate.setRendered %}
-        {% do form.irbStatusList.setRendered %}
-        {% do form.irbStatusExplain.setRendered %}
-    {% else %}
-        {{ transres.projectIrbInfo(form,project,cycle) }}
-    {% endif %}
+        {#{% do form.exemptIrbApproval.setRendered %}#}
+        {#{% do form.irbNumber.setRendered %}#}
+        {#{% do form.irbExpirationDate.setRendered %}#}
+        {#{% do form.irbStatusList.setRendered %}#}
+        {#{% do form.irbStatusExplain.setRendered %}#}
+    {#{% else %}#}
+        {#{{ transres.projectIrbInfo(form,project,cycle) }}#}
+    {#{% endif %}#}
+    {{ transres.projectIrbInfo(form,project,cycle) }}
 
     {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
         {#exemptIrbApproval set to exempt#}

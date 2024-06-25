@@ -98,7 +98,10 @@ function transresIrbExemptListener( classname ) {
 }
 function transresIrbExemptChange( exemptEl, classname ) {
     var exemptData = exemptEl.select2('data');
-    var exemptText = exemptData.text;
+    var exemptText = null;
+    if( exemptData ) {
+        exemptText = exemptData.text;
+    }
     //console.log("change: exemptText="+exemptText);
     if( exemptText == "Exempt" ) {
         $("."+classname+"-panel").hide('slow');
@@ -260,7 +263,6 @@ function transresCollDivsListener() {
         var showCollLabs = false;
         var showCompTypes = false;
         $('input[name="oleg_translationalresearchbundle_project[collDivs][]"]').each(function () {
-            //var sThisVal = (this.checked ? $(this).parent().text().trim() : "");
             if( this.checked ) {
                 var collDiv = $(this).parent().text().trim();
                 //console.log("change=" + collDiv);
@@ -618,7 +620,11 @@ function transresValidateProjectForm() {
     var projectOriginalStateValue = $("#projectOriginalStateValue").val();
     var projectOriginalState = $("#projectOriginalState").val(); //Closed
     var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
-    var projectCurrentStateValue = projectCurrentStateData.text; //Closed
+
+    var projectCurrentStateValue = null;
+    if( projectCurrentStateData ) {
+        projectCurrentStateValue = projectCurrentStateData.text; //Closed
+    }
 
     //"Closed" -> Any except "Canceled" => check exp date (only non-funded projects)
     var projectFundedValue = $("#oleg_translationalresearchbundle_project_funded").is(":checked");
