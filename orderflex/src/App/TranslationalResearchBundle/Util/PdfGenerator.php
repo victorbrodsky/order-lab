@@ -897,7 +897,8 @@ class PdfGenerator
             unlink($applicationOutputFilePath);
         }
 
-        ini_set('max_execution_time', 300); //300 sec
+        //ini_set('max_execution_time', 300); //300 sec
+        ini_set('max_execution_time', 30); //30 sec //testing
 
         //testing
         //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
@@ -914,8 +915,8 @@ class PdfGenerator
 
         $router = $this->container->get('router');
 
-        //$replaceContext = false;
-        $replaceContext = true;
+        $replaceContext = false;
+        //$replaceContext = true;
         if( $replaceContext ) {
             //generate application URL
             $context = $router->getContext();
@@ -939,7 +940,7 @@ class PdfGenerator
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
-        //$logger->notice("generateProjectPdf: Page URL=".$pageUrl);
+        $logger->notice("generateProjectPdf: Page URL=".$pageUrl);
 
 
         //take care of authentication
@@ -948,21 +949,36 @@ class PdfGenerator
         session_write_close();
         $PHPSESSID = $session->getId();
 
+        //testing: set snappy path 'wkhtmltopdfpath'
+//        $wkhtmltopdfpath = "C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe";
+//        $this->container->setParameter('wkhtmltopdfpath',$wkhtmltopdfpath);
+//        $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
+//        if (file_exists($wkhtmltopdfpathClean)) {
+//            //echo "The file $wkhtmltopdfpath exists <br>";
+//        } else {
+//            //echo "The file [$wkhtmltopdfpath] does not exist <br>";
+//            //exit("The file [$wkhtmltopdfpath] does not exist");
+//            $logger->notice("generateProjectPdf: Error - ignore PDF generation, wkhtmltopdfpath path does not exists");
+//            return null;
+//        }
+
         $logger->notice("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
+        //exit("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
         //knp_snappy
         //$snappy->setTimeout(300);
         //https://github.com/KnpLabs/KnpSnappyBundle
         //process_timeout: 20 # In seconds
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
-            $applicationOutputFilePath,
-            array(
-                'cookie' => array(
-                    'PHPSESSID' => $PHPSESSID
-                )
-            )
+            $applicationOutputFilePath
+//            array(
+//                'cookie' => array(
+//                    'PHPSESSID' => $PHPSESSID
+//                )
+//            )
         );
         $logger->notice("generateProjectPdf: after knp_snappy");
+        exit('generateProjectPdf: after knp_snappy');
 
         if( $replaceContext ) {
             //set back to original context

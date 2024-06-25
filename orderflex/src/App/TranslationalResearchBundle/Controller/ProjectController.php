@@ -2057,6 +2057,12 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
+        //Testing
+        //generate project PDF
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $user = $this->getUser();
+        $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
+
         //$cycle = "show";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
