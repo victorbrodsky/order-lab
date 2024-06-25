@@ -437,6 +437,18 @@ function transresValidateProjectForm() {
 
         var holder = $(this).closest(".row");
 
+        console.log("label=["+label+"]");
+        if( label == 'IRB Number:' || label == 'IRB Expiration Date:' ) {
+            var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
+            if( !exemptIrbApproval ) {
+                return;
+            }
+            var exemptIrbApprovalValue = exemptIrbApproval.text;
+            if( exemptIrbApprovalValue == "Exempt" ) {
+                return;
+            }
+        }
+
         //input
         var inputField = holder.find(".form-control");
         if( inputField.length > 0 ) {
@@ -476,7 +488,33 @@ function transresValidateProjectForm() {
             }
         }
 
-    });
+        // var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
+        // if( exemptIrbApproval == "Not Exempt" ) {
+        //     //irbNumber and irbExpirationDate are required
+        //     if( $(".transres-project-irbNumber").prop('required') ) {
+        //         var irbNumber = $(".transres-project-irbNumber").val();
+        //         if (!irbNumber) {
+        //             var msg = "Please provide IRB number.";
+        //             $("#projectError").show();
+        //             $("#projectError").html(msg);
+        //             transresShowBtn();
+        //             return false;
+        //         }
+        //     }
+        //
+        //     if( $(".transres-project-irbExpirationDate").prop('required') ) {
+        //         var irbExpirationDate = $(".transres-project-irbExpirationDate").val();
+        //         if (!irbExpirationDate) {
+        //             var msg = "Please provide IRB expiration date.";
+        //             $("#projectError").show();
+        //             $("#projectError").html(msg);
+        //             transresShowBtn();
+        //             return false;
+        //         }
+        //     }
+        // }
+
+    }); //if required
 
     if( validated == false ) {
         //console.log("Error: required value is NULL! label="+label+"; value="+value);
@@ -593,7 +631,7 @@ function transresValidateProjectForm() {
     var irbStatusList = $(".transres-project-irbStatusList").select2('data');
     var exemptIrbApprovalValue = exemptIrbApproval.text;
     //console.log("exemptIrbApprovalValue=" + exemptIrbApprovalValue);
-    if( exemptIrbApprovalValue == "Not Exempt" && irbStatusList ) {
+    if( exemptIrbApprovalValue == "Not Exempt" ) {
         //var irbStatusList = $(".transres-project-irbStatusList").select2('data');
         if( irbStatusList ) {
             var irbStatusListValue = irbStatusList.text; //might be null: irbStatusList is null
@@ -613,7 +651,7 @@ function transresValidateProjectForm() {
             } else {
                 //validate fields
             }
-        }
+        } //if irbStatusList
     }
 
     //get original and new (current) state
