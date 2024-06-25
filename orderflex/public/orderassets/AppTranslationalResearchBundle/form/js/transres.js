@@ -325,18 +325,42 @@ function transresShowHideNeedInfSupport(needInfSupport) {
 function transresProjectFundedListener() {
     //oleg_translationalresearchbundle_project_funded
     $(".transres-funded").on("change", function(e) {
-        //var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[transres-funded]"]:checked').val();
+        var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[funded]"]:checked').val();
+        //var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
         //console.log("change: checked value funded="+funded);
-        transresShowHideProjectDocument();
-        transresShowHideProjectAdditionalDetails();
-        transresShowHideYes();
+        transresShowHideProjectDocument(funded);
+        transresShowHideProjectAdditionalDetails(funded);
+        transresShowHideYes(funded);
+        transresFundByPath(funded);
     });
 }
-function transresShowHideProjectDocument() {
+function transresFundByPath(funded) {
+    //If “[ ] No…” is chosen for the question above, in the appearing accordion
+    // set “Is funding for this project being requested from the pathology department?”,
+    // set default answer to “Yes”.
+    //oleg_translationalresearchbundle_project_fundByPath fundByPath
+    if( funded == true ) {
+        console.log("transresFundByPath Yes");
+        //clear selection
+        $("input[name='oleg_translationalresearchbundle_project[fundByPath]'][value='1']").prop("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[fundByPath]'][value='0']").prop("checked",false).trigger("change");
+    } else {
+        console.log("transresFundByPath No => set fundByPath to Yes");
+        //set to Yes
+        $("input[name='oleg_translationalresearchbundle_project[fundByPath]'][value='1']").prop("checked",true).trigger("change");
+    }
+}
+function transresShowHideProjectDocument(funded) {
     //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
     //funded (checked) => hide
     //not-funded (un-checked) => show
-    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+
+    if( typeof funded === 'undefined' ) {
+        funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[funded]"]:checked').val();
+    }
+
+    //if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+    if( funded == true ) {
         //console.log("funded hide");
         $('#transres-project-documents').collapse('hide');
     } else {
@@ -344,11 +368,12 @@ function transresShowHideProjectDocument() {
         $('#transres-project-documents').collapse('show');
     }
 }
-function transresShowHideProjectAdditionalDetails() {
+function transresShowHideProjectAdditionalDetails(funded) {
     //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
     //funded (checked) => hide
     //not-funded (un-checked) => show
-    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+    //if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+    if( funded == true ) {
         //console.log("funded hide");
         $('#transres-project-additional-details').hide('slow');
     } else {
@@ -356,9 +381,10 @@ function transresShowHideProjectAdditionalDetails() {
         $('#transres-project-additional-details').show('slow');
     }
 }
-function transresShowHideYes() {
+function transresShowHideYes(funded) {
     //var label = 'Has this project been funded?:';
-    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+    //if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+    if( funded == true ) {
         console.log("transresShowHideYes Yes");
         //label = 'Has this project been funded? Yes:';
         //$('.transres-funded').closest('row').find('label').html('Has this project been funded? Yes:');

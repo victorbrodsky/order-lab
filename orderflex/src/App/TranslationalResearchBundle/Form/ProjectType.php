@@ -237,24 +237,24 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('funded', CheckboxType::class, array(
-            'required' => false,
-            'label' => "Has this project been funded?:", //"Funded:",
-            //'attr' => array('class'=>'form-control transres-funded')
-            'attr' => array('class' => 'transres-funded')
-        ));
-//        $builder->add('funded', ChoiceType::class, array(
-//            'label' => "Has this project been funded?:",
-//            'choices' => array(
-//                'Yes' => true,
-//                //'No' => false
-//            ),
+//        $builder->add('funded', CheckboxType::class, array(
 //            'required' => false,
-//            'expanded' => true,
-//            'multiple' => true,
-//            'placeholder' => false, //to remove 'Null' set placeholder to false
-//            'attr' => array('class' => 'horizontal_type collInstPi')
+//            'label' => "Has this project been funded?:", //"Funded:",
+//            //'attr' => array('class'=>'form-control transres-funded')
+//            'attr' => array('class' => 'transres-funded')
 //        ));
+        $builder->add('funded', ChoiceType::class, array(
+            'choices' => array(
+                'Yes' => true,
+                'No, I am requesting all or some funding from the '.$this->params['institutionName'].' Pathology department' => false
+            ),
+            'label' => 'Has this project been funded?:',
+            'multiple' => false,
+            'required' => false,
+            'expanded' => true,
+            'placeholder' => false, //to remove 'Null' set placeholder to false
+            'attr' => array('class' => 'horizontal_type transres-funded')
+        ));
 
         $builder->add('fundedAccountNumber', null, array(
             'label' => 'If funded, please provide account number:',
@@ -790,7 +790,6 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
         ));
         $builder->add('tissueProcessingServices', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TissueProcessingServiceList'] by [TissueProcessingServiceList::class]
             'class' => TissueProcessingServiceList::class,
             'label' => 'Services:',
             'required' => false,

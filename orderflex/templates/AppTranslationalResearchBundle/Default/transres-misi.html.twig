@@ -252,24 +252,25 @@
                     {% endif %}
 
                     {#default check mark for MISI#}
-                    <p>
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            {{ form_label(form.funded) }}
-                        </div>
-                        <div class="col-xs-6 text-center" align="left">
-                            <div class="radio_inline">
-                                {{ form_widget(form.funded) }}
-                                {% if project.getFunded() %}
-                                    <label id="label-funded" for="oleg_translationalresearchbundle_project_funded">Yes</label>
-                                {% else %}
-                                    <label id="label-funded" for="oleg_translationalresearchbundle_project_funded"></label>
-                                {% endif %}
-                            </div>
+                    {#<p>#}
+                    {#<div class="row">#}
+                        {#<div class="col-xs-6" align="right">#}
+                            {#{{ form_label(form.funded) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-6 text-center" align="left">#}
+                            {#<div class="radio_inline">#}
+                                {#{{ form_widget(form.funded) }}#}
+                                {#{% if project.getFunded() %}#}
+                                    {#<label id="label-funded" for="oleg_translationalresearchbundle_project_funded">Yes</label>#}
+                                {#{% else %}#}
+                                    {#<label id="label-funded" for="oleg_translationalresearchbundle_project_funded"></label>#}
+                                {#{% endif %}#}
                             {#</div>#}
-                        </div>
-                    </div>
-                    </p>
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div>#}
+                    {#</p>#}
+                    {{ formmacros.field(form.funded) }}
 
                     {{ transres.projectAdditionalDetails(form,project,cycle) }}
 
