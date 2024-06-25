@@ -939,7 +939,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('studyDuration', null, array(
-            'label' => "Projected grant or other closest deadline date for completion of this project:", //"Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
+            'label' => "Projected grant or other closest deadline date for completion of this project:",
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
