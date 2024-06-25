@@ -437,7 +437,7 @@ function transresValidateProjectForm() {
 
         var holder = $(this).closest(".row");
 
-        console.log("label=["+label+"]");
+        //console.log("label=["+label+"]");
         if( label == 'IRB Number:' || label == 'IRB Expiration Date:' ) {
             var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
             if( !exemptIrbApproval ) {
@@ -487,33 +487,6 @@ function transresValidateProjectForm() {
                 return false;
             }
         }
-
-        // var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
-        // if( exemptIrbApproval == "Not Exempt" ) {
-        //     //irbNumber and irbExpirationDate are required
-        //     if( $(".transres-project-irbNumber").prop('required') ) {
-        //         var irbNumber = $(".transres-project-irbNumber").val();
-        //         if (!irbNumber) {
-        //             var msg = "Please provide IRB number.";
-        //             $("#projectError").show();
-        //             $("#projectError").html(msg);
-        //             transresShowBtn();
-        //             return false;
-        //         }
-        //     }
-        //
-        //     if( $(".transres-project-irbExpirationDate").prop('required') ) {
-        //         var irbExpirationDate = $(".transres-project-irbExpirationDate").val();
-        //         if (!irbExpirationDate) {
-        //             var msg = "Please provide IRB expiration date.";
-        //             $("#projectError").show();
-        //             $("#projectError").html(msg);
-        //             transresShowBtn();
-        //             return false;
-        //         }
-        //     }
-        // }
-
     }); //if required
 
     if( validated == false ) {
