@@ -345,8 +345,14 @@ class ProjectType extends AbstractType
         }
         ///////////////// EOF Hide the fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
 
+        $descriptionLabel = "Brief Description:";
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+            $descriptionLabel = "Brief description (include basic information regarding your project, ".
+                "approximate number of markers you want to analyze, and number and type of samples, ".
+                "e.g. human or mouse, whole-slide or TMAs, neoplastic or non-neoplastic, disease model, etc.):";
+        }
         $builder->add('description', null, array(
-            'label' => "Brief Description:",
+            'label' => $descriptionLabel,
             'attr' => array('class' => 'textarea form-control')
         ));
 
@@ -933,7 +939,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('studyDuration', null, array(
-            'label' => "Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
+            'label' => "Projected grant or other closest deadline date for completion of this project:", //"Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
