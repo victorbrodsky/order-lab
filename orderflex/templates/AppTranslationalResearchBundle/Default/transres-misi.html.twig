@@ -275,7 +275,9 @@
                         {#</div>#}
                     {#</div>#}
                     {#</p>#}
-                    {{ formmacros.field(form.funded) }}
+                    {% if form.funded is defined %}
+                        {{ formmacros.field(form.funded) }}
+                    {% endif %}
 
                     {{ transres.projectAdditionalDetails(form,project,cycle) }}
 

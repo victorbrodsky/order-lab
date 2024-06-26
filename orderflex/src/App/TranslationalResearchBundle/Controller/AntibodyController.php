@@ -23,6 +23,7 @@ use App\TranslationalResearchBundle\Form\AntibodyFilterType;
 use App\TranslationalResearchBundle\Form\AntibodyType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -792,6 +793,34 @@ class AntibodyController extends OrderAbstractController
         return $mapper;
     }
 
+    //Classical approach using html
+    #[Route(path: '/public/misi-antibody-panels', name: 'translationalresearch_misi_antibody_panels', methods: ['GET'])]
+    public function indexPublicMisiAntibodyPanelsAction(Request $request)
+    {
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //orderflex\src\App\TranslationalResearchBundle\Util\MISI_Antibody_Panels.pdf
+        $originalname = 'MISI_Antibody_Panels.pdf';
+        $folderPath = $projectDir.DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."App".
+            DIRECTORY_SEPARATOR."TranslationalResearchBundle".
+            DIRECTORY_SEPARATOR."Util"
+        ;
+        $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
+
+        $size = filesize($abspath);
+
+        if( $abspath || $originalname || $size ) {
+            //echo "abspath=".$abspath."<br>";
+            //echo "originalname=".$originalname."<br>";
+            //echo "$abspath: size=".$size."<br>";
+            $viewType = NULL;
+            $downloader = new LargeFileDownloader();
+            $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
+        } else {
+            exit ("File $originalname is not available");
+        }
+        exit;
+    }
 
     //Classical approach using html
     #[Route(path: '/public/antibodies/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]

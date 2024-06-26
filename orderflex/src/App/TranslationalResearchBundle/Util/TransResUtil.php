@@ -6338,7 +6338,7 @@ class TransResUtil
     //TODO: export list of antibodies to PDF
     public function createAntibodyPdf($antibodyIdsArr,$fileName,$limit=null,$onlyPublic=false) {
 
-        echo "Export Under Construction";
+        echo "PDF export under construction";
         return null;
 
         $logger = $this->container->get('logger');

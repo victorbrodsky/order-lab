@@ -3791,6 +3791,18 @@ class Project {
         return NULL;
     }
 
+    public function getRequesterGroupAbbreviation( $lowercase=true ) {
+        $requesterGroup = $this->getRequesterGroup();
+        if( $requesterGroup ) {
+            $abbreviation = $requesterGroup->getAbbreviation();
+            if( $lowercase ) {
+                $abbreviation = strtolower($abbreviation);
+            }
+            return $abbreviation;
+        }
+        return NULL;
+    }
+
     public function getEntityName() {
         return "Project";
     }

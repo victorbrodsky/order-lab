@@ -260,18 +260,26 @@ class ProjectType extends AbstractType
 //            //'attr' => array('class'=>'form-control transres-funded')
 //            'attr' => array('class' => 'transres-funded')
 //        ));
-        $builder->add('funded', ChoiceType::class, array(
-            'choices' => array(
-                'Yes' => true,
-                'No, I am requesting all or some funding from the '.$this->params['institutionName'].' Pathology department' => false
-            ),
-            'label' => 'Has this project been funded?:',
-            'multiple' => false,
-            'required' => false,
-            'expanded' => true,
-            'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class' => 'horizontal_type transres-funded')
-        ));
+        //Hide funded for External (requestor group = External) MISI projects:
+        //Hide if (MISI && external)
+        //Show if (!MISI || !external)
+        //RequesterGroupList abbreviation 'External' 
+        if( $this->params['project']->getProjectSpecialtyStr() != 'MISI' ||
+            $this->params['project']->getRequesterGroupAbbreviation() != 'external'
+        ) {
+            $builder->add('funded', ChoiceType::class, array(
+                'choices' => array(
+                    'Yes' => true,
+                    'No, I am requesting all or some funding from the ' . $this->params['institutionName'] . ' Pathology department' => false
+                ),
+                'label' => 'Has this project been funded?:',
+                'multiple' => false,
+                'required' => false,
+                'expanded' => true,
+                'placeholder' => false, //to remove 'Null' set placeholder to false
+                'attr' => array('class' => 'horizontal_type transres-funded')
+            ));
+        }
 
         $builder->add('fundedAccountNumber', null, array(
             'label' => 'If funded, please provide account number:',

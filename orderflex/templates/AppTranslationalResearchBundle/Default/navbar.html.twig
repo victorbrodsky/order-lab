@@ -552,31 +552,38 @@
                     {# EOF simpleMenu #}
 
                     {#multi-level#}
+                    <li id="nav-bar-translationalresearch-catalogs" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Catalogs<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}" target="_blank">Fee schedule</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('translationalresearch_antibodies_public_react') }}" target="_blank">Published Antibody List</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('translationalresearch_misi_antibody_panels') }}" target="_blank">MISI Antibody Panels</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li id="nav-bar-translationalresearch-configuration" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>
-                            </li>
+                            {#<li>#}
+                                {#<a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>#}
+                            {#</li>#}
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
-                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
-                                {#Product/Service (Fee Schedule) List Management#}
-                                {#<li>#}
-                                    {#<a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Fee schedule management</a>#}
-                                {#</li>#}
-
                                 <li>
-                                    {#<a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>#}
                                     <a href="{{ path('translationalresearch_antibodies') }}">Complete Antibody List</a>
                                 </li>
                                 {#<li>#}
-                                    {#<a href="{{ path('translationalresearch_antibodies_public') }}">Antibody public page orig</a>#}
+                                    {#<a href="{{ path('translationalresearch_antibodies_public_react') }}">Published Antibody List</a>#}
                                 {#</li>#}
-                                <li>
-                                    <a href="{{ path('translationalresearch_antibodies_public_react') }}">Published Antibody List</a>
-                                </li>
                             {% endif %}
 
                             {#Reviewers#}
