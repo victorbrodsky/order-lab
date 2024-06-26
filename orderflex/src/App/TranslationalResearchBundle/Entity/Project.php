@@ -612,6 +612,12 @@ class Project {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $studyDuration;
 
+    //For MISI project submission form ONLY, add a new free text field
+    // "Timeframe description (expected deadline dates for the receipt of the initial requested data set,
+    // completed data analysis, manuscript submission, grant milestones, etc):"
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $timeframe;
+
     //12) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
     // with a drop down menu containing the following options: “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
     //13) If “Not applicable” is selected,
@@ -2627,6 +2633,22 @@ class Project {
     public function setStudyDuration($studyDuration)
     {
         $this->studyDuration = $studyDuration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeframe()
+    {
+        return $this->timeframe;
+    }
+
+    /**
+     * @param mixed $timeframe
+     */
+    public function setTimeframe($timeframe)
+    {
+        $this->timeframe = $timeframe;
     }
 
     /**

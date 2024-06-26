@@ -275,6 +275,10 @@
 
                     {{ formmacros.fieldDateLabel(form.studyDuration,'allow-future-date') }}
 
+                    {% if form.timeframe is defined %}
+                        {{ formmacros.field(form.timeframe) }}
+                    {% endif %}
+
                     {% if form.priceList is defined %}
                         {{ formmacros.field(form.priceList) }}
                     {% endif %}

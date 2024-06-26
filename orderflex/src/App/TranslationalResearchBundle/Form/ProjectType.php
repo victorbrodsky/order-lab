@@ -946,6 +946,15 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'datepicker form-control')
         ));
 
+        //For MISI project submission form ONLY
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+            $builder->add('timeframe', null, array(
+                'label' => "Timeframe description (expected deadline dates for the receipt of the initial" .
+                    " requested data set, completed data analysis, manuscript submission, grant milestones, etc):",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+        }
+
         //Add submitInvestigators similar to coInvestigators. Added above
 
         //////////// Additonal Details (8) ////////////
