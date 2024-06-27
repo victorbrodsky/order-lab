@@ -744,11 +744,11 @@ class Project {
     // and on https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=External&collaborating-division=CSP ,
     // set the checkbox “[v] Computational Pathology” to checked on load for question
     // “Which division(s) are you collaborating with?:“
-    // and under it (because it is checked), unhide a question titled “Computational study category:”
+    // and under it (because it is checked), unhide a question titled “Computational data analysis service category:”
     // showing the five members of the list “Computational translational project categories”
     // as unchecked check boxes. If “[v] Computational Pathology” checkbox
     // on any New Project Request page is unchecked (as an answer to “Which division(s)
-    // are you collaborating with?:“), CLEAR/uncheck the answers for and hide the “Computational study category:” question/field.
+    // are you collaborating with?:“), CLEAR/uncheck the answers for and hide the “Computational data analysis service category:” question/field.
     /**
      * Computational translational project categories (Types): Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
      **/

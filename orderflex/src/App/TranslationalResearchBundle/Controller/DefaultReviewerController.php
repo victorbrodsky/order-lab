@@ -804,17 +804,17 @@ class DefaultReviewerController extends OrderAbstractController
                 if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
                     if( $review->getPrimaryReview() ) {
                         if( $projectReviewerPrimaryCommittee ) {
-                            echo "*** User is Committee Reviewer (primary) <br>";
+                            echo "*** User is Scientific Committee Reviewer (primary) <br>";
                             $review->setReviewer($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = $this->getMsg("Primary Committee Reviewer",$substituteUser,$replaceUser); //"Primary Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Primary Scientific Committee Reviewer",$substituteUser,$replaceUser); //"Primary Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     } else {
                         if( $projectReviewerCommittee ) {
-                            echo "*** User is Committee Reviewer <br>";
+                            echo "*** User is Scientific Committee Reviewer <br>";
                             $review->setReviewer($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = $this->getMsg("Committee Reviewer",$substituteUser,$replaceUser); //"Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Scientific Committee Reviewer",$substituteUser,$replaceUser); //"Committee Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     }
                 }
@@ -822,17 +822,17 @@ class DefaultReviewerController extends OrderAbstractController
                 if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
                     if( $review->getPrimaryReview() ) {
                         if( $projectReviewerPrimaryCommitteeDelegate ) {
-                            echo "*** User is Committee Reviewer Delegate (primary) <br>";
+                            echo "*** User is Scientific Committee Reviewer Delegate (primary) <br>";
                             $review->setReviewerDelegate($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = $this->getMsg("Primary Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Primary Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Primary Scientific Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Primary Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     } else {
                         if( $projectReviewerCommitteeDelegate ) {
                             echo "*** User is Committee Reviewer Delegate <br>";
                             $review->setReviewerDelegate($replaceUser);
                             $this->flushObject($review,$testing);
-                            $msgArr[] = $this->getMsg("Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                            $msgArr[] = $this->getMsg("Scientific Committee Reviewer Delegate",$substituteUser,$replaceUser); //"Committee Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                         }
                     }
                 }
@@ -841,19 +841,19 @@ class DefaultReviewerController extends OrderAbstractController
             foreach( $project->getFinalReviews() as $review) {
                 if( $review->getReviewer() && $review->getReviewer()->getId() == $substituteUserId ) {
                     if( $projectReviewerFinal ) {
-                        echo "*** User is Final Reviewer <br>";
+                        echo "*** User is Financial and Programmatic Reviewer <br>";
                         $review->setReviewer($replaceUser);
                         $this->flushObject($review,$testing);
-                        $msgArr[] = $this->getMsg("Final Reviewer",$substituteUser,$replaceUser); //"Final Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Financial and Programmatic Reviewer",$substituteUser,$replaceUser); //"Final Reviewer substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
                 if( $review->getReviewerDelegate() && $review->getReviewerDelegate()->getId() == $substituteUserId ) {
                     if( $projectReviewerFinalDelegate ) {
-                        echo "*** User is Final Reviewer Delegate <br>";
+                        echo "*** User is Financial and Programmatic Reviewer Delegate <br>";
                         $review->setReviewerDelegate($replaceUser);
                         //$toFlushReviewer = true;
                         $this->flushObject($review,$testing);
-                        $msgArr[] = $this->getMsg("Final Reviewer Delegate",$substituteUser,$replaceUser); //"Final Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
+                        $msgArr[] = $this->getMsg("Financial and Programmatic Reviewer Delegate",$substituteUser,$replaceUser); //"Final Reviewer Delegate substituted from " . $substituteUser . " to " . $replaceUser;
                     }
                 }
             }

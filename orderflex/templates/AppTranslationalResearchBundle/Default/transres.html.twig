@@ -265,7 +265,9 @@
 
                     {#{{ formmacros.checkbox(form.needInfSupport) }}#}
                     {#{{ formmacros.field(form.amountInfSupport) }}#}
-                    {{ transres.needInfSupport(form,project,cycle) }}
+                    {% if form.needInfSupport is defined %}
+                        {{ transres.needInfSupport(form,project,cycle) }}
+                    {% endif %}
 
                     {{ formmacros.field(form.studyPopulation) }}
 
@@ -844,7 +846,7 @@ Show this accordion by default in an open + visible state.
         {% if form %}
             {{ formmacros.field(form.needStatSupport) }}
         {% else %}
-            {{ formmacros.simplefield("Will you need departmental statistical support?:", project.needStatSupport, "input", "disabled") }}
+            {{ formmacros.simplefield("Will you need departmental statistical or informatics support from the computational pathology team?:", project.needStatSupport, "input", "disabled") }}
         {% endif %}
 
         {#class="panel panel-default"#}
@@ -864,21 +866,17 @@ Show this accordion by default in an open + visible state.
     {% if not project.needInfSupport %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
-    {#<div class="well">#}
-        {% if form %}
-            {{ formmacros.field(form.needInfSupport) }}
-        {% else %}
-            {{ formmacros.simplefield("Will you need informatics support?:", project.needInfSupport, "input", "disabled") }}
-        {% endif %}
+    {% if form %}
+        {{ formmacros.field(form.needInfSupport) }}
+    {% else %}
+        {{ formmacros.simplefield("Will you need informatics support?:", project.needInfSupport, "input", "disabled") }}
+    {% endif %}
 
-        {#class="panel panel-default"#}
+    {% if form.amountInfSupport is defined %}
         <div id="needInfSupport" style="{{ panelStyle }}">
-            {#<div class="panel-heading">Departmental Informatics Support</div>#}
-            {#<div class="panel-body">#}
-                {{ formmacros.field(form.amountInfSupport) }}
-            {#</div>#}
+            {{ formmacros.field(form.amountInfSupport) }}
         </div>
-    {#</div>#}
+    {% endif %}
 {% endmacro %}
 
 {% macro irbStatusList( form, project, cycle ) %}
@@ -1588,9 +1586,13 @@ Show this accordion by default in an open + visible state.
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="committeereviewHeading">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#committeereview" aria-expanded="true" aria-controls="reviewBase">
+                        <a role="button" data-toggle="collapse"
+                           data-parent="#accordion"
+                           href="#committeereview"
+                           aria-expanded="true"
+                           aria-controls="reviewBase">
                             {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
-                            Committee Reviews
+                            Scientific Committee Reviews
                         </a>
                     </h4>
                 </div>
@@ -1614,7 +1616,7 @@ Show this accordion by default in an open + visible state.
 
                             {% if cycle != "show" and cycle != "review" %}
                                 {% if showAddDeleteBtn %}
-                                    {{ usermacros.addNewObjectBtn(cycle,'transres-committeereviews','Add Committee Reviewer') }}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-committeereviews','Add Scientific Committee Reviewer') }}
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -1631,7 +1633,7 @@ Show this accordion by default in an open + visible state.
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#finalreview" aria-expanded="true" aria-controls="reviewBase">
                             {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
-                            Final Review
+                            Financial and Programmatic Review
                         </a>
                     </h4>
                 </div>
@@ -1655,7 +1657,8 @@ Show this accordion by default in an open + visible state.
 
                             {% if cycle != "show" and cycle != "review" %}
                                 {% if showAddDeleteBtn %}
-                                    {{ usermacros.addNewObjectBtn(cycle,'transres-finalreviews','Add Final Reviewer') }}
+                                    {#Final Reviewer#}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-finalreviews','Add Financial and Programmatic Review') }}
                                 {% endif %}
                             {% endif %}
                         </div>

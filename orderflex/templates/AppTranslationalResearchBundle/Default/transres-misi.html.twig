@@ -217,11 +217,15 @@
                         {{ transres.needStatSupport(form,project,cycle) }}
                     {% endif %}
 
-                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
-                        {% do form.needInfSupport.setRendered %}
-                        {% do form.amountInfSupport.setRendered %}
-                    {% else %}
-                        {{ transres.needInfSupport(form,project,cycle) }}
+                    {% if form.needInfSupport is defined %}
+                        {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
+                            {% do form.needInfSupport.setRendered %}
+                            {% if form.amountInfSupport is defined %}
+                                {% do form.amountInfSupport.setRendered %}
+                            {% endif %}
+                        {% else %}
+                            {{ transres.needInfSupport(form,project,cycle) }}
+                        {% endif %}
                     {% endif %}
 
                     {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}

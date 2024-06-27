@@ -793,7 +793,6 @@ class AntibodyController extends OrderAbstractController
         return $mapper;
     }
 
-    //Classical approach using html
     #[Route(path: '/public/misi-antibody-panels', name: 'translationalresearch_misi_antibody_panels', methods: ['GET'])]
     public function indexPublicMisiAntibodyPanelsAction(Request $request)
     {
@@ -862,7 +861,7 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    #[Route(path: '/public-antibody-list', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
+    #[Route(path: '/public/published-antibodies', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {

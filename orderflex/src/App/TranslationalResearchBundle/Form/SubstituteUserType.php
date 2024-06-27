@@ -201,34 +201,34 @@ class SubstituteUserType extends AbstractType
         ));
         //Committee Reviewer
         $builder->add('projectReviewerCommittee', CheckboxType::class, array(
-            'label' => 'Committee Reviewer:',
+            'label' => 'Scientific Committee Reviewer:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerCommitteeDelegate', CheckboxType::class, array(
-            'label' => 'Committee Reviewer Delegate:',
+            'label' => 'Scientific Committee Reviewer Delegate:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Primary Committee Reviewer
         $builder->add('projectReviewerPrimaryCommittee', CheckboxType::class, array(
-            'label' => 'Primary Committee Reviewer:',
+            'label' => 'Primary Scientific Committee Reviewer:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerPrimaryCommitteeDelegate', CheckboxType::class, array(
-            'label' => 'Primary Committee Reviewer Delegate:',
+            'label' => 'Primary Scientific Committee Reviewer Delegate:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Final Reviewer
         $builder->add('projectReviewerFinal', CheckboxType::class, array(
-            'label' => 'Final Reviewer:',
+            'label' => 'Financial and Programmatic Reviewer:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerFinalDelegate', CheckboxType::class, array(
-            'label' => 'Final Reviewer Delegate:',
+            'label' => 'Financial and Programmatic Reviewer Delegate:',
             'required' => false,
             //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));

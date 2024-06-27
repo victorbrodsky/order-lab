@@ -885,7 +885,7 @@ class ProjectMisiType extends AbstractType
                 'Yes' => true,
                 'No' => false
             ),
-            'label' => 'Will you need departmental statistical support?:',
+            'label' => 'Will you need departmental statistical or informatics support from the computational pathology team?:',
             'multiple' => false,
             'required' => false,
             'expanded' => true,
@@ -893,26 +893,27 @@ class ProjectMisiType extends AbstractType
             'attr' => array('class'=>'horizontal_type needStatSupport')
         ));
         $builder->add('amountStatSupport',null,array(
-            'label' => "What is the estimated quantity of needed statistical support hours?:",
+            'label' => "What is the estimated quantity of needed statistical or informatics support hours?:",
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('needInfSupport', ChoiceType::class, array(
-            'choices' => array(
-                'Yes' => true,
-                'No' => false
-            ),
-            'label' => 'Will you need informatics support?:',
-            'multiple' => false,
-            'required' => false,
-            'expanded' => true,
-            'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class'=>'horizontal_type needInfSupport')
-        ));
-        $builder->add('amountInfSupport',null,array(
-            'label' => "Please describe the data and the needed analysis:",
-            'attr' => array('class'=>'textarea form-control')
-        ));
+        //F- Hide “Will you need informatics support?” question for ALL project types by default
+//        $builder->add('needInfSupport', ChoiceType::class, array(
+//            'choices' => array(
+//                'Yes' => true,
+//                'No' => false
+//            ),
+//            'label' => 'Will you need informatics support?:',
+//            'multiple' => false,
+//            'required' => false,
+//            'expanded' => true,
+//            'placeholder' => false, //to remove 'Null' set placeholder to false
+//            'attr' => array('class'=>'horizontal_type needInfSupport')
+//        ));
+//        $builder->add('amountInfSupport',null,array(
+//            'label' => "Please describe the data and the needed analysis:",
+//            'attr' => array('class'=>'textarea form-control')
+//        ));
 
         $builder->add('studyPopulation',null,array(
             'label' => "Study population (include a brief description such as health status or primary diagnosis):",
@@ -1050,7 +1051,7 @@ class ProjectMisiType extends AbstractType
 
         $builder->add('compTypes', EntityType::class, array(
             'class' => CompCategoryList::class,
-            'label' => 'Computational study category:',
+            'label' => 'Computational data analysis service category:',
             'required' => false,
             'multiple' => true,
             'expanded' => true,

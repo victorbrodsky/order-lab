@@ -1892,8 +1892,8 @@ class TransResUtil
                 break;
 
             case "committee_review_approved":
-                $label = "Approve Project Request as a Result of Committee Review";
-                $labeled = "Approved Project Request as a Result of Committee Review";
+                $label = "Approve Project Request as a Result of Scientific Committee Review";
+                $labeled = "Approved Project Request as a Result of Scientific Committee Review";
                 //echo "Reviewer=".$review->getReviewer()."<br>";
                 if( $review && method_exists($review, 'getPrimaryReview') ) {
                     //echo "committee_review_approved PrimaryReview =".$review->getPrimaryReview()."<br>";
@@ -1902,15 +1902,15 @@ class TransResUtil
                         //$labeled = $labeled . " as Primary Reviewer";
                     } else {
                         $userInfo = $this->getReviewerInfo($review);
-                        $label = "Recommend Approval as a Result of Committee Review" . $userInfo;
-                        $labeled = "Recommended Approval as a Result of Committee Review" . $userInfo;
+                        $label = "Recommend Approval as a Result of Scientific Committee Review" . $userInfo;
+                        $labeled = "Recommended Approval as a Result of Scientific Committee Review" . $userInfo;
                     }
                 }
                 //echo "label=$label<br>";
                 break;
             case "committee_review_rejected":
-                $label = "Reject Project Request as a Result of Committee Review";
-                $labeled = "Rejected Project Request as a Result of Committee Review";
+                $label = "Reject Project Request as a Result of Scientific Committee Review";
+                $labeled = "Rejected Project Request as a Result of Scientific Committee Review";
                 if( $review && method_exists($review, 'getPrimaryReview') ) {
                     if ($review->getPrimaryReview() === true) {
                         //$label = $label . " as Primary Reviewer";
@@ -1918,8 +1918,8 @@ class TransResUtil
                     } else {
                         $userInfo = $this->getReviewerInfo($review);
                         //$label = "Recommend Reject Committee Review".$userInfo;
-                        $label = "Recommend Rejection as a Result of Committee Review" . $userInfo;
-                        $labeled = "Recommended Rejection as a Result of Committee Review" . $userInfo;
+                        $label = "Recommend Rejection as a Result of Scientific Committee Review" . $userInfo;
+                        $labeled = "Recommended Rejection as a Result of Scientific Committee Review" . $userInfo;
                     }
                 }
                 break;
@@ -1934,30 +1934,30 @@ class TransResUtil
 //                }
 //                break;
             case "committee_review_resubmit":
-                $label = "Resubmit Project Request to Committee Review";
-                $labeled = "Resubmitted Project Request to Committee Review";
+                $label = "Resubmit Project Request to Scientific Committee Review";
+                $labeled = "Resubmitted Project Request to Scientific Committee Review";
                 break;
 
             case "final_review_approved":
-                $label = "Approve Project Request as a Result of Final Review";
-                $labeled = "Approved Project Request as a Result of Final Review";
+                $label = "Approve Project Request as a Result of Financial and Programmatic Review";
+                $labeled = "Approved Project Request as a Result of Financial and Programmatic Review";
                 break;
             case "final_review_rejected":
-                $label = "Reject Project Request as a Result of Final Review";
-                $labeled = "Rejected Project Request as a Result of Final Review";
+                $label = "Reject Project Request as a Result of Financial and Programmatic Review";
+                $labeled = "Rejected Project Request as a Result of Financial and Programmatic Review";
                 break;
 //            case "final_review_missinginfo":
 //                $label = "Request additional information from submitter for Final Review";
 //                $labeled = "Requested additional information from submitter for Final Review";
 //                break;
             case "final_review_resubmit":
-                $label = "Resubmit Project Request to Final Review";
-                $labeled = "Resubmitted Project Request to Final Review";
+                $label = "Resubmit Project Request to Financial and Programmatic Review";
+                $labeled = "Resubmitted Project Request to Financial and Programmatic Review";
                 break;
 
             case "committee_finalreview_approved":
-                $label = "Provide Final Approval";
-                $labeled = "Provided Final Approval";
+                $label = "Provide Financial and Programmatic Approval";
+                $labeled = "Provided Financial and Programmatic Approval";
                 break;
 
             default:
@@ -2061,23 +2061,23 @@ class TransResUtil
                 break;
 
             case "committee_review":
-                $state = "Committee Review";
+                $state = "Scientific Committee Review";
                 break;
             case "committee_rejected":
-                $state = "Committee Review Rejected";
+                $state = "Scientific Committee Review Rejected";
                 break;
 //            case "committee_missinginfo":
 //                $state = "Pending additional information from submitter for Committee Review";
 //                break;
 
             case "final_review":
-                $state = "Final Review";
+                $state = "Financial and Programmatic Review";
                 break;
             case "final_approved":
                 $state = "Approved";
                 break;
             case "final_rejected":
-                $state = "Final Review Rejected";
+                $state = "Financial and Programmatic Review Rejected";
                 break;
 //            case "final_missinginfo":
 //                $state = "Pending additional information from submitter for Final Review";
@@ -2134,23 +2134,23 @@ class TransResUtil
                 break;
 
             case "committee_review":
-                $state = "Committee Review";
+                $state = "Scientific Committee Review";
                 break;
             case "committee_rejected":
-                $state = "Committee Review Rejected";
+                $state = "Scientific Committee Review Rejected";
                 break;
 //            case "committee_missinginfo":
 //                $state = "Request additional information from submitter for Committee Review";
 //                break;
 
             case "final_review":
-                $state = "Final Review";
+                $state = "Financial and Programmatic Review";
                 break;
             case "final_approved":
                 $state = "Approved";
                 break;
             case "final_rejected":
-                $state = "Final Review Rejected";
+                $state = "Financial and Programmatic Review Rejected";
                 break;
 //            case "final_missinginfo":
 //                $state = "Request additional information from submitter for Final Review";
@@ -8005,19 +8005,19 @@ class TransResUtil
             ),
 
             'ROLE_TRANSRES_COMMITTEE_REVIEWER'      => array(
-                "Translational Research [[ROLENAME]] Committee Reviewer",
-                "[[ROLENAME]] Committee Review",
+                "Translational Research [[ROLENAME]] Scientific Committee Reviewer",
+                "[[ROLENAME]] Scientific Committee Review",
                 50,
             ),
 
             'ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER' => array(
-                "Translational Research [[ROLENAME]] Primary Committee Reviewer",
-                "[[ROLENAME]] Committee Review",
+                "Translational Research [[ROLENAME]] Primary Scientific Committee Reviewer",
+                "[[ROLENAME]] Scientific Committee Review",
                 50
             ),
 
             'ROLE_TRANSRES_PRIMARY_REVIEWER' => array(
-                "Translational Research [[ROLENAME]] Final Reviewer",
+                "Translational Research [[ROLENAME]] Financial and Programmatic Reviewer",
                 "Review for all states for [[ROLENAME]]",
                 80
             ),

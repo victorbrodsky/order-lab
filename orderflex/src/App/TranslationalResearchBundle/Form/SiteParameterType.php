@@ -363,12 +363,12 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectReminderDelay_committee_review', null, array(
-            'label' => "Pending project request reminder email delay for Committee review (in days):",
+            'label' => "Pending project request reminder email delay for Scientific Committee review (in days):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectReminderDelay_final_review', null, array(
-            'label' => "Pending project request reminder email delay for Final review (in days):",
+            'label' => "Pending project request reminder email delay for Financial and Programmatic review (in days):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
