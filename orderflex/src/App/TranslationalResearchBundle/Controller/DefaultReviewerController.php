@@ -62,7 +62,7 @@ class DefaultReviewerController extends OrderAbstractController
         return array(
             'states' => $states,
             'specialty' => $specialty,
-            'title' => "Default Reviewers for ".$specialty
+            'title' => "Reviewers for ".$specialty
         );
     }
 
@@ -128,7 +128,7 @@ class DefaultReviewerController extends OrderAbstractController
             'defaultReviewers' => $defaultReviewers,
             'stateStr' => $stateStr,
             'specialty' => $specialty,
-            'title' => "Default Reviewers for ".$specialty." ".$stateLabel
+            'title' => "Reviewers for ".$specialty." ".$stateLabel
         );
     }
 
@@ -188,7 +188,7 @@ class DefaultReviewerController extends OrderAbstractController
             'defaultReviewer' => $defaultReviewer,
             'specialty' => $specialty,
             'form' => $form->createView(),
-            'title' => "Create a new Default Reviewer for ".$stateLabel
+            'title' => "Create a new Reviewer for ".$stateLabel
         );
     }
 
@@ -214,7 +214,7 @@ class DefaultReviewerController extends OrderAbstractController
             'form' => $form->createView(),
             'defaultReviewer' => $defaultReviewer,
             'specialty' => $defaultReviewer->getProjectSpecialty(),
-            'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
+            'title' => "Reviewer ".$defaultReviewer->getReviewer(),
             'delete_form' => $deleteForm->createView(),
         );
 //        return $this->render('defaultreviewer/show.html.twig', array(
@@ -283,7 +283,7 @@ class DefaultReviewerController extends OrderAbstractController
             'defaultReviewer' => $defaultReviewer,
             'specialty' => $defaultReviewer->getProjectSpecialty(),
             'form' => $form->createView(),
-            'title' => "Default Reviewer for ".$specialtyStr." ".$stateLabel,
+            'title' => "Reviewer for ".$specialtyStr." ".$stateLabel,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -326,7 +326,7 @@ class DefaultReviewerController extends OrderAbstractController
             $em->flush();
 
             //Event Log
-            $eventType = "Default Reviewer Deleted";
+            $eventType = "Reviewer Deleted";
             $stateStr = $defaultReviewer->getState();
             $msg = "Default Reviewer Object ($stateStr, $specialtyStr) has been deleted with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
             $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
