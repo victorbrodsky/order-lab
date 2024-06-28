@@ -210,12 +210,13 @@
                         {{ formmacros.field(form.softwareTool)|raw }}
                     {% endif %}
 
-                    {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
-                        {% do form.needStatSupport.setRendered %}
-                        {% do form.amountStatSupport.setRendered %}
-                    {% else %}
-                        {{ transres.needStatSupport(form,project,cycle) }}
-                    {% endif %}
+                    {#{% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}#}
+                        {#{% do form.needStatSupport.setRendered %}#}
+                        {#{% do form.amountStatSupport.setRendered %}#}
+                    {#{% else %}#}
+                        {#{{ transres.needStatSupport(form,project,cycle) }}#}
+                    {#{% endif %}#}
+                    {{ transres.needStatSupport(form,project,cycle) }}
 
                     {% if form.needInfSupport is defined %}
                         {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
