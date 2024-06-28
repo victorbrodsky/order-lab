@@ -3359,6 +3359,76 @@ class Project {
         return $this->getOid() . " '$title'";
     }
 
+    public function getProjectSubmitterDetails( $separator='; ' ) {
+        $details = '';
+        //Contact information of the submitter:
+        //FirstName LastName, Degree
+        $submitter = $this->getSubmitter()->getUsernameOptimal();
+        if( $submitter) {
+            $details = $details . $submitter;
+        }
+
+        //OrganizationOfSubmitter: user_perSiteSettings_defaultInstitution
+        $institutions = $this->getSubmitter()->getDeduplicatedInstitutions();
+        $instNames = array();
+        foreach( $institutions as $instRes ) {
+            foreach( $instRes as $instId => $instArr ) {
+                $instNames[] = $instArr['instName'];
+            }
+        }
+        $instNameStr = implode("; ", $instNames);
+        if( $instNameStr ) {
+            $details = $details . $separator . $instNameStr;
+        }
+
+        //emailOfSubmitter
+        $email = $this->getSubmitter()->getSingleEmail();
+        if( $email ) {
+            $details = $details . $separator . $email;
+        }
+
+        //phoneNumberOfSubmitter
+        $phone = $this->getSubmitter()->getSinglePhone();
+        if( $phone ) {
+            $details = $details . $separator . $phone;
+        }
+
+        return $details;
+    }
+
+    public function getProjectCompCategories( $separator=", " ) {
+        $compTypes = $this->getCompTypes();
+        $compTypesStr = '';
+        foreach ($compTypes as $compType) {
+            $compTypeName = $compType->getName();
+            if( $compTypeName ) {
+                $compTypesStr != '' && $compTypesStr .= $separator;
+                $compTypesStr .= $compTypeName;
+            }
+        }
+        return $compTypesStr;
+    }
+
+    public function getProjectInformaticsSupport() {
+        if( $this->getNeedStatSupport() === true ) {
+            return $this->getAmountStatSupport();
+        }
+        return NULL;
+    }
+
+    //Check if send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+    public function sendComputationalEmail() {
+        //1) Which division(s) are you collaborating with? => Computational Pathology
+        if( $this->getProjectCompCategories() ) {
+            return true;
+        }
+        //2) Will you need departmental statistical or informatics support from the computational pathology team? => Yes
+        if( $this->getProjectInformaticsSupport() ) {
+            return true;
+        }
+        return false;
+    }
+
     public function getIrbIacucNumber($delimeter=" ") {
         //A- If there is only an IRB number: show the IRB number as you do now
         //B- If there is only an IACUC number: show the IACUC number in parentheses (IACUC Number)

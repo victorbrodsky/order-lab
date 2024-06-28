@@ -18,6 +18,7 @@
 //defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
 Window.prototype.transresValidateProjectForm = transresValidateProjectForm;
 Window.prototype.transresSubmitBtnRegister = transresSubmitBtnRegister;
+Window.prototype.transresTestEmailNotations = transresTestEmailNotations;
 
 //export transresValidateProjectForm = transresValidateProjectForm;
 //export transresSubmitBtnRegister;

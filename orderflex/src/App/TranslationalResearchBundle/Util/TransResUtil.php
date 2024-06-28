@@ -59,6 +59,7 @@ use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: r
 use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
 use App\TranslationalResearchBundle\Form\ReviewBaseType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -3647,6 +3648,55 @@ class TransResUtil
         return $emails;
     }
 
+    public function sendComputationalEmail($project) {
+        $compEmails = array();
+        $compEmailUsers = $this->getTransresSiteProjectParameter('compEmailUsers',$project);
+        //$compEmailUsers = $this->getTransresSiteProjectArrayParameter('compEmailUsers',$project);
+        //dump($compEmailUsers);
+        foreach($compEmailUsers as $compEmailUser) {
+            //echo "compEmails=".$compEmailUser->getSingleEmail().'<br>';
+            $compEmails[] = $compEmailUser->getSingleEmail();
+        }
+
+        //echo "compEmails count=".count($compEmails).'<br>';
+        if( count($compEmails) == 0 ) {
+            return 'Email has not been sent: Computational pathology users are not specified';
+        }
+
+        $compEmailSubject = $this->getTransresSiteProjectParameter('compEmailSubject',$project);
+        if( !$compEmailSubject ) {
+            $compEmailSubject = 'Project Request #'.$project->getOid().
+                ' specified bioinformatician or computational pathology involvement';
+        }
+        $compEmailSubject = $this->replaceTextByNamingConvention($compEmailSubject,$project,null,null);
+
+        $compEmailBody = $this->getTransresSiteProjectParameter('compEmailBody',$project);
+        if( !$compEmailBody ) {
+            $compEmailBody = '
+            [[PROJECT SUBMITTER]] has specified the need for a bioinformatician / informatics support'.
+            ' or computational pathology involvement while submitting Project ID [[PROJECT ID]]'.
+            ' Titled [[PROJECT TITLE]] for PI [[PROJECT PIS]] on [[PROJECT SUBMISSION DATE]].'.
+            '<br><br>[[PROJECT COMPUTATIONAL CATEGORIES]]'.
+            '<br><br>[[PROJECT STAT/INFORMATICS SUPPORT]].'.
+            '<br><br>The project details can be reviewed below: <br>[[PROJECT SHOW URL]]'.
+            '<br><br>Contact information of the submitter: <br>[[PROJECT SUBMITTER DETAILS]]';
+        }
+        $compEmailBody = $this->replaceTextByNamingConvention($compEmailBody,$project,null,null);
+
+        //dump($compEmails);
+        //dump($compEmailSubject);
+        //dump($compEmailBody);
+        //exit('sendComputationalEmail');
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $senderEmail = $this->getTransresSiteProjectParameter('fromEmail',$project);
+        $adminsCcs = $this->getTransResAdminEmails($project,true,true); //new project after save
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail($compEmails,$compEmailSubject,$compEmailBody,$adminsCcs,$senderEmail);
+
+        return 'Subject: $compEmailSubject'.'; receivers: '.implode(', ',$compEmails);
+    }
+
     public function getTransResCollaborationDivs() {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
         $collDivs = $this->em->getRepository(CollDivList::class)->findBy(
@@ -4653,6 +4703,12 @@ class TransResUtil
             $text = str_replace("[[PROJECT ID TITLE]]", $project->getProjectIdTitle(), $text);
             $text = str_replace("[[PROJECT TITLE]]", $project->getTitle(), $text);
 
+            $text = str_replace("[[PROJECT SUBMITTER]]", $project->getSubmitter()->getUsernameOptimal(), $text);
+
+            if( strpos((string)$text, '[[PROJECT SUBMITTER DETAILS]]') !== false ) {
+                $text = str_replace("[[PROJECT SUBMITTER DETAILS]]", $project->getProjectSubmitterDetails('<br>'), $text);
+            }
+
             $projectUpdater = $project->getUpdateUser();
             if( $projectUpdater ) {
                 $text = str_replace("[[PROJECT UPDATER]]", $projectUpdater->getUsernameShortest(), $text);
@@ -5000,6 +5056,26 @@ class TransResUtil
                 $reactivationLink = '<a href="'.$reactivationLink.'">'.$reactivationLink.'</a>';
 
                 $text = str_replace("[[PROJECT REACTIVATION DENY URL]]", $reactivationLink, $text);
+            }
+
+            //[[PROJECT COMPUTATIONAL CATEGORIES]]
+            if( strpos((string)$text, '[[PROJECT COMPUTATIONAL CATEGORIES]]') !== false ) {
+                $projectCompCategories = $project->getProjectCompCategories();
+                if( $projectCompCategories ) {
+                    $projectCompCategories = 'Submitter specified the following computational data analysis categories: '.
+                        $projectCompCategories;
+                }
+                $text = str_replace("[[PROJECT COMPUTATIONAL CATEGORIES]]", $projectCompCategories, $text);
+            }
+            //[[PROJECT STAT/INFORMATICS SUPPORT]]
+            if( strpos((string)$text, '[[PROJECT STAT/INFORMATICS SUPPORT]]') !== false ) {
+                $projectInformaticsSupport = $project->getProjectInformaticsSupport();
+                if( $projectInformaticsSupport ) {
+                    $projectInformaticsSupport = 'Submitter specified the following estimated quantity '.
+                        'of needed statistical or informatics support hours: '.
+                        $projectInformaticsSupport;
+                }
+                $text = str_replace("[[PROJECT STAT/INFORMATICS SUPPORT]]", $projectInformaticsSupport, $text);
             }
 
         }//project
@@ -7259,10 +7335,47 @@ class TransResUtil
         return $humanTissueFormsViewLink;
     }
 
+    //NOT USED, USE universal getTransresSiteProjectParameter
+    //Use when value is a Doctrine Array
+    public function getTransresSiteProjectArrayParameter( $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false ) {
+        $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty,$useDefault,$testing);
+
+        //value might be array
+        if( is_array($value) || $value instanceof PersistentCollection || $value instanceof ArrayCollection ) {
+            echo $fieldName.": value is array, count=".count($value)."<br>";
+        } else {
+            echo $fieldName.": value is not array <br>";
+        }
+
+        //echo "value1=[$value] <br>";
+
+        if( count($value) == 0 ) {
+            $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL,$useDefault,$testing);
+        } else {
+            //echo "NOTNULL value2=[$value] <br>";
+        }
+
+        return $value;
+    }
     public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false ) {
         $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty,$useDefault,$testing);
         //echo "value1=[$value] <br>";
-        if( $value === NULL ) {
+
+        //value might be array
+        $valueEmpty = false;
+        if( is_array($value) || $value instanceof PersistentCollection || $value instanceof ArrayCollection ) {
+            //echo $fieldName.": value is array, count=".count($value)."<br>";
+            if( count($value) == 0 ) {
+                $valueEmpty = true;
+            }
+        } else {
+            //echo $fieldName.": value is not array <br>";
+            if( $value === NULL ) {
+                $valueEmpty = true;
+            }
+        }
+
+        if( $valueEmpty ) {
             $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL,$useDefault,$testing);
             //echo "NULL value2=[$value] <br>";
         } else {

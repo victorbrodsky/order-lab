@@ -1970,6 +1970,10 @@ class DefaultController extends OrderAbstractController
             'messageToUsers',
             'humanTissueFormNote',
 
+            //Project Computational Pathology Email
+            'compEmailSubject',
+            'compEmailBody',
+
             //Project Expiration Settings (Only for Non-Funded Projects)
             'expiringProjectEmailSubject',
             'expiringProjectEmailBody',

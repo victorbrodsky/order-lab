@@ -1526,11 +1526,8 @@ class ProjectController extends OrderAbstractController
             //set ExpectedExprDate only when project is final approved
             //$transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project,"document");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project,"irbApprovalLetter");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
             $em->getRepository(Document::class)->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
@@ -1592,6 +1589,7 @@ class ProjectController extends OrderAbstractController
                     " It will be reviewed and you should receive notifications regarding its approval status by email.".
                     " You can also log back into the website for the ".$transresUtil->getBusinessEntityName()." to review the status of your project request, ".
                     "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
+
             }
 
             if( $testing ) {
@@ -1621,6 +1619,18 @@ class ProjectController extends OrderAbstractController
 
                 $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
                 $msg = $msg . "<br><br>" . $emailResult;
+
+                //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+                if( $project->sendComputationalEmail() ) {
+                    $compEmailRes = $transresUtil->sendComputationalEmail($project);
+                    $msg = $msg . "<br><br>" . $compEmailRes;
+                    $this->addFlash(
+                        'notice',
+                        "Notification emails for projects involving Computational Pathology".
+                        " or a request for a bioinformatician".
+                        " have been sent: " . $compEmailRes
+                    );
+                }
             }
 
             $eventType = "Project Created";
@@ -1965,6 +1975,18 @@ class ProjectController extends OrderAbstractController
 
                 $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
                 $msg = $msg . "<br><br>" . $emailResult;
+
+                //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+                if( $project->sendComputationalEmail() ) {
+                    $compEmailRes = $transresUtil->sendComputationalEmail($project);
+                    $msg = $msg . "<br><br>" . $compEmailRes;
+                    $this->addFlash(
+                        'notice',
+                        "Notification emails for projects involving Computational Pathology".
+                        " or a request for a bioinformatician".
+                        " have been sent: " . $compEmailRes
+                    );
+                }
             }
 
             //eventlog
@@ -2062,6 +2084,18 @@ class ProjectController extends OrderAbstractController
         //$transresPdfUtil = $this->container->get('transres_pdf_generator');
         //$user = $this->getUser();
         //$transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
+        //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+//        if( $project->sendComputationalEmail() ) {
+//            $compEmailRes = $transresUtil->sendComputationalEmail($project);
+//            $this->addFlash(
+//                'notice',
+//                "Notification emails for projects involving Computational Pathology".
+//                " or a request for a bioinformatician".
+//                " have been sent: " . $compEmailRes
+//            );
+//        }
+        //exit('showAction: $project->sendComputationalEmail()');
+
 
         //$cycle = "show";
 
