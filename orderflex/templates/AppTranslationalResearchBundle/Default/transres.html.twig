@@ -2160,7 +2160,6 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(form.enableProjectOnConfig) }}
 
 
-
                 {#<hr>#}
                 {#<h4>#}
                     {#Project Expiration Settings#}
@@ -2186,6 +2185,22 @@ Show this accordion by default in an open + visible state.
                     </p>
                 {% endif %}
 
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-project-compemail-{{ specialtyId }}"
+                >Notification emails for projects involving Computational Pathology or a request for a bioinformatician</a>
+            </h4>
+        </div>
+        <div id="transres-project-compemail-{{ specialtyId }}" class="panel-collapse collapse">
+            <div class="panel-body">
+                {{ formmacros.field(form.compEmailUsers) }}
+                {{ formmacros.field(form.compEmailSubject) }}
+                {{ formmacros.field(form.compEmailBody) }}
             </div>
         </div>
     </div>

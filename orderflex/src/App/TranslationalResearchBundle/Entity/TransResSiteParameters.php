@@ -297,6 +297,21 @@ class TransResSiteParameters {
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableProjectOnConfig;
 
+    //Section: Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+    //1) Send notification emails regarding projects involving Computational Pathology to
+    #[ORM\JoinTable(name: 'transres_transressiteparameters_compemailusers')]
+    #[ORM\JoinColumn(name: 'transressiteparameter_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'compemailuser_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    private $compEmailUsers;
+
+    //2) Subject line for notification emails regarding projects involving Computational Pathology
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $compEmailSubject;
+
+    //3) Body of the notification emails regarding projects involving Computational Pathology
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $compEmailBody;
 
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:
@@ -583,6 +598,7 @@ class TransResSiteParameters {
         $this->transresLogos = new ArrayCollection();
         $this->transresPackingSlipLogos = new ArrayCollection();
         $this->transresIntakeForms = new ArrayCollection();
+        $this->compEmailUsers = new ArrayCollection();
 
         $this->setEnableNewProjectAccessPage(true);
         $this->setEnableNewProjectOnNavbar(true);
@@ -2145,6 +2161,59 @@ class TransResSiteParameters {
     {
         $this->recipientFundNumber = $recipientFundNumber;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCompEmailUsers()
+    {
+        return $this->compEmailUsers;
+    }
+    public function addCompEmailUser($item)
+    {
+        if( $item && !$this->compEmailUsers->contains($item) ) {
+            $this->compEmailUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeCompEmailUser($item)
+    {
+        $this->compEmailUsers->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompEmailSubject()
+    {
+        return $this->compEmailSubject;
+    }
+
+    /**
+     * @param mixed $compEmailSubject
+     */
+    public function setCompEmailSubject($compEmailSubject)
+    {
+        $this->compEmailSubject = $compEmailSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompEmailBody()
+    {
+        return $this->compEmailBody;
+    }
+
+    /**
+     * @param mixed $compEmailBody
+     */
+    public function setCompEmailBody($compEmailBody)
+    {
+        $this->compEmailBody = $compEmailBody;
+    }
+
+    
 
 
 

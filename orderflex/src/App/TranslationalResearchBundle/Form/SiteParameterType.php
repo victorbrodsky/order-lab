@@ -329,6 +329,32 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('compEmailUsers', EntityType::class, array(
+            'class' => User::class,
+            'label' => "Send notification emails regarding projects involving Computational Pathology to:",
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName", "ASC");
+            }
+        ));
+        $builder->add('compEmailSubject', null, array(
+            'label' => "Subject line for notification emails regarding projects involving Computational Pathology:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('compEmailBody', null, array(
+            'label' => "Body of the notification emails regarding projects involving Computational Pathology:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         $builder->add('emailNoteConcern', null, array(
             'label' => "Email Notification Asking To Contact With Concerns:",
             'required' => false,
