@@ -800,7 +800,9 @@ class AntibodyController extends OrderAbstractController
 
         //orderflex\src\App\TranslationalResearchBundle\Util\MISI_Antibody_Panels.pdf
         $originalname = 'MISI_Antibody_Panels.pdf';
-        $folderPath = $projectDir.DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."App".
+        $folderPath = $projectDir.
+            DIRECTORY_SEPARATOR."src".
+            DIRECTORY_SEPARATOR."App".
             DIRECTORY_SEPARATOR."TranslationalResearchBundle".
             DIRECTORY_SEPARATOR."Util"
         ;
@@ -887,34 +889,6 @@ class AntibodyController extends OrderAbstractController
             );
         }
 
-        //exit('indexPublicAntibodiesReactAction');
-//        $filterType = trim((string)$request->get('public'));
-//
-//        $filterPublic = null;
-//        $all = $request->query->all();
-//        if( isset($all['filter']) && isset($all['filter']['public']) ) {
-//            $filterPublic = $all['filter']['public'];
-//        }
-//        //dump($filterPublic);
-//        //exit();
-//
-//        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
-//            return $this->redirectToRoute(
-//                'translationalresearch_antibodies_public_react',
-//                array(
-//                    'filter[public]' => 'Public',
-//                    'filter[type][0]' => 'default',
-//                    'filter[type][1]' => 'user-added',
-//                )
-//            );
-//        }
-
-        //$request->request->set('public', 'Public');
-        //$all['filter']['public'] = 'Public';
-        //$request->query->replace($all);
-        //dump($request);
-        //exit();
-
         $limit = 50;
         $onlyPublic = true;
         $listArr = $this->getList($request,$onlyPublic,$limit);
@@ -937,67 +911,8 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    //Tags"
-    //http://127.0.0.1/index_dev.php/translational-research/antibodies/?filter%5Bsearch%5D=&filter%5Bname%5D=&filter%5Bdescription%5D=&filter%5Bpublic%5D=&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added&filter%5Bclone%5D=&filter%5Bhost%5D=&filter%5Breactivity%5D=&filter%5Bcompany%5D=&filter%5Bcatalog%5D=&filter%5Bcontrol%5D=breast+cancer&filter%5Bprotocol%5D=&filter%5Bretrieval%5D=&filter%5Bdilution%5D=&filter%5Bcomment%5D=&filter%5Bdocument%5D=&filter%5Bvisual%5D=
-
-//    #[Route(path: '/public/antibodies/tag/{type}/{tag}', name: 'translationalresearch_antibody_filter_tag', methods: ['GET'])]
-//    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
-//    public function indexPublicAntibodiesReactFilterTagAction(Request $request)
-//    {
-//        $all = $request->query->all();
-//        dump($all);
-//        if( isset($all['filter']) && isset($all['filter']['public']) ) {
-//            $filterPublic = $all['filter']['public'];
-//        }
-//        dump($filterPublic);
-//        exit();
-//    }
-
     #[Route(path: '/public/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
-
-//        if(0) {
-//            $em = $this->getDoctrine()->getManager();
-//            $repository = $em->getRepository(AntibodyList::class);
-//            $dql = $repository->createQueryBuilder("antibody");
-//            $dql->select('antibody');
-//            //$dql->orderBy("antibody.orderinlist","DESC");
-//            $dql->where("antibody.type = :typedef OR antibody.type = :typeadd");
-//            $dql->andWhere("antibody.openToPublic = TRUE");
-//
-//            $dqlParameters = array();
-//            $dqlParameters["typedef"] = 'default';
-//            $dqlParameters["typeadd"] = 'user-added';
-//
-//            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//            //$query->setMaxResults(60);
-//
-//            if (count($dqlParameters) > 0) {
-//                $query->setParameters($dqlParameters);
-//            }
-//
-//            $limit = 50;
-//
-//            $paginationParams = array(
-//                'defaultSortFieldName' => 'antibody.orderinlist',
-//                'defaultSortDirection' => 'ASC',
-//                'wrap-queries' => true
-//            );
-//
-//            $page = $request->query->get('page', 1);
-//
-//            $paginator = $this->container->get('knp_paginator');
-//            $antibodies = $paginator->paginate(
-//                $query,
-//                $page,   /*page number*/
-//                $limit,                            /*limit per page*/
-//                $paginationParams
-//            );
-//        }
-
-        //$page = $request->query->get('page');
-        //echo "page=".$page."<br>";
-
         //For the sorting function, I would recommend to use built in pre-sorting
         // so we put the antibodies with pictures, and control slides available for purchase,
         // pathologist referred, etc in the front.
@@ -1035,94 +950,7 @@ class AntibodyController extends OrderAbstractController
         $jsonArray = array();
         foreach($antibodies as $antibody) {
             //$count++;
-
             $jsonArray[] = $antibody->toJson(); //$count
-
-//            if(0) {
-//                //$documentImageUrl = null;
-//                //$documentUrls = array();
-//                $imageData = array();
-//                foreach ($antibody->getDocuments() as $document) {
-//                    //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-//                    //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-//                    //$documentUrls[] = $document->getAbsoluteUploadFullPath();
-//                    //$documentImageUrl = $document->getAbsoluteUploadFullPath();
-//                    $imageData[] = array(
-//                        'key' => 'document-' . $document->getId(),
-//                        'label' => $antibody->getName(),
-//                        'url' => $document->getAbsoluteUploadFullPath()
-//                    );
-//                }
-//
-//                foreach ($antibody->getVisualInfos() as $visualInfo) {
-//                    $visualInfoROI = false;
-//                    $visualInfoWSI = false;
-//                    $uploadedType = $visualInfo->getUploadedType();
-//
-////                if( $uploadedType == 'Region Of Interest' ) {
-////                    $visualInfoROI = true;
-////                }
-////                if( $uploadedType == 'Whole Slide Image' ) {
-////                    $visualInfoWSI = true;
-////                }
-//
-//                    //$comment
-//                    //$catalog
-//                    //documents
-//
-//                    if ($uploadedType) {
-//                        $uploadedType = $uploadedType . ": ";
-//                    }
-//
-//                    foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-//                        $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-//                        if ($path) {
-//                            $imageData[] = array(
-//                                'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-//                                'label' => $uploadedType . $visualInfo->getComment(),
-//                                'url' => $path,
-//                                'comment' => $visualInfo->getComment(),
-//                                'catalog' => $visualInfo->getCatalog()
-//                            );
-//                        }
-//                    }
-//                }
-//
-//                $disableDatasheet = false;
-//                $datasheet = $antibody->getDatasheet();
-//                if (!$datasheet || $datasheet == '') {
-//                    $disableDatasheet = true;
-//                }
-//                //$disableDatasheet = true;
-//
-//                if (0) {
-//                    $jsonArray[] = array(
-//                        'id' => $antibody->getId(),
-//                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-//                        'description' => ($antibody->getDescription()) ? $antibody->getDescription() : '',
-//                        'categorytags' => ($antibody->getCategoryTagsStr()) ? $antibody->getCategoryTagsStr() : '', //$antibody->getCategoryTagsStr(),
-//                        'public' => ($antibody->getOpenToPublic()) ? $antibody->getOpenToPublic() : '', //$antibody->getOpenToPublic(),
-//                        'company' => ($antibody->getCompany()) ? $antibody->getCompany() : '', //$antibody->getCompany(),
-//                        'clone' => ($antibody->getClone()) ? $antibody->getClone() : '', //$antibody->getClone(),
-//                        'host' => ($antibody->getHost()) ? $antibody->getHost() : '', //$antibody->getHost(),
-//                        'reactivity' => ($antibody->getReactivity()) ? $antibody->getReactivity() : '', //$antibody->getReactivity(),
-//                        'storage' => ($antibody->getStorage()) ? $antibody->getStorage() : '', //$antibody->getStorage(),
-//                        //'documents' => $documentUrls //$antibody->getDocuments()
-//                        'documents' => $imageData //$antibody->getDocuments()
-//                        //'unitPrice'     => $antibody->getUnitPrice(),
-//                        //'Catalog'       => $antibody->getCatalog(),
-//                    );
-//                } else {
-//                    $jsonArray[] = array(
-//                        'id' => ($antibody->getId()) ? $antibody->getId() : $count . "-key",
-//                        'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-//                        'publictext' => $antibody->getPublicText(),
-//                        'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-//                        'datasheet' => $datasheet,
-//                        'disableDatasheet' => $disableDatasheet
-//                    );
-//                }
-//            }
         }
 
         $totalCount = 0;
@@ -1134,21 +962,8 @@ class AntibodyController extends OrderAbstractController
             $totalPages = ceil($totalCount / $limit);
         }
 
-        //$paginationData = $antibodies->getPaginationData();
-        //$indexTitle = " (".$paginationData['firstItemNumber']."-". $paginationData['lastItemNumber'];
-        //exit($indexTitle);
-
-//        $info = array(
-//            'seed' => "abc",
-//            'results' => $limit,
-//            'page' => $page,
-//            'version' => 1
-//        );
-
         $results = array(
             'results' => $jsonArray,
-            //'products' => $jsonArray,
-            //'info'    => $info,
             'totalPages'   => $totalPages,
             'totalProducts' => $totalCount
         );
@@ -1178,61 +993,6 @@ class AntibodyController extends OrderAbstractController
         $jsonArray = array();
         $jsonArray[] = $antibody->toJson();
 
-//        if(0) {
-//            $imageData = array();
-//            foreach ($antibody->getDocuments() as $document) {
-//                //$documentUrlsHtml = $document->getAbsoluteUploadFullPath();
-//                //$documentUrlsHtml = '<img src="'.$documentUrlsHtml.'" className="card-img-top" alt="Hollywood Sign on The Hill" />';
-//                //$documentUrls[] = $document->getAbsoluteUploadFullPath();
-//                //$documentImageUrl = $document->getAbsoluteUploadFullPath();
-//                $imageData[] = array(
-//                    'key' => 'document-' . $document->getId(),
-//                    'label' => $antibody->getName(),
-//                    'url' => $document->getAbsoluteUploadFullPath()
-//                );
-//            }
-//
-//            foreach ($antibody->getVisualInfos() as $visualInfo) {
-//                $visualInfoROI = false;
-//                $visualInfoWSI = false;
-//                $uploadedType = $visualInfo->getUploadedType();
-//
-//                if ($uploadedType) {
-//                    $uploadedType = $uploadedType . ": ";
-//                }
-//
-//                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-//                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-//                    if ($path) {
-//                        $imageData[] = array(
-//                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-//                            'label' => $uploadedType . $visualInfo->getComment(),
-//                            'url' => $path,
-//                            'comment' => $visualInfo->getComment(),
-//                            'catalog' => $visualInfo->getCatalog()
-//                        );
-//                    }
-//                }
-//            }
-//
-//            $disableDatasheet = false;
-//            $datasheet = $antibody->getDatasheet();
-//            if (!$datasheet || $datasheet == '') {
-//                $disableDatasheet = true;
-//            }
-//
-//            $jsonArray = array();
-//            $jsonArray[] = array(
-//                'id' => $antibody->getId(),
-//                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-//                'publictext' => $antibody->getPublicText(),
-//                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-//                'datasheet' => $datasheet,
-//                'disableDatasheet' => $disableDatasheet
-//                //'image' => $documentImageUrl //$antibody->getDocuments()
-//            );
-//        }
-
         return array(
             'antibody' => $antibody,
             'jsonArray' => $jsonArray,
@@ -1242,7 +1002,6 @@ class AntibodyController extends OrderAbstractController
         );
     }
 
-    //#[Template('AppTranslationalResearchBundle/Antibody/new.html.twig')]
     #[Route(path: '/public/antibody/api/{id}', name: 'translationalresearch_antibody_public_api', methods: ['GET'], options: ['expose' => true])]
     public function showPublicAction(Request $request, AntibodyList $antibody)
     {
@@ -1251,70 +1010,6 @@ class AntibodyController extends OrderAbstractController
 
         $jsonArray = array();
         $jsonArray[] = $antibody->toJson();
-
-//        if(0) {
-//            $cycle = "show";
-//
-//            $imageData = array();
-//            foreach ($antibody->getDocuments() as $document) {
-//                $documentImageUrl = $document->getAbsoluteUploadFullPath();
-//                //echo "documentImageUrl=[$documentImageUrl] <br>";
-//                $imageData[] = array(
-//                    'key' => 'document-' . $document->getId(),
-//                    'label' => $antibody->getName(),
-//                    'url' => $documentImageUrl
-//                );
-//            }
-//
-//            foreach ($antibody->getVisualInfos() as $visualInfo) {
-//                $visualInfoROI = false;
-//                $visualInfoWSI = false;
-//                $uploadedType = $visualInfo->getUploadedType();
-//
-//                if ($uploadedType) {
-//                    $uploadedType = $uploadedType . ": ";
-//                }
-//
-//                foreach ($visualInfo->getDocuments() as $visualInfoDocument) {
-//                    $path = $visualInfoDocument->getAbsoluteUploadFullPath();
-//                    if ($path) {
-//                        $imageData[] = array(
-//                            'key' => 'visualinfo-' . $visualInfoDocument->getId(),
-//                            'label' => $uploadedType . $visualInfo->getComment(),
-//                            'url' => $path,
-//                            'comment' => $visualInfo->getComment(),
-//                            'catalog' => $visualInfo->getCatalog()
-//                        );
-//                    }
-//                }
-//            }
-//
-//
-//            $datasheet = $antibody->getDatasheet();
-////        $disableDatasheet = false;
-////        if (!$datasheet || $datasheet == '') {
-////            $disableDatasheet = true;
-////        }
-//
-//            $jsonArray = array();
-//            $jsonArray[] = array(
-//                'id' => $antibody->getId(),
-//                'name' => ($antibody->getName()) ? $antibody->getName() : '', //$antibody->getName(),
-//                'publictext' => $antibody->getPublicText(),
-//                'documents' => $imageData, //$documentUrls, //$antibody->getDocuments()
-//                'datasheet' => $datasheet,
-//                //'disableDatasheet' => $disableDatasheet,
-//                'description' => $antibody->getDescription(),
-//                'tags' => $antibody->getCategoryTagsStr(),
-//                'company' => $antibody->getCompany(),
-//                'clone' => $antibody->getClone(),
-//                'host' => $antibody->getHost(),
-//                'reactivity' => $antibody->getReactivity(),
-//                'storage' => $antibody->getStorage(),
-//                'associates' => $antibody->getAssociatesObjectsArr(),
-//                //'' => $antibody->getCompany(),
-//            );
-//        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
