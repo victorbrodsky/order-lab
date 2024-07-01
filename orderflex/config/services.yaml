@@ -259,6 +259,10 @@ services:
     App\TranslationalResearchBundle\Command\ExpirationCronCommand:
         tags:
             - { name: 'console.command', command: 'cron:expiration-reminder-emails' }
+
+    App\TranslationalResearchBundle\Command\ProjectSyncCronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:project-sync' }
     ################## EOF Commands ##################
 
     logger:

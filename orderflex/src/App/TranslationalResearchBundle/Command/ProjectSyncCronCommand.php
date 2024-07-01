@@ -50,7 +50,6 @@ class ProjectSyncCronCommand extends Command {
     {
 
         $logger = $this->container->get('logger');
-        $transferDatas = 'None';
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
         $transferDatas = $interfaceTransferUtil->getSlaveToMasterTransfer();
