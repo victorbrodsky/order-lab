@@ -3694,7 +3694,7 @@ class TransResUtil
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail($compEmails,$compEmailSubject,$compEmailBody,$adminsCcs,$senderEmail);
 
-        return 'Subject: $compEmailSubject'.'; receivers: '.implode(', ',$compEmails);
+        return 'Subject:'.$compEmailSubject.'; receivers: '.implode(', ',$compEmails);
     }
 
     public function getTransResCollaborationDivs() {
@@ -9150,5 +9150,7 @@ WHERE
         dump($lists);
         exit('111');
     }
+    
+    
 
 }

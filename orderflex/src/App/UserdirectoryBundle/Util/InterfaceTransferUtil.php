@@ -1531,6 +1531,18 @@ class InterfaceTransferUtil {
                         null,
                         $eventType
                     );
+
+                    //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
+                    if( $transferableEntity->sendComputationalEmail() ) {
+                        $transresUtil = $this->container->get('transres_util');
+                        $compEmailRes = $transresUtil->sendComputationalEmail($transferableEntity);
+                        $this->addFlash(
+                            'notice',
+                            "Notification emails for projects involving Computational Pathology".
+                            " or a request for a bioinformatician".
+                            " have been sent: " . $compEmailRes
+                        );
+                    }
                 }
             }
 
