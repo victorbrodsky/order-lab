@@ -538,3 +538,17 @@ php-fpm.service: A process of this unit has been killed by the OOM k>
 Jun 21 17:50:08 packer-1717709078 systemd[1]: php-fpm.service: Failed with result 'oom-kill'.
 Jun 21 17:50:08 packer-1717709078 systemd[1]: php-fpm.service: Consumed 24min 23.107s CPU time.
 
+Certbot:
+[root@packer-1719928993 ~]# sudo certbot certonly --standalone
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Please enter the domain name(s) you would like on your certificate (comma and/or
+space separated) (Enter 'c' to cancel): view.online
+Requesting a certificate for view.online
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
+This certificate expires on 2024-09-30.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
