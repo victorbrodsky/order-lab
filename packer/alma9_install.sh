@@ -252,8 +252,8 @@ f_install_php82 () {
 	echo @### PHP: list of all the installable PHP modules ###
 	php -m
 	
-	echo @### PHP: Install PHP modules ###
-	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	echo @### PHP: Install PHP modules, no fpm ###
+	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,mbstring,xml,json}
 	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
 	#dnf -y install php82-syspaths
@@ -300,15 +300,13 @@ f_install_php83 () {
 	php -m
 	
 	echo @### PHP: Install PHP modules ###
-	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,mbstring,xml,json}
 	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 		
-	echo @### PHP: Start php-fpm ###
-	#sudo service php-fpm start
-	#sudo service php-fpm status
-	sudo systemctl enable php-fpm
-	sudo systemctl start php-fpm
-	sudo systemctl status php-fpm
+	#echo @### PHP: Start php-fpm ###
+	#sudo systemctl enable php-fpm
+	#sudo systemctl start php-fpm
+	#sudo systemctl status php-fpm
 		
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v

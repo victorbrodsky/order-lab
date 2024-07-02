@@ -518,7 +518,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_haproxy
 			f_stop_httpd
 			f_start_all_httpd
-			f_restart_phpfpm
+			#f_restart_phpfpm
 		else
 			echo -e ${COLOR} False ${NC}
 			f_test
