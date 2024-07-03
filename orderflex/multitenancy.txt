@@ -484,6 +484,7 @@ sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-
 3) verify haproxy, httpd status
 /usr/bin/systemctl status haproxy
 /usr/bin/systemctl status htppdtenantmanager
+systemctl status httpdtenantapp1
 /usr/bin/systemctl status php-fpm
 or
 journalctl -xeu haproxy

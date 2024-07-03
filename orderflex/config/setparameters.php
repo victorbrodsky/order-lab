@@ -84,7 +84,7 @@ $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
     $connection_channel = 'http';
 }
-//echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
+echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
 
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";
@@ -300,7 +300,7 @@ if( $conn ) {
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
                 //$connection_channel = 'http'; //testing
-                //echo "*** siteparameters.php: connection_channel=[".$connection_channel."] ***\n"; //testing
+                echo "*** siteparameters.php: site settings connection_channel=[".$connection_channel."] ***\n"; //testing
             }//if $row
 
             //echo "connection_channel=[".$connection_channel."]\n"; //testing
