@@ -299,7 +299,7 @@ if( $conn ) {
                 $database_password_pacsvendor = getDBParameter($row, $database_password_pacsvendor, 'pacsvendorSlideManagerDBPassword');
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
-                $connection_channel = 'http'; //testing
+                //$connection_channel = 'http'; //testing
                 echo "*** siteparameters.php: site settings connection_channel=[".$connection_channel."] ***\n"; //testing
             }//if $row
 
