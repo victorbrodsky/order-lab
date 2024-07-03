@@ -161,6 +161,9 @@ f_install_haproxy () {
 		else
 			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
 			sed -i -e 's/^\s*bind \*:443/#&/' /etc/haproxy/haproxy.cfg
+			
+			echo -e ${COLOR} disable 'http-request redirect scheme https unless { ssl_fc }' in haproxy.cfg ${NC}
+			sed -i -e 's/^\s*http-request/#&/' /etc/haproxy/haproxy.cfg
 	fi	
 	
 	echo -e ${COLOR} Adding new line to haproxy to prevent 'Missing LF on last line' ${NC}
