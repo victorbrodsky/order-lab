@@ -436,6 +436,8 @@ class EmailUtil {
 
         return $mailer;
     }
+
+    //Route outgoing SMTP relay messages through Google: https://support.google.com/a/answer/2956491
     public function getSmtpTransport() {
 
         $userSecUtil = $this->container->get('user_security_utility');

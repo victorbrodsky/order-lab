@@ -19,6 +19,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\TranslationalResearchBundle\Entity\Project;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -253,6 +254,10 @@ class InterfaceController extends OrderAbstractController
         }
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //Testing
+        $transferableEntity = new Project();
+        $interfaceTransferUtil->downloadFile(null, $transferableEntity, 'documents');
 
         //$interfaceTransferUtil->downloadFile(null,null,null);
         //exit('111');

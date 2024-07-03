@@ -2050,7 +2050,136 @@ class InterfaceTransferUtil {
     //The public key can be used to encrypt messages that only the private key can decrypt.
     //Therefore: 1) place public key on external server and use this key to ecrypt file
     //2) place private key on internal server and use it to decrypt the file
+    //Use ftp to get file from public server
     public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+
+        $mapper = $this->classListMapper($transferableEntity);
+        //$className = $mapper['className'];
+        $entityName = $mapper['entityName'];
+
+        $strServer = NULL;
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+        } else {
+            return false;
+        }
+
+        //$server_address = '68.183.146.32'; //'68.183.144.189';
+        $strServerPort = "22";
+        $strServerUsername = $interfaceTransfer->getSshUsername();
+        $strServerPassword = $interfaceTransfer->getSshPassword();
+
+        //change root password: passwd
+        $dstConnection = ssh2_connect($strServer, $strServerPort);
+        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+            //Ok, continue
+            echo "Connected to $strServer <br>";
+        } else {
+            exit("Unable to connect to the remote server");
+        }
+        exit('111');
+
+        $ssh = new SSH2($server_address);
+        $ssh->login('root');
+        $ssh->read('User Name:');
+        $ssh->write("username\n");
+        $ssh->read('Password:');
+        $ssh->write("password\n");
+
+        $ssh->setTimeout(1);
+        $ssh->read();
+        $ssh->write("ls -la\n");
+        echo $ssh->read();
+        exit('111');
+
+        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
+        $ssh = new SSH2($server_address);
+        if (!$ssh->login('root', $key)) {
+            throw new \Exception('Login failed');
+        }
+
+        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
+
+        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
+        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
+        {
+            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
+        } else {
+            echo '<h3 class="success">Authenticated.</h3>';
+        }
+        exit('222');
+
+        $ssh = new SSH2($server_address);
+        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
+        print_r($ssh->getErrors());
+        //print_r($ssh->getLastError());
+
+        echo $ssh->exec('ls -la');
+
+        exit('222');
+
+        $privateKey = RSA::createKey();
+        $public = $privateKey->getPublicKey();
+
+        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
+
+        // in case that key has a password
+        $privateKey->withPassword('private key password');
+
+        // load the private key
+        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
+        echo "privateKey=".$privateKey."<br>";
+
+
+
+        $mapper = $this->classListMapper($transferableEntity);
+        //$className = $mapper['className'];
+        $entityName = $mapper['entityName'];
+
+        $strServer = NULL;
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+        } else {
+            return false;
+        }
+
+        // login via sftp
+        if (!$sftp->login('username', $privateKey)) {
+            throw new Exception('sFTP login failed');
+        }
+
+        // now you can list what's in here
+        $filesAndFolders = $sftp->nlist();
+
+        $ssh = new SSH2($strServer);
+        $ssh->login(
+            'username',
+            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
+        );
+
+        $strServerPort = "22";
+        $strServerUsername = $interfaceTransfer->getSshUsername();
+        $strServerPassword = $interfaceTransfer->getSshPassword();
+
+        //connect to server
+        $dstConnection = ssh2_connect($strServer, $strServerPort);
+
+        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+            //Ok, continue
+            echo "Connected to $strServer <br>";
+        } else {
+            exit("Unable to connect to the remote server");
+        }
+
+        //$ssh = new SSH2('domain.tld');
+        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
+
+    }
+    public function downloadFile_orig( $jsonObject, $transferableEntity, $field ) {
 
         $server_address = '68.183.144.189';
         $port = 22;
