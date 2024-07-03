@@ -6,4 +6,4 @@
 
 ProjectBaseBundle_default:
     resource: 'routes-default.yaml'
-    #schemes:  ['%connection_channel%']
+    schemes:  ['%connection_channel%']
