@@ -539,6 +539,10 @@ class Document {
 
     public function getAbsoluteUploadFullPath($size=null,$onlyResize=false)
     {
+
+        //dump($_SERVER);
+        //exit('111');
+
         if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)) {
             $scheme = 'https';
         } else {
@@ -566,6 +570,11 @@ class Document {
                 $serverName = $serverName . ":" . $serverPort;
             }
         }
+
+        //TODO:
+        //For multitenancy $serverName should include a tenant url 'c/wcm/pathology':
+        //This http://view.online/Uploaded/directory/avatars/avatar/20240708194741.jpeg
+        //should be this: http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
 
         $uniquename = $this->getUniquename();
         if( !$uniquename ) {
