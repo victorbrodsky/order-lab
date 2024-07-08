@@ -1706,9 +1706,9 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('sshPassword', null, array(
-                'label' => "SSH password:",
+                'label' => "SSH password/key:",
                 'required' => false,
-                'attr' => array('class' => 'form-control'),
+                'attr' => array('class' => 'textarea form-control'),
             ));
         }
 

@@ -77,7 +77,8 @@ class InterfaceTransferList extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $sshUsername;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    //Password or key
+    #[ORM\Column(type: 'text', nullable: true)]
     private $sshPassword;
 
     

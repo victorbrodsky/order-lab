@@ -2044,20 +2044,80 @@ class InterfaceTransferUtil {
     }
 
 
-    function testconnect() {
-        $host = '68.183.146.32';
-        $login = '';
-        $password = '';
-        $co = ssh2_connect($host, 22);
-        if (false === $co)
-            throw new \Exception('Can\'t connect to remote server');
-        $result = ssh2_auth_password($co, $login, $password);
-        var_dump($result);
-        if ($result === false) {
-            throw new \Exception('Authentication failed!');
+    //On master server (server which will get the file from slave): provide a private key in field 'SSH password/key' in InterfaceTransferList
+    //On slave server (server which has a file to transfer to master): Specify the public key to use by changing AuthorizedKeysFile:
+    //1) vim /etc/ssh/sshd_config
+    //2) AuthorizedKeysFile /etc/ssh/ssh_host_ed25519_key.pub
+    //3) sudo systemctl restart sshd
+    public function connectByPublicKey( $transferableEntity ) {
+        $mapper = $this->classListMapper($transferableEntity);
+        $entityName = $mapper['entityName'];
+
+        $strServer = NULL;
+        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+        if( $interfaceTransfer ) {
+            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+        } else {
+            return false;
         }
-        echo 'Connection estabilished';
+
+        //$server_address = '68.183.146.32'; //'68.183.144.189';
+        //$strServer = 'view.online';
+        //$strServer = '68.183.146.32';
+        //$strServer = '68.183.144.189';
+        $strServerPort = "22";
+        //$strServerUsername = $interfaceTransfer->getSshUsername();
+        $privateKeyContent = $interfaceTransfer->getSshPassword();
+
+        //$strServerUsername = '';
+        //$strServerPassword = '';
+        echo "strServer=$strServer, strServerPort=$strServerPort, privateKeyContent=$privateKeyContent <br>";
+
+        //testing phpseclib
+        //$command = 'pwd'; //root
+
+//        $ssh = new SSH2($strServer);
+//        if (!$ssh->login($strServerUsername, $strServerPassword)) {
+//            $output ='Login Failed';
+//        }
+        //Change AuthorizedKeysFile .ssh/authorized_keys to
+        //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
+        //$private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
+        //$privateKeyContent = file_get_contents($private_key_path);
+
+        $key = PublicKeyLoader::load($privateKeyContent);
+        $ssh = new SSH2($strServer);
+        if (!$ssh->login('root', $key)) {
+            throw new \Exception('Login failed');
+        }
+        else{
+            //$output = $ssh->exec($command);
+            return $ssh;
+        }
+
+        return null;
     }
+
+    public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+        $sshConnection = $this->connectByPublicKey($transferableEntity);
+        $output = $sshConnection->exec('pwd');
+        exit('111: '.$output);
+    }
+
+//    function testconnect() {
+//        $host = '68.183.146.32';
+//        $login = '';
+//        $password = '';
+//        $co = ssh2_connect($host, 22);
+//        if (false === $co)
+//            throw new \Exception('Can\'t connect to remote server');
+//        $result = ssh2_auth_password($co, $login, $password);
+//        var_dump($result);
+//        if ($result === false) {
+//            throw new \Exception('Authentication failed!');
+//        }
+//        echo 'Connection estabilished';
+//    }
     //TODO: CURL encrypt - decrypt json
     //$ciphertext = $private->getPublicKey()->encrypt($plaintext);
     //echo $private->decrypt($ciphertext);
@@ -2066,7 +2126,7 @@ class InterfaceTransferUtil {
     //Therefore: 1) place public key on external server and use this key to ecrypt file
     //2) place private key on internal server and use it to decrypt the file
     //Use ftp to get file from public server
-    public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+    public function downloadFile_test( $jsonObject, $transferableEntity, $field ) {
 
 //        try {
 //            $this->testconnect();
@@ -2074,6 +2134,10 @@ class InterfaceTransferUtil {
 //            echo 'Caught exception: ', $e->getMessage(), "\n";
 //        }
 //        exit('000');
+
+        $sshConnection = $this->connectByPublicKey($transferableEntity);
+        $output = $sshConnection->exec('pwd');
+        exit('111: '.$output);
 
         $mapper = $this->classListMapper($transferableEntity);
         //$className = $mapper['className'];
@@ -2100,11 +2164,19 @@ class InterfaceTransferUtil {
         echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
 
         //testing phpseclib
-        $command = 'php version';
+        $command = 'pwd'; //root
 
+//        $ssh = new SSH2($strServer);
+//        if (!$ssh->login($strServerUsername, $strServerPassword)) {
+//            $output ='Login Failed';
+//        }
+        //Change AuthorizedKeysFile .ssh/authorized_keys to
+        //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
+        $private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
+        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
         $ssh = new SSH2($strServer);
-        if (!$ssh->login($strServerUsername, $strServerPassword)) {
-            $output ='Login Failed';
+        if (!$ssh->login('root', $key)) {
+            throw new \Exception('Login failed');
         }
         else{
             $output = $ssh->exec($command);
