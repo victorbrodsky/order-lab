@@ -302,7 +302,6 @@ class UploadController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
         $document = $em->getRepository(Document::class)->find($id);
 
         $originalname = null;
@@ -334,6 +333,7 @@ class UploadController extends OrderAbstractController {
                     $resize = null;
                 }
                 //$resize = null; //testing: disable resize images
+                //exit('$resize='.$resize);
 
                 //TODO: resize thumbnails http://127.0.0.1/order/fellowship-applications/generate-thumbnails
                 //get small thumbnail - i.e. used for the fellowship application list //small-18sec, original-25sec
@@ -395,6 +395,9 @@ class UploadController extends OrderAbstractController {
                     $originalname = $document->getOriginalnameClean();
                     $abspath = $document->getAbsoluteUploadFullPath();
                     $size = $document->getSize();
+                    //$logger = $this->container->get('logger');
+                    //$logger->notice("viewFileMethod: originalname=".$originalname. ", abspath=" . $abspath. ", size=".$size);
+                    //exit ("viewFileMethod: originalname=".$originalname. ", abspath=" . $abspath. ", size=".$size);
                     //echo "default abspath=$abspath <br>";
                 }
             }
@@ -407,12 +410,15 @@ class UploadController extends OrderAbstractController {
             //abspath=http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg
             //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
             //echo "abspath=$abspath <br>";
+            //$logger = $this->container->get('logger');
+            //$logger->notice("viewFileMethod: originalname=".$originalname. ", abspath=" . $abspath. ", size=".$size);
+            //exit ("viewFileMethod: originalname=".$originalname. ", abspath=" . $abspath. ", size=".$size);
             //exit(111);
             //$logger = $this->container->get('logger');
             //$logger->notice("abspath=$abspath");
             if( $abspath || $originalname || $size ) {
                 //echo "abspath=".$abspath."<br>";
-                //echo "originalname=".$originalname."<br>";
+                //echo "originalname=[".$originalname."]<br>";
                 //echo "$abspath: size=".$size."<br>";
                 //exit(111);
                 $downloader = new LargeFileDownloader();

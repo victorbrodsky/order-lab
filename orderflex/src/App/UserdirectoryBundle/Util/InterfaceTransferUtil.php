@@ -1828,6 +1828,9 @@ class InterfaceTransferUtil {
 
             //Files
             if(1) {
+                //example: "documents":[],
+                //"irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,"uploadDirectory":"Uploaded\/transres\/documents"}],
+                //"humanTissueForms":[]"
                 //uploadDirectory='Uploaded/transres/documents'
                 //'documents',
                 if (isset($jsonObject['documents'])) {
@@ -2057,6 +2060,15 @@ class InterfaceTransferUtil {
         $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
         if( $interfaceTransfer ) {
             $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+            //Since $strServer might be 'view.online/c/wcm/pathology' for multitenancy, get only view.online
+            //$strServerArr = parse_url($strServer);
+            //$pathInfo = pathinfo($strServer, PHP_URL_HOST);
+            $exploded_server = explode('/', $strServer);
+            //dump($exploded_server);exit('111');
+            //return $strServerArr['scheme']."://".$result['host'];
+            if( count($exploded_server) > 0 ) {
+                $strServer = $exploded_server[0];
+            }
         } else {
             return false;
         }
@@ -2103,6 +2115,11 @@ class InterfaceTransferUtil {
         $output = $sshConnection->exec('pwd');
 
         dump($jsonObject);
+
+        //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,"uploadDirectory":"Uploaded\/transres\/documents"}],
+        $fileInfo = $jsonObject[$field];
+        $originalname = $fileInfo['originalname'];
+
 
         exit('111: '.$output);
     }
@@ -2488,6 +2505,7 @@ class InterfaceTransferUtil {
                 'warning',
                 "Please set a Secret Key in the site settings"
             );
+            //return "Please set a Secret Key in the site settings";
             return false;
         }
 
@@ -2499,6 +2517,7 @@ class InterfaceTransferUtil {
                 'warning',
                 "Please create a transfer interface with the source and destination information"
             );
+            //return "Please create a transfer interface with the source and destination information";
             return false;
         }
 
@@ -2510,6 +2529,7 @@ class InterfaceTransferUtil {
                 'warning',
                 "Please set an Instance ID in the site settings"
             );
+            //return "Please set an Instance ID in the site settings";
             return false;
         }
 
@@ -2527,7 +2547,9 @@ class InterfaceTransferUtil {
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
 
         echo "url=$url <br>";
+        //exit('111');
         $ch = curl_init($url);
+        //exit('111');
 
         if(1) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -2551,8 +2573,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        //dump($result);
-        //exit('111');
+        dump($result);
+        exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -2568,8 +2590,14 @@ class InterfaceTransferUtil {
             //exit('222');
 
             if ($checksum === $hash && $valid === true && $transferResult) {
-                echo "Successefully sent: " . $jsonFile['className'] . " <br>";
+                echo "Successfully sent: " . $jsonFile['className'] . " <br>";
                 return $result;
+            } else {
+                //return "Curl is not valid";
+                $session->getFlashBag()->add(
+                    'warning',
+                    "Curl: invalid handshake"
+                );
             }
         }
 

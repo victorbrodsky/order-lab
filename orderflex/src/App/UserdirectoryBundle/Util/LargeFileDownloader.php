@@ -44,6 +44,8 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
+        exit ("downloadLargeFile: filepath=".$filepath. ", filename=" . $filename. ", size=".$size);
+
         $filenameClean = str_replace("\\", "/", $filepath);
 
         if( empty($filenameClean) ) {
