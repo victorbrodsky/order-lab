@@ -48,7 +48,7 @@ class LargeFileDownloader {
         //For multitenancy: filepath=http://view.online:80/Uploaded/directory/avatars/avatar/20240708194741
 
         $filenameClean = str_replace("\\", "/", $filepath);
-        //exit ("downloadLargeFile: filenameClean=$filenameClean");
+        exit ("downloadLargeFile: filenameClean=$filenameClean");
 
         if( empty($filenameClean) ) {
             exit ("File $filenameClean is not available");
