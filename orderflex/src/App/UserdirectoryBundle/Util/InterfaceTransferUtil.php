@@ -2097,10 +2097,22 @@ class InterfaceTransferUtil {
 
         //$strServerUsername = '';
         //$strServerPassword = '';
+        echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
+
+        //testing phpseclib
+        $command = 'php version';
+
+        $ssh = new SSH2($strServer);
+        if (!$ssh->login($strServerUsername, $strServerPassword)) {
+            $output ='Login Failed';
+        }
+        else{
+            $output = $ssh->exec($command);
+        }
+        exit('111: '.$output);
 
         //change root password: passwd
         $dstConnection = ssh2_connect($strServer, $strServerPort);
-        echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
 
         //$auth_methods = ssh2_auth_none($dstConnection, 'apache');
         //dump($auth_methods);
