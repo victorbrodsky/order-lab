@@ -326,8 +326,8 @@ class UploadController extends OrderAbstractController {
                 //if( file_exists($filenameClean) === false ) {
                 //    exit('File '.$filenameClean.' does not exist');
                 //}
-                echo "not snapshot abspath=$abspath <br>";
-                exit('exit notsnapshot');
+                //echo "not snapshot abspath=$abspath <br>";
+                //exit('exit notsnapshot');
             } else {
 
                 $viewTypeArr = explode("-", $viewType);
