@@ -2043,6 +2043,21 @@ class InterfaceTransferUtil {
         return $transferableEntity;
     }
 
+
+    function testconnect() {
+        $host = '68.183.146.32';
+        $login = '';
+        $password = '';
+        $co = ssh2_connect($host, 22);
+        if (false === $co)
+            throw new \Exception('Can\'t connect to remote server');
+        $result = ssh2_auth_password($co, $login, $password);
+        var_dump($result);
+        if ($result === false) {
+            throw new \Exception('Authentication failed!');
+        }
+        echo 'Connection estabilished';
+    }
     //TODO: CURL encrypt - decrypt json
     //$ciphertext = $private->getPublicKey()->encrypt($plaintext);
     //echo $private->decrypt($ciphertext);
@@ -2052,6 +2067,13 @@ class InterfaceTransferUtil {
     //2) place private key on internal server and use it to decrypt the file
     //Use ftp to get file from public server
     public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+
+//        try {
+//            $this->testconnect();
+//        } catch (\Exception $e) {
+//            echo 'Caught exception: ', $e->getMessage(), "\n";
+//        }
+//        exit('000');
 
         $mapper = $this->classListMapper($transferableEntity);
         //$className = $mapper['className'];
@@ -2066,18 +2088,63 @@ class InterfaceTransferUtil {
         }
 
         //$server_address = '68.183.146.32'; //'68.183.144.189';
+        $strServer = 'view.online';
+        $strServer = '68.183.146.32';
+        //$strServer = '68.183.144.189';
         $strServerPort = "22";
         $strServerUsername = $interfaceTransfer->getSshUsername();
         $strServerPassword = $interfaceTransfer->getSshPassword();
 
+        //$strServerUsername = '';
+        //$strServerPassword = '';
+
         //change root password: passwd
         $dstConnection = ssh2_connect($strServer, $strServerPort);
+        echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
+
+        //$auth_methods = ssh2_auth_none($dstConnection, 'apache');
+        //dump($auth_methods);
+        //exit('000');
+//        if (in_array('password', $auth_methods)) {
+//            echo "Server supports password based authentication\n";
+//        }
+
         if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
             //Ok, continue
             echo "Connected to $strServer <br>";
         } else {
+            ///var/log/auth.log
             exit("Unable to connect to the remote server");
         }
+
+        //Test read file
+        $srcFile = '';
+        $dstSFTP = ssh2_sftp($dstConnection);
+        echo "dstSFTP=$dstSFTP <br>";
+        //$dstSFTP = intval($dstSFTP);
+        //echo "dstSFTP=$dstSFTP <br>";
+        //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
+        //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
+        //dump($dstFile);
+
+        $testFilePath = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/directory/documents/66858c411569b.png';
+
+        $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$testFilePath, 'r');
+        if ( !$dstFile ) {
+            throw new \Exception('File open failed. file=' . $testFilePath);
+        }
+
+        //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
+        //$contents = stream_get_contents($dstTestFile);
+        //dump($contents);
+
+        $srcFile = fopen($testFilePath, 'r');
+
+        $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+        echo "writtenBytes=$writtenBytes <br>";
+        fclose($dstFile);
+        fclose($srcFile);
+
         exit('111');
 
         $ssh = new SSH2($server_address);
