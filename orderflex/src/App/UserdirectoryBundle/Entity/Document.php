@@ -537,6 +537,7 @@ class Document {
         return $fullPath;
     }
 
+    //Return: http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
     public function getAbsoluteUploadFullPath($size=null,$onlyResize=false)
     {
 
