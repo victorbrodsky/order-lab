@@ -1471,8 +1471,8 @@ class InterfaceTransferUtil {
             if( $transferableEntity ) {
                 echo "PrePersist: transferableEntity ID=".$transferableEntity->getId().", title=".$transferableEntity->getTitle()."<br>";
 
-                //dump($transferableEntity);
-                //exit('123');
+                dump($transferableEntity);
+                exit('123');
 
                 //TODO: error: spl_object_id(): Argument #1 ($object) must be of type object, array given
                 $this->em->persist($transferableEntity);
@@ -1827,7 +1827,7 @@ class InterfaceTransferUtil {
             }
 
             //Files
-            if(0) {
+            if(1) {
                 //uploadDirectory='Uploaded/transres/documents'
                 //'documents',
                 if (isset($jsonObject['documents'])) {
@@ -2101,6 +2101,9 @@ class InterfaceTransferUtil {
     public function downloadFile( $jsonObject, $transferableEntity, $field ) {
         $sshConnection = $this->connectByPublicKey($transferableEntity);
         $output = $sshConnection->exec('pwd');
+
+        dump($jsonObject);
+
         exit('111: '.$output);
     }
 

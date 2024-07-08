@@ -256,8 +256,8 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //Testing
-        $transferableEntity = new Project();
-        $interfaceTransferUtil->downloadFile(null, $transferableEntity, 'documents');
+        //$transferableEntity = new Project();
+        //$interfaceTransferUtil->downloadFile(null, $transferableEntity, 'documents');
 
         //$interfaceTransferUtil->downloadFile(null,null,null);
         //exit('111');
