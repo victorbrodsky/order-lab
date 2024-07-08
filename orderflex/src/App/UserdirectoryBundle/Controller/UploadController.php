@@ -322,12 +322,12 @@ class UploadController extends OrderAbstractController {
                 $originalname = $document->getOriginalnameClean();
                 $abspath = $document->getAbsoluteUploadFullPath();
                 $size = $document->getSize();
-                //echo "not snapshot abspath=$abspath <br>";
                 //$filenameClean = str_replace("\\", "/", $abspath);
                 //if( file_exists($filenameClean) === false ) {
                 //    exit('File '.$filenameClean.' does not exist');
                 //}
-                //exit('exit notsnapshot');
+                echo "not snapshot abspath=$abspath <br>";
+                exit('exit notsnapshot');
             } else {
 
                 $viewTypeArr = explode("-", $viewType);
