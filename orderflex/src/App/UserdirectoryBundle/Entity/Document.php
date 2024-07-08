@@ -558,10 +558,11 @@ class Document {
             $serverName = "127.0.0.1";
         }
 
+        //This was added for symfony server when port is not 80
         if( isset($_SERVER['SERVER_PORT']) ) {
             $serverPort = $_SERVER['SERVER_PORT'];
             //echo "serverPort=$serverPort <br>";
-            if( $serverPort ) {
+            if( $serverPort && $serverPort != '80' ) {
                 $serverName = $serverName . ":" . $serverPort;
             }
         }
