@@ -51,6 +51,7 @@ class HomeController extends OrderAbstractController {
 
         //$userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $width = "300";
         $height = "80";
@@ -61,7 +62,8 @@ class HomeController extends OrderAbstractController {
         //($platformLogos instanceof ArrayCollection || is_array($platformLogos)) &&
         if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
         //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 
@@ -100,6 +102,7 @@ class HomeController extends OrderAbstractController {
     public function multiTenancyHomePage(Request $request) {
 
         $userTenantUtil = $this->container->get('user_tenant_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $title = "Multi-tenancy home page";
 
@@ -113,7 +116,8 @@ class HomeController extends OrderAbstractController {
         //is_array($platformLogos) && 
         if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
 
         $aboutusLogoPath = null;
@@ -121,7 +125,8 @@ class HomeController extends OrderAbstractController {
         //is_array($platformLogos) &&
         if( count($aboutusLogos) > 0 ) {
             $aboutusLogo = $aboutusLogos->first();
-            $aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+            //$aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
 
         $tenants = array();
@@ -217,6 +222,7 @@ class HomeController extends OrderAbstractController {
     #[Template('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-aboutus.html.twig')]
     public function multiTenancyAboutusAction( Request $request )
     {
+        $userServiceUtil = $this->container->get('user_service_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
@@ -229,7 +235,8 @@ class HomeController extends OrderAbstractController {
         //is_array($platformLogos) &&
         if( count($aboutusLogos) > 0 ) {
             $aboutusLogo = $aboutusLogos->first();
-            $aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+            //$aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
+            $aboutusLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($aboutusLogo);
         }
 
         return array(

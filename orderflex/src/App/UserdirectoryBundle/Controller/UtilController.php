@@ -990,7 +990,9 @@ class UtilController extends OrderAbstractController {
 
     #[Route(path: '/common/grant/{id}/{subjectUser}', name: 'employees_get_grant', methods: ['GET'], options: ['expose' => true])]
     public function getGrantByIdAction( $id, $subjectUser=null ) {
-       
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         if( !is_numeric($id) ) {
             //echo "return null";
             $output = array();
@@ -1061,7 +1063,8 @@ class UtilController extends OrderAbstractController {
                         $documentJson["uniquename"] = $document->getUniquename();
                         $documentJson["originalname"] = $document->getOriginalnameClean();
                         $documentJson["size"] = $document->getSize();
-                        $documentJson["url"] = $document->getAbsoluteUploadFullPath();
+                        //$documentJson["url"] = $document->getAbsoluteUploadFullPath();
+                        $documentJson["url"] = $userServiceUtil->getDocumentAbsoluteUrl($document);
                         $documents[] = $documentJson;
                     }
 

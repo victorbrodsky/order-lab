@@ -286,6 +286,7 @@ class SiteParametersController extends OrderAbstractController
             }
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository(SiteParameters::class)->find($id);
@@ -311,13 +312,15 @@ class SiteParametersController extends OrderAbstractController
                 $em->getRepository(Document::class)->processDocuments($entity,"platformLogo");
                 if( $originalParam && count($originalParam)>0 ) {
                     $platformLogo = $originalParam->first();
-                    $originalParam = $platformLogo->getAbsoluteUploadFullPath();
+                    //$originalParam = $platformLogo->getAbsoluteUploadFullPath();
+                    $originalParam = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
                 } else {
                     $originalParam = null;
                 }
                 if( $updatedParam && count($updatedParam)>0 ) {
                     $platformLogo = $updatedParam->first();
-                    $updatedParam = $platformLogo->getAbsoluteUploadFullPath();
+                    //$updatedParam = $platformLogo->getAbsoluteUploadFullPath();
+                    $updatedParam = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
                 } else {
                     $updatedParam = null;
                 }

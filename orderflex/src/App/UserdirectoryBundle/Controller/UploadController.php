@@ -226,6 +226,7 @@ class UploadController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         //$logger = $this->container->get('logger');
 
@@ -243,7 +244,8 @@ class UploadController extends OrderAbstractController {
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 
             $originalname = $document->getOriginalnameClean();
-            $abspath = $document->getAbsoluteUploadFullPath();
+            //$abspath = $document->getAbsoluteUploadFullPath();
+            $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document);
             $size = $document->getSize();
             if( $abspath || $originalname || $size ) {
                 $downloader = new LargeFileDownloader();
@@ -301,6 +303,7 @@ class UploadController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository(Document::class)->find($id);
 
@@ -320,12 +323,11 @@ class UploadController extends OrderAbstractController {
 
             if( strpos((string)$viewType, 'snapshot') === false ) {
                 $originalname = $document->getOriginalnameClean();
-                $abspath = $document->getAbsoluteUploadFullPath(); // http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
+                //$abspath = $document->getAbsoluteUploadFullPath(); // http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
                 //$abspath = $document->getFullServerPath(); // /usr/local/***/Uploaded/directory/avatars/56fbf9e8867c3.jpg
                 $size = $document->getSize();
 
-                $userServiceUtil = $this->container->get('user_service_utility');
-                $userServiceUtil->getDocumentAbsoluteUrl($document);
+                $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document);
 
                 //$filenameClean = str_replace("\\", "/", $abspath);
                 //if( file_exists($filenameClean) === false ) {
@@ -355,12 +357,12 @@ class UploadController extends OrderAbstractController {
                     //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
                     if( file_exists($abspath) ) {
                         //echo "The file $abspath exists <br>";
-                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                        //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                        $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document,$resize,true);
                     } else {
                         //echo "The file $abspath does not exists <br>";
                         //try to re-generate thumbnails for jpg and jpeg
                         if( strpos((string)$originalname, '.jpg') !== false || strpos((string)$originalname, '.jpeg') !== false ) {
-                            $userServiceUtil = $this->container->get('user_service_utility');
                             $destRes = $userServiceUtil->generateTwoThumbnails($document);
                             if( $destRes ) {
                                 $logger = $this->container->get('logger');
@@ -368,7 +370,8 @@ class UploadController extends OrderAbstractController {
                             }
                         }
 
-                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+                        //$abspath = $document->getAbsoluteUploadFullPath($resize);
+                        $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document);
                     }
                     $size = $document->getSizeBySize($resize);
                     //exit('exit small: '.$abspath."; size=".$size);
@@ -379,15 +382,16 @@ class UploadController extends OrderAbstractController {
                     //$size = $document->getSize();
                     //$size = $document->getSizeBySize($resize);
                     //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
-                    $abspath = $document->getFileSystemPath($resize);
+                    //$abspath = $document->getFileSystemPath($resize);
+                    $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document);
                     if( file_exists($abspath) ) {
                         //echo "The file $abspath exists <br>";
-                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                        //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                        $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document,$resize,true);
                     } else {
                         //echo "The file $abspath does not exists <br>";
                         //try to re-generate thumbnails
                         if( strpos((string)$originalname, '.jpg') !== false || strpos((string)$originalname, '.jpeg') !== false ) {
-                            $userServiceUtil = $this->container->get('user_service_utility');
                             $destRes = $userServiceUtil->generateTwoThumbnails($document);
                             if( $destRes ) {
                                 $logger = $this->container->get('logger');
@@ -395,14 +399,16 @@ class UploadController extends OrderAbstractController {
                             }
                         }
 
-                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+                        //$abspath = $document->getAbsoluteUploadFullPath($resize);
+                        $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document,$resize);
                     }
                     $size = $document->getSizeBySize($resize);
                     //exit('exit medium: '.$abspath);
                 } else {
                     //default
                     $originalname = $document->getOriginalnameClean();
-                    $abspath = $document->getAbsoluteUploadFullPath();
+                    //$abspath = $document->getAbsoluteUploadFullPath();
+                    $abspath = $userServiceUtil->getDocumentAbsoluteUrl($document);
                     $size = $document->getSize();
                     //$logger = $this->container->get('logger');
                     //$logger->notice("viewFileMethod: originalname=".$originalname. ", abspath=" . $abspath. ", size=".$size);

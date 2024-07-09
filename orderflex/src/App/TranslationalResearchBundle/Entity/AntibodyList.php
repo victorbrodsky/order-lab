@@ -1049,7 +1049,7 @@ class AntibodyList extends ListAbstract
                 'type' => 'document',
                 'key' => 'document-'.$document->getId(),
                 'label' => $this->getName(),
-                'url' => $document->getAbsoluteUploadFullPath(),
+                'url' => $document->getAbsoluteUploadFullPath(), //should use $userServiceUtil->getDocumentAbsoluteUrl($document)
                 'path' => $document->getFullServerPath(),
                 'uniqueid' => $document->getUniqueid(),
                 'uniquename' => $document->getUniquename(),
@@ -1067,7 +1067,7 @@ class AntibodyList extends ListAbstract
             }
 
             foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
-                $path = $visualInfoDocument->getAbsoluteUploadFullPath();
+                $path = $visualInfoDocument->getAbsoluteUploadFullPath(); //should use $userServiceUtil->getDocumentAbsoluteUrl($document) 
                 if( $path ) {
                     $imageData[] = array(
                         'id' => $visualInfoDocument->getId(),

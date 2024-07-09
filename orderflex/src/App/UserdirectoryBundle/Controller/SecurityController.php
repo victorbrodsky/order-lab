@@ -218,6 +218,7 @@ class SecurityController extends OrderAbstractController
             return null;
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         //$helper = $this->container->get('security.authentication_utils');
@@ -255,7 +256,8 @@ class SecurityController extends OrderAbstractController
             if( count($logos) > 0 ) {
                 $logo = $logos->first();
                 //$packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
-                $logoPath = $logo->getAbsoluteUploadFullPath();
+                //$logoPath = $logo->getAbsoluteUploadFullPath();
+                $logoPath = $userServiceUtil->getDocumentAbsoluteUrl($logo);
             }
         }
 

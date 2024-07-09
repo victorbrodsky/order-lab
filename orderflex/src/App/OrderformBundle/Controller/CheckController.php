@@ -54,6 +54,7 @@ class CheckController extends OrderAbstractController {
 
     public function getArrayFieldJson( $fields, $childrenArr = null ) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         //echo "fields count=".count($fields)."  ";
         $fieldJson = array();
 
@@ -105,7 +106,8 @@ class CheckController extends OrderAbstractController {
                                 $childArr["uniquename"] = $onechild->getUniquename();
                                 $childArr["originalname"] = $onechild->getOriginalnameClean();
                                 $childArr["size"] = $onechild->getSize();
-                                $childArr["url"] = $onechild->getAbsoluteUploadFullPath();
+                                //$childArr["url"] = $onechild->getAbsoluteUploadFullPath();
+                                $childArr["url"] = $userServiceUtil->getDocumentAbsoluteUrl($onechild);
                                 $children[] = $childArr;
                             }
                             $hist[$child] = $children;

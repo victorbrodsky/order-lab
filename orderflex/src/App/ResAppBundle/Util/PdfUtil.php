@@ -2871,7 +2871,9 @@ class PdfUtil {
         //docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType})
         //$pdfDocumentPath = $pdfDocument->getAttachmentEmailPath();
         //$pdfDocumentPath = $pdfDocument->getServerPath();
-        $pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        //$pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $pdfDocumentPath = $userServiceUtil->getDocumentAbsoluteUrl($pdfDocument);
         //$pdfDocumentPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test2\\testPdf_StevenAdamsFull.pdf";
 
         if( !$pdfDocumentPath ) {

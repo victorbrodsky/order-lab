@@ -2918,7 +2918,9 @@ class UserSecurityUtil {
         $platformLogos = $this->getSiteSettingParameter('platformLogos');
         if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
         return $platformLogoPath;
     }

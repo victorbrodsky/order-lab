@@ -2178,7 +2178,9 @@ class FellAppUtil {
             return NULL;
         }
         
-        $pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        //$pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $pdfDocumentPath = $userServiceUtil->getDocumentAbsoluteUrl($pdfDocument);
 
         if( !$pdfDocumentPath ) {
             return NULL;

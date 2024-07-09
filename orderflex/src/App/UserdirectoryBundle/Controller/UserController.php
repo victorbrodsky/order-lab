@@ -4909,7 +4909,9 @@ class UserController extends OrderAbstractController
             $em->flush();
 
             $avatarid = $object->getId();
-            $avatarpath = $object->getAbsoluteUploadFullPath();
+            //$avatarpath = $object->getAbsoluteUploadFullPath();
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $avatarpath = $userServiceUtil->getDocumentAbsoluteUrl($object);
         }
 
         $responseArr = array(

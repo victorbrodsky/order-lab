@@ -90,6 +90,7 @@ class ReminderUtil
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $logger = $this->container->get('logger');
         $systemuser = $userSecUtil->findSystemUser();
@@ -324,7 +325,8 @@ class ReminderUtil
 
                 //It's working with cron
                 if( !$attachmentPath ) {
-                    $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+                    //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+                    $attachmentPath = $userServiceUtil->getDocumentAbsoluteUrl($invoicePDF);
                     //Result: http://127.0.0.1/Uploaded/transres/InvoicePDF/
                     //Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf;
                 }
