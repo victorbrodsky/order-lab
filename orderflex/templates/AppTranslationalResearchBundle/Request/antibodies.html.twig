@@ -194,7 +194,8 @@
                 <td>
                     {#{{ ent.documents }}#}
                     {% for document in ent.documents %}
-                        {% set absolutePath = document.getAbsoluteUploadFullPath() %}
+                        {#{% set absolutePath = document.getAbsoluteUploadFullPath() %}#}
+                        {% set absolutePath = user_service_utility.getDocumentAbsoluteUrl(document) %}
                         <p>
                             <a href="{{ absolutePath }}" target="_blank">
                                 {{ document.getOriginalname() }}

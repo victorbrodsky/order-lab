@@ -126,7 +126,8 @@
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}
+                    {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
+                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(fellapp.avatars|last,"medium") %}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"
                          style="max-width: 250px;"
@@ -247,17 +248,19 @@
         {% if fellapp.avatars|length > 0 %}
             {% if noGlyphicon %}
                 <p>
-                {% if '.pdf' in fellapp.avatars|last.getAbsoluteUploadFullPath %}
+                {% set avatarUrl = user_service_utility.getDocumentAbsoluteUrl(fellapp.avatars|last) %}
+                {#{% if '.pdf' in fellapp.avatars|last.getAbsoluteUploadFullPath %}#}
+                {% if '.pdf' in avatarUrl %}
                     {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
                     {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
-                {% elseif '.doc' in fellapp.avatars|last.getAbsoluteUploadFullPath %}
+                {% elseif '.doc' in avatarUrl %}
                     {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
                     {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
                 {% else %}
                     {#<a href="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}" target="_blank">#}
                     <img
                         alt="{{ fellapp.avatars|last.getOriginalnameClean }}"
-                        src="{{ fellapp.avatars|last.getAbsoluteUploadFullPath }}"
+                        src="{{ avatarUrl }}"
                         height="120"
                         width="{{ fellapp.avatars|last.getWidthByHeight(120) }}"
                     />

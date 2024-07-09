@@ -109,7 +109,13 @@
                 <td class="rowlink-skip">
                     {% for document in transresRequest.getDocuments() %}
                         {% if document.id %}
-                            <a href="{{ document.getAbsoluteUploadFullPath() }}" target="_blank" data-toggle="tooltip" title="{{ document.getOriginalname() }}">
+                            {#<a href="{{ document.getAbsoluteUploadFullPath() }}" target="_blank" data-toggle="tooltip" title="{{ document.getOriginalname() }}">#}
+                                {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
+                            {#</a>#}
+                            <a href="{{ user_service_utility.getDocumentAbsoluteUrl(document) }}"
+                               target="_blank"
+                               data-toggle="tooltip"
+                               title="{{ document.getOriginalname() }}">
                                 <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                             </a>
                         {% endif %}

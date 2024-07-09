@@ -2526,7 +2526,8 @@
         {% set viewType = 'snapshot' %}
     {% endif %}
 
-    {% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}
+    {#{% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}#}
+    {% set docAbsPath = user_service_utility.getDocumentAbsoluteUrl(documentEntity) %}
     {#{% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType}) %}#}
     {#docAbsPath={{ docAbsPath }}<br>#}
 

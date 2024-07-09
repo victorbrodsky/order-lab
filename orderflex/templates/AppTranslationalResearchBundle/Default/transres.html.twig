@@ -2787,7 +2787,8 @@ Show this accordion by default in an open + visible state.
                         <div class="well well-sm">
                             <p><b>Project's Tissue Form(s):</b></p>
                             {% for tissueFormDocument in project.getHumanTissueForms() %}
-                                {% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}
+                                {#{% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}#}
+                                {% set absolutePath = user_service_utility.getDocumentAbsoluteUrl(tissueFormDocument) %}
                                 <p>
                                     <a href="{{ absolutePath }}" target="_blank">
                                         {{ tissueFormDocument.getOriginalname() }} (uploaded {{ tissueFormDocument.getCreatedate()|date('m/d/Y H:i:s') }})

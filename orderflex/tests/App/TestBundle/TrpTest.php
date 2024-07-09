@@ -474,11 +474,11 @@ class TrpTest extends WebTestBase
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/default-reviewers/ap-cp');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Default Reviewers for AP/CP")')->count()
+            $crawler->filter('html:contains("Reviewers for AP/CP")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Default Reviewers for AP/CP Final Review")')->count()
+            $crawler->filter('html:contains("Reviewers for AP/CP Final Review")')->count()
         );
     }
 

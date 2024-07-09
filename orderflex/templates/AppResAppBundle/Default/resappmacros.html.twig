@@ -128,7 +128,8 @@
             {#avatar form modal#}
             {% if resapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    {% set avatarPath = resapp.avatars|last.getAbsoluteUploadFullPath("medium") %}
+                    {#{% set avatarPath = resapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
+                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(resapp.avatars|last,"medium") %}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~resapp.avatars|last.getOriginalnameClean }}"
                          style="max-width: 250px;"
@@ -248,22 +249,23 @@
         {% if resapp.avatars|length > 0 %}
             {% if noGlyphicon %}
                 <p>
-                {% if '.pdf' in resapp.avatars|last.getAbsoluteUploadFullPath %}
-                    {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
-                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
-                {% elseif '.doc' in resapp.avatars|last.getAbsoluteUploadFullPath %}
-                    {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
-                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
-                {% else %}
-                    {#<a href="{{ resapp.avatars|last.getAbsoluteUploadFullPath }}" target="_blank">#}
-                    <img
-                        alt="{{ resapp.avatars|last.getOriginalnameClean }}"
-                        src="{{ resapp.avatars|last.getAbsoluteUploadFullPath }}"
-                        height="120"
-                        width="{{ resapp.avatars|last.getWidthByHeight(120) }}"
-                    />
-                    {#</a>#}
-                {% endif %}
+                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(resapp.avatars|last) %}
+                    {% if '.pdf' in avatarPath %}
+                        {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                        {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                    {% elseif '.doc' in avatarPath %}
+                        {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                        {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                    {% else %}
+                        {#<a href="{{ avatarPath }}" target="_blank">#}
+                        <img
+                            alt="{{ resapp.avatars|last.getOriginalnameClean }}"
+                            src="{{ avatarPath }}"
+                            height="120"
+                            width="{{ resapp.avatars|last.getWidthByHeight(120) }}"
+                        />
+                        {#</a>#}
+                    {% endif %}
                 </p>
             {% else %}
                 <div style="height: 120px; width: 120px;">
