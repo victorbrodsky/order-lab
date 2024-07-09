@@ -320,8 +320,13 @@ class UploadController extends OrderAbstractController {
 
             if( strpos((string)$viewType, 'snapshot') === false ) {
                 $originalname = $document->getOriginalnameClean();
-                $abspath = $document->getAbsoluteUploadFullPath();
+                $abspath = $document->getAbsoluteUploadFullPath(); // http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
+                //$abspath = $document->getFullServerPath(); // /usr/local/***/Uploaded/directory/avatars/56fbf9e8867c3.jpg
                 $size = $document->getSize();
+
+                $userServiceUtil = $this->container->get('user_service_utility');
+                $userServiceUtil->getDocumentAbsoluteUrl($document);
+
                 //$filenameClean = str_replace("\\", "/", $abspath);
                 //if( file_exists($filenameClean) === false ) {
                 //    exit('File '.$filenameClean.' does not exist');

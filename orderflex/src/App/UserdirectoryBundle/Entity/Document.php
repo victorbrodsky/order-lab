@@ -537,8 +537,11 @@ class Document {
         return $fullPath;
     }
 
+    //NOT USED: limitation: can not get correct url prefix for multitenancy case 'http://view.online/c/wcm/pathology/'
+    //Use $userServiceUtil->getDocumentAbsoluteUrl($document) instead ($userServiceUtil = $this->container->get('user_service_utility');)
     //Return: http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
-    public function getAbsoluteUploadFullPath($size=null,$onlyResize=false)
+    //$urlPrefix is a prefix of the url, for example: 'http://view.online/c/wcm/pathology'
+    public function getAbsoluteUploadFullPath($size=null,$onlyResize=false,$urlPrefix=null)
     {
 
         //dump($_SERVER);
@@ -576,6 +579,8 @@ class Document {
         //For multitenancy $serverName should include a tenant url 'c/wcm/pathology':
         //This http://view.online/Uploaded/directory/avatars/avatar/20240708194741.jpeg
         //should be this: http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
+        //$this->generateUrl('employees_home')
+        //$this->get('router')->generate('employees_home')
 
         $uniquename = $this->getUniquename();
         if( !$uniquename ) {
@@ -594,7 +599,13 @@ class Document {
             $subdomain = '';
         }
 
-        $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        if( $urlPrefix ) {
+            $urlPrefix = rtrim($urlPrefix,'/'); //trim '/' at the end
+            $path = $urlPrefix . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        } else {
+            $path = $scheme . "://" . $serverName . DIRECTORY_SEPARATOR . $subdomain . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $uniquename;
+        }
+
         //echo "getAbsoluteUploadFullPath: path=$path <br>";
 
         if ($onlyResize == false) {

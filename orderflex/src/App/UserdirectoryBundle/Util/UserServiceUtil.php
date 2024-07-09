@@ -4855,6 +4855,50 @@ Pathology and Laboratory Medicine",
         return array("live"=>"live", "test"=>"test", "dev"=>"dev");
     }
 
+    //Similar to Document->getAbsoluteUploadFullPath
+    //Document's getAbsoluteUploadFullPath is limited for multitenancy HAproxy when url has 'c/wcm/pathology' prefix:
+    //http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
+    //Here in service, we can get the full url prefix 'http://view.online/c/wcm/pathology' using router
+    public function getDocumentAbsoluteUrl( $document, $size=null, $onlyResize=false ) {
+        $baseUrl = $this->container->get('router')->generate(
+            'main_common_home',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //https://view.online/c/wcm/pathology/
+        //exit('$baseUrl='.$baseUrl);
+
+        $uniquename = $document->getUniquename();
+        if( !$uniquename ) {
+            return null;
+        }
+
+        if ($size) {
+            $uniquename = $size . "-" . $uniquename;
+        }
+
+        $baseUrl = rtrim($baseUrl,'/'); //trim '/' at the end
+
+        $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
+
+//        if ($onlyResize == false) {
+//            if ($size) {
+//                $src = $document->getServerPath($size);
+//                if (file_exists($src)) {
+//                    //echo "The file $path exists <br>";
+//                } else {
+//                    //echo "The file $path does not exists <br>";
+//                    //exit("The file $path does not exists");
+//                    $url = $this->getDocumentAbsoluteUrl($document);
+//                }
+//            } else {
+//                //echo "Size is null <br>";
+//            }
+//        }
+
+        //exit('$url='.$url);
+        return $url;
+    }
+
     public function isDbInitialized( $locale=null ) {
         //return false;//testing
         //echo "isDbInitialized: locale=".$locale."<br>";
