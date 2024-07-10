@@ -402,6 +402,8 @@ class InterfaceController extends OrderAbstractController
             $logger->notice('confirmationMasterToSlaveAction: checksum valid');
             $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
             $transferResult = $interfaceTransferUtil->receiveConfirmationOnSlave($input);
+        } else {
+            $logger->notice('confirmationMasterToSlaveAction: checksum is not valid');
         }
 
         //dump($transferResult);

@@ -2192,6 +2192,15 @@ class InterfaceTransferUtil {
 
     public function createNewDocumentFromJson( $jsonDocument, $fileUniqueName, $filePath ) {
 
+        $documentDb = $this->em->getRepository(Document::class)->findOneByUniquename($fileUniqueName);
+        if( $documentDb ) {
+            $logger = $this->container->get('logger');
+            $event = "Document already exists with fileUniqueName=".$fileUniqueName;
+            $logger->notice($event);
+            //return $documentDb;
+            return NULL;
+        }
+
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
