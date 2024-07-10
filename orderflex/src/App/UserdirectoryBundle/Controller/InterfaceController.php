@@ -256,8 +256,16 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //Testing
-        //$transferableEntity = new Project();
-        //$interfaceTransferUtil->downloadFile(null, $transferableEntity, 'documents');
+//        $transferableEntity = new Project();
+//        $jsonObject = array(
+//            'apppath' => '/usr/local/bin/order-lab-tenantapp1/orderflex',
+//            'irbApprovalLetters' => array(
+//                'originalname' => '668c329c96a32.pdf',
+//                'uniqueid' => null,
+//                'uploadDirectory' => "Uploaded/transres/documents",
+//            ),
+//        );
+//        $interfaceTransferUtil->downloadFile($jsonObject, $transferableEntity, 'irbApprovalLetters');
         //$interfaceTransferUtil->downloadFile(null,null,null);
         //exit('111');
 

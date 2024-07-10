@@ -478,7 +478,7 @@ class TrpTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Reviewers for AP/CP Final Review")')->count()
+            $crawler->filter('html:contains("Reviewers for AP/CP Financial and Programmatic Review")')->count()
         );
     }
 

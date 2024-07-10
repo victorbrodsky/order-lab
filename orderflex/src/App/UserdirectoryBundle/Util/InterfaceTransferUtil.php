@@ -1845,6 +1845,7 @@ class InterfaceTransferUtil {
                     $this->downloadFile($jsonObject, $transferableEntity, 'humanTissueForms');
                 }
             }
+            exit('exit after downloadFile');
 
 //            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 //
@@ -2047,12 +2048,13 @@ class InterfaceTransferUtil {
     }
 
 
+    //SSH or SFTP connection by phpseclib3
     //On master server (server which will get the file from slave): provide a private key in field 'SSH password/key' in InterfaceTransferList
     //On slave server (server which has a file to transfer to master): Specify the public key to use by changing AuthorizedKeysFile:
     //1) vim /etc/ssh/sshd_config
     //2) AuthorizedKeysFile /etc/ssh/ssh_host_ed25519_key.pub
     //3) sudo systemctl restart sshd
-    public function connectByPublicKey( $transferableEntity ) {
+    public function connectByPublicKey( $transferableEntity, $type='SFTP' ) {
         $mapper = $this->classListMapper($transferableEntity);
         $entityName = $mapper['entityName'];
 
@@ -2083,7 +2085,7 @@ class InterfaceTransferUtil {
 
         //$strServerUsername = '';
         //$strServerPassword = '';
-        echo "strServer=$strServer, strServerPort=$strServerPort, privateKeyContent=$privateKeyContent <br>";
+        //echo "strServer=$strServer, strServerPort=$strServerPort, privateKeyContent=$privateKeyContent <br>";
 
         //testing phpseclib
         //$command = 'pwd'; //root
@@ -2096,32 +2098,88 @@ class InterfaceTransferUtil {
         //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
         //$private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
         //$privateKeyContent = file_get_contents($private_key_path);
-
         $key = PublicKeyLoader::load($privateKeyContent);
-        $ssh = new SSH2($strServer);
-        if (!$ssh->login('root', $key)) {
-            throw new \Exception('Login failed');
+
+        if( $type = 'SFTP' ) {
+            $sshConnection = new SFTP($strServer);
+        } else {
+            $sshConnection = new SSH2($strServer);
         }
-        else{
-            //$output = $ssh->exec($command);
-            return $ssh;
+
+//        if (!$sftpConnection->login('root', $key)) {
+//            throw new \Exception('SFTP login failed with private key');
+//        } else{
+//            //$projectRoot = $this->container->get('kernel')->getProjectDir();
+//            //$testFile = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/transres/documents/668c329c96a32.pdf';
+//            //$sftpConnection->get($testFile, $projectRoot.'\testFileLocal.pdf');
+//            //exit('Copied file ');
+//            return $sftpConnection;
+//        }
+//        //exit('111');
+
+        if( !$sshConnection->login('root', $key) ) {
+            throw new \Exception($type.' login failed with private key');
+        } else{
+            return $sshConnection;
         }
 
         return null;
     }
 
+    //$jsonObject, $transferableEntity, 'humanTissueForms'
     public function downloadFile( $jsonObject, $transferableEntity, $field ) {
-        $sshConnection = $this->connectByPublicKey($transferableEntity);
-        $output = $sshConnection->exec('pwd');
+        //$sshConnection = $this->connectByPublicKey($transferableEntity,'SSH');
+        //$output = $sshConnection->exec('pwd');
+        $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
+        $sftpConnection->enableDatePreservation(); //preserver original file last modified date
 
         dump($jsonObject);
+        //exit('111');
 
-        //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,"uploadDirectory":"Uploaded\/transres\/documents"}],
-        $fileInfo = $jsonObject[$field];
-        $originalname = $fileInfo['originalname'];
+        $transferRes = array();
+
+        $instanceId = $jsonObject['instanceId'];
+        $apppath = $jsonObject['apppath'];
+        $jsonDocuments = $jsonObject[$field];
+        echo $field.": jsonDocuments count=".count($jsonDocuments)."<br>";
+
+        foreach($jsonDocuments as $jsonDocument) {
+            //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,"uploadDirectory":"Uploaded\/transres\/documents"}],
+            $originalname = $jsonDocument['originalname'];
+            $uniqueid = $jsonDocument['uniqueid'];
+            $uniquename = $jsonDocument['uniquename'];
+            $uploadDirectory = $jsonDocument['uploadDirectory'];
+            $type = $jsonDocument['type'];
+            $typeName = NULL;
+            if( isset($type['type']['name']) ) {
+                $typeName = $type['type']['name'];
+            }
+
+            //TODO: transfer file with the same name and add to the project
+            //source file
+            $sourceFile = $apppath.'/'.'public'.'/'.$uploadDirectory.'/'.$uniquename;
+
+            //copy file to public/Uploaded/transres/documents
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            $destinationFileName = $instanceId.'-'.$uniquename;
+            $destinationFile = $projectRoot.'/public/Uploaded/transres/documents/'.$destinationFileName;
+            //$testFile = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/transres/documents/668c329c96a32.pdf';
+
+            echo "sourceFile=".$sourceFile.", destinationFile=".$destinationFile."<br>";
+
+            $output = $sftpConnection->get($sourceFile, $destinationFile);
+
+            if( $output ) {
+                echo "Transfer file success <br>";
+            } else {
+                echo "Transfer file fail <br>";
+            }
+
+            $transferRes[] = $output;
+        }
 
 
-        exit('111: '.$output);
+        echo $field.': downloadFile='.implode(', ',$transferRes);
     }
 
 //    function testconnect() {
@@ -2573,8 +2631,8 @@ class InterfaceTransferUtil {
         curl_close($ch);
 
         //dump($status);
-        dump($result);
-        exit('111');
+        //dump($result);
+        //exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);
@@ -2742,9 +2800,9 @@ class InterfaceTransferUtil {
                 'tissueFormComment',
                 
                 //Files
-                'documents' => ['uploadDirectory','originalname','uniqueid'],
-                'irbApprovalLetters' => ['uploadDirectory','originalname','uniqueid'],
-                'humanTissueForms' => ['uploadDirectory','originalname','uniqueid'],
+                'documents' => ['uploadDirectory','originalname','uniqueid','uniquename','type'=>['name']],
+                'irbApprovalLetters' => ['uploadDirectory','originalname','uniqueid','uniquename','type'=>['name']],
+                'humanTissueForms' => ['uploadDirectory','originalname','uniqueid','uniquename','type'=>['name']],
             ]];
 
             //https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
