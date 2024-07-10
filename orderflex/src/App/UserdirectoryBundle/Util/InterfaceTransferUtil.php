@@ -1466,16 +1466,20 @@ class InterfaceTransferUtil {
             echo "Final transferableEntity=".$transferableEntity."<br>";
             echo "Final resStr=$resStr <br>";
 
+            $new = true;
+            $actionStr = 'Create new Project';
+
             //TODO: fix update Project, now only create New Project
             //An exception occurred while executing a query: SQLSTATE[23505]:
             // Unique violation: 7 ERROR: duplicate key value violates
             // unique constraint "pk__transres__3213e83f716f45b5"
             //DETAIL: Key (id)=(1) already exists.
             if( $transferableEntity ) {
-                $resStr = "Get transfer not completed: Project ".$transferableEntity->getOid()." already exists.";
-                //return $resStr;
-                $resArr[] = $resStr;
-                continue;
+                $new = false;
+                $actionStr = 'Update Project';
+                //$resStr = "Get transfer not completed: Project ".$transferableEntity->getOid()." already exists.";
+                //$resArr[] = $resStr;
+                //continue;
             }
 
             //dump($jsonObject);
@@ -1488,7 +1492,10 @@ class InterfaceTransferUtil {
                 //exit('123');
 
                 //TODO: error: spl_object_id(): Argument #1 ($object) must be of type object, array given
-                $this->em->persist($transferableEntity);
+                if( $new ) {
+                    $this->em->persist($transferableEntity);
+                }
+
                 if ($testing === false) {
                     //set export ID or use TransferData to get it
                     //$transferableEntity->setExportId($localId);
@@ -1526,8 +1533,8 @@ class InterfaceTransferUtil {
                         'globalId' => $globalId     //global id on the internal (master) for newly created, or updated objects
                     );
 
-                    $resStr = "Create new Project with "
-                        . "id=". $transferableEntity->getId()
+                    $resStr = $actionStr." "
+                        . "ID=". $transferableEntity->getId()
                         . "; sourceId=" . $transferableEntity->getSourceId()
                         . "; oid=" . $transferableEntity->getOid()
                         . "; globalId=" . $transferableEntity->getGlobalId()
@@ -1636,7 +1643,8 @@ class InterfaceTransferUtil {
 
             if(1) {
                 if ($objectToPopulate) {
-                    echo "deserialize Object: Update project " . $objectToPopulate->getOid() . "<br>";
+                    $updateProjectOriginalId = $objectToPopulate->getId();
+                    //echo "deserialize Object: Update project " . $objectToPopulate->getOid() . ", original id=" . $updateProjectOriginalId . "<br>";
                     $transferableEntity = $serializer->denormalize(
                         $jsonObject,
                         $className,
@@ -1646,6 +1654,11 @@ class InterfaceTransferUtil {
                             AbstractNormalizer::OBJECT_TO_POPULATE => $objectToPopulate
                         ]
                     );
+
+                    $transferableEntity->setId($updateProjectOriginalId);
+
+                    //$updateProjectId = $transferableEntity->getId();
+                    //exit('$updateProjectId='.$objectToPopulate->getId());
                 } else {
                     echo "deserialize Object: Create new project <br>";
                     $transferableEntity = $serializer->denormalize(
@@ -2143,7 +2156,14 @@ class InterfaceTransferUtil {
     public function downloadFile( $jsonObject, $transferableEntity, $field, $adder ) {
         //$sshConnection = $this->connectByPublicKey($transferableEntity,'SSH');
         //$output = $sshConnection->exec('pwd');
-        $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
+
+        try {
+            $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
+        } catch( \Exception $e ) {
+            echo 'Caught connection exception: ', $e->getMessage(), "\n";
+            return false;
+        }
+
         $sftpConnection->enableDatePreservation(); //preserver original file last modified date
 
         //dump($jsonObject);
@@ -2722,14 +2742,18 @@ class InterfaceTransferUtil {
             //echo 'hash='.$hash.'<br>';
             //exit('222');
 
-            if ($checksum === $hash && $valid === true && $transferResult) {
+            //&& $transferResult
+            if ($checksum === $hash && $valid === true ) {
                 echo "Successfully sent: " . $jsonFile['className'] . " <br>";
                 return $result;
             } else {
                 //return "Curl is not valid";
                 $session->getFlashBag()->add(
                     'warning',
-                    "Curl: invalid handshake"
+                    "Curl: invalid handshake: ".
+                    "Hash: [".$checksum . "]?=[" . $hash . "]".
+                    ", valid=".$valid
+                    //.", transferResult=".var_dump($transferResult)
                 );
             }
         }
