@@ -43,6 +43,7 @@ use App\UserdirectoryBundle\Entity\TransferData;
 use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserInfo;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Crypt\RSA;
@@ -1471,8 +1472,8 @@ class InterfaceTransferUtil {
             if( $transferableEntity ) {
                 echo "PrePersist: transferableEntity ID=".$transferableEntity->getId().", title=".$transferableEntity->getTitle()."<br>";
 
-                dump($transferableEntity);
-                exit('123');
+                //dump($transferableEntity);
+                //exit('123');
 
                 //TODO: error: spl_object_id(): Argument #1 ($object) must be of type object, array given
                 $this->em->persist($transferableEntity);
@@ -1834,18 +1835,18 @@ class InterfaceTransferUtil {
                 //uploadDirectory='Uploaded/transres/documents'
                 //'documents',
                 if (isset($jsonObject['documents'])) {
-                    $this->downloadFile($jsonObject, $transferableEntity, 'documents');
+                    $this->downloadFile($jsonObject, $transferableEntity, 'documents','addDocument');
                 }
                 //'irbApprovalLetters',
                 if (isset($jsonObject['irbApprovalLetters'])) {
-                    $this->downloadFile($jsonObject, $transferableEntity, 'irbApprovalLetters');
+                    $this->downloadFile($jsonObject, $transferableEntity, 'irbApprovalLetters','addIrbApprovalLetter');
                 }
                 //'humanTissueForms'
                 if (isset($jsonObject['humanTissueForms'])) {
-                    $this->downloadFile($jsonObject, $transferableEntity, 'humanTissueForms');
+                    $this->downloadFile($jsonObject, $transferableEntity, 'humanTissueForms','addHumanTissueForm');
                 }
             }
-            exit('exit after downloadFile');
+            //exit('exit after downloadFile');
 
 //            echo "deserialize Object: ".$className.": transferableEntity ID=".$transferableEntity->getId()."<br>";
 //
@@ -2100,7 +2101,7 @@ class InterfaceTransferUtil {
         //$privateKeyContent = file_get_contents($private_key_path);
         $key = PublicKeyLoader::load($privateKeyContent);
 
-        if( $type = 'SFTP' ) {
+        if( $type == 'SFTP' ) {
             $sshConnection = new SFTP($strServer);
         } else {
             $sshConnection = new SSH2($strServer);
@@ -2127,13 +2128,13 @@ class InterfaceTransferUtil {
     }
 
     //$jsonObject, $transferableEntity, 'humanTissueForms'
-    public function downloadFile( $jsonObject, $transferableEntity, $field ) {
+    public function downloadFile( $jsonObject, $transferableEntity, $field, $adder ) {
         //$sshConnection = $this->connectByPublicKey($transferableEntity,'SSH');
         //$output = $sshConnection->exec('pwd');
         $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
         $sftpConnection->enableDatePreservation(); //preserver original file last modified date
 
-        dump($jsonObject);
+        //dump($jsonObject);
         //exit('111');
 
         $transferRes = array();
@@ -2144,16 +2145,18 @@ class InterfaceTransferUtil {
         echo $field.": jsonDocuments count=".count($jsonDocuments)."<br>";
 
         foreach($jsonDocuments as $jsonDocument) {
-            //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,"uploadDirectory":"Uploaded\/transres\/documents"}],
-            $originalname = $jsonDocument['originalname'];
-            $uniqueid = $jsonDocument['uniqueid'];
+            //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,
+            //"uniquename" => "668c329c96a32.pdf","uploadDirectory":"Uploaded\/transres\/documents"},
+            //"type" => array:1 ["name" => "IRB Approval Letter"]],
+            //$originalname = $jsonDocument['originalname'];
+            //$uniqueid = $jsonDocument['uniqueid'];
+//            $type = $jsonDocument['type'];
+//            $typeName = NULL;
+//            if( isset($type['type']['name']) ) {
+//                $typeName = $type['type']['name'];
+//            }
             $uniquename = $jsonDocument['uniquename'];
-            $uploadDirectory = $jsonDocument['uploadDirectory'];
-            $type = $jsonDocument['type'];
-            $typeName = NULL;
-            if( isset($type['type']['name']) ) {
-                $typeName = $type['type']['name'];
-            }
+            $uploadDirectory = $jsonDocument['uploadDirectory']; //add additional check if upload directory on this server the same
 
             //TODO: transfer file with the same name and add to the project
             //source file
@@ -2171,6 +2174,11 @@ class InterfaceTransferUtil {
 
             if( $output ) {
                 echo "Transfer file success <br>";
+                $document = $this->createNewDocumentFromJson($jsonDocument,$destinationFileName,$destinationFile);
+                if( $document ) {
+                    $this->em->persist($document);
+                    $transferableEntity->$adder($document);
+                }
             } else {
                 echo "Transfer file fail <br>";
             }
@@ -2178,8 +2186,54 @@ class InterfaceTransferUtil {
             $transferRes[] = $output;
         }
 
+        //echo $field.': downloadFile='.implode(', ',$transferRes);
+        return true;
+    }
 
-        echo $field.': downloadFile='.implode(', ',$transferRes);
+    public function createNewDocumentFromJson( $jsonDocument, $fileUniqueName, $filePath ) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+
+        $originalname = $jsonDocument['originalname'];
+        $uniqueid = $jsonDocument['uniqueid'];
+        //$uniquename = $jsonDocument['uniquename'];
+        $uploadDirectory = $jsonDocument['uploadDirectory'];
+        $type = $jsonDocument['type'];
+        $documentTypeName = NULL;
+        if( isset($type['type']['name']) ) {
+            $documentTypeName = $type['type']['name'];
+        }
+
+        $filesize = NULL;
+        if( file_exists($filePath) ) {
+            $filesize = filesize($filePath);
+        } else {
+            return NULL;
+        }
+
+        $object = new Document($systemUser);
+        $object->setUniqueid($uniqueid);
+        $object->setUniquename($fileUniqueName);
+        $object->setUploadDirectory($uploadDirectory);
+        $object->setOriginalname($originalname);
+        $object->setSize($filesize);
+
+        //TODO: use $file->getCreatedTime for creation date? (https://developers.google.com/drive/api/v3/reference/files#createdTime)
+        //$file->getCreatedTime is available only in 2.0 google/apiclient
+        //https://developers.google.com/resources/api-libraries/documentation/drive/v3/php/latest/class-Google_Service_Drive_DriveFile.html
+
+        //clean originalname
+        $object->setCleanOriginalname($originalname);
+
+        $transformer = new GenericTreeTransformer($this->em, $systemUser, "DocumentTypeList", "UserdirectoryBundle");
+        $documentTypeName = trim((string)$documentTypeName);
+        $documentTypeObject = $transformer->reverseTransform($documentTypeName);
+        if( $documentTypeObject ) {
+            $object->setType($documentTypeObject);
+        }
+
+        return $object;
     }
 
 //    function testconnect() {
