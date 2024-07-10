@@ -218,6 +218,7 @@ class DoctrineListener {
 
             //TODO: add project to TransferData if status changed from draft to irb_review
             if( $event !== 'create' ) {
+                $logger->notice('setTrabsferable: Project is not newly created');
                 return false;
             }
 
@@ -226,6 +227,7 @@ class DoctrineListener {
 
             //if not 'irb_review'
             if( $entity->getState() != 'irb_review' ) {
+                $logger->notice('setTrabsferable: Project is not in IRB review state');
                 return false;
             }
 //            if( $entity->getState() == 'draft' ) {

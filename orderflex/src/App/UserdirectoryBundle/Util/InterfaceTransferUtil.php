@@ -1380,6 +1380,9 @@ class InterfaceTransferUtil {
         //$testing = true;
         $testing = false;
 
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+
         $userSecUtil = $this->container->get('user_security_utility');
         $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
         if( !$instanceId ) {
@@ -1546,7 +1549,7 @@ class InterfaceTransferUtil {
                     if( $transferableEntity->sendComputationalEmail() ) {
                         $transresUtil = $this->container->get('transres_util');
                         $compEmailRes = $transresUtil->sendComputationalEmail($transferableEntity);
-                        $this->addFlash(
+                        $session->getFlashBag()->add(
                             'notice',
                             "Notification emails for projects involving Computational Pathology".
                             " or a request for a bioinformatician".
