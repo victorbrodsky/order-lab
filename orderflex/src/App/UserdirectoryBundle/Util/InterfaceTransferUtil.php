@@ -657,15 +657,24 @@ class InterfaceTransferUtil {
     //Used by DoctrineListener->setTrabsferable() find or create if TransferData has this antibody, project ...
     public function findCreateTransferData( $entity ) {
 
+        $logger = $this->container->get('logger');
         $transferData = $this->findTransferData($entity);
 
         if( $transferData ) {
             //set status to 'Ready'
             $statusReady = $this->em->getRepository(TransferStatusList::class)->findOneByName('Ready');
             $transferData->setTransferStatus($statusReady);
+            $logger->notice('findCreateTransferData: found existing TransferData ID='.
+                $transferData->getId().", className=".$transferData->getClassName().
+                ", localId=".$transferData->getLocalId()
+            );
         } else {
             //Create TransferData
             $transferData = $this->createTransferData($entity,$status='Ready');
+            $logger->notice('findCreateTransferData: created new TransferData ID='.
+                $transferData->getId().", className=".$transferData->getClassName().
+                ", localId=".$transferData->getLocalId()
+            );
         }
 
         return $transferData;
