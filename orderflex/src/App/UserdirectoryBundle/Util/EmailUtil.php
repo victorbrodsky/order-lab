@@ -405,7 +405,7 @@ class EmailUtil {
 
     public function getMailer() {
 
-        return $this->mailer;
+        //return $this->mailer;
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -439,11 +439,6 @@ class EmailUtil {
 
     //Route outgoing SMTP relay messages through Google: https://support.google.com/a/answer/2956491
     public function getSmtpTransport() {
-
-        # SMTP
-        //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default
-
-
         $userSecUtil = $this->container->get('user_security_utility');
 
         $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
@@ -466,11 +461,23 @@ class EmailUtil {
         //echo '$username='.$username.'; $password='.$password.'; $port='.$port.'; $host='.$host."<br>";
 
         //MAILER_DSN=smtp://****:****@smtp.office365.com:587?timeout=60
-        $timeoutStr = "";
+        //$timeoutStr = "";
         $timeoutStr = "?timeout=60"; //timeout in seconds
 
-        //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
-        $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
+        //url encode password
+        //$password = 'otmu vzjw mwzm puzl';
+        //$password = rawurlencode($password);
+        //echo '$password='.$password."<br>";
+        //exit();
+
+        if( $host == 'smtp.gmail.com' ) {
+            //Use gmail# SMTP
+            //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default rawurlencode
+            $transport = Transport::fromDsn('gmail+smtp://' . urlencode((string)$username) . ':' . urlencode((string)$password) . '@' . 'default');
+        } else {
+            //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
+            $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
+        }
 
         return $transport;
 
