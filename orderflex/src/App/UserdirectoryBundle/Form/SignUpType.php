@@ -22,7 +22,7 @@ class SignUpType extends AbstractType
         //$builder->add('createdate')->add('updatedate')->add('userName')->add('email')->add('firstName')->add('lastName')->add('phone')->add('salt')->add('hashPassword')->add('registrationLinkID')->add('registrationStatus')->add('ip')->add('useragent')->add('width')->add('height')->add('user')->add('site')->add('updatedby')->add('institution')->add('administrativeTitle');
 
         $builder->add( 'userName', TextType::class, array(
-            'label'=>'User Name:',
+            'label'=>'User Name (no spaces):',
             //'required'=> true,
             'attr' => array('class'=>'form-control'),
         ));

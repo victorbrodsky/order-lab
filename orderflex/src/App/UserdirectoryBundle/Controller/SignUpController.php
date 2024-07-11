@@ -130,9 +130,12 @@ class SignUpController extends OrderAbstractController
                 if( strlen((string)$signUp->getUserName()) < '4' || strlen((string)$signUp->getUserName()) > '25' ) {
                     $usernameErrorCount++;
                 }
+                if( str_contains($signUp->getUserName(), ' ') ) {
+                    $usernameErrorCount++;
+                }
             }
             if( $usernameErrorCount > 0 ) {
-                $usernameError = "Please make sure your user name contains at least 4 and at most 25 characters.";
+                $usernameError = "Please make sure your user name contains at least 4 and at most 25 characters and does not contain empty spaces.";
                 $form->get('userName')->addError(new FormError($usernameError));
             }
 
@@ -156,7 +159,6 @@ class SignUpController extends OrderAbstractController
 
                 //check if still active request and email or username existed in SignUp DB
                 if( !$emailHasError ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SignUp'] by [SignUp::class]
                     $signUpDbs = $em->getRepository(SignUp::class)->findByEmail($signUp->getEmail());
                     if (count($signUpDbs) > 0) {
                         $signUpDb = $signUpDbs[0];
@@ -270,7 +272,8 @@ class SignUpController extends OrderAbstractController
             unset($dummyUser);
 
             //2) Generate unique REGISTRATION-LINK-ID
-            $registrationLinkId = $userServiceUtil->getUniqueRegistrationLinkId("SignUp",$signUp->getEmail());
+            $text = $signUp->getEmail().$signUp->getUserName().$signUp->getSalt();
+            $registrationLinkId = $userServiceUtil->getUniqueRegistrationLinkId("SignUp",$text); //$signUp->getEmail());
             $signUp->setRegistrationLinkID($registrationLinkId);
 
             //sitename
@@ -506,8 +509,23 @@ class SignUpController extends OrderAbstractController
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
         $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
+
+        if( !$user ) {
+            //check by email
+            $emailCanonical = $this->canonicalize($signUp->getEmail());
+            $user = $em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
+        }
+
+        if( !$user ) {
+            $emailCanonical = $this->canonicalize($signUp->getEmail());
+            $users = $em->getRepository(User::class)->findUserByUserInfoEmail($emailCanonical);
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+
         //if( !$user ) { //&& !$signUp->getUser()
-        if( $user && $signUp->getUser() ) {
+        if( $user || $signUp->getUser() ) {
             //user exists: don't create a new user
         } else {
             ///////////// create a new user ///////////////
@@ -567,12 +585,12 @@ class SignUpController extends OrderAbstractController
             //set user in SignUp
             $signUp->setUser($user);
 
-//        //Update the registration status” column in the “sign up list” table to “Activated”
-//        $signUp->setRegistrationStatus("Activated");
+            //Update the registration status” column in the “sign up list” table to “Activated”
+            //$signUp->setRegistrationStatus("Activated");
 
             //delete registration link field in DB?
 
-            //exit('flush');
+            //exit('before new user');
             $em->persist($signUp);
             $em->persist($user);
             $em->flush();
@@ -632,7 +650,6 @@ class SignUpController extends OrderAbstractController
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
-
             //Update the registration status” column in the “sign up list” table to “Activated”
             $signUp->setRegistrationStatus("Activated");
 
@@ -647,7 +664,7 @@ class SignUpController extends OrderAbstractController
 //                echo "email=" . $info->getEmail() . "; phone=" . $info->getPreferredPhone() . "<br>";
 //            }
 
-            //exit('flush');
+            //exit('1 before activate new user='.$user);
             $em->flush();
 
             //Event Log
@@ -1394,5 +1411,18 @@ class SignUpController extends OrderAbstractController
         ));
     }
 
+    public function canonicalize($string)
+    {
+        if (null === $string) {
+            return null;
+        }
+
+        $encoding = mb_detect_encoding($string);
+        $result = $encoding
+            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+            : mb_convert_case($string, MB_CASE_LOWER);
+
+        return $result;
+    }
 
 }
