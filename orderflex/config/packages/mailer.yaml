@@ -1,7 +1,7 @@
 framework:
     mailer:
-        #dsn: '%env(MAILER_DSN)%'
-        dsn: '%mailer_dsn%'
+        dsn: '%mailer_dsn%' #mailer with EmailUtil
+        #dsn: '%env(MAILER_DSN)%' #default
         #dsn: 'null://null'
 
 

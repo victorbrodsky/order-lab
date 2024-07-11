@@ -405,7 +405,7 @@ class EmailUtil {
 
     public function getMailer() {
 
-        //return $this->mailer;
+        return $this->mailer;
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -439,6 +439,10 @@ class EmailUtil {
 
     //Route outgoing SMTP relay messages through Google: https://support.google.com/a/answer/2956491
     public function getSmtpTransport() {
+
+        # SMTP
+        //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default
+
 
         $userSecUtil = $this->container->get('user_security_utility');
 

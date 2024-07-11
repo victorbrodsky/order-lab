@@ -115,7 +115,7 @@ $container->setParameter('crn.uploadpath',$crnuploadpath);
 $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
-$container->setParameter('mailer_dsn', "null://null");
+$container->setParameter('mailer_dsn', "null://null"); //disable for testing
 
 
 if( $conn ) {

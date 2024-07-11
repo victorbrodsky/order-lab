@@ -26,6 +26,8 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -66,8 +68,21 @@ class EmailController extends OrderAbstractController
     
     #[Route(path: '/send-a-test-email/', name: 'employees_emailtest', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/Email/email-test.html.twig')]
-    public function emailTestAction(Request $request)
+    public function emailTestAction(Request $request, MailerInterface $mailer)
     {
+
+        //Test default symfony email
+//        $email = (new Email())
+//            ->from('cinava@yahoo.com')
+//            ->to('cinava@yahoo.com')
+//            //->cc('cc@example.com')
+//            //->bcc('bcc@example.com')
+//            //->replyTo('fabien@example.com')
+//            //->priority(Email::PRIORITY_HIGH)
+//            ->subject('Time for Symfony Mailer!')
+//            ->text('Sending emails is fun again!')
+//            ->html('<p>See Twig integration for better HTML integration!</p>');
+//        $mailer->send($email);
 
         if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
