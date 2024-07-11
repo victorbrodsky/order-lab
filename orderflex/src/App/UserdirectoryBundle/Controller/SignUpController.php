@@ -1055,7 +1055,12 @@ class SignUpController extends OrderAbstractController
                 }
 
                 //check if user with provided email existed in resetPassword DB
-                $userDbs = $em->getRepository(User::class)->findUserByUserInfoEmail($resetPassword->getEmail());
+                $text = $resetPassword->getEmail();
+                $user = $resetPassword->getUser();
+                if( $user ) {
+                    $text = $text . $user->getPrimaryPublicUserId();
+                }
+                $userDbs = $em->getRepository(User::class)->findUserByUserInfoEmail($text);
                 //echo "usersDb=".count($userDbs)."<br>";
                 if( count($userDbs) > 0 ) {
                     $userDb = $userDbs[0];
