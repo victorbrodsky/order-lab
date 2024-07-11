@@ -472,11 +472,12 @@ class EmailUtil {
 
         if( $host == 'smtp.gmail.com' ) {
             //Use gmail# SMTP
-            //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default rawurlencode
-            $transport = Transport::fromDsn('gmail+smtp://' . urlencode((string)$username) . ':' . urlencode((string)$password) . '@' . 'default');
+            //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default
+            $transport = Transport::fromDsn('gmail+smtp://' . rawurlencode((string)$username) . ':' . rawurlencode((string)$password) . '@' . 'default');
         } else {
+            //urlencode
             //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
-            $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
+            $transport = Transport::fromDsn('smtp://'.rawurlencode((string)$username).':'.rawurlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
         }
 
         return $transport;
