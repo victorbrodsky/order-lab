@@ -2724,8 +2724,9 @@ class InterfaceTransferUtil {
             //Correct way to use .crt
             //Install: yum install ca-certificates
             curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
+            curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
+            curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
             //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
         }
 
