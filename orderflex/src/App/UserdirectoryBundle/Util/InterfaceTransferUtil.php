@@ -2964,8 +2964,8 @@ class InterfaceTransferUtil {
         $jsonFile['confirmationResponse'] = $confirmationResponse;
 
         $data_string = json_encode($jsonFile);
-        dump($data_string);
-        exit('111');
+        //dump($data_string);
+        //exit('111');
 
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
 
