@@ -3036,8 +3036,8 @@ class InterfaceTransferUtil {
 //            'instanceId' => $instanceId,
 //        );
 
-        dump($confirmationJsonFile);
-        exit('123');
+        //dump($confirmationJsonFile);
+        //exit('123');
 
         $userSecUtil = $this->container->get('user_security_utility');
 
