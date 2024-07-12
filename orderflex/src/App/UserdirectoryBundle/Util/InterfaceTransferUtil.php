@@ -1455,9 +1455,9 @@ class InterfaceTransferUtil {
             }
 
             //Additional check if Project already exists by the source ID
-            if( !$transferableEntity ) {
+            //if( !$transferableEntity ) {
                 //$transferableEntity = $this->em->getRepository($className)->findOneBySourceId($sourceId);
-            }
+            //}
 
 //            if( !$transferableEntity ) {
 //                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
@@ -1526,6 +1526,7 @@ class InterfaceTransferUtil {
                     }
 
                     $confirmationResponse[] = array(
+                        'instanceId' => $instanceId,
                         'className' => $className,
                         'localId' => $localId,      //id on the external (slave)
                         'sourceId' => $sourceId,    //source id on the external (slave)
@@ -1535,7 +1536,7 @@ class InterfaceTransferUtil {
 
                     $resStr = $actionStr." "
                         . "ID=". $transferableEntity->getId()
-                        . "; sourceId=" . $transferableEntity->getSourceId()
+                        . "; sourceId=" . $transferableEntity->getSourceId() //WCMINT - product server, WCMTEST - test server
                         . "; oid=" . $transferableEntity->getOid()
                         . "; globalId=" . $transferableEntity->getGlobalId()
                         . ", title " . $transferableEntity->getTitle();
@@ -2963,8 +2964,8 @@ class InterfaceTransferUtil {
         $jsonFile['confirmationResponse'] = $confirmationResponse;
 
         $data_string = json_encode($jsonFile);
-        //dump($data_string);
-        //exit('111');
+        dump($data_string);
+        exit('111');
 
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
 
@@ -3031,8 +3032,12 @@ class InterfaceTransferUtil {
 //            'localId' => $localId,
 //            'oid' => $oid,
 //            'sourceId' => $sourceId,
-//            'globalId' => $globalId
+//            'globalId' => $globalId,
+//            'instanceId' => $instanceId,
 //        );
+
+        dump($confirmationJsonFile);
+        exit('123');
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -3041,6 +3046,11 @@ class InterfaceTransferUtil {
             $className = $singleConfirmationJsonFile['className'];
             $localId = $singleConfirmationJsonFile['localId'];
             $globalId = $singleConfirmationJsonFile['globalId'];
+            $instanceId = $singleConfirmationJsonFile['instanceId'];
+
+            if( $instanceId != 'WCMINT' ) {
+                continue;
+            }
 
             $transferableEntity = $this->em->getRepository($className)->find($localId);
             if ($transferableEntity) {
