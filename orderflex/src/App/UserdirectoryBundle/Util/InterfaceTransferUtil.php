@@ -2715,31 +2715,45 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
             //https://stackoverflow.com/questions/4372710/php-curl-https
             //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
             //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
             //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
             //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
-            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer');
+            //Correct way to use .crt
+            //Install: yum install ca-certificates
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
+            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
         }
 
         $result = curl_exec($ch);
-        //$status = curl_getinfo($ch);
+        $status = curl_getinfo($ch);
+        $error = curl_error($ch);
         curl_close($ch);
 
+        //dump($error);
         //dump($status);
         //dump($result);
         //exit('111');
 
-        if( $result ) {
+        if( $status['http_code'] != 200 || $error ) {
+            $session->getFlashBag()->add(
+                'warning',
+                "Curl failed: "." url=".$url." => ".$error
+            );
+        }
+
+        if( $status['http_code'] == 200 && $result ) {
             $result = json_decode($result, true);
             //if( !$result ) {
             //    return false;
             //}
             $checksum = $result['checksum'];
             $valid = $result['valid'];
-            $transferResult = $result['transferResult'];
+            //$transferResult = $result['transferResult'];
 
             //dump($result);
             //echo 'hash='.$hash.'<br>';
@@ -2945,6 +2959,9 @@ class InterfaceTransferUtil {
             return null;
         }
 
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+
         $className = $confirmationResponse[0]['className'];
         $entityName = $this->getEntityName($className);
         //echo "send ConfirmationToSourceServer: className=$className, $entityName <br>";
@@ -2988,22 +3005,32 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
             //https://stackoverflow.com/questions/4372710/php-curl-https
             //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
             //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
             //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
         }
 
+
         $result = curl_exec($ch);
-        //$status = curl_getinfo($ch);
+        $status = curl_getinfo($ch);
+        $error = curl_error($ch);
         curl_close($ch);
 
         //dump($status);
         //dump($result);
         //exit('111');
 
-        if( $result ) {
+        if( $status['http_code'] != 200 || $error ) {
+            $session->getFlashBag()->add(
+                'warning',
+                "Curl failed: "." url=".$url." => ".$error
+            );
+            return false;
+        }
+
+        if( $status['http_code'] == 200 && $result ) {
             $result = json_decode($result, true);
             //if( !$result ) {
             //    return false;
