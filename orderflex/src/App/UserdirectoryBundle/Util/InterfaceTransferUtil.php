@@ -1422,7 +1422,7 @@ class InterfaceTransferUtil {
 
             //echo "transferData=".$jsonObject."<br>";
             $title = $jsonObject['title'];
-            echo "title=$title <br>";
+            //echo "title=$title <br>";
 
             //IDs on external server
             $localId = $jsonObject['id'];
@@ -1463,8 +1463,8 @@ class InterfaceTransferUtil {
 //                $transferableEntity = $this->em->getRepository($className)->findOneByOid($oid);
 //                $resStr = "Update existing Project found by OID $oid, title " . $title;
 //            }
-            echo "Final transferableEntity=".$transferableEntity."<br>";
-            echo "Final resStr=$resStr <br>";
+            //echo "Final transferableEntity=".$transferableEntity."<br>";
+            //echo "Final resStr=$resStr <br>";
 
             $new = true;
             $actionStr = 'Create new Project';
@@ -1486,7 +1486,7 @@ class InterfaceTransferUtil {
             //exit('deserialize');
             $transferableEntity = $this->deserializeObject($jsonObject,$className,$serializer,$transferableEntity);
             if( $transferableEntity ) {
-                echo "PrePersist: transferableEntity ID=".$transferableEntity->getId().", title=".$transferableEntity->getTitle()."<br>";
+                //echo "PrePersist: transferableEntity ID=".$transferableEntity->getId().", title=".$transferableEntity->getTitle()."<br>";
 
                 //dump($transferableEntity);
                 //exit('123');
@@ -1660,7 +1660,7 @@ class InterfaceTransferUtil {
                     //$updateProjectId = $transferableEntity->getId();
                     //exit('$updateProjectId='.$objectToPopulate->getId());
                 } else {
-                    echo "deserialize Object: Create new project <br>";
+                    //echo "deserialize Object: Create new project <br>";
                     $transferableEntity = $serializer->denormalize(
                         $jsonObject,
                         $className,
@@ -1742,7 +1742,7 @@ class InterfaceTransferUtil {
             //projectSpecialty
             if( isset($jsonObject['projectSpecialty']) ) {
                 $projectSpecialtyName = $jsonObject['projectSpecialty']['name'];
-                echo "projectSpecialtyName=" . $projectSpecialtyName . "<br>";
+                //echo "projectSpecialtyName=" . $projectSpecialtyName . "<br>";
                 //Find one by name SpecialtyList
                 $projectSpecialtyEntity = $this->em->getRepository(SpecialtyList::class)->findOneByName($projectSpecialtyName);
                 $transferableEntity->setProjectSpecialty($projectSpecialtyEntity);
@@ -1751,7 +1751,7 @@ class InterfaceTransferUtil {
             //exemptIrbApproval
             if( isset($jsonObject['exemptIrbApproval']) ) {
                 $exemptIrbApprovalName = $jsonObject['exemptIrbApproval']['name'];
-                echo "exemptIrbApprovalName=" . $exemptIrbApprovalName . "<br>";
+                //echo "exemptIrbApprovalName=" . $exemptIrbApprovalName . "<br>";
                 //Find one by name IrbApprovalTypeList
                 $exemptIrbApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIrbApprovalName);
                 $transferableEntity->setExemptIrbApproval($exemptIrbApprovalEntity);
@@ -1760,7 +1760,7 @@ class InterfaceTransferUtil {
             //exemptIACUCApproval
             if( isset($jsonObject['exemptIACUCApproval']) ) {
                 $exemptIACUCApprovalName = $jsonObject['exemptIACUCApproval']['name'];
-                echo "exemptIACUCApprovalName=" . $exemptIACUCApprovalName . "<br>";
+                //echo "exemptIACUCApprovalName=" . $exemptIACUCApprovalName . "<br>";
                 //Find one by name IrbApprovalTypeList, the same as exemptIrbApproval
                 $exemptIACUCApprovalEntity = $this->em->getRepository(IrbApprovalTypeList::class)->findOneByName($exemptIACUCApprovalName);
                 $transferableEntity->setExemptIACUCApproval($exemptIACUCApprovalEntity);
@@ -1769,7 +1769,7 @@ class InterfaceTransferUtil {
             //irbStatusList
             if( isset($jsonObject['irbStatusList']) ) {
                 $irbStatusListName = $jsonObject['irbStatusList']['name'];
-                echo "irbStatusList=" . $irbStatusListName . "<br>";
+                //echo "irbStatusList=" . $irbStatusListName . "<br>";
                 $irbStatusListEntity = $this->em->getRepository(IrbStatusList::class)->findOneByName($irbStatusListName);
                 $transferableEntity->setIrbStatusList($irbStatusListEntity);
             }
@@ -1777,7 +1777,7 @@ class InterfaceTransferUtil {
             //requesterGroup RequesterGroupList
             if( isset($jsonObject['requesterGroup']) ) {
                 $listName = $jsonObject['requesterGroup']['name'];
-                echo "requesterGroup=" . $listName . "<br>";
+                //echo "requesterGroup=" . $listName . "<br>";
                 $listEntity = $this->em->getRepository(RequesterGroupList::class)->findOneByName($listName);
                 $transferableEntity->setRequesterGroup($listEntity);
             }
@@ -1839,7 +1839,7 @@ class InterfaceTransferUtil {
             //priceList PriceTypeList
             if( isset($jsonObject['priceList']) ) {
                 $priceListName = $jsonObject['priceList']['name'];
-                echo "priceListName=" . $priceListName . "<br>";
+                //echo "priceListName=" . $priceListName . "<br>";
                 $priceListEntity = $this->em->getRepository(PriceTypeList::class)->findOneByName($priceListName);
                 $transferableEntity->setPriceList($priceListEntity);
             }
@@ -1847,7 +1847,7 @@ class InterfaceTransferUtil {
             //projectType ProjectTypeList
             if( isset($jsonObject['projectType']) ) {
                 $projectTypeName = $jsonObject['projectType']['name'];
-                echo "projectTypeName=" . $projectTypeName . "<br>";
+                //echo "projectTypeName=" . $projectTypeName . "<br>";
                 $projectTypeListEntity = $this->em->getRepository(ProjectTypeList::class)->findOneByName($projectTypeName);
                 $transferableEntity->setProjectType($projectTypeListEntity);
             }
@@ -1910,7 +1910,7 @@ class InterfaceTransferUtil {
             $userInfos = $singleUser['infos'][0];
         }
 
-        echo "convertUser: $username, $email"."<br>";
+        //echo "convertUser: $username, $email"."<br>";
         $logger->notice("convertUser: $username, $email");
 
         $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
@@ -1964,9 +1964,9 @@ class InterfaceTransferUtil {
             $setter = 'set'.$fieldName;
             $transferableEntity->$setter($user);
 
-            echo "User added ".$user."<br>";
+            //echo "User added ".$user."<br>";
         } else {
-            echo "User not found: $username, $email"."<br>";
+            //echo "User not found: $username, $email"."<br>";
         }
 
         return $transferableEntity;
@@ -1992,7 +1992,7 @@ class InterfaceTransferUtil {
                 $userInfos = $singleUser['infos'][0];
             }
 
-            echo "convertUsers: $username, $email"."<br>";
+            //echo "convertUsers: $username, $email"."<br>";
             $logger->notice("convertUsers: $username, $email");
 
             $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
@@ -2046,9 +2046,9 @@ class InterfaceTransferUtil {
                 $setter = 'add'.$setterBaseName;
                 $transferableEntity->$setter($user);
 
-                echo "User added ".$user."<br>";
+                //echo "User added ".$user."<br>";
             } else {
-                echo "User not found: $username, $email"."<br>";
+                //echo "User not found: $username, $email"."<br>";
             }
         }
 
@@ -2062,14 +2062,14 @@ class InterfaceTransferUtil {
             return $transferableEntity;
         }
         $dateTimestamp = $jsonObject[$fieldName]['timestamp'];
-        echo $fieldName.": dateTimestamp=".$dateTimestamp."<br>";
+        //echo $fieldName.": dateTimestamp=".$dateTimestamp."<br>";
         $timezone = $jsonObject[$fieldName]['timezone']['name'];
         $date = new \DateTime('now', new \DateTimeZone($timezone));
         $date->setTimestamp($dateTimestamp);
         $setterMethod = 'set'.$fieldName;
         $getterMethod = 'get'.$fieldName;
         $transferableEntity->$setterMethod($date);
-        echo $fieldName.": date=".$transferableEntity->$getterMethod()->format('m/d/Y')."<br>";
+        //echo $fieldName.": date=".$transferableEntity->$getterMethod()->format('m/d/Y')."<br>";
         return $transferableEntity;
     }
 
@@ -2160,7 +2160,7 @@ class InterfaceTransferUtil {
         try {
             $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
         } catch( \Exception $e ) {
-            echo 'Caught connection exception: ', $e->getMessage(), "\n";
+            //echo 'Caught connection exception: ', $e->getMessage(), "\n";
             return false;
         }
 
@@ -2174,7 +2174,7 @@ class InterfaceTransferUtil {
         $instanceId = $jsonObject['instanceId'];
         $apppath = $jsonObject['apppath'];
         $jsonDocuments = $jsonObject[$field];
-        echo $field.": jsonDocuments count=".count($jsonDocuments)."<br>";
+        //echo $field.": jsonDocuments count=".count($jsonDocuments)."<br>";
 
         foreach($jsonDocuments as $jsonDocument) {
             //Example $jsonObject: "irbApprovalLetters":[{"originalname":"sample.pdf","uniqueid":null,
@@ -2200,19 +2200,19 @@ class InterfaceTransferUtil {
             $destinationFile = $projectRoot.'/public/Uploaded/transres/documents/'.$destinationFileName;
             //$testFile = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/transres/documents/668c329c96a32.pdf';
 
-            echo "sourceFile=".$sourceFile.", destinationFile=".$destinationFile."<br>";
+            //echo "sourceFile=".$sourceFile.", destinationFile=".$destinationFile."<br>";
 
             $output = $sftpConnection->get($sourceFile, $destinationFile);
 
             if( $output ) {
-                echo "Transfer file success <br>";
+                //echo "Transfer file success <br>";
                 $document = $this->createNewDocumentFromJson($jsonDocument,$destinationFileName,$destinationFile);
                 if( $document ) {
                     $this->em->persist($document);
                     $transferableEntity->$adder($document);
                 }
             } else {
-                echo "Transfer file fail <br>";
+                //echo "Transfer file fail <br>";
             }
 
             $transferRes[] = $output;
@@ -2597,7 +2597,7 @@ class InterfaceTransferUtil {
         // load the private key
         $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
         $privateKey->loadKey(file_get_contents($privateKeyFilePath));
-        echo "privateKey=".$privateKey."<br>";
+        //echo "privateKey=".$privateKey."<br>";
 
         $mapper = $this->classListMapper($transferableEntity);
         //$className = $mapper['className'];
@@ -2634,7 +2634,7 @@ class InterfaceTransferUtil {
 
         if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
             //Ok, continue
-            echo "Connected to $strServer <br>";
+            //echo "Connected to $strServer <br>";
         } else {
             exit("Unable to connect to the remote server");
         }
@@ -2699,7 +2699,7 @@ class InterfaceTransferUtil {
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
 
-        echo "url=$url <br>";
+        //echo "url=$url <br>";
         //exit('111');
         $ch = curl_init($url);
         //exit('111');
@@ -2744,7 +2744,7 @@ class InterfaceTransferUtil {
 
             //&& $transferResult
             if ($checksum === $hash && $valid === true ) {
-                echo "Successfully sent: " . $jsonFile['className'] . " <br>";
+                //echo "Successfully sent: " . $jsonFile['className'] . " <br>";
                 return $result;
             } else {
                 //return "Curl is not valid";
@@ -2944,7 +2944,7 @@ class InterfaceTransferUtil {
 
         $className = $confirmationResponse[0]['className'];
         $entityName = $this->getEntityName($className);
-        echo "send ConfirmationToSourceServer: className=$className, $entityName <br>";
+        //echo "send ConfirmationToSourceServer: className=$className, $entityName <br>";
 
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
@@ -2972,7 +2972,7 @@ class InterfaceTransferUtil {
         //Send back to slave (external) global ID of newly generated Project
         $url = 'https://'.$strServer.'/directory/transfer-interface/confirmation-master-to-slave';
 
-        echo "url=$url <br>";
+        //echo "url=$url <br>";
         $ch = curl_init($url);
 
         if(1) {
@@ -3014,7 +3014,7 @@ class InterfaceTransferUtil {
             //exit('222');
 
             if ($checksum === $hash && $valid === true && $transferResult) {
-                echo "Successefully sent: " . $jsonFile['className'] . " <br>";
+                //echo "Successefully sent: " . $jsonFile['className'] . " <br>";
                 return $result;
             }
         }
