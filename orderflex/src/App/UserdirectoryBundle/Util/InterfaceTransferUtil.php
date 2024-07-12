@@ -2715,11 +2715,13 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
             //https://stackoverflow.com/questions/4372710/php-curl-https
             //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
             //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
             //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+            //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
+            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer');
         }
 
         $result = curl_exec($ch);
