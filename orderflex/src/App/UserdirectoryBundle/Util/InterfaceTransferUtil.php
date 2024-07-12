@@ -2715,7 +2715,7 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
             //https://stackoverflow.com/questions/4372710/php-curl-https
             //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
             //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
@@ -2723,11 +2723,13 @@ class InterfaceTransferUtil {
             //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
             //Correct way to use .crt
             //Install: yum install ca-certificates
-            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
             //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
-            curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
+            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
             //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
+            //Error: Curl failed: url=https://view.online/c/wcm/pathology/directory/transfer-interface/slave-to-master-transfer =>
+            // Peer's Certificate issuer is not recognized.
         }
 
         $result = curl_exec($ch);
