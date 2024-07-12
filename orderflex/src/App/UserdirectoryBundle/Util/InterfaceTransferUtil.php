@@ -2988,7 +2988,7 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
             //https://stackoverflow.com/questions/4372710/php-curl-https
             //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
             //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
