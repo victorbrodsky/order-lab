@@ -9436,7 +9436,8 @@ class AdminController extends OrderAbstractController
             str_contains($cronJobName, 'importfellapp') ||
             str_contains($cronJobName, 'verifyimport') ||
             str_contains($cronJobName, 'invoice-reminder-emails') ||
-            str_contains($cronJobName, 'expiration-reminder-emails')
+            str_contains($cronJobName, 'expiration-reminder-emails') ||
+            str_contains($cronJobName, 'project-sync')
         ) {
             $redirectPath = 'employees_general_cron_jobs';
         }

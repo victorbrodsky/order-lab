@@ -108,7 +108,7 @@
         <p>
             <a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."
                 href="{{ path('user_populate_cron_jobs') }}">
-                Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)</a>
+                Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration, Project Sync)</a>
         </p>
         <table class="table table-bordered table-hover table-condensed text-left">
             <thead>
@@ -182,6 +182,16 @@
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
                        href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Project Sync with public server</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:project-sync",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:project-sync'}) }}">Remove</a>
                 </td>
             </tr>
             </tbody>

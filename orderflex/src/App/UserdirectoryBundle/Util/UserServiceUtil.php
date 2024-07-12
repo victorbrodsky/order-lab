@@ -2660,6 +2660,25 @@ Pathology and Laboratory Medicine",
         $logger->notice($res);
         //////////////////// EOF 3b) Expiration Reminder (at 5 am every Monday) ////////////////////
 
+        //////////////////// 3c) Project sync (every 10 min) ////////////////////
+        $commandName = "cron:project-sync";
+        $cronJobName = $commandName." --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //At every 10th minute
+
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
+            $this->addCronJobLinux($trpCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF 3b) Expiration Reminder (at 5 am every Monday) ////////////////////
+
         //////////////////// 4) Status (every 30 minutes) ////////////////////
 //        $cronJobName = "cron:status --env=prod";
 //

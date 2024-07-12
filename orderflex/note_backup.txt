@@ -4,17 +4,3 @@ tar: A lone zero block at 9387691
 tar: Exiting with failure status due to previous errors
 
 
-
-+------------------------------------------+-------------------------+---------------------+----------------+-------------+
-| DoctrineMigrations\Version20200130215505 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200219202036 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200220180054 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200312204331 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200313141148 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200313175719 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200316203018 | migrated, not available |                     |                |             |
-| DoctrineMigrations\Version20200319163003 | migrated                |                     |                |             |
-| DoctrineMigrations\Version20200323174905 | migrated                |                     |                |             |
-| DoctrineMigrations\Version20200323185412 | migrated                |                     |                |             |
-| DoctrineMigrations\Version20200324172139 | migrated                |                     |                |             |
-| DoctrineMigrations\Version20200326211716 | migrated, not available
