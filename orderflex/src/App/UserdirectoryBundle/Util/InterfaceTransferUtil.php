@@ -2763,10 +2763,10 @@ class InterfaceTransferUtil {
         $error = curl_error($ch);
         curl_close($ch);
 
-        dump($error);
-        dump($status);
-        dump($result);
-        exit('111');
+        //dump($error);
+        //dump($status);
+        //dump($result);
+        //exit('111');
 
         if( $status['http_code'] != 200 || $error ) {
             $session->getFlashBag()->add(
