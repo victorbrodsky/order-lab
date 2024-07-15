@@ -2744,7 +2744,7 @@ class InterfaceTransferUtil {
                 //3) use this remote certificate in CURLOPT_CAINFO
                 //Install: yum install ca-certificates
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+                curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
                 curl_setopt($ch, CURLOPT_VERBOSE, true);
 
