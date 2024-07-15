@@ -70,8 +70,8 @@ class InterfaceTransferUtil {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
-        $this->verifyPeer = true;
-        //$this->verifyPeer = false; //not recommended
+        //$this->verifyPeer = true;
+        $this->verifyPeer = false; //not recommended, test verifyPeer = true on rhel9 using curl v8
     }
 
     //Require ssh
