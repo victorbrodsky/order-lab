@@ -2735,6 +2735,7 @@ class InterfaceTransferUtil {
 
             //$this->verifyPeer = true;
             if( $this->verifyPeer ) {
+                exit("__FILE__: ".dirname(__FILE__));
                 //https://stackoverflow.com/questions/4372710/php-curl-https
                 //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
                 //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
@@ -2747,6 +2748,8 @@ class InterfaceTransferUtil {
                 curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
                 curl_setopt($ch, CURLOPT_VERBOSE, true);
+                //$fp = fopen(dirname(__FILE__).'/curlerrorlog.txt', 'w');
+                //curl_setopt($ch, CURLOPT_STDERR, $fp);
                 //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
             } else {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
