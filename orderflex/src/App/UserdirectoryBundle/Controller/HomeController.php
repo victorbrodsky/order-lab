@@ -163,6 +163,7 @@ class HomeController extends OrderAbstractController {
                 }
 
                 $url = $tenant->getUrlslug();
+                $instTitle = $tenant->getInstitutionTitle();
                 //echo "url=".$url."<br>";
 
                 if ($url) {
@@ -172,7 +173,13 @@ class HomeController extends OrderAbstractController {
                         $tenantBaseUrl = $baseUrl . '/' . $url;
                     }
 
-                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+                    if( !$instTitle ) {
+                        $instTitle = $tenantBaseUrl;
+                    }
+
+                    //
+                    //$tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
 
                     $enabled = $tenant->getEnabled();
                     if( !$enabled ) {
