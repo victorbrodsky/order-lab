@@ -2746,6 +2746,7 @@ class InterfaceTransferUtil {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
                 curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
+                curl_setopt($ch, CURLOPT_VERBOSE, true);
                 //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
             } else {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
