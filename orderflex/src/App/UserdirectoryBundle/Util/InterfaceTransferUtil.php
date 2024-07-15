@@ -2744,14 +2744,14 @@ class InterfaceTransferUtil {
                 //3) use this remote certificate in CURLOPT_CAINFO
                 //Install: yum install ca-certificates
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+                //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
                 curl_setopt($ch, CURLOPT_VERBOSE, true);
 
-                $projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
+                //$projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
                 //exit("__FILE__: ".$projectDir.'/var');
-                $fp = fopen($projectDir.'/var'.'/curlerrorlog.txt', 'w');
-                curl_setopt($ch, CURLOPT_STDERR, $fp);
+                //$fp = fopen($projectDir.'/var'.'/curlerrorlog.txt', 'w');
+                //curl_setopt($ch, CURLOPT_STDERR, $fp);
                 //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
             } else {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
