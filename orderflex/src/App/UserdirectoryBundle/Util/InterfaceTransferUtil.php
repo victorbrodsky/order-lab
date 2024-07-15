@@ -2702,6 +2702,7 @@ class InterfaceTransferUtil {
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
+        //$url = 'https://'.'view-test.med.cornell.edu'.'/directory/transfer-interface/slave-to-master-transfer';
 
         //echo "url=$url <br>";
         //exit('111');
@@ -2731,11 +2732,14 @@ class InterfaceTransferUtil {
                 //Install: yum install ca-certificates
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
                 curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+                //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                 //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
-                //curl_setopt($ch, CURLOPT_CAPATH, 'C:');
-                curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\mozilla.pem');
+                curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view.online.crt');
+                //curl_setopt($ch, CURLOPT_CAPATH, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view.online.crt');
+                //curl_setopt($ch, CURLOPT_CAPATH, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-test.med.cornell.edu.crt');
+                //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\mozilla.pem');
                 //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
-                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
+                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert.pem'); //remote
                 //Error: Curl failed: url=https://view.online/c/wcm/pathology/directory/transfer-interface/slave-to-master-transfer =>
                 // Peer's Certificate issuer is not recognized.
             }
