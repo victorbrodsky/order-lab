@@ -2704,9 +2704,14 @@ class InterfaceTransferUtil {
         if( !file_exists($remoteCertificate) ) {
             $session->getFlashBag()->add(
                 'warning',
-                "Remote certificate for curl does not exists"
+                "Remote certificate $remoteCertificate for curl does not exists"
             );
             return false;
+        } else {
+            $session->getFlashBag()->add(
+                'notice',
+                "Remote certificate $remoteCertificate for curl exists"
+            );
         }
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
