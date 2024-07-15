@@ -2701,6 +2701,14 @@ class InterfaceTransferUtil {
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
         $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
 
+        if( !file_exists($remoteCertificate) ) {
+            $session->getFlashBag()->add(
+                'warning',
+                "Remote certificate for curl does not exists"
+            );
+            return false;
+        }
+
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
         //$url = 'https://'.'view-test.med.cornell.edu'.'/directory/transfer-interface/slave-to-master-transfer';
