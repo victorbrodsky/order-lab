@@ -64,11 +64,14 @@ class InterfaceTransferUtil {
     protected $em;
     protected $container;
     protected $security;
+    protected $verifyPeer;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
+        //$this->verifyPeer = true;
+        $this->verifyPeer = false;
     }
 
     //Require ssh
@@ -2300,350 +2303,350 @@ class InterfaceTransferUtil {
     //Therefore: 1) place public key on external server and use this key to ecrypt file
     //2) place private key on internal server and use it to decrypt the file
     //Use ftp to get file from public server
-    public function downloadFile_test( $jsonObject, $transferableEntity, $field ) {
-
-//        try {
-//            $this->testconnect();
-//        } catch (\Exception $e) {
-//            echo 'Caught exception: ', $e->getMessage(), "\n";
+//    public function downloadFile_test( $jsonObject, $transferableEntity, $field ) {
+//
+////        try {
+////            $this->testconnect();
+////        } catch (\Exception $e) {
+////            echo 'Caught exception: ', $e->getMessage(), "\n";
+////        }
+////        exit('000');
+//
+//        $sshConnection = $this->connectByPublicKey($transferableEntity);
+//        $output = $sshConnection->exec('pwd');
+//        exit('111: '.$output);
+//
+//        $mapper = $this->classListMapper($transferableEntity);
+//        //$className = $mapper['className'];
+//        $entityName = $mapper['entityName'];
+//
+//        $strServer = NULL;
+//        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+//        if( $interfaceTransfer ) {
+//            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+//        } else {
+//            return false;
 //        }
-//        exit('000');
-
-        $sshConnection = $this->connectByPublicKey($transferableEntity);
-        $output = $sshConnection->exec('pwd');
-        exit('111: '.$output);
-
-        $mapper = $this->classListMapper($transferableEntity);
-        //$className = $mapper['className'];
-        $entityName = $mapper['entityName'];
-
-        $strServer = NULL;
-        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
-        if( $interfaceTransfer ) {
-            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
-        } else {
-            return false;
-        }
-
-        //$server_address = '68.183.146.32'; //'68.183.144.189';
-        $strServer = 'view.online';
-        $strServer = '68.183.146.32';
-        //$strServer = '68.183.144.189';
-        $strServerPort = "22";
-        $strServerUsername = $interfaceTransfer->getSshUsername();
-        $strServerPassword = $interfaceTransfer->getSshPassword();
-
-        //$strServerUsername = '';
-        //$strServerPassword = '';
-        echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
-
-        //testing phpseclib
-        $command = 'pwd'; //root
-
+//
+//        //$server_address = '68.183.146.32'; //'68.183.144.189';
+//        $strServer = 'view.online';
+//        $strServer = '68.183.146.32';
+//        //$strServer = '68.183.144.189';
+//        $strServerPort = "22";
+//        $strServerUsername = $interfaceTransfer->getSshUsername();
+//        $strServerPassword = $interfaceTransfer->getSshPassword();
+//
+//        //$strServerUsername = '';
+//        //$strServerPassword = '';
+//        echo "strServer=$strServer, strServerPort=$strServerPort, strServerUsername=$strServerUsername, strServerPassword=$strServerPassword <br>";
+//
+//        //testing phpseclib
+//        $command = 'pwd'; //root
+//
+////        $ssh = new SSH2($strServer);
+////        if (!$ssh->login($strServerUsername, $strServerPassword)) {
+////            $output ='Login Failed';
+////        }
+//        //Change AuthorizedKeysFile .ssh/authorized_keys to
+//        //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
+//        $private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
+//        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
 //        $ssh = new SSH2($strServer);
-//        if (!$ssh->login($strServerUsername, $strServerPassword)) {
-//            $output ='Login Failed';
+//        if (!$ssh->login('root', $key)) {
+//            throw new \Exception('Login failed');
 //        }
-        //Change AuthorizedKeysFile .ssh/authorized_keys to
-        //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
-        $private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
-        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
-        $ssh = new SSH2($strServer);
-        if (!$ssh->login('root', $key)) {
-            throw new \Exception('Login failed');
-        }
-        else{
-            $output = $ssh->exec($command);
-        }
-        exit('111: '.$output);
-
-        //change root password: passwd
-        $dstConnection = ssh2_connect($strServer, $strServerPort);
-
-        //$auth_methods = ssh2_auth_none($dstConnection, 'apache');
-        //dump($auth_methods);
-        //exit('000');
-//        if (in_array('password', $auth_methods)) {
-//            echo "Server supports password based authentication\n";
+//        else{
+//            $output = $ssh->exec($command);
 //        }
-
-        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
-            //Ok, continue
-            echo "Connected to $strServer <br>";
-        } else {
-            ///var/log/auth.log
-            exit("Unable to connect to the remote server");
-        }
-
-        //Test read file
-        $srcFile = '';
-        $dstSFTP = ssh2_sftp($dstConnection);
-        echo "dstSFTP=$dstSFTP <br>";
-        //$dstSFTP = intval($dstSFTP);
-        //echo "dstSFTP=$dstSFTP <br>";
-        //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
-        //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
-        //dump($dstFile);
-
-        $testFilePath = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/directory/documents/66858c411569b.png';
-
-        $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$testFilePath, 'r');
-        if ( !$dstFile ) {
-            throw new \Exception('File open failed. file=' . $testFilePath);
-        }
-
-        //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
-        //$contents = stream_get_contents($dstTestFile);
-        //dump($contents);
-
-        $srcFile = fopen($testFilePath, 'r');
-
-        $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
-        echo "writtenBytes=$writtenBytes <br>";
-        fclose($dstFile);
-        fclose($srcFile);
-
-        exit('111');
-
-        $ssh = new SSH2($server_address);
-        $ssh->login('root');
-        $ssh->read('User Name:');
-        $ssh->write("username\n");
-        $ssh->read('Password:');
-        $ssh->write("password\n");
-
-        $ssh->setTimeout(1);
-        $ssh->read();
-        $ssh->write("ls -la\n");
-        echo $ssh->read();
-        exit('111');
-
-        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
-        $ssh = new SSH2($server_address);
-        if (!$ssh->login('root', $key)) {
-            throw new \Exception('Login failed');
-        }
-
-        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
-
-        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
-        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
-        {
-            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
-        } else {
-            echo '<h3 class="success">Authenticated.</h3>';
-        }
-        exit('222');
-
-        $ssh = new SSH2($server_address);
-        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
-        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
-        print_r($ssh->getErrors());
-        //print_r($ssh->getLastError());
-
-        echo $ssh->exec('ls -la');
-
-        exit('222');
-
-        $privateKey = RSA::createKey();
-        $public = $privateKey->getPublicKey();
-
-        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
-
-        // in case that key has a password
-        $privateKey->withPassword('private key password');
-
-        // load the private key
-        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
-        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
-        echo "privateKey=".$privateKey."<br>";
-
-
-
-        $mapper = $this->classListMapper($transferableEntity);
-        //$className = $mapper['className'];
-        $entityName = $mapper['entityName'];
-
-        $strServer = NULL;
-        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
-        if( $interfaceTransfer ) {
-            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
-        } else {
-            return false;
-        }
-
-        // login via sftp
-        if (!$sftp->login('username', $privateKey)) {
-            throw new Exception('sFTP login failed');
-        }
-
-        // now you can list what's in here
-        $filesAndFolders = $sftp->nlist();
-
-        $ssh = new SSH2($strServer);
-        $ssh->login(
-            'username',
-            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
-        );
-
-        $strServerPort = "22";
-        $strServerUsername = $interfaceTransfer->getSshUsername();
-        $strServerPassword = $interfaceTransfer->getSshPassword();
-
-        //connect to server
-        $dstConnection = ssh2_connect($strServer, $strServerPort);
-
-        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
-            //Ok, continue
-            echo "Connected to $strServer <br>";
-        } else {
-            exit("Unable to connect to the remote server");
-        }
-
-        //$ssh = new SSH2('domain.tld');
-        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
-
-    }
-    public function downloadFile_orig( $jsonObject, $transferableEntity, $field ) {
-
-        $server_address = '68.183.144.189';
-        $port = 22;
-        $username = 'root';
-        $public_key_path = "path/pubkey.pub";
-        $private_key_path = "path/privakey";
-        $private_key_path = '/path/privakey.';
-        $public_key_path = "/path/pubkey.pub";
-        $password = '';
-        $local_file = 'path/test.txt';
-
-        //$ssh = new SSH2($server_address);
-        //if (!$ssh->login('username', 'mypass')) {
-        //    throw new \Exception('Login failed');
-        //}
-
-        $conn_id = ftp_connect($server_address);
-
-        // login with username and password
-        $login_result = ftp_login($conn_id, $username, 'mypass');
-
-        // try to download $server_file and save to $local_file
-        if (ftp_get($conn_id, $local_file, $private_key_path, FTP_BINARY)) {
-            echo "Successfully written to $local_file\n";
-        }
-        else {
-            echo "There was a problem\n";
-        }
-// close the connection
-        ftp_close($conn_id);
-        exit('111');
-
-        //change root password: passwd
-        $dstConnection = ssh2_connect($server_address, $port);
-        if( ssh2_auth_password($dstConnection, $username, 'mypass') ){
-            //Ok, continue
-            echo "Connected to $server_address <br>";
-        } else {
-            exit("Unable to connect to the remote server");
-        }
-        exit('111');
-
-        $ssh = new SSH2($server_address);
-        $ssh->login('root');
-        $ssh->read('User Name:');
-        $ssh->write("username\n");
-        $ssh->read('Password:');
-        $ssh->write("password\n");
-
-        $ssh->setTimeout(1);
-        $ssh->read();
-        $ssh->write("ls -la\n");
-        echo $ssh->read();
-        exit('111');
-
-        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
-        $ssh = new SSH2($server_address);
-        if (!$ssh->login('root', $key)) {
-            throw new \Exception('Login failed');
-        }
-
-        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
-
-        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
-        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
-        {
-            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
-        } else {
-            echo '<h3 class="success">Authenticated.</h3>';
-        }
-        exit('222');
-
-        $ssh = new SSH2($server_address);
-        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
-        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
-        print_r($ssh->getErrors());
-        //print_r($ssh->getLastError());
-
-        echo $ssh->exec('ls -la');
-
-        exit('222');
-
-        $privateKey = RSA::createKey();
-        $public = $privateKey->getPublicKey();
-
-        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
-
-        // in case that key has a password
-        $privateKey->withPassword('private key password');
-
-        // load the private key
-        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
-        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
-        //echo "privateKey=".$privateKey."<br>";
-
-        $mapper = $this->classListMapper($transferableEntity);
-        //$className = $mapper['className'];
-        $entityName = $mapper['entityName'];
-
-        $strServer = NULL;
-        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
-        if( $interfaceTransfer ) {
-            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
-        } else {
-            return false;
-        }
-
-        // login via sftp
-        if (!$sftp->login('username', $privateKey)) {
-            throw new Exception('sFTP login failed');
-        }
-
-        // now you can list what's in here
-        $filesAndFolders = $sftp->nlist();
-
-        $ssh = new SSH2($strServer);
-        $ssh->login(
-            'username',
-            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
-        );
-
-        $strServerPort = "22";
-        $strServerUsername = $interfaceTransfer->getSshUsername();
-        $strServerPassword = $interfaceTransfer->getSshPassword();
-
-        //connect to server
-        $dstConnection = ssh2_connect($strServer, $strServerPort);
-
-        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
-            //Ok, continue
-            //echo "Connected to $strServer <br>";
-        } else {
-            exit("Unable to connect to the remote server");
-        }
-
-        //$ssh = new SSH2('domain.tld');
-        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
-
-    }
+//        exit('111: '.$output);
+//
+//        //change root password: passwd
+//        $dstConnection = ssh2_connect($strServer, $strServerPort);
+//
+//        //$auth_methods = ssh2_auth_none($dstConnection, 'apache');
+//        //dump($auth_methods);
+//        //exit('000');
+////        if (in_array('password', $auth_methods)) {
+////            echo "Server supports password based authentication\n";
+////        }
+//
+//        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+//            //Ok, continue
+//            echo "Connected to $strServer <br>";
+//        } else {
+//            ///var/log/auth.log
+//            exit("Unable to connect to the remote server");
+//        }
+//
+//        //Test read file
+//        $srcFile = '';
+//        $dstSFTP = ssh2_sftp($dstConnection);
+//        echo "dstSFTP=$dstSFTP <br>";
+//        //$dstSFTP = intval($dstSFTP);
+//        //echo "dstSFTP=$dstSFTP <br>";
+//        //$dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$srcFile, 'w');
+//        //$dstFile = fopen("ssh2.sftp://" . intval($dstSFTP) . "/" . $srcFile, 'r'); //w or r
+//        //dump($dstFile);
+//
+//        $testFilePath = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/directory/documents/66858c411569b.png';
+//
+//        $dstFile = fopen("ssh2.sftp://{$dstSFTP}/".$testFilePath, 'r');
+//        if ( !$dstFile ) {
+//            throw new \Exception('File open failed. file=' . $testFilePath);
+//        }
+//
+//        //$dstTestFile = fopen("ssh2.sftp://{$dstSFTP}/".$dstTestFilePath, 'r');
+//        //$contents = stream_get_contents($dstTestFile);
+//        //dump($contents);
+//
+//        $srcFile = fopen($testFilePath, 'r');
+//
+//        $writtenBytes = stream_copy_to_stream($srcFile, $dstFile);
+//        echo "writtenBytes=$writtenBytes <br>";
+//        fclose($dstFile);
+//        fclose($srcFile);
+//
+//        exit('111');
+//
+//        $ssh = new SSH2($server_address);
+//        $ssh->login('root');
+//        $ssh->read('User Name:');
+//        $ssh->write("username\n");
+//        $ssh->read('Password:');
+//        $ssh->write("password\n");
+//
+//        $ssh->setTimeout(1);
+//        $ssh->read();
+//        $ssh->write("ls -la\n");
+//        echo $ssh->read();
+//        exit('111');
+//
+//        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
+//        $ssh = new SSH2($server_address);
+//        if (!$ssh->login('root', $key)) {
+//            throw new \Exception('Login failed');
+//        }
+//
+//        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
+//
+//        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
+//        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
+//        {
+//            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
+//        } else {
+//            echo '<h3 class="success">Authenticated.</h3>';
+//        }
+//        exit('222');
+//
+//        $ssh = new SSH2($server_address);
+//        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+//        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
+//        print_r($ssh->getErrors());
+//        //print_r($ssh->getLastError());
+//
+//        echo $ssh->exec('ls -la');
+//
+//        exit('222');
+//
+//        $privateKey = RSA::createKey();
+//        $public = $privateKey->getPublicKey();
+//
+//        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
+//
+//        // in case that key has a password
+//        $privateKey->withPassword('private key password');
+//
+//        // load the private key
+//        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+//        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
+//        echo "privateKey=".$privateKey."<br>";
+//
+//
+//
+//        $mapper = $this->classListMapper($transferableEntity);
+//        //$className = $mapper['className'];
+//        $entityName = $mapper['entityName'];
+//
+//        $strServer = NULL;
+//        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+//        if( $interfaceTransfer ) {
+//            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+//        } else {
+//            return false;
+//        }
+//
+//        // login via sftp
+//        if (!$sftp->login('username', $privateKey)) {
+//            throw new Exception('sFTP login failed');
+//        }
+//
+//        // now you can list what's in here
+//        $filesAndFolders = $sftp->nlist();
+//
+//        $ssh = new SSH2($strServer);
+//        $ssh->login(
+//            'username',
+//            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
+//        );
+//
+//        $strServerPort = "22";
+//        $strServerUsername = $interfaceTransfer->getSshUsername();
+//        $strServerPassword = $interfaceTransfer->getSshPassword();
+//
+//        //connect to server
+//        $dstConnection = ssh2_connect($strServer, $strServerPort);
+//
+//        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+//            //Ok, continue
+//            echo "Connected to $strServer <br>";
+//        } else {
+//            exit("Unable to connect to the remote server");
+//        }
+//
+//        //$ssh = new SSH2('domain.tld');
+//        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
+//
+//    }
+//    public function downloadFile_orig( $jsonObject, $transferableEntity, $field ) {
+//
+//        $server_address = '68.183.144.189';
+//        $port = 22;
+//        $username = 'root';
+//        $public_key_path = "path/pubkey.pub";
+//        $private_key_path = "path/privakey";
+//        $private_key_path = '/path/privakey.';
+//        $public_key_path = "/path/pubkey.pub";
+//        $password = '';
+//        $local_file = 'path/test.txt';
+//
+//        //$ssh = new SSH2($server_address);
+//        //if (!$ssh->login('username', 'mypass')) {
+//        //    throw new \Exception('Login failed');
+//        //}
+//
+//        $conn_id = ftp_connect($server_address);
+//
+//        // login with username and password
+//        $login_result = ftp_login($conn_id, $username, 'mypass');
+//
+//        // try to download $server_file and save to $local_file
+//        if (ftp_get($conn_id, $local_file, $private_key_path, FTP_BINARY)) {
+//            echo "Successfully written to $local_file\n";
+//        }
+//        else {
+//            echo "There was a problem\n";
+//        }
+//// close the connection
+//        ftp_close($conn_id);
+//        exit('111');
+//
+//        //change root password: passwd
+//        $dstConnection = ssh2_connect($server_address, $port);
+//        if( ssh2_auth_password($dstConnection, $username, 'mypass') ){
+//            //Ok, continue
+//            echo "Connected to $server_address <br>";
+//        } else {
+//            exit("Unable to connect to the remote server");
+//        }
+//        exit('111');
+//
+//        $ssh = new SSH2($server_address);
+//        $ssh->login('root');
+//        $ssh->read('User Name:');
+//        $ssh->write("username\n");
+//        $ssh->read('Password:');
+//        $ssh->write("password\n");
+//
+//        $ssh->setTimeout(1);
+//        $ssh->read();
+//        $ssh->write("ls -la\n");
+//        echo $ssh->read();
+//        exit('111');
+//
+//        $key = PublicKeyLoader::load(file_get_contents($private_key_path));
+//        $ssh = new SSH2($server_address);
+//        if (!$ssh->login('root', $key)) {
+//            throw new \Exception('Login failed');
+//        }
+//
+//        //$key = RSA::loadFormat('PKCS1', file_get_contents($public_key_path));
+//
+//        $connection = ssh2_connect($server_address, $port, array('hostkey'=>'ssh-rsa'));
+//        if (!@ssh2_auth_pubkey_file($connection, $username, $public_key_path, $private_key_path, $password))
+//        {
+//            echo '<h3 class="error">Unable to authenticate. Check ssh key pair.</h3>';
+//        } else {
+//            echo '<h3 class="success">Authenticated.</h3>';
+//        }
+//        exit('222');
+//
+//        $ssh = new SSH2($server_address);
+//        //$privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+//        $ssh->login('root', PublicKeyLoader::load(file_get_contents($private_key_path)));
+//        print_r($ssh->getErrors());
+//        //print_r($ssh->getLastError());
+//
+//        echo $ssh->exec('ls -la');
+//
+//        exit('222');
+//
+//        $privateKey = RSA::createKey();
+//        $public = $privateKey->getPublicKey();
+//
+//        //public key: /usr/local/bin/order-lab/orderflex/public/Uploaded/transres/documents
+//
+//        // in case that key has a password
+//        $privateKey->withPassword('private key password');
+//
+//        // load the private key
+//        $privateKeyFilePath = "C:/Users/cinav/.ssh/id_ed25519";
+//        $privateKey->loadKey(file_get_contents($privateKeyFilePath));
+//        //echo "privateKey=".$privateKey."<br>";
+//
+//        $mapper = $this->classListMapper($transferableEntity);
+//        //$className = $mapper['className'];
+//        $entityName = $mapper['entityName'];
+//
+//        $strServer = NULL;
+//        $interfaceTransfer = $this->getInterfaceTransferByName($entityName);
+//        if( $interfaceTransfer ) {
+//            $strServer = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+//        } else {
+//            return false;
+//        }
+//
+//        // login via sftp
+//        if (!$sftp->login('username', $privateKey)) {
+//            throw new Exception('sFTP login failed');
+//        }
+//
+//        // now you can list what's in here
+//        $filesAndFolders = $sftp->nlist();
+//
+//        $ssh = new SSH2($strServer);
+//        $ssh->login(
+//            'username',
+//            PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey'))
+//        );
+//
+//        $strServerPort = "22";
+//        $strServerUsername = $interfaceTransfer->getSshUsername();
+//        $strServerPassword = $interfaceTransfer->getSshPassword();
+//
+//        //connect to server
+//        $dstConnection = ssh2_connect($strServer, $strServerPort);
+//
+//        if( ssh2_auth_password($dstConnection, $strServerUsername, $strServerPassword) ){
+//            //Ok, continue
+//            //echo "Connected to $strServer <br>";
+//        } else {
+//            exit("Unable to connect to the remote server");
+//        }
+//
+//        //$ssh = new SSH2('domain.tld');
+//        //$ssh->login('username', PublicKeyLoader::load(file_get_contents('/home/ubuntu/privkey')/*, 'password'*/);
+//
+//    }
 
     //Run on internal (master) server
     //send request to remote server to send all transferable in the response
@@ -2715,21 +2718,27 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
-            //https://stackoverflow.com/questions/4372710/php-curl-https
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
-            //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
-            //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-            //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
-            //Correct way to use .crt
-            //Install: yum install ca-certificates
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
-            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
-            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
-            //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
-            //Error: Curl failed: url=https://view.online/c/wcm/pathology/directory/transfer-interface/slave-to-master-transfer =>
-            // Peer's Certificate issuer is not recognized.
+            $this->verifyPeer = true;
+            if( !$this->verifyPeer ) {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
+            } else {
+                //https://stackoverflow.com/questions/4372710/php-curl-https
+                //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
+                //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
+                //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+                //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
+                //Correct way to use .crt
+                //Install: yum install ca-certificates
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
+                //curl_setopt($ch, CURLOPT_CAPATH, 'C:');
+                curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\mozilla.pem');
+                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
+                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert_key.pem'); //remote
+                //Error: Curl failed: url=https://view.online/c/wcm/pathology/directory/transfer-interface/slave-to-master-transfer =>
+                // Peer's Certificate issuer is not recognized.
+            }
         }
 
         $result = curl_exec($ch);
@@ -2745,7 +2754,7 @@ class InterfaceTransferUtil {
         if( $status['http_code'] != 200 || $error ) {
             $session->getFlashBag()->add(
                 'warning',
-                "Curl failed: "." url=".$url." => ".$error
+                "Curl failed: "." url=".$url." => http_code=".$status['http_code']."; error=".$error
             );
         }
 
@@ -3008,11 +3017,14 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
-            //https://stackoverflow.com/questions/4372710/php-curl-https
-            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
-            //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
-            //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+            //if( !$this->verifyPeer ) {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            //} else {
+                //https://stackoverflow.com/questions/4372710/php-curl-https
+                //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
+                //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
+                //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+            //}
         }
 
 
