@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 //Update:   php bin/console doctrine:schema:update --force
 //Status:   php bin/console doctrine:migrations:status
+//Sync:     php bin/console doctrine:migration:sync-metadata-storage
 
 //Show versions: php bin/console doctrine:migrations:list
 //Delete Unavailable Migrations or before migrate again:
