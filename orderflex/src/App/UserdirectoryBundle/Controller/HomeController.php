@@ -132,7 +132,7 @@ class HomeController extends OrderAbstractController {
         $tenants = array();
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
-        $tenants = $userTenantUtil->getTenantsFromTenantManager();
+        $tenants = $userTenantUtil->getTenantsFromTenantManager(); //TODO: make sure tenant is coming from tenant manager
 
         $tenantManagerName = 'tenantmanager';
         $tenantManagerUrl = null;
@@ -165,7 +165,7 @@ class HomeController extends OrderAbstractController {
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
                 //echo "url=".$url."<br>";
-                echo "instTitle=".$instTitle."<br>";
+                //echo "instTitle=".$instTitle."<br>";
 
                 if ($url) {
                     if ($url == '/') {
