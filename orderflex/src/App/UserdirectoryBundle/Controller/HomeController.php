@@ -165,6 +165,7 @@ class HomeController extends OrderAbstractController {
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
                 //echo "url=".$url."<br>";
+                echo "instTitle=".$instTitle."<br>";
 
                 if ($url) {
                     if ($url == '/') {
