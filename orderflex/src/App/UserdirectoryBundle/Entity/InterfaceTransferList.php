@@ -81,8 +81,17 @@ class InterfaceTransferList extends ListAbstract
     #[ORM\Column(type: 'text', nullable: true)]
     private $sshPassword;
 
-    
-    
+    //Absolute path to the remote server certificate for curl:
+    //https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+    //1) visit remote site view.online
+    //2) view certificate => export/download as pem or crt
+    //3) use this remote certificate in CURLOPT_CAINFO (get from $remoteCertificate)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $remoteCertificate;
+
+
+
+
     /**
      * @return mixed
      */
@@ -161,6 +170,22 @@ class InterfaceTransferList extends ListAbstract
     public function setSshPassword($sshPassword)
     {
         $this->sshPassword = $sshPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemoteCertificate()
+    {
+        return $this->remoteCertificate;
+    }
+
+    /**
+     * @param mixed $remoteCertificate
+     */
+    public function setRemoteCertificate($remoteCertificate)
+    {
+        $this->remoteCertificate = $remoteCertificate;
     }
 
     

@@ -70,8 +70,8 @@ class InterfaceTransferUtil {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
-        //$this->verifyPeer = true;
-        $this->verifyPeer = false;
+        $this->verifyPeer = true;
+        //$this->verifyPeer = false; //not recommended
     }
 
     //Require ssh
@@ -2699,6 +2699,7 @@ class InterfaceTransferUtil {
 
         $data_string = json_encode($jsonFile);
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
+        $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
         $url = 'https://'.$strServer.'/directory/transfer-interface/slave-to-master-transfer';
@@ -2719,29 +2720,22 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            $this->verifyPeer = true;
-            if( !$this->verifyPeer ) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //TODO: This is dangerous - remove it. use CURLOPT_CAINFO
-            } else {
+            //$this->verifyPeer = true;
+            if( $this->verifyPeer ) {
                 //https://stackoverflow.com/questions/4372710/php-curl-https
                 //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
                 //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
                 //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-                //Path: /etc/httpd/ssl/view-test.med.cornell.edu_2025.cer
-                //Correct way to use .crt
+                //1) visit remote site view.online
+                //2) view certificate => export/download as pem or crt
+                //3) use this remote certificate in CURLOPT_CAINFO
                 //Install: yum install ca-certificates
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
                 curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
-                //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/view-test.med.cornell.edu_2025.cer'); //local
-                curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view.online.crt');
-                //curl_setopt($ch, CURLOPT_CAPATH, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view.online.crt');
-                //curl_setopt($ch, CURLOPT_CAPATH, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-test.med.cornell.edu.crt');
-                //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\mozilla.pem');
-                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/ssl/certificate_2025.pem'); //local
-                //curl_setopt($ch, CURLOPT_CAINFO, '/etc/letsencrypt/live/view.online/cert.pem'); //remote
-                //Error: Curl failed: url=https://view.online/c/wcm/pathology/directory/transfer-interface/slave-to-master-transfer =>
-                // Peer's Certificate issuer is not recognized.
+                curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
+                //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
+            } else {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
             }
         }
 
@@ -3003,6 +2997,7 @@ class InterfaceTransferUtil {
         //exit('111');
 
         $strServer = $interfaceTransfer->getTransferSource();  //view.online
+        $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
         //Send back to slave (external) global ID of newly generated Project
@@ -3021,14 +3016,17 @@ class InterfaceTransferUtil {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            //if( !$this->verifyPeer ) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
-            //} else {
+            if( $this->verifyPeer ) {
                 //https://stackoverflow.com/questions/4372710/php-curl-https
                 //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
                 //The proper way is: curl_setopt($ch, CURLOPT_CAINFO, $_SERVER['DOCUMENT_ROOT'] .  "/../cacert-2017-09-20.pem");
                 //Fix: https://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-            //}
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+                curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
+            } else {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //Danger TODO: use CURLOPT_CAINFO
+            }
         }
 
 

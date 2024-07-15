@@ -1710,6 +1710,13 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control'),
             ));
+
+            $builder->add('remoteCertificate', null, array(
+                'label' => "Absolute path to the remote server certificate for curl:",
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control'),
+            ));
+
         }
 
     }

@@ -1409,6 +1409,9 @@
     {% if form.sshPassword is defined %}
         {{ formmacros.field(form.sshPassword) }}
     {% endif %}
+    {% if form.remoteCertificate is defined %}
+        {{ formmacros.field(form.remoteCertificate) }}
+    {% endif %}
 
 {% endmacro %}
 
