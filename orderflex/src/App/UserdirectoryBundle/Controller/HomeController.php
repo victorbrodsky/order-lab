@@ -164,10 +164,11 @@ class HomeController extends OrderAbstractController {
                     continue;
                 }
 
+                $databasename = $tenant->getDatabaseName();
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
-                echo "url=".$url."<br>";
-                echo "instTitle=".$instTitle."<br>";
+                echo $databasename.": url=".$url."<br>";
+                echo $databasename.": instTitle=".$instTitle."<br>";
 
                 if ($url) {
                     if ($url == '/') {
