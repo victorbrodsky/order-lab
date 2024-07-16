@@ -157,7 +157,7 @@ class HomeController extends OrderAbstractController {
                 $tenant->setUrlslug($tenantArr['urlslug']);
                 $tenant->setEnabled($tenantArr['enabled']);
                 $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
-                $tenant->setInstitutionTitle($tenantArr['institutionTitle']);
+                $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
 
                 $showOnHomepage = $tenant->getShowOnHomepage();
                 if( $showOnHomepage !== true ) {
