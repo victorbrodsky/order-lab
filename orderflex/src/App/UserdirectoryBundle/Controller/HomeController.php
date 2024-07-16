@@ -204,8 +204,8 @@ class HomeController extends OrderAbstractController {
             }
         }
         //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
-        dump($tenants);
-        exit('multiTenancyHomePage: get Tenants');
+        //dump($tenants);
+        //exit('multiTenancyHomePage: get Tenants');
 
         $greetingText = $tenantManager->getGreeting();
         $mainText = $tenantManager->getMaintext();
