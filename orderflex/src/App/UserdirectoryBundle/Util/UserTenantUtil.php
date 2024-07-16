@@ -1131,7 +1131,7 @@ class UserTenantUtil
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
-        dump($tenantDataArr);
+        //dump($tenantDataArr);
         //exit('111');
 
         $host = $tenantDataArr[$tenantManagerName]['databaseHost'];
@@ -1160,8 +1160,8 @@ class UserTenantUtil
 
         $tenantsQuery = $conn->executeQuery($tenantsSql);
         $tenantsRows = $tenantsQuery->fetchAllAssociative();
-        dump($tenantsRows);
-        exit('get Tenants From Tenant Manager');
+        //dump($tenantsRows);
+        //exit('get Tenants From Tenant Manager');
         //$tenant = $hostedGroupRows[0]['id'];
 
         //destroy temporary $tenant
