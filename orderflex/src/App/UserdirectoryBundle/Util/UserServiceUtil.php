@@ -4899,7 +4899,7 @@ Pathology and Laboratory Medicine",
 
         $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
 
-        if ($onlyResize == false) {
+        if (0 && $onlyResize == false) {
             if ($size) {
                 $src = $document->getServerPath($size);
                 if (file_exists($src)) {
