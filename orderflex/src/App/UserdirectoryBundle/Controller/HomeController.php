@@ -129,7 +129,7 @@ class HomeController extends OrderAbstractController {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
 
-        $tenants = array();
+        //$tenants = array();
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
         $tenants = $userTenantUtil->getTenantsFromTenantManager(); //TODO: make sure tenant is coming from tenant manager

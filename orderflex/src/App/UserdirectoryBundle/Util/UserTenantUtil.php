@@ -1151,7 +1151,7 @@ class UserTenantUtil
         $conn = $this->getConnectionTenantDB($tenant);
 
         if( !$conn ) {
-            return $initialized;
+            return array();
         }
 
         //$tenantManagerSql = "SELECT * FROM " . 'user_tenantmanager';
@@ -1160,8 +1160,8 @@ class UserTenantUtil
 
         $tenantsQuery = $conn->executeQuery($tenantsSql);
         $tenantsRows = $tenantsQuery->fetchAllAssociative();
-        //dump($tenantsRows);
-        //exit('get Tenants From Tenant Manager');
+        dump($tenantsRows);
+        exit('get Tenants From Tenant Manager');
         //$tenant = $hostedGroupRows[0]['id'];
 
         //destroy temporary $tenant
