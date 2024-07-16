@@ -1771,7 +1771,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                    $logger->notice("mkdir command=".$command);
 //                    //echo "mkdir command=".$command."<br>";
 //                    $res = $this->runProcess($command);
-                    $this->createBackupPath($path);
+                    $this->createBackupPath($networkDrivePath);
                 }
 
                 if( file_exists($networkDrivePath) == false ) {
@@ -2495,7 +2495,7 @@ class DataBackupManagementController extends OrderAbstractController
         $dbInfoLower = strtolower($dbInfo);
         echo "$dbInfoLower=".$dbInfoLower."<br>";
         if( str_contains($dbInfoLower, 'postgresql') === false ) {
-            return "File ".$filename. " is not compatable with current database " . $dbInfo;
+            return "File is not compatable with current database " . $dbInfo;
         }
 
         $memory_limit = ini_get('memory_limit');

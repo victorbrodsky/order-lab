@@ -543,7 +543,7 @@ class MultiTenancyController extends OrderAbstractController
                     $tenantDb = $em->getRepository(TenantList::class)->findOneByName($tenantId);
 
                     if (!$tenantDb) {
-                        $tenantDb = new TenantList($user);
+                        $tenantDb = new TenantList();
                         $tenantManager->addTenant($tenantDb);
 
                         $orderInList = $orderInList + 10;

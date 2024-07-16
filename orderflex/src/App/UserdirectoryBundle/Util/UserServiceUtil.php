@@ -4899,20 +4899,20 @@ Pathology and Laboratory Medicine",
 
         $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
 
-//        if ($onlyResize == false) {
-//            if ($size) {
-//                $src = $document->getServerPath($size);
-//                if (file_exists($src)) {
-//                    //echo "The file $path exists <br>";
-//                } else {
-//                    //echo "The file $path does not exists <br>";
-//                    //exit("The file $path does not exists");
-//                    $url = $this->getDocumentAbsoluteUrl($document);
-//                }
-//            } else {
-//                //echo "Size is null <br>";
-//            }
-//        }
+        if ($onlyResize == false) {
+            if ($size) {
+                $src = $document->getServerPath($size);
+                if (file_exists($src)) {
+                    //echo "The file $path exists <br>";
+                } else {
+                    //echo "The file $path does not exists <br>";
+                    //exit("The file $path does not exists");
+                    $url = $this->getDocumentAbsoluteUrl($document);
+                }
+            } else {
+                //echo "Size is null <br>";
+            }
+        }
 
         //exit('$url='.$url);
         return $url;

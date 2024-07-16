@@ -579,7 +579,9 @@ class UserSecurityUtil {
             //$logger2->notice("clientIp=".$clientIp);
             //exit('1');
 
-            $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+            if( isset($_SERVER['HTTP_USER_AGENT']) ) {
+                $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
+            }
             $logger->setIp($request->getClientIp());
             $logger->setWidth($request->get('display_width'));
             $logger->setHeight($request->get('display_height'));

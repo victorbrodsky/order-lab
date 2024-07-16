@@ -178,7 +178,7 @@ class DoctrineListener {
 
         //echo "classname=".get_class($entity)."<br>";
         $logger = $this->container->get('logger');
-        $logger->notice("classname=".get_class($entity));
+        //$logger->notice("classname=".get_class($entity));
 
         if( $entity instanceof AntibodyList ) {
             //exit('setTrabsferable, ID='.$entity->getId());
@@ -272,7 +272,7 @@ class DoctrineListener {
 
         //echo "classname=".get_class($entity)."<br>";
         $logger = $this->container->get('logger');
-        $logger->notice("classname=".get_class($entity));
+        //$logger->notice("classname=".get_class($entity));
 
         if( $entity instanceof AntibodyList ) {
             //exit('setTrabsferable, ID='.$entity->getId());
