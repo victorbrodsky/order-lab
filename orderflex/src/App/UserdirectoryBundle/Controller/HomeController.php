@@ -130,9 +130,10 @@ class HomeController extends OrderAbstractController {
         }
 
         //$tenants = array();
+        $tenantManagerName = 'tenantmanager';
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
-        $tenants = $userTenantUtil->getTenantsFromTenantManager(); //TODO: make sure tenant is coming from tenant manager
+        $tenants = $userTenantUtil->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager
 
 //        $tenantManagerName = 'tenantmanager';
 //        $tenantManagerUrl = null;
