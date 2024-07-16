@@ -4871,7 +4871,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function getEnvironments() {
-        return array("live"=>"live", "test"=>"test", "dev"=>"dev");
+        return array('live'=>'live', 'test'=>'test', 'dev'=>'dev');
     }
 
     //Similar to Document->getAbsoluteUploadFullPath

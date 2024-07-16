@@ -2144,7 +2144,7 @@ class TransResImportData
         $logger = $this->container->get('logger');
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == "dev" ) {
+        if( $environment == 'dev' ) {
             return NULL;
         }
 

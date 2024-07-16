@@ -160,7 +160,7 @@ class RecLetterUtil {
         $forceSend = false;
         //$forceSend = true;
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $forceSend == false && $environment != "live" ) {
+        if( $forceSend == false && $environment != 'live' ) {
             $msg = "Server is not live: invitation email for the fellowship application ID ".$fellapp->getId()." will not be send to reference ".$reference->getFullName();
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
@@ -842,7 +842,7 @@ class RecLetterUtil {
         $logger->notice("compare: $identificationUploadLetterFellApp ?= $instituteIdentification");
         if( $instituteIdentification && $identificationUploadLetterFellApp ) {
             $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( $environment == "live" ) { //send email (on live server only)
+            if( $environment == 'live' ) { //send email (on live server only)
                 if ($identificationUploadLetterFellApp != $instituteIdentification) {
                     //send email
                     $msg = "Fellowship identification string in the letter file name ($instituteIdentification) does not match with the site settings ($identificationUploadLetterFellApp)";
@@ -865,7 +865,7 @@ class RecLetterUtil {
             //send email (on live server only)
             $msg = "No fellowship references found by letter ID=" . $refId;
             $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( $environment == "live" ) { //send email (on live server only)
+            if( $environment == 'live' ) { //send email (on live server only)
                 $userSecUtil->sendEmailToSystemEmail($msg, $msg);
             }
             //eventlog

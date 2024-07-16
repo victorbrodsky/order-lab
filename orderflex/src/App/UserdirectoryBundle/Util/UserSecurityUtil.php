@@ -2895,7 +2895,7 @@ class UserSecurityUtil {
 
     public function allowSiteLogin($sitename) {
         $environment = $this->getSiteSettingParameter('environment');
-        if( $environment == "live" && $this->isSiteAccessible($sitename) === false ) {
+        if( $environment == 'live' && $this->isSiteAccessible($sitename) === false ) {
             return false;
         }
         return true;

@@ -157,7 +157,7 @@ class RecLetterUtil {
         $logger = $this->container->get('logger');
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment != "live" ) {
+        if( $environment != 'live' ) {
             $msg = "Server is not live: invitation email for residency application will not be send to reference ".$reference->getFullName();
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$resapp);
             $res = array(
@@ -804,7 +804,7 @@ class RecLetterUtil {
             //send email (on live server only)
             $msg = "No residency references found by letter ID=" . $refId;
             $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( $environment == "live" ) { //send email (on live server only)
+            if( $environment == 'live' ) { //send email (on live server only)
                 $userSecUtil->sendEmailToSystemEmail($msg, $msg);
             }
             //eventlog

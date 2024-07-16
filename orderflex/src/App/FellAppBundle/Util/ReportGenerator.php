@@ -1777,7 +1777,7 @@ class ReportGenerator {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == "live" ) { //live
+        if( $environment == 'live' ) { //live
             $fellappId = 1507;
         }
 

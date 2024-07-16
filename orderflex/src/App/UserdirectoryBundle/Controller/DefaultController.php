@@ -947,15 +947,15 @@ class DefaultController extends OrderAbstractController
         $invoice = NULL;
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if ($environment == "dev") {
+        if ($environment == 'dev') {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
             $invoice = $em->getRepository(Invoice::class)->find(4760); //dev
         }
-        if ($environment == "test") {
+        if ($environment == 'test') {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
             $invoice = $em->getRepository(Invoice::class)->find(4730); //test
         }
-        if ($environment == "live") {
+        if ($environment == 'live') {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
             $invoice = $em->getRepository(Invoice::class)->find(7323); //prod
         }

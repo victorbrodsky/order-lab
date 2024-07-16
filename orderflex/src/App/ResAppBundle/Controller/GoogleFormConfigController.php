@@ -282,7 +282,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //if live
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == "live" ) { //live
+        if( $environment == 'live' ) { //live
             $updatedFile = $this->updateFileContent($service, $configFile->getId(), $configFileName, $newDescription, $newMimeType, $configJson, $newRevision);
             if( $updatedFile ) {
                 //echo "Config file has been updated <br>";

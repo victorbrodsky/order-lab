@@ -735,7 +735,7 @@ class AdminController extends OrderAbstractController
         //add a filter that checks if the site is "live" and hides this node in the live environment
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == "live" ) { //live
+        if( $environment == 'live' ) { //live
             $filterStr['filter[types][0]'] = 'default';
             $filterStr['filter[types][1]'] = 'user-added';
         }

@@ -62,12 +62,12 @@ class GoogleSheetManagement {
         $this->security = $security;
     }
 
-    public function allowModifySOurceGoogleDrive() {
+    public function allowModifySourceGoogleDrive() {
 
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
 
-        if( $environment == "live" ) {
+        if( $environment == 'live' ) {
             return true;
         }
 
@@ -84,7 +84,7 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
 
         //Never delete sources for non live server
-        if( !$this->allowModifySOurceGoogleDrive() ) {
+        if( !$this->allowModifySourceGoogleDrive() ) {
             $logger->error("Delete Row in ListFeed: Never delete sources for non production environment");
             return false;
         }
@@ -151,7 +151,7 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
 
         //Never delete sources for non live server
-        if( !$this->allowModifySOurceGoogleDrive() ) {
+        if( !$this->allowModifySourceGoogleDrive() ) {
             $logger->error("Delete File: Never delete sources for non production environment");
             return false;
         }

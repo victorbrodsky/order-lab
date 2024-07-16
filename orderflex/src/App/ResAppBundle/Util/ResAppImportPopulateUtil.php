@@ -1343,7 +1343,7 @@ class ResAppImportPopulateUtil {
 
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     //send confirmation email to this applicant
                     $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp',$this->container->getParameter('resapp.sitename'));
                     $confirmationSubjectResApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectResApp',$this->container->getParameter('resapp.sitename'));
@@ -1359,7 +1359,7 @@ class ResAppImportPopulateUtil {
                     
                 }//if live
 
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     //send confirmation email to the corresponding Residency director and coordinator
                     $resappUtil = $this->container->get('resapp_util');
                     $resappUtil->sendConfirmationEmailsOnApplicationPopulation( $residencyApplication, $user );
@@ -1367,7 +1367,7 @@ class ResAppImportPopulateUtil {
 
                 //create reference hash ID. Must run after residency is in DB and has IDs
                 $resappRecLetterUtil->generateResappRecLetterId($residencyApplication,true);
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     // send invitation email to upload recommendation letter to references
                     $resappRecLetterUtil->sendInvitationEmailsToReferences($residencyApplication,true);
                 }

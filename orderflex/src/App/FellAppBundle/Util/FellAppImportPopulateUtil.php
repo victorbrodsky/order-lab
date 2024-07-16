@@ -1285,7 +1285,7 @@ class FellAppImportPopulateUtil {
             }
 
 
-            if( $environment == "live" ) {
+            if( $environment == 'live' ) {
                 //getFellowshipSubspecialty
                 //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                 if( $errorMsgArr && count($errorMsgArr) > 0 ) {
@@ -1761,7 +1761,7 @@ class FellAppImportPopulateUtil {
                     $errorMsgArr[] = "End Date is null";
                 }
 
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
                     //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                     if ($errorMsgArr && count($errorMsgArr) > 0) {
@@ -1843,7 +1843,7 @@ class FellAppImportPopulateUtil {
 
                 //send confirmation email to this applicant for prod server
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     //send confirmation email to this applicant
                     //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
                     $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
@@ -1860,7 +1860,7 @@ class FellAppImportPopulateUtil {
                     
                 }//if live
 
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     //send confirmation email to the corresponding Fellowship director and coordinator
                     $fellappUtil = $this->container->get('fellapp_util');
                     $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user );
@@ -1868,7 +1868,7 @@ class FellAppImportPopulateUtil {
 
                 //create reference hash ID. Must run after fellowship is in DB and has IDs
                 $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
-                if( $environment == "live" ) {
+                if( $environment == 'live' ) {
                     // send invitation email to upload recommendation letter to references
                     $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
                 }
