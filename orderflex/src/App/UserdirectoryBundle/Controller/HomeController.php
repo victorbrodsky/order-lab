@@ -134,14 +134,14 @@ class HomeController extends OrderAbstractController {
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
         $tenants = $userTenantUtil->getTenantsFromTenantManager(); //TODO: make sure tenant is coming from tenant manager
 
-        $tenantManagerName = 'tenantmanager';
-        $tenantManagerUrl = null;
-        foreach ($tenants as $tenant) {
-            if( $tenant['name'] === $tenantManagerName ) {
-                $tenantManagerUrl = $tenant['urlslug'];
-                break;
-            }
-        }
+//        $tenantManagerName = 'tenantmanager';
+//        $tenantManagerUrl = null;
+//        foreach ($tenants as $tenant) {
+//            if( $tenant['name'] === $tenantManagerName ) {
+//                $tenantManagerUrl = $tenant['urlslug'];
+//                break;
+//            }
+//        }
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
@@ -156,6 +156,7 @@ class HomeController extends OrderAbstractController {
                 $tenant->setUrlslug($tenantArr['urlslug']);
                 $tenant->setEnabled($tenantArr['enabled']);
                 $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
+                $tenant->setInstitutionTitle($tenantArr['institutionTitle']);
 
                 $showOnHomepage = $tenant->getShowOnHomepage();
                 if( $showOnHomepage !== true ) {
