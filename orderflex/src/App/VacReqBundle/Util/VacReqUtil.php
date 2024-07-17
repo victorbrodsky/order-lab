@@ -1009,18 +1009,26 @@ class VacReqUtil
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
     //carryOver days are from getUserCarryOverDays
     //TODO: might add "date of hire" and "end of employment date" to calculate the total vacation days
-    public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDaysToNextYear=null, $carryOverDaysFromPreviousYear=null, $yearRange=null ) {
-        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
-        if( !$totalAllocatedDays ) {
-            $totalAllocatedDays = $this->getTotalAccruedDays($user);
-            //$totalAllocatedDays = $this->getTotalAccruedDaysByGroup($approvalGroupType);
-        }
-        //$totalAllocatedDays = 20;
-        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
+    public function totalVacationRemainingDays(
+        $user,
+        $totalAllocatedDays=null,
+        $vacationDays=null,
+        $carryOverDaysToNextYear=null,
+        $carryOverDaysFromPreviousYear=null,
+        $yearRange=null
+    ) {
 
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
+
+        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
+        if( !$totalAllocatedDays ) {
+            $totalAllocatedDays = $this->getTotalAccruedDays($user,$yearRange); //$yearRange year
+            //$totalAllocatedDays = $this->getTotalAccruedDaysByGroup($approvalGroupType);
+        }
+        //$totalAllocatedDays = 20;
+        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
 
         $vacationAccurate = true;
         if( !$vacationDays ) {
@@ -1619,6 +1627,7 @@ class VacReqUtil
     }
 
     //$centuryToStr - Replace century to string, i.e. $centuryToStr='FY': 2022 -> FY22
+    //Use the last year for FY: 2024-2025 => FY25
     public function getCurrentAcademicYearRange( $centuryToStr=null ) {
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDate = $dates['startDate']; //Y-m-d
@@ -4475,7 +4484,7 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
     //total accrued days calculated by vacationAccruedDaysPerMonth
-    public function getTotalAccruedDays( $user, $approvalGroupType=NULL ) {
+    public function getTotalAccruedDays( $user, $yearRange=NULL, $approvalGroupType=NULL ) {
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
 
@@ -4483,8 +4492,17 @@ class VacReqUtil
             $vacationAccruedDaysPerMonth = 2;
             //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
+
+        //TODO: get User start/end dates and calculate number of months (for the current year?)
+        if( !$yearRange ) {
+            $yearRange = $this->getCurrentAcademicYearRange();
+            $totalAccruedMonths = $this->$getTotalAccruedMonths($user,$yearRange);
+        }
+
         //echo "monthCount=".$monthCount."<br>";
-        $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+        //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+        $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+        exit('$yearRange='.$yearRange.", totalAccruedDays=".$totalAccruedDays);
 
         $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays",$user,$approvalGroupType);
         if( $maxVacationDays && $totalAccruedDays > $maxVacationDays ) {
@@ -4510,6 +4528,16 @@ class VacReqUtil
 
         $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
+    }
+
+    //Calculate number of month for user according to the start/end dates
+    public function getTotalAccruedMonths($user,$yearRange) {
+        $totalAccruedMonths = 12;
+
+        //$startDate = $user->
+        //$endDate = $user->
+
+        return $totalAccruedMonths;
     }
 
     public function getPendingCarryOverRequests($user) {
@@ -4637,7 +4665,7 @@ class VacReqUtil
         //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         //$accruedDays = $this->getAccruedDaysUpToThisMonth($user,$approvalGroupType);
-        $totalAccruedDays = $this->getTotalAccruedDays($user,$approvalGroupType);
+        $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
 
         //$currentStartYear
         //$yearRange = $this->getCurrentAcademicYearRange();
@@ -5074,7 +5102,7 @@ class VacReqUtil
 
     public function getCurrentYearUnusedDays( $user, $asString=true ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $totalAccruedDays = $this->getTotalAccruedDays($user);
+        $totalAccruedDays = $this->getTotalAccruedDays($user); //current year
         $requestTypeStr = 'vacation';
 
         $currentYearRange = $this->getCurrentAcademicYearRange();
@@ -5141,13 +5169,13 @@ class VacReqUtil
     }
 
     public function getPreviousYearUnusedDays( $user, $asString=true ) {
-        $totalAccruedDays = $this->getTotalAccruedDays($user);
         $requestTypeStr = 'vacation';
         //$break = "\r\n";
 
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
         //echo "carryOverDaysPreviousYear=$carryOverDaysPreviousYear<br>";
+        $totalAccruedDays = $this->getTotalAccruedDays($user,$yearRange); //previous year
 
         //TODO: test it: carried over days from the current year to THIS year (from prospective of the previous year).
         //For previous year. Use this year carry over days
@@ -5331,7 +5359,7 @@ class VacReqUtil
         $year = ((int)$year) - 1;   //previous year
         //echo "year=".$year."<br>";
 
-        $totalAccruedDays = $this->getTotalAccruedDays($user);
+        $totalAccruedDays = $this->getTotalAccruedDays($user); //current year
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year); //2015
 
         //carried over days from the current year to the next year.
