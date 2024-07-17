@@ -4496,13 +4496,13 @@ class VacReqUtil
         //TODO: get User start/end dates and calculate number of months (for the current year?)
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
-            $totalAccruedMonths = $this->$getTotalAccruedMonths($user,$yearRange);
         }
+
+        $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
 
         //echo "monthCount=".$monthCount."<br>";
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
         $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
-        exit('$yearRange='.$yearRange.", totalAccruedDays=".$totalAccruedDays);
 
         $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays",$user,$approvalGroupType);
         if( $maxVacationDays && $totalAccruedDays > $maxVacationDays ) {
@@ -4512,6 +4512,55 @@ class VacReqUtil
         $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
     }
+    //Calculate number of month for user according to the start/end dates
+    //$yearRange=2024-2025
+    public function getTotalAccruedMonths($user,$yearRangeStr) {
+        $totalAccruedMonths = 12;
+        return $totalAccruedMonths;
+
+        $userStartEndDates = $user->getEmploymentStartEndDates($asString=false);
+        $startDate = $userStartEndDates['startDate'];
+        $endDate = $userStartEndDates['endDate'];
+
+        $startDateStr = null;
+        if( $startDate ) {
+            $startDateStr = $startDate->format('d/m/Y');
+        }
+        $endDateStr = null;
+        if( $endDate ) {
+            $endDateStr = $endDate->format('d/m/Y');
+        }
+        echo "startDate=".$startDateStr.", endDate=".$endDateStr."<br>";
+        //startDate=01/07/2020, endDate=01/07/2021
+        //$yearRange = 2024-2025
+
+        //years
+        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
+        $previousYear = $yearRangeArr[0];
+        $currentYear = $yearRangeArr[1];
+        echo "previousYear=$previousYear, currentYear=$currentYear <br>";
+
+        $academicYearStartDateStr = $this->getEdgeAcademicYearDate($previousYear,'Start');
+        $academicYearEndDateStr = $this->getEdgeAcademicYearDate($previousYear,'End');
+        echo "academicYearStartDateStr=$academicYearStartDateStr, academicYearEndDateStr=$academicYearEndDateStr <br>";
+
+        //convert $academicYearStartDateStr to $academicYearStartDate
+        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
+        $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
+
+        //check if user startDate > $academicYearStartDate
+        if( $startDate > $academicYearStartDate ) {
+            echo "User started after beginning academic year <br>";
+        }
+        if( $endDate < $academicYearEndDate ) {
+            echo "User ended before ending academic year <br>";
+        }
+
+        exit('$yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths);
+
+        return $totalAccruedMonths;
+    }
+
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
         $vacationAccruedDaysPerMonth = $approvalGroupType->getVacationAccruedDaysPerMonth();
         if( !$vacationAccruedDaysPerMonth ) {
@@ -4528,16 +4577,6 @@ class VacReqUtil
 
         $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
-    }
-
-    //Calculate number of month for user according to the start/end dates
-    public function getTotalAccruedMonths($user,$yearRange) {
-        $totalAccruedMonths = 12;
-
-        //$startDate = $user->
-        //$endDate = $user->
-
-        return $totalAccruedMonths;
     }
 
     public function getPendingCarryOverRequests($user) {
@@ -7802,10 +7841,9 @@ class VacReqUtil
 
     public function getAcademicYearBySingleDate( $floatingDayDate ) {
 
-        $academicYearArr = array();
-
+        //$academicYearArr = array();
         //return "2014-2015, 2015-2016";
-        $academicYearStr = null;
+        //$academicYearStr = null;
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        //academicYearStart: July 01
 //        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');

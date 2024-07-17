@@ -1,0 +1,15 @@
+getTotalAccruedDays
+getTotalAccruedDaysByGroup
+
+getAccruedDaysUpToThisMonth -> getAccruedDaysUpToThisMonthByDaysPerMonth
+
+getAccruedDaysUpToThisMonthByDaysPerMonth
+
+getCurrentAcademicYearStartEndDates
+
+getYearsFromYearRangeStr
+
+$academicYearStart = $this->getAcademicYearStart();
+$academicYearEnd = $this->getAcademicYearEnd();
+
+getEdgeAcademicYearDate( $year, $edge ) {
