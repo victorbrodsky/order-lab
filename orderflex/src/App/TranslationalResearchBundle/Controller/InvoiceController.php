@@ -1507,14 +1507,25 @@ class InvoiceController extends OrderAbstractController
 
     /**
      * Show the most recent PDF version of invoice
+     * 'Invoice $invoice' might not exists => use id to find and generate flash message to the user
      */
     #[Route(path: '/download-recent-invoice-pdf/{id}', name: 'translationalresearch_invoice_download_recent', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Invoice/pdf-show.html.twig')]
-    public function downloadRecentPdfAction(Request $request, Invoice $invoice)
+    public function downloadRecentPdfAction(Request $request, $id)
     {
 //        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
+
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository(Invoice::class)->find($id);
+        if( !$invoice ) {
+            $this->addFlash(
+                'warning',
+                'Invoice with ID '. $id . ' does not exist.'
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
