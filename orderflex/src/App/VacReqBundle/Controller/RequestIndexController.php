@@ -800,12 +800,14 @@ class RequestIndexController extends OrderAbstractController
             $academicYear = $academicYear + 1; //the user should pick the start of the academic year (2015) to see 2015-2016
             //echo "academicYear=".$academicYear."<br>";
 
+            //echo "<br>Request Start: getEdgeAcademicYearDate<br>";
             $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "Start" );
             $startAcademicYearDate = new \DateTime($startAcademicYearStr);
             $startAcademicYearDate = $this->convertFromUserTimezonetoUTC($startAcademicYearDate,$currentUser);
             $startAcademicYearDate->setTime(00, 00, 00);
             //echo "start year date:".$startAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
+            //echo "<br>Request End: getEdgeAcademicYearDate<br>";
             $endAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "End" );
             $endAcademicYearDate = new \DateTime($endAcademicYearStr);
             $endAcademicYearDate = $this->convertFromUserTimezonetoUTC($endAcademicYearDate,$currentUser);

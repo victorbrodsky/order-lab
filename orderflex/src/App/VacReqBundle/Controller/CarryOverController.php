@@ -227,6 +227,7 @@ class CarryOverController extends OrderAbstractController
         //TODO: fixed using getCurrentAcademicYearStartEndDates
         //get current academical start year:
         $currentStartYear = date("Y"); //2016
+        //echo "<br>addCarryOverByAcademicYear: getEdgeAcademicYearDate <br>";
         $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $currentStartYear, "Start" );
         $startAcademicYearDate = new \DateTime($startAcademicYearStr); //2015-07-01
         //echo "startAcademicYearDate=".$startAcademicYearDate->format("Y-m-d")."<br>";

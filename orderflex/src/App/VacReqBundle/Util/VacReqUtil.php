@@ -87,6 +87,9 @@ class VacReqUtil
     //protected $secAuth;
     protected $container;
 
+    private $academicYearStartDateStr = '';
+    private $academicYearEndDateStr = '';
+
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
 
@@ -3025,31 +3028,30 @@ class VacReqUtil
         $academicYearEdgeStr = NULL;
 
         //academicYearEdge
-        //$academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
+        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
 
-        //Testing: local get academicYearStart/academicYearEnd
-        $userServiceUtil = $this->container->get('user_service_utility');
-        //$this->container->get('doctrine')->resetManager();
-        $param = $userServiceUtil->getSingleSiteSettingParameter();
-        echo "param ID=[".$param->getId()."]<br>";
-        //$this->container->get('doctrine')->resetManager();
-        $specificSiteSettingParameter = $param->getVacreqSiteParameter();
-        echo "specificSiteSettingParameter ID=[".$specificSiteSettingParameter->getId()."]<br>";
-        //$this->container->get('doctrine')->resetManager();
-        if( $edge == "Start" || $edge == "start" ) {
-            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearStart();
-        }
-        if( $edge == "End" || $edge == "end" ) {
-            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearEnd();
-        }
+        ///// Testing: local get academicYearStart/academicYearEnd
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $param = $userServiceUtil->getSingleSiteSettingParameter();
+//        echo "param ID=[".$param->getId()."]<br>";
+//        $specificSiteSettingParameter = $param->getVacreqSiteParameter();
+//        echo "specificSiteSettingParameter ID=[".$specificSiteSettingParameter->getId()."]<br>";
+//        if( $edge == "Start" || $edge == "start" ) {
+//            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearStart();
+//        }
+//        if( $edge == "End" || $edge == "end" ) {
+//            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearEnd();
+//        }
+        ///// Testing //////
 
         if( !$academicYearEdge ) {
             throw new \InvalidArgumentException('academicYear'.$edge.' is not defined in Site Parameters.');
         }
+        //echo "academicYearEdge Str=[".$academicYearEdge->format('m-d-Y H:s:i')."]<br>";
 
         //academicYearEdge
         $academicYearEdgeStr = $academicYearEdge->format('m-d');
-        echo "year=$year, edge=[$edge], academicYearEdgeStr=[".$academicYearEdgeStr."]<br>";
+        //echo "year=$year, edge=[$edge], academicYearEdgeStr=[".$academicYearEdgeStr."]<br>";
 
         if( $edge == "Start" || $edge == "start" ) {
             $year = (int)$year - 1;
@@ -3060,7 +3062,24 @@ class VacReqUtil
 
         return $academicYearEdgeStr;
     }
-
+    //Testing
+//    public function getSiteSettingsStartEndAcademicDates() {
+//        //Testing: local get academicYearStart/academicYearEnd
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $param = $userServiceUtil->getSingleSiteSettingParameter();
+//        echo "param ID=[".$param->getId()."]<br>";
+//        $specificSiteSettingParameter = $param->getVacreqSiteParameter();
+//        echo "specificSiteSettingParameter ID=[".$specificSiteSettingParameter->getId()."]<br>";
+//        $academicYearStart = $specificSiteSettingParameter->getAcademicYearStart();
+//        echo "academicYearStart Str=[".$academicYearStart->format('m-d-Y H:s:i')."]<br>";
+//        $academicYearEnd = $specificSiteSettingParameter->getAcademicYearEnd();
+//        echo "academicYearEnd Str=[".$academicYearEnd->format('m-d-Y H:s:i')."]<br>";
+//
+//        return array(
+//            'academicYearStart' => $academicYearStart->format('m-d'),
+//            'academicYearEnd' => $academicYearEnd->format('m-d')
+//        );
+//    }
 
     public function getRequestAcademicYears( $request ) {
 
@@ -4514,6 +4533,7 @@ class VacReqUtil
         }
 
         //TODO: get User start/end dates and calculate number of months (for the current year?)
+        //TODO: fix summary: http://127.0.0.1/time-away-request/summary/?filter%5Busers%5D%5B%5D=762&filter%5Btypes%5D%5B%5D=1&filter%5Btypes%5D%5B%5D=2&filter%5Bsubmit%5D=
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
@@ -4535,12 +4555,12 @@ class VacReqUtil
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
     public function getTotalAccruedMonths($user,$yearRangeStr) {
-        echo "<br>getTotalAccruedMonths yearRangeStr=[$yearRangeStr]<br>";
+        //echo "<br>getTotalAccruedMonths yearRangeStr=[$yearRangeStr]<br>";
         $totalAccruedMonths = 12;
         //return $totalAccruedMonths;
 
         if( !$user ) {
-            echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
+            //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
             return $totalAccruedMonths;
         }
 
@@ -4549,43 +4569,90 @@ class VacReqUtil
         $endDate = $userStartEndDates['endDate'];
         //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
 
-        $startDateStr = null;
-        if( $startDate ) {
-            $startDateStr = $startDate->format('d/m/Y');
-        }
-        $endDateStr = null;
-        if( $endDate ) {
-            $endDateStr = $endDate->format('d/m/Y');
-        }
+//        $startDateStr = null;
+//        if( $startDate ) {
+//            $startDateStr = $startDate->format('d/m/Y');
+//        }
+//        $endDateStr = null;
+//        if( $endDate ) {
+//            $endDateStr = $endDate->format('d/m/Y');
+//        }
         //echo "startDateStr=".$startDateStr.", endDateStr=".$endDateStr."<br>";
         //startDate=01/07/2020, endDate=01/07/2021
         //$yearRange = 2024-2025
 
         //years
         $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
-        $previousYear = $yearRangeArr[0];
+        //$previousYear = $yearRangeArr[0];
         $currentYear = $yearRangeArr[1];
-        echo "previousYear=$previousYear, currentYear=$currentYear <br>";
+        //echo "previousYear=$previousYear, currentYear=$currentYear <br>";
 
-        $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear,'Start');
-        $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear,'End');
-        echo "academicYearStartDateStr=$academicYearStartDateStr, academicYearEndDateStr=$academicYearEndDateStr <br>";
+        //Testing
+        if(0) {
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+            //exit('1111');
+        }
+
+        //Use the class global academicYearStartDateStr and academicYearEndDateStr
+        // to prevent modification on the repeating DB calls. As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
+        //TODO: why end year date is changed?
+        if(1) {
+            if (!$this->academicYearStartDateStr || !$this->academicYearEndDateStr) {
+                $academicYearStartDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+                $academicYearEndDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            $academicYearEndDateArray = $this->getSiteSettingsStartEndAcademicDates();
+//            $academicYearStartDateStrThis = $academicYearEndDateArray['academicYearStart'];
+//            $academicYearEndDateStrThis = $academicYearEndDateArray['academicYearEnd'];
+//            $academicYearStartDateStrThis = ((int)$currentYear - 1)."-".$academicYearStartDateStrThis;
+//            $academicYearEndDateStrThis = $currentYear."-".$academicYearEndDateStrThis;
+                $this->academicYearStartDateStr = $academicYearStartDateStrThis;
+                $this->academicYearEndDateStr = $academicYearEndDateStrThis;
+                //echo "academicYearStartDateStr=".$this->academicYearStartDateStr.", academicYearEndDateStr=".$this->academicYearEndDateStr."<br>";
+            }
+
+            $academicYearStartDateStr = $this->academicYearStartDateStr;
+            $academicYearEndDateStr = $this->academicYearEndDateStr;
+        } else {
+            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+        }
+
+        //$academicYearStartDateStr = '2024-07-01';
+        //$academicYearEndDateStr = '2025-06-30';
+        //echo "academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+        //return $totalAccruedMonths;
 
         //convert $academicYearStartDateStr to $academicYearStartDate
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
         $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
+        //$academicYearStartDate = NULL;
+        //$academicYearEndDate = NULL;
 
         $monthCount = 0;
         //check if user startDate > $academicYearStartDate
         if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
             $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
             $totalAccruedMonths = 12 - $monthCount;
-            echo "User started after beginning academic year: ".
-                $startDate->format('d-F-Y')." > ".
-                $academicYearStartDate->format('d-F-Y').
-                ", monthCount=".$monthCount.
-                ", totalAccruedMonths=".$totalAccruedMonths.
-                "<br>";
+//            echo "User started after beginning academic year: ".
+//                $startDate->format('d-F-Y')." > ".
+//                $academicYearStartDate->format('d-F-Y').
+//                ", monthCount=".$monthCount.
+//                ", totalAccruedMonths=".$totalAccruedMonths.
+//                "<br>";
         }
 //        if( $endDate && $academicYearStartDate && $endDate > $academicYearStartDate ) {
 //            $monthCount = $this->diffInMonths($endDate, $academicYearStartDate); //12-$monthCount=total vacation days for this year
@@ -4600,15 +4667,15 @@ class VacReqUtil
         if( $endDate && $academicYearEndDate && $endDate < $academicYearEndDate ) {
             $monthCount = $this->diffInMonths($academicYearEndDate, $endDate); //12-$monthCount=total vacation days for this year
             $totalAccruedMonths = $totalAccruedMonths - $monthCount;
-            echo "User ended before ending academic year: ".
-                $endDate->format('d-F-Y')." > ".
-                $academicYearEndDate->format('d-F-Y').
-                ", monthCount=".$monthCount.
-                ", totalAccruedMonths=".$totalAccruedMonths.
-                "<br>";
+//            echo "User ended before ending academic year: ".
+//                $endDate->format('d-F-Y')." > ".
+//                $academicYearEndDate->format('d-F-Y').
+//                ", monthCount=".$monthCount.
+//                ", totalAccruedMonths=".$totalAccruedMonths.
+//                "<br>";
         }
 
-        echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
+        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
         //exit('end of total accrued month');
 
         return $totalAccruedMonths;
