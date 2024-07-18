@@ -3025,7 +3025,24 @@ class VacReqUtil
         $academicYearEdgeStr = NULL;
 
         //academicYearEdge
-        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
+        //$academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
+
+        //Testing: local get academicYearStart/academicYearEnd
+        $userServiceUtil = $this->container->get('user_service_utility');
+        //$this->container->get('doctrine')->resetManager();
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+        echo "param ID=[".$param->getId()."]<br>";
+        //$this->container->get('doctrine')->resetManager();
+        $specificSiteSettingParameter = $param->getVacreqSiteParameter();
+        echo "specificSiteSettingParameter ID=[".$specificSiteSettingParameter->getId()."]<br>";
+        //$this->container->get('doctrine')->resetManager();
+        if( $edge == "Start" || $edge == "start" ) {
+            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearStart();
+        }
+        if( $edge == "End" || $edge == "end" ) {
+            $academicYearEdge = $specificSiteSettingParameter->getAcademicYearEnd();
+        }
+
         if( !$academicYearEdge ) {
             throw new \InvalidArgumentException('academicYear'.$edge.' is not defined in Site Parameters.');
         }
