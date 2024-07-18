@@ -2689,7 +2689,7 @@ class User extends UserBase {
             }
             if( $latestEmploymentStatus->getTerminationDate() ) {
                 $endDate = $latestEmploymentStatus->getTerminationDate();
-                if( $endDate && $endDate ) {
+                if( $endDate && $asString ) {
                     $endDate = $endDate->format($format);
                 }
             }

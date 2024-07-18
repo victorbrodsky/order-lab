@@ -3021,6 +3021,8 @@ class VacReqUtil
     //construct date string of the academical year edge - start (2016-06-30) or end (2016-07-01)
     public function getEdgeAcademicYearDate( $year, $edge ) {
         $userSecUtil = $this->container->get('user_security_utility');
+        $academicYearEdge = NULL;
+        $academicYearEdgeStr = NULL;
 
         //academicYearEdge
         $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
@@ -3030,9 +3032,10 @@ class VacReqUtil
 
         //academicYearEdge
         $academicYearEdgeStr = $academicYearEdge->format('m-d');
+        echo "year=$year, edge=[$edge], academicYearEdgeStr=[".$academicYearEdgeStr."]<br>";
 
         if( $edge == "Start" || $edge == "start" ) {
-            $year = $int = (int)$year - 1;
+            $year = (int)$year - 1;
         }
 
         $academicYearEdgeStr = $year."-".$academicYearEdgeStr;
@@ -4484,7 +4487,7 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
     //total accrued days calculated by vacationAccruedDaysPerMonth
-    public function getTotalAccruedDays( $user, $yearRange=NULL, $approvalGroupType=NULL ) {
+    public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
 
@@ -4504,8 +4507,8 @@ class VacReqUtil
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
         $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
 
-        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays",$user,$approvalGroupType);
-        if( $maxVacationDays && $totalAccruedDays > $maxVacationDays ) {
+        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
+        if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
             $totalAccruedDays = $maxVacationDays;
         }
 
@@ -4515,12 +4518,19 @@ class VacReqUtil
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
     public function getTotalAccruedMonths($user,$yearRangeStr) {
+        echo "<br>getTotalAccruedMonths yearRangeStr=[$yearRangeStr]<br>";
         $totalAccruedMonths = 12;
-        return $totalAccruedMonths;
+        //return $totalAccruedMonths;
+
+        if( !$user ) {
+            echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
+            return $totalAccruedMonths;
+        }
 
         $userStartEndDates = $user->getEmploymentStartEndDates($asString=false);
         $startDate = $userStartEndDates['startDate'];
         $endDate = $userStartEndDates['endDate'];
+        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
 
         $startDateStr = null;
         if( $startDate ) {
@@ -4530,7 +4540,7 @@ class VacReqUtil
         if( $endDate ) {
             $endDateStr = $endDate->format('d/m/Y');
         }
-        echo "startDate=".$startDateStr.", endDate=".$endDateStr."<br>";
+        //echo "startDateStr=".$startDateStr.", endDateStr=".$endDateStr."<br>";
         //startDate=01/07/2020, endDate=01/07/2021
         //$yearRange = 2024-2025
 
@@ -4540,23 +4550,49 @@ class VacReqUtil
         $currentYear = $yearRangeArr[1];
         echo "previousYear=$previousYear, currentYear=$currentYear <br>";
 
-        $academicYearStartDateStr = $this->getEdgeAcademicYearDate($previousYear,'Start');
-        $academicYearEndDateStr = $this->getEdgeAcademicYearDate($previousYear,'End');
+        $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear,'Start');
+        $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear,'End');
         echo "academicYearStartDateStr=$academicYearStartDateStr, academicYearEndDateStr=$academicYearEndDateStr <br>";
 
         //convert $academicYearStartDateStr to $academicYearStartDate
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
         $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
 
+        $monthCount = 0;
         //check if user startDate > $academicYearStartDate
-        if( $startDate > $academicYearStartDate ) {
-            echo "User started after beginning academic year <br>";
+        if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
+            $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
+            $totalAccruedMonths = 12 - $monthCount;
+            echo "User started after beginning academic year: ".
+                $startDate->format('d-F-Y')." > ".
+                $academicYearStartDate->format('d-F-Y').
+                ", monthCount=".$monthCount.
+                ", totalAccruedMonths=".$totalAccruedMonths.
+                "<br>";
         }
-        if( $endDate < $academicYearEndDate ) {
-            echo "User ended before ending academic year <br>";
+//        if( $endDate && $academicYearStartDate && $endDate > $academicYearStartDate ) {
+//            $monthCount = $this->diffInMonths($endDate, $academicYearStartDate); //12-$monthCount=total vacation days for this year
+//            $totalAccruedMonths = $totalAccruedMonths + $monthCount;
+//            echo "User ended before ending academic year: ".
+//                $endDate->format('d-F-Y')." > ".
+//                $academicYearStartDate->format('d-F-Y').
+//                ", monthCount=".$monthCount.
+//                ", totalAccruedMonths=".$totalAccruedMonths.
+//                "<br>";
+//        }
+        if( $endDate && $academicYearEndDate && $endDate < $academicYearEndDate ) {
+            $monthCount = $this->diffInMonths($academicYearEndDate, $endDate); //12-$monthCount=total vacation days for this year
+            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
+            echo "User ended before ending academic year: ".
+                $endDate->format('d-F-Y')." > ".
+                $academicYearEndDate->format('d-F-Y').
+                ", monthCount=".$monthCount.
+                ", totalAccruedMonths=".$totalAccruedMonths.
+                "<br>";
         }
 
-        exit('$yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths);
+        echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
+        //exit('end of total accrued month');
 
         return $totalAccruedMonths;
     }
@@ -4704,6 +4740,7 @@ class VacReqUtil
         //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         //$accruedDays = $this->getAccruedDaysUpToThisMonth($user,$approvalGroupType);
+        $facultyTotalAccruedDays = $this->getTotalAccruedDays(NULL,NULL,$approvalGroupType); //current year
         $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
 
         //$currentStartYear
@@ -4757,7 +4794,7 @@ class VacReqUtil
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
         //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
-        $accruedDaysString = $approvalGroupTypeName." accrue $totalAccruedDays vacation days per year, or";
+        $accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or"; //$totalAccruedDays
         $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month.";
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
 
@@ -4804,9 +4841,14 @@ class VacReqUtil
             //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
             ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
             // You have [17] remaining vacation days during the current academic year.
-            $remainingDaysString = "Based on the assumed " . $totalAccruedDays . " accrued days per year and on approved carry over " .
+//            $remainingDaysString = "Based on the assumed " . $totalAccruedDays . " accrued days per year and on approved carry over " .
+//                "requests documented in this system," .
+//                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
+            $remainingDaysString = "Based on your start/end employment dates, you have " . $totalAccruedDays .
+                " accrued days per year and on approved carry over " .
                 "requests documented in this system," .
-                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
+                " you have " . $remainingDaysRes['numberOfDays'] .
+                " remaining vacation days during the current academic year";
             if (!$remainingDaysRes['accurate']) {
                 $remainingDaysString .= " (" . $this->getInaccuracyMessage() . ")";
             }

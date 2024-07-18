@@ -1710,34 +1710,6 @@ class UserSecurityUtil {
     }
 
     public function getSiteSettingParameter( $parameter, $sitename=null ) {
-
-        //return null; //testing
-
-//        if( $this->siteSettingsParam === null ) {
-//
-//            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-//            //echo "params count=".count($params)."<br>";
-//
-//            if (count($params) == 0) {
-//                //return -1;
-//                return null;
-//                //return "[Site Settings is not initialized]";
-//            }
-//
-//            if (count($params) > 1) {
-//                $logger = $this->container->get('logger');
-//                $msg = 'Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
-//                $logger->error($msg);
-//                exit($msg);
-//                //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-//            }
-//
-//            //$param = $params[0];
-//            $this->siteSettingsParam = $params[0];
-//        }
-
-        //$param = $this->getSingleSiteSettingsParam();
-        //$param = $this->siteSettingsParam;
         $userServiceUtil = $this->container->get('user_service_utility');
         $param = $userServiceUtil->getSingleSiteSettingParameter();
 
