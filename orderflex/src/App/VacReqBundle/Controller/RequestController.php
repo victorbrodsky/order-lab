@@ -77,6 +77,17 @@ class RequestController extends OrderAbstractController
         $routeName = $request->get('_route');
         $newCarryOverRequestStr = null;
 
+        //Testing accrued days
+        $yearRangeStr = '2024-2025';
+        //$startDate = new \DateTime('d/m/Y','07/10/2024');
+        //$endDate = new \DateTime('d/m/Y','08/12/2024');
+        //$totalAccruedMonths = $vacreqUtil->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
+        //echo "Exit totalAccruedMonths=$totalAccruedMonths <br>";
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/10/2024','08/12/2024'); //answer 
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
+        exit('111');
+        
         //permitted only for users with allowCarryOver
         if( $routeName == "vacreq_carryoverrequest" ) {
             if (

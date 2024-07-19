@@ -4409,6 +4409,7 @@ class VacReqUtil
 //        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
 //        return $accruedDays;
 //    }
+    //NOT USED
     public function getAccruedDaysUpToThisMonth( $user, $approverType=null ) {
         if( !$approverType ) {
             $approverType = $this->getSingleApprovalGroupType($user);
@@ -4420,7 +4421,7 @@ class VacReqUtil
         return $this->getAccruedDaysUpToThisMonthByDaysPerMonth($vacationAccruedDaysPerMonth);
     }
 
-    //substitute getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq') by VacReqApprovalTypeList
+    //Used to show average accrued days for each group on the 'summary' page
     public function getAccruedDaysUpToThisMonthByInstitution( $instituionId ) {
         //1) find VacReqSettings by institution
         //2) VacReqSettings has many approvalTypes (VacReqApprovalTypeList)
@@ -4428,33 +4429,6 @@ class VacReqUtil
         //3) find vacationAccruedDaysPerMonth from VacReqApprovalTypeList
 
         //echo "instituionId=$instituionId <br>";
-
-//        $params = array();
-//
-//        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
-//        $dql =  $repository->createQueryBuilder("list");
-//        $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
-//        $dql->leftJoin("vacreqSettings.institution", "institution");
-//
-//        $dql->where("institution.id = :institutionId");
-//        $params['institutionId'] = $instituionId;
-//
-//        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
-//
-//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-//
-//        $query->setParameters($params);
-//
-//        $approverTypes = $query->getResult();
-//
-////        foreach($approverTypes as $approverType) {
-////            echo "approverType=$approverType <br>";
-////        }
-//
-//        $approverType = NULL;
-//        if( count($approverTypes) > 0 ) {
-//            $approverType = $approverTypes[0];
-//        }
 
         $approverType = $this->getApprovalGroupTypeByInstitution($instituionId);
 
@@ -4466,6 +4440,7 @@ class VacReqUtil
 
         return $this->getAccruedDaysUpToThisMonthByDaysPerMonth($vacationAccruedDaysPerMonth);
     }
+    //Used to show average accrued days for each group on the 'summary' page. Use full month for accrued days = 2*months
     public function getAccruedDaysUpToThisMonthByDaysPerMonth( $vacationAccruedDaysPerMonth ) {
         //get start academic date
         $dates = $this->getCurrentAcademicYearStartEndDates(true);
@@ -4500,12 +4475,25 @@ class VacReqUtil
 //
 //        return $months;
 //    }
+
+    //Used directly by getAccruedDaysUpToThisMonthByDaysPerMonth, getTotalAccruedMonths
+    //if days in month 1-15 => 1 day
+    //if days ib month 16-30 => 2 days
+    //who started 10/3/23, we should accrue two days for the month of October 2023.
+    //who started July 15th (mid-month), we should account for just 1 day of vacation time accrued this month
     //http://www.tricksofit.com/2013/12/calculate-the-difference-between-two-dates-in-php#.V1GMSL69GgM
     public static function diffInMonths(\DateTime $date1, \DateTime $date2)
     {
+        //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
         $months = $date1->diff($date2)->m + ($date1->diff($date2)->y*12);
-        //echo "months=".$months."<br>";
+        //echo "2 months=".$months."<br>";
         return (int)$months;
+
+        //$abs_diff = $date1->diff($date2)->format("%a"); //3
+        //echo "abs_diff=".$abs_diff." days<br>";
+        //$months = $date1->diff($date2)->d + ($date1->diff($date2)->y*12);
+        //echo "1 months=".$months."<br>";
+        //return (int)$months;
     }
 
     //Use in totalVacationRemainingDays, getHeaderInfoMessages,
@@ -4554,8 +4542,8 @@ class VacReqUtil
     }
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
-    public function getTotalAccruedMonths($user,$yearRangeStr) {
-        //echo "<br>getTotalAccruedMonths yearRangeStr=[$yearRangeStr]<br>";
+    public function getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL ) {
+        //echo "<br>get Total Accrued Months yearRangeStr=[$yearRangeStr]<br>";
         $totalAccruedMonths = 12;
         //return $totalAccruedMonths;
 
@@ -4564,9 +4552,15 @@ class VacReqUtil
             return $totalAccruedMonths;
         }
 
-        $userStartEndDates = $user->getEmploymentStartEndDates($asString=false);
-        $startDate = $userStartEndDates['startDate'];
-        $endDate = $userStartEndDates['endDate'];
+        if( !$startDate || !$endDate ) {
+            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+            if( !$startDate ) {
+                $startDate = $userStartEndDates['startDate'];
+            }
+            if( !$endDate ) {
+                $endDate = $userStartEndDates['endDate'];
+            }
+        }
         //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
 
 //        $startDateStr = null;
@@ -4647,12 +4641,18 @@ class VacReqUtil
         if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
             $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
             $totalAccruedMonths = 12 - $monthCount;
-//            echo "User started after beginning academic year: ".
-//                $startDate->format('d-F-Y')." > ".
-//                $academicYearStartDate->format('d-F-Y').
-//                ", monthCount=".$monthCount.
-//                ", totalAccruedMonths=".$totalAccruedMonths.
-//                "<br>";
+
+            //echo "monthCount=".$monthCount."<br>";
+
+            if( $user ) {
+                //Use prorated days for intervals: 1-15=>1 day, 16-31=>2 days
+                echo "User started after beginning academic year: " .
+                    $startDate->format('d-F-Y') . " > " .
+                    $academicYearStartDate->format('d-F-Y') .
+                    ", monthCount=" . $monthCount .
+                    ", totalAccruedMonths=" . $totalAccruedMonths .
+                    "<br>";
+            }
         }
 //        if( $endDate && $academicYearStartDate && $endDate > $academicYearStartDate ) {
 //            $monthCount = $this->diffInMonths($endDate, $academicYearStartDate); //12-$monthCount=total vacation days for this year
@@ -4667,17 +4667,57 @@ class VacReqUtil
         if( $endDate && $academicYearEndDate && $endDate < $academicYearEndDate ) {
             $monthCount = $this->diffInMonths($academicYearEndDate, $endDate); //12-$monthCount=total vacation days for this year
             $totalAccruedMonths = $totalAccruedMonths - $monthCount;
-//            echo "User ended before ending academic year: ".
-//                $endDate->format('d-F-Y')." > ".
-//                $academicYearEndDate->format('d-F-Y').
-//                ", monthCount=".$monthCount.
-//                ", totalAccruedMonths=".$totalAccruedMonths.
-//                "<br>";
+
+            if( $user ) {
+                echo "User ended before ending academic year: " .
+                    $endDate->format('d-F-Y') . " > " .
+                    $academicYearEndDate->format('d-F-Y') .
+                    ", monthCount=" . $monthCount .
+                    ", totalAccruedMonths=" . $totalAccruedMonths .
+                    "<br>";
+            }
+        }
+
+        if(0) {
+            echo "1 totalAccruedMonths=$totalAccruedMonths <br>";
+            //Prorate days:
+            //If employment date in the interval 1-15 days => add 0.5 month
+            //If employment date in the interval 15-31 days => add 1 month
+            if ($startDate) {
+                $day = $startDate->format('d');
+                if ($day > 0 && $day <= 15) {
+                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
+                }
+                if ($day > 15 && $day <= 31) {
+                    $totalAccruedMonths = $totalAccruedMonths + 1;
+                }
+            }
+
+            if ($endDate) {
+                $day = $endDate->format('d');
+                if ($day > 0 && $day <= 15) {
+                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
+                }
+                if ($day > 15 && $day <= 31) {
+                    $totalAccruedMonths = $totalAccruedMonths + 1;
+                }
+            }
+            echo "2 totalAccruedMonths=$totalAccruedMonths <br>";
         }
 
         //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
-        //exit('end of total accrued month');
+        if( $user ) {
+            //exit('end of total accrued month');
+        }
 
+        return $totalAccruedMonths;
+    }
+    public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr) {
+        $datetime = new \DateTime();
+        $startDate = $datetime->createFromFormat('d/m/Y',$startDateStr);
+        $endDate = $datetime->createFromFormat('d/m/Y',$endDateStr);
+        $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
+        echo "totalAccruedMonths=$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
         return $totalAccruedMonths;
     }
 
