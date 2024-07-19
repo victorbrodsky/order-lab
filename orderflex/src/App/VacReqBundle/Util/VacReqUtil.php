@@ -4484,16 +4484,57 @@ class VacReqUtil
     //http://www.tricksofit.com/2013/12/calculate-the-difference-between-two-dates-in-php#.V1GMSL69GgM
     public static function diffInMonths(\DateTime $date1, \DateTime $date2)
     {
+        //Calculate difference with disregard of the partial month: partial month counted as a full month
         //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
         $months = $date1->diff($date2)->m + ($date1->diff($date2)->y*12);
-        //echo "2 months=".$months."<br>";
+        //echo "diffInMonths=".$months." <= date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
         return (int)$months;
+
+        //$months = $date1->diff($date2)->m;
+        //return (int)$months;
 
         //$abs_diff = $date1->diff($date2)->format("%a"); //3
         //echo "abs_diff=".$abs_diff." days<br>";
         //$months = $date1->diff($date2)->d + ($date1->diff($date2)->y*12);
         //echo "1 months=".$months."<br>";
         //return (int)$months;
+    }
+
+    public function diffInMonths1(\DateTime $date1, \DateTime $date2)
+    {
+        //Calculate difference with disregard of the partial month: partial month counted as a full month
+        //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
+
+        //$Months = $date2->diff($date1);
+        //$howeverManyMonths = (($Months->y) * 12) + ($Months->m);
+        //return $howeverManyMonths;
+
+        $year1 = $date1->format('Y');
+        $year2 = $date2->format('Y');
+
+        $month1 = $date1->format('m');
+        $month2 = $date2->format('m');
+
+        //$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
+        $diff = ($month2 - $month1);
+        return $diff;
+    }
+    public function diffInMonths2( $date1, $date2 )
+    {
+        $begin = $date1;
+        $end = $date2;
+        $end = $end->modify( '+1 month' );
+
+        $interval = \DateInterval::createFromDateString('1 month');
+
+        $period = new \DatePeriod($begin, $interval, $end);
+        $counter = 0;
+        //foreach($period as $dt) {
+        //    $counter++;
+        //}
+        $counter = iterator_count($period);
+
+        return $counter;
     }
 
     //Use in totalVacationRemainingDays, getHeaderInfoMessages,
@@ -4549,7 +4590,7 @@ class VacReqUtil
 
         if( !$user ) {
             //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
-            return $totalAccruedMonths;
+            //return $totalAccruedMonths; //remove for testing
         }
 
         if( !$startDate || !$endDate ) {
@@ -4636,11 +4677,18 @@ class VacReqUtil
         //$academicYearStartDate = NULL;
         //$academicYearEndDate = NULL;
 
+
+//        $startDate->setTime(0, 0, 0);
+//        $endDate->setTime(0, 0, 0);
+//        $academicYearStartDate->setTime(0, 0, 0);
+//        $academicYearEndDate->setTime(0, 0, 0);
+
         $monthCount = 0;
+        $user = true;
         //check if user startDate > $academicYearStartDate
         if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
             $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
-            $totalAccruedMonths = 12 - $monthCount;
+            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
 
             //echo "monthCount=".$monthCount."<br>";
 
@@ -4670,7 +4718,7 @@ class VacReqUtil
 
             if( $user ) {
                 echo "User ended before ending academic year: " .
-                    $endDate->format('d-F-Y') . " > " .
+                    $endDate->format('d-F-Y') . " < " .
                     $academicYearEndDate->format('d-F-Y') .
                     ", monthCount=" . $monthCount .
                     ", totalAccruedMonths=" . $totalAccruedMonths .
@@ -4678,28 +4726,28 @@ class VacReqUtil
             }
         }
 
-        if(0) {
+        if(1) {
             echo "1 totalAccruedMonths=$totalAccruedMonths <br>";
             //Prorate days:
             //If employment date in the interval 1-15 days => add 0.5 month
-            //If employment date in the interval 15-31 days => add 1 month
+            //If employment date in the interval 15-31 days => add 1 full month
             if ($startDate) {
                 $day = $startDate->format('d');
                 if ($day > 0 && $day <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
+                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
                 }
                 if ($day > 15 && $day <= 31) {
-                    $totalAccruedMonths = $totalAccruedMonths + 1;
+                    //$totalAccruedMonths = $totalAccruedMonths - 1;
                 }
             }
 
             if ($endDate) {
                 $day = $endDate->format('d');
                 if ($day > 0 && $day <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
+                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
                 }
                 if ($day > 15 && $day <= 31) {
-                    $totalAccruedMonths = $totalAccruedMonths + 1;
+                    //$totalAccruedMonths = $totalAccruedMonths + 1;
                 }
             }
             echo "2 totalAccruedMonths=$totalAccruedMonths <br>";
@@ -4712,13 +4760,43 @@ class VacReqUtil
 
         return $totalAccruedMonths;
     }
-    public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr) {
+    public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr,$expectedResult=NULL) {
         $datetime = new \DateTime();
-        $startDate = $datetime->createFromFormat('d/m/Y',$startDateStr);
-        $endDate = $datetime->createFromFormat('d/m/Y',$endDateStr);
+        //$timezone = new \DateTimeZone('America/New_York');
+        //$datetime->setTimezone($timezone);
+        //$datetime->setTime(0, 0, 0);
+        $startDate = $datetime->createFromFormat('m/d/Y',$startDateStr);
+        $endDate = $datetime->createFromFormat('m/d/Y',$endDateStr);
+
+        //test 1
+        if(0) {
+            $totalAccruedMonths = $this->diffInMonths($startDate, $endDate);
+            //echo "startDate=".$startDate->format('m F Y H:i:s').", endDate=".$endDate->format('m F Y H:i:s')." => ";
+            echo $startDate->format('m F Y') . " - " . $endDate->format('m F Y') . " => ";
+            echo "totalAccruedMonths=$totalAccruedMonths <br>";
+            return $totalAccruedMonths;
+        }
+
+        //$startDate = strtotime($startDateStr);
+        //$endDate = strtotime($endDateStr);
+        echo "<br>";
+        //echo $expectedResult.": startDate=".$startDate->format('m/d/Y').", endDate=".$endDate->format('m/d/Y')."<br>";
+        echo $expectedResult.": startDate=".$startDate->format('d F Y H:i:s').", endDate=".$endDate->format('d F Y H:i:s')."<br>";
         $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
-        echo "totalAccruedMonths=$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
-        return $totalAccruedMonths;
+        echo "totalAccruedMonths===$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
+
+        $vacationAccruedDaysPerMonth = 2;
+        $totalAccruedDays = $vacationAccruedDaysPerMonth * $totalAccruedMonths;
+        echo "totalAccruedDays===$totalAccruedDays <br>";
+
+        if( $expectedResult ) {
+            if( $expectedResult == (int) $totalAccruedDays ) {
+                echo "Pass <br>";
+            } else {
+                echo "Fail <br>";
+            }
+        }
+        return $totalAccruedDays;
     }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {

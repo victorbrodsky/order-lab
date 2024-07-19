@@ -83,9 +83,15 @@ class RequestController extends OrderAbstractController
         //$endDate = new \DateTime('d/m/Y','08/12/2024');
         //$totalAccruedMonths = $vacreqUtil->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
         //echo "Exit totalAccruedMonths=$totalAccruedMonths <br>";
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/10/2024','08/12/2024'); //answer 
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
+        //'m/d/Y'
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/10/2024','08/12/2024',2); //1 day for month 7, 1 day for month 8 => 2
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','08/31/2024',4); //2 day for month 7, 2 day for month 8 => 4
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','09/01/2024',5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','09/02/2024',5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/01/2025',13); //2 day for month 7, 2 day for months 8,9,10,11,12 (10) and 1 day for month 1 => 5
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/02/2025',14);
+        //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
+        //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
         exit('111');
         
         //permitted only for users with allowCarryOver
