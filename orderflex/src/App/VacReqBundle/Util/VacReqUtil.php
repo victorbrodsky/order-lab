@@ -4616,6 +4616,8 @@ class VacReqUtil
 //        $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
 //        return $totalAccruedDays;
 //    }
+
+    //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
@@ -4633,6 +4635,7 @@ class VacReqUtil
         }
 
         $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
+        //$totalAccruedMonths = 12; //Old version without user's start/end dates
 
         //echo "monthCount=".$monthCount."<br>";
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
@@ -7740,7 +7743,8 @@ class VacReqUtil
         $data[0] = "Accrued vacation days";
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
-            $accruedDays = 24;
+            //$accruedDays = 24;
+            $accruedDays = $this->getTotalAccruedDays($subjectUser,$yearRange);
             $data[$col] = $accruedDays;
             $yearData[$yearRange]['accruedDays'] = $accruedDays;
             $col++;
