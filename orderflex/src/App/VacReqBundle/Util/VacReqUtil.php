@@ -4518,22 +4518,23 @@ class VacReqUtil
         //$date2Str = strtotime((string) $date2->format('m/d/y'));
         //$date_diff = abs(strtotime($date1Str) - strtotime($date2Str));
 
+        $interval = $date1->diff($date2);
+        $totalMonths = $interval->m + $interval->y * 12;
+
+        return array(
+            'years' => $interval->y,
+            'months' => $interval->m,   //full months
+            'days' => $interval->d,     //leftover days
+            'totalMonths' => $totalMonths, //$interval->m + $interval->y * 12
+            //'totalDays' => $totalDays
+        );
+
+        //The calc below is asuming 30 days per month which is not correct
         $timestamp1 = $date1->getTimestamp();
         $timestamp2 = $date2->getTimestamp();
 
-//        if( $date1 > $date2 ) {
-//            $diffInSeconds = $timestamp1 - $timestamp2;
-//        } else {
-//            $diffInSeconds = $timestamp2 - $timestamp1;
-//        }
         $diffInSeconds = abs($timestamp1 - $timestamp2);
 
-//        $year1 = date('Y', $timestamp1);
-//        $year2 = date('Y', $timestamp2);
-//        $month1 = date('m', $timestamp1);
-//        $month2 = date('m', $timestamp2);
-//        $diffMonths = (($year2 - $year1) * 12) + ($month2 - $month1);
-//        echo "diffMonths: $diffMonths <br>";
 
         // Calculate the number of years in the difference
         $years = floor($diffInSeconds / (365*60*60*24));
@@ -4692,22 +4693,9 @@ class VacReqUtil
             $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
         }
 
-        //$academicYearStartDateStr = '2024-07-01';
-        //$academicYearEndDateStr = '2025-06-30';
-        //echo "academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
-        //return $totalAccruedMonths;
-
         //convert $academicYearStartDateStr to $academicYearStartDate
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
         $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
-        //$academicYearStartDate = NULL;
-        //$academicYearEndDate = NULL;
-
-
-//        $startDate->setTime(0, 0, 0);
-//        $endDate->setTime(0, 0, 0);
-//        $academicYearStartDate->setTime(0, 0, 0);
-//        $academicYearEndDate->setTime(0, 0, 0);
 
         //$monthCount = 0;
         $user = true;
@@ -4843,6 +4831,10 @@ class VacReqUtil
             $totalAccruedMonths = 12;
         }
 
+        if( $totalAccruedMonths === NULL ) {
+            echo "Case 0: exception => 12 month <br>";
+            $totalAccruedMonths = 12;
+        }
 
 
         //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
@@ -5029,6 +5021,20 @@ class VacReqUtil
 
         return $totalAccruedMonths;
     }
+    
+    public function testAccruedDays() {
+        $yearRangeStr = '2024-2025';
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/22/2024', '08/25/2024', 3); //1 day for month 7, 2 days for month 8 => 3
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/01/2034', 24); //12 month * 2 = 24. July-August - next year => not counted
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/10/2024', '08/12/2024', 3); //2 day for month 7, 1 day for month 8 => 3
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/01/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8, 1 day for month 9 => 5
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
+        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '01/01/2025', 12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
+        exit('EOF testAccruedDays');
+    }
     public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr,$expectedResult=NULL) {
         $datetime = new \DateTime();
         //$timezone = new \DateTimeZone('America/New_York');
@@ -5037,20 +5043,23 @@ class VacReqUtil
         $startDate = $datetime->createFromFormat('m/d/Y',$startDateStr);
         $endDate = $datetime->createFromFormat('m/d/Y',$endDateStr);
         //$startDate = $datetime->createFromFormat('m/d/Y H:i:s',$startDateStr." 00:00:00");
-        //$endDate = $datetime->createFromFormat('m/d/Y H:i:s',$endDateStr." 00:00:00");
+        //$endDate = $datetime->createFromFormat('m/d/Y H:i:s',$endDateStr." 23:59:59");
 
-        //test 1
+        //test 1 diffBetweenTwoDates
         if(0) {
             echo "<br>";
             $diffBetweenTwoDates = $this->diffBetweenTwoDates($startDate, $endDate);
             dump($diffBetweenTwoDates);
             $totalAccruedMonths = $diffBetweenTwoDates['totalMonths'];
+            $months = $diffBetweenTwoDates['months'];
+            $days = $diffBetweenTwoDates['days'];
             //echo "startDate=".$startDate->format('m F Y H:i:s').", endDate=".$endDate->format('m F Y H:i:s')." => ";
             echo $startDate->format('d F Y') . " - " . $endDate->format('d F Y') . " => ";
-            echo "totalAccruedMonths=$totalAccruedMonths <br>";
-            return $totalAccruedMonths;
+            echo "totalAccruedMonths=$totalAccruedMonths, months=$months, days=$days <br>";
+            return $months;
         }
 
+        //Test getTotalAccruedMonths
         //$startDate = strtotime($startDateStr);
         //$endDate = strtotime($endDateStr);
         echo "<br>";
