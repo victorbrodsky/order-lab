@@ -4513,7 +4513,7 @@ class VacReqUtil
 //        $date2->setTime(24,60,60);
 
         //Calculate difference with disregard of the partial month: partial month counted as a full month
-        echo "diffBetweenTwoDates: date1=".$date1->format('d F Y H:i:s').", date2=".$date2->format('d F Y H:i:s')."<br>";
+        //echo "diffBetweenTwoDates: date1=".$date1->format('d F Y H:i:s').", date2=".$date2->format('d F Y H:i:s')."<br>";
         //$date1Str = strtotime((string) $date1->format('m/d/y'));
         //$date2Str = strtotime((string) $date2->format('m/d/y'));
         //$date_diff = abs(strtotime($date1Str) - strtotime($date2Str));
@@ -4642,23 +4642,25 @@ class VacReqUtil
     //$yearRange=2024-2025
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
-    public function getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL ) {
+    public function getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE ) {
         //echo "<br>get Total Accrued Months yearRangeStr=[$yearRangeStr]<br>";
         $totalAccruedMonths = NULL;
         //return $totalAccruedMonths;
 
-        if( !$user ) {
-            //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
-            //return $totalAccruedMonths; //remove for testing
-        }
-
-        if( !$startDate || !$endDate ) {
-            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-            if( !$startDate ) {
-                $startDate = $userStartEndDates['startDate'];
+        if( $testing === FALSE ) {
+            if (!$user) {
+                //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
+                return $totalAccruedMonths; //remove for testing
             }
-            if( !$endDate ) {
-                $endDate = $userStartEndDates['endDate'];
+
+            if (!$startDate || !$endDate) {
+                $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+                if (!$startDate) {
+                    $startDate = $userStartEndDates['startDate'];
+                }
+                if (!$endDate) {
+                    $endDate = $userStartEndDates['endDate'];
+                }
             }
         }
         //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
@@ -4697,8 +4699,6 @@ class VacReqUtil
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
         $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
 
-        //$monthCount = 0;
-        $user = true;
 
         //S - start employment date
         //E - end employment date
@@ -4717,7 +4717,7 @@ class VacReqUtil
         //Case 5: ------1July2024--------------30June2025----S---E----
         //interval: 0 months
 
-        if( $startDate || $endDate ) {
+        if( $startDate && $endDate ) {
             //Common cases 1,2,3: S and/or E inside 1July2024 and 30June2025
             //Case 1: ------1July2024-----S-----E----30June2025-----------
             //interval: between S and E
@@ -4725,43 +4725,10 @@ class VacReqUtil
                 $startDate > $academicYearStartDate && $startDate < $academicYearEndDate
                 && $endDate > $academicYearStartDate && $endDate < $academicYearEndDate
             ) {
-                echo "Case 1: ------1July2024-----S-----E----30June2025----------- <br>";
+                if($testing) {
+                    echo "Case 1: ------1July2024-----S-----E----30June2025----------- <br>";
+                }
                 $diffDates = $this->diffBetweenTwoDates($startDate, $endDate);
-                $totalAccruedMonths = $diffDates['totalMonths'];
-                $days = $diffDates['days'];
-                if ($days > 0 && $days <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
-                }
-                if ($days > 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 1;
-                }
-            }
-
-            //Case 1a: ------1July2024-----S------30June2025-----------
-            //interval: between S and 30June2025
-            if(
-                $totalAccruedMonths === NULL
-                && $startDate > $academicYearStartDate && $startDate < $academicYearEndDate
-            ) {
-                echo "Case 1a: ------1July2024-----S------30June2025----------- <br>";
-                $diffDates = $this->diffBetweenTwoDates($startDate, $academicYearEndDate);
-                $totalAccruedMonths = $diffDates['totalMonths'];
-                $days = $diffDates['days'];
-                if ($days > 0 && $days <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 0.5;
-                }
-                if ($days > 15) {
-                    $totalAccruedMonths = $totalAccruedMonths + 1;
-                }
-            }
-
-            //Case 1b: ------1July2024-----E------30June2025-----------
-            //interval: between S and 30June2025
-            if( $totalAccruedMonths === NULL
-                && $endDate > $academicYearStartDate && $endDate < $academicYearEndDate
-            ) {
-                echo "Case 1b: ------1July2024-----E------30June2025----------- <br>";
-                $diffDates = $this->diffBetweenTwoDates($academicYearStartDate, $endDate);
                 $totalAccruedMonths = $diffDates['totalMonths'];
                 $days = $diffDates['days'];
                 if ($days > 0 && $days <= 15) {
@@ -4778,7 +4745,9 @@ class VacReqUtil
                 && $startDate < $academicYearStartDate
                 && $endDate > $academicYearStartDate && $endDate < $academicYearEndDate
             ) {
-                echo "Case 2: ---S---1July2024-------E-------30June2025----------- <br>";
+                if($testing) {
+                    echo "Case 2: ---S---1July2024-------E-------30June2025----------- <br>";
+                }
                 $diffDates = $this->diffBetweenTwoDates($academicYearStartDate, $endDate);
                 $totalAccruedMonths = $diffDates['totalMonths'];
                 $days = $diffDates['days'];
@@ -4796,7 +4765,9 @@ class VacReqUtil
                 && $startDate > $academicYearStartDate && $startDate < $academicYearEndDate
                 && $endDate > $academicYearEndDate
             ) {
-                echo "Case 3: ------1July2024-----S---------30June2025------E----- <br>";
+                if($testing) {
+                    echo "Case 3: ------1July2024-----S---------30June2025------E----- <br>";
+                }
                 $diffDates = $this->diffBetweenTwoDates($startDate, $academicYearEndDate);
                 $totalAccruedMonths = $diffDates['totalMonths'];
                 $days = $diffDates['days'];
@@ -4813,7 +4784,9 @@ class VacReqUtil
             if( $totalAccruedMonths === NULL
                 && $startDate < $academicYearStartDate && $endDate < $academicYearStartDate
             ) {
-                echo "Case 4: --S--E----1July2024--------------30June2025----------- <br>";
+                if($testing) {
+                    echo "Case 4: --S--E----1July2024--------------30June2025----------- <br>";
+                }
                 $totalAccruedMonths = 0;
             }
 
@@ -4822,36 +4795,81 @@ class VacReqUtil
             if( $totalAccruedMonths === NULL
                 && $startDate > $academicYearEndDate && $endDate > $academicYearEndDate
             ) {
-                echo "Case 5: ------1July2024--------------30June2025----S---E---- <br>";
+                if($testing) {
+                    echo "Case 5: ------1July2024--------------30June2025----S---E---- <br>";
+                }
                 $totalAccruedMonths = 0;
             }
-        } else {
-            //$startDate && $endDate are not set => 12 month
-            echo "Case 0: startDate && endDate are not set => 12 month <br>";
-            $totalAccruedMonths = 12;
         }
+
+        //Case 1a: ------1July2024-----S------30June2025-----------
+        //interval: between S and 30June2025
+        if(
+            $totalAccruedMonths === NULL
+            && $startDate
+            && $startDate > $academicYearStartDate && $startDate < $academicYearEndDate
+        ) {
+            if($testing) {
+                echo "Case 1a: ------1July2024-----S------30June2025----------- <br>";
+            }
+            $diffDates = $this->diffBetweenTwoDates($startDate, $academicYearEndDate);
+            $totalAccruedMonths = $diffDates['totalMonths'];
+            $days = $diffDates['days'];
+            if ($days > 0 && $days <= 15) {
+                $totalAccruedMonths = $totalAccruedMonths + 0.5;
+            }
+            if ($days > 15) {
+                $totalAccruedMonths = $totalAccruedMonths + 1;
+            }
+        }
+
+        //Case 1b: ------1July2024-----E------30June2025-----------
+        //interval: between S and 30June2025
+        if( $totalAccruedMonths === NULL
+            && $endDate
+            && $endDate > $academicYearStartDate && $endDate < $academicYearEndDate
+        ) {
+            if($testing) {
+                echo "Case 1b: ------1July2024-----E------30June2025----------- <br>";
+            }
+            $diffDates = $this->diffBetweenTwoDates($academicYearStartDate, $endDate);
+            $totalAccruedMonths = $diffDates['totalMonths'];
+            $days = $diffDates['days'];
+            if ($days > 0 && $days <= 15) {
+                $totalAccruedMonths = $totalAccruedMonths + 0.5;
+            }
+            if ($days > 15) {
+                $totalAccruedMonths = $totalAccruedMonths + 1;
+            }
+        }
+
+//        else {
+//            //$startDate && $endDate are not set => 12 month
+//            echo "Case 0: startDate && endDate are not set => 12 month <br>";
+//            $totalAccruedMonths = 12;
+//        }
 
         if( $totalAccruedMonths === NULL ) {
-            echo "Case 0: exception => 12 month <br>";
+            if($testing) {
+                echo "Case 0: exception => 12 month <br>";
+            }
             $totalAccruedMonths = 12;
         }
 
-
-        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
-        if( $user ) {
-            //exit('end of total accrued month');
-        }
+        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.
+        //", monthCount=".$monthCount.
+        //": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
 
         return $totalAccruedMonths;
     }
-    public function getTotalAccruedMonths_ORIG( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL ) {
+    public function getTotalAccruedMonths_ORIG( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE ) {
         //echo "<br>get Total Accrued Months yearRangeStr=[$yearRangeStr]<br>";
         $totalAccruedMonths = 12;
         //return $totalAccruedMonths;
 
         if( !$user ) {
             //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
-            //return $totalAccruedMonths; //remove for testing
+            return $totalAccruedMonths; //remove for testing
         }
 
         if( !$startDate || !$endDate ) {
@@ -5065,7 +5083,7 @@ class VacReqUtil
         echo "<br>";
         //echo $expectedResult.": startDate=".$startDate->format('m/d/Y').", endDate=".$endDate->format('m/d/Y')."<br>";
         echo $expectedResult.": startDate=".$startDate->format('d F Y H:i:s').", endDate=".$endDate->format('d F Y H:i:s')."<br>";
-        $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
+        $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate,$testing=TRUE);
         echo "totalAccruedMonths===$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
 
         $vacationAccruedDaysPerMonth = 2;
@@ -5329,7 +5347,33 @@ class VacReqUtil
 //            $remainingDaysString = "Based on the assumed " . $totalAccruedDays . " accrued days per year and on approved carry over " .
 //                "requests documented in this system," .
 //                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
-            $remainingDaysString = "Based on your start/end employment dates, you have " . $totalAccruedDays .
+
+            $startDateStr = NULL;
+            $endDateStr = NULL;
+            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+            $startDate = $userStartEndDates['startDate'];
+            if( $startDate ) {
+                $startDateStr = $startDate->format('m/d/Y');
+            }
+            $endDate = $userStartEndDates['endDate'];
+            if( $endDate ) {
+                $endDateStr = $endDate->format('m/d/Y');
+            }
+            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
+            if( $startDateStr && $endDateStr ) {
+                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
+            }
+            elseif( $startDateStr  ) {
+                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
+            }
+            elseif( $endDateStr  ) {
+                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
+            }
+
+            $remainingDaysString =
+                //"Based on your start/end employment dates ($userEmplDatesStr)".
+                $totalAccruedDaysStr .
+                ", you have " . $totalAccruedDays .
                 " accrued days per year and on approved carry over " .
                 "requests documented in this system," .
                 " you have " . $remainingDaysRes['numberOfDays'] .

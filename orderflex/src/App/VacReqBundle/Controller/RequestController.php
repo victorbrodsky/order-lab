@@ -79,27 +79,6 @@ class RequestController extends OrderAbstractController
 
         //Testing accrued days
         if(0) {
-//            $yearRangeStr = '2024-2025';
-//            //$startDate = new \DateTime('d/m/Y','07/10/2024');
-//            //$endDate = new \DateTime('d/m/Y','08/12/2024');
-//            //$totalAccruedMonths = $vacreqUtil->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
-//            //echo "Exit totalAccruedMonths=$totalAccruedMonths <br>";
-//            //'m/d/Y'
-////        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/25/2024','08/31/2025',4);
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/22/2024', '08/25/2024', 3); //1 day for month 7, 2 days for month 8 => 3
-////        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/25/2024','08/25/2024',4);
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/01/2034', 24); //12 month * 2 = 24. July-August - next year => not counted
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/10/2024', '08/12/2024', 3); //2 day for month 7, 1 day for month 8 => 3
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/01/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8, 1 day for month 9 => 5
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
-//            $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '01/01/2025', 12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
-////        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/02/2025',14);
-//            //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
-//            //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
-//            exit('111');
             $vacreqUtil->testAccruedDays();
         }
         
