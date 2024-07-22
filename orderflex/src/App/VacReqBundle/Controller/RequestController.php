@@ -84,12 +84,17 @@ class RequestController extends OrderAbstractController
         //$totalAccruedMonths = $vacreqUtil->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate);
         //echo "Exit totalAccruedMonths=$totalAccruedMonths <br>";
         //'m/d/Y'
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/10/2024','08/12/2024',2); //1 day for month 7, 1 day for month 8 => 2
+//        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/25/2024','08/31/2025',4);
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/22/2024','08/25/2024',3); //1 day for month 7, 2 days for month 8 => 3
+//        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/25/2024','08/25/2024',4);
+//        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/26/2024','08/25/2034',4);
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/10/2024','08/12/2024',3); //2 day for month 7, 1 day for month 8 => 3
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'06/30/2024','08/31/2024',44); //2 day for month 7, 2 day for month 8 => 4
         $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','08/31/2024',4); //2 day for month 7, 2 day for month 8 => 4
         $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','09/01/2024',5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
         $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','09/02/2024',5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/01/2025',13); //2 day for month 7, 2 day for months 8,9,10,11,12 (10) and 1 day for month 1 => 5
-        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/02/2025',14);
+        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/01/2025',12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
+//        $vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/01/2024','01/02/2025',14);
         //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
         //$vacreqUtil->getTestTotalAccruedMonths($yearRangeStr,'07/16/2024','08/12/2024');
         exit('111');
