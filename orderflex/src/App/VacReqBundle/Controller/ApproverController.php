@@ -1877,6 +1877,7 @@ class ApproverController extends OrderAbstractController
             }
             $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
             $totalAllocatedDays = $vacreqUtil->getTotalAccruedDaysByGroup($approvalGroupType);
+            //echo "mySingleGroupAction totalAllocatedDays=$totalAllocatedDays <br>";
         }
 
         //get accrued days by institution

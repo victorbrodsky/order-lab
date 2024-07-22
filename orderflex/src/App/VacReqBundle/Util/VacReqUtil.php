@@ -1025,13 +1025,13 @@ class VacReqUtil
             $yearRange = $this->getCurrentAcademicYearRange();
         }
 
-        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
+        //echo "1totalAllocatedDays=$totalAllocatedDays <br>";
         if( !$totalAllocatedDays ) {
             $totalAllocatedDays = $this->getTotalAccruedDays($user,$yearRange); //$yearRange year
             //$totalAllocatedDays = $this->getTotalAccruedDaysByGroup($approvalGroupType);
         }
         //$totalAllocatedDays = 20;
-        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
+        //echo "2totalAllocatedDays=$totalAllocatedDays <br>";
 
         $vacationAccurate = true;
         if( !$vacationDays ) {
@@ -4448,8 +4448,16 @@ class VacReqUtil
 
         //get month difference between now and $startAcademicYearDate
         $nowDate = new \DateTime();
-        $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
-        //$monthCount = $monthCount - 1;
+        //$monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
+        $diffDates = $this->diffBetweenTwoDates($startAcademicYearDate, $nowDate);
+        $totalAccruedMonths = $diffDates['totalMonths'];
+        $days = $diffDates['days'];
+        if ($days > 0 && $days <= 15) {
+            $monthCount = $totalAccruedMonths + 0.5;
+        }
+        if ($days > 15) {
+            $monthCount = $totalAccruedMonths + 1;
+        }
 
         //echo "monthCount=".$monthCount."<br>";
         $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
@@ -4476,35 +4484,24 @@ class VacReqUtil
 //        return $months;
 //    }
 
+    //Not used: replaced by diffBetweenTwoDates
     //Used directly by getAccruedDaysUpToThisMonthByDaysPerMonth, getTotalAccruedMonths
     //if days in month 1-15 => 1 day
     //if days ib month 16-30 => 2 days
     //who started 10/3/23, we should accrue two days for the month of October 2023.
     //who started July 15th (mid-month), we should account for just 1 day of vacation time accrued this month
     //http://www.tricksofit.com/2013/12/calculate-the-difference-between-two-dates-in-php#.V1GMSL69GgM
-    public static function diffInMonths_ORIG(\DateTime $date1, \DateTime $date2)
+    public static function diffInMonths(\DateTime $date1, \DateTime $date2)
     {
         //Calculate difference with disregard of the partial month: partial month counted as a full month
         //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
         $months = $date1->diff($date2)->m + ($date1->diff($date2)->y*12);
-
-        $days = $date1->diff($date2)->d + ($date1->diff($date2)->y*12);
-        $months = $days/30;
-        echo "days=$days, diffInMonths=".$months." <= date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
+        //echo "diffInMonths=".$months." <= date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
         return (int)$months;
-
-        //$months = $date1->diff($date2)->m;
-        //return (int)$months;
-
-        //$abs_diff = $date1->diff($date2)->format("%a"); //3
-        //echo "abs_diff=".$abs_diff." days<br>";
-        //$months = $date1->diff($date2)->d + ($date1->diff($date2)->y*12);
-        //echo "1 months=".$months."<br>";
-        //return (int)$months;
     }
 
     //https://stackoverflow.com/questions/1519228/get-interval-seconds-between-two-datetime-in-php
-    public static function diffBetweenTwoDates(\DateTime $date1, \DateTime $date2)
+    public static function diffBetweenTwoDates(\DateTime $date1=NULL, \DateTime $date2=NULL)
     {
 //        $timezone = new \DateTimeZone('UTC');
 //        $date1->setTimezone($timezone);
@@ -4517,6 +4514,17 @@ class VacReqUtil
         //$date1Str = strtotime((string) $date1->format('m/d/y'));
         //$date2Str = strtotime((string) $date2->format('m/d/y'));
         //$date_diff = abs(strtotime($date1Str) - strtotime($date2Str));
+
+        if( !$date1 || !$date2 ) {
+            //exit("date1 date2 null");
+            return array(
+                'years' => 0,
+                'months' => 0,   //full months
+                'days' => 0,     //leftover days
+                'totalMonths' => 0,
+                //'totalDays' => $totalDays
+            );
+        }
 
         $interval = $date1->diff($date2);
         $totalMonths = $interval->m + $interval->y * 12;
@@ -4557,42 +4565,42 @@ class VacReqUtil
         );
     }
 
-    public function diffInMonths1(\DateTime $date1, \DateTime $date2)
-    {
-        //Calculate difference with disregard of the partial month: partial month counted as a full month
-        //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
-
-        //$Months = $date2->diff($date1);
-        //$howeverManyMonths = (($Months->y) * 12) + ($Months->m);
-        //return $howeverManyMonths;
-
-        $year1 = $date1->format('Y');
-        $year2 = $date2->format('Y');
-
-        $month1 = $date1->format('m');
-        $month2 = $date2->format('m');
-
-        //$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
-        $diff = ($month2 - $month1);
-        return $diff;
-    }
-    public function diffInMonths2( $date1, $date2 )
-    {
-        $begin = $date1;
-        $end = $date2;
-        $end = $end->modify( '+1 month' );
-
-        $interval = \DateInterval::createFromDateString('1 month');
-
-        $period = new \DatePeriod($begin, $interval, $end);
-        $counter = 0;
-        //foreach($period as $dt) {
-        //    $counter++;
-        //}
-        $counter = iterator_count($period);
-
-        return $counter;
-    }
+//    public function diffInMonths1(\DateTime $date1, \DateTime $date2)
+//    {
+//        //Calculate difference with disregard of the partial month: partial month counted as a full month
+//        //echo "date1=".$date1->format('d-m-Y H:i:s').", date2=".$date2->format('d-m-Y H:i:s')."<br>";
+//
+//        //$Months = $date2->diff($date1);
+//        //$howeverManyMonths = (($Months->y) * 12) + ($Months->m);
+//        //return $howeverManyMonths;
+//
+//        $year1 = $date1->format('Y');
+//        $year2 = $date2->format('Y');
+//
+//        $month1 = $date1->format('m');
+//        $month2 = $date2->format('m');
+//
+//        //$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
+//        $diff = ($month2 - $month1);
+//        return $diff;
+//    }
+//    public function diffInMonths2( $date1, $date2 )
+//    {
+//        $begin = $date1;
+//        $end = $date2;
+//        $end = $end->modify( '+1 month' );
+//
+//        $interval = \DateInterval::createFromDateString('1 month');
+//
+//        $period = new \DatePeriod($begin, $interval, $end);
+//        $counter = 0;
+//        //foreach($period as $dt) {
+//        //    $counter++;
+//        //}
+//        $counter = iterator_count($period);
+//
+//        return $counter;
+//    }
 
     //Use in totalVacationRemainingDays, getHeaderInfoMessages,
     // getCurrentYearUnusedDays, getPreviousYearUnusedDays,
@@ -4674,7 +4682,7 @@ class VacReqUtil
         //Use the class global academicYearStartDateStr and academicYearEndDateStr
         // to prevent modification on the repeating DB calls. As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
         //TODO: why end year date is changed?
-        if(1) {
+        if(0) {
             if (!$this->academicYearStartDateStr || !$this->academicYearEndDateStr) {
                 $academicYearStartDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'Start');
                 $academicYearEndDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'End');
@@ -4694,6 +4702,7 @@ class VacReqUtil
             $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
             $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
         }
+        //echo "academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
 
         //convert $academicYearStartDateStr to $academicYearStartDate
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
@@ -4862,185 +4871,188 @@ class VacReqUtil
 
         return $totalAccruedMonths;
     }
-    public function getTotalAccruedMonths_ORIG( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE ) {
-        //echo "<br>get Total Accrued Months yearRangeStr=[$yearRangeStr]<br>";
-        $totalAccruedMonths = 12;
-        //return $totalAccruedMonths;
-
-        if( !$user ) {
-            //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
-            return $totalAccruedMonths; //remove for testing
-        }
-
-        if( !$startDate || !$endDate ) {
-            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-            if( !$startDate ) {
-                $startDate = $userStartEndDates['startDate'];
-            }
-            if( !$endDate ) {
-                $endDate = $userStartEndDates['endDate'];
-            }
-        }
-        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
-
-//        $startDateStr = null;
-//        if( $startDate ) {
-//            $startDateStr = $startDate->format('d/m/Y');
+//    public function getTotalAccruedMonths_ORIG( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE ) {
+//        //echo "<br>get Total Accrued Months yearRangeStr=[$yearRangeStr]<br>";
+//        $totalAccruedMonths = 12;
+//        //return $totalAccruedMonths;
+//
+//        if( !$user ) {
+//            //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
+//            return $totalAccruedMonths; //remove for testing
 //        }
-//        $endDateStr = null;
-//        if( $endDate ) {
-//            $endDateStr = $endDate->format('d/m/Y');
+//
+//        if( !$startDate || !$endDate ) {
+//            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+//            if( !$startDate ) {
+//                $startDate = $userStartEndDates['startDate'];
+//            }
+//            if( !$endDate ) {
+//                $endDate = $userStartEndDates['endDate'];
+//            }
 //        }
-        //echo "startDateStr=".$startDateStr.", endDateStr=".$endDateStr."<br>";
-        //startDate=01/07/2020, endDate=01/07/2021
-        //$yearRange = 2024-2025
-
-        //years
-        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
-        //$previousYear = $yearRangeArr[0];
-        $currentYear = $yearRangeArr[1];
-        //echo "previousYear=$previousYear, currentYear=$currentYear <br>";
-
-        //Testing
-        if(0) {
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
-            //exit('1111');
-        }
-
-        //Use the class global academicYearStartDateStr and academicYearEndDateStr
-        // to prevent modification on the repeating DB calls. As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
-        //TODO: why end year date is changed?
-        if(1) {
-            if (!$this->academicYearStartDateStr || !$this->academicYearEndDateStr) {
-                $academicYearStartDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-                $academicYearEndDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'End');
-//            $academicYearEndDateArray = $this->getSiteSettingsStartEndAcademicDates();
-//            $academicYearStartDateStrThis = $academicYearEndDateArray['academicYearStart'];
-//            $academicYearEndDateStrThis = $academicYearEndDateArray['academicYearEnd'];
-//            $academicYearStartDateStrThis = ((int)$currentYear - 1)."-".$academicYearStartDateStrThis;
-//            $academicYearEndDateStrThis = $currentYear."-".$academicYearEndDateStrThis;
-                $this->academicYearStartDateStr = $academicYearStartDateStrThis;
-                $this->academicYearEndDateStr = $academicYearEndDateStrThis;
-                //echo "academicYearStartDateStr=".$this->academicYearStartDateStr.", academicYearEndDateStr=".$this->academicYearEndDateStr."<br>";
-            }
-
-            $academicYearStartDateStr = $this->academicYearStartDateStr;
-            $academicYearEndDateStr = $this->academicYearEndDateStr;
-        } else {
-            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
-            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
-        }
-
-        //$academicYearStartDateStr = '2024-07-01';
-        //$academicYearEndDateStr = '2025-06-30';
-        //echo "academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
-        //return $totalAccruedMonths;
-
-        //convert $academicYearStartDateStr to $academicYearStartDate
-        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
-        $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
-        //$academicYearStartDate = NULL;
-        //$academicYearEndDate = NULL;
-
-
-//        $startDate->setTime(0, 0, 0);
-//        $endDate->setTime(0, 0, 0);
-//        $academicYearStartDate->setTime(0, 0, 0);
-//        $academicYearEndDate->setTime(0, 0, 0);
-
-        $monthCount = 0;
-        $user = true;
-        //check if user startDate > $academicYearStartDate
-        if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
-            $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
-            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
-
-            //echo "monthCount=".$monthCount."<br>";
-
-            if( $user ) {
-                //Use prorated days for intervals: 1-15=>1 day, 16-31=>2 days
-                echo "User started after beginning academic year: " .
-                    $startDate->format('d-F-Y') . " > " .
-                    $academicYearStartDate->format('d-F-Y') .
-                    ", monthCount=" . $monthCount .
-                    ", totalAccruedMonths=" . $totalAccruedMonths .
-                    "<br>";
-            }
-        }
-//        if( $endDate && $academicYearStartDate && $endDate > $academicYearStartDate ) {
-//            $monthCount = $this->diffInMonths($endDate, $academicYearStartDate); //12-$monthCount=total vacation days for this year
-//            $totalAccruedMonths = $totalAccruedMonths + $monthCount;
-//            echo "User ended before ending academic year: ".
-//                $endDate->format('d-F-Y')." > ".
-//                $academicYearStartDate->format('d-F-Y').
-//                ", monthCount=".$monthCount.
-//                ", totalAccruedMonths=".$totalAccruedMonths.
-//                "<br>";
+//        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+//
+////        $startDateStr = null;
+////        if( $startDate ) {
+////            $startDateStr = $startDate->format('d/m/Y');
+////        }
+////        $endDateStr = null;
+////        if( $endDate ) {
+////            $endDateStr = $endDate->format('d/m/Y');
+////        }
+//        //echo "startDateStr=".$startDateStr.", endDateStr=".$endDateStr."<br>";
+//        //startDate=01/07/2020, endDate=01/07/2021
+//        //$yearRange = 2024-2025
+//
+//        //years
+//        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
+//        //$previousYear = $yearRangeArr[0];
+//        $currentYear = $yearRangeArr[1];
+//        //echo "previousYear=$previousYear, currentYear=$currentYear <br>";
+//
+//        //Testing
+//        if(0) {
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//            echo "###### academicYearStartDateStr=" . $academicYearStartDateStr . ", academicYearEndDateStr=" . $academicYearEndDateStr . "<br>";
+//            //exit('1111');
 //        }
-        if( $endDate && $academicYearEndDate && $endDate < $academicYearEndDate ) {
-            $monthCount = $this->diffInMonths($academicYearEndDate, $endDate); //12-$monthCount=total vacation days for this year
-            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
-
-            if( $user ) {
-                echo "User ended before ending academic year: " .
-                    $endDate->format('d-F-Y') . " < " .
-                    $academicYearEndDate->format('d-F-Y') .
-                    ", monthCount=" . $monthCount .
-                    ", totalAccruedMonths=" . $totalAccruedMonths .
-                    "<br>";
-            }
-        }
-
-        if(1) {
-            echo "1 totalAccruedMonths=$totalAccruedMonths <br>";
-            //Prorate days:
-            //If employment date in the interval 1-15 days => add 0.5 month
-            //If employment date in the interval 15-31 days => add 1 full month
-            if ($startDate) {
-                $day = $startDate->format('d');
-                if ($day > 0 && $day <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
-                }
-                if ($day > 15 && $day <= 31) {
-                    //$totalAccruedMonths = $totalAccruedMonths - 1;
-                }
-            }
-
-            if ($endDate) {
-                $day = $endDate->format('d');
-                if ($day > 0 && $day <= 15) {
-                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
-                }
-                if ($day > 15 && $day <= 31) {
-                    //$totalAccruedMonths = $totalAccruedMonths + 1;
-                }
-            }
-            echo "2 totalAccruedMonths=$totalAccruedMonths <br>";
-        }
-
-        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
-        if( $user ) {
-            //exit('end of total accrued month');
-        }
-
-        return $totalAccruedMonths;
-    }
+//
+//        //Use the class global academicYearStartDateStr and academicYearEndDateStr
+//        // to prevent modification on the repeating DB calls. As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
+//        //TODO: why end year date is changed?
+//        if(1) {
+//            if (!$this->academicYearStartDateStr || !$this->academicYearEndDateStr) {
+//                $academicYearStartDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//                $academicYearEndDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'End');
+////            $academicYearEndDateArray = $this->getSiteSettingsStartEndAcademicDates();
+////            $academicYearStartDateStrThis = $academicYearEndDateArray['academicYearStart'];
+////            $academicYearEndDateStrThis = $academicYearEndDateArray['academicYearEnd'];
+////            $academicYearStartDateStrThis = ((int)$currentYear - 1)."-".$academicYearStartDateStrThis;
+////            $academicYearEndDateStrThis = $currentYear."-".$academicYearEndDateStrThis;
+//                $this->academicYearStartDateStr = $academicYearStartDateStrThis;
+//                $this->academicYearEndDateStr = $academicYearEndDateStrThis;
+//                //echo "academicYearStartDateStr=".$this->academicYearStartDateStr.", academicYearEndDateStr=".$this->academicYearEndDateStr."<br>";
+//            }
+//
+//            $academicYearStartDateStr = $this->academicYearStartDateStr;
+//            $academicYearEndDateStr = $this->academicYearEndDateStr;
+//        } else {
+//            $academicYearStartDateStr = $this->getEdgeAcademicYearDate($currentYear, 'Start');
+//            $academicYearEndDateStr = $this->getEdgeAcademicYearDate($currentYear, 'End');
+//        }
+//
+//        //$academicYearStartDateStr = '2024-07-01';
+//        //$academicYearEndDateStr = '2025-06-30';
+//        //echo "academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+//        //return $totalAccruedMonths;
+//
+//        //convert $academicYearStartDateStr to $academicYearStartDate
+//        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
+//        $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
+//        //$academicYearStartDate = NULL;
+//        //$academicYearEndDate = NULL;
+//
+//
+////        $startDate->setTime(0, 0, 0);
+////        $endDate->setTime(0, 0, 0);
+////        $academicYearStartDate->setTime(0, 0, 0);
+////        $academicYearEndDate->setTime(0, 0, 0);
+//
+//        $monthCount = 0;
+//        $user = true;
+//        //check if user startDate > $academicYearStartDate
+//        if( $startDate && $academicYearStartDate && $startDate > $academicYearStartDate ) {
+//            $monthCount = $this->diffInMonths($startDate, $academicYearStartDate); //accrued for this year
+//            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
+//
+//            //echo "monthCount=".$monthCount."<br>";
+//
+//            if( $user ) {
+//                //Use prorated days for intervals: 1-15=>1 day, 16-31=>2 days
+//                echo "User started after beginning academic year: " .
+//                    $startDate->format('d-F-Y') . " > " .
+//                    $academicYearStartDate->format('d-F-Y') .
+//                    ", monthCount=" . $monthCount .
+//                    ", totalAccruedMonths=" . $totalAccruedMonths .
+//                    "<br>";
+//            }
+//        }
+////        if( $endDate && $academicYearStartDate && $endDate > $academicYearStartDate ) {
+////            $monthCount = $this->diffInMonths($endDate, $academicYearStartDate); //12-$monthCount=total vacation days for this year
+////            $totalAccruedMonths = $totalAccruedMonths + $monthCount;
+////            echo "User ended before ending academic year: ".
+////                $endDate->format('d-F-Y')." > ".
+////                $academicYearStartDate->format('d-F-Y').
+////                ", monthCount=".$monthCount.
+////                ", totalAccruedMonths=".$totalAccruedMonths.
+////                "<br>";
+////        }
+//        if( $endDate && $academicYearEndDate && $endDate < $academicYearEndDate ) {
+//            $monthCount = $this->diffInMonths($academicYearEndDate, $endDate); //12-$monthCount=total vacation days for this year
+//            $totalAccruedMonths = $totalAccruedMonths - $monthCount;
+//
+//            if( $user ) {
+//                echo "User ended before ending academic year: " .
+//                    $endDate->format('d-F-Y') . " < " .
+//                    $academicYearEndDate->format('d-F-Y') .
+//                    ", monthCount=" . $monthCount .
+//                    ", totalAccruedMonths=" . $totalAccruedMonths .
+//                    "<br>";
+//            }
+//        }
+//
+//        if(1) {
+//            echo "1 totalAccruedMonths=$totalAccruedMonths <br>";
+//            //Prorate days:
+//            //If employment date in the interval 1-15 days => add 0.5 month
+//            //If employment date in the interval 15-31 days => add 1 full month
+//            if ($startDate) {
+//                $day = $startDate->format('d');
+//                if ($day > 0 && $day <= 15) {
+//                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
+//                }
+//                if ($day > 15 && $day <= 31) {
+//                    //$totalAccruedMonths = $totalAccruedMonths - 1;
+//                }
+//            }
+//
+//            if ($endDate) {
+//                $day = $endDate->format('d');
+//                if ($day > 0 && $day <= 15) {
+//                    $totalAccruedMonths = $totalAccruedMonths - 0.5;
+//                }
+//                if ($day > 15 && $day <= 31) {
+//                    //$totalAccruedMonths = $totalAccruedMonths + 1;
+//                }
+//            }
+//            echo "2 totalAccruedMonths=$totalAccruedMonths <br>";
+//        }
+//
+//        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount.": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
+//        if( $user ) {
+//            //exit('end of total accrued month');
+//        }
+//
+//        return $totalAccruedMonths;
+//    }
     
     public function testAccruedDays() {
+        $yearRangeStr = '2023-2024';
+        $this->getTestTotalAccruedMonths($yearRangeStr, NULL, '08/31/2024', 24);
+
         $yearRangeStr = '2024-2025';
         $this->getTestTotalAccruedMonths($yearRangeStr, '07/22/2024', '08/25/2024', 3); //1 day for month 7, 2 days for month 8 => 3
         $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/01/2034', 24); //12 month * 2 = 24. July-August - next year => not counted
@@ -5051,6 +5063,7 @@ class VacReqUtil
         $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8, 1 day for month 9 => 5
         $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
         $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '01/01/2025', 12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
+
         exit('EOF testAccruedDays');
     }
     public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr,$expectedResult=NULL) {
@@ -5058,8 +5071,15 @@ class VacReqUtil
         //$timezone = new \DateTimeZone('America/New_York');
         //$datetime->setTimezone($timezone);
         //$datetime->setTime(0, 0, 0);
-        $startDate = $datetime->createFromFormat('m/d/Y',$startDateStr);
-        $endDate = $datetime->createFromFormat('m/d/Y',$endDateStr);
+
+        $startDate = NULL;
+        $endDate = NULL;
+        if( $startDateStr ) {
+            $startDate = $datetime->createFromFormat('m/d/Y', $startDateStr);
+        }
+        if( $endDateStr ) {
+            $endDate = $datetime->createFromFormat('m/d/Y', $endDateStr);
+        }
         //$startDate = $datetime->createFromFormat('m/d/Y H:i:s',$startDateStr." 00:00:00");
         //$endDate = $datetime->createFromFormat('m/d/Y H:i:s',$endDateStr." 23:59:59");
 
@@ -5071,8 +5091,18 @@ class VacReqUtil
             $totalAccruedMonths = $diffBetweenTwoDates['totalMonths'];
             $months = $diffBetweenTwoDates['months'];
             $days = $diffBetweenTwoDates['days'];
+
+            $startDateStr2 = "";
+            $endDateStr2 = "";
+            if( $startDate ) {
+                $startDateStr2 = $startDate->format('d F Y');
+            }
+            if( $endDate ) {
+                $endDateStr2 = $endDate->format('d F Y');
+            }
             //echo "startDate=".$startDate->format('m F Y H:i:s').", endDate=".$endDate->format('m F Y H:i:s')." => ";
-            echo $startDate->format('d F Y') . " - " . $endDate->format('d F Y') . " => ";
+            echo $startDateStr2 . " - " . $endDateStr2 . " => ";
+
             echo "totalAccruedMonths=$totalAccruedMonths, months=$months, days=$days <br>";
             return $months;
         }
@@ -5081,8 +5111,18 @@ class VacReqUtil
         //$startDate = strtotime($startDateStr);
         //$endDate = strtotime($endDateStr);
         echo "<br>";
+
         //echo $expectedResult.": startDate=".$startDate->format('m/d/Y').", endDate=".$endDate->format('m/d/Y')."<br>";
-        echo $expectedResult.": startDate=".$startDate->format('d F Y H:i:s').", endDate=".$endDate->format('d F Y H:i:s')."<br>";
+
+        $startDateStr2 = "";
+        $endDateStr2 = "";
+        if( $startDate ) {
+            $startDateStr2 = $startDate->format('d F Y H:i:s');
+        }if( $endDate ) {
+            $endDateStr2 = $endDate->format('d F Y H:i:s');
+        }
+        echo $expectedResult.": startDate=".$startDateStr2.", endDate=".$endDateStr2.", yearRangeStr=$yearRangeStr"."<br>";
+
         $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate,$testing=TRUE);
         echo "totalAccruedMonths===$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
 
