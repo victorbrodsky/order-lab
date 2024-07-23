@@ -5344,7 +5344,7 @@ class VacReqUtil
 
         //TODO: ask why fellows don't have the actual accrued days message:
         // Based on your start employment dates (06/10/2024), you have 24 accrued days per year
-        // SHould I add this message to fellows?
+        // Should I add this message to fellows? Answer: fellows can not carry over request
 
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
@@ -5352,6 +5352,30 @@ class VacReqUtil
         $accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or"; //$totalAccruedDays
         $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month.";
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
+
+        ////////// Based on ... message //////////////
+        $startDateStr = NULL;
+        $endDateStr = NULL;
+        $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+        $startDate = $userStartEndDates['startDate'];
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        $endDate = $userStartEndDates['endDate'];
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
+        }
+        $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
+        if( $startDateStr && $endDateStr ) {
+            $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
+        }
+        elseif( $startDateStr  ) {
+            $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
+        }
+        elseif( $endDateStr  ) {
+            $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
+        }
+        ////////// EOF Based on ... message //////////////
 
         ////////////// carry over allowed ///////////////////
         $carriedOverDaysString = null;
@@ -5400,27 +5424,27 @@ class VacReqUtil
 //                "requests documented in this system," .
 //                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
 
-            $startDateStr = NULL;
-            $endDateStr = NULL;
-            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-            $startDate = $userStartEndDates['startDate'];
-            if( $startDate ) {
-                $startDateStr = $startDate->format('m/d/Y');
-            }
-            $endDate = $userStartEndDates['endDate'];
-            if( $endDate ) {
-                $endDateStr = $endDate->format('m/d/Y');
-            }
-            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
-            if( $startDateStr && $endDateStr ) {
-                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
-            }
-            elseif( $startDateStr  ) {
-                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
-            }
-            elseif( $endDateStr  ) {
-                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
-            }
+//            $startDateStr = NULL;
+//            $endDateStr = NULL;
+//            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+//            $startDate = $userStartEndDates['startDate'];
+//            if( $startDate ) {
+//                $startDateStr = $startDate->format('m/d/Y');
+//            }
+//            $endDate = $userStartEndDates['endDate'];
+//            if( $endDate ) {
+//                $endDateStr = $endDate->format('m/d/Y');
+//            }
+//            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
+//            if( $startDateStr && $endDateStr ) {
+//                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
+//            }
+//            elseif( $startDateStr  ) {
+//                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
+//            }
+//            elseif( $endDateStr  ) {
+//                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
+//            }
 
             $remainingDaysString =
                 //"Based on your start/end employment dates ($userEmplDatesStr)".
@@ -5434,6 +5458,31 @@ class VacReqUtil
                 $remainingDaysString .= " (" . $this->getInaccuracyMessage() . ")";
             }
             $remainingDaysString .= ".";
+        } else {
+//            $startDateStr = NULL;
+//            $endDateStr = NULL;
+//            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+//            $startDate = $userStartEndDates['startDate'];
+//            if( $startDate ) {
+//                $startDateStr = $startDate->format('m/d/Y');
+//            }
+//            $endDate = $userStartEndDates['endDate'];
+//            if( $endDate ) {
+//                $endDateStr = $endDate->format('m/d/Y');
+//            }
+//            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
+//            if( $startDateStr && $endDateStr ) {
+//                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
+//            }
+//            elseif( $startDateStr  ) {
+//                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
+//            }
+//            elseif( $endDateStr  ) {
+//                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
+//            }
+            $remainingDaysString = $totalAccruedDaysStr .
+                ", you have " . $totalAccruedDays .
+                " accrued days per year.";
         }
         ////////////// EOF carry over allowed ///////////////////
 
