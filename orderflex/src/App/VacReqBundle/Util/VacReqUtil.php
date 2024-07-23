@@ -5058,21 +5058,24 @@ class VacReqUtil
 //    }
     
     public function testAccruedDays() {
+        $count = 0;
+
         $yearRangeStr = '2023-2024';
-        $this->getTestTotalAccruedMonths($yearRangeStr, NULL, '08/31/2024', 24);
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, NULL, '08/31/2024', 24);
 
         $yearRangeStr = '2024-2025';
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/22/2024', '08/25/2024', 3); //1 day for month 7, 2 days for month 8 => 3
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/01/2034', 24); //12 month * 2 = 24. July-August - next year => not counted
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/10/2024', '08/12/2024', 3); //2 day for month 7, 1 day for month 8 => 3
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/01/2024', 4); //2 day for month 7, 2 day for month 8 => 4
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8, 1 day for month 9 => 5
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
-        $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '01/01/2025', 12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/22/2024', '08/25/2024', 3); //1 day for month 7, 2 days for month 8 => 3
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/01/2034', 24); //12 month * 2 = 24. July-August - next year => not counted
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/10/2024', '08/12/2024', 3); //2 day for month 7, 1 day for month 8 => 3
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '08/31/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/01/2024', 4); //2 day for month 7, 2 day for month 8 => 4
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8, 1 day for month 9 => 5
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '09/02/2024', 5); //2 day for month 7, 2 day for month 8 and 1 day for month 9 => 5
+        $count += $this->getTestTotalAccruedMonths($yearRangeStr, '07/01/2024', '01/01/2025', 12); //July,Aug,Sep,Oct,Nov,Dec = 6 month => 12 days
 
-        exit('EOF testAccruedDays');
+        return $count;
+        //exit('EOF testAccruedDays');
     }
     public function getTestTotalAccruedMonths($yearRangeStr,$startDateStr,$endDateStr,$expectedResult=NULL) {
         $datetime = new \DateTime();
@@ -5118,34 +5121,36 @@ class VacReqUtil
         //Test getTotalAccruedMonths
         //$startDate = strtotime($startDateStr);
         //$endDate = strtotime($endDateStr);
-        echo "<br>";
+        //echo "<br>";
 
         //echo $expectedResult.": startDate=".$startDate->format('m/d/Y').", endDate=".$endDate->format('m/d/Y')."<br>";
 
-        $startDateStr2 = "";
-        $endDateStr2 = "";
-        if( $startDate ) {
-            $startDateStr2 = $startDate->format('d F Y H:i:s');
-        }if( $endDate ) {
-            $endDateStr2 = $endDate->format('d F Y H:i:s');
-        }
-        echo $expectedResult.": startDate=".$startDateStr2.", endDate=".$endDateStr2.", yearRangeStr=$yearRangeStr"."<br>";
+//        $startDateStr2 = "";
+//        $endDateStr2 = "";
+//        if( $startDate ) {
+//            $startDateStr2 = $startDate->format('d F Y H:i:s');
+//        }if( $endDate ) {
+//            $endDateStr2 = $endDate->format('d F Y H:i:s');
+//        }
+        //echo $expectedResult.": startDate=".$startDateStr2.", endDate=".$endDateStr2.", yearRangeStr=$yearRangeStr"."<br>";
 
         $totalAccruedMonths = $this->getTotalAccruedMonths(NULL,$yearRangeStr,$startDate,$endDate,$testing=TRUE);
-        echo "totalAccruedMonths===$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
+        //echo "totalAccruedMonths===$totalAccruedMonths <= $startDateStr - $endDateStr <br>";
 
         $vacationAccruedDaysPerMonth = 2;
         $totalAccruedDays = $vacationAccruedDaysPerMonth * $totalAccruedMonths;
-        echo "totalAccruedDays===$totalAccruedDays <br>";
+        //echo "totalAccruedDays===$totalAccruedDays <br>";
 
         if( $expectedResult ) {
             if( $expectedResult == (int) $totalAccruedDays ) {
-                echo "Pass <br>";
+                //echo "Pass <br>";
+                return 1;
             } else {
-                echo "Fail <br>";
+                //echo "Fail <br>";
+                return 0;
             }
         }
-        return $totalAccruedDays;
+        return 0;
     }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
@@ -5424,28 +5429,6 @@ class VacReqUtil
 //                "requests documented in this system," .
 //                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
 
-//            $startDateStr = NULL;
-//            $endDateStr = NULL;
-//            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-//            $startDate = $userStartEndDates['startDate'];
-//            if( $startDate ) {
-//                $startDateStr = $startDate->format('m/d/Y');
-//            }
-//            $endDate = $userStartEndDates['endDate'];
-//            if( $endDate ) {
-//                $endDateStr = $endDate->format('m/d/Y');
-//            }
-//            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
-//            if( $startDateStr && $endDateStr ) {
-//                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
-//            }
-//            elseif( $startDateStr  ) {
-//                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
-//            }
-//            elseif( $endDateStr  ) {
-//                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
-//            }
-
             $remainingDaysString =
                 //"Based on your start/end employment dates ($userEmplDatesStr)".
                 $totalAccruedDaysStr .
@@ -5459,27 +5442,6 @@ class VacReqUtil
             }
             $remainingDaysString .= ".";
         } else {
-//            $startDateStr = NULL;
-//            $endDateStr = NULL;
-//            $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-//            $startDate = $userStartEndDates['startDate'];
-//            if( $startDate ) {
-//                $startDateStr = $startDate->format('m/d/Y');
-//            }
-//            $endDate = $userStartEndDates['endDate'];
-//            if( $endDate ) {
-//                $endDateStr = $endDate->format('m/d/Y');
-//            }
-//            $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
-//            if( $startDateStr && $endDateStr ) {
-//                $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
-//            }
-//            elseif( $startDateStr  ) {
-//                $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
-//            }
-//            elseif( $endDateStr  ) {
-//                $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
-//            }
             $remainingDaysString = $totalAccruedDaysStr .
                 ", you have " . $totalAccruedDays .
                 " accrued days per year.";

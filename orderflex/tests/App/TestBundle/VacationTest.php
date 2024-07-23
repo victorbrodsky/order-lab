@@ -448,5 +448,21 @@ class VacationTest extends WebTestBase
             $crawler->filter('html:contains("Organizational Groups")')->count()
         );
     }
+    
+    public function testAccruedDays() {
+        $this->logIn();
+
+        $vacreqUtil = $this->testContainer->get('vacreq_util');
+        $count = $vacreqUtil->testAccruedDays(); //must be equal to 10
+
+        $this->assertContainsEquals(
+            $count,
+            10
+        );
+//        $this->assertGreaterThan(
+//            $count, //we have 10 entries per page
+//            10
+//        );
+    }
 
 }
