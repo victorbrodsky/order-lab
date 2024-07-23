@@ -5798,6 +5798,10 @@ class VacReqUtil
             return $unusedDays;
         }
 
+        if( $unusedDays < 0 ) {
+            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+        }
+
         if( $asString && $unusedDays > 0 ) {
             $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_carryoverrequest'
@@ -5833,7 +5837,9 @@ class VacReqUtil
 
             //show only on vacation request page, hide on carryover page
             //$link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
-            $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining vacation days' . $carryOverNote . '</a>';
+            $link = '<a href="' . $actionRequestUrl . 
+                '">Request to carry over the remaining vacation days' . 
+                $carryOverNote . '</a>';
 
             return $link;
         }
@@ -5866,6 +5872,10 @@ class VacReqUtil
             return $unusedDays;
         }
 
+//        if( $unusedDays < 0 ) {
+//            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+//        }
+
         // if the logged in user has a carry over request from the previous academic year to the current academic year
         if( $asString && $unusedDays > 0 ) {
 
@@ -5885,7 +5895,9 @@ class VacReqUtil
 
             $link = "You have " . $unusedDays . " unused vacation days in the previous " . $yearRange . " academic year.";
             //$link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining ' . $unusedDays . ' vacation days</a>';
-            $link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining vacation days</a>';
+            $link .= ' <a href="' . 
+                $actionRequestUrl . 
+                '" target="_blank">Request to carry over the remaining vacation days</a>';
 
 
             // If the carry over request has a status of "Approved" (final),
@@ -6049,6 +6061,10 @@ class VacReqUtil
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToNextYear;
 
+//        if( $daysToRequest < 0 ) {
+//            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+//        }
+
         if( $daysToRequest && $daysToRequest > 0 ) {
             $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_carryoverrequest'
@@ -6059,7 +6075,8 @@ class VacReqUtil
             );
 
             //$link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
-            $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining vacation days</a>';
+            $link = '<a href="'.$actionRequestUrl.
+                '">Request to carry over the remaining vacation days</a>';
             return $link;
         }
 
