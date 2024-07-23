@@ -461,7 +461,7 @@ class VacationTest extends WebTestBase
 //        );
         $this->assertGreaterThan(
             $count, //we have 10 entries per page
-            10
+            9
         );
     }
 
