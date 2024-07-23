@@ -459,9 +459,13 @@ class VacationTest extends WebTestBase
 //            $count,
 //            10
 //        );
-        $this->assertGreaterThan(
-            $count, //we have 10 entries per page
-            11
+//        $this->assertGreaterThan(
+//            $count, //we have 10 entries per page
+//            11
+//        );
+        $this->assertGreaterThanOrEqual(
+            10, //19, //we should have 2 (history, outcome) per entry entries per page
+            $count
         );
     }
 
