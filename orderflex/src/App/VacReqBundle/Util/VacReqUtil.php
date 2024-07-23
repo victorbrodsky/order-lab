@@ -5799,7 +5799,7 @@ class VacReqUtil
         }
 
         if( $unusedDays < 0 ) {
-            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+            return "According to our vacation request system, you have $unusedDays exceeded vacation days.";
         }
 
         if( $asString && $unusedDays > 0 ) {
@@ -5873,7 +5873,7 @@ class VacReqUtil
         }
 
 //        if( $unusedDays < 0 ) {
-//            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+//            return "According to our vacation request system, you have $unusedDays exceeded vacation days.";
 //        }
 
         // if the logged in user has a carry over request from the previous academic year to the current academic year
@@ -6062,7 +6062,7 @@ class VacReqUtil
         $daysToRequest = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToNextYear;
 
 //        if( $daysToRequest < 0 ) {
-//            return "According to the vacation request system, you have $unusedDays exceeded vacation days.";
+//            return "According to our vacation request system, you have $unusedDays exceeded vacation days.";
 //        }
 
         if( $daysToRequest && $daysToRequest > 0 ) {
