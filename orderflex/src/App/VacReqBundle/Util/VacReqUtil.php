@@ -5799,7 +5799,7 @@ class VacReqUtil
         }
 
         if( $unusedDays < 0 ) {
-            return "According to our vacation request system, you have." .
+            return "According to our vacation request system, you have " .
             abs($unusedDays)." exceeded vacation days.";
         }
 
