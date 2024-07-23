@@ -4639,7 +4639,7 @@ class VacReqUtil
         $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
         //$totalAccruedMonths = 12; //Old version without user's start/end dates
 
-        echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
+        //echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
         $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
 
@@ -4665,8 +4665,8 @@ class VacReqUtil
 
         if( $testing === FALSE ) {
             if (!$user) {
-                //echo "No user => totalAccruedMonths=$totalAccruedMonths"."<br>";
-                return $totalAccruedMonths; //remove for testing
+                //echo "No user => totalAccruedMonths=12"."<br>";
+                return 12; //$totalAccruedMonths; //remove for testing
             }
 
             if (!$startDate || !$endDate) {
@@ -5341,6 +5341,10 @@ class VacReqUtil
         if( !$maxCarryOverVacationDays ) {
             $maxCarryOverVacationDays = 10;
         }
+
+        //TODO: ask why fellows don't have the actual accrued days message:
+        // Based on your start employment dates (06/10/2024), you have 24 accrued days per year
+        // SHould I add this message to fellows?
 
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
