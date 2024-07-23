@@ -4617,6 +4617,7 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
 
+    //TODO: test fellows ala2022 and test no start/end dates
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
@@ -4627,6 +4628,7 @@ class VacReqUtil
             $vacationAccruedDaysPerMonth = 2;
             //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
+        //echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>"; //fellows 1.666
 
         //TODO: get User start/end dates and calculate number of months (for the current year?)
         //TODO: fix summary: http://127.0.0.1/time-away-request/summary/?filter%5Busers%5D%5B%5D=762&filter%5Btypes%5D%5B%5D=1&filter%5Btypes%5D%5B%5D=2&filter%5Bsubmit%5D=
@@ -4637,7 +4639,7 @@ class VacReqUtil
         $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
         //$totalAccruedMonths = 12; //Old version without user's start/end dates
 
-        //echo "monthCount=".$monthCount."<br>";
+        echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
         $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
 
@@ -4645,8 +4647,11 @@ class VacReqUtil
         if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
             $totalAccruedDays = $maxVacationDays;
         }
+        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
 
         $totalAccruedDays = round($totalAccruedDays);
+        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
+
         return $totalAccruedDays;
     }
     //Calculate number of month for user according to the start/end dates
