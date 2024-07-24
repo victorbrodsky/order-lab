@@ -1706,6 +1706,7 @@ class ApproverController extends OrderAbstractController
     //My Group vacreq_mygroup
     /**
      * Get groups and populate them in mySingleGroupAction
+     * TODO: don't show all users by default. Show it empty if filter is not set.
      */
     #[Route(path: '/my-group/', name: 'vacreq_my_group', methods: ['GET', 'POST'])]
     #[Route(path: '/summary/', name: 'vacreq_summary', methods: ['GET', 'POST'])]
@@ -1763,11 +1764,6 @@ class ApproverController extends OrderAbstractController
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         //$accruedDays = $this->vacreqUtil->getAccruedDaysUpToThisMonth();
 
-        //Current Academic Year
-//        $currentYear = new \DateTime();
-//        $currentYear = $currentYear->format('Y');
-//        $previousYear = $currentYear - 1;
-//        $yearRange = $previousYear."-".$currentYear;
         $yearRange = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         /////////////// filter form ///////////////////
@@ -1792,6 +1788,7 @@ class ApproverController extends OrderAbstractController
 
             $filterapprovaltypes = $filterform["types"]->getData();
             //dump($filterapprovaltypes);
+            //dump($users);
             //exit('111');
             foreach( $groups as $group ) {
                 $thisApprovalGroupType = $this->vacreqUtil->getApprovalGroupTypeByInstitution($group->getId());
@@ -1809,7 +1806,22 @@ class ApproverController extends OrderAbstractController
             }
         }
         /////////////// EOF: filter form ///////////////////
+        //dump($users);
+        //echo "group length=".count($filteredGroups)."<br>";
+        //exit('111');
 
+        $showall = true;
+        if( count($filteredGroups) > 3 ) {
+            $showall = false;
+        }
+
+        if( $showall === false && !$userids ) {
+            //note: Please select employee //TODO:
+            $this->addFlash(
+                'pnotify',
+                'Please select employee(s) to see the summary'
+            );
+        }
 
         return array(
             //'groups' => $groups,
@@ -1819,32 +1831,37 @@ class ApproverController extends OrderAbstractController
             //'entity' => $entity,
             'filterform' => $filterform->createView(),
             'userids' => $userids,
+            'showall' => $showall
             //'approvaltypes' => $approvaltypes
             //'organizationalGroupName' => $institution."",
             //'organizationalGroupId' => $instid,
         );
     }
 
-    #[Route(path: '/my-single-group/{groupId}/{userids}/{approvaltypes}', name: 'vacreq_mysinglegroup', methods: ['GET', 'POST'])]
+    #[Route(path: '/my-single-group/{groupId}/{showall}/{userids}/{approvaltypes}', name: 'vacreq_mysinglegroup', methods: ['GET', 'POST'])]
     #[Template('AppVacReqBundle/Group/my-single-group.html.twig')]
-    public function mySingleGroupAction( Request $request, $groupId, $userids )
+    public function mySingleGroupAction( Request $request, $groupId, $showall, $userids )
     {
 
-        if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+        if (false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             false == $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
         //echo "groupId=".$groupId."<br>";
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        //find role submitters by institution
-        //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
-        $submitters = $this->vacreqUtil->getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER");
+        if( $showall || $userids ) {
+            //find role submitters by institution
+            //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
+            $submitters = $this->vacreqUtil->getUsersByGroupId($groupId, "ROLE_VACREQ_SUBMITTER");
+        } else {
+            $submitters = array(); //don't show all users by default
+        }
 
         //filter users
         if( $userids ) {

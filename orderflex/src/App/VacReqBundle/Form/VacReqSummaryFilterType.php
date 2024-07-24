@@ -47,13 +47,15 @@ class VacReqSummaryFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             'class' => User::class,
             'label' => false,
             'required' => false,
             'multiple' => true,
             //'choice_label' => 'name',
-            'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
+            'attr' => array(
+                'class'=>'combobox combobox-width',
+                'placeholder'=>"Please select employee(s) to see the summary"
+            ),
             //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('user')
@@ -67,7 +69,6 @@ class VacReqSummaryFilterType extends AbstractType
         ));
 
         $builder->add('types', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
             'class' => VacReqApprovalTypeList::class,
             'label' => false,
             'required' => false,

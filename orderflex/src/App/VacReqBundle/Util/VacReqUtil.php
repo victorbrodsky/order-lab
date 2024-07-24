@@ -505,14 +505,12 @@ class VacReqUtil
         $users = array();
         
         if( !$groupId || filter_var($groupId, FILTER_VALIDATE_INT) === false  ) { //|| is_int($groupId) === false
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $users = $this->em->getRepository(User::class)->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
             //echo "0user count=".count($users)."<br>";
             //exit('111');
             return $users;
         }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $roles = $this->em->getRepository(User::class)->
                             findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
 
@@ -528,7 +526,6 @@ class VacReqUtil
 
         //echo "role=".$role."<br>";
         if( $role ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $users = $this->em->getRepository(User::class)->findUserByRole($role->getName(),"infos.lastName",$onlyWorking);
         }
 
@@ -4617,7 +4614,6 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
 
-    //TODO: test fellows ala2022 and test no start/end dates
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
@@ -4630,7 +4626,6 @@ class VacReqUtil
         }
         //echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>"; //fellows 1.666
 
-        //TODO: get User start/end dates and calculate number of months (for the current year?)
         //TODO: fix summary: http://127.0.0.1/time-away-request/summary/?filter%5Busers%5D%5B%5D=762&filter%5Btypes%5D%5B%5D=1&filter%5Btypes%5D%5B%5D=2&filter%5Bsubmit%5D=
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
