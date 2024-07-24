@@ -1815,13 +1815,12 @@ class ApproverController extends OrderAbstractController
             $showall = false;
         }
 
-        if( $showall === false && !$userids ) {
-            //note: Please select employee //TODO:
-            $this->addFlash(
-                'pnotify',
-                'Please select employee(s) to see the summary'
-            );
-        }
+//        if( $showall === false && !$userids ) {
+//            $this->addFlash(
+//                'pnotify',
+//                'Please select employee(s) to see the summary'
+//            );
+//        }
 
         return array(
             //'groups' => $groups,
