@@ -5794,13 +5794,16 @@ class VacReqUtil
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToNextYear;
 
-        if( $unusedDays == 0 ) {
-            return $unusedDays;
+        if( $asString && $unusedDays == 0 ) {
+            //return $unusedDays;
+            return "According to our vacation request system,".
+            " you don't have any remaining vacation days.";
         }
 
-        if( $unusedDays < 0 ) {
-            return "According to our vacation request system, you have " .
-            abs($unusedDays)." exceeded vacation days.";
+        if( $asString && $unusedDays < 0 ) {
+            return "According to our vacation request system,".
+            " you have exceeded the number of accrued vacation days by  " .
+            abs($unusedDays);
         }
 
         if( $asString && $unusedDays > 0 ) {
@@ -5869,13 +5872,17 @@ class VacReqUtil
         $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToThisYear;
         //echo "unusedDays=$unusedDays<br>";
 
-        if( $unusedDays == 0 ) {
-            return $unusedDays;
+        if( $asString && $unusedDays == 0 ) {
+            //return $unusedDays;
+            return "According to our vacation request system,".
+            " you don't have any remaining vacation days.";
         }
 
-//        if( $unusedDays < 0 ) {
-//            return "According to our vacation request system, you have $unusedDays exceeded vacation days.";
-//        }
+        if( $asString && $unusedDays < 0 ) {
+            return "According to our vacation request system," .
+            " you have exceeded the number of accrued vacation days by  " .
+            abs($unusedDays);
+        }
 
         // if the logged in user has a carry over request from the previous academic year to the current academic year
         if( $asString && $unusedDays > 0 ) {
