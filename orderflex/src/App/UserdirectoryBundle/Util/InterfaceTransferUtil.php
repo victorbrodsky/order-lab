@@ -3119,7 +3119,7 @@ class InterfaceTransferUtil {
             $instanceId = $singleConfirmationJsonFile['instanceId'];
 
             if( $instanceId != 'WCMINT' ) {
-                //continue;
+                //continue; //remove for testing to allow transfer by test or dev servers
             }
 
             $transferableEntity = $this->em->getRepository($className)->find($localId);
