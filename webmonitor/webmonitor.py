@@ -130,6 +130,9 @@ def sendEmail(url, status):
 
 
 def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+    if MAILER_HOST == "":
+        print("Error: unable to send email: MAILER_HOST is not provided")
+        return False
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
     msg = MIMEText(emailBody)
     msg['Subject'] = emailSubject

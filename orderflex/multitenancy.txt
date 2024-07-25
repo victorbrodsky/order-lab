@@ -553,3 +553,34 @@ This certificate expires on 2024-09-30.
 These files will be updated when the certificate renews.
 Certbot has set up a scheduled task to automatically renew this certificate in the background.
 
+Log php-fpm: /var/log/httpd and /var/log/php-fpm
+The “oom-kill” error in PHP-FPM occurs when the system’s Out-Of-Memory (OOM) killer terminates the PHP-FPM process due to excessive memory usage. Here are some steps to help you fix this issue:
+
+Adjust PHP-FPM Configuration:
+Reduce pm.max_children: This setting controls the maximum number of child processes. Lowering it can help reduce memory usage.
+Set pm.max_requests: This limits the number of requests each child process can handle before being restarted. A lower value can help mitigate memory leaks.
+Tune pm.start_servers, pm.min_spare_servers, and pm.max_spare_servers: These settings control the number of child processes created on startup and the minimum/maximum number of idle processes.
+Optimize PHP Scripts:
+Check for memory leaks in your PHP code. Use tools like Xdebug or Blackfire to profile and optimize your scripts.
+Adjust System Settings:
+Modify Kernel Parameters: Add the following lines to /etc/sysctl.conf to adjust memory overcommit settings:
+vm.overcommit_memory = 2
+vm.overcommit_ratio = 80
+Then, apply the changes with:
+sudo sysctl -p
+
+Monitor and Restart PHP-FPM:
+Create a script to monitor PHP-FPM memory usage and restart the service if it exceeds a certain threshold.
+Increase System Memory:
+If possible, add more RAM to your server to handle higher memory demands.
+These steps should help you manage and reduce the occurrence of OOM kills with PHP-FPM
+
+https://serverfault.com/questions/939436/understand-correctly-pm-max-children-tuning
+25 July 2024 set:
+pm.max_requests=500
+pm.max_children = 32
+pm = ondemand
+pm.process_idle_timeout = 3s
+systemctl status php-fpm
+
+
