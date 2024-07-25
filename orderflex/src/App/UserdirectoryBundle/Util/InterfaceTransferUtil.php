@@ -1470,16 +1470,15 @@ class InterfaceTransferUtil {
             //echo "Final resStr=$resStr <br>";
 
             $new = true;
-            $actionStr = 'Create new Project';
+            $actionStr = 'Created new Project';
 
-            //TODO: fix update Project, now only create New Project
             //An exception occurred while executing a query: SQLSTATE[23505]:
             // Unique violation: 7 ERROR: duplicate key value violates
             // unique constraint "pk__transres__3213e83f716f45b5"
             //DETAIL: Key (id)=(1) already exists.
             if( $transferableEntity ) {
                 $new = false;
-                $actionStr = 'Update Project';
+                $actionStr = 'Updated Project';
                 //$resStr = "Get transfer not completed: Project ".$transferableEntity->getOid()." already exists.";
                 //$resArr[] = $resStr;
                 //continue;
@@ -2713,10 +2712,10 @@ class InterfaceTransferUtil {
             );
             return false;
         } else {
-            $session->getFlashBag()->add(
-                'notice',
-                "Remote certificate $remoteCertificate for curl exists"
-            );
+//            $session->getFlashBag()->add(
+//                'notice',
+//                "Remote certificate $remoteCertificate for curl exists"
+//            );
         }
 
         //http://view.online/directory/transfer-interface/slave-to-master-transfer
@@ -3119,7 +3118,7 @@ class InterfaceTransferUtil {
             $instanceId = $singleConfirmationJsonFile['instanceId'];
 
             if( $instanceId != 'WCMINT' ) {
-                //continue; //remove for testing to allow transfer by test or dev servers
+                continue; //remove for testing to allow transfer by test or dev servers
             }
 
             $transferableEntity = $this->em->getRepository($className)->find($localId);
