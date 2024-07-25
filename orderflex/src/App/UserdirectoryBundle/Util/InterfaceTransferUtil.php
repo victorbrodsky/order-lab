@@ -1494,7 +1494,6 @@ class InterfaceTransferUtil {
                 //dump($transferableEntity);
                 //exit('123');
 
-                //TODO: error: spl_object_id(): Argument #1 ($object) must be of type object, array given
                 if( $new ) {
                     $this->em->persist($transferableEntity);
                 }
@@ -1556,6 +1555,12 @@ class InterfaceTransferUtil {
                         $eventType
                     );
 
+                    //send email when project transfered
+                    $emailUtil = $this->container->get('user_mailer_utility');
+                    $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                    $subject = $eventType.' ID '.$transferableEntity->getId().': '.$actionStr;
+                    $emailUtil->sendEmail($systemEmail,$subject,$resStr );
+
                     //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
                     if( $transferableEntity->sendComputationalEmail() ) {
                         $transresUtil = $this->container->get('transres_util');
@@ -1568,7 +1573,7 @@ class InterfaceTransferUtil {
                         );
                     }
                 }
-            }
+            } //if( $transferableEntity )
 
             $resArr[] = $resStr;
             //exit('EOF getSlaveToMasterTransfer: ' . $resStr);
