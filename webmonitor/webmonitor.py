@@ -313,10 +313,10 @@ def main(argv):
         #logging.warning('Nothing to do: urls are not provided')
         return
 
-    if mailerhost == '':
-        print('Nothing to do: mailerhost is not provided')
-        #logging.warning('Nothing to do: mailerhost is not provided')
-        return
+    #if mailerhost == '':
+    #    print('Nothing to do: mailerhost is not provided')
+    #    #logging.warning('Nothing to do: mailerhost is not provided')
+    #    return
 
     if sender == '':
         print('Nothing to do: sender is not provided')
