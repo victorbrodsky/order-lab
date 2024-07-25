@@ -558,6 +558,12 @@
                 </div> <!-- panel-collapse -->
             </div> <!-- panel panel-info -->
 
+        {% else %}
+
+            {% if form %}
+                {% do projectPdfs.setRendered %}
+            {% endif %}
+
         {% endif %}
     {% endif %}
 {% endmacro %}
