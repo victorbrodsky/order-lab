@@ -99,7 +99,7 @@ class SystemTenancyController extends OrderAbstractController
         if (count($users) == 0) {
 
             $usernamePrefix = "local-user";
-            $adminemail = "email@example.com";
+            $adminemail = "";//"email@example.com";
             $default_time_zone = $this->getParameter('default_time_zone');
 
             $this->generateUsernameTypes();
