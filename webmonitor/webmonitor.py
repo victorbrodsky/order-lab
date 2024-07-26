@@ -10,6 +10,10 @@
 #2) Defaults:apache !requiretty
 #3) apache ALL= NOPASSWD: /usr/bin/systemctl restart httpd.service
 #   apache ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
+# Multitenancy with haproxy and php-fpm:
+# apache ALL= NOPASSWD: /usr/bin/systemctl restart php-fpm
+# apache ALL= NOPASSWD: /usr/bin/systemctl restart haproxy
+# apache ALL= NOPASSWD: /usr/bin/systemctl restart httpdtenantapp1 (optional)
 
 # sample usage: python webmonitor.py --urls "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu" -u "" -p "" -s "oli2002@med.cornell.edu" -r "oli2002@med.cornell.edu"
 # -l --urls: "http://view.med.cornell.edu,http://view-test.med.cornell.edu"
