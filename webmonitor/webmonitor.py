@@ -31,6 +31,7 @@ import time
 from datetime import datetime
 import subprocess
 from subprocess import PIPE
+import urllib
 #import yagmail
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
@@ -134,6 +135,30 @@ def sendEmail(url, status):
 
 
 def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+    if MAILER_HOST == "":
+        print("Error: unable to send email: MAILER_HOST is not provided")
+        return False
+    emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
+    msg = MIMEText(emailBody)
+    msg['Subject'] = emailSubject
+    msg['From'] = fromEmail
+    msg['To'] = ', '.join(toEmailList)
+
+    try:
+        #print("MAILER_HOST=" + MAILER_HOST+", MAILER_PORT="+MAILER_PORT)
+        smtpObj = smtplib.SMTP(MAILER_HOST, MAILER_PORT)
+        if MAILER_USERNAME != "" and MAILER_PASSWORD != "":
+            smtpObj.starttls()          
+            #smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
+            #urllib.request.pathname2url(stringToURLEncode)
+            smtpObj.login(MAILER_USERNAME, urllib.request.pathname2url(MAILER_PASSWORD))
+        smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
+        print("Successfully sent email")
+    except SMTPException:
+        print("Error: unable to send email")
+        #pass
+
+def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     if MAILER_HOST == "":
         print("Error: unable to send email: MAILER_HOST is not provided")
         return False

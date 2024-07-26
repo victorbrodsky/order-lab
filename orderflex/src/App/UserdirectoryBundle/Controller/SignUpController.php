@@ -674,10 +674,10 @@ class SignUpController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Account Activation');
 
-            $this->addFlash(
-                'notice',
-                "Your account has been successfully activated."
-            );
+//            $this->addFlash(
+//                'notice',
+//                "Your account has been successfully activated."
+//            );
 
             //////////////// send email to admin //////////////////////
             $newline = "<br>";
@@ -711,14 +711,21 @@ class SignUpController extends OrderAbstractController
 //            );
             //////////////// EOF send email to admin //////////////////////
 
-            //redirect to intended Url
-            $redirectUrl = $signUp->getLastUrl();
-            if( $redirectUrl ) {
-                return $this->redirect($redirectUrl);
-            } else {
-                //send them to the homepage.
-                return $this->redirectToRoute($this->pathHome);
-            }
+            //TODO: Logout user after creating new user
+            $this->addFlash(
+                'notice',
+                "Your account has been successfully activated. Please re-login."
+            );
+            return $this->redirect($this->generateUrl($this->siteName . '_logout'));
+
+//            //redirect to intended Url
+//            $redirectUrl = $signUp->getLastUrl();
+//            if( $redirectUrl ) {
+//                return $this->redirect($redirectUrl);
+//            } else {
+//                //send them to the homepage.
+//                return $this->redirectToRoute($this->pathHome);
+//            }
         }
         //exit('new');
 
