@@ -195,7 +195,7 @@ class UserUtil {
 
             $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
             if( !$adminemail ) {
-                $adminemail = "email@example.com";
+                $adminemail = "adminemail@example.com";
             }
 
             $systemuser = new User();
