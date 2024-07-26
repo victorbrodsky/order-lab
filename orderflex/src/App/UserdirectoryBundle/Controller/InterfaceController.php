@@ -82,7 +82,10 @@ class InterfaceController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
     public function transferInterfaceManagerAction(Request $request)
     {
-        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if(
+            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -103,7 +106,10 @@ class InterfaceController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
     public function startTransferAction(Request $request)
     {
-        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if(
+            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -249,7 +255,10 @@ class InterfaceController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
     public function getSlaveToMasterTransferAction(Request $request)
     {
-        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if(
+            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
