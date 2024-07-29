@@ -429,7 +429,6 @@ class SignUpController extends OrderAbstractController
     {
         //exit('1');
         $emailUtil = $this->container->get('user_mailer_utility');
-        //$userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -437,10 +436,6 @@ class SignUpController extends OrderAbstractController
         $signUp = $em->getRepository(SignUp::class)->findOneByRegistrationLinkID($registrationLinkID);
         if( !$signUp ) {
             $confirmation = "This activation link is invalid. Please make sure you have copied it from your email message correctly.";
-//            $this->addFlash(
-//                'notice',
-//                $confirmation
-//            );
             return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(
                     'title'=>"Invalid Activation Link",
