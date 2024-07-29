@@ -6505,13 +6505,6 @@ class TransResUtil
         //echo "cycle=$cycle <br>";
         if( $cycle && $cycle == "new" ) {
             return function(EntityRepository $er) {
-//                $roles = "(list.roles NOT LIKE '%ROLE_TESTER%' OR
-//                    (
-//                        list.roles LIKE '%ROLE_PLATFORM_ADMIN%' OR
-//                        list.roles LIKE '%ROLE_PLATFORM_DEPUTY_ADMIN%' OR
-//                        list.roles LIKE '%ROLE_SUPER_DEPUTY_ADMIN%'
-//                    )
-//                    )";
                 $roles = "list.roles NOT LIKE '%ROLE_TESTER%' OR
                 (
                     list.roles LIKE '%ROLE_TESTER%' AND
