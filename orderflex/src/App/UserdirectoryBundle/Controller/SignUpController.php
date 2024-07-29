@@ -360,12 +360,13 @@ class SignUpController extends OrderAbstractController
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $activationUrl = '<a href="'.$activationUrl.'">'.$activationUrl.'</a>';
 
         $body =
             "Thank You for registering at ".$orderUrl." !".
-            $newline."Please visit the following link to activate your account or copy/paste it into your browser’s address bar:".
+            $newline.$newline."Please visit the following link to activate your account or copy/paste it into your browser’s address bar:".
             $newline.$activationUrl.
-            $newline."If you encounter any issues, please email our system administrator at $systemEmail.";
+            $newline.$newline."If you encounter any issues, please email our system administrator at $systemEmail.";
         ;
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
