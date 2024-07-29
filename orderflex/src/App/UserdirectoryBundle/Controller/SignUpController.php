@@ -559,6 +559,16 @@ class SignUpController extends OrderAbstractController
             foreach($lowestRoles as $role) {
                 $user->addRole($role);
             }
+            /////// add TRP minimum role ////////
+            $trpSiteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation('translationalresearch');
+            $trpLowestRoles = $trpSiteObject->getLowestRoles();
+            //if( count($trpLowestRoles) == 0 ) {
+            //    $lowestRoles = $this->minimumRoles;
+            //}
+            foreach($trpLowestRoles as $role) {
+                $user->addRole($role);
+            }
+            /////// EOF add TRP minimum role ////////
 
             //set passwordhash
             if ($signUp->getHashPassword()) {

@@ -23,8 +23,27 @@ class TransResSignUpController extends SignUpController
         $this->siteNameShowuser = 'translationalresearch';
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';
-        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER_APCP', 'ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY', 'ROLE_TRANSRES_REQUESTER_COVID19', 'ROLE_TRANSRES_REQUESTER_MISI');
-        $this->roleAdmins = array('ROLE_TRANSRES_ADMIN_APCP','ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY','ROLE_TRANSRES_ADMIN_COVID19','ROLE_TRANSRES_ADMIN_MISI');
+        $this->minimumRoles = array(
+            'ROLE_USERDIRECTORY_OBSERVER',
+            'ROLE_TRANSRES_REQUESTER_APCP',
+            'ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY',
+            //'ROLE_TRANSRES_REQUESTER_COVID19',
+            'ROLE_TRANSRES_REQUESTER_MISI',
+            'ROLE_TRANSRES_REQUESTER_USCAP',
+            'ROLE_TRANSRES_REQUESTER_AP',
+            'ROLE_TRANSRES_REQUESTER_CP',
+            'ROLE_TRANSRES_REQUESTER_CSP'
+        );
+        $this->roleAdmins = array(
+            'ROLE_TRANSRES_ADMIN_APCP',
+            'ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY',
+            //'ROLE_TRANSRES_ADMIN_COVID19',
+            'ROLE_TRANSRES_ADMIN_MISI',
+            'ROLE_TRANSRES_ADMIN_USCAP',
+            'ROLE_TRANSRES_ADMIN_AP',
+            'ROLE_TRANSRES_ADMIN_CP',
+            'ROLE_TRANSRES_ADMIN_CSP'
+        );
     }
 
     /**
