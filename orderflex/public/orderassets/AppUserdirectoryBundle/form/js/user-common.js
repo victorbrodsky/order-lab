@@ -711,7 +711,7 @@ function collapseThis(link) {
 }
 
 function collapseAll(holder) {
-    //console.log('collapse All');
+    console.log('collapse All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
@@ -724,7 +724,7 @@ function collapseAll(holder) {
 }
 
 function extendAll(holder) {
-    //console.log('extend All');
+    console.log('extend All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('show');
     } else {
