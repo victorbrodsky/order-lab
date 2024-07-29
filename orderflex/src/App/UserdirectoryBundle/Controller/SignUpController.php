@@ -344,9 +344,7 @@ class SignUpController extends OrderAbstractController
         $newline = "<br>";
         $subject = $this->siteNameStr." Registration";
 
-        //$orderUrl = ""; //[URL/order]
         $orderUrl = $this->container->get('router')->generate(
-        //'main_common_home',
             $this->pathHome,
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL

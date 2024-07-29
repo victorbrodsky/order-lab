@@ -6505,6 +6505,10 @@ class TransResUtil
         //echo "cycle=$cycle <br>";
         if( $cycle && $cycle == "new" ) {
             return function(EntityRepository $er) {
+                $roles = "(list.roles != 'ROLE_TESTER' AND 
+                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND 
+                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND 
+                    list.roles != 'ROLE_SUPER_DEPUTY_ADMIN')";
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
@@ -6517,6 +6521,11 @@ class TransResUtil
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
 
                     ->andWhere("employmentStatus.terminationDate IS NULL")
+//                    ->andWhere("(list.roles != 'ROLE_TESTER' AND
+//                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND
+//                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND
+//                    list.roles != 'ROLE_SUPER_DEPUTY_ADMIN')")
+                    ->andWhere($roles)
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
             };
