@@ -332,6 +332,7 @@ function transresProjectFundedListener() {
         //var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
         //console.log("change: checked value funded="+funded);
         transresShowHideProjectDocument(funded);
+        //Do not unfold if NEW and MISI
         transresShowHideProjectAdditionalDetails(funded);
         transresShowHideYes(funded);
         transresFundByPath(funded);
