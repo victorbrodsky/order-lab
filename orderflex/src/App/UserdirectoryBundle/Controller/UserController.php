@@ -3645,11 +3645,17 @@ class UserController extends OrderAbstractController
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
             echo "currentKeyType ID=".$currentKeyType->getId()."<br>";
-            echo "originalKeyType ID=".$originalKeyType->getId()."<br>";
-            if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
-                $uniqueUsername = $entity->createUniqueUsername();
-                $entity->setUsernameForce($uniqueUsername);
+            echo "originalKeyType ID=".$originalKeyType->getId()."<br>"; //does not exist for test user
+            if( $currentKeyType && $originalKeyType ) {
+                if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
+                    $uniqueUsername = $entity->createUniqueUsername();
+                    $entity->setUsernameForce($uniqueUsername);
+                }
             }
+//            if( !$originalKeyType ) {
+//                $uniqueUsername = $entity->createUniqueUsername();
+//                $entity->setUsernameForce($uniqueUsername);
+//            }
 
             //check if insts were changed and user is not admin
             if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
