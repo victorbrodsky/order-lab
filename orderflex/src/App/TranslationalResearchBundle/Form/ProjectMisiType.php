@@ -345,8 +345,15 @@ class ProjectMisiType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        if ($this->params['cycle'] == "new") {
+            $totalCostLabel = 'Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):';
+        } else {
+            $totalCostLabel = 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):';
+        }
+
         $builder->add('totalCost', null, array(
-            'label' => 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):', //Estimated Total Costs ($)
+            //'label' => 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):', //Estimated Total Costs ($)
+            'label' => $totalCostLabel,
             'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             //'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
@@ -931,7 +938,8 @@ class ProjectMisiType extends AbstractType
         ));
 
         $builder->add('studyDuration',null,array(
-            'label' => "Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
+            //'label' => "Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
+            'label' => "Projected grant or other closest deadline date:",
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,

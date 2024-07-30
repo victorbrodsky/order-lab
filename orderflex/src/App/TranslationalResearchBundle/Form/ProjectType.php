@@ -364,8 +364,15 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        if ($this->params['cycle'] == "new") {
+            $totalCostLabel = 'Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):';
+        } else {
+            $totalCostLabel = 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):';
+        }
+
         $builder->add('totalCost', null, array(
-            'label' => 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):', //Estimated Total Costs ($)
+            //'label' => 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):', //Estimated Total Costs ($)
+            'label' => $totalCostLabel,
             'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             //'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
