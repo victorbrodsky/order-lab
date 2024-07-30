@@ -330,10 +330,22 @@ function transresProjectFundedListener() {
     $(".transres-funded").on("change", function(e) {
         var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[funded]"]:checked').val();
         //var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
-        //console.log("change: checked value funded="+funded);
+        console.log("change: checked value funded="+funded);
         transresShowHideProjectDocument(funded);
-        //Do not unfold if NEW and MISI
-        transresShowHideProjectAdditionalDetails(funded);
+
+        //transresShowHideProjectAdditionalDetails(funded);
+        //TODO: Do not unfold if NEW and MISI: get new from #formcycle, get #projectSpecialty
+        var cycle = $("#formcycle").val();
+        var projectSpecialty = $("#projectSpecialty").val();
+        console.log('transresProjectFundedListener: cycle='+cycle,"projectSpecialty="+projectSpecialty);
+        if( cycle == 'new' && projectSpecialty == 'MISI' ) {
+            //don't show Project Additional Details
+            console.log('dont show Project Additional Details');
+        } else {
+            transresShowHideProjectAdditionalDetails(funded);
+            console.log('show Project Additional Details');
+        }
+
         transresShowHideYes(funded);
         transresFundByPath(funded);
     });

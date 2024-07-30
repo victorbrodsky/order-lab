@@ -560,7 +560,7 @@
 
         {% else %}
 
-            {% if form %}
+            {% if form and projectPdfs is defined and projectPdfs %}
                 {% do projectPdfs.setRendered %}
             {% endif %}
 

@@ -285,6 +285,11 @@
                     {% endif %}
 
                     {{ transres.projectAdditionalDetails(form,project,cycle) }}
+                    {#{% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}#}
+                        {#don't show projectAdditionalDetails#}
+                    {#{% else %}#}
+                        {#{{ transres.projectAdditionalDetails(form,project,cycle) }}#}
+                    {#{% endif %}#}
 
                     {% if cycle == "new" and project.getProjectSpecialtyStr == 'MISI' %}
                         {% do form.fundedAccountNumber.setRendered %}
