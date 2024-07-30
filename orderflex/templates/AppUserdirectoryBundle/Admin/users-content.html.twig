@@ -128,7 +128,7 @@
             {#style="min-width: 120px"#}
             <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'infos.preferredPhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Mobile Phone Number', 'infos.preferredMobilePhone') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'IC(s)', 'locations.ic') }}</th>
+            {#<th>{{ knp_pagination_sortable(entities, 'IC(s)', 'locations.ic') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Pager(s)', 'locations.pager') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locationroom.name') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistantinfos.displayName') }}</th>
@@ -157,7 +157,7 @@
                 <th>Email</th>
                 {#style="min-width: 120px"#}
                 <th>Phone Number</th>
-                <th>IC(s)</th>
+                {#<th>IC(s)</th>#}
                 <th>Pager(s)</th>
                 {#<th>Room Number(s)</th>#}
                 <th>Assistant(s)</th>
@@ -258,13 +258,13 @@
                         <p>{{ phone['prefix'] }}{{ usermacros.phoneHref(phone['phone']) }}</p>
                     {% endfor %}
                 </td>
-                <td>
-                    {% for location in entity.locations %}
-                        {% if location.ic %}
-                            {{ location.ic }}<br>
-                        {% endif %}
-                    {% endfor %}
-                </td>
+                {#<td>#}
+                    {#{% for location in entity.locations %}#}
+                        {#{% if location.ic %}#}
+                            {#{{ location.ic }}<br>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {#</td>#}
                 <td>
                     {% for location in entity.locations %}
                         {% if location.pager %}
