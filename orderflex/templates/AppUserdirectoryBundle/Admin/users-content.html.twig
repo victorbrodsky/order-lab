@@ -118,6 +118,7 @@
                 {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
             {#</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Name', 'infos.displayName') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Type', 'user.keytype') }}</th>
             {#<th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Academic Title(s)', 'appointmentName.name') }}</th>
@@ -129,7 +130,7 @@
             <th>{{ knp_pagination_sortable(entities, 'Mobile Phone Number', 'infos.preferredMobilePhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'IC(s)', 'locations.ic') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Pager(s)', 'locations.pager') }}</th>
-            <th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locationroom.name') }}</th>
+            {#<th>{{ knp_pagination_sortable(entities, 'Room Number(s)', 'locationroom.name') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistantinfos.displayName') }}</th>
 
 
@@ -147,6 +148,7 @@
                 {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
                 {#</th>#}
                 <th>Name</th>
+                <th>Type</th>
                 {#<th>Role(s)</th>#}
                 <th>Administrative Title(s)</th>
                 <th>Academic Title(s)</th>
@@ -157,7 +159,7 @@
                 <th>Phone Number</th>
                 <th>IC(s)</th>
                 <th>Pager(s)</th>
-                <th>Room Number(s)</th>
+                {#<th>Room Number(s)</th>#}
                 <th>Assistant(s)</th>
 
 
@@ -207,6 +209,13 @@
 
                 <td>
                     <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.getUserNameStr(true) }}</strong></a>
+                </td>
+
+                {#Primary Public User ID Type#}
+                <td class="rowlink-skip">
+                    {% if entity.keytype %}
+                        {{ entity.keytype.name }}
+                    {% endif %}
                 </td>
 
                 {#administrativeTitles#}
@@ -263,13 +272,13 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td class="rowlink-skip">
-                    {% for location in entity.locations %}
-                        {% if location.room %}
-                            <p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a></p>
-                        {% endif %}
-                    {% endfor %}
-                </td>
+                {#<td class="rowlink-skip">#}
+                    {#{% for location in entity.locations %}#}
+                        {#{% if location.room %}#}
+                            {#<p><a href="{{ path( employees_sitename~'_search_same_object', { 'tablename':'room','id': location.room.id, 'name': location.room.name }) }}">{{ location.room }}</a></p>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
                 {#Assistant#}
                 <td class="rowlink-skip">
