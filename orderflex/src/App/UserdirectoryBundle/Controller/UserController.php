@@ -3644,6 +3644,8 @@ class UserController extends OrderAbstractController
 
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
+            echo "currentKeyType ID=".$currentKeyType->getId()."<br>";
+            echo "originalKeyType ID=".$originalKeyType->getId()."<br>";
             if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
                 $uniqueUsername = $entity->createUniqueUsername();
                 $entity->setUsernameForce($uniqueUsername);
