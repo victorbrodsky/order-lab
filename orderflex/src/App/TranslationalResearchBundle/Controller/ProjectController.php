@@ -2431,38 +2431,30 @@ class ProjectController extends OrderAbstractController
             );
         }
 
+        $feeScheduleUrl = $this->container->get('router')->generate(
+            'translationalresearchfeesschedule-list',
+            //array(
+            //    'orderable-for-specialty[specialties][]' => $project->getProjectSpecialty()->getId()
+            //),
+            $feeScheduleUrlArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
+            $feeScheduleUrl.
+            ">See fee schedule</a>";
+
         //On “New Project Request” page for MISI projects ONLY, after “See fee schedule” link, add
         // “ / See MISI Antibody Panel List” with the words “See MISI Antibody Panel List” linking to the PDF
         if( $cycle == 'new' && $project->getProjectSpecialtyStr() == 'MISI' ) {
-            $feeScheduleUrl = $this->container->get('router')->generate(
-                'translationalresearchfeesschedule-list',
-                $feeScheduleUrlArr,
+            $feeScheduleMisiLink = $this->container->get('router')->generate(
+                'translationalresearch_misi_antibody_panels',
+                array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
-                $feeScheduleUrl.
-                ">See fee schedule / See MISI Antibody Panel List</a>";
-
-            $feeScheduleUrl = $this->container->get('router')->generate(
-                'translationalresearchfeesschedule-list',
-                $feeScheduleUrlArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $feeScheduleLink = $feeScheduleLink ." ". "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
-                $feeScheduleUrl.
-                ">See fee schedule / See MISI Antibody Panel List</a>";
-        } else {
-            $feeScheduleUrl = $this->container->get('router')->generate(
-                'translationalresearchfeesschedule-list',
-                //array(
-                //    'orderable-for-specialty[specialties][]' => $project->getProjectSpecialty()->getId()
-                //),
-                $feeScheduleUrlArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
-                $feeScheduleUrl.
-                ">See fee schedule</a>";
+            $feeScheduleLink = $feeScheduleLink ." / ".
+                "<a target='_blank' data-toggle='tooltip' title='MISI Antibody Panel List' href=".
+                $feeScheduleMisiLink.
+                ">See MISI Antibody Panel List</a>";
         }
 
         $trpAdmin = false;
