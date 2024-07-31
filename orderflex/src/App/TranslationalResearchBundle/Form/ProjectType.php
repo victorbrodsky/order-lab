@@ -954,8 +954,13 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+            $studyDurationLabel = "Projected grant or other closest deadline date:";
+        } else {
+            $studyDurationLabel = "Projected grant or other closest deadline date for completion of this project:";
+        }
         $builder->add('studyDuration', null, array(
-            'label' => "Projected grant or other closest deadline date for completion of this project:",
+            'label' => $studyDurationLabel, //"Projected grant or other closest deadline date for completion of this project:",
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
