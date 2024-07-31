@@ -64,7 +64,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 //NOT USED
-class ProjectMisiType extends AbstractType
+class ProjectMisiTypeTODEL extends AbstractType
 {
 
     protected $project;

@@ -235,9 +235,9 @@ class ProjectType extends AbstractType
         //For MISI project submission form only, make two fields:
         // “IRB Expiration Date:“ and “IRB Approval Status:”required IF “Not exempt” is selected.
         $irbNumberRequired = false;
-        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
-            $irbNumberRequired = true;
-        }
+//        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' ) {
+//            $irbNumberRequired = true;
+//        }
         $builder->add('irbNumber', null, array(
             'label' => $this->params['transresUtil']->getHumanName() . ' Number:',
             'required' => $irbNumberRequired, //false,
