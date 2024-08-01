@@ -204,7 +204,8 @@ def restartServer(url):
         # send email
         #send_email_alert(SENDER, RECEIVERS, "restartServer Test email", "restartServer Test email")
         emailSubject = "Run on down commands in " + ENV_NAME
-        emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
+        #emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
+        emailBody = "Trying to run on down commands for " + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         #emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
         print("restartServer: emailSubject=" + emailSubject+", emailBody=" + emailBody)
         #send_email_alert(SENDER, RECEIVERS, "restartServer emailSubject", "restartServer emailBody")
