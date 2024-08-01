@@ -133,8 +133,17 @@ def sendEmail(url, status):
     send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
     return False
 
-
 def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+    if MAILER_HOST == "":
+        print("Error: unable to send email: MAILER_HOST is not provided")
+        return False
+        
+    if MAILER_HOST == "smtp.gmail.com":
+        send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody)
+    else:
+        send_email_alert_local(fromEmail, toEmailList, emailSubject, emailBody);
+
+def send_email_alert_local(fromEmail, toEmailList, emailSubject, emailBody):
     if MAILER_HOST == "":
         print("Error: unable to send email: MAILER_HOST is not provided")
         return False
@@ -158,10 +167,12 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
         print("Error: unable to send email")
         #pass
 
+#https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     if MAILER_HOST == "":
         print("Error: unable to send email: MAILER_HOST is not provided")
         return False
+    
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
     msg = MIMEText(emailBody)
     msg['Subject'] = emailSubject
@@ -169,16 +180,14 @@ def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     msg['To'] = ', '.join(toEmailList)
 
     try:
-        #print("MAILER_HOST=" + MAILER_HOST+", MAILER_PORT="+MAILER_PORT)
-        smtpObj = smtplib.SMTP(MAILER_HOST, MAILER_PORT)
-        if MAILER_USERNAME != "" and MAILER_PASSWORD != "":
-            smtpObj.starttls()
-            smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
-        smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
-        print("Successfully sent email")
+        smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     except SMTPException:
-        print("Error: unable to send email")
-        #pass
+        print("Error: unable to send email") 
+    else:
+        with smtpObj:
+            smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
+            smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
+            print("Successfully sent email")
 
 def restartServer(url):
     if ON_DOWN_COMMANDS != "":
