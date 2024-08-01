@@ -144,9 +144,9 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
         send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody);
 
 def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
+    #print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
-        print("Error: unable to send email: MAILER_HOST is not provided")
+        print("Error: unable to send local email: MAILER_HOST is not provided")
         return False
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
     msg = MIMEText(emailBody)
@@ -163,16 +163,16 @@ def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
             #urllib.request.pathname2url(stringToURLEncode)
             smtpObj.login(MAILER_USERNAME, urllib.request.pathname2url(MAILER_PASSWORD))
         smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
-        print("Successfully sent email")
+        print("Successfully sent local email: ",emailSubject)
     except SMTPException:
-        print("Error: unable to send email")
+        print("Error: unable to send email: ",emailSubject)
         #pass
 
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
+    #print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
-        print("Error: unable to send email: MAILER_HOST is not provided")
+        print("Error: unable to send gmail email: MAILER_HOST is not provided")
         return False
     
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
@@ -184,12 +184,12 @@ def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     try:
         smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     except SMTPException:
-        print("Error: unable to send email") 
+        print("Error: unable to send gmail email: ",emailSubject) 
     else:
         with smtpObj:
             smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
             smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
-            print("Successfully sent email")
+            print("Successfully sent gmail email: ",emailSubject)
 
 def restartServer(url):
     if ON_DOWN_COMMANDS != "":
@@ -381,7 +381,7 @@ def main(argv):
     #listBool = [False]*len(listUrls) #False - disable email if site is up
     #statusResultMap = map(get_site_status, listUrls, listBool)
 
-    runCommand('whoami') #testing runCommand
+    #runCommand('whoami') #testing runCommand
     #restartServer("test url") #testing restartServer
     
     #Testing email
