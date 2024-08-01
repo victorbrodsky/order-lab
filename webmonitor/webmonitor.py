@@ -397,7 +397,7 @@ def main(argv):
         #send_email_alert(SENDER, RECEIVERS, "1 Test email", "1 Test email: status="+statusResult)
         #if 1: # statusResult == 'down' and isLocalServer(url):
             #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),": Before restartServer "+url)
-            send_email_alert(SENDER, RECEIVERS, "2 Test email: subject Before restartServer "+url, "2 Test email: body Before restartServer "+url)
+        send_email_alert(SENDER, RECEIVERS, "2 Test email: subject Before restartServer "+url, "2 Test email: body Before restartServer "+url)
             # restartServer(url) #testing
             #check url again and send email if server is up
             # time.sleep(10)
