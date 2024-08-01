@@ -394,11 +394,13 @@ def main(argv):
     
     #Testing email
     #send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
-    sendEmail('https://view.online/c/wcm/pathology/', 'down')
-    return
+    #sendEmail('https://view.online/c/wcm/pathology/', 'down')
+    #return
 
     statusResultList = []
     for url in listUrls:
+        sendEmail('test url', 'down')
+        return
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
         statusResultList.append(statusResult)
