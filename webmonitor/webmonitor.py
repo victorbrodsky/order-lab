@@ -116,7 +116,7 @@ def get_site_status(url, sendSuccEmail=False):
     #    status = "-" + status
     # return 'down'+status
 
-    print(status)
+    print("get_site_status:","return=down","status=",status)
     return 'down'
 
 def sendEmail(url, status):
@@ -392,7 +392,7 @@ def main(argv):
     for url in listUrls:
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
-        send_email_alert(SENDER, RECEIVERS, "Test email", "Test email: status="+statusResult)
+        #send_email_alert(SENDER, RECEIVERS, "Test email", "Test email: status="+statusResult)
         statusResultList.append(statusResult)
         if statusResult == 'down' and isLocalServer(url):
             restartServer(url)
