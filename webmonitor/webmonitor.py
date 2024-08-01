@@ -391,7 +391,7 @@ def main(argv):
     statusResultList = []
     for url in listUrls:
         statusResult = get_site_status(url,False)
-        print(url,"status=",statusResult)
+        print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
         statusResultList.append(statusResult)
         if statusResult == 'down' and isLocalServer(url):
             restartServer(url)
