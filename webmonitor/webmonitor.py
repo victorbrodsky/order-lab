@@ -391,6 +391,7 @@ def main(argv):
     statusResultList = []
     for url in listUrls:
         statusResult = get_site_status(url,False)
+        print(url,statusResultList)
         statusResultList.append(statusResult)
         if statusResult == 'down' and isLocalServer(url):
             restartServer(url)
@@ -399,7 +400,7 @@ def main(argv):
             get_site_status(url,True)
 
     #print(list(statusResultMap))
-    print(statusResultList)
+    #print(statusResultList)
 
 if __name__ == '__main__':
     #python webmonitor.py -l "http://view.med.cornell.edu, http://view-test.med.cornell.edu"
