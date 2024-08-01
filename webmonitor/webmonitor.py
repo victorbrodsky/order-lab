@@ -121,8 +121,9 @@ def get_site_status(url, sendSuccEmail=False):
     return 'down'
 
 def sendEmail(url, status):
-    split_url = urlsplit(url)
-    url = split_url.path
+    #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
+    url = urlsplit(url).path
+    
     if status == "up":
         # site is up
         emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
@@ -204,8 +205,7 @@ def restartServer(url):
             output = runCommand(command.strip())
             outputs.append(output)
 
-        #split_url = urlsplit(url)
-        #url = split_url.path
+        #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
         url = urlsplit(url).path
 
         # send email
