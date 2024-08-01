@@ -400,10 +400,10 @@ def main(argv):
         #send_email_alert(SENDER, RECEIVERS, "2 Test email subject", "2 Test email: body")
         if statusResult == 'down' and isLocalServer(url):
             send_email_alert(SENDER, RECEIVERS, "2 Test email", "2 Test email: status=["+statusResult+"]")
-            # restartServer(url) #testing
+            restartServer(url) #testing
             #check url again and send email if server is up
-            # time.sleep(10)
-            # get_site_status(url,True)
+            time.sleep(3)
+            get_site_status(url,True)
 
     #print(list(statusResultMap))
     #print(statusResultList)
