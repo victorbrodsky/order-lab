@@ -236,7 +236,7 @@ def isLocalServer(url):
 
 def main(argv):
 
-    print("\n### webmonitor.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
+    #print("\n### webmonitor.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
 
