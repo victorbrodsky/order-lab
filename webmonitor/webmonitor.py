@@ -144,7 +144,7 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
         send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody);
 
 def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    #print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
+    print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send local email: MAILER_HOST is not provided")
         return False
@@ -170,7 +170,7 @@ def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
 
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    #print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
+    print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send gmail email: MAILER_HOST is not provided")
         return False
@@ -391,8 +391,8 @@ def main(argv):
     statusResultList = []
     for url in listUrls:
         statusResult = get_site_status(url,False)
-        print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
-        send_email_alert(SENDER, RECEIVERS, "Test email", "Test email: status"+statusResult)
+        #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
+        send_email_alert(SENDER, RECEIVERS, "Test email", "Test email: status="+statusResult)
         statusResultList.append(statusResult)
         if statusResult == 'down' and isLocalServer(url):
             restartServer(url)
