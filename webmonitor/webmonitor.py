@@ -117,14 +117,12 @@ def get_site_status(url, sendSuccEmail=False):
     #    status = "-" + status
     # return 'down'+status
 
-    print("get_site_status:","return=down","status=",status)
+    #print("get_site_status:","return=down","status=",status)
     return 'down'
 
 def sendEmail(url, status):
-    #url = urllib.request.pathname2url(url)
     split_url = urlsplit(url)
     url = split_url.path
-    #print("url="+url)
     if status == "up":
         # site is up
         emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
@@ -149,7 +147,7 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
         send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody);
 
 def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
+    #print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send local email: MAILER_HOST is not provided")
         return False
@@ -175,7 +173,7 @@ def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
 
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
-    print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
+    #print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send gmail email: MAILER_HOST is not provided")
         return False
@@ -211,16 +209,10 @@ def restartServer(url):
         url = urlsplit(url).path
 
         # send email
-        #send_email_alert(SENDER, RECEIVERS, "restartServer Test email", "restartServer Test email")
         emailSubject = "Run restart commands in " + ENV_NAME
         emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
-        #emailBody = "Trying to run restart commands for " + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = emailBody + "." + "\n\n Output=" + str(outputs)      
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
-
-        #check url again
-        #time.sleep(10)
-        #get_site_status(url,True)
 
         #inceremnt global command counter
         global COMMAND_COUNTER
@@ -241,7 +233,7 @@ def runCommand(command):
 
 def isLocalServer(url):
     # check if url is located on the local server
-    print("isLocalServer: ",URL_COMMAND,url)
+    #print("isLocalServer: ",URL_COMMAND,url)
     if URL_COMMAND == url:
         return True
     return False
