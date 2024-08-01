@@ -395,7 +395,7 @@ def main(argv):
         if statusResult == 'down' and isLocalServer(url):
             restartServer(url)
             #check url again and send email if server is up
-            time.sleep(10)
+            time.sleep(5)
             get_site_status(url,True)
 
     #print(list(statusResultMap))
