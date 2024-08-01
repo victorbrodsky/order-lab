@@ -395,7 +395,7 @@ def main(argv):
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
         statusResultList.append(statusResult)
         #send_email_alert(SENDER, RECEIVERS, "1 Test email", "1 Test email: status="+statusResult)
-        if 1: # statusResult == 'down' and isLocalServer(url):
+        #if 1: # statusResult == 'down' and isLocalServer(url):
             #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),": Before restartServer "+url)
             send_email_alert(SENDER, RECEIVERS, "2 Test email: subject Before restartServer "+url, "2 Test email: body Before restartServer "+url)
             # restartServer(url) #testing
