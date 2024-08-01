@@ -230,6 +230,7 @@ def runCommand(command):
 
 def isLocalServer(url):
     # check if url is located on the local server
+    print("isLocalServer: ",URL_COMMAND,url)
     if URL_COMMAND == url:
         return True
     return False
