@@ -386,29 +386,16 @@ def main(argv):
     #statusResultMap = map(get_site_status, listUrls, listBool)
 
     #runCommand('whoami') #testing runCommand
-    #restartServer("test url") #testing restartServer
-    
-    #Testing email
-    #send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
-    #sendEmail('https://view.online/c/wcm/pathology/', 'down')
-    #return
 
     statusResultList = []
     for url in listUrls:
-        #sendEmail(url, 'down')
-        #return
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
         statusResultList.append(statusResult)
-        #send_email_alert(SENDER, RECEIVERS, "1 Test email", "1 Test email: status="+statusResult)
-        #if 1: # statusResult == 'down' and isLocalServer(url):
-        #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),": Before restartServer "+url)
-        #send_email_alert(SENDER, RECEIVERS, "2 Test email subject", "2 Test email: body")
         if statusResult == 'down' and isLocalServer(url):
-            #send_email_alert(SENDER, RECEIVERS, "2 Test email", "2 Test email: status=["+statusResult+"]")
-            restartServer(url) #testing
+            restartServer(url)
             #check url again and send email if server is up
-            time.sleep(3)
+            time.sleep(10)
             get_site_status(url,True)
 
     #print(list(statusResultMap))
