@@ -210,7 +210,7 @@ def restartServer(url):
 
         # send email
         emailSubject = "Run restart commands in " + ENV_NAME
-        emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
+        emailBody = "Trying to run restart commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = emailBody + "." + "\n\n Output=" + str(outputs)      
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
 
