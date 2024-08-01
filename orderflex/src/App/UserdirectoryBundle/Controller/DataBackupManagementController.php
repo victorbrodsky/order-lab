@@ -1150,8 +1150,16 @@ class DataBackupManagementController extends OrderAbstractController
             if( !$environment ) {
                 $environment = "unknownenv";
             }
+            //better to use instanceId
+            $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
+            if( !$instanceId ) {
+                $instanceId = "unknowinstanceId";
+            }
 
-            $command = $command . " --action backup --prefix $environment";
+            //TODO: check error
+            // /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/venv/bin/python /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/manage_postgres_db.py --configfile /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/db.config --verbose true --path /usr/local/bin/order-lab-tenantapp1/orderflex/var/backups/ --source-db tenantapp1 --user symfony --password symfony --action backup --prefix live
+
+            $command = $command . " --action backup --prefix ".$environment."-".$instanceId;
         } elseif( $action == 'restore' ) {
             //restore
             if( $backupFileName ) {
