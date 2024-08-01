@@ -120,7 +120,8 @@ def get_site_status(url, sendSuccEmail=False):
     return 'down'
 
 def sendEmail(url, status):
-    url = urllib.request.pathname2url(url)
+    #url = urllib.request.pathname2url(url)
+    url = urllib.parse(url)
     if status == "up":
         # site is up
         emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
