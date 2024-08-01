@@ -207,7 +207,8 @@ def restartServer(url):
         emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
         print("restartServer: emailSubject=" + emailSubject+", emailBody=" + emailBody)
-        send_email_alert(SENDER, RECEIVERS, "restartServer emailSubject", "restartServer emailBody")
+        #send_email_alert(SENDER, RECEIVERS, "restartServer emailSubject", "restartServer emailBody")
+        send_email_alert(SENDER, RECEIVERS, emailSubject, "restartServer emailBody")
 
         #check url again
         #time.sleep(10)
