@@ -385,8 +385,8 @@ def main(argv):
     #restartServer("test url") #testing restartServer
     
     #Testing email
-    send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
-    return
+    #send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
+    #return
 
     statusResultList = []
     for url in listUrls:
