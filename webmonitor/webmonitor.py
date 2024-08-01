@@ -394,7 +394,7 @@ def main(argv):
     
     #Testing email
     #send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
-    sendEmail('test url', 'down')
+    sendEmail('https://view.online/c/wcm/pathology/', 'down')
     return
 
     statusResultList = []
