@@ -32,6 +32,7 @@ from datetime import datetime
 import subprocess
 from subprocess import PIPE
 import urllib
+from urllib.parse import urlsplit, urlunsplit
 #import yagmail
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
