@@ -206,6 +206,7 @@ def restartServer(url):
         emailSubject = "Run on down commands in " + ENV_NAME
         emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
+        print("emailSubject: " + emailSubject, "emailBody: " + emailBody)
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
 
         #check url again
@@ -400,7 +401,7 @@ def main(argv):
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),": Before restartServer "+url)
         #send_email_alert(SENDER, RECEIVERS, "2 Test email subject", "2 Test email: body")
         if statusResult == 'down' and isLocalServer(url):
-            send_email_alert(SENDER, RECEIVERS, "2 Test email", "2 Test email: status=["+statusResult+"]")
+            #send_email_alert(SENDER, RECEIVERS, "2 Test email", "2 Test email: status=["+statusResult+"]")
             restartServer(url) #testing
             #check url again and send email if server is up
             time.sleep(3)
