@@ -122,7 +122,7 @@ def get_site_status(url, sendSuccEmail=False):
 
 def sendEmail(url, status):
     #url = urllib.request.pathname2url(url)
-    split_url = urllib.urlsplit(url)
+    split_url = urlsplit(url)
     url = split_url.path
     print("url="+url)
     if status == "up":
