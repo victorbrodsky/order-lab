@@ -851,7 +851,7 @@ class DefaultController extends OrderAbstractController
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         //echo "projectRoot=$projectRoot<br>";
         //exit($projectRoot);
-        $parentRoot = str_replace('order-lab','',$projectRoot);
+        $parentRoot = str_replace('order-lab','',$projectRoot); //not used. Execute only once
         $parentRoot = str_replace('orderflex','',$parentRoot);
         $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
         //echo "parentRoot=$parentRoot<br>";

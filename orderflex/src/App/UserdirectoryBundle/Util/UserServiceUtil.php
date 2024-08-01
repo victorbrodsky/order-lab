@@ -1855,12 +1855,12 @@ Pathology and Laboratory Medicine",
         //echo "command=$command <br>";
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $projectRoot = str_replace('order-lab', '', $projectRoot);
+        //$projectRoot = str_replace('order-lab', '', $projectRoot);
         $parentRoot = str_replace('orderflex', '', $projectRoot);
         $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
 
         $managePackagePath = $parentRoot .
-            DIRECTORY_SEPARATOR . "order-lab" .
+            //DIRECTORY_SEPARATOR . 'order-lab' .
             DIRECTORY_SEPARATOR . "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";

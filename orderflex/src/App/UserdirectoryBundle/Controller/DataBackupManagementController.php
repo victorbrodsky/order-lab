@@ -1069,12 +1069,13 @@ class DataBackupManagementController extends OrderAbstractController
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
 
-        $projectRoot = str_replace('order-lab', '', $projectRoot);
+        //For multitenancy is not 'order-lab' anymore, but 'order-lab-tenantapp1'
+        //$projectRoot = str_replace('order-lab', '', $projectRoot);
         $parentRoot = str_replace('orderflex', '', $projectRoot);
         $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
 
         $managePackagePath = $parentRoot .
-            DIRECTORY_SEPARATOR . "order-lab" .
+            //DIRECTORY_SEPARATOR . 'order-lab' .
             DIRECTORY_SEPARATOR . "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
@@ -1096,7 +1097,7 @@ class DataBackupManagementController extends OrderAbstractController
         //password=userpassword
 
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
-        //exit('111='.$pythonScriptPath);
+        //exit('pythonScriptPath='.$pythonScriptPath);
 
         //python in virtualenv'ed scripts: /path/to/venv/bin/python3
         if( $userServiceUtil->isWindows() ){

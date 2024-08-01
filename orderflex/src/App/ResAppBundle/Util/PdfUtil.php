@@ -2641,16 +2641,16 @@ class PdfUtil {
         $pdfPath = $pdfDocument->getAttachmentEmailPath();
 
         //testing
-        if(0) {
-            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-            $parentRoot = str_replace('order-lab', '', $projectRoot);
-            $parentRoot = str_replace('orderflex', '', $parentRoot);
-            $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-            $filename = "eras_gs.pdf";
-            //$filename = "eras.pdf";
-            $pdfPath = $parentRoot . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $filename;
-            //echo "pdfPath=$pdfPath<br>";
-        }
+//        if(0) {
+//            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//            $parentRoot = str_replace('order-lab', '', $projectRoot);
+//            $parentRoot = str_replace('orderflex', '', $parentRoot);
+//            $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+//            $filename = "eras_gs.pdf";
+//            //$filename = "eras.pdf";
+//            $pdfPath = $parentRoot . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $filename;
+//            //echo "pdfPath=$pdfPath<br>";
+//        }
 
         echo "pdfPath=$pdfPath<br>";
         if( $this->isPdfCompressed($pdfPath) ) {
