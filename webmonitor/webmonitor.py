@@ -123,6 +123,7 @@ def sendEmail(url, status):
     #url = urllib.request.pathname2url(url)
     split_url = urllib.urlsplit(url)
     url = split_url.path
+    print("url="+url)
     if status == "up":
         # site is up
         emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
