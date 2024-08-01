@@ -124,7 +124,7 @@ def sendEmail(url, status):
     #url = urllib.request.pathname2url(url)
     split_url = urlsplit(url)
     url = split_url.path
-    print("url="+url)
+    #print("url="+url)
     if status == "up":
         # site is up
         emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
@@ -215,7 +215,7 @@ def restartServer(url):
         emailBody = "Trying to run restart commands for " + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
         #emailBody = emailBody + "." + "\n\n commands=" + str(inputCommands)
-        print("restartServer: emailSubject=" + emailSubject+", emailBody=" + emailBody)
+        #print("restartServer: emailSubject=" + emailSubject+", emailBody=" + emailBody)
         #send_email_alert(SENDER, RECEIVERS, "restartServer emailSubject", "restartServer emailBody")
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
 
@@ -404,8 +404,8 @@ def main(argv):
 
     statusResultList = []
     for url in listUrls:
-        sendEmail(url, 'down')
-        return
+        #sendEmail(url, 'down')
+        #return
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
         statusResultList.append(statusResult)
