@@ -399,7 +399,7 @@ def main(argv):
 
     statusResultList = []
     for url in listUrls:
-        sendEmail('test url', 'down')
+        sendEmail(url, 'down')
         return
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
