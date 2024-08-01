@@ -393,13 +393,13 @@ def main(argv):
     for url in listUrls:
         statusResult = get_site_status(url,False)
         #print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),url,"status=",statusResult)
-        send_email_alert(SENDER, RECEIVERS, "1 Test email", "Test email: status="+statusResult)
+        send_email_alert(SENDER, RECEIVERS, "1 Test email", "1 Test email: status="+statusResult)
         statusResultList.append(statusResult)
         if statusResult == 'down' and isLocalServer(url):
-            print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),"Before restartServer "+url)
-            send_email_alert(SENDER, RECEIVERS, "2 Test email: Before restartServer "+url, "Before restartServer "+url+", status="+statusResult)
+            print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),": Before restartServer "+url)
+            send_email_alert(SENDER, RECEIVERS, "2 Test email: subject Before restartServer "+url, "2 Test email: body Before restartServer "+url)
             # restartServer(url) #testing
-            # check url again and send email if server is up
+            #check url again and send email if server is up
             # time.sleep(10)
             # get_site_status(url,True)
 
