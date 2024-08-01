@@ -196,17 +196,20 @@ def restartServer(url):
         #ON_DOWN_COMMANDS is a string or comma seperated string of commands
         commands = ON_DOWN_COMMANDS.split(",")
         outputs = []
+        inputCommands = []
         for command in commands:
             #try to run command
             output = runCommand(command.strip())
             outputs.append(output)
+            inputCommands.append(command.strip())
 
         # send email
         #send_email_alert(SENDER, RECEIVERS, "restartServer Test email", "restartServer Test email")
         emailSubject = "Run on down commands in " + ENV_NAME
         #emailBody = "Trying to run on down commands for " + url + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
         emailBody = "Trying to run on down commands for " + " in " + ENV_NAME + ":\n" + ON_DOWN_COMMANDS
-        #emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
+        emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
+        #emailBody = emailBody + "." + "\n\n commands=" + str(inputCommands)
         print("restartServer: emailSubject=" + emailSubject+", emailBody=" + emailBody)
         #send_email_alert(SENDER, RECEIVERS, "restartServer emailSubject", "restartServer emailBody")
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
