@@ -1073,12 +1073,13 @@ class DataBackupManagementController extends OrderAbstractController
         //$projectRoot = str_replace('order-lab', '', $projectRoot);
         $parentRoot = str_replace('orderflex', '', $projectRoot);
         $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-        echo "parentRoot=".$parentRoot."<br>";
-        exit('111');
+        //echo "parentRoot=".$parentRoot."<br>";
+        //exit('111');
 
         $managePackagePath = $parentRoot .
             //DIRECTORY_SEPARATOR . 'order-lab' .
-            DIRECTORY_SEPARATOR . "utils" .
+            //DIRECTORY_SEPARATOR . "utils" .
+            "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
         //echo 'scriptPath='.$scriptPath."<br>";

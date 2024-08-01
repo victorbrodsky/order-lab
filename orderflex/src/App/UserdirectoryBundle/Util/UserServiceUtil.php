@@ -1861,7 +1861,8 @@ Pathology and Laboratory Medicine",
 
         $managePackagePath = $parentRoot .
             //DIRECTORY_SEPARATOR . 'order-lab' .
-            DIRECTORY_SEPARATOR . "utils" .
+            //DIRECTORY_SEPARATOR . "utils" .
+            "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
         //echo "managePackagePath=$managePackagePath <br>";
