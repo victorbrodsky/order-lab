@@ -141,9 +141,10 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     if MAILER_HOST == "smtp.gmail.com":
         send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody)
     else:
-        send_email_alert_local(fromEmail, toEmailList, emailSubject, emailBody);
+        send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody);
 
-def send_email_alert_local(fromEmail, toEmailList, emailSubject, emailBody):
+def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+    print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send email: MAILER_HOST is not provided")
         return False
@@ -169,6 +170,7 @@ def send_email_alert_local(fromEmail, toEmailList, emailSubject, emailBody):
 
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+    print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
     if MAILER_HOST == "":
         print("Error: unable to send email: MAILER_HOST is not provided")
         return False
@@ -381,6 +383,10 @@ def main(argv):
 
     runCommand('whoami') #testing runCommand
     #restartServer("test url") #testing restartServer
+    
+    #Testing email
+    send_email_alert(SENDER, RECEIVERS, "Test email subject", "Test email body")
+    return
 
     statusResultList = []
     for url in listUrls:
