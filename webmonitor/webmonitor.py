@@ -398,7 +398,7 @@ def main(argv):
         if statusResult == 'down' and isLocalServer(url):
             print(datetime.now().strftime('%Y-%B-%d %H:%M:%S'),"Before restartServer "+url)
             send_email_alert(SENDER, RECEIVERS, "Before restartServer "+url, "Before restartServer "+url+", status="+statusResult)
-            restartServer(url)
+            #restartServer(url) #testing
             # check url again and send email if server is up
             time.sleep(10)
             get_site_status(url,True)
