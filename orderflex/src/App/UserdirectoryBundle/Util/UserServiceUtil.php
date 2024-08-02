@@ -3196,12 +3196,13 @@ Pathology and Laboratory Medicine",
                 $resArr[] = "Cron job interval is not provided and cron job can not be created";
             }
 
-        }
+        } //foreach sets
 
         if( count($resArr) == 0 ) {
             $resArr[] = "Cron failed. Probably invalid JSON file. Please make sure 'sets' keyword is exists. <br>".$helpStr;
         }
 
+        $logger->notice("createBackupCronLinux: ".implode(", ",$resArr));
         //dump($resArr);
         //exit('EOF createBackupCronLinux');
 
