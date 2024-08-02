@@ -53,7 +53,7 @@ class DbBackupCommand extends Command {
 
 
     //Cron job to back up DB
-    //php app/console cron:db-backup-command --env=prod
+    //php bin/console cron:db-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $resStr = "N/A";

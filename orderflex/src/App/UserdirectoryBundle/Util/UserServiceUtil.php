@@ -3273,13 +3273,13 @@ Pathology and Laboratory Medicine",
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
 
-        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            $res = array(
-                'status' => "NOTOK",
-                'message' => "No permission"
-            );
-            return $res;
-        }
+//        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            $res = array(
+//                'status' => "NOTOK",
+//                'message' => "No permission"
+//            );
+//            return $res;
+//        }
 
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
