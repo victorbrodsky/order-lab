@@ -219,7 +219,7 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:useradstatus' }
 
-  App\UserdirectoryBundle\Command\DbBackupCommand:
+    App\UserdirectoryBundle\Command\DbBackupCommand:
         tags:
             - { name: 'console.command', command: 'cron:db-backup-command' }
 
