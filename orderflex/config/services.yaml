@@ -219,6 +219,9 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:useradstatus' }
 
+  App\UserdirectoryBundle\Command\DbBackupCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:db-backup-command' }
 
     App\FellAppBundle\Command\GenerateReportRunCommand:
         tags:

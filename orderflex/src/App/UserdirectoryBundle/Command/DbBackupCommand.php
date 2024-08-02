@@ -24,19 +24,13 @@
 
 namespace App\UserdirectoryBundle\Command;
 
-
-//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use App\FellAppBundle\Entity\FellowshipApplication;
-use App\TranslationalResearchBundle\Entity\Invoice;
 use Symfony\Component\Console\Command\Command;
-//use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-//use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UtilCommand extends Command {
+class DbBackupCommand extends Command {
 
     //protected static $defaultName = 'cron:db-backup-command';
     private $container;
@@ -58,51 +52,23 @@ class UtilCommand extends Command {
     }
 
 
-    //Cron job to periodically overnight copy data
+    //Cron job to back up DB
     //php app/console cron:db-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        $resStr = "N/A";
 
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        //$logger = $this->container->get('logger');
-        $res = "EOF util-command";
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
 
-        //$calllogUtil = $this->container->get('calllog_util');
-        //$res = $calllogUtil->updateTextHtml();
-        //exit("EOF updateTextHtmlAction. Res=".$res);
+        if( $networkDrivePath ) {
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
 
-        if(0) {
-            $oid = "APCP3296-REQ13549-V1"; //dev
-            $oid = "APCP2173-REQ15079-V2"; //collage
-            $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
-            if (!$invoice) {
-                throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-            }
-            $transresRequestUtil = $this->container->get('transres_request_util');
-            $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
+            $resStr = implode(', ', $res);
         }
 
-        if(0) {
-            ///// rec letter ////////
-            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-            $fellapp = $em->getRepository(FellowshipApplication::class)->find(1414); //8-testing, 1414-collage, 1439-live
-            $references = $fellapp->getReferences();
-            $reference = $references->first();
-            $letters = $reference->getDocuments();
-            $uploadedLetterDb = $letters->first();
-            $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp, $uploadedLetterDb);
-
-            $fellappType = $fellapp->getFellowshipSubspecialty();
-            $res = "ID=" . $fellapp->getId() . ", fellappType=" . $fellappType . ": res=" . $res . "<br>";
-            /////////////////////////
-        }
-
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->testEmailWithAttachments();
-        $res = "EOF testEmailWithAttachments";
-
-        //$output->writeln($res);
-        $output->writeln($res);
+        $output->writeln($resStr);
 
         return Command::SUCCESS;
     }
