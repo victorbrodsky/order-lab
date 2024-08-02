@@ -3485,7 +3485,7 @@ Pathology and Laboratory Medicine",
             $res = "";
             foreach ($jobs as $job) {
                 $res = $res . "<p>".$job."</p>";
-                echo "job=[".$job."]<br>";
+                //echo "job=[".$job."]<br>";
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
             }
             return $res;
@@ -3500,7 +3500,7 @@ Pathology and Laboratory Medicine",
 
         //make ' cron:statustest '
         //$commandName = " "."cron:".$cronJobName." ";
-        //echo "commandName=$commandName <br>";
+        echo "commandName=$commandName <br>";
         //exit('111');
 
         $commandName = trim((string)$commandName);
@@ -3516,7 +3516,7 @@ Pathology and Laboratory Medicine",
         if( isset($jobs) && is_array($jobs) ) {
 
             foreach ($jobs as $job) {
-                //echo "[".$commandName."]: job=[".$job."]<br>";
+                echo "[".$commandName."]: job=[".$job."]<br>";
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
 
                 //if (strpos((string)$job, $commandName) !== false) {
