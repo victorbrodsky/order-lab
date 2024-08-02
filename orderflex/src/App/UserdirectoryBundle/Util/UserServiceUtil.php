@@ -3485,7 +3485,7 @@ Pathology and Laboratory Medicine",
             $res = "";
             foreach ($jobs as $job) {
                 $res = $res . "<p>".$job."</p>";
-//                echo "job=[".$job."]<br>";
+                echo "job=[".$job."]<br>";
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
             }
             return $res;
