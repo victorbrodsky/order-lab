@@ -462,7 +462,7 @@ class DataBackupManagementController extends OrderAbstractController
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
             // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
-            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
             //exit($res);
 
             $resStatus = $res['status'];
@@ -627,7 +627,9 @@ class DataBackupManagementController extends OrderAbstractController
 
         //$res = $this->restoringBackupSQLFull($backupFilePath);
         //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-        $res = $this->dbManagePython($networkDrivePath,'restore',$backupFileName); //Use python script pg_restore
+        //$res = $this->dbManagePython($networkDrivePath,'restore',$backupFileName); //Working: Use python script pg_restore
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Use python script pg_restore
         //exit($res);
 
         $logger->notice("After dbManagePython");
