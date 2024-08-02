@@ -460,7 +460,9 @@ class DataBackupManagementController extends OrderAbstractController
 
             //create backup
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             //exit($res);
 
             $resStatus = $res['status'];
