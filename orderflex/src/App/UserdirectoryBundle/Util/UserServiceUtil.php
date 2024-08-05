@@ -3514,7 +3514,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function removeOldBackupFiles() {
-        $keepnumber = 2;
+        $keepNumber = 2;
 
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -3527,24 +3527,48 @@ Pathology and Laboratory Medicine",
         $files = $this->getBackupFiles($networkDrivePath);
         echo "Total files ".count($files)."<br>";
 
+//        $count = 0;
+//        foreach( $files as $file ) {
+//            //echo "file id=".$file['id'].", name=".$file['name']."<br>";
+//            if( str_contains($file['name'],'backupdb-') ) {
+//                //Keep only the first $keepnumber
+//                //echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
+//                $filePath = $networkDrivePath.$file['id'];
+//                echo "filePath=".$filePath."<br>";
+//                if (is_file($filePath)) {
+//                    if( $count >= $keepNumber ) {
+//                        unlink($filePath);
+//                        echo "Removed: $filePath <br>";
+//                    }
+//                }
+//                $count++;
+//            }
+//        }
+        $removedDbCount = $this->processOldBackupFiles($networkDrivePath,$files,$keepNumber,'backupdb-');
+        $removedFilesCount = $this->processOldBackupFiles($networkDrivePath,$files,$keepNumber,'backupfiles-');
+        return "Removed $removedDbCount DB backup files and $removedFilesCount Upload files";
+    }
+    public function processOldBackupFiles($networkDrivePath,$files,$keepNumber,$filePartialName) {
+        $removedCount = 0;
         $count = 0;
         foreach( $files as $file ) {
             //echo "file id=".$file['id'].", name=".$file['name']."<br>";
-            if( str_contains($file['name'],'backupdb-') ) {
+            if( str_contains($file['name'],$filePartialName) ) {
                 //Keep only the first $keepnumber
                 //echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
                 $filePath = $networkDrivePath.$file['id'];
                 echo "filePath=".$filePath."<br>";
                 if (is_file($filePath)) {
-                    if( $count >= $keepnumber ) {
+                    if( $count >= $keepNumber ) {
                         unlink($filePath);
                         echo "Removed: $filePath <br>";
+                        $removedCount++;
                     }
                 }
                 $count++;
             }
         }
-
+        return $removedCount;
     }
     public function getBackupFiles( $networkDrivePath ) {
         if( !$networkDrivePath ) {
