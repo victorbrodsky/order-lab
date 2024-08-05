@@ -79,7 +79,8 @@ class DbBackupCommand extends Command {
             $resStr = $resStr . "; " . $res;
 
             //Remove previously created backups: keep only number of backup files (keepnumber)
-            $userServiceUtil->removeOldBackupFiles();
+            $res = $userServiceUtil->removeOldBackupFiles();
+            $resStr = $resStr . "; " . $res;
 
             $logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         } else {

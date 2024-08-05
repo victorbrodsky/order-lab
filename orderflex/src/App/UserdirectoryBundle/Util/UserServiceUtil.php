@@ -3515,7 +3515,120 @@ Pathology and Laboratory Medicine",
 
     public function removeOldBackupFiles() {
         $keepnumber = 3;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            return "removeOldBackupFiles: Cannot proceed: networkDrivePath is not specified";
+        }
+
+        //get files from $networkDrivePath
+        $files = $this->getBackupFiles($networkDrivePath);
+
+        foreach( $files as $file ) {
+            echo "file=$file <br>";
+        }
+
     }
+    public function getBackupFiles( $networkDrivePath ) {
+        if( !$networkDrivePath ) {
+            return null;
+        }
+
+        if (file_exists($networkDrivePath)) {
+            //echo "The path=$networkDrivePath";
+        } else {
+            //echo "The file $networkDrivePath does not exist";
+            return null;
+        }
+
+        //echo "networkDrivePath=$networkDrivePath <br>";
+
+        //$files = scandir($networkDrivePath); //with dots
+        $files = $this->better_scandir($networkDrivePath,SCANDIR_SORT_DESCENDING);
+        //dump($files);
+        //exit('111');
+
+        $backupFiles = array();
+        if( $files && is_array($files) ) {
+            $files = array_diff($files, array('..', '.'));
+            foreach( $files as $file ) {
+                //echo "file=$file <br>";
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if( $ext && $ext != 'log' && $ext != 'txt' ) {
+                    $filePath = $networkDrivePath . DIRECTORY_SEPARATOR . $file;
+                    $fileName = $file .
+                        " (" .
+                        date("F d Y H:i:s", filemtime($filePath)) .
+                        ", " . $this->formatSizeUnits(filesize($filePath)) .
+                        ")";
+                    $fileOption = array("id" => $file, "name" => $fileName);
+                    $backupFiles[] = $fileOption;
+                }
+            }
+        }
+        //dump($files);
+        //exit('111');
+        return $backupFiles;
+    }
+    public function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
+    }
+    //https://stackoverflow.com/questions/11923235/scandir-to-sort-by-date-modified
+    public function better_scandir($dir, $sorting_order = SCANDIR_SORT_ASCENDING) {
+
+        /****************************************************************************/
+        // Roll through the scandir values.
+        $files = array();
+        $files = $this->getFiles( $dir, $sorting_order );
+        //dump($files);
+        //exit('111');
+
+        /****************************************************************************/
+        // Sort the files array.
+        if ($sorting_order == SCANDIR_SORT_ASCENDING) {
+            asort($files, SORT_NUMERIC);
+        }
+        else {
+            arsort($files, SORT_NUMERIC);
+        }
+
+        /****************************************************************************/
+        // Set the final return value.
+        $ret = array_keys($files);
+
+        /****************************************************************************/
+        // Return the final value.
+        return $ret;
+
+    } // better_scandir
 
     public function getJsonHelpStr() {
         $helpStr = '
