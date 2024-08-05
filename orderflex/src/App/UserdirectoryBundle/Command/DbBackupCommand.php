@@ -52,7 +52,9 @@ class DbBackupCommand extends Command {
     }
 
 
-    //Cron job to back up DB
+    //TODO: 315(F): F- Implement a view.med.cornell.edu cron job that reaches out to view.online
+    //TODO: and picks up/downloads the back up files every 12 hours from the back up destination folder
+    //Cron job to back up DB.
     // /bin/php bin/console cron:db-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
