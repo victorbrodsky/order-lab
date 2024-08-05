@@ -223,6 +223,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:db-backup-command' }
 
+    App\UserdirectoryBundle\Command\SyncBackupCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:sync-backup-command' }
+
     App\FellAppBundle\Command\GenerateReportRunCommand:
         tags:
             - { name: 'console.command', command: 'fellapp:generatereportrun' }

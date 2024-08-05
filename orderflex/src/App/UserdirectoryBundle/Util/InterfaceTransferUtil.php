@@ -3157,6 +3157,4 @@ class InterfaceTransferUtil {
         return $res;
     }
 
-
-
 }

@@ -114,8 +114,8 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         //Testing
-        $res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
-        echo "Testing: removeOldBackupFiles: $res <br>";
+        //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
+        //echo "Testing: removeOldBackupFiles: $res <br>";
 
         //$param = $userSecUtil->getSingleSiteSettingsParam();
         $param = $userServiceUtil->getSingleSiteSettingParameter();

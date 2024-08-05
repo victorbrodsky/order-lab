@@ -24,65 +24,52 @@
 
 namespace App\UserdirectoryBundle\Command;
 
+use App\UserdirectoryBundle\Util\SyncBackupUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DbBackupCommand extends Command {
+class SyncBackupCommand extends Command {
 
-    //protected static $defaultName = 'cron:db-backup-command';
     private $container;
     private $em;
+    private $syncBackupUtil;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, SyncBackupUtil $syncBackupUtil)
     {
         parent::__construct();
 
         $this->container = $container;
         $this->em = $em;
+        $this->syncBackupUtil = $syncBackupUtil;
     }
 
     protected function configure() : void 
     {
         $this
-            ->setName('cron:db-backup-command')
-            ->setDescription('Backup DB');
+            ->setName('cron:sync-backup-command')
+            ->setDescription('Download backup files from the public to the internal server');
     }
 
-    //Cron job to back up DB.
-    // /bin/php bin/console cron:db-backup-command --env=prod
+
+    //F- Implement a view.med.cornell.edu cron job that reaches out to
+    // view.online and picks up/downloads the back up files every 12 hours
+    // from the back up destination folder (both the database file and
+    // the zipped up uploaded files) and puts them into a dedicated
+    // network shared folder
+    // (subfolder of where the view.med.cornell.edu backups are uploaded.)
+
+    // /bin/php bin/console cron:sync-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $resStr = "N/A";
 
         $logger = $this->container->get('logger');
-        //$logger->notice("cron:db-backup-command. before.");
+        $logger->notice("cron:sync-backup-command. Start.");
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-
-        if( $networkDrivePath ) {
-            $userServiceUtil = $this->container->get('user_service_utility');
-
-            //$logger->notice("cron:db-backup-command. start.");
-
-            $resStr = NULL;
-            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
-            $resStr = implode(', ', $res);
-
-            $res = $userServiceUtil->createBackupUpload();
-            $resStr = $resStr . "; " . $res;
-
-            //Remove previously created backups: keep only number of backup files (keepnumber)
-            $res = $userServiceUtil->removeOldBackupFiles();
-            $resStr = $resStr . "; " . $res;
-
-            //$logger->notice("cron:db-backup-command. after. resStr=".$resStr);
-        } else {
-            $logger->notice("cron:db-backup-command. Error: no networkDrivePath.");
-        }
+        $this->syncBackupUtil->downloadBackupFilesFromPublic();
 
         $output->writeln($resStr);
 
