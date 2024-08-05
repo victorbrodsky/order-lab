@@ -3536,7 +3536,7 @@ Pathology and Laboratory Medicine",
                 $filePath = $networkDrivePath.$file['id'];
                 echo "filePath=".$filePath."<br>";
                 if (is_file($filePath)) {
-                    if( $count > $keepnumber ) {
+                    if( $count >= $keepnumber ) {
                         unlink($filePath);
                         echo "Removed: $filePath <br>";
                     }
