@@ -27,6 +27,6 @@ class SyncBackupUtil
     }
 
     public function downloadBackupFilesFromPublic() {
-
+        return "downloadBackupFilesFromPublic";
     }
 }

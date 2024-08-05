@@ -69,7 +69,7 @@ class SyncBackupCommand extends Command {
         $logger = $this->container->get('logger');
         $logger->notice("cron:sync-backup-command. Start.");
 
-        $this->syncBackupUtil->downloadBackupFilesFromPublic();
+        $resStr = $this->syncBackupUtil->downloadBackupFilesFromPublic();
 
         $output->writeln($resStr);
 
