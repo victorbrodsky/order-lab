@@ -1273,7 +1273,7 @@ class DataBackupManagementController extends OrderAbstractController
             }
             ////////// EOF Create upload backup ///////////////
 
-            $res = $userServiceUtil->createBackupUpload($request);
+            $res = $userServiceUtil->createBackupUpload();
 
             if( $res ) {
                 $this->addFlash(

@@ -3439,7 +3439,7 @@ Pathology and Laboratory Medicine",
     }
 
     //create-backup-upload: result file: 'backupfiles-...'
-    public function createBackupUpload( $request ) {
+    public function createBackupUpload() {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
