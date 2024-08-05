@@ -53,19 +53,21 @@ class DbBackupCommand extends Command {
 
 
     //Cron job to back up DB
-    //php bin/console cron:db-backup-command --env=prod
+    // /bin/php bin/console cron:db-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $resStr = "N/A";
 
         $logger = $this->container->get('logger');
+        $logger->notice("cron:db-backup-command. before.");
+
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
 
         if( $networkDrivePath ) {
             $userServiceUtil = $this->container->get('user_service_utility');
 
-            $logger->notice("cron:db-backup-command. before.");
+            $logger->notice("cron:db-backup-command. start.");
 
             $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
             $resStr = implode(', ', $res);
@@ -74,6 +76,8 @@ class DbBackupCommand extends Command {
             $resStr = $resStr . "; " . $res;
 
             $logger->notice("cron:db-backup-command. after. resStr=".$resStr);
+        } else {
+            $logger->notice("cron:db-backup-command. Error: no networkDrivePath.");
         }
 
         $output->writeln($resStr);
