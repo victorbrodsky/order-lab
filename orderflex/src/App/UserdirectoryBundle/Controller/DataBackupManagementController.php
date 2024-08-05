@@ -1208,6 +1208,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
@@ -1223,46 +1224,56 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $networkDrivePath ) {
 
-            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
-            //set_time_limit(900); //900 sec => 15 min
+            ////////// Create upload backup ///////////////
+            if(0) {
+                set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+                //set_time_limit(900); //900 sec => 15 min
 
-            //create backup tar -zcvf archive.tar.gz directory/
-            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
-            //exit($networkDrivePath);
+                //create backup tar -zcvf archive.tar.gz directory/
+                $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+                //exit($networkDrivePath);
 
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( !$environment ) {
-                $environment = "unknownenv";
+                $environment = $userSecUtil->getSiteSettingParameter('environment');
+                if (!$environment) {
+                    $environment = "unknownenv";
+                }
+
+                $date = date('Y-m-d-H-i-s');
+                $archiveFile = "backupfiles-" . $environment . "_" . $date . ".tar.gz";
+                $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
+                //echo "archiveFile=".$archiveFile."<br>";
+
+                $projectRoot = $this->container->get('kernel')->getProjectDir();
+                //echo "projectRoot=".$projectRoot."<br>";
+                $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";//.DIRECTORY_SEPARATOR."Uploaded";
+                //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+                //echo "folder=".$folder."<br>";
+                //exit('111');
+
+                //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
+                // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
+
+                $targetFolder = "Uploaded";
+                //$targetFolder = "UploadedTest"; //testing
+
+                //use tar.gz archive
+                $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
+                //echo "command=".$command."<br>";
+
+                $logger->notice("createUploadBackupAction. before command=" . $command);
+
+                $res = $this->runProcess($command);
+                //exit("res=".$res);
+
+                $logger->notice("createUploadBackupAction. after res=" . $res);
+
+                if (!$res) {
+                    $res = "Uploaded folder backup $archiveFile has been successfully created";
+                }
             }
+            ////////// EOF Create upload backup ///////////////
 
-            $date = date('Y-m-d-H-i-s');
-            $archiveFile = "backupfiles-".$environment."_".$date.".tar.gz";
-            $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$archiveFile;
-            //echo "archiveFile=".$archiveFile."<br>";
-
-            $projectRoot = $this->container->get('kernel')->getProjectDir();
-            //echo "projectRoot=".$projectRoot."<br>";
-            $folder = $projectRoot.DIRECTORY_SEPARATOR."public";//.DIRECTORY_SEPARATOR."Uploaded";
-            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
-            //echo "folder=".$folder."<br>";
-            //exit('111');
-
-            //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
-            // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
-
-            $targetFolder = "Uploaded";
-            //$targetFolder = "UploadedTest"; //testing
-
-            //use tar.gz archive
-            $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
-            //echo "command=".$command."<br>";
-
-            $logger->notice("createUploadBackupAction. before command=".$command);
-
-            $res = $this->runProcess($command);
-            //exit("res=".$res);
-
-            $logger->notice("createUploadBackupAction. after res=".$res);
+            $res = $userServiceUtil->createBackupUpload();
 
             if( !$res ) {
                 $res = "Uploaded folder backup $archiveFile has been successfully created";

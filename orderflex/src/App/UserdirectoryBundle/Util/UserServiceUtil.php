@@ -3437,6 +3437,81 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    //create-backup-upload
+    public function createBackupUpload( $request ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+//            //exit("No networkDrivePath is defined");
+//            $this->addFlash(
+//                'pnotify-error',
+//                //'notice',
+//                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+//            );
+//            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+            return "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings";
+        }
+
+        $res = NULL;
+
+        if( $networkDrivePath ) {
+
+            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+            //set_time_limit(900); //900 sec => 15 min
+
+            //create backup tar -zcvf archive.tar.gz directory/
+            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+            //exit($networkDrivePath);
+
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if (!$environment) {
+                $environment = "unknownenv";
+            }
+
+            $date = date('Y-m-d-H-i-s');
+            $archiveFile = "backupfiles-" . $environment . "_" . $date . ".tar.gz";
+            $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
+            //echo "archiveFile=".$archiveFile."<br>";
+
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            //echo "projectRoot=".$projectRoot."<br>";
+            $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";//.DIRECTORY_SEPARATOR."Uploaded";
+            //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+            //echo "folder=".$folder."<br>";
+            //exit('111');
+
+            //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
+            // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
+
+            $targetFolder = "Uploaded";
+            //$targetFolder = "UploadedTest"; //testing
+
+            //use tar.gz archive
+            $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
+            //echo "command=".$command."<br>";
+
+            $logger->notice("createUploadBackupAction. before command=" . $command);
+
+            $res = $this->runProcess($command);
+            //exit("res=".$res);
+
+            $logger->notice("createUploadBackupAction. after res=" . $res);
+
+            if (!$res) {
+                $res = "Uploaded folder backup $archiveFile has been successfully created";
+            }
+
+//            //Event Log
+//            $user = $this->security->getUser();
+//            $sitename = $this->container->getParameter('employees.sitename');
+//            $userSecUtil->createUserEditEvent($sitename, $res, $user, null, $request, 'Create Backup Upload Files');
+        }
+
+        return $res;
+    }
+
     public function getJsonHelpStr() {
         $helpStr = '
                 {"sets" : [
