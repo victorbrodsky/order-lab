@@ -3514,7 +3514,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function removeOldBackupFiles() {
-        $keepnumber = 3;
+        $keepnumber = 2;
 
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -3526,16 +3526,21 @@ Pathology and Laboratory Medicine",
         //get files from $networkDrivePath
         $files = $this->getBackupFiles($networkDrivePath);
 
+        $count = 0;
         foreach( $files as $file ) {
             //echo "file id=".$file['id'].", name=".$file['name']."<br>";
             if( str_contains($file['name'],'backupdb-') ) {
-                echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
+                //Keep only the first $keepnumber
+                //echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
                 $filePath = $networkDrivePath.$file['id'];
-                echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
+                echo "filePath=".$filePath."<br>";
                 if (is_file($filePath)) {
-                    //unlink($networkDrivePath.$file);
+                    if( $count > $keepnumber ) {
+                        unlink($filePath);
+                    }
                     echo "Removed: $filePath <br>";
                 }
+                $count++;
             }
         }
 
