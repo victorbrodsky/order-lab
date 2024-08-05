@@ -3629,6 +3629,19 @@ Pathology and Laboratory Medicine",
         return $ret;
 
     } // better_scandir
+    public function getFiles( $dir, $sorting_order ) {
+        /****************************************************************************/
+        // Roll through the scandir values.
+        $files = array();
+        foreach (scandir($dir, $sorting_order) as $file) {
+            if ($file[0] === '.') {
+                continue;
+            }
+            $files[$file] = filemtime($dir . '/' . $file);
+        } // foreach
+
+        return $files;
+    }
 
     public function getJsonHelpStr() {
         $helpStr = '
