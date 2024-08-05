@@ -64,7 +64,7 @@ class StatusCronCommand extends Command {
         $logger->notice("cron:status. execute.");
 
         //Testing dbManagePython
-        if(1) {
+        if(0) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $userSecUtil = $this->container->get('user_security_utility');
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -74,7 +74,6 @@ class StatusCronCommand extends Command {
             $resStr = $resStr . "; " . $res;
             $logger->notice("cron:status. after. resStr=" . $resStr);
         }
-
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatus();
