@@ -3527,7 +3527,7 @@ Pathology and Laboratory Medicine",
         $files = $this->getBackupFiles($networkDrivePath);
 
         foreach( $files as $file ) {
-            echo "file=$file <br>";
+            echo "file id=".$file['id'].", name=".$file['name']."<br>";
         }
 
     }
