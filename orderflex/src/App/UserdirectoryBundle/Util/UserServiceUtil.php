@@ -3525,6 +3525,7 @@ Pathology and Laboratory Medicine",
 
         //get files from $networkDrivePath
         $files = $this->getBackupFiles($networkDrivePath);
+        echo "Total files ".count($files)."<br>";
 
         $count = 0;
         foreach( $files as $file ) {
@@ -3537,8 +3538,8 @@ Pathology and Laboratory Medicine",
                 if (is_file($filePath)) {
                     if( $count > $keepnumber ) {
                         unlink($filePath);
+                        echo "Removed: $filePath <br>";
                     }
-                    echo "Removed: $filePath <br>";
                 }
                 $count++;
             }
