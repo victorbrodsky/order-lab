@@ -72,11 +72,11 @@ class DbBackupCommand extends Command {
             $logger->notice("cron:db-backup-command. start.");
 
             $resStr = NULL;
-            //$res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
-            //$resStr = implode(', ', $res);
+            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
+            $resStr = implode(', ', $res);
 
-            //$res = $userServiceUtil->createBackupUpload();
-            //$resStr = $resStr . "; " . $res;
+            $res = $userServiceUtil->createBackupUpload();
+            $resStr = $resStr . "; " . $res;
 
             //Remove previously created backups: keep only number of backup files (keepnumber)
             $userServiceUtil->removeOldBackupFiles();
