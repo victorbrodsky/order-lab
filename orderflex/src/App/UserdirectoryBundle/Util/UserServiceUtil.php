@@ -3518,14 +3518,14 @@ Pathology and Laboratory Medicine",
 
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        echo "networkDrivePath=".$networkDrivePath."<br>";
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             return "removeOldBackupFiles: Cannot proceed: networkDrivePath is not specified";
         }
 
         //get files from $networkDrivePath
         $files = $this->getBackupFiles($networkDrivePath);
-        echo "Total files ".count($files)."<br>";
+        //echo "Total files ".count($files)."<br>";
 
 //        $count = 0;
 //        foreach( $files as $file ) {
@@ -3557,11 +3557,11 @@ Pathology and Laboratory Medicine",
                 //Keep only the first $keepnumber
                 //echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
                 $filePath = $networkDrivePath.$file['id'];
-                echo "filePath=".$filePath."<br>";
+                //echo "filePath=".$filePath."<br>";
                 if (is_file($filePath)) {
                     if( $count >= $keepNumber ) {
                         unlink($filePath);
-                        echo "Removed: $filePath <br>";
+                        //echo "Removed: $filePath <br>";
                         $removedCount++;
                     }
                 }
