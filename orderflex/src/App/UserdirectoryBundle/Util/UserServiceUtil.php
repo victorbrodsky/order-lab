@@ -3271,6 +3271,7 @@ Pathology and Laboratory Medicine",
     }
 
     //Used by DataBackupManagemenetController.php
+    //create-backup: result file: 'backupdb-...'
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
 
@@ -3437,7 +3438,7 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    //create-backup-upload
+    //create-backup-upload: result file: 'backupfiles-...'
     public function createBackupUpload( $request ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
