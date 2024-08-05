@@ -69,6 +69,8 @@ class StatusCronCommand extends Command {
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
         $resStr = implode(', ', $res);
+        $res = $userServiceUtil->createBackupUpload();
+        $resStr = $resStr . "; " . $res;
         $logger->notice("cron:status. after. resStr=".$resStr);
 
 
