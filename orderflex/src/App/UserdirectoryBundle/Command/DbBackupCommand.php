@@ -78,6 +78,9 @@ class DbBackupCommand extends Command {
             //$res = $userServiceUtil->createBackupUpload();
             //$resStr = $resStr . "; " . $res;
 
+            //Remove previously created backups: keep only number of backup files (keepnumber)
+            $userServiceUtil->removeOldBackupFiles();
+
             $logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         } else {
             $logger->notice("cron:db-backup-command. Error: no networkDrivePath.");

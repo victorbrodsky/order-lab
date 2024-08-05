@@ -3513,6 +3513,10 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    public function removeOldBackupFiles() {
+        $keepnumber = 3;
+    }
+
     public function getJsonHelpStr() {
         $helpStr = '
                 {"sets" : [
