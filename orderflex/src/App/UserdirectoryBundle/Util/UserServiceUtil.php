@@ -2722,7 +2722,7 @@ Pathology and Laboratory Medicine",
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
         $statusFrequency = 30;
-        //$statusFrequency = 5; //testing
+        $statusFrequency = 2; //testing
         $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
