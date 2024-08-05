@@ -3527,7 +3527,10 @@ Pathology and Laboratory Medicine",
         $files = $this->getBackupFiles($networkDrivePath);
 
         foreach( $files as $file ) {
-            echo "file id=".$file['id'].", name=".$file['name']."<br>";
+            //echo "file id=".$file['id'].", name=".$file['name']."<br>";
+            if( str_contains($file['name'],'backupdb-') ) {
+                echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
+            }
         }
 
     }
@@ -3606,7 +3609,7 @@ Pathology and Laboratory Medicine",
 
         /****************************************************************************/
         // Roll through the scandir values.
-        $files = array();
+        //$files = array();
         $files = $this->getFiles( $dir, $sorting_order );
         //dump($files);
         //exit('111');
