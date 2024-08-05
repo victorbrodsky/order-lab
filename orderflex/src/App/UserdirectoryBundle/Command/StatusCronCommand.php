@@ -60,6 +60,16 @@ class StatusCronCommand extends Command {
     //php bin/console cron:status --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("cron:status. before.");
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
+        $resStr = implode(', ', $res);
+        $logger->notice("cron:status. after. resStr=".$resStr);
+
+
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatus();
         $output->writeln($res);
