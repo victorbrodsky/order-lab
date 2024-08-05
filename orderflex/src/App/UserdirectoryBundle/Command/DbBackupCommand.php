@@ -58,16 +58,22 @@ class DbBackupCommand extends Command {
     {
         $resStr = "N/A";
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
 
         if( $networkDrivePath ) {
             $userServiceUtil = $this->container->get('user_service_utility');
+
+            $logger->notice("cron:db-backup-command. before.");
+
             $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
             $resStr = implode(', ', $res);
-            
+
             $res = $userServiceUtil->createBackupUpload();
             $resStr = $resStr . "; " . $res;
+
+            $logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         }
 
         $output->writeln($resStr);
