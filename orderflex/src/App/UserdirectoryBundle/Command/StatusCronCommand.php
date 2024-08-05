@@ -61,7 +61,8 @@ class StatusCronCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $logger = $this->container->get('logger');
-        $logger->notice("cron:status. before.");
+        $logger->notice("cron:status. execute.");
+        
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
