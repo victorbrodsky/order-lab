@@ -3530,7 +3530,8 @@ Pathology and Laboratory Medicine",
             //echo "file id=".$file['id'].", name=".$file['name']."<br>";
             if( str_contains($file['name'],'backupdb-') ) {
                 echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
-                $filePath = $networkDrivePath.$file;
+                $filePath = $networkDrivePath.$file['id'];
+                echo "backupdb file id=".$file['id'].", name=".$file['name']."<br>";
                 if (is_file($filePath)) {
                     //unlink($networkDrivePath.$file);
                     echo "Removed: $filePath <br>";
