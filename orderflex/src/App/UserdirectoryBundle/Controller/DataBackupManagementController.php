@@ -1275,8 +1275,17 @@ class DataBackupManagementController extends OrderAbstractController
 
             $res = $userServiceUtil->createBackupUpload();
 
-            if( !$res ) {
-                $res = "Uploaded folder backup $archiveFile has been successfully created";
+            if( $res ) {
+                $this->addFlash(
+                    'notice',
+                    $res
+                );
+            } else {
+                $res = "Error: Uploaded folder backup has not been created";
+                $this->addFlash(
+                    'warning',
+                    $res
+                );
             }
 
             //Event Log
