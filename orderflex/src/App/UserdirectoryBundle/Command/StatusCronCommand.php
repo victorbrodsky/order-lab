@@ -62,7 +62,8 @@ class StatusCronCommand extends Command {
     {
         $logger = $this->container->get('logger');
         $logger->notice("cron:status. execute.");
-        
+
+        //Testing dbManagePython
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
