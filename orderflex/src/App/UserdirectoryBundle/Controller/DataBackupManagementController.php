@@ -97,6 +97,7 @@ class DataBackupManagementController extends OrderAbstractController
                 'pnotify-error',
                 "DB management is not implemented for Windows"
             );
+            return $this->redirect($this->generateUrl('employees_home'));
         }
 
         //networkDrivePath

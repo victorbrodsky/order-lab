@@ -64,8 +64,10 @@ class DbBackupCommand extends Command {
         if( $networkDrivePath ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
-
             $resStr = implode(', ', $res);
+            
+            $res = $userServiceUtil->createBackupUpload();
+            $resStr = $resStr . "; " . $res;
         }
 
         $output->writeln($resStr);
