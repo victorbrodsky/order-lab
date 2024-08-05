@@ -69,11 +69,11 @@ class DbBackupCommand extends Command {
 
             $logger->notice("cron:db-backup-command. start.");
 
-            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
-            $resStr = implode(', ', $res);
+            //$res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
+            //$resStr = implode(', ', $res);
 
-            $res = $userServiceUtil->createBackupUpload();
-            $resStr = $resStr . "; " . $res;
+            //$res = $userServiceUtil->createBackupUpload();
+            //$resStr = $resStr . "; " . $res;
 
             $logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         } else {
