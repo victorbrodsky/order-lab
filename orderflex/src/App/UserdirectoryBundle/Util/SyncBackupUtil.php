@@ -27,6 +27,15 @@ class SyncBackupUtil
     }
 
     public function downloadBackupFilesFromPublic() {
+        $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //send request to public (remote) server to send back the backup files as a response
+        //downloadFile
+        //employees_transfer_interface_get_app_path
+        //get-app-path
+        //getAppPathCurl
+
+
         return "downloadBackupFilesFromPublic";
     }
 }

@@ -64,8 +64,7 @@ class SyncBackupCommand extends Command {
     // /bin/php bin/console cron:sync-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $resStr = "N/A";
-
+        //$resStr = "N/A";
         $logger = $this->container->get('logger');
         $logger->notice("cron:sync-backup-command. Start.");
 
