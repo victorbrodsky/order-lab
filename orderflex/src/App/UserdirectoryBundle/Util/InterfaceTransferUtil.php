@@ -230,7 +230,8 @@ class InterfaceTransferUtil {
         //exit('111');
 
         //Step 1: get application path with curl
-        $remoteAppPath = $this->getAppPathCurl($interfaceTransfer,$jsonFile);
+        $serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        $remoteAppPath = $this->getAppPathCurl($serverName,$jsonFile);
         //$logger->notice('remoteAppPath='.$remoteAppPath);
         //exit('remoteAppPath='.$remoteAppPath);
         $jsonFile['apppath'] = $remoteAppPath;
@@ -494,7 +495,7 @@ class InterfaceTransferUtil {
         return false;
     }
 
-    public function getAppPathCurl( InterfaceTransferList $interfaceTransfer, $jsonFile ) {
+    public function getAppPathCurl( $serverName, $jsonFile ) {
         $remoteAppPath = NULL;
 
         //Send data with curl and secret key
@@ -508,7 +509,7 @@ class InterfaceTransferUtil {
         $jsonFile['hash'] = $hash;
 
         $data_string = json_encode($jsonFile);
-        $strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        //$strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
         $url = 'http://'.$strServer.'/directory/transfer-interface/get-app-path';
         echo "url=$url <br>";
         $ch = curl_init($url);
@@ -2158,6 +2159,35 @@ class InterfaceTransferUtil {
         }
 
         return null;
+    }
+    public function getRemoteFile( $serverName, $privateKeyContent, $sourceFile, $destinationFile, $type='SFTP' ) {
+
+        if( $type == 'SFTP' ) {
+            $sshConnection = new SFTP($serverName);
+        } else {
+            $sshConnection = new SSH2($serverName);
+        }
+
+        $key = PublicKeyLoader::load($privateKeyContent);
+
+        if( !$sshConnection->login('root', $key) ) {
+            throw new \Exception($type.' login failed with private key');
+        }
+        //else{
+        //    return $sshConnection;
+        //}
+
+        $sshConnection->enableDatePreservation(); //preserver original file last modified date
+
+        //$sourceFile = $apppath.'/'.'public'.'/'.$uploadDirectory.'/'.$uniquename;
+
+        $output = $sshConnection->get($sourceFile, $destinationFile);
+
+        if( $output ) {
+            return true;
+        }
+
+        return false;
     }
 
     //$jsonObject, $transferableEntity, 'humanTissueForms'
