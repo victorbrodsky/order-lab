@@ -47,13 +47,21 @@ class SyncBackupUtil
 
         //2) downloadFile
         //$file = $interfaceTransferUtil->downloadFile( $jsonObject, $transferableEntity, $field, $adder );
-        try {
-            $sftpConnection = $this->connectByPublicKey($transferableEntity,'SFTP');
-        } catch( \Exception $e ) {
-            //echo 'Caught connection exception: ', $e->getMessage(), "\n";
+        $privateKeyContent = $interfaceTransfer->getSshPassword();
+        $uniquename = null; //get the latest 'backupdb' and 'backupfiles' files
+        //$uniquename = 'backupdb-live-WCMEXT-20240806-160005-tenantapp1.dump.gz';
+        //$uniquename = 'backupfiles-live_2024-08-06-16-00-08.tar.gz';
+        $sourceFile = $remoteAppPath.'/'.'var'.'/'.'backups'.'/'.$uniquename;
+
+        //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $destinationFileName = $serverName.'-'.$uniquename;
+        $destinationFile = $projectRoot.'/var/backups/'.$destinationFileName;
+
+        $outputRes = $interfaceTransferUtil->getRemoteFile($serverName, $privateKeyContent, $sourceFile, $destinationFile);
+        if( $outputRes ) {
             return false;
         }
-        $sftpConnection->enableDatePreservation(); //preserver original file last modified date
 
         //downloadFile
         //employees_transfer_interface_get_app_path
