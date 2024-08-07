@@ -35,7 +35,7 @@ class SyncBackupUtil
         //1) Get remote project path
         $jsonFile = array(
             //'datetime' => time(),
-            'random' => rand()
+            //'random' => rand()
         );
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
