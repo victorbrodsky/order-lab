@@ -231,7 +231,8 @@ class InterfaceTransferUtil {
 
         //Step 1: get application path with curl
         $serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $remoteAppPath = $this->getAppPathCurl($serverName,$jsonFile);
+        $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
+        $remoteAppPath = $this->getAppPathCurl($serverName,$jsonFile,$remoteCertificate);
         //$logger->notice('remoteAppPath='.$remoteAppPath);
         //exit('remoteAppPath='.$remoteAppPath);
         $jsonFile['apppath'] = $remoteAppPath;
@@ -495,7 +496,7 @@ class InterfaceTransferUtil {
         return false;
     }
 
-    public function getAppPathCurl( $serverName, $jsonFile ) {
+    public function getAppPathCurl( $serverName, $jsonFile, $remoteCertificate=null ) {
         $remoteAppPath = NULL;
 
         if( !$serverName ) {
@@ -514,8 +515,9 @@ class InterfaceTransferUtil {
 
         $data_string = json_encode($jsonFile);
         //$serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $url = 'http://'.$serverName.'/directory/transfer-interface/get-app-path';
-        echo "url=$url <br>";
+        //$url = 'http://'.$serverName.'/directory/transfer-interface/get-app-path';
+        $url = 'https://'.$serverName.'/directory/transfer-interface/get-app-path';
+        //echo "url=$url <br>";
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -526,10 +528,10 @@ class InterfaceTransferUtil {
             'Content-Type: application/json',
             'Content-Length: ' . strlen($data_string)
         ));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //        //$this->verifyPeer = true;
-//        if( $this->verifyPeer ) {
+        if( $this->verifyPeer && $remoteCertificate ) {
 //            $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
 //            //https://stackoverflow.com/questions/4372710/php-curl-https
 //            //curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false); is a quick fix
@@ -539,19 +541,13 @@ class InterfaceTransferUtil {
 //            //2) view certificate => export/download as pem or crt
 //            //3) use this remote certificate in CURLOPT_CAINFO
 //            //Install: yum install ca-certificates
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-//            curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
-//            curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
-//            curl_setopt($ch, CURLOPT_VERBOSE, true);
-//
-//            //$projectDir = $this->container->get('kernel')->getProjectDir(); //order-lab\orderflex
-//            //exit("__FILE__: ".$projectDir.'/var');
-//            //$fp = fopen($projectDir.'/var'.'/curlerrorlog.txt', 'w');
-//            //curl_setopt($ch, CURLOPT_STDERR, $fp);
-//            //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
-//        } else {
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
-//        }
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_CAINFO, $remoteCertificate);
+            //curl_setopt($ch, CURLOPT_VERBOSE, true);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
+        }
 
         $result = curl_exec($ch);
         $status = curl_getinfo($ch);

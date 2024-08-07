@@ -214,6 +214,7 @@ class InterfaceController extends OrderAbstractController
 
         $valid = NULL;
         $hash = hash('sha512', $secretKey . serialize($input));
+        $logger->notice("receiveTransferAction: hash=[$hash], checksum=[$checksum]");
         if ($hash === $checksum) {
             $valid = true;
         } else {
