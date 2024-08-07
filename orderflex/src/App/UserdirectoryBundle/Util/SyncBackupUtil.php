@@ -44,15 +44,15 @@ class SyncBackupUtil
         //Use InterfaceTransferList 'Project' to get server ip or url
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
         $serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        echo "serverName=$serverName <br>";
+        echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);
-        echo "remoteAppPath=$remoteAppPath <br>";
+        echo "downloadBackupFilesFromPublic: remoteAppPath=$remoteAppPath <br>";
 
         //2) downloadFile
         //$file = $interfaceTransferUtil->downloadFile( $jsonObject, $transferableEntity, $field, $adder );
         $privateKeyContent = $interfaceTransfer->getSshPassword();
-        echo "privateKeyContent=$privateKeyContent <br>";
+        echo "downloadBackupFilesFromPublic: privateKeyContent=$privateKeyContent <br>";
         if( !$privateKeyContent ) {
             return false;
         }
