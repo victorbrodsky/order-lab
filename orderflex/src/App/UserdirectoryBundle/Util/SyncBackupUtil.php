@@ -8,6 +8,7 @@
 
 namespace App\UserdirectoryBundle\Util;
 
+use App\UserdirectoryBundle\Entity\InterfaceTransferList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
