@@ -51,7 +51,11 @@ class SyncBackupUtil
         $uniquename = null; //get the latest 'backupdb' and 'backupfiles' files
         //$uniquename = 'backupdb-live-WCMEXT-20240806-160005-tenantapp1.dump.gz';
         //$uniquename = 'backupfiles-live_2024-08-06-16-00-08.tar.gz';
-        $sourceFile = $remoteAppPath.'/'.'var'.'/'.'backups'.'/'.$uniquename;
+        $sourcePath = $remoteAppPath.'/'.'var'.'/'.'backups';
+        $sourceFile = $sourcePath.'/'.$uniquename;
+
+        $files = $interfaceTransferUtil->listRemoteFiles($serverName, $privateKeyContent, $sourcePath);
+        return $files;
 
         //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)
         $projectRoot = $this->container->get('kernel')->getProjectDir();

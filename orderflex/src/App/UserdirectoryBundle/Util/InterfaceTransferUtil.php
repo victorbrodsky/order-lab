@@ -2189,6 +2189,34 @@ class InterfaceTransferUtil {
 
         return false;
     }
+    public function listRemoteFiles( $serverName, $privateKeyContent, $path, $type='SFTP' ) {
+        if( $type == 'SFTP' ) {
+            $sshConnection = new SFTP($serverName);
+        } else {
+            $sshConnection = new SSH2($serverName);
+        }
+
+        $key = PublicKeyLoader::load($privateKeyContent);
+
+        if( !$sshConnection->login('root', $key) ) {
+            throw new \Exception($type.' login failed with private key');
+        }
+        //else{
+        //    return $sshConnection;
+        //}
+
+        //$sshConnection->enableDatePreservation(); //preserver original file last modified date
+
+        if (!($files = $sshConnection->nlist($path, true)))
+        {
+            die("Cannot read directory contents");
+        }
+
+        foreach ($files as $file)
+        {
+            echo "file=$file\n";
+        }
+    }
 
     //$jsonObject, $transferableEntity, 'humanTissueForms'
     public function downloadFile( $jsonObject, $transferableEntity, $field, $adder ) {

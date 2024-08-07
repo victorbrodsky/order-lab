@@ -90,7 +90,10 @@ class InterfaceController extends OrderAbstractController
         }
 
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
-        
+
+        //Testing
+        $files = $interfaceTransferUtil->downloadBackupFilesFromPublic();
+
         $title = "Transfer Interface Manager";
 
         //List of items to transfer from TransferData
