@@ -43,7 +43,11 @@ class SyncBackupUtil
         $jsonFile['hash'] = $hash;
         //Use InterfaceTransferList 'Project' to get server ip or url
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
-        $serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        if( !$interfaceTransfer ) {
+            exit("Not fount InterfaceTransferList by name Project");
+        }
+
+        $serverName = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
         echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);
