@@ -528,10 +528,14 @@ class InterfaceTransferUtil {
         ));
 
         $result = curl_exec($ch);
-        //$status = curl_getinfo($ch);
+        $status = curl_getinfo($ch);
+        $error = curl_error($ch);
         curl_close($ch);
 
+        dump($error);
+        dump($status);
         dump($result);
+
         exit('111');
 
         if( $result ) {
