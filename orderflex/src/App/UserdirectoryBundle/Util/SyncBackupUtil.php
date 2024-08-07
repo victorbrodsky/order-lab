@@ -44,11 +44,19 @@ class SyncBackupUtil
         //Use InterfaceTransferList 'Project' to get server ip or url
         $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
         $serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        echo "serverName=$serverName <br>";
+
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);
+        echo "remoteAppPath=$remoteAppPath <br>";
 
         //2) downloadFile
         //$file = $interfaceTransferUtil->downloadFile( $jsonObject, $transferableEntity, $field, $adder );
         $privateKeyContent = $interfaceTransfer->getSshPassword();
+        echo "privateKeyContent=$privateKeyContent <br>";
+        if( !$privateKeyContent ) {
+            return false;
+        }
+
         $uniquename = null; //get the latest 'backupdb' and 'backupfiles' files
         //$uniquename = 'backupdb-live-WCMEXT-20240806-160005-tenantapp1.dump.gz';
         //$uniquename = 'backupfiles-live_2024-08-06-16-00-08.tar.gz';
