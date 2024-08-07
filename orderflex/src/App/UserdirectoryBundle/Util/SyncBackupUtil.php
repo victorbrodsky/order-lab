@@ -34,6 +34,7 @@ class SyncBackupUtil
 
         //1) Get remote project path
         $jsonFile = array(
+            'className' => 'Project',
             'datetime' => time(),
             'random' => rand()
         );

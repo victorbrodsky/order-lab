@@ -510,9 +510,8 @@ class InterfaceTransferUtil {
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         //Add hash and security key
-        echo "serialize(jsonFile)=".serialize($jsonFile)."<br>";
+        //echo "serialize(jsonFile)=".serialize($jsonFile)."<br>";
         $hash = hash('sha512', $secretKey . serialize($jsonFile));
-        //$hash = hash('sha512', $secretKey);
         $jsonFile['hash'] = $hash;
 
         $data_string = json_encode($jsonFile);
@@ -553,16 +552,16 @@ class InterfaceTransferUtil {
 
         $result = curl_exec($ch);
         $status = curl_getinfo($ch);
-        $error = curl_error($ch);
+        //$error = curl_error($ch);
         curl_close($ch);
 
-        dump($error);
-        dump($status);
-        dump($result);
+        //dump($error);
+        //dump($status);
+        //dump($result);
 
-        exit('111');
+        //exit('111');
 
-        if( $result ) {
+        if( $status['http_code'] == 200 && $result ) {
             $result = json_decode($result, true);
             if( !$result ) {
                 return NULL;
@@ -572,11 +571,11 @@ class InterfaceTransferUtil {
             $transferResult = $result['transferResult'];
             $apppath = $result['apppath'];
 
-            dump($result);
-            exit('222');
+            //dump($result);
+            //exit('222');
 
             if ($checksum === $hash && $valid === true && $transferResult === true) {
-                echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+                //echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
                 return $apppath;
             }
         }
