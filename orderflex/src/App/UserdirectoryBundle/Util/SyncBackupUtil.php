@@ -48,7 +48,8 @@ class SyncBackupUtil
             exit("Not fount InterfaceTransferList by name Project");
         }
 
-        $serverName = $interfaceTransfer->getTransferSourceBase();  //"159.203.95.150";
+        //$serverName = $interfaceTransfer->getTransferSourceBase();  //http://view.online/directory/transfer-interface/get-app-path 
+        $serverName = $interfaceTransfer->getTransferSource();  //http://view.online/wcm/pathology/directory/transfer-interface/get-app-path 
         echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);

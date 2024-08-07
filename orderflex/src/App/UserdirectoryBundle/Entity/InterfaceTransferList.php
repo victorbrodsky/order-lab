@@ -192,6 +192,10 @@ class InterfaceTransferList extends ListAbstract
     public function getTransferSourceBase()
     {
         $serverName = $this->getTransferSource();
+        if( !$serverName ) {
+            return NULL;
+        }
+
         $exploded_server = explode('/', $serverName);
         if( count($exploded_server) > 0 ) {
             $serverName = $exploded_server[0];

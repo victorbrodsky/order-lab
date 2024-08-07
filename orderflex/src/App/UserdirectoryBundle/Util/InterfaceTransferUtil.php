@@ -544,8 +544,8 @@ class InterfaceTransferUtil {
             $transferResult = $result['transferResult'];
             $apppath = $result['apppath'];
 
-            //dump($result);
-            //exit('222');
+            dump($result);
+            exit('222');
 
             if ($checksum === $hash && $valid === true && $transferResult === true) {
                 echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
