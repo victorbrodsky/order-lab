@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\Project;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
+use App\UserdirectoryBundle\Util\SyncBackupUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +81,7 @@ class InterfaceController extends OrderAbstractController
 
     #[Route(path: '/transfer-manager', name: 'employees_interface_manager', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/TransferInterface/manager.html.twig')]
-    public function transferInterfaceManagerAction(Request $request)
+    public function transferInterfaceManagerAction(Request $request, SyncBackupUtil $syncBackupUtil)
     {
         if(
             false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
@@ -92,7 +93,7 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //Testing
-        $files = $interfaceTransferUtil->downloadBackupFilesFromPublic();
+        $files = $syncBackupUtil->downloadBackupFilesFromPublic();
 
         $title = "Transfer Interface Manager";
 
