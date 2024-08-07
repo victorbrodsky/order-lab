@@ -34,13 +34,13 @@ class SyncBackupUtil
 
         //1) Get remote project path
         $jsonFile = array(
-            //'datetime' => time(),
-            //'random' => rand()
+            'datetime' => time(),
+            'random' => rand()
         );
-        $userSecUtil = $this->container->get('user_security_utility');
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        $hash = hash('sha512', $secretKey . serialize($jsonFile));
-        $jsonFile['hash'] = $hash;
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+//        $jsonFile['hash'] = $hash;
         //Use InterfaceTransferList 'Project' to get server ip or url
         //$interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
         $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByName($entityName='Project');
