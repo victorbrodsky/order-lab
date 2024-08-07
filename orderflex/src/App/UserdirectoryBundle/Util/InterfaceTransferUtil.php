@@ -2165,35 +2165,24 @@ class InterfaceTransferUtil {
         //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
         //$private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
         //$privateKeyContent = file_get_contents($private_key_path);
-        $key = PublicKeyLoader::load($privateKeyContent);
-
-        if( $type == 'SFTP' ) {
-            $sshConnection = new SFTP($strServer);
-        } else {
-            $sshConnection = new SSH2($strServer);
-        }
-
-//        if (!$sftpConnection->login('root', $key)) {
-//            throw new \Exception('SFTP login failed with private key');
-//        } else{
-//            //$projectRoot = $this->container->get('kernel')->getProjectDir();
-//            //$testFile = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/transres/documents/668c329c96a32.pdf';
-//            //$sftpConnection->get($testFile, $projectRoot.'\testFileLocal.pdf');
-//            //exit('Copied file ');
-//            return $sftpConnection;
+//        $key = PublicKeyLoader::load($privateKeyContent);
+//
+//        if( $type == 'SFTP' ) {
+//            $sshConnection = new SFTP($strServer);
+//        } else {
+//            $sshConnection = new SSH2($strServer);
 //        }
-//        //exit('111');
+//
+//        if( !$sshConnection->login('root', $key) ) {
+//            throw new \Exception($type.' login failed with private key');
+//        } else{
+//            return $sshConnection;
+//        }
 
-        if( !$sshConnection->login('root', $key) ) {
-            throw new \Exception($type.' login failed with private key');
-        } else{
-            return $sshConnection;
-        }
-
-        return null;
+        $sshConnection = $this->getRemoteConnection($strServer,$privateKeyContent);
+        return $sshConnection;
     }
-    public function getRemoteFile( $serverName, $privateKeyContent, $sourceFile, $destinationFile, $type='SFTP' ) {
-
+    public function getRemoteConnection( $serverName, $privateKeyContent, $type='SFTP' ) {
         if( $type == 'SFTP' ) {
             $sshConnection = new SFTP($serverName);
         } else {
@@ -2205,9 +2194,28 @@ class InterfaceTransferUtil {
         if( !$sshConnection->login('root', $key) ) {
             throw new \Exception($type.' login failed with private key');
         }
-        //else{
-        //    return $sshConnection;
-        //}
+
+        //$sshConnection->enableDatePreservation(); //preserver original file last modified date
+
+        return $sshConnection;
+    }
+    public function getRemoteFile( $sshConnection, $sourceFile, $destinationFile, $type='SFTP' ) {
+
+//        if( $type == 'SFTP' ) {
+//            $sshConnection = new SFTP($serverName);
+//        } else {
+//            $sshConnection = new SSH2($serverName);
+//        }
+//
+//        $key = PublicKeyLoader::load($privateKeyContent);
+//
+//        if( !$sshConnection->login('root', $key) ) {
+//            throw new \Exception($type.' login failed with private key');
+//        }
+//        //else{
+//        //    return $sshConnection;
+//        //}
+//        $sshConnection = $this->getRemoteConnection($serverName,$privateKeyContent);
 
         $sshConnection->enableDatePreservation(); //preserver original file last modified date
 
@@ -2221,23 +2229,8 @@ class InterfaceTransferUtil {
 
         return false;
     }
-    public function listRemoteFiles( $serverName, $privateKeyContent, $path, $type='SFTP' ) {
-        if( $type == 'SFTP' ) {
-            $sshConnection = new SFTP($serverName);
-        } else {
-            $sshConnection = new SSH2($serverName);
-        }
-
-        $key = PublicKeyLoader::load($privateKeyContent);
-
-        if( !$sshConnection->login('root', $key) ) {
-            throw new \Exception($type.' login failed with private key');
-        }
-        //else{
-        //    return $sshConnection;
-        //}
-
-        //$sshConnection->enableDatePreservation(); //preserver original file last modified date
+    public function listRemoteFiles( $sshConnection, $path ) {
+        $sshConnection->enableDatePreservation(); //preserver original file last modified date
 
         //$sshConnection->setListOrder('filename', SORT_ASC);
         //$sshConnection->setListOrder('mtime', SORT_DESC);

@@ -57,7 +57,7 @@ class SyncBackupUtil
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);
         echo "downloadBackupFilesFromPublic: remoteAppPath=$remoteAppPath <br>";
 
-        //2) downloadFile
+        //2) Get latest filenames
         //$file = $interfaceTransferUtil->downloadFile( $jsonObject, $transferableEntity, $field, $adder );
         $privateKeyContent = $interfaceTransfer->getSshPassword();
         //echo "downloadBackupFilesFromPublic: privateKeyContent=$privateKeyContent <br>";
@@ -66,51 +66,71 @@ class SyncBackupUtil
             return false;
         }
 
-        $uniquename = null; //get the latest 'backupdb' and 'backupfiles' files
+        $sshConnection = $interfaceTransferUtil->getRemoteConnection($serverBaseName,$privateKeyContent);
+
+        //$uniquename = null; //get the latest 'backupdb' and 'backupfiles' files
         //$uniquename = 'backupdb-live-WCMEXT-20240806-160005-tenantapp1.dump.gz';
         //$uniquename = 'backupfiles-live_2024-08-06-16-00-08.tar.gz';
         $sourcePath = $remoteAppPath.'/'.'var'.'/'.'backups';
-        $sourceFile = $sourcePath.'/'.$uniquename;
 
-        $files = $interfaceTransferUtil->listRemoteFiles($serverBaseName, $privateKeyContent, $sourcePath);
+        $files = $interfaceTransferUtil->listRemoteFiles($sshConnection, $sourcePath);
 
         //https://stackoverflow.com/questions/54999763/getting-latest-file-from-sftp-in-php-using-curl
         // filter out folders     
         $files_only_callback = function($a) {
-            return (
-                $a["type"] == NET_SFTP_TYPE_REGULAR
-                &&
-                (str_contains($a['filename'],'backupfiles') || str_contains($a['filename'],'backupdb'))
-            );
+            return ($a["type"] == NET_SFTP_TYPE_REGULAR);
         };
         $files = array_filter($files, $files_only_callback);
-        
+
+        $files_db_callback = function($a) {
+            return (str_contains($a['filename'],'backupdb'));
+        };
+        $dbFiles = array_filter($files, $files_db_callback);
+
+        $files_upload_callback = function($a) {
+            return (str_contains($a['filename'],'backupfiles'));
+        };
+        $uploadFiles = array_filter($files, $files_upload_callback);
+
         // sort by timestamp
-        //usort($files, function($a, $b) { return $b["mtime"] - $a["mtime"]; });
         // In PHP 7, you can use spaceship operator instead:
-        usort($files, function($a, $b) { return $b["mtime"] <=> $a["mtime"]; });
+        usort($dbFiles, function($a, $b) { return $b["mtime"] <=> $a["mtime"]; });
+        usort($uploadFiles, function($a, $b) { return $b["mtime"] <=> $a["mtime"]; });
 
-        $latest = $files[0]["filename"];
-        echo "latest=".$latest."<br>";
+        $latestDbFile = $dbFiles[0]["filename"];
+        echo "latestDbFile=".$latestDbFile."<br>";
 
-        foreach ($files as $key=>$file)
-        {
-            dump($file);
-            echo "$key: file=".$file['filename']."<br>";
-        }
+        $latestUploadFile = $uploadFiles[0]["filename"];
+        echo "latestUploadFile=".$latestUploadFile."<br>";
 
-        exit('111');
+//        foreach ($files as $file) {
+//            dump($file);
+//            //echo "file=".$file['filename']."<br>";
+//        }
+        //exit('111');
+        //return $files;
 
-        return $files;
-
+        //3) downloadFile
         //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)
         $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $destinationFileName = $serverName.'-'.$uniquename;
-        $destinationFile = $projectRoot.'/var/backups/'.$destinationFileName;
+        //a) backupdb
+        $sourceDbFile = $sourcePath.'/'.$latestDbFile;
+        $destinationDbFileName = $serverName.'-'.$latestDbFile;
+        $destinationDbFile = $projectRoot.'/var/backups/'.$destinationDbFileName;
+        $outputDbRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceDbFile, $destinationDbFile);
+        if( $outputDbRes ) {
+            //return false;
+            echo "destinationDbFile=".$destinationDbFile."<br>";
+        }
 
-        $outputRes = $interfaceTransferUtil->getRemoteFile($serverName, $privateKeyContent, $sourceFile, $destinationFile);
-        if( $outputRes ) {
-            return false;
+        //b) backupfiles
+        $sourceUploadFile = $sourcePath.'/'.$latestUploadFile;
+        $destinationUploadFileName = $serverName.'-'.$latestUploadFile;
+        $destinationUploadFile = $projectRoot.'/var/backups/'.$destinationUploadFileName;
+        $outputUploadRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceUploadFile, $destinationUploadFile);
+        if( $outputUploadRes ) {
+            //return false;
+            echo "destinationUploadFile=".$destinationUploadFile."<br>";
         }
 
         //downloadFile
@@ -121,4 +141,5 @@ class SyncBackupUtil
 
         return "downloadBackupFilesFromPublic";
     }
+
 }
