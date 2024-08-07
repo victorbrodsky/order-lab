@@ -34,6 +34,7 @@ class SyncBackupUtil
 
         //1) Get remote project path
         $jsonFile = array(
+            'id' => 'None',
             'className' => 'Project',
             'datetime' => time(),
             'random' => rand()
@@ -72,6 +73,34 @@ class SyncBackupUtil
         $sourceFile = $sourcePath.'/'.$uniquename;
 
         $files = $interfaceTransferUtil->listRemoteFiles($serverBaseName, $privateKeyContent, $sourcePath);
+
+        //https://stackoverflow.com/questions/54999763/getting-latest-file-from-sftp-in-php-using-curl
+        // filter out folders     
+        $files_only_callback = function($a) {
+            return (
+                $a["type"] == NET_SFTP_TYPE_REGULAR
+                &&
+                (str_contains($a['filename'],'backupfiles') || str_contains($a['filename'],'backupdb'))
+            );
+        };
+        $files = array_filter($files, $files_only_callback);
+        
+        // sort by timestamp
+        //usort($files, function($a, $b) { return $b["mtime"] - $a["mtime"]; });
+        // In PHP 7, you can use spaceship operator instead:
+        usort($files, function($a, $b) { return $b["mtime"] <=> $a["mtime"]; });
+
+        $latest = $files[0]["filename"];
+        echo "latest=".$latest."<br>";
+
+        foreach ($files as $key=>$file)
+        {
+            dump($file);
+            echo "$key: file=".$file['filename']."<br>";
+        }
+
+        exit('111');
+
         return $files;
 
         //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)

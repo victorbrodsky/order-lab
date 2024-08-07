@@ -568,13 +568,14 @@ class InterfaceTransferUtil {
             }
             $checksum = $result['checksum'];
             $valid = $result['valid'];
-            $transferResult = $result['transferResult'];
+            //$transferResult = $result['transferResult'];
             $apppath = $result['apppath'];
 
             //dump($result);
             //exit('222');
 
-            if ($checksum === $hash && $valid === true && $transferResult === true) {
+            //&& $transferResult === true
+            if ($checksum === $hash && $valid === true ) {
                 //echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
                 return $apppath;
             }
@@ -2238,15 +2239,28 @@ class InterfaceTransferUtil {
 
         //$sshConnection->enableDatePreservation(); //preserver original file last modified date
 
-        if (!($files = $sshConnection->nlist($path, true)))
+        //$sshConnection->setListOrder('filename', SORT_ASC);
+        //$sshConnection->setListOrder('mtime', SORT_DESC);
+
+        //$files = $sshConnection->nlist($path,true);
+        $files = $sshConnection->rawlist($path);
+
+        if( !$files )
         {
             die("Cannot read directory contents");
         }
 
-        foreach ($files as $file)
-        {
-            echo "file=$file\n";
-        }
+//        // filter out folders
+//        $files_only_callback = function($a) {
+//            return (
+//                $a["type"] == NET_SFTP_TYPE_REGULAR
+//                &&
+//                (str_contains($a['filename'],'backupfiles') || str_contains($a['filename'],'backupdb'))
+//            );
+//        };
+//        $files = array_filter($files, $files_only_callback);
+
+        return $files;
     }
 
     //$jsonObject, $transferableEntity, 'humanTissueForms'
