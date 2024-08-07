@@ -527,6 +527,7 @@ class InterfaceTransferUtil {
             'Content-Length: ' . strlen($data_string)
         ));
 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //        //$this->verifyPeer = true;
 //        if( $this->verifyPeer ) {
 //            $remoteCertificate = $interfaceTransfer->getRemoteCertificate();  //path to crt or pem file
@@ -549,7 +550,7 @@ class InterfaceTransferUtil {
 //            //curl_setopt($ch, CURLOPT_STDERR, $fp);
 //            //curl_setopt($ch, CURLOPT_CAINFO, 'C:\Users\cinav\Documents\WCMC\Certificate\view-online\view-online.pem');
 //        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //This is dangerous - remove it. use CURLOPT_CAINFO
 //        }
 
         $result = curl_exec($ch);
