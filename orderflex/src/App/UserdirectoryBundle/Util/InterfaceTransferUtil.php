@@ -510,8 +510,9 @@ class InterfaceTransferUtil {
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
         //Add hash and security key
-        //$hash = hash('sha512', $secretKey . serialize($jsonFile));
-        $hash = hash('sha512', $secretKey);
+        echo "serialize(jsonFile)=".serialize($jsonFile)."<br>";
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        //$hash = hash('sha512', $secretKey);
         $jsonFile['hash'] = $hash;
 
         $data_string = json_encode($jsonFile);
