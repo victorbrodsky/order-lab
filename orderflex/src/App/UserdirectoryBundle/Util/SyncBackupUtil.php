@@ -42,7 +42,8 @@ class SyncBackupUtil
         $hash = hash('sha512', $secretKey . serialize($jsonFile));
         $jsonFile['hash'] = $hash;
         //Use InterfaceTransferList 'Project' to get server ip or url
-        $interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
+        //$interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
+        $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByName($entityName='Project');
         if( !$interfaceTransfer ) {
             exit("Not fount InterfaceTransferList by name Project");
         }
