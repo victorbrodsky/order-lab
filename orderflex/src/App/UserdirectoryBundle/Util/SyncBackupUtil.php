@@ -48,7 +48,7 @@ class SyncBackupUtil
             exit("Not fount InterfaceTransferList by name Project");
         }
 
-        $serverName = $interfaceTransfer->getTransferSource();  //"159.203.95.150";
+        $serverName = $interfaceTransfer->getTransferSourceBase();  //"159.203.95.150";
         echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
         $remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);

@@ -188,6 +188,15 @@ class InterfaceTransferList extends ListAbstract
         $this->remoteCertificate = $remoteCertificate;
     }
 
-    
+    //Since $strServer might be 'view.online/c/wcm/pathology' for multitenancy, get only view.online
+    public function getTransferSourceBase()
+    {
+        $serverName = $this->getTransferSource();
+        $exploded_server = explode('/', $serverName);
+        if( count($exploded_server) > 0 ) {
+            $serverName = $exploded_server[0];
+        }
+        return $serverName;
+    }
 
 }
