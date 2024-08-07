@@ -509,8 +509,8 @@ class InterfaceTransferUtil {
         $jsonFile['hash'] = $hash;
 
         $data_string = json_encode($jsonFile);
-        //$strServer = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
-        $url = 'http://'.$strServer.'/directory/transfer-interface/get-app-path';
+        //$serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        $url = 'http://'.$serverName.'/directory/transfer-interface/get-app-path';
         echo "url=$url <br>";
         $ch = curl_init($url);
 
