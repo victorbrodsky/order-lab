@@ -498,6 +498,10 @@ class InterfaceTransferUtil {
     public function getAppPathCurl( $serverName, $jsonFile ) {
         $remoteAppPath = NULL;
 
+        if( !$serverName ) {
+            return NULL;
+        }
+
         //Send data with curl and secret key
         //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
         //$secretKey = $_ENV['APP_SECRET']; //get .env parameter

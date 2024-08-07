@@ -52,8 +52,9 @@ class SyncBackupUtil
         //2) downloadFile
         //$file = $interfaceTransferUtil->downloadFile( $jsonObject, $transferableEntity, $field, $adder );
         $privateKeyContent = $interfaceTransfer->getSshPassword();
-        echo "downloadBackupFilesFromPublic: privateKeyContent=$privateKeyContent <br>";
+        //echo "downloadBackupFilesFromPublic: privateKeyContent=$privateKeyContent <br>";
         if( !$privateKeyContent ) {
+            exit("No private key");
             return false;
         }
 
