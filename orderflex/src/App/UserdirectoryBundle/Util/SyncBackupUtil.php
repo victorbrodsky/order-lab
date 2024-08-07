@@ -34,7 +34,7 @@ class SyncBackupUtil
 
         //1) Get remote project path
         $jsonFile = array(
-            'datetime' => time(),
+            //'datetime' => time(),
             'random' => rand()
         );
         $userSecUtil = $this->container->get('user_security_utility');
