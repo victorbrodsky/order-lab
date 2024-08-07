@@ -531,8 +531,8 @@ class InterfaceTransferUtil {
         //$status = curl_getinfo($ch);
         curl_close($ch);
 
-        //dump($result);
-        //exit('111');
+        dump($result);
+        exit('111');
 
         if( $result ) {
             $result = json_decode($result, true);

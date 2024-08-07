@@ -48,7 +48,7 @@ class SyncBackupUtil
             exit("Not fount InterfaceTransferList by name Project");
         }
 
-        //$serverName = $interfaceTransfer->getTransferSourceBase();  //http://view.online/directory/transfer-interface/get-app-path 
+        $serverBaseName = $interfaceTransfer->getTransferSourceBase();  //http://view.online/directory/transfer-interface/get-app-path
         $serverName = $interfaceTransfer->getTransferSource();  //http://view.online/wcm/pathology/directory/transfer-interface/get-app-path 
         echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
@@ -70,7 +70,7 @@ class SyncBackupUtil
         $sourcePath = $remoteAppPath.'/'.'var'.'/'.'backups';
         $sourceFile = $sourcePath.'/'.$uniquename;
 
-        $files = $interfaceTransferUtil->listRemoteFiles($serverName, $privateKeyContent, $sourcePath);
+        $files = $interfaceTransferUtil->listRemoteFiles($serverBaseName, $privateKeyContent, $sourcePath);
         return $files;
 
         //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)
