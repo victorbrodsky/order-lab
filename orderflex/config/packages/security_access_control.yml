@@ -33,6 +33,7 @@ security:
 
        - { path: ^.*/directory/transfer-interface/receive-transfer, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/transfer-interface/get-app-path, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/transfer-interface/get-backup-path, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/transfer-interface/slave-to-master-transfer, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/transfer-interface/confirmation-master-to-slave, role: PUBLIC_ACCESS }
 

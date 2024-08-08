@@ -173,7 +173,6 @@ class SyncBackupUtil
         //get-app-path
         //getAppPathCurl
 
-
         return $files; //"downloadBackupFilesFromPublic";
     }
 
