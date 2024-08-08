@@ -111,26 +111,45 @@ class SyncBackupUtil
         //return $files;
 
         //3) downloadFile
+        $files = array();
         //$destinationFile - puts them into a dedicated network shared folder (subfolder of where the view.med.cornell.edu backups are uploaded.)
+        //get /mnt/ folder on live: /mnt/pathology/view-backup/upload-backup
+
         $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $projectpath = $projectRoot.'/var/backups/';
+        if (!file_exists($projectpath)) {
+            mkdir($projectpath, 0777, true);
+        }
         //a) backupdb
         $sourceDbFile = $sourcePath.'/'.$latestDbFile;
+        echo "sourceDbFile=".$sourceDbFile."<br>";
         $destinationDbFileName = $serverName.'-'.$latestDbFile;
-        $destinationDbFile = $projectRoot.'/var/backups/'.$destinationDbFileName;
+        $destinationDbFile = $projectpath.$destinationDbFileName;
+        echo "destinationDbFile=".$destinationDbFile."<br>";
+        //TODO: check if the file does not exists
+        //TODO: keep only limited number of files $keepNumber (just run: UserServiceUtil->removeOldBackupFiles)
         $outputDbRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceDbFile, $destinationDbFile);
         if( $outputDbRes ) {
             //return false;
             echo "destinationDbFile=".$destinationDbFile."<br>";
+            $files[] = $destinationDbFile;
+        } else {
+            echo "getRemoteFile failed: sourceDbFile=".$sourceDbFile."<br>";
         }
 
         //b) backupfiles
         $sourceUploadFile = $sourcePath.'/'.$latestUploadFile;
+        echo "sourceUploadFile=".$sourceUploadFile."<br>";
         $destinationUploadFileName = $serverName.'-'.$latestUploadFile;
-        $destinationUploadFile = $projectRoot.'/var/backups/'.$destinationUploadFileName;
+        $destinationUploadFile = $projectpath.$destinationUploadFileName;
+        echo "destinationUploadFile=".$destinationUploadFile."<br>";
         $outputUploadRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceUploadFile, $destinationUploadFile);
         if( $outputUploadRes ) {
             //return false;
             echo "destinationUploadFile=".$destinationUploadFile."<br>";
+            $files[] = $destinationDbFile;
+        } else {
+            echo "getRemoteFile failed: sourceUploadFile=".$sourceUploadFile."<br>";
         }
 
         //downloadFile
@@ -139,7 +158,7 @@ class SyncBackupUtil
         //getAppPathCurl
 
 
-        return "downloadBackupFilesFromPublic";
+        return $files; //"downloadBackupFilesFromPublic";
     }
 
 }

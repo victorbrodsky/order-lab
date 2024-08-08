@@ -2150,38 +2150,11 @@ class InterfaceTransferUtil {
         //$strServerUsername = $interfaceTransfer->getSshUsername();
         $privateKeyContent = $interfaceTransfer->getSshPassword();
 
-        //$strServerUsername = '';
-        //$strServerPassword = '';
-        //echo "strServer=$strServer, strServerPort=$strServerPort, privateKeyContent=$privateKeyContent <br>";
-
-        //testing phpseclib
-        //$command = 'pwd'; //root
-
-//        $ssh = new SSH2($strServer);
-//        if (!$ssh->login($strServerUsername, $strServerPassword)) {
-//            $output ='Login Failed';
-//        }
-        //Change AuthorizedKeysFile .ssh/authorized_keys to
-        //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
-        //$private_key_path = "C:/Users/cinav/.ssh/id_ed25519_2"; //private key on master
-        //$privateKeyContent = file_get_contents($private_key_path);
-//        $key = PublicKeyLoader::load($privateKeyContent);
-//
-//        if( $type == 'SFTP' ) {
-//            $sshConnection = new SFTP($strServer);
-//        } else {
-//            $sshConnection = new SSH2($strServer);
-//        }
-//
-//        if( !$sshConnection->login('root', $key) ) {
-//            throw new \Exception($type.' login failed with private key');
-//        } else{
-//            return $sshConnection;
-//        }
-
         $sshConnection = $this->getRemoteConnection($strServer,$privateKeyContent);
         return $sshConnection;
     }
+    //Change AuthorizedKeysFile .ssh/authorized_keys to
+    //AuthorizedKeysFile /etc/ssh/id_ed25519_2.pub //public key on slave
     public function getRemoteConnection( $serverName, $privateKeyContent, $type='SFTP' ) {
         if( $type == 'SFTP' ) {
             $sshConnection = new SFTP($serverName);
@@ -2201,22 +2174,6 @@ class InterfaceTransferUtil {
     }
     public function getRemoteFile( $sshConnection, $sourceFile, $destinationFile, $type='SFTP' ) {
 
-//        if( $type == 'SFTP' ) {
-//            $sshConnection = new SFTP($serverName);
-//        } else {
-//            $sshConnection = new SSH2($serverName);
-//        }
-//
-//        $key = PublicKeyLoader::load($privateKeyContent);
-//
-//        if( !$sshConnection->login('root', $key) ) {
-//            throw new \Exception($type.' login failed with private key');
-//        }
-//        //else{
-//        //    return $sshConnection;
-//        //}
-//        $sshConnection = $this->getRemoteConnection($serverName,$privateKeyContent);
-
         $sshConnection->enableDatePreservation(); //preserver original file last modified date
 
         //$sourceFile = $apppath.'/'.'public'.'/'.$uploadDirectory.'/'.$uniquename;
@@ -2231,7 +2188,6 @@ class InterfaceTransferUtil {
     }
     public function listRemoteFiles( $sshConnection, $path ) {
         $sshConnection->enableDatePreservation(); //preserver original file last modified date
-
         //$sshConnection->setListOrder('filename', SORT_ASC);
         //$sshConnection->setListOrder('mtime', SORT_DESC);
 
@@ -2242,17 +2198,6 @@ class InterfaceTransferUtil {
         {
             die("Cannot read directory contents");
         }
-
-//        // filter out folders
-//        $files_only_callback = function($a) {
-//            return (
-//                $a["type"] == NET_SFTP_TYPE_REGULAR
-//                &&
-//                (str_contains($a['filename'],'backupfiles') || str_contains($a['filename'],'backupdb'))
-//            );
-//        };
-//        $files = array_filter($files, $files_only_callback);
-
         return $files;
     }
 
