@@ -78,6 +78,7 @@ class SyncBackupUtil
         //$sourcePath = $remoteAppPath.'/'.'var'.'/'.'backups';
 
         $sourcePath = $interfaceTransferUtil->getRemoteBackupPathCurl($serverName,$jsonFile);
+        $sourcePath = rtrim($sourcePath,'/');
         echo "downloadBackupFilesFromPublic: sourcePath=$sourcePath <br>";
 
         $files = $interfaceTransferUtil->listRemoteFiles($sshConnection, $sourcePath);
@@ -127,14 +128,22 @@ class SyncBackupUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
 
+        //remove right '/'
+        $networkDrivePath = rtrim($networkDrivePath,'/');
+
         if (!file_exists($networkDrivePath)) {
+            echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath] does not exist.<br>";
             mkdir($networkDrivePath, 0777, true);
         }
+        echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath]<br>";
+
         //a) backupdb
         $sourceDbFile = $sourcePath.'/'.$latestDbFile;
         echo "sourceDbFile=".$sourceDbFile."<br>";
-        $destinationDbFileName = $serverName.'-'.$latestDbFile;
-        $destinationDbFile = $networkDrivePath.$destinationDbFileName;
+        //$destinationDbFileName = $serverName.'-'.$latestDbFile;
+        $destinationDbFileName = $latestDbFile;
+        echo "destinationDbFileName=".$destinationDbFileName."<br>";
+        $destinationDbFile = $networkDrivePath.'/'.$destinationDbFileName;
         echo "destinationDbFile=".$destinationDbFile."<br>";
         //TODO: check if the file does not exists
         if( file_exists($destinationDbFile) ) {
@@ -156,7 +165,8 @@ class SyncBackupUtil
         //b) backupfiles
         $sourceUploadFile = $sourcePath.'/'.$latestUploadFile;
         echo "sourceUploadFile=".$sourceUploadFile."<br>";
-        $destinationUploadFileName = $serverName.'-'.$latestUploadFile;
+        //$destinationUploadFileName = $serverName.'-'.$latestUploadFile;
+        $destinationUploadFileName = $latestUploadFile;
         $destinationUploadFile = $networkDrivePath.$destinationUploadFileName;
         echo "destinationUploadFile=".$destinationUploadFile."<br>";
         $outputUploadRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceUploadFile, $destinationUploadFile);
