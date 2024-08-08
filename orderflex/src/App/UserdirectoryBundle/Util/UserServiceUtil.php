@@ -3513,12 +3513,14 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    public function removeOldBackupFiles() {
+    public function removeOldBackupFiles( $networkDrivePath=NULL ) {
         $keepNumber = 5;
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+            //echo "networkDrivePath=".$networkDrivePath."<br>";
+        }
         if( !$networkDrivePath ) {
             return "removeOldBackupFiles: Cannot proceed: networkDrivePath is not specified";
         }

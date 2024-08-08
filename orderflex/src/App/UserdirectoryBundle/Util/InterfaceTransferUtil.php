@@ -529,7 +529,76 @@ class InterfaceTransferUtil {
             'Content-Type: application/json',
             'Content-Length: ' . strlen($data_string)
         ));
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch);
+        //$error = curl_error($ch);
+        curl_close($ch);
+
+        //dump($error);
+        //dump($status);
+        //dump($result);
+
+        //exit('111');
+
+        if( $status['http_code'] == 200 && $result ) {
+            $result = json_decode($result, true);
+            if( !$result ) {
+                return NULL;
+            }
+            $checksum = $result['checksum'];
+            $valid = $result['valid'];
+            //$transferResult = $result['transferResult'];
+            $apppath = $result['apppath'];
+
+            //dump($result);
+            //exit('222');
+
+            //&& $transferResult === true
+            if ($checksum === $hash && $valid === true ) {
+                //echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
+                return $apppath;
+            }
+        }
+
+        return NULL;
+    }
+
+    public function getRemoteBackupPathCurl( $serverName, $jsonFile, $remoteCertificate=null ) {
+        $remoteAppPath = NULL;
+
+        if( !$serverName ) {
+            return NULL;
+        }
+
+        //Send data with curl and secret key
+        //$secretKey = $interfaceTransfer->getSshPassword(); //use SshPassword for now
+        //$secretKey = $_ENV['APP_SECRET']; //get .env parameter
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        //Add hash and security key
+        //echo "serialize(jsonFile)=".serialize($jsonFile)."<br>";
+        $hash = hash('sha512', $secretKey . serialize($jsonFile));
+        $jsonFile['hash'] = $hash;
+
+        $data_string = json_encode($jsonFile);
+        //$serverName = $interfaceTransfer->getTransferDestination();  //"159.203.95.150";
+        //$url = 'http://'.$serverName.'/directory/transfer-interface/get-app-path';
+        $url = 'https://'.$serverName.'/directory/transfer-interface/get-backup-path';
+        //echo "url=$url <br>";
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)
+        ));
+        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
 //        //$this->verifyPeer = true;
         if( $this->verifyPeer && $remoteCertificate ) {
@@ -569,7 +638,7 @@ class InterfaceTransferUtil {
             $checksum = $result['checksum'];
             $valid = $result['valid'];
             //$transferResult = $result['transferResult'];
-            $apppath = $result['apppath'];
+            $backuppath = $result['backuppath'];
 
             //dump($result);
             //exit('222');
@@ -577,7 +646,7 @@ class InterfaceTransferUtil {
             //&& $transferResult === true
             if ($checksum === $hash && $valid === true ) {
                 //echo "Successefully sent: " . $jsonFile['className'] . ", ID=" . $jsonFile['id'] . " <br>";
-                return $apppath;
+                return $backuppath;
             }
         }
 
