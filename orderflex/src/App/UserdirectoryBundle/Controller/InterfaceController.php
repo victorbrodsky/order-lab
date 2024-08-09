@@ -21,6 +21,8 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\Project;
 use App\UserdirectoryBundle\Entity\InterfaceTransferList;
+use App\UserdirectoryBundle\Entity\TransferData;
+use App\UserdirectoryBundle\Entity\TransferStatusList;
 use App\UserdirectoryBundle\Util\SyncBackupUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -489,5 +491,52 @@ class InterfaceController extends OrderAbstractController
         $response->setContent(json_encode($res));
         return $response;
     }
-    
+
+    #[Route(path: '/change-status-transfer/{id}/{status}', name: 'employees_change_status_transfer', methods: ['GET'])]
+    public function changeStatusAction(Request $request, $id, $status)
+    {
+        if(
+            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //$interfaceTransferUtil = $this->container->get('interface_transfer_utility');
+
+        //find TransferData by id
+        $transferData = $em->getRepository(TransferData::class)->find($id);
+        if( !$transferData ) {
+            //exit('TransferData not found by id='.$id);
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                'TransferData not found by id='.$id
+            );
+            return $this->redirect($this->generateUrl('employees_interface_manager'));
+        }
+
+        //find TransferStatusList by status
+        $transferStatus = $em->getRepository(TransferStatusList::class)->findOneByName($status);
+        if( !$transferStatus ) {
+            //exit('TransferStatusList not found by name='.$status);
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                'TransferStatusList not found by name='.$status
+            );
+            return $this->redirect($this->generateUrl('employees_interface_manager'));
+        }
+
+        if( $transferData && $transferStatus ) {
+            $transferData->setTransferStatus($transferStatus);
+            $em->flush();
+        }
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            "TransferData for " . $transferData->getClassName() . " has been set to " . $transferStatus
+        );
+
+        return $this->redirect($this->generateUrl('employees_interface_manager'));
+    }
 }

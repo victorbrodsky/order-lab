@@ -44,7 +44,7 @@
             {#<th>{{ knp_pagination_sortable(entities, 'Source ID', 'ent.sourceId') }}</th>#}
             {#<th>{{ knp_pagination_sortable(entities, 'Global ID', 'ent.globalId') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Object Class Name', 'ent.className') }}</th>
-            {#<th>Actions</th>#}
+            <th>Actions</th>
         </tr>
         </thead>
 
@@ -86,13 +86,25 @@
                 </td>
 
 
-                {#<td class="rowlink-skip">#}
-                    {#<div class="btn-group">#}
-                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-                            {#Action <span class="caret"></span>#}
-                        {#</button>#}
-                    {#</div>#}
-                {#</td>#}
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {% if ent.transferStatus|lower == 'ready' %}
+                                <li>
+                                    <a general-data-confirm="Are you sure you would like to change the status of this transferable to complete?"
+                                       href="{{ path('employees_change_status_transfer',
+                                       { 'id':ent.id, 'status':'Completed' }) }}">Change status to Complete
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </div>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
