@@ -2246,6 +2246,7 @@ class InterfaceTransferUtil {
         //check if the file does not exists
         if( file_exists($destinationFile) ) {
             //exit("File $destinationFile already exists");
+            echo "File already exists: $destinationFile<br>";
             return false;
         }
 
