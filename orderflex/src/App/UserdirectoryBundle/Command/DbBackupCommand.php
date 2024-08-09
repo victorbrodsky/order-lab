@@ -32,7 +32,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DbBackupCommand extends Command {
 
-    //protected static $defaultName = 'cron:db-backup-command';
     private $container;
     private $em;
 
@@ -51,7 +50,7 @@ class DbBackupCommand extends Command {
             ->setDescription('Backup DB');
     }
 
-    //Cron job to back up DB.
+    //Cron job to back up DB and Uploaded files.
     // /bin/php bin/console cron:db-backup-command --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {

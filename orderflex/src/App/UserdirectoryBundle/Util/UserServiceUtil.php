@@ -3471,8 +3471,14 @@ Pathology and Laboratory Medicine",
                 $environment = "unknownenv";
             }
 
+            //better to use instanceId
+            $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
+            if( !$instanceId ) {
+                $instanceId = "unknowinstanceId";
+            }
+
             $date = date('Y-m-d-H-i-s');
-            $archiveFile = "backupfiles-" . $environment . "_" . $date . ".tar.gz";
+            $archiveFile = "backupfiles-" . $environment . "_" . $instanceId . "_" . $date . ".tar.gz";
             $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
             //echo "archiveFile=".$archiveFile."<br>";
 
