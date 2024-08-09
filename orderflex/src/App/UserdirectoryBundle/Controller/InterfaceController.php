@@ -95,7 +95,7 @@ class InterfaceController extends OrderAbstractController
         $interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //Testing
-        //$files = $syncBackupUtil->downloadBackupFilesFromPublic();
+        $files = $syncBackupUtil->downloadBackupFilesFromPublic();
 
         $title = "Transfer Interface Manager";
 
@@ -503,7 +503,6 @@ class InterfaceController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$interfaceTransferUtil = $this->container->get('interface_transfer_utility');
 
         //find TransferData by id
         $transferData = $em->getRepository(TransferData::class)->find($id);

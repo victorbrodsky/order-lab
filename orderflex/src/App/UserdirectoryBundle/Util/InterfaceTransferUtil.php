@@ -2243,6 +2243,12 @@ class InterfaceTransferUtil {
     }
     public function getRemoteFile( $sshConnection, $sourceFile, $destinationFile, $type='SFTP' ) {
 
+        //check if the file does not exists
+        if( file_exists($destinationFile) ) {
+            //exit("File $destinationFile already exists");
+            return false;
+        }
+
         $sshConnection->enableDatePreservation(); //preserver original file last modified date
 
         //$sourceFile = $apppath.'/'.'public'.'/'.$uploadDirectory.'/'.$uniquename;

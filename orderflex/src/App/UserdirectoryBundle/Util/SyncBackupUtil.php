@@ -146,21 +146,20 @@ class SyncBackupUtil
         echo "destinationDbFileName=".$destinationDbFileName."<br>";
         $destinationDbFile = $networkDrivePath.'/'.$destinationDbFileName;
         echo "destinationDbFile=".$destinationDbFile."<br>";
-        //TODO: check if the file does not exists
-        if( file_exists($destinationDbFile) ) {
-            exit("File $destinationDbFile already exists");
-            return false;
-        }
-        //TODO: keep only limited number of files $keepNumber (just run: UserServiceUtil->removeOldBackupFiles)
-        $userServiceUtil->removeOldBackupFiles();
+
+//        //TODO: check if the file does not exists
+//        if( file_exists($destinationDbFile) ) {
+//            exit("File $destinationDbFile already exists");
+//            return false;
+//        }
 
         $outputDbRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceDbFile, $destinationDbFile);
         if( $outputDbRes ) {
             //return false;
-            echo "destinationDbFile=".$destinationDbFile."<br>";
+            echo "File has been downloaded ".$destinationDbFile."<br>";
             $files[] = $destinationDbFile;
         } else {
-            echo "getRemoteFile failed: sourceDbFile=".$sourceDbFile."<br>";
+            echo "File has not been downloaded ".$destinationDbFile."<br>";
         }
 
         //b) backupfiles
@@ -168,16 +167,19 @@ class SyncBackupUtil
         echo "sourceUploadFile=".$sourceUploadFile."<br>";
         //$destinationUploadFileName = $serverName.'-'.$latestUploadFile;
         $destinationUploadFileName = $latestUploadFile;
-        $destinationUploadFile = $networkDrivePath.$destinationUploadFileName;
+        $destinationUploadFile = $networkDrivePath.'/'.$destinationUploadFileName;
         echo "destinationUploadFile=".$destinationUploadFile."<br>";
         $outputUploadRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceUploadFile, $destinationUploadFile);
         if( $outputUploadRes ) {
             //return false;
-            echo "destinationUploadFile=".$destinationUploadFile."<br>";
+            echo "File has been downloaded ".$destinationUploadFile."<br>";
             $files[] = $destinationDbFile;
         } else {
-            echo "getRemoteFile failed: sourceUploadFile=".$sourceUploadFile."<br>";
+            echo "File has not been downloaded ".$sourceUploadFile."<br>";
         }
+
+        //keep only limited number of files $keepNumber (just run: UserServiceUtil->removeOldBackupFiles)
+        $userServiceUtil->removeOldBackupFiles();
 
         //downloadFile
         //employees_transfer_interface_get_app_path
