@@ -54,7 +54,7 @@ class SyncBackupUtil
 
         $serverBaseName = $interfaceTransfer->getTransferSourceBase();  //http://view.online/directory/transfer-interface/get-app-path
         $serverName = $interfaceTransfer->getTransferSource();  //http://view.online/wcm/pathology/directory/transfer-interface/get-app-path 
-        echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
+        //echo "downloadBackupFilesFromPublic: serverName=$serverName <br>";
 
         //$remoteAppPath = $interfaceTransferUtil->getAppPathCurl($serverName,$jsonFile);
         //echo "downloadBackupFilesFromPublic: remoteAppPath=$remoteAppPath <br>";
@@ -80,7 +80,7 @@ class SyncBackupUtil
 
         $sourcePath = $interfaceTransferUtil->getRemoteBackupPathCurl($serverName,$jsonFile);
         $sourcePath = rtrim($sourcePath,'/');
-        echo "downloadBackupFilesFromPublic: sourcePath=$sourcePath <br>";
+        //echo "downloadBackupFilesFromPublic: sourcePath=$sourcePath <br>";
 
         $files = $interfaceTransferUtil->listRemoteFiles($sshConnection, $sourcePath);
 
@@ -107,10 +107,10 @@ class SyncBackupUtil
         usort($uploadFiles, function($a, $b) { return $b["mtime"] <=> $a["mtime"]; });
 
         $latestDbFile = $dbFiles[0]["filename"];
-        echo "latestDbFile=".$latestDbFile."<br>";
+        //echo "latestDbFile=".$latestDbFile."<br>";
 
         $latestUploadFile = $uploadFiles[0]["filename"];
-        echo "latestUploadFile=".$latestUploadFile."<br>";
+        //echo "latestUploadFile=".$latestUploadFile."<br>";
 
 //        foreach ($files as $file) {
 //            dump($file);
@@ -133,19 +133,19 @@ class SyncBackupUtil
         $networkDrivePath = rtrim($networkDrivePath,'/');
 
         if (!file_exists($networkDrivePath)) {
-            echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath] does not exist.<br>";
+            //echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath] does not exist.<br>";
             mkdir($networkDrivePath, 0777, true);
         }
-        echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath]<br>";
+        //echo "downloadBackupFilesFromPublic: networkDrivePath=[$networkDrivePath]<br>";
 
         //a) backupdb
         $sourceDbFile = $sourcePath.'/'.$latestDbFile;
-        echo "sourceDbFile=".$sourceDbFile."<br>";
+        //echo "sourceDbFile=".$sourceDbFile."<br>";
         //$destinationDbFileName = $serverName.'-'.$latestDbFile;
         $destinationDbFileName = $latestDbFile;
-        echo "destinationDbFileName=".$destinationDbFileName."<br>";
+        //echo "destinationDbFileName=".$destinationDbFileName."<br>";
         $destinationDbFile = $networkDrivePath.'/'.$destinationDbFileName;
-        echo "destinationDbFile=".$destinationDbFile."<br>";
+        //echo "destinationDbFile=".$destinationDbFile."<br>";
 
 //        //TODO: check if the file does not exists
 //        if( file_exists($destinationDbFile) ) {
@@ -164,11 +164,11 @@ class SyncBackupUtil
 
         //b) backupfiles
         $sourceUploadFile = $sourcePath.'/'.$latestUploadFile;
-        echo "sourceUploadFile=".$sourceUploadFile."<br>";
+        //echo "sourceUploadFile=".$sourceUploadFile."<br>";
         //$destinationUploadFileName = $serverName.'-'.$latestUploadFile;
         $destinationUploadFileName = $latestUploadFile;
         $destinationUploadFile = $networkDrivePath.'/'.$destinationUploadFileName;
-        echo "destinationUploadFile=".$destinationUploadFile."<br>";
+        //echo "destinationUploadFile=".$destinationUploadFile."<br>";
         $outputUploadRes = $interfaceTransferUtil->getRemoteFile($sshConnection, $sourceUploadFile, $destinationUploadFile);
         if( $outputUploadRes ) {
             //return false;
