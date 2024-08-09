@@ -48,7 +48,8 @@ class SyncBackupUtil
         //$interfaceTransfer = $this->em->getRepository(InterfaceTransferList::class)->findOneByName('Project');
         $interfaceTransfer = $interfaceTransferUtil->getInterfaceTransferByName($entityName='Project');
         if( !$interfaceTransfer ) {
-            exit("Not fount InterfaceTransferList by name Project");
+            //exit("Not fount InterfaceTransferList by name Project");
+            return false;
         }
 
         $serverBaseName = $interfaceTransfer->getTransferSourceBase();  //http://view.online/directory/transfer-interface/get-app-path
@@ -63,7 +64,7 @@ class SyncBackupUtil
         $privateKeyContent = $interfaceTransfer->getSshPassword();
         //echo "downloadBackupFilesFromPublic: privateKeyContent=$privateKeyContent <br>";
         if( !$privateKeyContent ) {
-            exit("No private key");
+            //exit("No private key specified in $entityName");
             return false;
         }
 
