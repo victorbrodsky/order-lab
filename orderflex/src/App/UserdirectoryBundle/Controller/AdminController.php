@@ -10791,7 +10791,8 @@ class AdminController extends OrderAbstractController
 
         $types = array(
             "Internal - WCM Pathology Faculty" => "Internal",
-            "External - Non-WCM Pathology Faculty" => "External"
+            //"External - Non-WCM Pathology Faculty" => "External"
+            "External - WCM Faculty of Other Departments and Members of Other Institutions" => "External"
         );
 
         $count = 10;

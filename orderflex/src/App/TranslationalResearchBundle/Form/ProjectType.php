@@ -909,7 +909,7 @@ class ProjectType extends AbstractType
                 'Yes' => true,
                 'No' => false
             ),
-            'label' => 'Will you need departmental statistical or informatics support from the computational pathology team?:',
+            'label' => 'Will you need departmental statistical or informatics support from the computational pathology team?',
             'multiple' => false,
             'required' => false,
             'expanded' => true,
@@ -917,7 +917,7 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'horizontal_type needStatSupport')
         ));
         $builder->add('amountStatSupport', null, array(
-            'label' => "What is the estimated quantity of needed statistical or informatics support hours?:",
+            'label' => "Please describe the statistical or informatics support you would like:",
             'attr' => array('class' => 'textarea form-control')
         ));
 
