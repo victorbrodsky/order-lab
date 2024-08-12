@@ -264,15 +264,20 @@ class ProjectType extends AbstractType
         //Hide if (MISI && external)
         //Show if (!MISI || !external)
         //RequesterGroupList abbreviation 'External' 
-        if( $this->params['project']->getProjectSpecialtyStr() != 'MISI' ||
-            $this->params['project']->getRequesterGroupAbbreviation() != 'external'
+//        if( $this->params['project']->getProjectSpecialtyStr() != 'MISI' ||
+//            $this->params['project']->getRequesterGroupAbbreviation() != 'external'
+//        )
+        if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' &&
+            $this->params['project']->getRequesterGroupAbbreviation() == 'external'
         ) {
+            //only for MISI, and ONLY for External projects, completely hide the question
+        } else {
             $builder->add('funded', ChoiceType::class, array(
                 'choices' => array(
                     'Yes' => true,
                     'No, I am requesting all or some funding from the ' . $this->params['institutionName'] . ' Pathology department' => false
                 ),
-                'label' => 'Has this project been funded?:',
+                'label' => 'Has this project been funded?',
                 'multiple' => false,
                 'required' => false,
                 'expanded' => true,

@@ -242,7 +242,7 @@ class ProjectMisiTypeTODEL extends AbstractType
 
         $builder->add('funded', CheckboxType::class, array(
             'required' => false,
-            'label' => "Has this project been funded?:", //"Funded:",
+            'label' => "Has this project been funded?", //"Funded:",
             //'attr' => array('class'=>'form-control transres-funded')
             'attr' => array('class' => 'transres-funded')
         ));
