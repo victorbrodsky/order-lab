@@ -10,6 +10,7 @@
 
 knp_snappy:
     process_timeout: 300 # In seconds
+    temporary_folder: '%kernel.project_dir%/var/tmp/' #use different temp folder
     pdf:
         enabled:    true
         binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
