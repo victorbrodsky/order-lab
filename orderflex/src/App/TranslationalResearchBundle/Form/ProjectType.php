@@ -446,7 +446,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
             'class' => IrbApprovalTypeList::class,
-            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?:',
+            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -462,8 +462,8 @@ class ProjectType extends AbstractType
 
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
-            'class' => IrbApprovalTypeList::class,
-            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?:',
+            'class' => IrbApprovalTypeList::class, //use the same types as for IRB
+            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -752,6 +752,17 @@ class ProjectType extends AbstractType
                 $builder->add('irbApprovalLetters', CollectionType::class, array(
                     'entry_type' => DocumentType::class,
                     'label' => $this->params['transresUtil']->getHumanName() . ' Approval Letter:',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__documentsid__',
+                ));
+
+                $builder->add('irbExemptionLetters', CollectionType::class, array(
+                    'entry_type' => DocumentType::class,
+                    'label' => $this->params['transresUtil']->getHumanName() . ' Exemption Letter:',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'required' => false,

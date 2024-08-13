@@ -201,6 +201,16 @@ class Project {
     private $irbApprovalLetters;
 
     /**
+     * IRB Exemption Letter
+     **/
+    #[ORM\JoinTable(name: 'transres_project_irbexemptionletter')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'irbexemptionletter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
+    private $irbExemptionLetters;
+
+    /**
      * Human Tissue Form
      **/
     #[ORM\JoinTable(name: 'transres_project_humanTissueForm')]
@@ -811,6 +821,7 @@ class Project {
 
         $this->documents = new ArrayCollection();
         $this->irbApprovalLetters = new ArrayCollection();
+        $this->irbExemptionLetters = new ArrayCollection();
         $this->humanTissueForms = new ArrayCollection();
         $this->projectPdfs = new ArrayCollection();
 
@@ -1657,6 +1668,32 @@ class Project {
     public function getSingleIrbApprovalLetter()
     {
         $docs = $this->getIrbApprovalLetters();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
+
+    public function addIrbExemptionLetter($item)
+    {
+        if( $item && !$this->irbExemptionLetters->contains($item) ) {
+            $this->irbExemptionLetters->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeIrbExemptionLetter($item)
+    {
+        $this->irbExemptionLetters->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getIrbExemptionLetters()
+    {
+        return $this->irbExemptionLetters;
+    }
+    public function getSingleIrbExemptionLetter()
+    {
+        $docs = $this->getIrbExemptionLetters();
         if( count($docs) > 0 ) {
             return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
         }

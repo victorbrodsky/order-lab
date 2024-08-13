@@ -107,10 +107,21 @@ function transresIrbExemptChange( exemptEl, classname ) {
     if( exemptText == "Exempt" ) {
         $("."+classname+"-panel").hide('slow');
         //$("."+classname+"-panel").fadeOut(2000);
+
+        //TODO: show irbExemptionLetters
+        if( classname == 'transres-project-exemptIrbApproval' ) {
+            $(".transres-project-exemptIrbExemption-panel").show('slow');
+        }
+
     }
     if( exemptText == "Not Exempt" ) {
         $("."+classname+"-panel").show('slow');
         //$("."+classname+"-panel").fadeIn(2000);
+
+        //TODO: show irbExemptionLetters
+        if( classname == 'transres-project-exemptIrbApproval' ) {
+            $(".transres-project-exemptIrbExemption-panel").hide('slow');
+        }
     }
 }
 

@@ -433,6 +433,14 @@
         {% set irbApprovalLetters = project.irbApprovalLetters %}
     {% endif %}
 
+    {% if form.irbExemptionLetters is defined %}
+        {% set asExemptionFormOrEntity = "asForm" %}
+        {% set irbExemptionLetters = form.irbExemptionLetters %}
+    {% else %}
+        {% set asExemptionFormOrEntity = "asEntity" %}
+        {% set irbExemptionLetters = project.irbExemptionLetters %}
+    {% endif %}
+
     {% set humanName = transres_util.getHumanName() %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -447,13 +455,16 @@
             <div id="projectIrbInfoContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectIrbInfoContentHeading">
                 <div class="panel-body">
 
+                    {% set hideshowExemption = "display: none;" %}
                     {% set hideshow = "" %}
                     {% if project.exemptIrbApproval and project.exemptIrbApproval.getName() == "Exempt" %}
                         {% set hideshow = "display: none;" %}
+                        {% set hideshowExemption = "" %}
                     {% endif %}
 
                     {{ formmacros.field(form.exemptIrbApproval) }}
 
+                    {#irbApprovalLetters#}
                     <div class="well transres-project-exemptIrbApproval-panel" style="{{ hideshow }}">
                         {{ formmacros.field(form.irbNumber) }}
                         {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
@@ -471,6 +482,21 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
+
+                    </div>
+
+                    {#irbExemptionLetters#}
+                    <div class="well transres-project-exemptIrbExemption-panel" style="{{ hideshowExemption }}">
+                        {% if cycle != "pdf" %}
+                            <div class="well form-element-holder user-irbExemptionLetters">
+                                <label class="col-xs-12 control-label">{{ humanName }} Exemption Letter</label>
+                                <div class="row withpaddingtop">
+                                    <div class="col-xs-12">
+                                        {{ usermacros.documentsContainer(null,irbExemptionLetters,cycle,'noprototype',8,'default',humanName~' Exemption Letter',asExemptionFormOrEntity) }}
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
 
                     </div>
