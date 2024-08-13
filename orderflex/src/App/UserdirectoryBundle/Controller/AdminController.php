@@ -10819,6 +10819,7 @@ class AdminController extends OrderAbstractController
             $listEntity = new RequesterGroupList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
+            $listEntity->setAbbreviation($urlSlug);
             $listEntity->setUrlSlug($urlSlug);
 
             //exit('exit generateObjectTypeActions');

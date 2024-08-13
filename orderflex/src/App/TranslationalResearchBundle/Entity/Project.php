@@ -3862,15 +3862,21 @@ class Project {
     }
 
     public function getRequesterGroupAbbreviation( $lowercase=true ) {
+        $abbreviation = NULL;
         $requesterGroup = $this->getRequesterGroup();
         if( $requesterGroup ) {
             $abbreviation = $requesterGroup->getAbbreviation();
-            if( $lowercase ) {
+            //return $abbreviation;
+
+            if( !$abbreviation ) {
+                $abbreviation = $requesterGroup->getUrlSlug();
+            }
+
+            if( $lowercase && $abbreviation ) {
                 $abbreviation = strtolower($abbreviation);
             }
-            return $abbreviation;
         }
-        return NULL;
+        return $abbreviation;
     }
 
     public function getEntityName() {
