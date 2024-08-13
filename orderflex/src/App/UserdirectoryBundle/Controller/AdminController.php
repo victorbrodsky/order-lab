@@ -8010,6 +8010,7 @@ class AdminController extends OrderAbstractController
             "transrescolllabs" => array('CollLabList','transrescolllabs-list','Translational Research Collaboration Laboratory List'),
             "transrescolldivs" => array('CollDivList','transrescolldivs-list','Translational Research Collaboration Division List'),
             "transresirbstatus" => array('IrbStatusList','transresirbstatus-list','Translational Research Irb Approval Status List'),
+            "transresirbapprovaltypes" => array('IrbApprovalTypeList','transresirbapprovaltypes-list','Translational Research Irb Approval Type List"'),
             "transresrequestergroup" => array('RequesterGroupList','transresrequestergroup-list','Translational Research Requester Group List'),
             "transrescomptypes" => array('CompCategoryList','transrescomptypes-list','Translational Research Computational Categories List'),
             "antibodycategorytag" => array('AntibodyCategoryTagList','antibodycategorytag-list','Translational Research Antibody Category Tag List'),

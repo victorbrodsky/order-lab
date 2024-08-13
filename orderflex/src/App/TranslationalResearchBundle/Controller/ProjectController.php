@@ -811,12 +811,15 @@ class ProjectController extends OrderAbstractController
             $advancedFilter++;
         }
         if ($exemptIrbApproval) {
-            //echo "fundingType=" . $exemptIrbApproval . "<br>";
+            echo "exemptIrbApproval=" . $exemptIrbApproval . "<br>";
+            $dql->leftJoin('project.exemptIrbApproval', 'exemptIrbApproval');
             if ($exemptIrbApproval == "exempt-from-irb-approval") {
-                $dql->andWhere("project.exemptIrbApproval = true OR project.exemptIrbApproval IS NULL");
+                //$dql->andWhere("project.exemptIrbApproval = true OR project.exemptIrbApproval IS NULL");
+                $dql->andWhere("exemptIrbApproval.name = 'Exempt' OR project.exemptIrbApproval IS NULL");
             }
             if ($exemptIrbApproval == "not-exempt-from-irb-approval") {
-                $dql->andWhere("project.exemptIrbApproval = false");
+                //$dql->andWhere("project.exemptIrbApproval = false");
+                $dql->andWhere("exemptIrbApproval.name = 'Not Exempt'");
             }
             $advancedFilter++;
         }

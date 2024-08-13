@@ -462,6 +462,16 @@
                         {% set hideshowExemption = "" %}
                     {% endif %}
 
+                    {#On the “Project Request View” page, only show this field/link
+                    to the uploaded file if it is not empty (for all projects,
+                    regardless if the “Is this project exempt from IRB approval?:“
+                    field value equals “Exempt” or not)#}
+                    {% if cycle == 'show' %}
+                        {% if irbExemptionLetters|length > 0 %}
+                            {% set hideshowExemption = "" %}
+                        {% endif %}
+                    {% endif %}
+
                     {{ formmacros.field(form.exemptIrbApproval) }}
 
                     {#irbApprovalLetters#}
