@@ -474,14 +474,14 @@
                         {{ transres.irbStatusList(form,project,cycle) }}
 
                         {% if cycle != "pdf" %}
-                        <div class="well form-element-holder user-irbApprovalLetters">
-                            <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
-                            <div class="row withpaddingtop">
-                                <div class="col-xs-12">
-                                    {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default',humanName~' Approval Letter',asFormOrEntity) }}
+                            <div class="well form-element-holder user-irbApprovalLetters">
+                                <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
+                                <div class="row withpaddingtop">
+                                    <div class="col-xs-12">
+                                        {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default',humanName~' Approval Letter',asFormOrEntity) }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         {% endif %}
 
                     </div>

@@ -104,11 +104,12 @@ function transresIrbExemptChange( exemptEl, classname ) {
         exemptText = exemptData.text;
     }
     //console.log("change: exemptText="+exemptText);
+    //console.log("change: classname="+classname);
     if( exemptText == "Exempt" ) {
         $("."+classname+"-panel").hide('slow');
         //$("."+classname+"-panel").fadeOut(2000);
 
-        //TODO: show irbExemptionLetters
+        //show irbExemptionLetters
         if( classname == 'transres-project-exemptIrbApproval' ) {
             $(".transres-project-exemptIrbExemption-panel").show('slow');
         }
@@ -118,7 +119,7 @@ function transresIrbExemptChange( exemptEl, classname ) {
         $("."+classname+"-panel").show('slow');
         //$("."+classname+"-panel").fadeIn(2000);
 
-        //TODO: show irbExemptionLetters
+        //hide irbExemptionLetters
         if( classname == 'transres-project-exemptIrbApproval' ) {
             $(".transres-project-exemptIrbExemption-panel").hide('slow');
         }
