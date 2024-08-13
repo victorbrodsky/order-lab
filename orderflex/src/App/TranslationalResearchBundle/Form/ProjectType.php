@@ -267,8 +267,8 @@ class ProjectType extends AbstractType
 //        if( $this->params['project']->getProjectSpecialtyStr() != 'MISI' ||
 //            $this->params['project']->getRequesterGroupAbbreviation() != 'external'
 //        )
-        echo "getProjectSpecialtyStr=".$this->params['project']->getProjectSpecialtyStr()."<br>";
-        echo "getRequesterGroupAbbreviation=".$this->params['project']->getRequesterGroupAbbreviation()."<br>";
+        //echo "getProjectSpecialtyStr=".$this->params['project']->getProjectSpecialtyStr()."<br>";
+        //echo "getRequesterGroupAbbreviation=".$this->params['project']->getRequesterGroupAbbreviation()."<br>";
         if( $this->params['project']->getProjectSpecialtyStr() == 'MISI' &&
             $this->params['project']->getRequesterGroupAbbreviation() == 'external'
         ) {
