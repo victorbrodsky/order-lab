@@ -585,7 +585,7 @@ class ProjectType extends AbstractType
         ));
 
         //Reviews
-        //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
+        //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>"; 
         if ($this->params['showIrbReviewer']) {
             //echo "show irb_review<br>";
             $this->params['stateStr'] = "irb_review";
