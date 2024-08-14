@@ -193,11 +193,26 @@
                                                 >New Project Request</a>
                                             </li>
 
+                                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+
                                             {% for specialty in specialties %}
+                                                {% set requesterGroup = 'Internal' %}
                                                 {% if transres_util.getTransresSiteProjectParameter('enableNewProjectOnNavbar',null,specialty) == true %}
                                                     <li>
-                                                        <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                                        >New {{ specialty.getName() }} Project</a>
+                                                        <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation(), 'requester-group': requesterGroup}) }}"
+                                                        >New {{ requesterGroup }} {{ specialty.getName() }} Project</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                                            {% for specialty in specialties %}
+                                                {% set requesterGroup = 'External' %}
+                                                {% if transres_util.getTransresSiteProjectParameter('enableNewProjectOnNavbar',null,specialty) == true %}
+                                                    <li>
+                                                        <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation(), 'requester-group': requesterGroup}) }}"
+                                                        >New {{ requesterGroup }} {{ specialty.getName() }} Project</a>
                                                     </li>
                                                 {% endif %}
                                             {% endfor %}
