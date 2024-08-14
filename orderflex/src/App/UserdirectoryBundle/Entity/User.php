@@ -1179,9 +1179,10 @@ class User extends UserBase {
 //        return $displayName;
 
         //testing
-        return (string) $this->getPrimaryUseridKeytypeStr();
+        return $this->getPrimaryPublicUserId();                 //it takes ~20 sec
+        return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec
 
-        return (string) $this->getUserNameStr();
+        return (string) $this->getUserNameStr();                //it takes ~30 sec
     }
 
 
