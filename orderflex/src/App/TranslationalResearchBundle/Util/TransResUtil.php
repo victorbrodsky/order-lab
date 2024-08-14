@@ -6530,9 +6530,9 @@ class TransResUtil
 //                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND
 //                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND
 //                    list.roles != 'ROLE_SUPER_DEPUTY_ADMIN')")
-                    ->andWhere($roles)
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
+                    ->andWhere($roles);
+                    //->leftJoin("list.infos", "infos")
+                    //->orderBy("infos.displayName","ASC");
             };
         }
 
