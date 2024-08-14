@@ -585,7 +585,7 @@ class ProjectType extends AbstractType
         ));
 
         //Reviews
-        //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>"; 
+        //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
         if ($this->params['showIrbReviewer']) {
             //echo "show irb_review<br>";
             $this->params['stateStr'] = "irb_review";
@@ -1243,7 +1243,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        //Work Progress Log Notes (visible to staff only): (hide on new project page)
+        //Project Progress Log Notes (visible to staff only): (hide on new project page)
         //On the “Project Request View” page hide if empty if( cycle == 'show' && project->getProgressLog() )
         //$this->params['trpAdmin'] ||
         //$this->params['trpTech']
@@ -1259,7 +1259,7 @@ class ProjectType extends AbstractType
         }
         if( $showProgressLog ) {
             $builder->add('progressLog', null, array(
-                'label' => "Work Progress Log Notes (visible to staff only):",
+                'label' => "Project Progress Log Notes (visible to staff only):",
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control')
             ));
