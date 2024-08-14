@@ -1179,7 +1179,7 @@ class User extends UserBase {
 //        return $displayName;
 
         //testing
-        return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
+        //return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
         //return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec, 3937 DB queries total, 3780 DB queries 'scan_perSiteSettings'
 
         return (string) $this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo', 3780 DB queries 'scan_perSiteSettings'
