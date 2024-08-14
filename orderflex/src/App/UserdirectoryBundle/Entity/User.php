@@ -1178,6 +1178,9 @@ class User extends UserBase {
 //        }
 //        return $displayName;
 
+        //testing
+        return (string) $this->getPrimaryUseridKeytypeStr();
+
         return (string) $this->getUserNameStr();
     }
 
