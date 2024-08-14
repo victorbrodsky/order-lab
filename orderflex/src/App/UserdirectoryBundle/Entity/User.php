@@ -1180,9 +1180,9 @@ class User extends UserBase {
 
         //testing
         return $this->getPrimaryPublicUserId();                 //it takes ~20 sec
-        return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec
+        return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~15 sec, 3937 DB queries total
 
-        return (string) $this->getUserNameStr();                //it takes ~30 sec
+        return (string) $this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo'
     }
 
 
