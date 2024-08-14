@@ -988,8 +988,7 @@ Show this accordion by default in an open + visible state.
     {#{% endif %}#}
 
     {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
-    {#{% if form.progressLog is defined and cycle != 'new' %}#}
-    {% if form.progressLog is defined and form.progressLog %}
+    {% if form.progressLog is defined %}
         {{ formmacros.field(form.progressLog) }}
     {% endif %}
 
