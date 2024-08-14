@@ -2504,6 +2504,26 @@ class ProjectController extends OrderAbstractController
         $params['showCommitteeReviewer'] = true;
         $params['showFinalReviewer'] = true;
 
+        //User can be admin for other project speciatly, but not for this one. Therefore: show only if reviewer
+//        $params['showIrbReviewer'] = $transresUtil->isProjectReviewer($project);
+//        $params['showAdminReviewer'] = $transresUtil->isProjectReviewer($project);
+//        $params['showCommitteeReviewer'] = $transresUtil->isProjectReviewer($project);
+//        $params['showFinalReviewer'] = $transresUtil->isProjectReviewer($project);
+
+        //User can be admin for other project speciatly, but not for this one. Therefore: show only if platform admin, specialty admin, reviewer
+        $params['showIrbReviewer'] = $transresUtil->isAdminOrPrimaryReviewerOrExecutive($project);
+        $params['showAdminReviewer'] = $transresUtil->isAdminOrPrimaryReviewerOrExecutive($project);
+        $params['showCommitteeReviewer'] = $transresUtil->isAdminOrPrimaryReviewerOrExecutive($project);
+        $params['showFinalReviewer'] = $transresUtil->isAdminOrPrimaryReviewerOrExecutive($project);
+
+        //Show reviews: If specialty admin or platform admin
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $params['showIrbReviewer'] = true;
+            $params['showAdminReviewer'] = true;
+            $params['showCommitteeReviewer'] = true;
+            $params['showFinalReviewer'] = true;
+        }
+
         if( $cycle == "pdf" ) {
             $params['showIrbReviewer'] = false;
             $params['showAdminReviewer'] = false;
@@ -2564,12 +2584,12 @@ class ProjectController extends OrderAbstractController
                 $params['submitIrbReview'] = true;
             }
 
-            if( $params['admin'] === false ) {
-                $params['showIrbReviewer'] = false;
-                $params['showAdminReviewer'] = false;
-                $params['showCommitteeReviewer'] = false;
-                $params['showFinalReviewer'] = false;
-            }
+//            if( $params['admin'] === false ) {
+//                $params['showIrbReviewer'] = false;
+//                $params['showAdminReviewer'] = false;
+//                $params['showCommitteeReviewer'] = false;
+//                $params['showFinalReviewer'] = false;
+//            }
         }
 
         if( $cycle == "show" || $cycle == "review" || $cycle == "pdf" ) {
