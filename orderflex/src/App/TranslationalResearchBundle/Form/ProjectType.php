@@ -1244,17 +1244,25 @@ class ProjectType extends AbstractType
         }
 
         //Work Progress Log Notes (visible to staff only): (hide on new project page)
+        //On the “Project Request View” page hide if empty if( cycle == 'show' && project->getProgressLog() )
         //$this->params['trpAdmin'] ||
         //$this->params['trpTech']
         //$this->params['admin']
+        $showProgressLog = false;
         if( $this->params['cycle'] != 'new' ) {
             if( $this->params['trpAdmin'] || $this->params['admin'] ) {
-                $builder->add('progressLog', null, array(
-                    'label' => "Work Progress Log Notes (visible to staff only):",
-                    'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
-                ));
+                $showProgressLog = true;
             }
+            if( $this->params['cycle'] == 'show' && !$this->params['project']->getProgressLog() ) {
+                $showProgressLog = false;
+            }
+        }
+        if( $showProgressLog ) {
+            $builder->add('progressLog', null, array(
+                'label' => "Work Progress Log Notes (visible to staff only):",
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control')
+            ));
         }
 
         if( $this->params['saveAsDraft'] === true ) {
