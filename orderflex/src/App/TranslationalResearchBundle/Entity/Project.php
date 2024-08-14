@@ -805,6 +805,12 @@ class Project {
     #[ORM\Column(type: 'text', nullable: true)]
     private $softwareTool;
 
+    //Work Progress Log Notes (visible to staff only): (hide on new project page)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $progressLog;
+
+    
+
     public function __construct($user=null) {
 
         $this->principalInvestigators = new ArrayCollection();
@@ -3162,6 +3168,21 @@ class Project {
         $this->softwareTool = $softwareTool;
     }
     
+    /**
+     * @return mixed
+     */
+    public function getProgressLog()
+    {
+        return $this->progressLog;
+    }
+
+    /**
+     * @param mixed $progressLog
+     */
+    public function setProgressLog($progressLog)
+    {
+        $this->progressLog = $progressLog;
+    }
 
 
     public function incrementExpirationNotifyCounter() {

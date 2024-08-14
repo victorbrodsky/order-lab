@@ -9,6 +9,12 @@
         {#{% set cycle = "show" %}#}
     {#{% endif %}#}
 
+    {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
+    {#{% if form.progressLog is defined and cycle != 'new' %}#}
+    {% if form.progressLog is defined and form.progressLog %}
+        {{ formmacros.field(form.progressLog) }}
+    {% endif %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectRequestersHeading">

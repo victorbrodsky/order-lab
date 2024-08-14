@@ -1243,6 +1243,19 @@ class ProjectType extends AbstractType
             ));
         }
 
+        //Work Progress Log Notes (visible to staff only): (hide on new project page)
+        //$this->params['trpAdmin'] ||
+        //$this->params['trpTech']
+        //$this->params['admin']
+        if( $this->params['cycle'] != 'new' ) {
+            if( $this->params['trpAdmin'] || $this->params['admin'] ) {
+                $builder->add('progressLog', null, array(
+                    'label' => "Work Progress Log Notes (visible to staff only):",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+            }
+        }
 
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(
