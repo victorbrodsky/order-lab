@@ -428,10 +428,12 @@ class TransResPermissionUtil
 
             //all request's requesters associated with this project.
             //We can search all requests and then verify if this user is request's requester
-            //but for perfomarnce, just show the project to requester roles
-            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
-                return true;
-            }
+            //but for performance sake, just show the project to requester roles
+            //NO for above: AP/CP Project Requester would be able to view all AP/CP projects
+//            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+//                exit('hasProjectPermission: ROLE_TRANSRES_REQUESTER'.$specialtyStr);
+//                return true;
+//            }
 
             if(
                 $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
@@ -440,6 +442,7 @@ class TransResPermissionUtil
                 return true;
             }
 
+            //exit('hasProjectPermission');
             //check if the user is a ROLE_TRANSRES_PRIMARY_REVIEWER of this project
             if( $project ) {
                 $user = $this->security->getUser();
@@ -449,6 +452,7 @@ class TransResPermissionUtil
                 
                 //show if user has ROLE_TRANSRES_BIOINFORMATICIAN and this project->sendComputationalEmail == TRUE
                 if( $project->sendComputationalEmail() ) {
+                    //exit('hasProjectPermission: sendComputationalEmail='.$project->sendComputationalEmail());
                     if( $this->security->isGranted("ROLE_TRANSRES_BIOINFORMATICIAN") ) {
                         return true;
                     }
@@ -471,9 +475,9 @@ class TransResPermissionUtil
             }
 
             //all request's requesters associated with this project
-            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
-                return true;
-            }
+//            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+//                return true;
+//            }
 
         }
 
