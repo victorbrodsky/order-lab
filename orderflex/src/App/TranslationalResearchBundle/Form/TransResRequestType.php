@@ -406,6 +406,28 @@ class TransResRequestType extends AbstractType
                     ));
             },
         ));
+
+//        //Work Request Progress Log Notes (visible to staff only): (hide on new project page)
+//        //On the “Work Request View” page hide if empty if( cycle == 'show' && transresRequest->getProgressLog() )
+//        //$this->params['trpAdmin'] ||
+//        //$this->params['trpTech']
+//        //$this->params['admin']
+//        $showProgressLog = false;
+//        if( $this->params['cycle'] != 'new' ) {
+//            if( $this->params['trpAdmin'] || $this->params['admin'] ) {
+//                $showProgressLog = true;
+//            }
+//            if( $this->params['cycle'] == 'show' && !$this->params['transresRequest']->getProgressLog() ) {
+//                $showProgressLog = false;
+//            }
+//        }
+//        if( $showProgressLog ) {
+//            $builder->add('progressLog', null, array(
+//                'label' => "Work Request Progress Log Notes (visible to staff only):",
+//                'required' => false,
+//                'attr' => array('class' => 'textarea form-control')
+//            ));
+//        }
         //////////////// EOF fields /////////////////////////
 
 

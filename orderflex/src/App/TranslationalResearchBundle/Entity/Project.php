@@ -805,7 +805,7 @@ class Project {
     #[ORM\Column(type: 'text', nullable: true)]
     private $softwareTool;
 
-    //Work Progress Log Notes (visible to staff only): (hide on new project page)
+    //Project Progress Log Notes (visible to staff only): (hide on new project page)
     #[ORM\Column(type: 'text', nullable: true)]
     private $progressLog;
 

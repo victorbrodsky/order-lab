@@ -234,6 +234,11 @@ class TransResRequest {
     #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $businessPurposes;
 
+    //Work Progress Log Notes (visible to staff only): (hide on new project page)
+    //#[ORM\Column(type: 'text', nullable: true)]
+    //private $progressLog;
+
+    
     
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -841,6 +846,22 @@ class TransResRequest {
     {
         $this->businessPurposes->removeElement($item);
     }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getProgressLog()
+//    {
+//        return $this->progressLog;
+//    }
+//
+//    /**
+//     * @param mixed $progressLog
+//     */
+//    public function setProgressLog($progressLog)
+//    {
+//        $this->progressLog = $progressLog;
+//    }
     //////////////// EOF fields /////////////////////////
 
 
