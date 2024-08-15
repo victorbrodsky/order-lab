@@ -79,12 +79,15 @@ class DashboardSiteParametersController extends SiteParametersController
     #[Template('AppDashboardBundle/SiteParameter/edit-content.html.twig')]
     public function dashboardSiteParameterShowAction( Request $request ) {
 
+        //exit('dashboardSiteParameterShowAction before 1');
         if( false === $this->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //exit('dashboardSiteParameterShowAction before 2');
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 
         $cycle = "show";
 
+        //exit('dashboardSiteParameterShowAction before 3');
         $dashboardSiteParameter = $this->getOrCreateNewDashboardParameters($cycle);
         //echo "dashboardSiteParameter=".$dashboardSiteParameter->getId()."<br>";
 
