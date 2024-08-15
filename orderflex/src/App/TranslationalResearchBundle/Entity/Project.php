@@ -3476,6 +3476,7 @@ class Project {
 
     //Check if send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
     public function sendComputationalEmail() {
+        //exit('sendComputationalEmail: start');
         //1) Which division(s) are you collaborating with? => Computational Pathology
         if( $this->getProjectCompCategories() ) {
             return true;
@@ -3484,6 +3485,7 @@ class Project {
         if( $this->getProjectInformaticsSupport() ) {
             return true;
         }
+        //exit('sendComputationalEmail: false');
         return false;
     }
 

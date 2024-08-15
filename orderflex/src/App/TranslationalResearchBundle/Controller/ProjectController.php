@@ -1625,7 +1625,7 @@ class ProjectController extends OrderAbstractController
 
                 //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
                 if( $project->sendComputationalEmail() ) {
-                    $compEmailRes = $transresUtil->sendComputationalEmail($project);
+                    $compEmailRes = $transresUtil->sendComputationalEmail($project); //new page
                     $msg = $msg . "<br><br>" . $compEmailRes;
                     $this->addFlash(
                         'notice',
@@ -1981,7 +1981,8 @@ class ProjectController extends OrderAbstractController
 
                 //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
                 if( $project->sendComputationalEmail() ) {
-                    $compEmailRes = $transresUtil->sendComputationalEmail($project);
+                    //exit('send sendComputationalEmail');
+                    $compEmailRes = $transresUtil->sendComputationalEmail($project); //edit page
                     $msg = $msg . "<br><br>" . $compEmailRes;
                     $this->addFlash(
                         'notice',
@@ -2097,7 +2098,7 @@ class ProjectController extends OrderAbstractController
 //                " have been sent: " . $compEmailRes
 //            );
 //        }
-        //exit('showAction: $project->sendComputationalEmail()');
+//        exit('showAction: $project->sendComputationalEmail()');
 
 
         //$cycle = "show";

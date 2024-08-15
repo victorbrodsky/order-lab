@@ -3650,8 +3650,14 @@ class TransResUtil
 
     public function sendComputationalEmail($project) {
         $compEmails = array();
-        $compEmailUsers = $this->getTransresSiteProjectParameter('compEmailUsers',$project);
-        //$compEmailUsers = $this->getTransresSiteProjectArrayParameter('compEmailUsers',$project);
+
+        //Get compEmailUsers from TRP site settings (Deprecated. Replaced by ROLE_TRANSRES_BIOINFORMATICIAN)
+        //$compEmailUsers = $this->getTransresSiteProjectParameter('compEmailUsers',$project);
+
+        //Get all users with role ROLE_TRANSRES_BIOINFORMATICIAN
+        $compEmailUsers = $this->em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_BIOINFORMATICIAN"));
+        //echo "compEmailUsers=".count($compEmailUsers).'<br>';
+
         //dump($compEmailUsers);
         foreach($compEmailUsers as $compEmailUser) {
             //echo "compEmails=".$compEmailUser->getSingleEmail().'<br>';
@@ -3660,6 +3666,7 @@ class TransResUtil
 
         //echo "compEmails count=".count($compEmails).'<br>';
         if( count($compEmails) == 0 ) {
+            //exit('emails 0');
             return 'Email has not been sent: Computational pathology users are not specified';
         }
 
