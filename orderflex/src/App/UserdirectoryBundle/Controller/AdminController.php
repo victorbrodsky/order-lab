@@ -2232,6 +2232,13 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_BIOINFORMATICIAN" => array(
+                "Translational Research Bioinformatician",
+                "View Translational Research Project with departmental statistical or informatics support",
+                30,
+                "translational-research"
+            ),
+
             "ROLE_TRANSRES_TECHNICIAN_APCP" => array(
                 "Translational Research AP/CP Technician",
                 "View and Edit a Translational Research AP/CP Request",

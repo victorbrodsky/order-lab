@@ -446,7 +446,14 @@ class TransResPermissionUtil
                 if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
                     return true;
                 }
-            }
+                
+                //show if user has ROLE_TRANSRES_BIOINFORMATICIAN and this project->sendComputationalEmail == TRUE
+                if( $project->sendComputationalEmail() ) {
+                    if( $this->security->isGranted("ROLE_TRANSRES_BIOINFORMATICIAN") ) {
+                        return true;
+                    }
+                }
+            } //if view/show
 
             if(
                 $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
