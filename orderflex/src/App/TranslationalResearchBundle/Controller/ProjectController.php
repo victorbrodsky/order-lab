@@ -1981,7 +1981,6 @@ class ProjectController extends OrderAbstractController
 
                 //Send Notification emails for projects involving Computational Pathology or a request for a bioinformatician
                 if( $project->sendComputationalEmail() ) {
-                    //exit('send sendComputationalEmail');
                     $compEmailRes = $transresUtil->sendComputationalEmail($project); //edit page
                     $msg = $msg . "<br><br>" . $compEmailRes;
                     $this->addFlash(
