@@ -412,9 +412,12 @@ class TransResRequestType extends AbstractType
         //$this->params['trpAdmin'] ||
         //$this->params['trpTech']
         //$this->params['admin']
+//        echo "trpAdmin=".$this->params['trpAdmin']."<br>";
+//        echo "admin=".$this->params['admin'];
         $showProgressLog = false;
         if( $this->params['cycle'] != 'new' ) {
-            if( $this->params['trpAdmin'] || $this->params['admin'] ) {
+            //if( $this->params['trpAdmin'] || $this->params['admin'] ) {
+            if( $this->params['trpAdvancedUser'] ) {
                 $showProgressLog = true;
             }
             if( $this->params['cycle'] == 'show' && !$this->params['transresRequest']->getProgressLog() ) {

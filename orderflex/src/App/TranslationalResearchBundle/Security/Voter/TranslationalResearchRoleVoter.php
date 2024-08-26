@@ -157,15 +157,14 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
         if( count($attributeArr) > 0 ) {
             $specialty = end($attributeArr);
             //search specialty DB if exists
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
             $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByRolename($specialty);
         }
         //echo "specialty=$specialty<br>";
         if( $specialty ) {
             $specialtyRolename = $specialty->getRolename();
+            //echo "specialtyRolename=$specialtyRolename<br>";
             //2) check if user has a admin role for this specialty
             $adminPartialRole = "ROLE_TRANSRES_ADMIN_".$specialtyRolename;
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $roleObjects = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user,$sitename,$adminPartialRole);
             //echo $adminPartialRole.": roleObjects count=".count($roleObjects)."<br>";
             if( count($roleObjects) > 0 ) {
@@ -177,7 +176,6 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
             //specialty not provided. i.e. 'ROLE_TRANSRES_TECHNICIAN'
             //2) check if user has a admin role for this specialty
             $adminPartialRole = "ROLE_TRANSRES_ADMIN";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $roleObjects = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user,$sitename,$adminPartialRole);
             //echo $adminPartialRole.": roleObjects count=".count($roleObjects)."<br>";
             if( count($roleObjects) > 0 ) {

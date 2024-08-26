@@ -701,6 +701,97 @@ class TransResUtil
 
         return false;
     }
+
+    //If user has roles other than requester
+    public function isAdvancedUser( $project=null ) {
+        //check only if user is admin, executive for the project specialty
+        //or user is a primary (final) reviewer of this particular project
+
+        $projectSpecialty = null;
+        $specialtyStr = null;
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
+        if( $projectSpecialty ) {
+            $specialtyStr = $projectSpecialty->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
+
+        if(
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        //if user included in the project's reviewer directly
+        if( $project ) {
+            if( $this->isProjectReviewer($project) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isTech( $project=null ) {
+        $specialtyStr = $this->getProjectSpecialtyStr($project);
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
+            return true;
+        }
+        return false;
+    }
+    public function isAdmin( $project=null ) {
+        $specialtyStr = $this->getProjectSpecialtyStr($project);
+        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN_'.$specialtyStr) ) {
+            return true;
+        }
+        return false;
+    }
+    public function isComiteeReviewer( $project=null ) {
+        $specialtyStr = $this->getProjectSpecialtyStr($project);
+        if( $this->security->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER_'.$specialtyStr) ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getProjectSpecialtyStr( $project ) {
+        $projectSpecialty = null;
+        $specialtyStr = "";
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
+        if( $projectSpecialty ) {
+            $specialtyStr = $projectSpecialty->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
+        return $specialtyStr;
+    }
+    
 //    public function isAdminOrPrimaryReviewerOrExecutive_ORIG( $project=null ) {
 //        //TODO: implement check only if user is admin, executive for the project specialty
 //        //TODO: or user is a primary (final) reviewer of this particular project

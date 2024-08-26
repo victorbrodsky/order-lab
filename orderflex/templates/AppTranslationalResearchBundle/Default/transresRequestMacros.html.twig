@@ -67,6 +67,12 @@
 {% macro transresRequestBody( form, transresRequest, cycle, sitename ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    {#progressLog#}
+    {% if form.progressLog is defined %}
+        {{ formmacros.field(form.progressLog) }}
+    {% endif %}
+
     {#Request#}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">

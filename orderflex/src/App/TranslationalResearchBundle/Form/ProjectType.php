@@ -176,12 +176,7 @@ class ProjectType extends AbstractType
 
         //visible only to TRP Admin, TRP Tech, Deputy Platform Admin, and Platform Admin
         if (1) {
-            if (
-                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
-                $this->params['trpAdmin'] ||
-                $this->params['trpTech']
-            ) {
+            if( $this->params['trpAdmin'] || $this->params['trpTech'] ) {
                 //if( $this->params['cycle'] == "new" ) {
                 if (1) {
                     $builder->add('priceList', EntityType::class, array(
@@ -1248,9 +1243,15 @@ class ProjectType extends AbstractType
         //$this->params['trpAdmin'] ||
         //$this->params['trpTech']
         //$this->params['admin']
+        //trpCommitteeReviewer
+        //echo "trpAdmin=".$this->params['trpAdmin']."<br>";
+        //echo "trpTech=".$this->params['trpTech']."<br>";
+        //echo "trpCommitteeReviewer=".$this->params['trpCommitteeReviewer']."<br>";
+        //echo "admin=".$this->params['admin'];
         $showProgressLog = false;
         if( $this->params['cycle'] != 'new' ) {
-            if( $this->params['trpAdmin'] || $this->params['admin'] ) {
+            //if( $this->params['trpAdmin'] || $this->params['admin'] || $this->params['trpTech'] || $this->params['trpCommitteeReviewer'] ) {
+            if( $this->params['trpAdvancedUser'] ) {
                 $showProgressLog = true;
             }
             if( $this->params['cycle'] == 'show' && !$this->params['project']->getProgressLog() ) {

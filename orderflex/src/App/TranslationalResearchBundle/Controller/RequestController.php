@@ -2689,10 +2689,14 @@ class RequestController extends OrderAbstractController
             $fundedNumberLabel = "Fund Number (Optional):";
         }
 
-        $trpAdmin = false;
-        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            $trpAdmin = true;
-        }
+//        $trpAdmin = false;
+//        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            $trpAdmin = true;
+//        }
+        $trpAdmin = $transresUtil->isAdmin($project);
+        $trpTech = $transresUtil->isTech($project);
+        $trpPrimaryReviewer = $transresUtil->isPrimaryReviewer($project);
+        $trpAdvancedUser = $transresUtil->isAdvancedUser($project);
 
         $params = array(
             'cycle' => $cycle,
@@ -2701,6 +2705,7 @@ class RequestController extends OrderAbstractController
             'transresUtil' => $transresUtil,
             //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdmin' => $trpAdmin,
+            'trpAdvancedUser' => $trpAdvancedUser,
             'transresRequest' => $transresRequest,
             'routeName' => $routeName,
             'saveAsUpdate' => false,
@@ -2722,11 +2727,12 @@ class RequestController extends OrderAbstractController
 
         $params['admin'] = false;
 
-        if(
-            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
+//        if(
+//            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+//            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//            $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//        ) {
+        if( $trpAdmin || $trpTech || $trpPrimaryReviewer ) {
             $params['admin'] = true;
         } else {
             //TODO: do not add reviewers

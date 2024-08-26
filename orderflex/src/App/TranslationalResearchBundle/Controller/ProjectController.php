@@ -2073,6 +2073,13 @@ class ProjectController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Project/show.html.twig')]
     public function showAction(Request $request, Project $project, $cycle="show")
     {
+
+//        //Testing
+//        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            echo "showAction: YES ROLE_TRANSRES_ADMIN <br>";
+//        }
+//        //exit('test role');
+
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
         if( false === $transresPermissionUtil->hasProjectPermission("view",$project) ) {
@@ -2460,18 +2467,24 @@ class ProjectController extends OrderAbstractController
                 ">See MISI Antibody Panel List</a>";
         }
 
-        $trpAdmin = false;
-        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            $trpAdmin = true;
-        }
-        $trpTech = false;
-        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            $trpTech = true;
-        }
-        $trpCommitteeReviewer = false;
-        if( $this->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
-            $trpCommitteeReviewer = true;
-        }
+//        $trpAdmin = false;
+//        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            $trpAdmin = true;
+//        }
+        $trpAdmin = $transresUtil->isAdmin($project);
+//        $trpTech = false;
+//        if( $this->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+//            $trpTech = true;
+//        }
+        $trpTech = $transresUtil->isTech($project);
+
+//        $trpCommitteeReviewer = false;
+//        if( $this->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
+//            $trpCommitteeReviewer = true;
+//        }
+        $trpCommitteeReviewer = $transresUtil->isComiteeReviewer($project);
+
+        $trpAdvancedUser = $transresUtil->isAdvancedUser($project);
 
         $params = array(
             'cycle' => $cycle,
@@ -2481,6 +2494,7 @@ class ProjectController extends OrderAbstractController
             //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdmin' => $trpAdmin,
             'trpTech' => $trpTech,
+            'trpAdvancedUser' => $trpAdvancedUser,
             'trpCommitteeReviewer' => $trpCommitteeReviewer,
             'project' => $project,
             'otherUserParam' => $otherUserParam,
@@ -2531,16 +2545,14 @@ class ProjectController extends OrderAbstractController
             $params['showFinalReviewer'] = false;
         }
 
-        if(
-            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
-        ) {
+        $trpPrimaryReviewer = $transresUtil->isPrimaryReviewer($project);
+        //if( $this->isGranted('ROLE_TRANSRES_ADMIN') || $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
+        if( $trpAdmin || $trpPrimaryReviewer ) {
             $params['admin'] = true;
 //            $params['showIrbReviewer'] = true;
 //            $params['showAdminReviewer'] = true;
 //            $params['showCommitteeReviewer'] = true;
 //            $params['showFinalReviewer'] = true;
-
             $params['disabledReviewerFields'] = false;
             $params['disabledState'] = false;
             $params['disabledReviewers'] = false;
