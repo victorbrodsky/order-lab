@@ -1217,6 +1217,29 @@
 </div>
 </div>
 
+    {#Mailer Gmail settings manual#}
+    {% set mailerManualUrl = user_mailer_utility.getMailerManualUrl() %}
+    mailerManualUrl={{ mailerManualUrl }}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#gmail-instructions">
+                    Gmail settings manual
+                </a>
+            </h4>
+        </div>
+        <div id="gmail-instructions" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                <p>
+                    {#<embed src="{{ asset(manualUrl) }}" width="800px" height="2100px" />#}
+                    <embed src="{{ asset(mailerManualUrl) }}" width="100%" height="900px" />
+                </p>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+
     {#Defaults for an Organizational Group#}
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'AppUserdirectoryBundle/SiteParameters/organizational-group-defaults.html.twig' %}

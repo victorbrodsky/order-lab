@@ -1078,6 +1078,13 @@ class EmailUtil {
 
     }
 
+    public function getMailerManualUrl() {
+        $filename = "GmailSettings.pdf";
+        $mailerManualUrl = "orderassets\\AppUserdirectoryBundle\\form\\docs\\".$filename;
+        $mailerManualUrl = $mailerManualUrl.$filename;
+        return $mailerManualUrl;
+    }
+
 }
 
 
@@ -1095,6 +1102,8 @@ class EmailUtil {
 //in the /vendor/swiftmailer/swiftmailer/lib/preferences.php everything works fine.
 // I think that the problem was in the permission to the directory.
 // Swiftmailer uses sys_get_temp_dir() function which trying refer to /tmp directory.
+
+
 
 
 
