@@ -310,6 +310,13 @@ class SignUpController extends OrderAbstractController
                 An email was sent to the email address you provided ".$signUp->getEmail()." with a registration link.<br>
                 Please click the link emailed to you to activate your account.";
 
+            $confirmation = $confirmation .
+                "<br><br>If you do not receive the confirmation message within".
+                " a few minutes of signing up, please check your spam or junk mail ".
+                "folder just in case the confirmation email got delivered there ".
+                "instead of your inbox. If so, select the confirmation message ".
+                "and click Not Junk/Spam, which will allow future messages to get through.";
+
             //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
             return $this->render('AppUserdirectoryBundle/SignUp/confirmation.html.twig',
                 array(

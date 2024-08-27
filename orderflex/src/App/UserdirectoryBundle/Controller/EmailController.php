@@ -83,6 +83,7 @@ class EmailController extends OrderAbstractController
 //            ->text('Sending emails is fun again!')
 //            ->html('<p>See Twig integration for better HTML integration!</p>');
 //        $mailer->send($email);
+//        Check the spam folder
 
         if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -172,10 +173,18 @@ class EmailController extends OrderAbstractController
             $emailRes = $emailUtil->sendEmail($emails, $thisMsg, $msg, $ccs);
             //exit("email res=".$emailRes);
 
+            $confirmation = 'Test email sent to: '.$emails.'; ccs to:'.$ccs. "<br> Status: ".$emailRes;
+            $confirmation = $confirmation .
+                "<br><br>If you do not receive the confirmation message within".
+                " a few minutes of signing up, please check your spam or junk mail ".
+                "folder just in case the confirmation email got delivered there ".
+                "instead of your inbox. If so, select the confirmation message ".
+                "and click Not Junk/Spam, which will allow future messages to get through.";
+
             //Flash
             $this->addFlash(
                 'notice',
-                'Test email sent to: '.$emails.' and ccs to:'.$ccs. "<br> Status: ".$emailRes
+                $confirmation
             );
 
             return $this->redirectToRoute('employees_home');

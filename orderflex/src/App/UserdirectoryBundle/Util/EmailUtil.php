@@ -190,6 +190,7 @@ class EmailUtil {
 
         //send copy email to siteEmail via bcc
         $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
+        $bcc = NULL; //testing copy
 
         //$allEmails = "";
         $emails = $this->checkEmails($emails); //,'to',$allEmails);
