@@ -409,14 +409,8 @@ class TransResRequestType extends AbstractType
 
         //Work Request Progress Log Notes (visible to staff only): (hide on new project page)
         //On the “Work Request View” page hide if empty if( cycle == 'show' && transresRequest->getProgressLog() )
-        //$this->params['trpAdmin'] ||
-        //$this->params['trpTech']
-        //$this->params['admin']
-//        echo "trpAdmin=".$this->params['trpAdmin']."<br>";
-//        echo "admin=".$this->params['admin'];
         $showProgressLog = false;
         if( $this->params['cycle'] != 'new' ) {
-            //if( $this->params['trpAdmin'] || $this->params['admin'] ) {
             if( $this->params['trpAdvancedUser'] ) {
                 $showProgressLog = true;
             }
