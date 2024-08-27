@@ -1219,7 +1219,6 @@
 
     {#Mailer Gmail settings manual#}
     {% set mailerManualUrl = user_mailer_utility.getMailerManualUrl() %}
-    mailerManualUrl={{ mailerManualUrl }}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -1230,7 +1229,7 @@
         </div>
         <div id="gmail-instructions" class="panel-collapse collapse">
             <div class="panel-body">
-
+                mailerManualUrl={{ mailerManualUrl }}
                 <p>
                     {#<embed src="{{ asset(manualUrl) }}" width="800px" height="2100px" />#}
                     <embed src="{{ asset(mailerManualUrl) }}" width="100%" height="900px" />
