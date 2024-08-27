@@ -438,6 +438,11 @@ class EmailUtil {
     }
 
     //Route outgoing SMTP relay messages through Google: https://support.google.com/a/answer/2956491
+    //Gmail:
+    // 1) Enable 2-Step Verification
+    // 2) Go to Security and click on "2-Step Verification"
+    // 3) On the bottom of the page click "App passwords"
+    // 4) Create new App passwords and save it
     public function getSmtpTransport() {
         $userSecUtil = $this->container->get('user_security_utility');
 

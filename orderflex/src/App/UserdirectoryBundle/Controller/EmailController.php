@@ -89,7 +89,7 @@ class EmailController extends OrderAbstractController
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $newline =  "<br>\n";
         //$newline =  "\n";
 
