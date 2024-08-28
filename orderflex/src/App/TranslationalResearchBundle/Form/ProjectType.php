@@ -214,8 +214,6 @@ class ProjectType extends AbstractType
                         },
                     ));
                 }
-
-
             }
         }
 

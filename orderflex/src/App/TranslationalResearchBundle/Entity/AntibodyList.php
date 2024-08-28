@@ -261,6 +261,14 @@ class AntibodyList extends ListAbstract
 
     //Add Original ID (oid) to match the unique transferable entity between source and destination servers?
 
+    #[ORM\JoinTable(name: 'transres_antibody_lab')]
+    #[ORM\ManyToMany(targetEntity: AntibodyLabList::class, inversedBy: 'antibodies')]
+    private $antibodyLabs;
+
+    #[ORM\JoinTable(name: 'transres_antibody_panel')]
+    #[ORM\ManyToMany(targetEntity: AntibodyPanelList::class, inversedBy: 'antibodies')]
+    private $antibodyPanels;
+
 
     public function __construct($author=null) {
 
@@ -272,6 +280,9 @@ class AntibodyList extends ListAbstract
 
         $this->associates = new ArrayCollection();
         //$this->myAssociates = new ArrayCollection();
+
+        $this->antibodyLabs = new ArrayCollection();
+        $this->antibodyPanels = new ArrayCollection();
     }
 
     
@@ -802,6 +813,56 @@ class AntibodyList extends ListAbstract
 //            $this->removeAssociate($associate);
 //        }
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAntibodyLabs()
+    {
+        return $this->antibodyLabs;
+    }
+    public function addAntibodyLab( $item )
+    {
+        if( !$this->antibodyLabs->contains($item) ) {
+            $this->antibodyLabs->add($item);
+        }
+
+        return $this;
+    }
+    public function removeAntibodyLab($item)
+    {
+        if( $this->antibodyLabs->contains($item) ) {
+            $this->antibodyLabs->removeElement($item);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAntibodyPanels()
+    {
+        return $this->antibodyPanels;
+    }
+    public function addAntibodyPanel( $item )
+    {
+        if( !$this->antibodyPanels->contains($item) ) {
+            $this->antibodyPanels->add($item);
+        }
+
+        return $this;
+    }
+    public function removeAntibodyPanel($item)
+    {
+        if( $this->antibodyPanels->contains($item) ) {
+            $this->antibodyPanels->removeElement($item);
+        }
+
+        return $this;
+    }
+
+
 
 //    /**
 //     * @return mixed

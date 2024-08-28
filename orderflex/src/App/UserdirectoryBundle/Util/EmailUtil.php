@@ -1080,7 +1080,7 @@ class EmailUtil {
 
     public function getMailerManualUrl() {
         $filename = "GmailSettings.pdf";
-        $mailerManualUrl = "orderassets\\AppUserdirectoryBundle\\form\\docs\\".$filename;
+        $mailerManualUrl = "orderassets\\AppUserdirectoryBundle\\form\\docs\\";
         $mailerManualUrl = $mailerManualUrl.$filename;
         return $mailerManualUrl;
     }
