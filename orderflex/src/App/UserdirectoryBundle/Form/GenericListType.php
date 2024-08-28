@@ -20,6 +20,8 @@ namespace App\UserdirectoryBundle\Form;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
+use App\TranslationalResearchBundle\Entity\AntibodyLabList;
+use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
 use App\UserdirectoryBundle\Entity\HostedUserGroupList;
@@ -1057,6 +1059,41 @@ class GenericListType extends AbstractType
                 'class' => AntibodyCategoryTagList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Antibody Category Tag(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('antibodyLabs', EntityType::class, array(
+                'class' => AntibodyLabList::class,
+                //'choice_label' => 'getTreeName',
+                'label'=>'Antibody Lab(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+            $builder->add('antibodyPanels', EntityType::class, array(
+                'class' => AntibodyPanelList::class,
+                //'choice_label' => 'getTreeName',
+                'label'=>'Antibody Panel(s):',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),

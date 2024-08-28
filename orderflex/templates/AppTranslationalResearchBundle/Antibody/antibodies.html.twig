@@ -74,27 +74,38 @@
 
             <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.type) }}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.type) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.clone) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.host) }}
+                        </div>
+
+                        <div class="col-xs-3">
+                            {{ form_widget(filterform.reactivity) }}
+                        </div>
+
+                        <div class="col-xs-3">
+                            {{ form_widget(filterform.company) }}
+                        </div>
                     </div>
 
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.clone) }}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodylabs) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodypanels) }}
+                        </div>
                     </div>
 
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.host) }}
-                    </div>
-
-                    <div class="col-xs-3">
-                        {{ form_widget(filterform.reactivity) }}
-                    </div>
-
-                    <div class="col-xs-3">
-                        {{ form_widget(filterform.company) }}
-                    </div>
-                </div>
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
             {{ form_rest(filterform) }}
@@ -108,6 +119,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Labs', 'antibodyLabs.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Panels', 'antibodyPanels.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
@@ -151,6 +164,18 @@
                 <td>
                     {% for category in ent.categoryTags %}
                         {{ category }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for lab in ent.antibodyLabs %}
+                        {{ lab }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for panel in ent.antibodyPanels %}
+                        {{ panel }}<br>
                     {% endfor %}
                 </td>
 

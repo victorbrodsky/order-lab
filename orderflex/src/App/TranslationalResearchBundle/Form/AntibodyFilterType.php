@@ -18,6 +18,8 @@
 namespace App\TranslationalResearchBundle\Form;
 
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
+use App\TranslationalResearchBundle\Entity\AntibodyLabList;
+use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -129,6 +131,42 @@ class AntibodyFilterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Category Tag(s)"),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('antibodylabs', EntityType::class, array(
+                'class' => AntibodyLabList::class,
+                //'choice_label' => 'getTreeName',
+                'label' => 'Antibody Lab(s):',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Lab(s)"),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add('antibodypanels', EntityType::class, array(
+                'class' => AntibodyPanelList::class,
+                //'choice_label' => 'getTreeName',
+                'label' => 'Antibody Panel(s):',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Panel(s)"),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("(list.type = :typedef OR list.type = :typeadd)")

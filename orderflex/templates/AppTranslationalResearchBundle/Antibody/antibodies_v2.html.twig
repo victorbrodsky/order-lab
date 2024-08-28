@@ -146,6 +146,20 @@
                     <br>
                     <div class="row">
                         <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodylabs) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodypanels) }}
+                        </div>
+
+                        <div class="col-xs-8">
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2">
                             {{ form_widget(filterform.document) }}
                         </div>
 
@@ -168,6 +182,8 @@
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Labs', 'antibodyLabs.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Panels', 'antibodyPanels.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Source ID', 'ent.sourceId') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
@@ -215,6 +231,18 @@
                 <td>
                     {% for category in ent.categoryTags %}
                         {{ category }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for lab in ent.antibodyLabs %}
+                        {{ lab }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for panel in ent.antibodyPanels %}
+                        {{ panel }}<br>
                     {% endfor %}
                 </td>
 

@@ -309,6 +309,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag-list', methods: ['GET'])]
     #[Route(path: '/list/transferstatus/', name: 'transferstatus-list', methods: ['GET'])]
     #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers-list', methods: ['GET'])]
+    #[Route(path: '/list/antibodylabs/', name: 'antibodylabs-list', methods: ['GET'])]
+    #[Route(path: '/list/antibodypanels/', name: 'antibodypanels-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -1011,6 +1013,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/', name: 'antibodycategorytag_create', methods: ['POST'])]
     #[Route(path: '/list/transferstatus/', name: 'transferstatus_create', methods: ['POST'])]
     #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers_create', methods: ['POST'])]
+    #[Route(path: '/list/antibodylabs/', name: 'antibodylabs_create', methods: ['POST'])]
+    #[Route(path: '/list/antibodypanels/', name: 'antibodypanels_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1377,6 +1381,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/new', name: 'antibodycategorytag_new', methods: ['GET'])]
     #[Route(path: '/list/transferstatus/new', name: 'transferstatus_new', methods: ['GET'])]
     #[Route(path: '/list/interfacetransfers/new', name: 'interfacetransfers_new', methods: ['GET'])]
+    #[Route(path: '/list/antibodylabs/new', name: 'antibodylabs_new', methods: ['GET'])]
+    #[Route(path: '/list/antibodypanels/new', name: 'antibodypanels_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1697,6 +1703,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_show', methods: ['GET'])]
     #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_show', methods: ['GET'])]
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_show', methods: ['GET'])]
+    #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_show', methods: ['GET'])]
+    #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -2006,6 +2014,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/{id}/edit', name: 'antibodycategorytag_edit', methods: ['GET'])]
     #[Route(path: '/list/transferstatus/{id}/edit', name: 'transferstatus_edit', methods: ['GET'])]
     #[Route(path: '/list/interfacetransfers/{id}/edit', name: 'interfacetransfers_edit', methods: ['GET'])]
+    #[Route(path: '/list/antibodylabs/{id}/edit', name: 'antibodylabs_edit', methods: ['GET'])]
+    #[Route(path: '/list/antibodypanels/{id}/edit', name: 'antibodypanels_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2369,6 +2379,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_update', methods: ['PUT'])]
     #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_update', methods: ['PUT'])]
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_update', methods: ['PUT'])]
+    #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_update', methods: ['PUT'])]
+    #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3499,6 +3511,16 @@ class ListController extends OrderAbstractController
                 $displayName = "Translational Research Antibody Category Tag List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "antibodylabs":
+                $className = "AntibodyLabList";
+                $displayName = "Translational Research Antibody Lab List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+            case "antibodypanels":
+                $className = "AntibodyPanelList";
+                $displayName = "Translational Research Antibody Panel List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "workqueuetypes":
                 $className = "WorkQueueList";
@@ -4301,6 +4323,8 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodycategorytag/{id}', name: 'antibodycategorytag_delete', methods: ['DELETE'])]
     #[Route(path: '/list/transferstatus/{id}', name: 'transferstatus_delete', methods: ['DELETE'])]
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
