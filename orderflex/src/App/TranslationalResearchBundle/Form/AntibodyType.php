@@ -92,7 +92,7 @@ class AntibodyType extends AbstractType
         $builder->add('antibodyLabs', EntityType::class, array(
             'class' => AntibodyLabList::class,
             //'choice_label' => 'getTreeName',
-            'label' => 'Antibody Lab(s):',
+            'label' => 'Lab offering the Antibody:',
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Antibody Lab(s)"),
@@ -110,7 +110,7 @@ class AntibodyType extends AbstractType
         $builder->add('antibodyPanels', EntityType::class, array(
             'class' => AntibodyPanelList::class,
             //'choice_label' => 'getTreeName',
-            'label' => 'Antibody Panel(s):',
+            'label' => 'Antibody Panel:',
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Category Panel(s)"),
@@ -283,7 +283,7 @@ class AntibodyType extends AbstractType
         $builder->add('sourceId', null, array(
             'label' => 'Source Original Id:',
             'required' => false,
-            'attr' => array('style' => 'form-control')
+            'attr' => array('class' => 'form-control')
         ));
 
         //Buttons

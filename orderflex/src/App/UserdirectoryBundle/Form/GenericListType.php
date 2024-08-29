@@ -1076,7 +1076,7 @@ class GenericListType extends AbstractType
             $builder->add('antibodyLabs', EntityType::class, array(
                 'class' => AntibodyLabList::class,
                 //'choice_label' => 'getTreeName',
-                'label'=>'Antibody Lab(s):',
+                'label'=>'Lab offering the Antibody:',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),

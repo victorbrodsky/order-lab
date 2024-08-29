@@ -22,6 +22,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
+use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
 use App\UserdirectoryBundle\Entity\AuthServerNetworkList;
 use App\UserdirectoryBundle\Entity\AuthPartnerServerList;
 use App\UserdirectoryBundle\Entity\AuthUserGroupList;
@@ -10984,37 +10985,37 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-//    //Add numbers 1 through 71 as titles to this list as placeholders
-//    //Get list of Unique MISI Antibody Panel Names (for each PDF section) from
-//    // Fabio and replace placeholder panel titles (1 through 71) with the provided unique names
-//    public function generateAntibodyPanelList() {
-//        $username = $this->getUser();
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $types = array(
-//            "TRP",
-//            "MISI"
-//        );
-//
-//        $count = 10;
-//        foreach( $types as $name ) {
-//
-//            $listEntity = $em->getRepository(AntibodyLabList::class)->findOneByName($name);
-//            if( $listEntity ) {
-//                continue;
-//            }
-//
-//            $listEntity = new AntibodyLabList();
-//            $this->setDefaultList($listEntity,$count,$username,$name);
-//
-//            $em->persist($listEntity);
-//            $em->flush();
-//
-//            $count = $count + 10;
-//        }
-//
-//        return round($count/10);
-//    }
+    //Add numbers 1 through 71 as titles to this list as placeholders
+    //Get list of Unique MISI Antibody Panel Names (for each PDF section) from
+    // Fabio and replace placeholder panel titles (1 through 71) with the provided unique names
+    public function generateAntibodyPanelList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "1",
+            "2",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository(AntibodyPanelList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AntibodyPanelList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
 
     public function generateTransferStatusList() {
