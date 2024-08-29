@@ -1070,7 +1070,7 @@ class AdminController extends OrderAbstractController
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $count_generateAntibodyCategoryTagList = $this->generateAntibodyCategoryTagList();
         $count_generateAntibodyLabList = $this->generateAntibodyLabList();
-        //$count_generateAntibodyPanelList = $this->generateAntibodyPanelList();
+        $count_generateAntibodyPanelList = $this->generateAntibodyPanelList();
         $logger->notice("Finished AntibodyPanelList");
         //return "Finished generateBusinessPurposes";
 
@@ -1252,7 +1252,7 @@ class AdminController extends OrderAbstractController
             'generateTenantUrlList='.$count_generateTenantUrlList.', '.
             'generateAntibodyCategoryTagList='.$count_generateAntibodyCategoryTagList.', '.
             'generateAntibodyLabList='.$count_generateAntibodyLabList.', '.
-            //'generateAntibodyPanelList='.$count_generateAntibodyPanelList.', '.
+            'generateAntibodyPanelList='.$count_generateAntibodyPanelList.', '.
 
             'generateTransferStatusList='.$count_generateTransferStatusList.', '.
 
@@ -8027,6 +8027,8 @@ class AdminController extends OrderAbstractController
             "transresrequestergroup" => array('RequesterGroupList','transresrequestergroup-list','Translational Research Requester Group List'),
             "transrescomptypes" => array('CompCategoryList','transrescomptypes-list','Translational Research Computational Categories List'),
             "antibodycategorytag" => array('AntibodyCategoryTagList','antibodycategorytag-list','Translational Research Antibody Category Tag List'),
+            "antibodylabs" => array('AntibodyLabList','antibodylabs-list','Translational Research Antibody Lab List'),
+            "antibodypanels" => array('AntibodyPanelList','antibodypanels-list','Translational Research Antibody Panel List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),

@@ -78,7 +78,7 @@ class AntibodyController extends OrderAbstractController
         $dql->addGroupBy('updatedby.username');
 
         $entityClass = $mapper['fullClassName'];   //"App\\OrderformBundle\\Entity\\".$mapper['className'];
-        $className = $mapper['className'];
+        //$className = $mapper['className'];
 
         //synonyms and original
         $dql->leftJoin("ent.synonyms", "synonyms");

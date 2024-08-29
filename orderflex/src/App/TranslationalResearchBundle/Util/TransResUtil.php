@@ -19,6 +19,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 
+use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 
@@ -3935,6 +3936,26 @@ class TransResUtil
         }
 
         return $requesterGroup;
+    }
+
+    public function getTransResAntibodyLabs() {
+        $repository = $this->em->getRepository(AntibodyLabList::class);
+        $dql =  $repository->createQueryBuilder("list");
+
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        );
+
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $labs = $query->getResult();
+
+        return $labs;
     }
 
     //NOT USED?
