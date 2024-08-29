@@ -10,32 +10,11 @@
 {% block content %}
 
     <h4 class="text-info" align="center">
-        {{ title|raw }}
-        {#({{ entities.getTotalItemCount }} matching)#}
+        {{ title|raw }} ({{ entities.getTotalItemCount }} matching)
         {#{% if entities|length > 0 %}#}
             {#&nbsp;({{ entities.getTotalItemCount }} matching)#}
         {#{% endif %}#}
-        {% if matchingAntibodyIdsArr is defined and matchingAntibodyIdsArr|length > 0 %}
-            <label
-                    for="download-spreadsheet-form-indexpage" tabindex="0"
-                    data-toggle="tooltip"
-                    title="Export all matching antibodies to a spreadsheet"
-                    style="cursor:pointer"
-            >
-                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
-            </label>
-        {% endif %}
     </h4>
-
-    {% if matchingAntibodyIdsArr is defined and matchingAntibodyIdsArr|length > 0 %}
-        <form action="{{ path('translationalresearch_download_antibody_spreadsheet') }}" method="post">
-            <input type="hidden" name="ids" value="{{ matchingAntibodyIdsArr|join(',') }}">
-            <button type="submit"
-                    id="download-spreadsheet-form-indexpage"
-                    class="btn hidden"
-            ></button>
-        </form>
-    {% endif %}
 
     <br>
     <div class="well form-search">
@@ -116,34 +95,7 @@
                             {{ form_widget(filterform.company) }}
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.catalog) }}
-                        </div>
 
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.control) }}
-                        </div>
-
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.protocol) }}
-                        </div>
-
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.retrieval) }}
-                        </div>
-
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.dilution) }}
-                        </div>
-
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.comment) }}
-                        </div>
-                    </div>
-
-                    <br>
                     <div class="row">
                         <div class="col-xs-2">
                             {{ form_widget(filterform.antibodylabs) }}
@@ -152,24 +104,8 @@
                         <div class="col-xs-2">
                             {{ form_widget(filterform.antibodypanels) }}
                         </div>
-
-                        <div class="col-xs-8">
-                        </div>
                     </div>
 
-                    <br>
-                    <div class="row">
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.document) }}
-                        </div>
-
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.visual) }}
-                        </div>
-
-                        <div class="col-xs-8">
-                        </div>
-                    </div>
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
             {{ form_rest(filterform) }}
@@ -181,17 +117,17 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Labs', 'antibodyLabs.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Panels', 'antibodyPanels.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Source ID', 'ent.sourceId') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Catalog', 'ent.catalog') }}</th>
-                {#<th>{{ knp_pagination_sortable(entities, 'Lot', 'ent.lot') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(entities, 'Ig Concentraton', 'ent.igconcentration') }}</th>#}
+                <th>{{ knp_pagination_sortable(entities, 'Lot', 'ent.lot') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Ig Concentraton', 'ent.igconcentration') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Clone', 'ent.clone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Host', 'ent.host') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reactivity', 'ent.reactivity') }}</th>
@@ -201,9 +137,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Dilution', 'ent.dilution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Storage', 'ent.storage') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Associated Antibodies', 'associates.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Data sheet', 'ent.datasheet') }}</th>
-                {#<th>Docs</th>#}
+                <th>Docs</th>
                 <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
@@ -215,19 +150,17 @@
         <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
         {% for ent in entities %}
 
-            {% set sourceIdTooltip = null %}
-            {% if ent.sourceId %}
-                {% set sourceIdTooltip = 'Source Original ID ' ~ ent.sourceId %}
-            {% endif %}
-
             <tr>
-                <td data-toggle="tooltip" title="{{ sourceIdTooltip }}">
+                <td>
                     {#{{ ent.id }}#}
                     <a class="list-row-mainlink"
                        href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"
                        target="_blank">{{ ent.id }}</a>
                 </td>
 
+                {#<td>#}
+                    {#{{ ent.category }}#}
+                {#</td>#}
                 <td>
                     {% for category in ent.categoryTags %}
                         {{ category }}<br>
@@ -267,17 +200,13 @@
                     {% endif %}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.sourceId }}#}
-                {#</td>#}
-
                 <td>
                     {{ ent.name }}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.altname }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.altname }}
+                </td>
 
                 <td>
                     {{ ent.company }}
@@ -287,13 +216,13 @@
                     {{ ent.catalog }}
                 </td>
 
-                {#<td>#}
-                    {#{{ ent.lot }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.lot }}
+                </td>
 
-                {#<td>#}
-                    {#{{ ent.igconcentration }}#}
-                {#</td>#}
+                <td>
+                    {{ ent.igconcentration }}
+                </td>
 
                 <td>
                     {{ ent.clone }}
@@ -340,29 +269,24 @@
                 </td>
 
                 <td>
-                    {% for associate in ent.associates %}
-                        {{ associate.listName() }}<br>
-                    {% endfor %}
-                </td>
-
-                <td>
                     {#{{ ent.datasheet }}#}
                     {% if ent.datasheet %}
                         <a target="_blank" href="{{ ent.datasheet }}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
                     {% endif %}
                 </td>
 
-                {#<td>#}
+                <td>
                     {#{{ ent.documents }}#}
-                    {#{% for document in ent.documents %}#}
+                    {% for document in ent.documents %}
                         {#{% set absolutePath = document.getAbsoluteUploadFullPath() %}#}
-                        {#<p>#}
-                            {#<a href="{{ absolutePath }}" target="_blank">#}
-                                {#{{ document.getOriginalname() }}#}
-                            {#</a>#}
-                        {#</p>#}
-                    {#{% endfor %}#}
-                {#</td>#}
+                        {% set absolutePath = user_service_utility.getDocumentAbsoluteUrl(document) %}
+                        <p>
+                            <a href="{{ absolutePath }}" target="_blank">
+                                {{ document.getOriginalname() }}
+                            </a>
+                        </p>
+                    {% endfor %}
+                </td>
 
                 <td>
                     {{ ent.type }}
@@ -388,22 +312,22 @@
                                     >Edit</a>
                                 </li>
 
-                                {% if ent.getType()|lower != 'disabled' %}
-                                    <li>
-                                        <a general-data-confirm="Are you sure you would like to disable this entry?"
-                                           href="{{ path('translationalresearch_change_antibody_type',
-                                            { 'entityId':ent.id, 'type':'disabled' }) }}">Disable
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}
-                                    <li>
-                                        <a general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
-                                           href="{{ path('translationalresearch_change_antibody_type',
-                                            { 'entityId':ent.id, 'type':'default' }) }}">Enable
-                                        </a>
-                                    </li>
-                                {% endif %}
+                                {#{% if ent.getType()|lower != 'disabled' %}#}
+                                    {#<li>#}
+                                        {#<a#}
+                                                {#general-data-confirm="Are you sure you would like to disable this entry?"#}
+                                                {#href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'disabled', 'postpath':postPath }) }}">Disable#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
+                                {#{% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}#}
+                                    {#<li>#}
+                                        {#<a#}
+                                                {#general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"#}
+                                                {#href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':ent.id, 'type':'default', 'postpath':postPath }) }}">Enable#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
 
                             </ul>
 

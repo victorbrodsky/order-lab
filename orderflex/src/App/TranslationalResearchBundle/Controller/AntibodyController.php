@@ -33,7 +33,7 @@ class AntibodyController extends OrderAbstractController
 {
     //Custom Antibody list
     #[Route(path: '/antibodies/', name: 'translationalresearch_antibodies', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_v2.html.twig')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies.html.twig')]
     public function indexAntibodiesAction(Request $request)
     {
         if(
@@ -87,6 +87,10 @@ class AntibodyController extends OrderAbstractController
         $dql->addGroupBy('original.name');
         $dql->leftJoin("ent.categoryTags", "categoryTags");
         $dql->addGroupBy('categoryTags.name');
+        $dql->leftJoin("ent.antibodyLabs", "antibodyLabs");
+        $dql->addGroupBy('antibodyLabs.name');
+        $dql->leftJoin("ent.antibodyPanels", "antibodyPanels");
+        $dql->addGroupBy('antibodyPanels.name');
         $dql->leftJoin("ent.associates", "associates");
         $dql->addGroupBy('associates.name');
 
@@ -127,6 +131,8 @@ class AntibodyController extends OrderAbstractController
         $name = null;
         $description = null;
         $categorytags = null;
+        $antibodylabs = null;
+        $antibodypanels = null;
         //$public = null;
         //secondary filter
         $clone = null;
@@ -151,6 +157,8 @@ class AntibodyController extends OrderAbstractController
             $name = $filterform['name']->getData();
             $description = $filterform['description']->getData();
             $categorytags = $filterform['categorytags']->getData();
+            $antibodylabs = $filterform['antibodylabs']->getData();
+            $antibodypanels = $filterform['antibodypanels']->getData();
             //$public = $filterform['public']->getData();
             //secondary filter
             $clone = $filterform['clone']->getData();
@@ -217,6 +225,8 @@ class AntibodyController extends OrderAbstractController
 
             $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(antibodyLabs.name) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(antibodyPanels.name) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";
@@ -261,6 +271,16 @@ class AntibodyController extends OrderAbstractController
         if( $categorytags && count($categorytags) > 0 ) {
             $dql->andWhere("categoryTags.id IN (:categoryTags)");
             $dqlParameters['categoryTags'] = $categorytags;
+        }
+
+        if( $antibodylabs && count($antibodylabs) > 0 ) {
+            $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
+            $dqlParameters['antibodyLabs'] = $antibodylabs;
+        }
+
+        if( $antibodypanels && count($antibodypanels) > 0 ) {
+            $dql->andWhere("antibodyPanels.id IN (:antibodyPanels)");
+            $dqlParameters['antibodyPanels'] = $antibodypanels;
         }
 
         if( $public ) {
