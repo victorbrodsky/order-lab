@@ -21,6 +21,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 
 
@@ -3956,6 +3957,50 @@ class TransResUtil
         $labs = $query->getResult();
 
         return $labs;
+    }
+
+    public function getTransResAntibodyPanels() {
+        $repository = $this->em->getRepository(AntibodyPanelList::class);
+        $dql =  $repository->createQueryBuilder("list");
+
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        );
+
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $panels = $query->getResult();
+
+        return $panels;
+    }
+    
+    public function getAntibodiesByPanel( $panel ) {
+        $repository = $this->em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("list");
+
+        $dql->leftJoin('list.antibodyPanels','antibodyPanels');
+
+        $dql->where("antibodyPanels.id = :panelId");
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'panelId' => $panel->getId(),
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        );
+
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $antibodies = $query->getResult();
+
+        return $antibodies;
     }
 
     //NOT USED?

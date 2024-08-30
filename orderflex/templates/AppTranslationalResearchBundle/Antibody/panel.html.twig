@@ -1,0 +1,23 @@
+{#{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}#}
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+
+{% block title %}
+    {{ title|raw }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+
+    {% for antibody in antibodies %}
+        <p>
+            {{ antibody }}
+        </p>
+    {% endfor %}
+
+
+{% endblock %}

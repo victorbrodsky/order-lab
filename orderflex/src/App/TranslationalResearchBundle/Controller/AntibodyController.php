@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\AntibodyList;
+use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
 use App\TranslationalResearchBundle\Entity\VisualInfo;
 use App\TranslationalResearchBundle\Form\AntibodyFilterType;
 use App\TranslationalResearchBundle\Form\AntibodyType;
@@ -273,16 +274,6 @@ class AntibodyController extends OrderAbstractController
             $dqlParameters['categoryTags'] = $categorytags;
         }
 
-        if( $antibodylabs && count($antibodylabs) > 0 ) {
-            $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
-            $dqlParameters['antibodyLabs'] = $antibodylabs;
-        }
-
-        if( $antibodypanels && count($antibodypanels) > 0 ) {
-            $dql->andWhere("antibodyPanels.id IN (:antibodyPanels)");
-            $dqlParameters['antibodyPanels'] = $antibodypanels;
-        }
-
         if( $public ) {
             //echo "public=".$public."<br>";
             if( strtolower($public) == 'public' ) {
@@ -354,6 +345,18 @@ class AntibodyController extends OrderAbstractController
             $dql->leftJoin("ent.visualInfos", "visualInfos");
             $dql->leftJoin("visualInfos.documents", "visualInfosDocuments");
             $dql->andWhere("visualInfosDocuments IS NOT NULL");
+            $advancedFilter++;
+        }
+
+        if( $antibodylabs && count($antibodylabs) > 0 ) {
+            $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
+            $dqlParameters['antibodyLabs'] = $antibodylabs;
+            $advancedFilter++;
+        }
+
+        if( $antibodypanels && count($antibodypanels) > 0 ) {
+            $dql->andWhere("antibodyPanels.id IN (:antibodyPanels)");
+            $dqlParameters['antibodyPanels'] = $antibodypanels;
             $advancedFilter++;
         }
 
@@ -914,9 +917,24 @@ class AntibodyController extends OrderAbstractController
         $listArr = $this->getList($request,$onlyPublic,$limit);
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
-        $listArr['title'] = "Public ".$listArr['title'];
 
         $filterFormObject = $listArr['filterFormObject'];
+
+        //'antibodypanels'
+        $antibodyLabs = $filterFormObject['antibodylabs']->getData();
+
+        $antibodyLabsStr = "";
+        if( $antibodyLabs ) {
+            foreach ($antibodyLabs as $antibodyLab) {
+                $antibodyLabsStr = $antibodyLabsStr . $antibodyLab->getName();
+            }
+            if( $antibodyLabsStr ) {
+                $antibodyLabsStr = $antibodyLabsStr . " ";
+            }
+        }
+
+        $listArr['title'] = "Published ".$antibodyLabsStr.$listArr['title'];
+
         $control = $filterFormObject['control']->getData();
         $tags = array(
             //array("control","All"),
@@ -1110,4 +1128,43 @@ class AntibodyController extends OrderAbstractController
         exit();
     }
 
+    #[Route(path: '/public/antibodies/group-by-panel', methods: ['GET'], name: 'translationalresearch_antibodies_group_by_panel')]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_group_by_panel.html.twig')]
+    public function groupByPanelAction(Request $request) {
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //get all panels
+        $panels = $transresUtil->getTransResAntibodyPanels();
+
+
+        return array(
+            'panels' => $panels,
+            'title' => "Antibodies Grouped by Panel",
+            //'cycle' => $cycle
+        );
+    }
+
+    #[Route(path: '/public/antibody/panel/{panelId}', methods: ['GET'], name: 'translationalresearch_antibody_panel')]
+    #[Template('AppTranslationalResearchBundle/Antibody/panel.html.twig')]
+    public function showPanelAction(Request $request, $panelId) {
+
+        $transresUtil = $this->container->get('transres_util');
+
+
+        $em = $this->getDoctrine()->getManager();
+        $panel = $em->getRepository(AntibodyPanelList::class)->find($panelId);
+
+        $panelName = $panel->getName();
+
+        //get all panels
+        $antibodies = $transresUtil->getAntibodiesByPanel($panel);
+
+
+        return array(
+            'antibodies' => $antibodies,
+            'title' => "Panel ".$panelName,
+            //'cycle' => $cycle
+        );
+    }
 }
