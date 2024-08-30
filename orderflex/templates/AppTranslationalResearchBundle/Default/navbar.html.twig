@@ -621,12 +621,12 @@
                                 {#data-toggle="dropdown"#}
                                 {#{% set antibodyLabs = transres_util.getTransResAntibodyLabs() %}#}
                                 {% if antibodyLabs|length > 0 %}
-                                    <li class="dropdown-submenu">
+                                    <li id="nav-bar-translationalresearch-antibodies" class="dropdown-submenu">
                                         <a href="{{ path('translationalresearch_antibodies') }}"
                                            >Complete Antibody List</a>
                                         <ul class="dropdown-menu">
                                             {% for antibodyLab in antibodyLabs %}
-                                                <li>
+                                                <li id="nav-bar-translationalresearch-antibodies">
                                                     <a href="{{ path('translationalresearch_antibodies',{'filter[antibodylabs][]':antibodyLab.id}) }}"
                                                     >Complete {{ antibodyLab.name }} Antibody List</a>
                                                 </li>

@@ -309,6 +309,9 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/substitute-user/") !== -1 ) {
         id = 'translationalresearch-configuration';
     }
+    if( full.indexOf("/translational-research/antibodies/") !== -1 ) {
+        id = 'translationalresearch-configuration';
+    }
 
     if( full.indexOf("/translational-research/work-request/new/") !== -1 ) {
         id = 'translationalresearch-allmenu-requests';

@@ -1,23 +1,66 @@
 {#{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}#}
 {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 
-{% block title %}
-    {{ title|raw }}
-{% endblock %}
-
 
 {% block content %}
 
-    <h4 class="text-info" align="center">
-        {{ title|raw }}
-    </h4>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#panel-{{ panel.id }}">
+                    {{ title }}
+                </a>
+            </h4>
+        </div>
+        <div id="panel-{{ panel.id }}" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="user-panel-holder" style="background-color:inherit;">
+                    <table class="table table-hover table-condensed text-left">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Antibody</th>
+                            <th>Host</th>
+                            <th>Clone</th>
+                            <th>Reactivity</th>
+                        </tr>
+                        </thead>
 
+                        <tbody >
+                        {% for antibody in antibodies %}
+                            <tr>
+                                <td>
+                                    {{ antibody.id }}
+                                </td>
 
-    {% for antibody in antibodies %}
-        <p>
-            {{ antibody }}
-        </p>
-    {% endfor %}
+                                <td>
+                                    {{ antibody.name }}
+                                </td>
 
+                                <td>
+                                    {{ antibody.host }}
+                                </td>
+
+                                <td>
+                                    {{ antibody.clone }}
+                                </td>
+
+                                <td>
+                                    {{ antibody.reactivity }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#{% for antibody in antibodies %}#}
+        {#<p>#}
+            {#{{ antibody }}#}
+        {#</p>#}
+    {#{% endfor %}#}
 
 {% endblock %}

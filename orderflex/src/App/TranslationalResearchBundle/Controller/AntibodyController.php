@@ -45,7 +45,7 @@ class AntibodyController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
         
-        $listArr = $this->getList($request);
+        $listArr = $this->getList($request); //list
         //$listArr['title'] = "Antibodies";
         $listArr['postPath'] = "_translationalresearch";
 
@@ -348,6 +348,11 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
+//        echo "antibodylabs=".count($antibodylabs)."<br>";
+//        foreach($antibodylabs as $antibodylab) {
+//            echo "antibodylab=".$antibodylab."<br>";
+//        }
+//        exit('111');
         if( $antibodylabs && count($antibodylabs) > 0 ) {
             $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
             $dqlParameters['antibodyLabs'] = $antibodylabs;
@@ -914,7 +919,7 @@ class AntibodyController extends OrderAbstractController
 
         $limit = 50;
         $onlyPublic = true;
-        $listArr = $this->getList($request,$onlyPublic,$limit);
+        $listArr = $this->getList($request,$onlyPublic,$limit); //list react main page
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
 
@@ -956,18 +961,34 @@ class AntibodyController extends OrderAbstractController
         // pathologist referred, etc in the front.
 
         //pre-set list type
-        $typeArr = array('type'=>array('default','user-added'));
-        $request->query->set('filter', $typeArr);
+        //$typeArr = array('type'=>array('default','user-added'));
+        //$request->query->set('filter', $typeArr);
+
+        //get original filter
+        $filter = $request->get('filter');
+
+        //add types ('default','user-added') to the existing filter
+        $filter['type'] = array('default','user-added');
+
+        $request->query->set('filter',$filter);
 
         //dump($request);
         //exit('111');
 
         $limit = 20; //20
         $onlyPublic = true;
-        $listArr = $this->getList($request,$onlyPublic,$limit);
+
+        //dump($request);
+        //exit('111');
+
+        //Correct  : http://127.0.0.1/translational-research/public/antibodies/api?page=1&antibodylabs[]=2
+        //Currently: http://127.0.0.1/translational-research/public/antibodies/api?page=1&filter[antibodylabs][]=2
+
+        $listArr = $this->getList($request,$onlyPublic,$limit); //api
         $antibodies = $listArr['entities'];
         $totalAntibodiesCount = $listArr['totalAntibodiesCount'];
-        //echo "antibodies=".count($antibodies)."<br>";
+        //echo "react antibodies=".count($antibodies)."<br>";
+        //exit('111');
         //echo "totalAntibodiesCount=".$totalAntibodiesCount."<br>";
         //$limit = $listArr['limit'];
         //echo "limit=".$limit."<br>";
@@ -1163,6 +1184,7 @@ class AntibodyController extends OrderAbstractController
 
         return array(
             'antibodies' => $antibodies,
+            'panel' => $panel,
             'title' => "Panel ".$panelName,
             //'cycle' => $cycle
         );
