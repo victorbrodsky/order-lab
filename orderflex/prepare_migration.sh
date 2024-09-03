@@ -19,7 +19,7 @@ PROJECT_NAME='ScanOrder Symfony Project'
 # The location of the Symfony project you want to Deploy.
 PROJECT_LOCAL_PATH=.
 
-##### Functions #####
+##### Functions php bin/console ... #####
 function prep()
 {
     echo "Preparing for Migration..."
