@@ -243,9 +243,9 @@ class LargeFileDownloader {
 
     public function getFileContent($filenameClean) {
 
-        if( !file_exists($filenameClean) ) {
-            return NULL;
-        }
+//        if( !file_exists($filenameClean) ) {
+//            return NULL;
+//        }
 
         $arrContextOptions=array(
             "ssl"=>array(
@@ -257,7 +257,7 @@ class LargeFileDownloader {
         //$use_include_path = FILE_USE_INCLUDE_PATH; //or true
         $use_include_path = false;
 
-        //echo "before get content <br>";
+        //echo "before get content filenameClean=$filenameClean<br>";
         //exit('000');
         $response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
         //exit('111');
