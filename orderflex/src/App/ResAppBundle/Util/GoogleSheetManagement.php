@@ -1069,10 +1069,10 @@ class GoogleSheetManagement {
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
     public function getConfigOnGoogleDrive() {
 
-        if( $this->security->isGranted('ROLE_RESAPP_ADMIN') === false ) {
-            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
-            return NULL;
-        }
+//        if( $this->security->isGranted('ROLE_RESAPP_ADMIN') === false ) {
+//            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
+//            return NULL;
+//        }
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
