@@ -431,6 +431,16 @@ class UploadController extends OrderAbstractController {
             //exit(111);
             //$logger = $this->container->get('logger');
             //$logger->notice("abspath=$abspath");
+
+//            $serverPath = $document->getFullServerPath();
+//            $serverPath = "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\Uploaded\directory\avatars\avatar\\20150910195909.jpeg";
+//            echo "serverPath=$serverPath <br>";
+//            if( !file_exists($serverPath) ) {
+//                exit ("File path $serverPath is not available");
+//            } else {
+//                echo "File path $serverPath is available <br>";
+//            }
+
             if( $abspath || $originalname || $size ) {
                 //echo "abspath=".$abspath."<br>";
                 //echo "originalname=[".$originalname."]<br>";

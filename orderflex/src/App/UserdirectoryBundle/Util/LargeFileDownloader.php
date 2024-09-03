@@ -242,11 +242,6 @@ class LargeFileDownloader {
     }
 
     public function getFileContent($filenameClean) {
-
-//        if( !file_exists($filenameClean) ) {
-//            return NULL;
-//        }
-
         $arrContextOptions=array(
             "ssl"=>array(
                 "verify_peer"=>false,
