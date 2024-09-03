@@ -65,7 +65,17 @@
                     </div>
 
                     <div class="col-xs-1">
-                        <a class="btn btn-default btn-sm" href="{{ path('translationalresearch_antibodies_group_by_panel') }}" target="_blank">
+                        {% set labs = filterform.vars.value.antibodylabs %}
+                        {% set labsArray = [] %}
+                        {% for lab in labs %}
+                            {#lab={{ lab }}#}
+                            {% set labsArray = labsArray|merge([lab]) %}
+                        {% endfor %}
+                        {% set labsStr = labsArray|join('|') %}
+                        {#labsStr = {{ labsStr }}#}
+                        <a class="btn btn-default btn-sm"
+                           href="{{ path('translationalresearch_antibodies_group_by_panel', {'labs': labsStr}) }}"
+                           target="_blank">
                             Group by Panel
                         </a>
                     </div>

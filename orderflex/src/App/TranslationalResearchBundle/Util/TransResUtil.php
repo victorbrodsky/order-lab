@@ -3959,11 +3959,30 @@ class TransResUtil
         return $labs;
     }
 
-    public function getTransResAntibodyPanels() {
+    //$labsStr = 'TRP|MISI'
+    public function getTransResAntibodyPanels( $labsStr ) {
         $repository = $this->em->getRepository(AntibodyPanelList::class);
         $dql =  $repository->createQueryBuilder("list");
 
+        $dql->leftJoin('list.antibodies','antibodies');
+        $dql->leftJoin('antibodies.antibodyLabs','antibodyLabs');
+
         $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        //echo "labsStr=$labsStr <br>";
+        $labsArr = array();
+        if( $labsStr ) {
+            $labsArr = explode('|',$labsStr);
+            $labsCriterionArr = array();
+            foreach($labsArr as $lab) {
+                $labsCriterionArr[] = "antibodyLabs.name = '".$lab."'";
+            }
+            $labsCriterionStr = implode(' OR ',$labsCriterionArr);
+            //echo "labsCriterionStr=$labsCriterionStr <br>";
+            if( $labsCriterionStr ) {
+                $dql->andWhere($labsCriterionStr);
+            }
+        }
 
         $parameters = array(
             'typedef' => 'default',
@@ -3976,7 +3995,13 @@ class TransResUtil
 
         $panels = $query->getResult();
 
-        return $panels;
+        $res = array(
+            'panels' => $panels,
+            //'labsStr' => $labsStr,
+            'labsArr' => $labsArr
+        );
+
+        return $res;
     }
     
     public function getAntibodiesByPanel( $panel ) {
