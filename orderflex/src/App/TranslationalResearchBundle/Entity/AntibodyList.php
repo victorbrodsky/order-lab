@@ -837,6 +837,22 @@ class AntibodyList extends ListAbstract
 
         return $this;
     }
+    public function getAntibodyLabStr() {
+        $labs = $this->getAntibodyLabs();
+        $labsArr = array();
+        if( count($labs) > 0 ) {
+            //echo "Antibody has lab <br>";
+            //echo $antibody->getId().": ".$antibody->getName(). "";
+            foreach ($labs as $lab) {
+                //echo ": " . $lab->getName();
+                $labsArr[] = $lab->getName();
+            }
+        }
+        if( count($labsArr) > 0 ) {
+            return implode(", ", $labsArr);
+        }
+        return "";
+    }
 
     /**
      * @return ArrayCollection

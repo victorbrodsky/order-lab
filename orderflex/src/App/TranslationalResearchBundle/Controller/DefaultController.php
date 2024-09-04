@@ -4,6 +4,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
+use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
@@ -3376,20 +3377,10 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-//        $repository = $em->getRepository(AntibodyList::class);
-//        $dql =  $repository->createQueryBuilder("antibody");
-//        $dql->select('antibody');
-//
-//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-//
-//        $antibodys = $query->getResult();
-//        echo "antibodys=".count($antibodys)."<br>";
-//
-//        foreach($antibodys as $antibody) {
-//            echo $antibody->getId().": ".$antibody->getName(). "<br>";
-//        }
-//        exit('111');
-
+        $trpLab = $em->getRepository(AntibodyLabList::class)->findOneByName("TRP");
+        if( !$trpLab ) {
+            exit("AntibodyLabList TRP does not exist");
+        }
 
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
@@ -3397,7 +3388,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.antibodyLabs','antibodyLabs');
 
-        //$dql->andWhere("antibodyLabs IS NULL");
+        $dql->andWhere("antibodyLabs IS NULL");
 
         $query = $dql->getQuery();
         //$query->setParameters($params);
@@ -3406,20 +3397,31 @@ class DefaultController extends OrderAbstractController
         $antibodies = $query->getResult();
         echo "antibodies=".count($antibodies)."<br>";
 
+        $count = 0;
+
         foreach($antibodies as $antibody) {
             //echo $antibody->getId().": ".$antibody->getName(). "";
-            $name = $antibody->getName();
+            //$name = $antibody->getName();
             $labs = $antibody->getAntibodyLabs();
             if( count($labs) > 0 ) {
-                echo $antibody->getId().": ".$antibody->getName(). "";
-                foreach ($labs as $lab) {
-                    echo ": " . $lab->getName();
-                }
+                echo "Skip: antibody ".$antibody->getName()." has labs [".$antibody->getAntibodyLabStr()."]<br>";
+                continue;
+//                echo $antibody->getId().": ".$antibody->getName(). "";
+//                foreach ($labs as $lab) {
+//                    echo ": " . $lab->getName();
+//                }
+            } else {
+                //Add "TRP" lab
+                $antibody->addAntibodyLab($trpLab);
+                $em->flush();
+                echo $count.": Added lab to ".$antibody->getId().", ".$antibody->getName(). ": [".$antibody->getAntibodyLabStr(). "]<br>";
+                $count++;
             }
-            echo "<br>";
+            //echo "<br>";
         }
+        //$em->flush();
 
-        exit('111');
+        exit('Added lab to antibodies ='.$count);
     }
     
 }
