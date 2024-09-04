@@ -3367,7 +3367,7 @@ class DefaultController extends OrderAbstractController
     //Set default 'TRP' lab to all existing antibodies
     #[Route(path: '/antibody-set-trp-lab/', name: 'translationalresearch_antibody-set-trp-lab', methods: ['GET'])]
     public function antibodySetTrpLabAction( Request $request ) {
-        //exit("antibodySetTrpLabAction not allowed");
+        exit("antibodySetTrpLabAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
