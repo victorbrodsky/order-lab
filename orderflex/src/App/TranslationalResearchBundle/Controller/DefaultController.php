@@ -3362,5 +3362,64 @@ class DefaultController extends OrderAbstractController
 
         exit('end of populateProjectCommentAction');
     }
+
+    //Set default 'TRP' lab to all existing antibodies
+    #[Route(path: '/antibody-set-trp-lab/', name: 'translationalresearch_antibody-set-trp-lab', methods: ['GET'])]
+    public function antibodySetTrpLabAction( Request $request ) {
+        //exit("antibodySetTrpLabAction not allowed");
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //$user = $this->getUser();
+        //$count = 1;
+
+        $em = $this->getDoctrine()->getManager();
+
+//        $repository = $em->getRepository(AntibodyList::class);
+//        $dql =  $repository->createQueryBuilder("antibody");
+//        $dql->select('antibody');
+//
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
+//
+//        $antibodys = $query->getResult();
+//        echo "antibodys=".count($antibodys)."<br>";
+//
+//        foreach($antibodys as $antibody) {
+//            echo $antibody->getId().": ".$antibody->getName(). "<br>";
+//        }
+//        exit('111');
+
+
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+
+        $dql->leftJoin('antibody.antibodyLabs','antibodyLabs');
+
+        //$dql->andWhere("antibodyLabs IS NULL");
+
+        $query = $dql->getQuery();
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $antibodies = $query->getResult();
+        echo "antibodies=".count($antibodies)."<br>";
+
+        foreach($antibodies as $antibody) {
+            //echo $antibody->getId().": ".$antibody->getName(). "";
+            $name = $antibody->getName();
+            $labs = $antibody->getAntibodyLabs();
+            if( count($labs) > 0 ) {
+                echo $antibody->getId().": ".$antibody->getName(). "";
+                foreach ($labs as $lab) {
+                    echo ": " . $lab->getName();
+                }
+            }
+            echo "<br>";
+        }
+
+        exit('111');
+    }
     
 }
