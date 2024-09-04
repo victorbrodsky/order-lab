@@ -3423,5 +3423,20 @@ class DefaultController extends OrderAbstractController
 
         exit('Added lab to antibodies ='.$count);
     }
+
+
+    #[Route(path: '/antibody-create-panels/', name: 'translationalresearch_antibody-create-panels', methods: ['GET'])]
+    public function antibodyCreatePanelsAction( Request $request )
+    {
+        exit("antibodyCreatePanelsAction not allowed");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        //Use MISI_all.xlsx
+        //Add separators for panels
+
+        exit('111');
+    }
     
 }
