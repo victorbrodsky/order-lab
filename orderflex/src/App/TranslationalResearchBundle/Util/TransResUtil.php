@@ -9449,7 +9449,7 @@ WHERE
             echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
 
             $antibodyArr[$panel][] = array($antibodyName,$host,$clone,$reactivity);
-
+            
             //dump($rowData);
             //exit('111');
 
@@ -9460,6 +9460,10 @@ WHERE
             //echo "2 thisReactivity=>($thisReactivity) <br>";
 
             if( str_contains($antibodyName,'###') ) {
+
+                dump($antibodyArr);
+                exit('111');
+
                 $panel++;
 
                 //process this panel
