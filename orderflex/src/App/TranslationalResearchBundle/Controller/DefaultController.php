@@ -3425,18 +3425,35 @@ class DefaultController extends OrderAbstractController
     }
 
 
+    //127.0.0.1/translational-research/antibody-create-panels
     #[Route(path: '/antibody-create-panels/', name: 'translationalresearch_antibody-create-panels', methods: ['GET'])]
     public function antibodyCreatePanelsAction( Request $request )
     {
-        exit("antibodyCreatePanelsAction not allowed");
+        //exit("antibodyCreatePanelsAction not allowed");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); // ....../orderflex
+        echo "projectRoot=$projectRoot <br>";
+
+        $pdfFilePath = $projectRoot . "/"."/src/App/TranslationalResearchBundle/Util/MISI_Antibody_Panels.pdf";
+        echo "pdfFilePath=$pdfFilePath <br>";
+        if (file_exists($pdfFilePath)) {
+            echo "The file $pdfFilePath exists";
+        } else {
+            echo "The file $pdfFilePath does not exist";
+        }
+
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+        $pdfText = $resappPdfUtil->extractPdfText($pdfFilePath);
+
+        dump($pdfText);
+
         //Use MISI_all.xlsx
         //Add separators for panels
 
-        exit('111');
+        exit('EOF antibodyCreatePanelsAction');
     }
     
 }

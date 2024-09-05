@@ -1,0 +1,899 @@
+Antibody
+PTEN GFP ChrA c-Myc pAKT Rb Cytokeratin 8 AR Synaptophysin (Syp) FOXA2 MASH1(ASCL1) Ki67 ACC Ki67 P-ACC ARV7 Cytokeratin Gpx3 C3 CD55 NFkB SFRP1 cytokeratin LEF1 WIF1 Wnt2/IRP SFPR2 LGR5 Cytokeratin
+
+Host
+Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit
+
+Clone
+138G6 EPR14104-89 polyclonal Y69 D9E EPR17512 EP1628Y ER179(2) SP11 EPR4466 EPR19840 D3B5 D4W27 D3B5 s79 NA AE1/AE3 EPR228815-112 EPR19394 EPR6689 E381 EPR7003 polyclonal EPR2029Y [EPR9385 EPR3101(2) tbd tbd polyclonal
+
+Reactive species
+mouse mouse human human
+human
+
+SFRP4
+
+Rabbit
+
+Ube2L3/UBCH7 (E2F1) Rabbit
+
+Stathmin 1
+
+Rabbit
+
+Midkine
+
+Rabbit
+
+Ki-67
+
+Rabbit
+
+Cytokeratin
+
+Rabbit
+
+GFP
+
+Rabbit
+
+Ki-67
+
+Rabbit
+
+SFRP4
+
+Rabbit
+
+LEF1
+
+Rabbit
+
+ERG
+
+Rabbit
+
+Cytokeratin
+
+Rabbit
+
+CD163
+
+Mouse
+
+CD3
+
+Mouse
+
+CD8
+
+Mouse
+
+CD4
+
+Mouse
+
+HMW Keratin
+
+Mouse
+
+PDL1 (CD274)
+
+Rabbit
+
+FOXP3
+
+Mouse
+
+Ki67
+
+Rabbit
+
+CD4
+
+Mouse
+
+HMW Keratin
+
+Mouse
+
+SETD2
+
+Rabbit
+
+H3K36me3
+
+Rabbit
+
+FoxA2
+
+Rabbit
+
+NSD2
+
+Mouse
+
+H3K36me2
+
+Rabbit
+
+Chga
+
+Rabbit
+
+AR
+
+Rabbit
+
+EZH2
+
+Mouse
+
+EPR9389 EPR4368 SP49 EP1143Y D3B5 polyclonal EPR14104-89 D3B5 EPR9389 EPR2029Y EPR3864 Polyclonal 10D6 LN10 4B11 4B12 34BETAE12 73-10 236A/E7 D3B5 4B12 34BETAE12 E4W8Q polyclonal EPR4465 29D1 C75H12 polyclonal EPR1535(2) AC22
+
+mouse mouse human human human human
+
+H3K27me3
+
+Rabbit
+
+DNMT3A
+
+Rabbit
+
+Synaptophysin
+
+Mouse
+
+Gpx3
+
+Rabbit
+
+C3
+
+Rabbit
+
+CD55
+
+Rabbit
+
+NFkB
+
+Rabbit
+
+SFRP1
+
+Rabbit
+
+cytokeratin
+
+Rabbit
+
+LEF1
+
+Rabbit
+
+WIF1
+
+Rabbit
+
+Wnt2/IRP
+
+Rabbit
+
+SFPR2
+
+Rabbit
+
+LGR5
+
+Rabbit
+
+Cytokeratin
+
+Rabbit
+
+ERG
+
+Rabbit
+
+Cytokeratin
+
+Rabbit
+
+PTEN
+
+Rabbit
+
+PCTP-L
+
+Rabbit
+
+HMGB2
+
+Rabbit
+
+Milk Fat Globule 1 (0.2mMg/omusl)e
+
+Estrogen Receptor alphaRabbit
+
+FOXA1
+
+Rabbit
+
+AR
+
+Rabbit
+
+c-myc
+
+Rabbit
+
+ARV7
+
+Rabbit
+
+Ki67
+
+Rabbit
+
+HMW Cytokeratin Mouse
+
+ACC
+
+Rabbit
+
+c-PARP
+
+Rabbit
+
+C36B11 polyclonal 2/synaptophysin (RUO) EPR19951-136 EPR19394 EPR6689 E381 EPR7003 polyclonal EPR2029Y EPR9385 EPR3101(2) polyclonal polyclonal polyclonal
+EPR3864 polyclonal D4.3 polyclonal EPR6301 SPM291 EPR4097 EPR10881-14 EPR179(2) Y69 RM7 D3B5 clone 34E12 C83B10 E51
+
+human mouse
+mouse
+mouse human human human
+
+P-ACC FASN HMW Cytokeratin pH2a.x c-PARP P-ACC Ki67 HMW Cytokeratin EMPTY Synaptophysin Periostin Chromogranin AR PanCK EMPTY Lef1 Periostin Stathmin 1 Ki67 PanCK EMPTY Synaptophysin Periostin Chromogranin AR PanCK c-MYC FASN AR-V7 PSA
+
+Rabbit Rabbit Mouse Rabbit Rabbit Rabbit Rabbit Mouse EMPTY Mouse Rabbit Rabbit Rabbit Rabbit EMPTY Rabbit Rabbit Rabbit Rabbit Rabbit EMPTY Mouse Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse
+
+S79 polyclonal clone 34E12 20E 3 E51 S79 D3B5 clone 34E12 EMPTY 2/synaptophysin (RUO) EPR20806 polyclonal EPR179(2) polyclonal EMPTY EPR2029Y EPR20806 SP49 D3B5 polyclonal EMPTY 2/synaptophysin (RUO) EPR20806 polyclonal EPR179(2) polyclonal Y69 polyclonal RM7 35H9
+
+human mouse mouse mouse mouse
+
+AR PanCK Ki67 c-PARP GPX4 xCT/SLC7A11 3-Nitrotyrosine PanCk Ki-67 FASN ACC p-ACC HMW Cytokeratin PanCK c-Myc Ki67 AR PanCk ATF4 Elovl5 CD56 synaptophysin INSM1 Chromogranin A FOXA2 NKX3.1 Cytokeratin 5/6 Synaptophysin Periostin Chromogranin A
+
+Rabbit Rabbit
+Rabbit Rabbit Rabbit Rabbit mouse Rabbit
+Rabbit Rabbit Rabbit
+Rabbit
+mouse Rabbit
+Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse Mouse Rabbit Mouse Rabbit Rabbit ms Mouse Rabbit ms
+
+ER179(2) ab9377 D3B5 E51 polyclonal D2M7A11 39B6 polyclonal D3B5 polyclonal c83b10 s79 34BETAE12 polyclonal polyclonal D3B5 ER179 polyclonal polyclonal polyclonal NCAM (from Leica) 2/synaptophysin MRQ-70 LK2H10 EPR4465 poly D5/16 B4 2/synaptophysin (RUO) EPR20806 LK2H10 (from clinic)
+
+human human mouse human human
+
+AR PanCK ITGB3 Synaptophysin Periostin Chromogranin AR PanCK CD4 CD21 FOXP3 PAX5 PD1 CD8 CD163 CD68 CD11c PDL1 Cytokeratin CD3 Ki67 CD8 FOXP3 CD4 Cytokeratin CD8 Ki67 PKC Lambda PSTAT1 Cytokeratin
+
+Rabbit Rabbit Rabbit Mouse Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse Mouse Mouse Rabbit Mouse Rabbit Mouse Mouse Mouse Mouse Mouse Mouse Mouse Mouse Rabbit Mouse
+
+EPR179(2)
+
+polyclonal
+
+ERP17507
+
+2/synaptophysin (RUO) EPR20806
+
+mouse
+
+polyclonal
+
+EPR179(2)
+
+polyclonal
+
+EPR19514
+
+EPR3093 D608R
+
+mouse
+
+D7H5X https://www.prosci-inc.com/pd-1-antibody-4065.html
+
+D4W2Z
+
+10D6 KP1
+
+human
+
+5D11
+
+SP142
+
+AE1/AE3
+
+SP7
+
+MIB-1 C8/144B
+
+human
+
+236A/E7
+
+4B12
+
+AE1/AE3
+
+C8/144B MM1
+
+human
+
+RUO
+
+Y701
+
+AE1/AE3
+
+CD8 PDL1 PD1 CD30 CD4 PAX5 CD3 CD45 RO CD25 CD4 CD45RA CD163 CD4 CD21 FOXP3 PAX5 PD1 CD8 CD8 PDL1 PD1 CD30 CD4 CD20 CD71 CD61 CD117 (c-kit) CD38 CD34 CD15
+
+Mouse Rabbit Rabbit Mouse Mouse Mouse Rabbit Mouse Mouse Mouse Mouse Mouse Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse Rabbit Rabbit Mouse Mouse Mouse Mouse Mouse Rabbit Mouse Mouse Mouse
+
+C8/144B 73-10
+
+human
+
+CAL20
+
+Ber-H2
+
+4B12
+
+24/PAX-5
+
+SP7 UCH-L1
+
+human
+
+4C9
+
+4B12
+
+4KB5
+
+10D6
+
+EPR19514
+
+EPR3093 D608R
+
+mouse
+
+D7H5X https://www.prosci-inc.com/pd-1-antibody-4065.html
+
+D4W2Z
+
+C8/144B
+
+73-10 CAL20
+
+human
+
+Ber-H2
+
+4B12
+
+L26
+
+10F11
+
+2F2 D3W6Y
+
+human
+
+38C03(SPCD32)
+
+QBEND/10
+
+MMA
+
+CALRm CD38 CD117 TdT CD34 Ki67 S1PR1 S1PR2 CD34 CD61 CD4 CD30 PD1 PDL1 CD8 CD20 HA PKC Lambda CD56 CD44 Vimentin CK5 CD8 alpha CD19 FOXP3 MRP8 Ki67 Cytokeratin CD3 CD4
+
+Mouse Mouse Rabbit Mouse Mouse Mouse Mouse Rabbit Mouse Mouse Mouse Mouse Rabbit Rabbit Mouse Mouse N/A Mouse Mouse Mouse Mouse Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Rabbit Mouse
+
+CAL2 38C03(SPCD32) ckit SEN28 QBEND/10 MM1 A-6 Polyclonal QBEND/10 2F2 4B12 Ber-H2 CAL20 73-10 4B11 L26 N/A RUO CD564 VFF-7 V9 Poly19055
+EPR20305 D4V4B D608R EPR3554 D3B5 polyclonal SP7 4B12
+
+human human human human mouse
+
+CD8
+
+Mouse
+
+FOXP3
+
+Mouse
+
+Ki67
+
+Mouse
+
+Cytokeratin
+
+Mouse
+
+CD4
+
+Mouse
+
+CD8
+
+Mouse
+
+FOXP3
+
+Mouse
+
+CD11c
+
+Mouse
+
+Ki67
+
+Mouse
+
+Cytokeratin
+
+Mouse
+
+Nestin
+
+Mouse
+
+Neurod2
+
+Rabbit
+
+DLX2
+
+Mouse
+
+TBR2
+
+Rabbit
+
+Olig1
+
+Mouse
+
+GFAP
+
+Rabbit
+
+CD163
+
+Rabbit
+
+F4/80
+
+Rabbit
+
+CD4
+
+Rabbit
+
+CD8 alpha
+
+Rabbit
+
+FOXP3
+
+Rabbit
+
+Cytokeratin
+
+Mouse
+
+DLL3
+
+Rabbit
+
+CUL4B
+
+Rabbit
+
+MHC Class I
+
+Mouse
+
+Met
+
+Rabbit
+
+ERbB3
+
+Rabbit
+
+EGFR
+
+Rabbit
+
+VE-Cadherin/CD144 (0.5Mmogu/mseL)
+
+MCAM/CD146
+
+Rabbit
+
+C8/144B 236A/E7 MIB-1 AE1/AE3 4B12 C8/144B 236A/E7 5D11 MIB-1 AE1/AE3 10C2 JE50-57 B-5 polyclonal ? polyclonal EPR19518 D2S9R EPR19514 EPR20305 D6O8R AE1/AE3 EPR22592-18 Polyclonal EMR8-5 D1C2 SP71 Polyclonal 16B1 E3F3E
+
+human human human mouse human
+
+CD117 (c-kit)
+
+Rabbit D3W6Y
+
+Nestin
+
+Mouse 10C2
+
+CD34
+
+Mouse QBEND/10
+
+Ki-67
+
+Rabbit D2H10
+
+PNA
+
+N/A-Biotin B-1075-5
+
+CD21
+
+Rabbit SP186
+
+Notch1
+
+Rabbit EP1328Y
+
+Ki-67
+
+Rabbit D3B5
+
+CD45R (0.5mg/mL) Rat
+
+RA3-6B2
+
+CD163
+
+Rabbit EPR19518
+
+F4/80
+
+Rabbit D2S9R
+
+CD4
+
+Rabbit EPR19514
+
+CD8 alpha
+
+Rabbit EPR20305
+
+FOXP3
+
+Rabbit D6O8R
+
+Cytokeratin
+
+Mouse AE1/AE3
+
+CD31
+
+Rabbit polyclonal
+
+LRRC15
+
+Rabbit polyclonal
+
+CD34
+
+Mouse QBEND/10
+
+FAP (1mg/mL)
+
+Rabbit polyclonal
+
+SMA (smooth muscle acRtianb)bit ACTA2
+
+Perilipin
+
+f
+
+polyclonal
+
+CD3
+
+Mouse LN10
+
+WT1
+
+Mouse 6F-H2
+
+HHV8-LANA1
+
+Rat
+
+LN53
+
+Ki67
+
+Rabbit D2H10
+
+CD8
+
+Mouse 4B11
+
+PD1 cytokeratin
+
+Rabbit Mouse
+
+CAL20 AE1/AE3 + 5D3
+
+p16
+
+Rabbit EPR1473
+
+Lamin B1
+
+Rabbit EPR22165-121
+
+human mouse mouse human human mouse
+
+GLB1
+
+Rabbit
+
+Klotho
+
+Rabbit
+
+WT1
+
+Mouse
+
+HHV8-LANA1
+
+Rat
+
+CD68
+
+Mouse
+
+CD14
+
+Rabbit
+
+CD11b
+
+Rabbit
+
+CD163
+
+Mouse
+
+Cytokeratin
+
+Mouse
+
+Glutamine synthetase Mouse
+
+Collagen I
+
+Rabbit
+
+CD34
+
+Mouse
+
+Collagen III
+
+Mouse
+
+Hep-par1
+
+Mouse
+
+AR
+
+Rabbit
+
+EZH2
+
+Rabbit
+
+INSM1
+
+Mouse
+
+DNMT1
+
+Rabbit
+
+TET1
+
+Rabbit
+
+SSTR2
+
+Rabbit
+
+PR
+
+mouse
+
+CD68
+
+mouse
+
+CD3
+
+mouse
+
+Ki67
+
+Rabbit
+
+ERG
+
+Rabbit
+
+CD8 alpha
+
+Rabbit
+
+PD-L1
+
+Rabbit
+
+FOXP3
+
+Rabbit
+
+F4/80
+
+Rabbit
+
+CD4
+
+Rabbit
+
+Polyclonal Polyclonal 6F-H2 LN53 KP1 EPR3653 EP1345Y 10D6 RN7 RUO EPR7785 QBEND/10 FH-7a OCH1E5 ER179(2) SP129 A-8 JF09-89
+UMB1
+KP1 LN10 D3B5 EPR3864
+73-10
+
+human
+human human 16 human
+mouse
+
+Melan A FoxP3 CD8 CD4 CD19 CD38 PanCK TDTOMATO p21 XBP1s (CST) CTL4 Gata3 CD4 CD8 GFP PDL1 PDL1 F4/80 CD4 CD8 Ly-6G GFP HMW Cytokeratin TREM2 CD68 CD14 CD163 PanCK TET1 INSM1
+
+Rabbit Rabbit Mouse Mouse Mouse Mouse Mouse Goat Rabbit Rabbit Rabbit Rabbit Rat Rabbit Rabbit Rabbit Rabbit Rabbit Rat Rabbit Rabbit Rabbit Mouse Rabbit Mouse Rabbit Mouse Mouse Rabbit Mouse
+
+D6O8R C8/144B 4B12 BT51E SPC32 AE1/AE3 + 5D3 polyclonal EPR1802 E9V3E
+34Beta12 D8I4C KP1 [EPR3653] 10D6 AE1/AE3 N1 C-1
+
+human mouse mouse mouse human
+
+EZH2
+
+Rabbit
+
+AR
+
+Rabbit
+
+DNMT1
+
+Rabbit
+
+PanCK
+CD56 CD4 CD8 FoxP3 B2m Panck
+
+Mouse
+Mouse Mouse Mouse Mouse Rabbit Mouse
+
+PASK
+
+Rabbit
+
+Chromogranin A
+
+Mouse
+
+CD31
+
+Mouse
+
+CD74
+
+Rabbit
+
+Chromogranin A
+
+Mouse
+
+CD31 (new)
+
+Mouse
+
+AQP1
+
+Rabbit
+
+Chromogranin A
+
+Mouse
+
+CD31 (new)
+
+Mouse
+
+CD163
+
+Rabbit
+
+F4/80
+
+Rabbit
+
+CD4
+
+Rabbit
+
+CD8 alpha
+
+Rabbit
+
+FOXP3
+
+Rabbit
+
+Cytokeratin
+
+Mouse
+
+Cytokeratin
+
+Mouse
+
+Glutamine synthetase Mouse
+
+Collagen I
+
+Rabbit
+
+CD34
+
+Mouse
+
+Collagen III
+
+Mouse
+
+SP129 ER179(2) D63A6 AE1/AE3 CD564 4B12 C8/114B 236A/E7 polyclonal AE1/AE3 Polyclonal Sigma HPA016450 LK2H10 JC/70A JF40-10 LK2H10 JC/70A Polyclonal LK2H10 JC/70A EPR19518 D2S9R EPR19514 EPR20305 D6O8R AAE1/AE3
+RN7 RUO EPR7785
+QBEND/10 FH-7a
+
+mouse
+human human human human human
+human
+
+Hep-par1
+
+Mouse OCH1E5
+
+
