@@ -2041,7 +2041,8 @@ class PdfUtil {
         if( $userServiceUtil->isWinOs() ) {
             //$pdftotextPath = '/mingw64/bin/pdftotext';
             //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
-            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+            //$pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+            $pdftotextPath = 'c:/Program Files/Git/mingw64/bin/pdftotext';
         } else {
             $pdftotextPath = '/bin/pdftotext';
         }
@@ -2756,7 +2757,8 @@ class PdfUtil {
         if( $userServiceUtil->isWinOs() ) {
             //$pdftotextPath = '/mingw64/bin/pdftotext';
             //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
-            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+            //$pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+            $pdftotextPath = 'c:/Program Files/Git/mingw64/bin/pdftotext';
         } else {
             $pdftotextPath = '/bin/pdftotext';
         }

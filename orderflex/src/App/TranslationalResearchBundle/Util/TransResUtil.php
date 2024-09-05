@@ -9354,6 +9354,248 @@ WHERE
         exit('111');
     }
     
-    
+
+    public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
+
+        //exit('<br>exit processExcelMisiPanels');
+
+        if (file_exists($filename)) {
+            echo "EXISTS: The file $filename <br><br>";
+        } else {
+            echo "Does Not EXISTS: The file $filename <br><br>";
+        }
+
+        //set_time_limit(18000); //18000 seconds => 5 hours 3600sec=>1 hour
+        //ini_set('memory_limit', '7168M');
+
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+
+        //$inputFileName = __DIR__ . "/" . $filename;
+        echo "==================== Processing $filename =====================<br>";
+
+        try {
+            if(1) {
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($filename);
+                $reader->setReadDataOnly(true);
+                $objPHPExcel = $reader->load($filename);
+            }
+        } catch( \Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($filename,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        //$highestColumn = $sheet->getHighestColumn();
+        $highestColumn = 'D'; //max column for this file
+        echo "highestRow=".$highestRow."; highestColum=".$highestColumn."<br>";
+
+//        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+//            NULL,
+//            TRUE,
+//            FALSE);
+//
+//        $this->headerMapArr = $this->getHeaderMap($headers);
+//
+//        $limitRow = $highestRow;
+//        if( $endRaw && $endRaw <= $highestRow ) {
+//            $limitRow = $endRaw;
+//        }
+//
+//        if( $startRaw < 2 ) {
+//            $startRaw = 2; //minimum raw
+//        }
+//
+//        echo "start Iteration from $startRaw to ".$limitRow."; highestColumn=".$highestColumn."<br>"; //start Iteration from 2 to 1048557
+//        $logger->notice("start Iteration from $startRaw to ".$limitRow."; highestColumn=".$highestColumn);
+//        //exit('111');
+
+        $currentDate = date('Y-m-d H:i:s');
+        $newline = "\n\r";
+
+        $startRaw = 3;
+        $limitRow = 463;
+
+        $previousRequestId = null;
+        $batchSize = 20;
+        $count = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = $startRaw; $row <= $limitRow; $row++ ) {
+
+            $count++;
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            dump($rowData);
+            exit('111');
+
+            $thisOriginalRequestID = $this->getValueByHeaderName('REQ#', $rowData, $headers);
+            //$thisRequestID = '20489'; //test
+            echo "<br>$row: thisOriginalRequestID=$thisOriginalRequestID <br>";
+
+            if( $thisOriginalRequestID ) {
+                //remove -i and _N
+                $thisRequestID = str_replace('-i','',$thisOriginalRequestID);
+                $thisRequestID = str_replace('_N','',$thisRequestID);
+                //check if integer
+                # Check if your variable is an integer
+                if( filter_var($thisRequestID, FILTER_VALIDATE_INT) === false ) {
+                    echo "[$thisRequestID] is not an integer <br>";
+                    $thisRequestID = null;
+                }
+            }
+            echo "thisRequestID=$thisRequestID <br>";
+            if( $thisRequestID ) {
+                $requestID = $previousRequestId = $thisRequestID;
+            } else {
+                echo "Use previous request ID=$requestID <br>";
+                $requestID = $previousRequestId;
+            }
+
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $this->em->getRepository(TransResRequest::class)->findOneById($requestID);
+            if( !$transresRequest ) {
+                exit("Request not found by ID ".$requestID);
+            }
+
+            $comment = $transresRequest->getComment();
+            if( $comment && str_contains($comment,"Added by 2023_IHC_BH (row $row)") ) {
+                //if( !$thisRequestID ) {
+                //comment might be already exists from the previous row + current row is continue of the previous row
+                //skip
+                echo "Skip requestID=$requestID <br>";
+                continue;
+                //}
+            }
+
+            $projectId = $this->getValueByHeaderName('Project', $rowData, $headers);
+            $submitter = $this->getValueByHeaderName('Submitter', $rowData, $headers);
+            $dateSubmitted = $this->getValueByHeaderName('Date submitted', $rowData, $headers);
+            $bakedDate = $this->getValueByHeaderName('Baked date', $rowData, $headers);
+            $trpTech = $this->getValueByHeaderName('TRP Tech', $rowData, $headers);
+            $slideN = $this->getValueByHeaderName('Slide #', $rowData, $headers);
+            $tissueType = $this->getValueByHeaderName('Tissue Type', $rowData, $headers);
+            $abName = $this->getValueByHeaderName('Ab name', $rowData, $headers);
+            $abcompany = $this->getValueByHeaderName('Ab company', $rowData, $headers);
+            $catN = $this->getValueByHeaderName('Cat#', $rowData, $headers);
+            $host = $this->getValueByHeaderName('Host', $rowData, $headers);
+            $condition = $this->getValueByHeaderName('Condition', $rowData, $headers);
+            $note = $this->getValueByHeaderName('Note', $rowData, $headers);
+            $dateDone = $this->getValueByHeaderName('Date done', $rowData, $headers);
+            $tat = $this->getValueByHeaderName('TAT', $rowData, $headers);
+
+            $requestID = trim((string)$requestID);
+            //$requestID = $requestID."0000000"; //test
+            echo "requestID=[" . $requestID . "]" . "; projectId=[" . $projectId .  "] <br>";
+
+            ////// Convert Dates ///////
+            $dateSubmitted = intval($dateSubmitted);
+            echo "dateSubmitted=[" . $dateSubmitted .  "] <br>";
+            if( $dateSubmitted ) {
+                //$dateSubmittedT = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($dateSubmitted);
+                $dateSubmittedT = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateSubmitted);
+                //echo "dateSubmittedT=[" . $dateSubmittedT . "] <br>";
+                $dateSubmitted = date("Y-m-d", $dateSubmittedT);
+                //$dateStr = $dateSubmittedT->format("Y-m-d H:i:s");
+            } else {
+                $dateSubmitted = "";
+            }
+            echo "dateSubmitted=[" . $dateSubmitted . "] <br>";
+
+            $bakedDate = intval($bakedDate);
+            echo "bakedDate=[" . $bakedDate .  "] <br>";
+            if( $bakedDate ) {
+                $bakedDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($bakedDate);
+                $bakedDate = date("Y-m-d", $bakedDate);
+            } else {
+                $bakedDate = "";
+            }
+            echo "bakedDate=[" . $bakedDate . "] <br>";
+
+            $dateDone = intval($dateDone);
+            echo "dateDone=[" . $dateDone .  "] <br>";
+            if( $dateDone ) {
+                $dateDone = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateDone);
+                $dateDone = date("Y-m-d", $dateDone);
+            } else {
+                $dateDone = "";
+            }
+            echo "dateDone=[" . $dateDone . "] <br>";
+            ////// EOF Convert Dates ///////
+
+
+            $thisProject = $transresRequest->getProject();
+            if( $thisProject ) {
+                $thisProjectId = $thisProject->getId();
+            }
+
+            if( $projectId && str_contains($projectId,$thisProjectId) === false ) {
+                if( $thisRequestID ) {
+                    echo "thisRequestID=$thisRequestID: thisProjectId=[" . $thisProjectId . "] " . '!=' . " projectId=[" . $projectId . "] <br>";
+                    exit("Project ID in this file does not match the Request's project ID in DB");
+                }
+            } else {
+                //echo "thisProjectId=[" . $thisProjectId . "] " . '==' . " projectId=[" . $projectId .  "] <br>";
+            }
+
+            //$rowDataStr = "rowDataStr";// implode(";",$rowData);
+            //$rowDataStr = implode(";",$rowData[0]);
+            $rowDataStr =
+                'REQ#='.$thisOriginalRequestID."; ".
+                'Project='.$projectId."; ".
+                'Submitter='.$submitter."; ".
+                'Date submitted='.$dateSubmitted."; ".
+                'Baked date='.$bakedDate."; ".
+                'TRP Tech='.$trpTech."; ".
+                'Slide #='.$slideN."; ".
+                'Tissue Type='.$tissueType."; ".
+                'Ab name='.$abName."; ".
+                'Ab company='.$abcompany."; ".
+                'Cat#='.$catN."; ".
+                'Host='.$host."; ".
+                'Condition='.$condition."; ".
+                'Note='.$note."; ".
+                'Date done='.$dateDone."; ".
+                'TAT='.$tat
+            ;
+
+            //dump($rowData);
+            echo "rowDataStr=$rowDataStr <br>";
+
+            if( $thisRequestID ) {
+                $prefix = "";
+            } else {
+                $prefix = " (use previous request $requestID)";
+            }
+
+            if( $comment ) {
+                $comment = $comment.$newline;
+            }
+            $comment = $comment .
+                "Added by 2023_IHC_BH (row $row) on " . $currentDate . $prefix .
+                ": " . $rowDataStr;
+
+            //dump($rowData);
+            echo "comment=$comment <br>";
+            $transresRequest->setComment($comment);
+
+            $msg = "Comment of the work request $requestID has been updated by 2023_IHC_BH (appended by row $row): ".$rowDataStr;
+            $transresUtil->setEventLog($thisProject,$eventType,$msg);
+
+            if( ($count % $batchSize) === 0 ) {
+                $this->em->flush();
+            }
+
+        }//for
+
+        $this->em->flush();
+    }
 
 }

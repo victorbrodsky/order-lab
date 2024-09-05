@@ -3434,10 +3434,12 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
+
         $projectRoot = $this->container->get('kernel')->getProjectDir(); // ....../orderflex
         echo "projectRoot=$projectRoot <br>";
 
-        $pdfFilePath = $projectRoot . "/"."/src/App/TranslationalResearchBundle/Util/MISI_Antibody_Panels.pdf";
+        $pdfFilePath = $projectRoot . "/src/App/TranslationalResearchBundle/Util/MISI_Antibody_Panels.pdf";
         echo "pdfFilePath=$pdfFilePath <br>";
         if (file_exists($pdfFilePath)) {
             echo "The file $pdfFilePath exists";
@@ -3445,13 +3447,23 @@ class DefaultController extends OrderAbstractController
             echo "The file $pdfFilePath does not exist";
         }
 
-        $resappPdfUtil = $this->container->get('resapp_pdfutil');
-        $pdfText = $resappPdfUtil->extractPdfText($pdfFilePath);
+        //Try to read PDF => panels are not shown => useless
+        //$resappPdfUtil = $this->container->get('resapp_pdfutil');
+        //$pdfText = $resappPdfUtil->extractPdfText($pdfFilePath);
+        //dump($pdfText);
 
-        dump($pdfText);
+        //Use MISI_with_panels.xlsx
+        //Add separators for panels '### '
 
-        //Use MISI_all.xlsx
-        //Add separators for panels
+        $excelFilePath = $projectRoot ."/src/App/TranslationalResearchBundle/Util/MISI_with_panels.xlsx";
+        echo "excelFilePath=$excelFilePath <br>";
+        if (file_exists($excelFilePath)) {
+            echo "The file $excelFilePath exists";
+        } else {
+            echo "The file $excelFilePath does not exist";
+        }
+
+        $transresUtil->processExcelMisiPanels($excelFilePath);
 
         exit('EOF antibodyCreatePanelsAction');
     }
