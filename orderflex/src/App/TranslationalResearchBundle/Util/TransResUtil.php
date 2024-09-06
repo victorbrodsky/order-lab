@@ -9358,6 +9358,8 @@ WHERE
     //Used by 127.0.0.1/translational-research/antibody-create-panels
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
 
+        //$testing = false;
+        $testing = true;
         //exit('<br>exit processExcelMisiPanels');
 
         if (file_exists($filename)) {
@@ -9369,8 +9371,8 @@ WHERE
         //set_time_limit(18000); //18000 seconds => 5 hours 3600sec=>1 hour
         //ini_set('memory_limit', '7168M');
 
-        $transresUtil = $this->container->get('transres_util');
-        $logger = $this->container->get('logger');
+        //$transresUtil = $this->container->get('transres_util');
+        //$logger = $this->container->get('logger');
 
         $misiLab = $this->em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
         if( !$misiLab ) {
@@ -9388,7 +9390,7 @@ WHERE
             }
         } catch( \Exception $e ) {
             $error = 'Error loading file "'.pathinfo($filename,PATHINFO_BASENAME).'": '.$e->getMessage();
-            $logger->error($error);
+            //$logger->error($error);
             die($error);
         }
 
@@ -9417,8 +9419,8 @@ WHERE
             $count++;
 
             //stop for testing
-            if( $panel > 10 ) {
-                exit("Exit on panel $count");
+            if( $panel > 4 ) {
+                //exit("Exit on panel $count");
             }
 
             //Read a row of data into an array
@@ -9454,13 +9456,13 @@ WHERE
 
                 //process this panel
                 //1) find or create panel by name $panel
-                $panelObject = $this->findOrCreatePanel($panel);
+                $panelObject = $this->findOrCreatePanel($panel,$testing);
                 if( !$panelObject ) {
                     exit("Panel not found by name $panel");
                 }
 
                 //2 find or create antibodies from array $panelArr
-                $antibodyCount = $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab);
+                $antibodyCount = $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab,$testing);
                 echo "EOF panel: $panel thisReactivity=$thisReactivity, antibody count=".$antibodyCount."<br><br>";
                 //exit('111');
 
@@ -9479,7 +9481,8 @@ WHERE
         //$this->em->flush();
     }
 
-    public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab ) {
+    public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab, $testing=false ) {
+        $logger = $this->container->get('logger');
         $antibodyCount = 0;
         foreach($panelArr as $antibodyData) {
             $antibodyName   = trim($antibodyData[0]);
@@ -9488,7 +9491,7 @@ WHERE
             //$reactivity     = trim($antibodyData[3]);
             echo "processPanel: [$antibodyName] [$host] [$clone] [$thisReactivity] <br>";
 
-            $antibody = $this->findOrCreateAntibody($antibodyName,$host,$clone,$thisReactivity);
+            $antibody = $this->findOrCreateAntibody($antibodyName,$host,$clone,$thisReactivity,$testing);
             //echo "Antibody found/created: ".$antibody->getName()."<br>";
             if( !$antibody ) {
                 exit("Antibody not found/create by name $antibodyName");
@@ -9496,13 +9499,17 @@ WHERE
 
             $antibody->addAntibodyPanel($panelObject);
             $antibody->addAntibodyLab($misiLab);
-            //$this->em->flush();
             $antibodyCount++;
+            if( !$testing ) {
+                $this->em->flush();
+                $logger->notice("processPanel: Antibody [$antibodyName] updated with panel and lab");
+            }
         }
         return $antibodyCount;
     }
 
-    public function findOrCreatePanel( $panelName ) {
+    public function findOrCreatePanel( $panelName, $testing=false ) {
+        $logger = $this->container->get('logger');
         $panelName = $panelName.""; //convert to string
         $panelObject = $this->em->getRepository(AntibodyPanelList::class)->findOneByName($panelName);
         if( !$panelObject ) {
@@ -9512,25 +9519,34 @@ WHERE
             $count = NULL;
             $userSecUtil->setDefaultList( $panelObject, $count, $user, $panelName );
             $panelObject->setType('default');
-            //$this->em->persist($panelObject);
-            //$this->em->flush();
+            //echo "findOrCreatePanel: New panel created: [$panelName] <br>";
+            if( !$testing ) {
+                $this->em->persist($panelObject);
+                $this->em->flush();
+                $logger->notice("findOrCreatePanel: New panel created: [$panelName]");
+            }
+        } else {
+            //echo "findOrCreatePanel: panel found by name [$panelName] <br>";
         }
         return $panelObject;
     }
 
     //check if antibody already exists by name, host, clone, reactivity and if LAB is not MISI,
     //if antibody does not exist => create new
-    public function findOrCreateAntibody( $name, $host, $clone, $reactivity  ) {
-
+    public function findOrCreateAntibody( $name, $host, $clone, $reactivity, $testing=false ) {
+        $logger = $this->container->get('logger');
         $repository = $this->em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("list");
 
-        //$dql->leftJoin('list.antibodyPanels','antibodyPanels');
+        $dql->leftJoin('list.antibodyLabs','antibodyLabs');
 
-        $dql->where("list.name = :name");
-        $dql->andWhere("list.host = :host");
-        $dql->andWhere("list.clone = :clone");
-        $dql->andWhere("list.reactivity = :reactivity");
+        $dql->where("LOWER(list.name) LIKE LOWER(:name)");
+        $dql->andWhere("LOWER(list.host) LIKE LOWER(:host)");
+        $dql->andWhere("LOWER(list.clone) LIKE LOWER(:clone)");
+        $dql->andWhere("LOWER(list.reactivity) LIKE LOWER(:reactivity)"); //has string?
+        //$dql->andWhere("LOWER(list.reactivity) = LOWER(:reactivity)");
+        $dql->andWhere("LOWER(antibodyLabs.name) = LOWER(:antibodyLab)");
+
         //$dql->andWhere("list.type = :typedef OR list.type = :typeadd");
 
         $parameters = array(
@@ -9538,6 +9554,7 @@ WHERE
             'host' => $host,
             'clone' => $clone,
             'reactivity' => $reactivity,
+            'antibodyLab' => 'MISI'
             //'typedef' => 'default',
             //'typeadd' => 'user-added',
         );
@@ -9549,6 +9566,7 @@ WHERE
         $antibodies = $query->getResult();
 
         if( count($antibodies) == 1 ) {
+            exit("!!! Antibodies found name=[$name], ID=".$antibodies[0]->getId());
             return $antibodies[0];
         }
 
@@ -9569,8 +9587,11 @@ WHERE
             $antibody->setHost($host);
             $antibody->setClone($clone);
             $antibody->setReactivity($reactivity);
-            //$this->em->persist($antibody);
-            //$this->em->flush();
+            if( !$testing ) {
+                $this->em->persist($antibody);
+                $this->em->flush();
+                $logger->notice("findOrCreateAntibody: New antibody created: [$name] [$host] [$clone] [$reactivity]");
+            }
             return $antibody;
         }
 
