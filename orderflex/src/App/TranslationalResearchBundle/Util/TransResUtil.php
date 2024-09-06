@@ -9434,7 +9434,7 @@ WHERE
 
             if( !str_contains($antibodyName,'###') ) {
                 //do not add ### row
-                echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
+                //echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
                 $panelArr[$panel][] = array($antibodyName,$host,$clone,$reactivity);
             }
 
@@ -9460,10 +9460,9 @@ WHERE
                 }
 
                 //2 find or create antibodies from array $panelArr
-                $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab);
-                exit('111');
-
-                echo "EOF panel: $panel thisReactivity=$thisReactivity, antibody name=".$antibody->getName() ."<br>";
+                $antibodyCount = $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab);
+                echo "EOF panel: $panel thisReactivity=$thisReactivity, antibody count=".$antibodyCount."<br><br>";
+                //exit('111');
 
                 $thisReactivity = NULL;
                 $panel++;
@@ -9481,6 +9480,7 @@ WHERE
     }
 
     public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab ) {
+        $antibodyCount = 0;
         foreach($panelArr as $antibodyData) {
             $antibodyName   = trim($antibodyData[0]);
             $host           = trim($antibodyData[1]);
@@ -9489,14 +9489,17 @@ WHERE
             echo "processPanel: [$antibodyName] [$host] [$clone] [$thisReactivity] <br>";
 
             $antibody = $this->findOrCreateAntibody($antibodyName,$host,$clone,$thisReactivity);
-            echo "Antibody found/created: ".$antibody->getName()."<br>";
+            //echo "Antibody found/created: ".$antibody->getName()."<br>";
             if( !$antibody ) {
                 exit("Antibody not found/create by name $antibodyName");
             }
 
             $antibody->addAntibodyPanel($panelObject);
             $antibody->addAntibodyLab($misiLab);
+            //$this->em->flush();
+            $antibodyCount++;
         }
+        return $antibodyCount;
     }
 
     public function findOrCreatePanel( $panelName ) {
@@ -9555,7 +9558,7 @@ WHERE
 
 
         if( count($antibodies) == 0 ) {
-            echo "findOrCreateAntibody: create antibody $name<br>";
+            //echo "findOrCreateAntibody: create antibody $name<br>";
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->security->getUser();
             $antibody = new AntibodyList($user);
