@@ -9353,8 +9353,9 @@ WHERE
         dump($lists);
         exit('111');
     }
-    
 
+
+    //Used by 127.0.0.1/translational-research/antibody-create-panels
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
 
         //exit('<br>exit processExcelMisiPanels');
@@ -9370,6 +9371,11 @@ WHERE
 
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
+
+        $misiLab = $this->em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
+        if( !$misiLab ) {
+            exit("Lab is not found by name MISI");
+        }
 
         //$inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
@@ -9392,28 +9398,8 @@ WHERE
         $highestColumn = 'D'; //max column for this file
         echo "highestRow=".$highestRow."; highestColum=".$highestColumn."<br>";
 
-//        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
-//            NULL,
-//            TRUE,
-//            FALSE);
-//
-//        $this->headerMapArr = $this->getHeaderMap($headers);
-//
-//        $limitRow = $highestRow;
-//        if( $endRaw && $endRaw <= $highestRow ) {
-//            $limitRow = $endRaw;
-//        }
-//
-//        if( $startRaw < 2 ) {
-//            $startRaw = 2; //minimum raw
-//        }
-//
-//        echo "start Iteration from $startRaw to ".$limitRow."; highestColumn=".$highestColumn."<br>"; //start Iteration from 2 to 1048557
-//        $logger->notice("start Iteration from $startRaw to ".$limitRow."; highestColumn=".$highestColumn);
-//        //exit('111');
-
-        $currentDate = date('Y-m-d H:i:s');
-        $newline = "\n\r";
+        //$currentDate = date('Y-m-d H:i:s');
+        //$newline = "\n\r";
 
         $startRaw = 3;
         $limitRow = 463;
@@ -9421,9 +9407,9 @@ WHERE
         $previousRequestId = null;
         $batchSize = 20;
         $count = 0;
-        $panel = 0;
+        $panel = 1;
         $thisReactivity = NULL;
-        $antibodyArr = array();
+        $panelArr = array();
 
         //for each request in excel (start at row 2)
         for( $row = $startRaw; $row <= $limitRow; $row++ ) {
@@ -9431,7 +9417,7 @@ WHERE
             $count++;
 
             //stop for testing
-            if( $panel > 2 ) {
+            if( $panel > 10 ) {
                 exit("Exit on panel $count");
             }
 
@@ -9446,10 +9432,12 @@ WHERE
             $clone          = trim($rowData[0][2]);
             $reactivity     = trim($rowData[0][3]);
 
-            echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
+            if( !str_contains($antibodyName,'###') ) {
+                //do not add ### row
+                echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
+                $panelArr[$panel][] = array($antibodyName,$host,$clone,$reactivity);
+            }
 
-            $antibodyArr[$panel][] = array($antibodyName,$host,$clone,$reactivity);
-            
             //dump($rowData);
             //exit('111');
 
@@ -9461,10 +9449,8 @@ WHERE
 
             if( str_contains($antibodyName,'###') ) {
 
-                dump($antibodyArr);
-                exit('111');
-
-                $panel++;
+                //dump($panelArr);
+                //exit('111');
 
                 //process this panel
                 //1) find or create panel by name $panel
@@ -9473,18 +9459,14 @@ WHERE
                     exit("Panel not found by name $panel");
                 }
 
-                //2 find or create antibodies from array $antibodyArr
-                $antibody = $this->findAntibody($antibodyName,$host,$clone,$reactivity);
-                echo "Antibody found=".$antibody."<br>";
-                if( !$antibody ) {
-                    exit("Antibody not found by name $antibodyName");
-                }
-
-                $antibody->addAntibodyPanel($panelObject);
+                //2 find or create antibodies from array $panelArr
+                $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab);
+                exit('111');
 
                 echo "EOF panel: $panel thisReactivity=$thisReactivity, antibody name=".$antibody->getName() ."<br>";
 
                 $thisReactivity = NULL;
+                $panel++;
             }
 
 
@@ -9496,6 +9478,25 @@ WHERE
 
         exit('eof processExcelMisiPanels');
         //$this->em->flush();
+    }
+
+    public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab ) {
+        foreach($panelArr as $antibodyData) {
+            $antibodyName   = trim($antibodyData[0]);
+            $host           = trim($antibodyData[1]);
+            $clone          = trim($antibodyData[2]);
+            //$reactivity     = trim($antibodyData[3]);
+            echo "processPanel: [$antibodyName] [$host] [$clone] [$thisReactivity] <br>";
+
+            $antibody = $this->findOrCreateAntibody($antibodyName,$host,$clone,$thisReactivity);
+            echo "Antibody found/created: ".$antibody->getName()."<br>";
+            if( !$antibody ) {
+                exit("Antibody not found/create by name $antibodyName");
+            }
+
+            $antibody->addAntibodyPanel($panelObject);
+            $antibody->addAntibodyLab($misiLab);
+        }
     }
 
     public function findOrCreatePanel( $panelName ) {
@@ -9514,7 +9515,9 @@ WHERE
         return $panelObject;
     }
 
-    public function findAntibody( $name, $host, $clone, $reactivity  ) {
+    //check if antibody already exists by name, host, clone, reactivity and if LAB is not MISI,
+    //if antibody does not exist => create new
+    public function findOrCreateAntibody( $name, $host, $clone, $reactivity  ) {
 
         $repository = $this->em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("list");
@@ -9552,7 +9555,7 @@ WHERE
 
 
         if( count($antibodies) == 0 ) {
-            exit("findAntibody: create antibody");
+            echo "findOrCreateAntibody: create antibody $name<br>";
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->security->getUser();
             $antibody = new AntibodyList($user);
@@ -9569,7 +9572,7 @@ WHERE
         }
 
         //logical error
-        exit("findAntibody: logical error");
+        exit("findOrCreateAntibody: logical error");
         return NULL;
     }
 
