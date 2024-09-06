@@ -9357,10 +9357,10 @@ WHERE
 
     //Used by 127.0.0.1/translational-research/antibody-create-panels
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
+        exit('<br>exit processExcelMisiPanels');
 
         //$testing = false;
         $testing = true;
-        //exit('<br>exit processExcelMisiPanels');
 
         if (file_exists($filename)) {
             echo "EXISTS: The file $filename <br><br>";
@@ -9404,7 +9404,7 @@ WHERE
         //$newline = "\n\r";
 
         $startRaw = 3;
-        $limitRow = 463;
+        $limitRow = 464;
 
         $previousRequestId = null;
         $batchSize = 20;
@@ -9436,7 +9436,7 @@ WHERE
 
             if( !str_contains($antibodyName,'###') ) {
                 //do not add ### row
-                //echo $count.": row: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
+                //echo $count.": row=[$row]: [$antibodyName] [$host] [$clone] [$reactivity] <br>";
                 $panelArr[$panel][] = array($antibodyName,$host,$clone,$reactivity);
             }
 
@@ -9447,7 +9447,7 @@ WHERE
                 $thisReactivity = $reactivity;
                 //echo "1 thisReactivity=>($thisReactivity) <br>";
             }
-            //echo "2 thisReactivity=>($thisReactivity) <br>"; 
+            //echo "2 thisReactivity=>($thisReactivity) <br>";
 
             if( str_contains($antibodyName,'###') ) {
 
