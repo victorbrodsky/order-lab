@@ -63,6 +63,7 @@
 /src/App/OrderformBundle/SDK
 /src/App/TranslationalResearchBundle/Util/*.xlsx
 !/src/App/TranslationalResearchBundle/Util/JV*.xlsx
+!/src/App/TranslationalResearchBundle/Util/MISI_with_panels.xlsx 
 
 ### Certificate ###
 /src/App/UserdirectoryBundle/Cert/*
