@@ -9359,7 +9359,7 @@ WHERE
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
         //exit('<br>exit processExcelMisiPanels');
 
-        //$testing = false;
+        $testing = false;
         $testing = true;
 
         if (file_exists($filename)) {
@@ -9420,7 +9420,7 @@ WHERE
 
             //stop for testing
             if( $panel > 4 ) {
-                //exit("Exit on panel $count");
+                exit("Exit on panel $panel");
             }
 
             //Read a row of data into an array
@@ -9454,6 +9454,10 @@ WHERE
                 //dump($panelArr);
                 //exit('111');
 
+//                if( !$thisReactivity ) {
+//                    exit("Logical error: Reactivity not found for panel=$panel, antibody=$antibodyName");
+//                }
+
                 //process this panel
                 //1) find or create panel by name $panel
                 $panelObject = $this->findOrCreatePanel($panel,$testing);
@@ -9483,6 +9487,11 @@ WHERE
 
     public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab, $testing=false ) {
         $logger = $this->container->get('logger');
+
+        if( !$thisReactivity ) {
+            exit("Logical error: Reactivity [$thisReactivity] not found for antibody=".$panelArr[0][0]);
+        }
+
         $antibodyCount = 0;
         foreach($panelArr as $antibodyData) {
             $antibodyName   = trim($antibodyData[0]);
@@ -9490,6 +9499,10 @@ WHERE
             $clone          = trim($antibodyData[2]);
             //$reactivity     = trim($antibodyData[3]);
             echo "processPanel: [$antibodyName] [$host] [$clone] [$thisReactivity] <br>";
+
+            if( !$antibodyName || !$host || !$clone || !$thisReactivity ) {
+                //exit("Logical error: Some parameters are empty: [$antibodyName] [$host] [$clone] [$thisReactivity]");
+            }
 
             $antibody = $this->findOrCreateAntibody($antibodyName,$host,$clone,$thisReactivity,$testing);
             //echo "Antibody found/created: ".$antibody->getName()."<br>";
@@ -9566,7 +9579,7 @@ WHERE
         $antibodies = $query->getResult();
 
         if( count($antibodies) == 1 ) {
-            exit("!!! Antibodies found name=[$name], ID=".$antibodies[0]->getId());
+            //exit("!!! Antibodies found name=[$name], ID=".$antibodies[0]->getId());
             return $antibodies[0];
         }
 
@@ -9576,7 +9589,8 @@ WHERE
 
 
         if( count($antibodies) == 0 ) {
-            echo "findOrCreateAntibody: create new antibody $name<br>";
+            echo "findOrCreateAntibody: create new antibody: [$name] [$host] [$clone] [$reactivity]<br>";
+            //exit('Created again?');
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->security->getUser();
             $antibody = new AntibodyList($user);
