@@ -9519,7 +9519,7 @@ WHERE
             $count = NULL;
             $userSecUtil->setDefaultList( $panelObject, $count, $user, $panelName );
             $panelObject->setType('default');
-            //echo "findOrCreatePanel: New panel created: [$panelName] <br>";
+            echo "findOrCreatePanel: New panel created: [$panelName] <br>";
             if( !$testing ) {
                 $this->em->persist($panelObject);
                 $this->em->flush();
@@ -9576,7 +9576,7 @@ WHERE
 
 
         if( count($antibodies) == 0 ) {
-            //echo "findOrCreateAntibody: create antibody $name<br>";
+            echo "findOrCreateAntibody: create new antibody $name<br>";
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->security->getUser();
             $antibody = new AntibodyList($user);
