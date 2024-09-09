@@ -9360,7 +9360,7 @@ WHERE
         //exit('<br>exit processExcelMisiPanels');
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         if (file_exists($filename)) {
             echo "EXISTS: The file $filename <br><br>";
