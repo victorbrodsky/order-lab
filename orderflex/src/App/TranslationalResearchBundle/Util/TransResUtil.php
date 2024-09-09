@@ -9360,7 +9360,7 @@ WHERE
         //exit('<br>exit processExcelMisiPanels');
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         if (file_exists($filename)) {
             echo "EXISTS: The file $filename <br><br>";
@@ -9419,9 +9419,9 @@ WHERE
             $count++;
 
             //stop for testing
-//            if( $panel > 4 ) {
-//                exit("Exit on panel $panel");
-//            }
+            if( $panel > 4 ) {
+                exit("Exit on panel $panel");
+            }
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
