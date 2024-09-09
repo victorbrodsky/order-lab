@@ -9357,9 +9357,9 @@ WHERE
 
     //Used by 127.0.0.1/translational-research/antibody-create-panels
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
-        //exit('<br>exit processExcelMisiPanels');
+        exit('<br>exit processExcelMisiPanels: run only once');
 
-        $testing = false;
+        //$testing = false;
         $testing = true;
 
         if (file_exists($filename)) {
@@ -9580,6 +9580,7 @@ WHERE
 
         if( count($antibodies) == 1 ) {
             //exit("!!! Antibodies found name=[$name], ID=".$antibodies[0]->getId());
+            echo "Antibodies found name=[$name] <br>";
             return $antibodies[0];
         }
 
