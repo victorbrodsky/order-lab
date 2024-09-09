@@ -9419,7 +9419,7 @@ WHERE
             $count++;
 
             //stop for testing
-            if( $panel > 4 ) {
+            if( $panel > 2 ) {
                 exit("Exit on panel $panel");
             }
 
