@@ -9590,7 +9590,7 @@ WHERE
 
         if( count($antibodies) == 0 ) {
             echo "findOrCreateAntibody: create new antibody: [$name] [$host] [$clone] [$reactivity]<br>";
-            exit('Created again?');
+            //exit('Created again?');
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $this->security->getUser();
             $antibody = new AntibodyList($user);
