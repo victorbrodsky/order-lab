@@ -809,6 +809,12 @@ class Project {
     #[ORM\Column(type: 'text', nullable: true)]
     private $progressLog;
 
+    //Project Goals:
+    // 1) one project can have multiple project goals (OneToMany)
+    // 2) project goals can be disabled
+    // 3) project goals can be added on the edit project page or work request page by admin/tech
+    #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
+    private $projectGoals;
     
 
     public function __construct($user=null) {
@@ -840,6 +846,8 @@ class Project {
         $this->collDivs = new ArrayCollection();
         $this->submitInvestigators = new ArrayCollection();
         $this->compTypes = new ArrayCollection();
+
+        $this->projectGoals = new ArrayCollection();
 
         //$this->reminderEmails = new ArrayCollection();
 
@@ -3182,6 +3190,25 @@ class Project {
     public function setProgressLog($progressLog)
     {
         $this->progressLog = $progressLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectGoals()
+    {
+        return $this->projectGoals;
+    }
+    public function addProjectGoal($item)
+    {
+        if( $item && !$this->projectGoals->contains($item) ) {
+            $this->projectGoals->add($item);
+        }
+        return $this;
+    }
+    public function removeProjectGoal($item)
+    {
+        $this->projectGoals->removeElement($item);
     }
 
 

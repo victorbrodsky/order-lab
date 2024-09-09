@@ -3429,7 +3429,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-create-panels/', name: 'translationalresearch_antibody-create-panels', methods: ['GET'])]
     public function antibodyCreatePanelsAction( Request $request )
     {
-        //exit("antibodyCreatePanelsAction not allowed");
+        exit("antibodyCreatePanelsAction not allowed");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
