@@ -9357,7 +9357,7 @@ WHERE
 
     //Used by 127.0.0.1/translational-research/antibody-create-panels
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
-        exit('<br>exit processExcelMisiPanels');
+        //exit('<br>exit processExcelMisiPanels');
 
         //$testing = false;
         $testing = true;
