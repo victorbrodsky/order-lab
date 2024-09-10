@@ -18,15 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 class ProjectGoal {
 
-    //IDENTITY or AUTO: symptoms: when creating and persist new object ID is not created with AUTO.
-    //The logic relys on ID creation on persist.
+    //IDENTITY or AUTO: when creating and persist new object ID is created with AUTO.
+    // However, the logic relies on ID = NULL when new object is persisted but the object does not yet exist.
     // Make a test "Testing IDENTITY comparing to AUTO":
-    //$product = new Product($user);
-    //$em->persist($product);
-    //echo "product id (IDENTITY)=".$product->getId()."<br>";
+    // IDENTITY => ID is not created
+    // AUTO => ID is created
 
-    //? [ORM\GeneratedValue(strategy: 'AUTO')]
-    //User Deprecated: Context: Loading metadata for class
+    // User Deprecated: Context: Loading metadata for class
     // App\UserdirectoryBundle\Entity\Document Problem:
     // Using the IDENTITY generator strategy with platform
     // "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is
@@ -34,17 +32,15 @@ class ProjectGoal {
     // Solution: Use the SEQUENCE generator strategy instead.
     // (ClassMetadataFactory.php:632 called by ClassMetadataFactory.php:150,
     // https://github.com/doctrine/orm/issues/8850, package doctrine/orm)
-
-    //[ORM\GeneratedValue(strategy: 'IDENTITY')]
     
-    //?composer require doctrine/dbal:^4
+    //Probably fix: composer require doctrine/dbal:^4
 
     /**
      * @var integer
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
