@@ -18,6 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 class ProjectGoal {
 
+    //IDENTITY or AUTO: symptoms: when creating and persist new object ID is not created with AUTO.
+    //The logic relys on ID creation on persist.
+    // Make a test "Testing IDENTITY comparing to AUTO":
+    //$product = new Product($user);
+    //$em->persist($product);
+    //echo "product id (IDENTITY)=".$product->getId()."<br>";
+
     //? [ORM\GeneratedValue(strategy: 'AUTO')]
     //User Deprecated: Context: Loading metadata for class
     // App\UserdirectoryBundle\Entity\Document Problem:
@@ -29,6 +36,8 @@ class ProjectGoal {
     // https://github.com/doctrine/orm/issues/8850, package doctrine/orm)
 
     //[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    
+    //?composer require doctrine/dbal:^4
 
     /**
      * @var integer
