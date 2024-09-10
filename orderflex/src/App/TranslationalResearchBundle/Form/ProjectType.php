@@ -1308,6 +1308,22 @@ class ProjectType extends AbstractType
             ));
         }
 
+        //Project Goals
+        $builder->add('projectGoals', CollectionType::class, array(
+            'entry_type' => ProjectGoalType::class,
+            'entry_options' => array(
+                //'data_class' => 'App\TranslationalResearchBundle\Entity\Product',
+                'form_custom_value' => $this->params
+            ),
+            'label' => false,
+            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__projectgoals__',
+        ));
+
 //        //////////////////// Project Closure/Reactivation ////////////////////
 //        if( $this->params['cycle'] != 'new' ) {
 //            $builder->add('closureReason', null, array(

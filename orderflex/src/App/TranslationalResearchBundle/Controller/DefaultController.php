@@ -15,8 +15,8 @@ use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py
 use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
 use App\TranslationalResearchBundle\Entity\Product;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
-use App\UserdirectoryBundle\Entity\Grant;
-use App\UserdirectoryBundle\Entity\SiteList;
+//use App\UserdirectoryBundle\Entity\Grant;
+//use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
@@ -259,19 +259,16 @@ class DefaultController extends OrderAbstractController
 
         //testing IDENTITY, AUTO
         //$user = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
-        $product = new Product();
-        echo "product id (IDENTITY)=".$product->getId()."<br>";
-
-        $site = new SiteList();
-        $em->persist($site);
-        echo "site id (Auto)=".$site->getId()."<br>";
-
-        $grant = new Grant();
-        $em->persist($grant);
-        echo "grant id (Auto)=".$grant->getId()."<br>";
-
-        exit();
+//        $em = $this->getDoctrine()->getManager();
+//        $product = new Product();
+//        echo "product id (IDENTITY)=".$product->getId()."<br>";
+//        $site = new SiteList();
+//        $em->persist($site);
+//        echo "site id (Auto)=".$site->getId()."<br>";
+//        $grant = new Grant();
+//        $em->persist($grant);
+//        echo "grant id (Auto)=".$grant->getId()."<br>";
+//        exit();
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

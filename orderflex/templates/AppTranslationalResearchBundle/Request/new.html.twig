@@ -226,6 +226,7 @@
              data-userid = "{{ app.user.id }}"
 
              data-prototype-transres-products = "{{ transresRequestMacros.productForm(form.products,cycle,'transres-products','prototype',sitename,1)|e }}"
+             {#data-prototype-transres-projectgoals = "{{ transresRequestMacros.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"#}
         ></div>
 
         {% if form.project is defined %}

@@ -412,6 +412,10 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
+    {#{{ transres.projectGoals(form,project,cycle) }}#}
+    {#{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
+    {{ transres.projectGoalDetails(form,project,cycle) }}
+
     {#{% if form.progressUpdate is defined %}#}
         {#{{ formmacros.field(form.progressUpdate) }}#}
     {#{% endif %}#}
@@ -704,6 +708,36 @@ Show this accordion by default in an open + visible state.
             </div>
         </div>
     {% endif %}
+{% endmacro %}
+
+{% macro projectGoalDetails( form, project, cycle ) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+    {% if cycle == "review" %}
+        {% set cycle = "show" %}
+    {% endif %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectGoalDetailsHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectGoalDetails" aria-expanded="true">
+                        Project Goals
+                    </a>
+                </h4>
+            </div>
+            <div id="projectGoalDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectGoalDetailsHeading">
+                <div class="panel-body">
+
+                    {{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}
+
+                </div> {#panel-body#}
+            </div>
+        </div>
+    </div>
+
 {% endmacro %}
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}
@@ -1931,6 +1965,11 @@ Show this accordion by default in an open + visible state.
                 {% if form.finalReviews is defined %}
                     data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
                 {% endif %}
+
+                {% if form.projectgoals is defined %}
+                    data-prototype-transres-projectgoals = "{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
+                {% endif %}
+
             {% endif %}
     ></div>
 
@@ -2848,6 +2887,94 @@ Show this accordion by default in an open + visible state.
                 </div>
             </div>
         </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro projectGoalForm( projectGoal, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formreview = projectGoal.vars.prototype %}
+    {% else %}
+        {% set formreview = projectGoal %}
+    {% endif %}
+
+    {#{% if formprojectgoal.vars.value and formprojectgoal.vars.value.getId() %}#}
+        {#{% set formprojectgoalId = "id=projectgoal-"~formprojectgoal.vars.value.getId() %}#}
+    {#{% else %}#}
+        {#{% set formprojectgoalId = "" %}#}
+    {#{% endif %}#}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    {#<div {{ formprojectgoalId }} class="user-collection-holder alert {{ classname }} {{ wellclass }}">#}
+        {#{% if cycle != "show" and showAddDeleteBtn %}#}
+            {#<div class="text-right">#}
+
+            {#</div>#}
+            {#<br>#}
+        {#{% else %}#}
+        {#{% endif %}#}
+
+        {#{{ form_widget(formprojectgoal.id) }}#}
+
+        {#{{ form_widget(formprojectgoal.description) }}#}
+    {#</div>#}
+
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != "show" and cycle != "review" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button
+                        type="button"
+                        class="btn btn-default btn-sm"
+                        onClick="removeExistingObject(this,'{{ classname }}')"
+                ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+
+            {% if showAddDeleteBtn %}
+                {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+            {% endif %}
+
+        {% else %}
+            {#do nothing#}
+        {% endif %}
+
+
+        {% if formreview.id is defined %}
+            {{ form_widget(formreview.id) }}
+        {% endif %}
+
+        {% if formreview.vars.value and (formreview.vars.value.reviewedBy or formreview.vars.value.updatedate) %}
+            {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
+            {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
+            {% set reviewedBy = null %}
+            {% if formreview.vars.value.reviewedBy %}
+                {#show it only to admin, reviewers and reviewedBy users#}
+                {% if transres_util.showReviewedBy(formreview.vars.value) %}
+                    {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
+                {% endif %}
+            {% endif %}
+            <p>
+                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y \\a\\t h:i A T") }}
+            </p>
+        {% endif %}
+
+        {% if formreview.description is defined %}
+            {{ formmacros.checkbox(formreview.description) }}
+        {% endif %}
+
+
     </div>
 
 {% endmacro %}

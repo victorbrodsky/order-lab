@@ -3203,6 +3203,7 @@ class Project {
     {
         if( $item && !$this->projectGoals->contains($item) ) {
             $this->projectGoals->add($item);
+            $item->setProject($this);
         }
         return $this;
     }
