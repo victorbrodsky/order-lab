@@ -412,10 +412,6 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
-    {#{{ transres.projectGoals(form,project,cycle) }}#}
-    {#{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
-    {{ transres.projectGoalDetails(form,project,cycle) }}
-
     {#{% if form.progressUpdate is defined %}#}
         {#{{ formmacros.field(form.progressUpdate) }}#}
     {#{% endif %}#}
@@ -709,6 +705,7 @@ Show this accordion by default in an open + visible state.
         </div>
     {% endif %}
 {% endmacro %}
+
 
 {% macro projectGoalDetails( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
@@ -1011,6 +1008,23 @@ Show this accordion by default in an open + visible state.
     </div>
 {% endmacro %}
 
+
+{% macro projectHeaders( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
+    {% if form.progressLog is defined %}
+        {{ formmacros.field(form.progressLog) }}
+    {% endif %}
+
+    {#{{ transres.projectGoals(form,project,cycle) }}#}
+    {#{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
+    {% if form.projectgoals is defined %}
+        before showing projectGoalDetails
+        {{ transres.projectGoalDetails(form,project,cycle) }}
+    {% endif %}
+
+{% endmacro %}
+
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
@@ -1022,9 +1036,9 @@ Show this accordion by default in an open + visible state.
     {#{% endif %}#}
 
     {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
-    {% if form.progressLog is defined %}
-        {{ formmacros.field(form.progressLog) }}
-    {% endif %}
+    {#{% if form.progressLog is defined %}#}
+        {#{{ formmacros.field(form.progressLog) }}#}
+    {#{% endif %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -1966,7 +1980,9 @@ Show this accordion by default in an open + visible state.
                     data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
                 {% endif %}
 
+                before projectgoals prototype
                 {% if form.projectgoals is defined %}
+                    adding projectgoals prototype
                     data-prototype-transres-projectgoals = "{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
                 {% endif %}
 

@@ -91,6 +91,8 @@
 
     {{ form_start(form) }}
 
+        {{ transres.projectHeaders(form,project,cycle) }}
+
         {{ transres.projectRequesters(form,project,cycle) }}
 
         {{ transres.projectBodyFormFields(form,project,cycle) }}
