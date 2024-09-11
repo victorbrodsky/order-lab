@@ -1068,6 +1068,15 @@ class ListController extends OrderAbstractController
             
             $this->postProcessList($entity);
 
+            //EventLog
+            $userSecUtil = $this->container->get('user_security_utility');
+            $newName = "Unknown";
+            if( method_exists($entity,"getName") ) {
+                $newName = $entity->getName();
+            }
+            $event = "New list '".$newName."' created by $user";
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Created');
+            
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())));
         }
 
@@ -2689,7 +2698,7 @@ class ListController extends OrderAbstractController
             }
 
             //EventLog
-            $event = "List updated by $user" . $updatedInfo;
+            $event = "List '".$newName."' updated by $user" . $updatedInfo;
             $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
 
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
