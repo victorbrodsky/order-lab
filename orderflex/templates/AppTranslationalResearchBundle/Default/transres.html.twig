@@ -1067,11 +1067,9 @@ Show this accordion by default in an open + visible state.
         {{ formmacros.field(form.progressLog) }}
     {% endif %}
 
-    {#{{ transres.projectGoals(form,project,cycle) }}#}
-    {#{{ transres.projectGoalSection(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
-    {% if form.projectGoals is defined %}
-        {{ transres.projectGoalSection(form,project,cycle) }}
-    {% endif %}
+    {#{% if form.projectGoals is defined %}#}
+        {#{{ transres.projectGoalSection(form,project,cycle) }}#}
+    {#{% endif %}#}
 
 {% endmacro %}
 

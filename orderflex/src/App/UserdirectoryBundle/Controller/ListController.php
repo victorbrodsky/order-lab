@@ -2414,6 +2414,15 @@ class ListController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
         }
 
+        $originalName = NULL;
+        if( method_exists($entity,'getName') ) {
+            $originalName = $entity->getName();
+        }
+        $originalType = NULL;
+        if( method_exists($entity,'getType') ) {
+            $originalType = $entity->getType();
+        }
+
         //remove permissions: original permissions. Used for roles
         if( method_exists($entity,'getPermissions') ) {
             $originalPermissions = array();
@@ -2657,8 +2666,30 @@ class ListController extends OrderAbstractController
 
             $em->flush();
 
+            $newName = "Unknown";
+            if( method_exists($entity,"getName") ) {
+                $newName = $entity->getName();
+            }
+            $newType = "Unknown";
+            if( method_exists($entity,"getType") ) {
+                $newType = $entity->getType();
+            }
+            $updatedInfo = "";
+            if( $newName != $originalName ) {
+                $updatedInfo = " original name=$originalName, new name=$newName";
+            }
+            if( $newType != $originalType ) {
+                if( $updatedInfo ) {
+                    $updatedInfo = $updatedInfo . ";";
+                }
+                $updatedInfo = $updatedInfo . " original type=$originalType, new type=$newType";
+            }
+            if( $updatedInfo ) {
+                $updatedInfo = ": ".$updatedInfo;
+            }
+
             //EventLog
-            $event = "List Updated by $user";
+            $event = "List updated by $user" . $updatedInfo;
             $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
 
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
