@@ -707,7 +707,7 @@ Show this accordion by default in an open + visible state.
 {% endmacro %}
 
 
-{% macro projectGoalDetails( form, project, cycle ) %}
+{% macro projectGoalSection( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
@@ -716,25 +716,75 @@ Show this accordion by default in an open + visible state.
         {% set cycle = "show" %}
     {% endif %}
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="projectGoalDetailsHeading">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectGoalDetails" aria-expanded="true">
-                        Project Goals
+    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
+        {#<div class="panel panel-default">#}
+            {#<div class="panel-heading" role="tab" id="projectGoalDetailsHeading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectGoalDetails" aria-expanded="true">#}
+                        {#Project Goals#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="projectGoalDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectGoalDetailsHeading">#}
+                {#<div class="panel-body">#}
+
+                    {#{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
+
+                {#</div> #}{#panel-body#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+
+    <div class="user-projectgoals-holder">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#projectGoalSection">
+                        Project Goal(s)
                     </a>
                 </h4>
             </div>
-            <div id="projectGoalDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectGoalDetailsHeading">
+            <div id="projectGoalSection" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectGoalSectionHeading">
                 <div class="panel-body">
+                    {% for projectGoal in form.projectGoals %}
+                        {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','prototype',sitename,1) }}
+                    {% endfor %}
 
-                    {{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}
-
-                </div> {#panel-body#}
+                    {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+                </div>
             </div>
         </div>
     </div>
 
+{% endmacro %}
+
+{#{% macro projectSingleGoal2( projectGoal, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}#}
+{#{% endmacro %}#}
+{% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    <div class="user-collection-holder well {{ classname }}">
+
+        {% if cycle != 'show_user' %}
+            <div class="text-right">
+                <button type="button"
+                        class="btn btn-default btn-sm"
+                        onClick="removeExistingObject(this,'{{ classname }}')" >
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(formfield.description) }}
+
+    </div>
 {% endmacro %}
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}
@@ -1011,16 +1061,16 @@ Show this accordion by default in an open + visible state.
 
 {% macro projectHeaders( form, project, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
     {% if form.progressLog is defined %}
         {{ formmacros.field(form.progressLog) }}
     {% endif %}
 
     {#{{ transres.projectGoals(form,project,cycle) }}#}
-    {#{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
-    {% if form.projectgoals is defined %}
-        before showing projectGoalDetails
-        {{ transres.projectGoalDetails(form,project,cycle) }}
+    {#{{ transres.projectGoalSection(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1) }}#}
+    {% if form.projectGoals is defined %}
+        {{ transres.projectGoalSection(form,project,cycle) }}
     {% endif %}
 
 {% endmacro %}
@@ -1981,9 +2031,9 @@ Show this accordion by default in an open + visible state.
                 {% endif %}
 
                 before projectgoals prototype
-                {% if form.projectgoals is defined %}
+                {% if form.projectGoals is defined %}
                     adding projectgoals prototype
-                    data-prototype-transres-projectgoals = "{{ transres.projectGoalForm(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
+                    data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
                 {% endif %}
 
             {% endif %}
@@ -2908,7 +2958,7 @@ Show this accordion by default in an open + visible state.
 {% endmacro %}
 
 
-{% macro projectGoalForm( projectGoal, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro projectGoalSection2( projectGoals, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
@@ -2918,9 +2968,9 @@ Show this accordion by default in an open + visible state.
     {% endif %}
 
     {% if prototype == "prototype" %}
-        {% set formreview = projectGoal.vars.prototype %}
+        {% set formProjectGoals = projectGoals.vars.prototype %}
     {% else %}
-        {% set formreview = projectGoal %}
+        {% set formProjectGoals = projectGoals %}
     {% endif %}
 
     {#{% if formprojectgoal.vars.value and formprojectgoal.vars.value.getId() %}#}
@@ -2945,52 +2995,50 @@ Show this accordion by default in an open + visible state.
         {#{{ form_widget(formprojectgoal.description) }}#}
     {#</div>#}
 
+    {#<div class="user-collection-holder alert {{ classname }} {{ wellclass }}">#}
+        {#{% if cycle != "show" and cycle != "review" and showAddDeleteBtn %}#}
+            {#<div class="text-right">#}
+                {#<button#}
+                        {#type="button"#}
+                        {#class="btn btn-default btn-sm"#}
+                        {#onClick="removeExistingObject(this,'{{ classname }}')"#}
+                {#><span class="glyphicon glyphicon-remove"></span></button>#}
+            {#</div>#}
+            {#<br>#}
 
-    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+            {#{% if showAddDeleteBtn %}#}
+                {#{{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}#}
+            {#{% endif %}#}
 
-        {% if cycle != "show" and cycle != "review" and showAddDeleteBtn %}
-            <div class="text-right">
-                <button
-                        type="button"
-                        class="btn btn-default btn-sm"
-                        onClick="removeExistingObject(this,'{{ classname }}')"
-                ><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-            <br>
-
-            {% if showAddDeleteBtn %}
-                {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
-            {% endif %}
-
-        {% else %}
+        {#{% else %}#}
             {#do nothing#}
-        {% endif %}
+        {#{% endif %}#}
 
+        {#{% if formProjectGoal.description is defined %}#}
+            {#{{ formmacros.field(formProjectGoal.description) }}#}
+        {#{% endif %}#}
+    {#</div>#}
 
-        {% if formreview.id is defined %}
-            {{ form_widget(formreview.id) }}
-        {% endif %}
+    <div class="user-projectgoals-holder">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#projectgoals">
+                        Project Goal(s)
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-body">
+                {% for formProjectGoal in formProjectGoals %}
+                    {#{{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype',true,'') }}#}
 
-        {% if formreview.vars.value and (formreview.vars.value.reviewedBy or formreview.vars.value.updatedate) %}
-            {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
-            {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
-            {% set reviewedBy = null %}
-            {% if formreview.vars.value.reviewedBy %}
-                {#show it only to admin, reviewers and reviewedBy users#}
-                {% if transres_util.showReviewedBy(formreview.vars.value) %}
-                    {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
-                {% endif %}
-            {% endif %}
-            <p>
-                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y \\a\\t h:i A T") }}
-            </p>
-        {% endif %}
+                    {#{{ transres. }}#}
 
-        {% if formreview.description is defined %}
-            {{ formmacros.checkbox(formreview.description) }}
-        {% endif %}
+                {% endfor %}
 
-
+                {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+            </div>
+        </div>
     </div>
 
 {% endmacro %}

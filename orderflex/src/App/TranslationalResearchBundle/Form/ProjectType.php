@@ -1310,8 +1310,8 @@ class ProjectType extends AbstractType
 
         //Project Goals
         //show it to users with TRP roles other than “basic TRP submitter” and ONLY if it is non-empty
-        //echo "cycle=".$this->params['cycle']."<br>";
         if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
+            //echo "cycle=".$this->params['cycle']."<br>";
             $builder->add('projectGoals', CollectionType::class, array(
                 'entry_type' => ProjectGoalType::class,
                 'entry_options' => array(
