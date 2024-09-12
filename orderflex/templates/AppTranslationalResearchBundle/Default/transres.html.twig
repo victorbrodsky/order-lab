@@ -736,16 +736,17 @@ Show this accordion by default in an open + visible state.
     {#</div>#}
 
 
-    <div class="user-projectgoals-holder">
-        <div class="panel panel-info">
+    {#<div class="transres-projectgoals-holder">#}
+    <div class="transres-projectgoals-holder2">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title text-left">
-                    <a data-toggle="collapse" href="#projectGoalSection">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#projectgoals">
                         Project Goal(s)
                     </a>
                 </h4>
             </div>
-            <div id="projectGoalSection" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectGoalSectionHeading">
+            <div id="projectgoals" class="panel-collapse collapse in transres-projectgoals-holder" role="tabpanel" aria-labelledby="projectGoalSectionHeading">
                 <div class="panel-body">
                     {% for projectGoal in form.projectGoals %}
                         {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','prototype',sitename,1) }}
@@ -1067,9 +1068,9 @@ Show this accordion by default in an open + visible state.
         {{ formmacros.field(form.progressLog) }}
     {% endif %}
 
-    {#{% if form.projectGoals is defined %}#}
-        {#{{ transres.projectGoalSection(form,project,cycle) }}#}
-    {#{% endif %}#}
+    {% if form.projectGoals is defined %}
+        {{ transres.projectGoalSection(form,project,cycle) }}
+    {% endif %}
 
 {% endmacro %}
 
@@ -3018,7 +3019,7 @@ Show this accordion by default in an open + visible state.
     {#</div>#}
 
     <div class="user-projectgoals-holder">
-        <div class="panel panel-info">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title text-left">
                     <a data-toggle="collapse" href="#projectgoals">

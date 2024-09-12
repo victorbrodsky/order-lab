@@ -813,6 +813,11 @@ class Project {
     // 1) one project can have multiple project goals (OneToMany)
     // 2) project goals can be disabled
     // 3) project goals can be added on the edit project page or work request page by admin/tech
+    // 4) Project Goal can be created on the Work Request page.
+    // Therefore, each project goal should have a reference to the Work Request (confirm?)
+    // Do not show this new field/field set on the “New Project Request” page at all to anyone.
+    // On the “Project Request View” page, only show this field to users with TRP roles
+    // other than “basic TRP submitter” and ONLY if it is non-empty, otherwise hide it.
     #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $projectGoals;
     
