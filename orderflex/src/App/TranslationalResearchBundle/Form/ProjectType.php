@@ -1315,7 +1315,6 @@ class ProjectType extends AbstractType
             $builder->add('projectGoals', CollectionType::class, array(
                 'entry_type' => ProjectGoalType::class,
                 'entry_options' => array(
-                    //'data_class' => 'App\TranslationalResearchBundle\Entity\Product',
                     'form_custom_value' => $this->params
                 ),
                 'label' => false,

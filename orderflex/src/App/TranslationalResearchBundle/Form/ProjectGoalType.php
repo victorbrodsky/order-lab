@@ -45,8 +45,9 @@ class ProjectGoalType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        //For collection with "Add New ..." must add id to correctly calculate ned section id
         $builder->add('id', HiddenType::class, array(
-            'attr' => array('class'=>'product-id'),
+            'attr' => array('class'=>'projectgoals-id'),
         ));
 
         $builder->add('description', null, array(

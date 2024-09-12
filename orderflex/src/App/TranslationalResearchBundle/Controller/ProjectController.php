@@ -1727,6 +1727,11 @@ class ProjectController extends OrderAbstractController
         foreach ($project->getFinalReviews() as $review) {
             $originalFinalReviews->add($review);
         }
+        //Project Goals
+        $originalProjectGoals = new ArrayCollection();
+        foreach ($project->getProjectGoals() as $projectGoal) {
+            $originalProjectGoals->add($projectGoal);
+        }
         ///////////// EOF get originals /////////////
 
         $form = $this->createProjectForm($project,$cycle,$request); //edit
@@ -1783,15 +1788,11 @@ class ProjectController extends OrderAbstractController
             $msg = "Project request " . $project->getOid() . " has been successfully updated";
 
             //////////// remove the relationship between the review and the project ////////////
-//            $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, $project->getIrbReviews());
-//            $transresUtil->removeReviewsFromProject($project, $originalAdminReviews, $project->getAdminReviews());
-//            $transresUtil->removeReviewsFromProject($project, $originalCommitteeReviews, $project->getCommitteeReviews());
-//            $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, $project->getFinalReviews());
-
             $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, "IrbReview");
             $transresUtil->removeReviewsFromProject($project, $originalAdminReviews, "AdminReview");
             $transresUtil->removeReviewsFromProject($project, $originalCommitteeReviews, "CommitteeReview");
             $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, "FinalReview");
+            $transresUtil->removeReviewsFromProject($project, $originalProjectGoals, "ProjectGoal");
             //////////// EOF remove the relationship between the review and the project ////////////
 
 //            $currentReviews = $project->getIrbReviews();
