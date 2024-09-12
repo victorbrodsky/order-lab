@@ -737,7 +737,7 @@ Show this accordion by default in an open + visible state.
 
 
     {#<div class="transres-projectgoals-holder">#}
-    <div class="transres-projectgoals-holder2">
+    {#<div class="transres-projectgoals">#}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -746,7 +746,10 @@ Show this accordion by default in an open + visible state.
                     </a>
                 </h4>
             </div>
-            <div id="projectgoals" class="panel-collapse collapse in transres-projectgoals-holder" role="tabpanel" aria-labelledby="projectGoalSectionHeading">
+            <div id="projectgoals"
+                 class="panel-collapse collapse in transres-projectgoals-holder"
+                 role="tabpanel"
+                 aria-labelledby="projectGoalSectionHeading">
                 <div class="panel-body">
                     {% for projectGoal in form.projectGoals %}
                         {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','prototype',sitename,1) }}
@@ -756,7 +759,7 @@ Show this accordion by default in an open + visible state.
                 </div>
             </div>
         </div>
-    </div>
+    {#</div>#}
 
 {% endmacro %}
 
