@@ -719,13 +719,13 @@ Show this accordion by default in an open + visible state.
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#projectgoals2">
+                <a data-toggle="collapse" href="#projectGoalSection">
                     Project Goal(s)
                 </a>
             </h4>
         </div>
         <br>
-        <div class="panel-collapse collapse in transres-projectgoals-holder"
+        <div id="projectGoalSection" class="panel-collapse collapse in transres-projectgoals-holder"
              role="tabpanel"
              aria-labelledby="projectGoalSection">
             <div class="panel-body">
@@ -752,7 +752,7 @@ Show this accordion by default in an open + visible state.
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cycle != 'show_user' %}
+        {% if cycle == 'edit' %}
             <div class="text-right">
                 <button type="button"
                         class="btn btn-default btn-sm"
@@ -1090,6 +1090,7 @@ Show this accordion by default in an open + visible state.
         </div>
     </div>
 
+    {#<br>#}
 {% endmacro %}
 
 {% macro projectRequesters( form, project, cycle ) %}

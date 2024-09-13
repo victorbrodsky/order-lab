@@ -2457,9 +2457,14 @@ class ProjectController extends OrderAbstractController
         //On “New Project Request” page for MISI projects ONLY, after “See fee schedule” link, add
         // “ / See MISI Antibody Panel List” with the words “See MISI Antibody Panel List” linking to the PDF
         if( $cycle == 'new' && $project->getProjectSpecialtyStr() == 'MISI' ) {
+//            $feeScheduleMisiLink = $this->container->get('router')->generate(
+//                'translationalresearch_misi_antibody_panels',
+//                array(),
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
             $feeScheduleMisiLink = $this->container->get('router')->generate(
-                'translationalresearch_misi_antibody_panels',
-                array(),
+                'translationalresearch_antibodies_group_by_panel',
+                array('labs'=>'MISI'),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
             $feeScheduleLink = $feeScheduleLink ." / ".
