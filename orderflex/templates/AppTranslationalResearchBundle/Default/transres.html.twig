@@ -213,6 +213,25 @@
     </div>
 {% endmacro %}
 
+{% macro projectWorkRequestGoalSection( project, cycle ) %}
+    {#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
+    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
+        {#<div class="panel panel-default">#}
+            {#<div class="panel-heading" role="tab" id="projectFullInfoHeading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectFullInfo" aria-expanded="true">#}
+                        {#Associated Project Info#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="projectFullInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectFullInfoHeading">#}
+                {#<div class="panel-body" id="panel-projectFullInfo">#}
+                    {#{{ render(path('translationalresearch_project_show_simple', {id: project.id})) }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+{% endmacro %}
 
 {% macro projectBodyFormFields( form, project, cycle ) %}
 
@@ -709,7 +728,6 @@ Show this accordion by default in an open + visible state.
 
 {% macro projectGoalSection( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {% if cycle == "review" %}
@@ -729,9 +747,7 @@ Show this accordion by default in an open + visible state.
              role="tabpanel"
              aria-labelledby="projectGoalSection">
             <div class="panel-body">
-                {#projectGoalsCount={{ project.projectGoals|length }}#}
                 {% for projectGoal in form.projectGoals %}
-                    {#projectGoalId={{ projectGoal.vars.id }}#}
                     {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','',translationalresearch_sitename,1) }}
                 {% endfor %}
 
@@ -739,7 +755,6 @@ Show this accordion by default in an open + visible state.
             </div>
         </div>
     </div>
-
 {% endmacro %}
 {% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
