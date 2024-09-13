@@ -22,6 +22,7 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IrbApprovalTypeList
 
 
+use App\TranslationalResearchBundle\Form\ProjectGoalsSectionType;
 use App\TranslationalResearchBundle\Form\ProjectMisiType;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
@@ -2256,6 +2257,47 @@ class ProjectController extends OrderAbstractController
             $resArr
         );
         ////////////////// EOF custom rendering ////////////////
+    }
+
+    #[Route(path: '/project/goals/{id}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
+    #[Template('AppTranslationalResearchBundle/Project/goals.html.twig')]
+    public function projectGoalsAction(Request $request, Project $project)
+    {
+//        $transresPermissionUtil = $this->container->get('transres_permission_util');
+//        if( false === $transresPermissionUtil->hasProjectPermission("edit",$project) ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+
+        $transresUtil = $this->container->get('transres_util');
+        if( false === $transresUtil->isAdvancedUser($project) ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $cycle = "edit";
+
+        $disabled = true;
+        if( $cycle == 'edit' ) {
+            $disabled = false;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            //'user' => $user,
+        );
+
+        $form = $this->createForm(ProjectGoalsSectionType::class, $project, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
+
+
+
+        return array(
+            'title' => "Project Goals",
+            'project' => $project,
+            'cycle' => $cycle,
+            'form' => $form->createView(),
+        );
     }
 
     /**

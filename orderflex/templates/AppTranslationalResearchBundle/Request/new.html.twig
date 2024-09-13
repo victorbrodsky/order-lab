@@ -349,7 +349,7 @@
         {#{{ transres.projectObjFullInfo(project,cycle) }}#}
         {{ transres.projectIncludeInfo(project,cycle) }}
 
-        {{ transres.projectWorkRequestGoalSection(project,cycle) }}
+        {{ transres.projectIncludeGoals(project,cycle) }}
 
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the work request list</a>
@@ -415,6 +415,7 @@
                         transresPrepopulateProjectDetails($(this),true);
                         //transresPrepopulateProductServices( $(this) );
                         transresIncludeProjectDetails($(this));
+                        transresIncludeProjectGoals($(this));
                     } else {
                         //reload page with project as it was clicked on the "New work request" from the project's action menu
                         var projectId = $(this).val();
@@ -888,6 +889,28 @@
                     });
                 }
             }
+        }
+
+        function transresIncludeProjectGoals( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            $( "#panel-projectIncludeGoals" ).html('Loading project '+projectId+'...');
+            $( "#panel-projectIncludeGoals" ).load(
+                    Routing.generate(
+                            'translationalresearch_project_goals',
+                            {id: projectId}
+                    ),
+                    function( response, status, xhr ) {
+                        if ( status == "error" ) {
+                            var msg = "Error loading project "+projectId+": ";
+                            $( "#panel-projectIncludeGoals" ).html( msg + xhr.status + " " + xhr.statusText );
+                        }
+                    });
         }
 
         //NOT USED

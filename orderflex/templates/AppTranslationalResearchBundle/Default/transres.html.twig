@@ -213,24 +213,24 @@
     </div>
 {% endmacro %}
 
-{% macro projectWorkRequestGoalSection( project, cycle ) %}
-    {#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
-    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
-        {#<div class="panel panel-default">#}
-            {#<div class="panel-heading" role="tab" id="projectFullInfoHeading">#}
-                {#<h4 class="panel-title">#}
-                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectFullInfo" aria-expanded="true">#}
-                        {#Associated Project Info#}
-                    {#</a>#}
-                {#</h4>#}
-            {#</div>#}
-            {#<div id="projectFullInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectFullInfoHeading">#}
-                {#<div class="panel-body" id="panel-projectFullInfo">#}
-                    {#{{ render(path('translationalresearch_project_show_simple', {id: project.id})) }}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
+{% macro projectIncludeGoals( project, cycle ) %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectIncludeGoalsHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIncludeGoals" aria-expanded="true">
+                        Project Goal(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="projectIncludeGoals" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectIncludeGoalsHeading">
+                <div class="panel-body" id="panel-projectIncludeGoals">
+                    {{ render(path('translationalresearch_project_goals', {id: project.id})) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endmacro %}
 
 {% macro projectBodyFormFields( form, project, cycle ) %}
