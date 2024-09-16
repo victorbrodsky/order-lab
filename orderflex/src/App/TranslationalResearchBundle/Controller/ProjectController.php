@@ -2289,9 +2289,7 @@ class ProjectController extends OrderAbstractController
             'form_custom_value' => $params,
             'disabled' => $disabled,
         ));
-
-
-
+        
         return array(
             'title' => "Project Goals",
             'project' => $project,

@@ -2063,9 +2063,9 @@ Show this accordion by default in an open + visible state.
                     data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
                 {% endif %}
 
-                before projectgoals prototype
+                {#before projectgoals prototype#}
                 {% if form.projectGoals is defined %}
-                    adding projectgoals prototype
+                    {#adding projectgoals prototype#}
                     data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
                 {% endif %}
 

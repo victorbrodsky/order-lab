@@ -349,7 +349,9 @@
         {#{{ transres.projectObjFullInfo(project,cycle) }}#}
         {{ transres.projectIncludeInfo(project,cycle) }}
 
-        {{ transres.projectIncludeGoals(project,cycle) }}
+        {% if transres_util.isAdvancedUser(project) %}
+            {{ transres.projectIncludeGoals(project,cycle) }}
+        {% endif %}
 
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the work request list</a>

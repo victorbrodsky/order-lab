@@ -1,10 +1,33 @@
-{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{#{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}#}
 
-{% block title %}
-    {{ title }}
-{% endblock %}
+{#{% block title %}#}
+    {#{{ title }}#}
+{#{% endblock %}#}
 
 
 {% block content %}
-    project.id = {{ project.id }}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+        {% if form %}
+            {% if form.projectGoals is defined %}
+                data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+            {% endif %}
+        {% endif %}
+    ></div>
+
+
+    {{ form_start(form) }}
+        project.id = {{ project.id }}
+
+        {#{{ formmacros.field(form.title) }}#}
+
+        {{ transres.projectGoalSection(form,project,cycle) }}
+
+    {{ form_end(form) }}
 {% endblock %}

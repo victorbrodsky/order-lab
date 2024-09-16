@@ -818,6 +818,8 @@ class Project {
     // Do not show this new field/field set on the “New Project Request” page at all to anyone.
     // On the “Project Request View” page, only show this field to users with TRP roles
     // other than “basic TRP submitter” and ONLY if it is non-empty, otherwise hide it.
+    // On Work Request page: show on new, view (if non empty), edit pages
+    // for all users with TRP roles other than “basic TRP submitter”
     #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $projectGoals;
     
