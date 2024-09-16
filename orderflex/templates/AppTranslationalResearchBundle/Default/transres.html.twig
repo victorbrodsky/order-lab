@@ -756,6 +756,37 @@ Show this accordion by default in an open + visible state.
         </div>
     </div>
 {% endmacro %}
+{% macro showExistingProjectGoalSection( form, project, cycle ) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+    {#{% if cycle == "review" %}#}
+        {% set cycle = "show" %}
+    {#{% endif %}#}
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#projectGoalSection">
+                    Project Goal(s)
+                </a>
+            </h4>
+        </div>
+        <br>
+        <div id="projectGoalSection" class="panel-collapse collapse in transres-projectgoals-holder"
+             role="tabpanel"
+             aria-labelledby="projectGoalSection">
+            <div class="panel-body">
+                {% for projectGoal in form.projectGoals %}
+                    {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','',translationalresearch_sitename,1) }}
+                {% endfor %}
+
+                {% set cycle = "edit" %}
+                {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 {% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 

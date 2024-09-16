@@ -29,7 +29,7 @@
 
         {#{{ formmacros.field(form.title) }}#}
 
-        {{ transres.projectGoalSection(form,project,cycle) }}
+        {{ transres.showExistingProjectGoalSection(form,project,cycle) }}
 
         {#{% if form.save is defined %}#}
             {#<br>#}
@@ -45,6 +45,7 @@
         </p>
 
     {{ form_end(form) }}
+    {#{{ form_end(form, {'render_rest': false}) }}#}
 {% endblock %}
 
 

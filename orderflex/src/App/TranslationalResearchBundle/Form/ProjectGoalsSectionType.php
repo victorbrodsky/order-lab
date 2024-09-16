@@ -49,6 +49,7 @@ class ProjectGoalsSectionType extends AbstractType
                     'form_custom_value' => $this->params
                 ),
                 'label' => false,
+                //'disabled' => true,
                 'required' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
