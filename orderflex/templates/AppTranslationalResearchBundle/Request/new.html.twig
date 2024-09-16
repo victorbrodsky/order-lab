@@ -903,16 +903,17 @@
 
             $( "#panel-projectIncludeGoals" ).html('Loading project '+projectId+'...');
             $( "#panel-projectIncludeGoals" ).load(
-                    Routing.generate(
-                            'translationalresearch_project_goals',
-                            {id: projectId}
-                    ),
-                    function( response, status, xhr ) {
-                        if ( status == "error" ) {
-                            var msg = "Error loading project "+projectId+": ";
-                            $( "#panel-projectIncludeGoals" ).html( msg + xhr.status + " " + xhr.statusText );
-                        }
-                    });
+                Routing.generate(
+                        'translationalresearch_project_goals',
+                        {id: projectId}
+                ),
+                function( response, status, xhr ) {
+                    if ( status == "error" ) {
+                        var msg = "Error loading project "+projectId+": ";
+                        $( "#panel-projectIncludeGoals" ).html( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
         }
 
         //NOT USED

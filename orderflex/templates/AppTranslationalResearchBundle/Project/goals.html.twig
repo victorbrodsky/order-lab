@@ -10,24 +10,57 @@
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    <div id="form-prototype-data"
-         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-         data-userid = "{{ app.user.id }}"
-        {% if form %}
-            {% if form.projectGoals is defined %}
-                data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
-            {% endif %}
-        {% endif %}
-    ></div>
 
 
     {{ form_start(form) }}
-        project.id = {{ project.id }}
+
+        <div id="form-prototype-data2"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+                {% if form %}
+                    {% if form.projectGoals is defined %}
+                        data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+                    {% endif %}
+                {% endif %}
+        ></div>
+
+        {#project.id = {{ project.id }}#}
 
         {#{{ formmacros.field(form.title) }}#}
 
         {{ transres.projectGoalSection(form,project,cycle) }}
 
+        {#{% if form.save is defined %}#}
+            {#<br>#}
+            {#<p>#}
+                {#{{ form_widget(form.save) }}#}
+            {#</p>#}
+        {#{% endif %}#}
+
+        <br>
+        <p>
+            <a id="update-project-include-goals" class="btn btn-default" onclick="updateProjectIncludeGoals()"
+            >Update Project Goals</a>
+        </p>
+
     {{ form_end(form) }}
 {% endblock %}
+
+
+{% block additionaljs %}
+    <script type="text/javascript">
+//        $(document).ready(function() {
+//            //console.log('goal: cycle=' + cycle);
+//        });
+        function updateProjectIncludeGoals() {
+            console.log('updateProjectIncludeGoals');
+
+            //get new goals and send by ajax to update the goals
+        }
+
+    </script>
+{% endblock %}
+
+
+

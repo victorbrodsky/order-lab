@@ -2289,7 +2289,18 @@ class ProjectController extends OrderAbstractController
             'form_custom_value' => $params,
             'disabled' => $disabled,
         ));
-        
+
+        //$form->handleRequest($request);
+
+        //if( $form->isSubmitted() ) {
+//            if( $form->isValid() ) {
+//                exit('valid projectGoalsAction');
+//            }
+            //exit('submit projectGoalsAction');
+        //}
+
+        //exit('render projectGoalsAction');
+
         return array(
             'title' => "Project Goals",
             'project' => $project,

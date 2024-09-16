@@ -56,6 +56,11 @@ class ProjectGoalsSectionType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__projectgoals__',
             ));
+
+//            $builder->add('save', SubmitType::class, array(
+//                'label' => 'Save Project Goals',
+//                'attr' => array('class' => 'btn btn-warning')
+//            ));
         }
     }
 
