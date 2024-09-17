@@ -2697,6 +2697,10 @@ class DashboardUtil
             return $chartsArray;
         }
 
+        //if( $this->security->isGranted('read', $chartObject) === false ) {
+            //exit('getDashboardChart: no read permission');
+        //}
+
         //check !isChartPublic and read permission
         if( $this->isChartPublic($chartObject) == false && $this->security->isGranted('read', $chartObject) === false ) {
             //get admin email
@@ -8999,7 +9003,7 @@ class DashboardUtil
         }
 
         //country of origin of people that have applied to our program and then sorted by fellowship
-        //fellapp-country-origin
+        //"73. Country of origin for fellowship applicants" => "fellapp-country-origin",
         if( $chartType == "fellapp-country-origin" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
@@ -9032,19 +9036,66 @@ class DashboardUtil
             //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
             //exit('111');
 
+            $fellappDataArr = array();
+            $fellSpecialtyName = NULL;
+
             foreach($fellapps as $fellapp) {
+                //get fellowship specialty
+                $fellSpecialtyName = NULL;
+                $fellSpecialty = $fellapp->getFellowshipSubspecialty();
+                if( $fellSpecialty ) {
+                    $fellSpecialtyName = $fellSpecialty->getName();
+                }
+                if( !$fellSpecialtyName ) {
+                    continue;
+                }
+
                 //get citizenship App\UserdirectoryBundle\Entity\Citizenship
                 $citizenshipName = NULL;
-                $citizenship = $fellapp->getCitizenship();
-                if( $citizenship ) {
-                    $country = $citizenship->getCountry();
-                    if( $country ) {
-                        $citizenshipName = $country->getName();
+                $citizenships = $fellapp->getCitizenships();
+                foreach($citizenships as $citizenship) {
+                    if ($citizenship) {
+                        $country = $citizenship->getCountry();
+                        if ($country) {
+                            $citizenshipName = $country->getName();
+                        }
                     }
+                    //echo "citizenshipName=$citizenshipName <br>";
+
+                    $countCountry = 0;
+                    if (isset($fellappDataArr[$fellSpecialtyName][$citizenshipName])) {
+                        $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+                    }
+                    $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
                 }
-                echo "citizenshipName=$citizenshipName <br>";
             }
 
+            //dump($fellappDataArr);
+            //exit('111');
+
+            $combinedData = array();
+            foreach($fellappDataArr as $fellSpecialtyName => $fellappData) {
+                //array($fellSpecialtyName)
+                echo $fellSpecialtyName;
+                //dump($fellappData);
+                //$combinedData[$fellSpecialtyName] = $fellappData[$fellSpecialtyName];
+            }
+
+            //$combinedData[$fellSpecialtyName] = $loginsTranslationalresearchArr;
+
+//            $ex1Arr['1'] = 3;
+//            $ex1Arr['2'] = 4;
+//            $ex2Arr['3'] = 5;
+//            $ex2Arr['4'] = 6;
+//            $combinedData = array();
+//            $combinedData["Ex1"] = $ex1Arr;
+//            $combinedData["Ex2"] = $ex2Arr;
+
+            $chartName = $chartName;
+
+
+            //73.
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
         }
 
         //NOT USED

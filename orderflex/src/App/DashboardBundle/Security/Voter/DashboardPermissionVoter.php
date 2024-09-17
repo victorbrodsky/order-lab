@@ -105,7 +105,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
                 return true;
             }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
             $repository = $this->em->getRepository(PermissionObjectList::class);
             $dql = $repository->createQueryBuilder("list");
             $dql->select('list');
@@ -145,7 +144,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
     protected function canView($subject, TokenInterface $token) : bool
     {
         //exit('dashboard canView');
-
         //return true; //testing
         //return false;
 
