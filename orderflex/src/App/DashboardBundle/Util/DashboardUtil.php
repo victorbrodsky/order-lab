@@ -621,7 +621,7 @@ class DashboardUtil
             "68. Total candidate interview feedback comments provided via the system, by interviewer" => "fellapp-resapp-interviews-feedback",
             "71. Residency interview feedback comments provided via the system, by interviewer" => "resapp-interviews-feedback",
             "72. Fellowship interview feedback comments provided via the system, by interviewer" => "fellapp-interviews-feedback",
-
+            "73. Country of origin for fellowship applicants" => "fellapp-country-origin",
 
             "" => "",
             "" => "",
@@ -8996,6 +8996,55 @@ class DashboardUtil
 
             //bar chart
             $chartsArray = $this->getChart($totalInterviewsArr, $chartName,'bar',$layoutArray);
+        }
+
+        //country of origin of people that have applied to our program and then sorted by fellowship
+        //fellapp-country-origin
+        if( $chartType == "fellapp-country-origin" ) {
+            $fellappUtil = $this->container->get('fellapp_util');
+
+            //$year can be multiple dates "2019,2020,2021..."
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            //echo "1startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            if ((int)$startYear > (int)$endYear) {
+                //echo "flip<br>";
+                $tempYear = $startYear;
+                $startYear = $endYear;
+                $endYear = $tempYear;
+            }
+            //echo "2startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            $yearRange = '';
+
+            foreach (range($startYear, $endYear) as $thisYear) {
+                $yearRangeArr[] = $thisYear;
+            }
+
+            if (count($yearRangeArr) > 0) {
+                $yearRange = implode(",", $yearRangeArr);
+            } else {
+                $yearRange = $startYear;
+            }
+
+            $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
+            //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
+            //exit('111');
+
+            foreach($fellapps as $fellapp) {
+                //get citizenship App\UserdirectoryBundle\Entity\Citizenship
+                $citizenshipName = NULL;
+                $citizenship = $fellapp->getCitizenship();
+                if( $citizenship ) {
+                    $country = $citizenship->getCountry();
+                    if( $country ) {
+                        $citizenshipName = $country->getName();
+                    }
+                }
+                echo "citizenshipName=$citizenshipName <br>";
+            }
+
         }
 
         //NOT USED

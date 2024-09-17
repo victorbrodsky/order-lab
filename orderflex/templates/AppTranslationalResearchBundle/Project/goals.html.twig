@@ -51,9 +51,12 @@
 
 {% block additionaljs %}
     <script type="text/javascript">
-//        $(document).ready(function() {
-//            //console.log('goal: cycle=' + cycle);
-//        });
+        $(document).ready(function() {
+            //Disable all existing fields. Enable only new fields.
+            console.log('goal: disable all existing fields');
+            //$("#panel-projectIncludeGoals").attr("disabled", true);
+            $('#panel-projectIncludeGoals').find('input, textarea, select').attr('disabled','disabled');
+        });
         function updateProjectIncludeGoals() {
             console.log('updateProjectIncludeGoals');
 
