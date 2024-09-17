@@ -9067,6 +9067,11 @@ class DashboardUtil
                         $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
                     }
                     $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
+
+//                    if (isset($fellappDataArr[$fellSpecialtyName])) {
+//                        $fellappArr = $fellappDataArr[$fellSpecialtyName];
+//                    }
+//                    $fellappDataArr[$fellSpecialtyName] = array($citizenshipName=>$countCountry); //[$citizenshipName] = $countCountry + 1;
                 }
             }
 
@@ -9076,9 +9081,9 @@ class DashboardUtil
             $combinedData = array();
             foreach($fellappDataArr as $fellSpecialtyName => $fellappData) {
                 //array($fellSpecialtyName)
-                echo $fellSpecialtyName;
+                //echo $fellSpecialtyName;
                 //dump($fellappData);
-                //$combinedData[$fellSpecialtyName] = $fellappData[$fellSpecialtyName];
+                $combinedData[$fellSpecialtyName] = array($fellSpecialtyName=>1); //$fellappData[$fellSpecialtyName];
             }
 
             //$combinedData[$fellSpecialtyName] = $loginsTranslationalresearchArr;
@@ -9095,6 +9100,8 @@ class DashboardUtil
 
 
             //73.
+            //1) X - fellap types, menu on right - countries
+            //2) X - countries, menu on right - fellap types
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
         }
 
