@@ -1089,52 +1089,54 @@ Show this accordion by default in an open + visible state.
 
 
 {% macro projectHeaders( form, project, cycle ) %}
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+    {% if form.projectGoals is defined %}
+        {% set showProjectGoal = false %}
+        {% if form.projectGoals|length > 0 %}
+            {% set showProjectGoal = true %}
+        {% endif %}
+        {% if form.projectGoals|length == 0 %}
+            {% if cycle == 'show' %}
+                {% set showProjectGoal = false %}
+            {% endif %}
+            {% if cycle == 'edit' %}
+                {% set showProjectGoal = true %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#projecheader">
-                    Project Header
-                </a>
-            </h4>
-        </div>
-        <br>
-        <div id="projecheader"
-             class="panel-collapse collapse in"
-             role="tabpanel"
-             aria-labelledby="projecheader">
-            <div class="panel-body">
+    {% if form.progressLog is defined or showProjectGoal %}
+        {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+        {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
-                {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
-                {% if form.progressLog is defined %}
-                    {{ formmacros.field(form.progressLog) }}
-                {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#projecheader">
+                        Project Header
+                    </a>
+                </h4>
+            </div>
+            <br>
+            <div id="projecheader"
+                 class="panel-collapse collapse in"
+                 role="tabpanel"
+                 aria-labelledby="projecheader">
+                <div class="panel-body">
 
-                {% if form.projectGoals is defined %}
-                    {% set showProjectGoal = false %}
-                    {% if form.projectGoals|length > 0 %}
-                        {% set showProjectGoal = true %}
+                    {#Work Progress Log Notes (visible to staff only): (hide on new project page)#}
+                    {% if form.progressLog is defined %}
+                        {{ formmacros.field(form.progressLog) }}
                     {% endif %}
-                    {% if form.projectGoals|length == 0 %}
-                        {% if cycle == 'show' %}
-                            {% set showProjectGoal = false %}
-                        {% endif %}
-                            {% if cycle == 'edit' %}
-                                {% set showProjectGoal = true %}
-                            {% endif %}
-                    {% endif %}
-                    {#showProjectGoal={{ showProjectGoal }}#}
+
                     {% if showProjectGoal %}
                         {{ transres.projectGoalSection(form,project,cycle) }}
                     {% endif %}
-                {% endif %}
 
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     {#<br>#}
 {% endmacro %}
