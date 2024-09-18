@@ -9349,16 +9349,19 @@ class DashboardUtil
                     //echo "citizenshipName=$citizenshipName <br>";
 
                     if( $citizenshipName ) {
+                        $citizenshipName = ucfirst(strtolower($citizenshipName));;
+                        //$citizenshipName = strtolower($citizenshipName);
+
                         if (!isset($countryArr[$citizenshipName])) {
                             $countryArr[$citizenshipName] = 1;
                         }
-                    }
 
-                    $countCountry = 0;
-                    if (isset($fellappDataArr[$fellSpecialtyName][$citizenshipName])) {
-                        $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+                        $countCountry = 0;
+                        if (isset($fellappDataArr[$fellSpecialtyName][$citizenshipName])) {
+                            $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+                        }
+                        $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
                     }
-                    $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
 
 //                    if (isset($countryCountArr[$fellSpecialtyName])) {
 //                        $fellappArr = $fellappDataArr[$fellSpecialtyName];
@@ -9396,33 +9399,6 @@ class DashboardUtil
             //exit('111');
 
             $chartName = $chartName;
-
-            $layoutArray1 = array(
-                'height' => $this->height,
-                'width' => $this->width,
-                //'showlegend' => true,
-                'margin' => array(
-                    'b' => 200,
-                    //'l' => 500,
-                    //'r' => 100,
-                    //'t' => 500,
-                    //'pad' => 1
-                ),
-                'legend' => array(
-                    'orientation'=>"h"
-                ),
-                'yaxis' => array(
-                    'tickformat' => "d", //"digit", //"digit"
-                    //'showticklabels' => true,
-                    //'tickvals' => null,
-                    'automargin' => true,
-                    //'titlefont' => array('size'=>30)
-                ),
-                'xaxis' => array(
-                    'tickformat' =>  "d",
-                    'automargin' => true,
-                )
-            );
 
             //73.
             //1) X - fellap types, menu on right - countries

@@ -349,9 +349,9 @@
         {#{{ transres.projectObjFullInfo(project,cycle) }}#}
         {{ transres.projectIncludeInfo(project,cycle) }}
 
-        {% if transres_util.isAdvancedUser(project) %}
-            {{ transres.projectIncludeGoals(project,cycle) }}
-        {% endif %}
+        {#{% if transres_util.isAdvancedUser(project) %}#}
+            {#{{ transres.projectIncludeGoals(project,cycle) }}#}
+        {#{% endif %}#}
 
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the work request list</a>
@@ -417,7 +417,7 @@
                         transresPrepopulateProjectDetails($(this),true);
                         //transresPrepopulateProductServices( $(this) );
                         transresIncludeProjectDetails($(this));
-                        transresIncludeProjectGoals($(this));
+                        //transresIncludeProjectGoals($(this));
                     } else {
                         //reload page with project as it was clicked on the "New work request" from the project's action menu
                         var projectId = $(this).val();
