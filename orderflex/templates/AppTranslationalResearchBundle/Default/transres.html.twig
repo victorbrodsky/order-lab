@@ -213,23 +213,27 @@
     </div>
 {% endmacro %}
 
+{#Showing on Work Request page#}
 {% macro projectIncludeGoals( project, cycle ) %}
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="projectIncludeGoalsHeading">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIncludeGoals" aria-expanded="true">
-                        Project Goal(s)
-                    </a>
-                </h4>
-            </div>
-            <div id="projectIncludeGoals" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectIncludeGoalsHeading">
-                <div class="panel-body" id="panel-projectIncludeGoals">
-                    {{ render(path('translationalresearch_project_goals', {id: project.id})) }}
-                </div>
-            </div>
-        </div>
+    {#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
+    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
+        {#<div class="panel panel-default">#}
+            {#<div class="panel-heading" role="tab" id="projectIncludeGoalsHeading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIncludeGoals" aria-expanded="true">#}
+                        {#Project Goal(s)3#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="projectIncludeGoals" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectIncludeGoalsHeading">#}
+                {#<div class="panel-body" id="panel-projectIncludeGoals">#}
+                    {#{{ render(path('translationalresearch_project_goals', {id: project.id})) }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+    <div id="panel-projectIncludeGoals">
+        {{ render(path('translationalresearch_project_goals', {id: project.id})) }}
     </div>
 {% endmacro %}
 
@@ -756,6 +760,7 @@ Show this accordion by default in an open + visible state.
         </div>
     </div>
 {% endmacro %}
+{#Showing on Work Request page#}
 {% macro showExistingProjectGoalSection( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
