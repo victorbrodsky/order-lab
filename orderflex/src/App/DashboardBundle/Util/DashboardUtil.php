@@ -621,7 +621,7 @@ class DashboardUtil
             "68. Total candidate interview feedback comments provided via the system, by interviewer" => "fellapp-resapp-interviews-feedback",
             "71. Residency interview feedback comments provided via the system, by interviewer" => "resapp-interviews-feedback",
             "72. Fellowship interview feedback comments provided via the system, by interviewer" => "fellapp-interviews-feedback",
-            "73. Country of origin for fellowship applicants" => "fellapp-country-origin",
+            "73. Country of origin for the fellowship applicants" => "fellapp-country-origin",
 
             "" => "",
             "" => "",
@@ -9282,7 +9282,7 @@ class DashboardUtil
         }
 
         //country of origin of people that have applied to our program and then sorted by fellowship (similar to 66.)
-        //"73. Country of origin for fellowship applicants" => "fellapp-country-origin",
+        //"73. Country of origin for the fellowship applicants" => "fellapp-country-origin",
         if( $chartType == "fellapp-country-origin" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
