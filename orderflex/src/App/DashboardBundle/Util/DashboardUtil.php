@@ -9281,73 +9281,6 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
         }
 
-
-        if( $chartType == "" ) {
-
-        }
-        if( $chartType == "" ) {
-
-        }
-
-
-        //$chartsArray = array(); //testing
-        //$chartsArray = null; //testing
-
-        if( !is_array($chartsArray) ) {
-            //echo "null <br>";
-            $chartKey = $this->getChartTypeByValue($chartType);
-            $chartsArray['error'] = "Chart type '$chartKey' is not valid";
-            $chartsArray['warning'] = false;
-            return $chartsArray;
-        }
-
-        if( is_array($chartsArray) && count($chartsArray) == 0 ) {
-            //echo "count is 0 <br>";
-            if( !$warningNoData ) {
-                $chartKey = $this->getChartTypeByValue($chartType);
-                $warningNoData = "Chart data is not found for '$chartKey'";
-            }
-            $chartsArray['warning'] = $warningNoData;   //"Chart data is not found for '$chartKey'";
-            $chartsArray['error'] = false;
-            return $chartsArray;
-        }
-
-        //dump($chartsArray);
-
-        //chart is ok: add $chartObject->getId() to $chartsArray
-        if( $chartObject ) {
-            //$chartsArray = array(
-            //    'layout' => $layoutArray,
-            //    'data' => $dataArray
-            //);
-            //$layoutArray = $chartsArray['layout'];
-            //$dataArray = $chartsArray['data'];
-
-            //$dataArray[] = $chartDataArray;
-            //$chartDataArray = $dataArray[0];
-            //$chartDataArray['id'] = $chartObject->getId();
-            
-            //add favorite flag
-            $user = $this->security->getUser();
-            //$chartDataArray['favorite'] = $chartObject->isFavorite($user);
-            
-            //overwrite $chartsArray['data']
-            //$dataArray = array();
-            //$dataArray[] = $chartDataArray;
-            //$chartsArray['data'] = $dataArray;
-
-//            $chartsArray = array(
-//                'chartId' => $chartObject->getId(),
-//                'favorite' => $chartObject->isFavorite($user),
-//                'layout' => $layoutArray,
-//                'data' => $dataArray
-//            );
-
-            $user = $this->security->getUser();
-            $chartsArray['chartId'] = $chartObject->getId();
-            $chartsArray['favorite'] = $chartObject->isFavorite($user);
-        }
-
         //country of origin of people that have applied to our program and then sorted by fellowship (similar to 66.)
         //"73. Country of origin for fellowship applicants" => "fellapp-country-origin",
         if( $chartType == "fellapp-country-origin" ) {
@@ -9415,8 +9348,10 @@ class DashboardUtil
                     }
                     //echo "citizenshipName=$citizenshipName <br>";
 
-                    if( !isset($countryArr) ) {
-                        $countryArr[$citizenshipName] = 1;
+                    if( $citizenshipName ) {
+                        if (!isset($countryArr[$citizenshipName])) {
+                            $countryArr[$citizenshipName] = 1;
+                        }
                     }
 
                     $countCountry = 0;
@@ -9432,17 +9367,22 @@ class DashboardUtil
                 }
             }
 
+            //dump($countryArr);
             //dump($fellappDataArr);
             //exit('111');
 
-            $combinedData = array();
-            foreach($countryArr as $citizenshipName) {
-                foreach($fellSpecialtyArr as $fellSpecialtyName) {
-                    $combinedData[$citizenshipName] = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
-                }
-            }
-
-            //$combinedData[$fellSpecialtyName] = $loginsTranslationalresearchArr;
+//            $combinedData = array();
+//            foreach($countryArr as $citizenshipName) {
+//                $thisArr = array();
+//                foreach($fellSpecialtyArr as $fellSpecialtyName) {
+//                    $thisArr[$fellSpecialtyName] = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+//                }
+//                //$thisArr['1'] = 1;
+//                //$thisArr['2'] = 2;
+//                //$thisArr['3'] = 3;
+//                $combinedData[$citizenshipName] = $thisArr; //$fellappDataArr[$citizenshipName];
+//                //$combinedData["Ex1"] = $ex1Arr;
+//            }
 
 //            $ex1Arr['1'] = 3;
 //            $ex1Arr['2'] = 4;
@@ -9452,9 +9392,12 @@ class DashboardUtil
 //            $combinedData["Ex1"] = $ex1Arr;
 //            $combinedData["Ex2"] = $ex2Arr;
 
+            //dump($combinedData);
+            //exit('111');
+
             $chartName = $chartName;
 
-            $layoutArray = array(
+            $layoutArray1 = array(
                 'height' => $this->height,
                 'width' => $this->width,
                 //'showlegend' => true,
@@ -9480,11 +9423,78 @@ class DashboardUtil
                     'automargin' => true,
                 )
             );
-            
+
             //73.
             //1) X - fellap types, menu on right - countries
             //2) X - countries, menu on right - fellap types
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
+            $chartsArray = $this->getStackedChart($fellappDataArr, $chartName, "stack", $layoutArray);
+        }
+
+
+        if( $chartType == "" ) {
+
+        }
+        if( $chartType == "" ) {
+
+        }
+
+
+        //$chartsArray = array(); //testing
+        //$chartsArray = null; //testing
+
+        if( !is_array($chartsArray) ) {
+            //echo "null <br>";
+            $chartKey = $this->getChartTypeByValue($chartType);
+            $chartsArray['error'] = "Chart type '$chartKey' is not valid";
+            $chartsArray['warning'] = false;
+            return $chartsArray;
+        }
+
+        if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+            //echo "count is 0 <br>";
+            if( !$warningNoData ) {
+                $chartKey = $this->getChartTypeByValue($chartType);
+                $warningNoData = "Chart data is not found for '$chartKey'";
+            }
+            $chartsArray['warning'] = $warningNoData;   //"Chart data is not found for '$chartKey'";
+            $chartsArray['error'] = false;
+            return $chartsArray;
+        }
+
+        //dump($chartsArray);
+
+        //chart is ok: add $chartObject->getId() to $chartsArray
+        if( $chartObject ) {
+            //$chartsArray = array(
+            //    'layout' => $layoutArray,
+            //    'data' => $dataArray
+            //);
+            //$layoutArray = $chartsArray['layout'];
+            //$dataArray = $chartsArray['data'];
+
+            //$dataArray[] = $chartDataArray;
+            //$chartDataArray = $dataArray[0];
+            //$chartDataArray['id'] = $chartObject->getId();
+            
+            //add favorite flag
+            $user = $this->security->getUser();
+            //$chartDataArray['favorite'] = $chartObject->isFavorite($user);
+            
+            //overwrite $chartsArray['data']
+            //$dataArray = array();
+            //$dataArray[] = $chartDataArray;
+            //$chartsArray['data'] = $dataArray;
+
+//            $chartsArray = array(
+//                'chartId' => $chartObject->getId(),
+//                'favorite' => $chartObject->isFavorite($user),
+//                'layout' => $layoutArray,
+//                'data' => $dataArray
+//            );
+
+            $user = $this->security->getUser();
+            $chartsArray['chartId'] = $chartObject->getId();
+            $chartsArray['favorite'] = $chartObject->isFavorite($user);
         }
 
         //dump($chartsArray);
