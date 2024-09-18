@@ -9002,109 +9002,6 @@ class DashboardUtil
             $chartsArray = $this->getChart($totalInterviewsArr, $chartName,'bar',$layoutArray);
         }
 
-        //country of origin of people that have applied to our program and then sorted by fellowship
-        //"73. Country of origin for fellowship applicants" => "fellapp-country-origin",
-        if( $chartType == "fellapp-country-origin" ) {
-            $fellappUtil = $this->container->get('fellapp_util');
-
-            //$year can be multiple dates "2019,2020,2021..."
-            $startYear = $startDate->format('Y');
-            $endYear = $endDate->format('Y');
-            //echo "1startYear=".$startYear.", endYear=".$endYear."<br>";
-
-            if ((int)$startYear > (int)$endYear) {
-                //echo "flip<br>";
-                $tempYear = $startYear;
-                $startYear = $endYear;
-                $endYear = $tempYear;
-            }
-            //echo "2startYear=".$startYear.", endYear=".$endYear."<br>";
-
-            $yearRange = '';
-
-            foreach (range($startYear, $endYear) as $thisYear) {
-                $yearRangeArr[] = $thisYear;
-            }
-
-            if (count($yearRangeArr) > 0) {
-                $yearRange = implode(",", $yearRangeArr);
-            } else {
-                $yearRange = $startYear;
-            }
-
-            $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
-            //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
-            //exit('111');
-
-            $fellappDataArr = array();
-            $fellSpecialtyName = NULL;
-
-            foreach($fellapps as $fellapp) {
-                //get fellowship specialty
-                $fellSpecialtyName = NULL;
-                $fellSpecialty = $fellapp->getFellowshipSubspecialty();
-                if( $fellSpecialty ) {
-                    $fellSpecialtyName = $fellSpecialty->getName();
-                }
-                if( !$fellSpecialtyName ) {
-                    continue;
-                }
-
-                //get citizenship App\UserdirectoryBundle\Entity\Citizenship
-                $citizenshipName = NULL;
-                $citizenships = $fellapp->getCitizenships();
-                foreach($citizenships as $citizenship) {
-                    if ($citizenship) {
-                        $country = $citizenship->getCountry();
-                        if ($country) {
-                            $citizenshipName = $country->getName();
-                        }
-                    }
-                    //echo "citizenshipName=$citizenshipName <br>";
-
-                    $countCountry = 0;
-                    if (isset($fellappDataArr[$fellSpecialtyName][$citizenshipName])) {
-                        $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
-                    }
-                    $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
-
-//                    if (isset($fellappDataArr[$fellSpecialtyName])) {
-//                        $fellappArr = $fellappDataArr[$fellSpecialtyName];
-//                    }
-//                    $fellappDataArr[$fellSpecialtyName] = array($citizenshipName=>$countCountry); //[$citizenshipName] = $countCountry + 1;
-                }
-            }
-
-            //dump($fellappDataArr);
-            //exit('111');
-
-            $combinedData = array();
-            foreach($fellappDataArr as $fellSpecialtyName => $fellappData) {
-                //array($fellSpecialtyName)
-                //echo $fellSpecialtyName;
-                //dump($fellappData);
-                $combinedData[$fellSpecialtyName] = array($fellSpecialtyName=>1); //$fellappData[$fellSpecialtyName];
-            }
-
-            //$combinedData[$fellSpecialtyName] = $loginsTranslationalresearchArr;
-
-//            $ex1Arr['1'] = 3;
-//            $ex1Arr['2'] = 4;
-//            $ex2Arr['3'] = 5;
-//            $ex2Arr['4'] = 6;
-//            $combinedData = array();
-//            $combinedData["Ex1"] = $ex1Arr;
-//            $combinedData["Ex2"] = $ex2Arr;
-
-            $chartName = $chartName;
-
-
-            //73.
-            //1) X - fellap types, menu on right - countries
-            //2) X - countries, menu on right - fellap types
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
-        }
-
         //NOT USED
         //"67. Scheduled residency and fellowship interviews by interviewer (stacked)" => "fellapp-resapp-interviews-stacked",
         if( $chartType == "fellapp-resapp-interviews-stacked" ) {
@@ -9451,10 +9348,152 @@ class DashboardUtil
             $chartsArray['favorite'] = $chartObject->isFavorite($user);
         }
 
+        //country of origin of people that have applied to our program and then sorted by fellowship (similar to 66.)
+        //"73. Country of origin for fellowship applicants" => "fellapp-country-origin",
+        if( $chartType == "fellapp-country-origin" ) {
+            $fellappUtil = $this->container->get('fellapp_util');
+
+            //$year can be multiple dates "2019,2020,2021..."
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            //echo "1startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            if ((int)$startYear > (int)$endYear) {
+                //echo "flip<br>";
+                $tempYear = $startYear;
+                $startYear = $endYear;
+                $endYear = $tempYear;
+            }
+            //echo "2startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            $yearRange = '';
+
+            foreach (range($startYear, $endYear) as $thisYear) {
+                $yearRangeArr[] = $thisYear;
+            }
+
+            if (count($yearRangeArr) > 0) {
+                $yearRange = implode(",", $yearRangeArr);
+            } else {
+                $yearRange = $startYear;
+            }
+
+            $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
+            //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
+            //exit('111');
+
+            $fellappDataArr = array();
+            $countryCountArr = array();
+            $countryArr = array();
+            $fellSpecialtyArr = array();
+            $fellSpecialtyName = NULL;
+
+            foreach($fellapps as $fellapp) {
+                //get fellowship specialty
+                $fellSpecialtyName = NULL;
+                $fellSpecialty = $fellapp->getFellowshipSubspecialty();
+                if( $fellSpecialty ) {
+                    $fellSpecialtyName = $fellSpecialty->getName();
+                }
+                if( !$fellSpecialtyName ) {
+                    continue;
+                }
+
+                if( !isset($fellSpecialtyArr) ) {
+                    $fellSpecialtyArr[$fellSpecialtyName] = 1;
+                }
+
+                //get citizenship App\UserdirectoryBundle\Entity\Citizenship
+                $citizenshipName = NULL;
+                $citizenships = $fellapp->getCitizenships();
+                foreach($citizenships as $citizenship) {
+                    if ($citizenship) {
+                        $country = $citizenship->getCountry();
+                        if ($country) {
+                            $citizenshipName = $country->getName();
+                        }
+                    }
+                    //echo "citizenshipName=$citizenshipName <br>";
+
+                    if( !isset($countryArr) ) {
+                        $countryArr[$citizenshipName] = 1;
+                    }
+
+                    $countCountry = 0;
+                    if (isset($fellappDataArr[$fellSpecialtyName][$citizenshipName])) {
+                        $countCountry = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+                    }
+                    $fellappDataArr[$fellSpecialtyName][$citizenshipName] = $countCountry + 1;
+
+//                    if (isset($countryCountArr[$fellSpecialtyName])) {
+//                        $fellappArr = $fellappDataArr[$fellSpecialtyName];
+//                    }
+//                    $countryCountArr[$fellSpecialtyName] = array($citizenshipName=>$countCountry); //[$citizenshipName] = $countCountry + 1;
+                }
+            }
+
+            //dump($fellappDataArr);
+            //exit('111');
+
+            $combinedData = array();
+            foreach($countryArr as $citizenshipName) {
+                foreach($fellSpecialtyArr as $fellSpecialtyName) {
+                    $combinedData[$citizenshipName] = $fellappDataArr[$fellSpecialtyName][$citizenshipName];
+                }
+            }
+
+            //$combinedData[$fellSpecialtyName] = $loginsTranslationalresearchArr;
+
+//            $ex1Arr['1'] = 3;
+//            $ex1Arr['2'] = 4;
+//            $ex2Arr['3'] = 5;
+//            $ex2Arr['4'] = 6;
+//            $combinedData = array();
+//            $combinedData["Ex1"] = $ex1Arr;
+//            $combinedData["Ex2"] = $ex2Arr;
+
+            $chartName = $chartName;
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+                //'showlegend' => true,
+                'margin' => array(
+                    'b' => 200,
+                    //'l' => 500,
+                    //'r' => 100,
+                    //'t' => 500,
+                    //'pad' => 1
+                ),
+                'legend' => array(
+                    'orientation'=>"h"
+                ),
+                'yaxis' => array(
+                    'tickformat' => "d", //"digit", //"digit"
+                    //'showticklabels' => true,
+                    //'tickvals' => null,
+                    'automargin' => true,
+                    //'titlefont' => array('size'=>30)
+                ),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
+                    'automargin' => true,
+                )
+            );
+            
+            //73.
+            //1) X - fellap types, menu on right - countries
+            //2) X - countries, menu on right - fellap types
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
+        }
+
         //dump($chartsArray);
 
         return $chartsArray;
     }
+
+
+
 
 }
 
