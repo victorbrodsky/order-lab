@@ -60,7 +60,45 @@
         function updateProjectIncludeGoals() {
             console.log('updateProjectIncludeGoals');
 
-            //get new goals (enabled) and send by ajax to update the goals
+            //get new goals (enabled, not dosabled) and send by ajax to update the goals
+            //var description = $(':textarea[class=projectgoal-description]:not(:disabled)').val();
+            //var description = $('.projectgoal-description:not(:disabled)').val();
+            //console.log('description='+description);
+
+            var projectGoalData = [];
+            $('.projectgoal-description:not(:disabled)').each(function() {
+                var description = $(this).val();
+                console.log('description='+description);
+                projectGoalData.push(description);
+            });
+
+            var projectField = $('#oleg_translationalresearchbundle_request_project');
+
+            var projectId = null;
+            if( projectField && projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                projectId = $('#oleg_translationalresearchbundle_request_project').val();
+            }
+            console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
+
+            var url = Routing.generate('translationalresearch_add_project_goals_ajax', {id: projectId});
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                type: "POST",
+                data: {projectId: projectId, projectGoals: projectGoalData},
+                dataType: 'json',
+                async: asyncflag
+            }).success(function (response) {
+                console.log('response=' + response);
+                $('#panel-projectFullInfo').html(response);
+            }).done(function () {
+                //console.log('response=' + response);
+            }).error(function (jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+                $('#panel-projectFullInfo').html(errorThrown);
+            });
         }
 
     </script>

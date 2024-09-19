@@ -54,7 +54,7 @@ class ProjectGoalType extends AbstractType
             'label' => "Project Goal:",
             'required' => false,
             //'disabled' => $this->disabled,
-            'attr' => array('class' => 'textarea form-control product-comment')
+            'attr' => array('class' => 'textarea form-control projectgoal-description')
         ));
     }
 

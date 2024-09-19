@@ -2309,6 +2309,34 @@ class ProjectController extends OrderAbstractController
         );
     }
 
+    #[Route(path: '/add-project-goals', name: 'translationalresearch_add_project_goals_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function addProjectGoalsAjaxAction(Request $request) {
+
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //$projectId = $request->query->get('projectId');
+        //$productArr = $request->query->get('productArr');
+
+        $projectId = $request->get('projectId');
+        $projectGoals = $request->get('projectGoals');
+
+        //testing
+        $output[] = array(
+            'error' => NULL,
+            'projectId' => $projectId,
+            'projectGoals' => implode(',',$projectGoals)
+        );
+
+        //$output = $remainingBudget;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
     /**
      * Finds and displays a review form for this project entity.
      */
