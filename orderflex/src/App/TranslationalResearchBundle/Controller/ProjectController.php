@@ -22,6 +22,8 @@ namespace App\TranslationalResearchBundle\Controller;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IrbApprovalTypeList
 
 
+//use App\TranslationalResearchBundle\Entity\ProjectGoal;
+use App\TranslationalResearchBundle\Entity\ProjectGoal;
 use App\TranslationalResearchBundle\Form\ProjectGoalsSectionType;
 use App\TranslationalResearchBundle\Form\ProjectMisiType;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
@@ -2315,6 +2317,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
 
         //$projectId = $request->query->get('projectId');
         //$productArr = $request->query->get('productArr');
@@ -2322,15 +2325,42 @@ class ProjectController extends OrderAbstractController
         $projectId = $request->get('projectId');
         $projectGoals = $request->get('projectGoals');
 
+        $messageArr = array();
 
-        $message = "Project Goals have been successfully updated";
+        if( $projectGoals && $projectId ) {
+
+            foreach($projectGoals as $description) {
+                //find if the project goal exists
+                //$projectGoalEntity = $em->getRepository(ProjectGoal::class)->findOneByDescription('Pathology and Laboratory Medicine');
+                $projectGoalEntities = $transresUtil->getProjectGoal($description,$projectId);
+                if( $projectGoalEntities && count($projectGoalEntities) ) {
+                    $messageArr[] = "Project goal '$description' already exists.";
+                } else {
+                    $project = $em->getRepository(Project::class)->find($projectId);
+                    if( $project ) {
+                        $projectGoalEntity = new ProjectGoal($user);
+                        $projectGoalEntity->setProject($project);
+                        //$em->persist($projectGoalEntity);
+                        //$em->flush();
+                        $messageArr[] = "Project goal '$description' has been successfully added.";
+                    } else {
+                        $messageArr[] = "Project with ID '$projectId' does not exist.";
+                    }
+                }
+            }
+        }
+
+        $message = "";
+        if( count($messageArr) > 0 ) {
+            $message = implode('<br>',$messageArr);
+        }
 
         //testing
         $output[] = array(
             'error' => NULL,
             'projectId' => $projectId,
             'projectGoals' => implode(',',$projectGoals),
-            'message' => $message
+            'message' => $message,
         );
 
         //$output = $remainingBudget;

@@ -22,6 +22,7 @@ namespace App\TranslationalResearchBundle\Util;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
+use App\TranslationalResearchBundle\Entity\ProjectGoal;
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 
 
@@ -9612,6 +9613,28 @@ WHERE
 
         //logical error
         exit("findOrCreateAntibody: logical error");
+        return NULL;
+    }
+    
+    function getProjectGoal( $description, $projectId ) {
+        if( $description && $projectId ) {
+            //$projectGoal = $this->em->getRepository(ProjectGoal::class)->findOneByDescription($description);
+
+            $repository = $this->em->getRepository(ProjectGoal::class);
+            $dql =  $repository->createQueryBuilder("projectGoal");
+            $dql->where("projectGoal.description = :description AND projectGoal.project = :projectId");
+            $parameters = array(
+                'description' => $description,
+                'projectId' => $projectId
+            );
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+            $query->setParameters($parameters);
+
+            $projectGoals = $query->getResult();
+
+            return $projectGoals;
+        }
         return NULL;
     }
 

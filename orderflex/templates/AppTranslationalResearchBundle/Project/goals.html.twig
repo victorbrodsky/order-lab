@@ -82,6 +82,9 @@
             }
             console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
 
+            $('#project-goals-feedback').hide();
+            $('#project-goals-feedback').html("");
+
             var url = Routing.generate('translationalresearch_add_project_goals_ajax', {id: projectId});
             $.ajax({
                 url: url,
@@ -93,6 +96,7 @@
             }).success(function (response) {
                 console.log('response=', response);
                 //$('#panel-projectFullInfo').html(response);
+                $('#project-goals-feedback').show();
                 $('#project-goals-feedback').html(response[0]['message']);
             }).done(function () {
                 //console.log('response=' + response);
