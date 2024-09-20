@@ -2325,16 +2325,28 @@ class ProjectController extends OrderAbstractController
         $projectId = $request->get('projectId');
         $projectGoals = $request->get('projectGoals');
 
+        //dump($projectGoals);
+        //exit('111');
+
         $messageArr = array();
+        $resultArr = array();
 
         if( $projectGoals && $projectId ) {
 
-            foreach($projectGoals as $description) {
+            foreach($projectGoals as $projectGoalData) {
+                $projectGoalId = $projectGoalData['id'];
+                $description = $projectGoalData['description'];
                 //find if the project goal exists
                 //$projectGoalEntity = $em->getRepository(ProjectGoal::class)->findOneByDescription('Pathology and Laboratory Medicine');
                 $projectGoalEntities = $transresUtil->getProjectGoal($description,$projectId);
                 if( $projectGoalEntities && count($projectGoalEntities) ) {
-                    $messageArr[] = "Project goal '$description' already exists.";
+                    //$messageArr[] = "Project goal '$description' already exists.";
+                    $resultArr[] = array(
+                        'error' => 1,
+                        'id' => $projectGoalId,
+                        'projectGoalEntityId' => null,
+                        'message' => "Project goal '$description' already exists and the section with this project goal has been removed."
+                    );
                 } else {
                     $project = $em->getRepository(Project::class)->find($projectId);
                     if( $project ) {
@@ -2342,32 +2354,47 @@ class ProjectController extends OrderAbstractController
                         $projectGoalEntity->setProject($project);
                         //$em->persist($projectGoalEntity);
                         //$em->flush();
-                        $messageArr[] = "Project goal '$description' has been successfully added.";
+                        //$messageArr[] = "Project goal '$description' has been successfully added.";
+                        //$resultArr[$projectGoalId] = $projectGoalEntity->getId();
+                        $resultArr[] = array(
+                            'error' => 0,
+                            'id' => $projectGoalId,
+                            'projectGoalEntityId' => $projectGoalEntity->getId(),
+                            'message' => "Project goal '$description' has been successfully added."
+                        );
                     } else {
-                        $messageArr[] = "Project with ID '$projectId' does not exist.";
+                        //$messageArr[] = "Project with ID '$projectId' does not exist.";
+                        //$resultArr[$projectGoalId] = null;
+                        $resultArr[] = array(
+                            'error' => 1,
+                            'id' => $projectGoalId,
+                            'projectGoalEntityId' => null,
+                            'message' => "Project with ID '$projectId' does not exist."
+                        );
                     }
                 }
             }
         }
 
-        $message = "";
-        if( count($messageArr) > 0 ) {
-            $message = implode('<br>',$messageArr);
-        }
+//        $message = "";
+//        if( count($messageArr) > 0 ) {
+//            $message = implode('<br>',$messageArr);
+//        }
 
         //testing
-        $output[] = array(
-            'error' => NULL,
-            'projectId' => $projectId,
-            'projectGoals' => implode(',',$projectGoals),
-            'message' => $message,
-        );
+//        $output[] = array(
+//            'error' => NULL,
+//            'projectId' => $projectId,
+//            'projectGoals' => implode(',',$projectGoals),
+//            //'message' => $message,
+//            'result' => $resultArr
+//        );
 
         //$output = $remainingBudget;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
+        $response->setContent(json_encode($resultArr));
         return $response;
     }
 

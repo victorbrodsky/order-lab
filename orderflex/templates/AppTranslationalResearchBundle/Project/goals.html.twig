@@ -67,9 +67,15 @@
 
             var projectGoalData = [];
             $('.projectgoal-description:not(:disabled)').each(function() {
+                var projectGoalId = $(this).attr('id');
                 var description = $(this).val();
-                console.log('description='+description);
-                projectGoalData.push(description);
+                console.log('projectGoalId='+projectGoalId+', description='+description);
+                projectGoalData.push(
+                    {
+                        'id': projectGoalId,
+                        'description': description
+                    }
+                );
             });
 
             var projectField = $('#oleg_translationalresearchbundle_request_project');
@@ -96,8 +102,31 @@
             }).success(function (response) {
                 console.log('response=', response);
                 //$('#panel-projectFullInfo').html(response);
-                $('#project-goals-feedback').show();
-                $('#project-goals-feedback').html(response[0]['message']);
+
+                //parse response[0]['result'] to remove non added projectGoal, disable added project goals.
+                response.forEach(function(item){
+                    var error = item['error'];
+                    var sectionId = item['id'];
+                    var message = item['message'];
+                    var projectGoalEntityId = item['projectGoalEntityId'];
+                    if( error == 0 ) {
+                        $("#"+sectionId).prop('disabled', true);
+                        $("#"+sectionId).closest('.transres-projectgoals').find('.btn').remove();
+//                        $('#project-goals-feedback').show();
+//                        $('#project-goals-feedback').append('<p>'+message+'</p>');
+                    } else {
+                        //remove parent with class 'transres-projectgoals'
+                        $("#"+sectionId).closest('.transres-projectgoals').remove();
+                        //$("#"+sectionId).remove();
+//                        $('#project-goals-feedback').show();
+//                        $('#project-goals-feedback').append('<p>'+message+'</p>');
+                    }
+                    $('#project-goals-feedback').show();
+                    $('#project-goals-feedback').append('<p>'+message+'</p>');
+                });
+
+//                $('#project-goals-feedback').show();
+//                $('#project-goals-feedback').html(response[0]['message']);
             }).done(function () {
                 //console.log('response=' + response);
             }).error(function (jqXHR, textStatus, errorThrown) {
