@@ -788,6 +788,16 @@ Show this accordion by default in an open + visible state.
 
                 {% set cycle = "edit" %}
                 {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+
+                <br>
+
+                <div id="project-goals-feedback"></div>
+
+                <p>
+                    <a id="update-project-include-goals" class="btn btn-primary" onclick="updateProjectIncludeGoals()"
+                    >Update Project Goals</a>
+                </p>
+
             </div>
         </div>
     </div>

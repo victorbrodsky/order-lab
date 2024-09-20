@@ -2322,11 +2322,15 @@ class ProjectController extends OrderAbstractController
         $projectId = $request->get('projectId');
         $projectGoals = $request->get('projectGoals');
 
+
+        $message = "Project Goals have been successfully updated";
+
         //testing
         $output[] = array(
             'error' => NULL,
             'projectId' => $projectId,
-            'projectGoals' => implode(',',$projectGoals)
+            'projectGoals' => implode(',',$projectGoals),
+            'message' => $message
         );
 
         //$output = $remainingBudget;

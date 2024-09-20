@@ -38,11 +38,11 @@
             {#</p>#}
         {#{% endif %}#}
 
-        <br>
-        <p>
-            <a id="update-project-include-goals" class="btn btn-default" onclick="updateProjectIncludeGoals()"
-            >Update Project Goals</a>
-        </p>
+        {#<br>#}
+        {#<p>#}
+            {#<a id="update-project-include-goals" class="btn btn-default" onclick="updateProjectIncludeGoals()"#}
+            {#>Update Project Goals</a>#}
+        {#</p>#}
 
     {{ form_end(form) }}
     {#{{ form_end(form, {'render_rest': false}) }}#}
@@ -91,8 +91,9 @@
                 dataType: 'json',
                 async: asyncflag
             }).success(function (response) {
-                console.log('response=' + response);
-                $('#panel-projectFullInfo').html(response);
+                console.log('response=', response);
+                //$('#panel-projectFullInfo').html(response);
+                $('#project-goals-feedback').html(response[0]['message']);
             }).done(function () {
                 //console.log('response=' + response);
             }).error(function (jqXHR, textStatus, errorThrown) {
