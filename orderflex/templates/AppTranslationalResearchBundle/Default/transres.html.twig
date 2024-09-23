@@ -233,7 +233,7 @@
         {#</div>#}
     {#</div>#}
     <div id="panel-projectIncludeGoals">
-        {{ render(path('translationalresearch_project_goals', {id: project.id})) }}
+        {{ render(path('translationalresearch_project_goals', {id: project.id, cycle: cycle})) }}
     </div>
 {% endmacro %}
 
@@ -762,6 +762,8 @@ Show this accordion by default in an open + visible state.
 {% endmacro %}
 {#Showing on Work Request page#}
 {% macro showExistingProjectGoalSection( form, project, cycle ) %}
+
+    {% if form and form.projectGoals is defined %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
@@ -801,6 +803,7 @@ Show this accordion by default in an open + visible state.
             </div>
         </div>
     </div>
+    {% endif %}
 {% endmacro %}
 {% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}

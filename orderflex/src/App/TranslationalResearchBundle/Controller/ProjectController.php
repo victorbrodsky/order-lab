@@ -2261,21 +2261,42 @@ class ProjectController extends OrderAbstractController
         ////////////////// EOF custom rendering ////////////////
     }
 
-    #[Route(path: '/project/goals/{id}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
+    //Used for Work Request page
+    //Show this field on “Work Request View” page to all users only if this field is non-empty
+    //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
+    #[Route(path: '/project/goals/{id}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/goals.html.twig')]
-    public function projectGoalsAction(Request $request, Project $project)
+    public function projectGoalsAction(Request $request, Project $project, $cycle)
     {
 //        $transresPermissionUtil = $this->container->get('transres_permission_util');
 //        if( false === $transresPermissionUtil->hasProjectPermission("edit",$project) ) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
+        //$cycle = "edit";
+
         $transresUtil = $this->container->get('transres_util');
-        if( false === $transresUtil->isAdvancedUser($project) ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        if( $cycle == 'edit' && false === $transresUtil->isAdvancedUser($project) ) {
+            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            return array(
+                'title' => "Project Goals",
+                'project' => $project,
+                'cycle' => $cycle,
+                'form' => null,
+            );
         }
 
-        $cycle = "edit";
+        //Show this field on “Work Request View” page to all users only if this field is non-empty.
+        if( $cycle == 'show' ) {
+            if( count($project->getProjectGoals()) == 0 ) {
+                return array(
+                    'title' => "Project Goals",
+                    'project' => $project,
+                    'cycle' => $cycle,
+                    'form' => null,
+                );
+            }
+        }
 
         $disabled = true;
         if( $cycle == 'edit' ) {
@@ -2345,15 +2366,16 @@ class ProjectController extends OrderAbstractController
                         'error' => 1,
                         'id' => $projectGoalId,
                         'projectGoalEntityId' => null,
-                        'message' => "Project goal '$description' already exists and the section with this project goal has been removed."
+                        'message' => "Project goal '$description' already exists, this project goal has been removed."
                     );
                 } else {
                     $project = $em->getRepository(Project::class)->find($projectId);
                     if( $project ) {
                         $projectGoalEntity = new ProjectGoal($user);
                         $projectGoalEntity->setProject($project);
-                        //$em->persist($projectGoalEntity);
-                        //$em->flush();
+                        $projectGoalEntity->setDescription($description);
+                        $em->persist($projectGoalEntity);
+                        $em->flush();
                         //$messageArr[] = "Project goal '$description' has been successfully added.";
                         //$resultArr[$projectGoalId] = $projectGoalEntity->getId();
                         $resultArr[] = array(

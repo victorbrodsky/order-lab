@@ -10,42 +10,22 @@
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-
-
-    {{ form_start(form) }}
-
-        <div id="form-prototype-data2"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-                {% if form %}
-                    {% if form.projectGoals is defined %}
-                        data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+    {% if form %}
+        {{ form_start(form) }}
+            <div id="form-prototype-data2"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+                    {% if form %}
+                        {% if form.projectGoals is defined %}
+                            data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-        ></div>
-
-        {#project.id = {{ project.id }}#}
-
-        {#{{ formmacros.field(form.title) }}#}
-
-        {{ transres.showExistingProjectGoalSection(form,project,cycle) }}
-
-        {#{% if form.save is defined %}#}
-            {#<br>#}
-            {#<p>#}
-                {#{{ form_widget(form.save) }}#}
-            {#</p>#}
-        {#{% endif %}#}
-
-        {#<br>#}
-        {#<p>#}
-            {#<a id="update-project-include-goals" class="btn btn-default" onclick="updateProjectIncludeGoals()"#}
-            {#>Update Project Goals</a>#}
-        {#</p>#}
-
-    {{ form_end(form) }}
-    {#{{ form_end(form, {'render_rest': false}) }}#}
+            ></div>
+            {{ transres.showExistingProjectGoalSection(form,project,cycle) }}
+        {{ form_end(form) }}
+        {#{{ form_end(form, {'render_rest': false}) }}#}
+    {% endif %}
 {% endblock %}
 
 

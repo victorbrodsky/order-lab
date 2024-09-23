@@ -349,9 +349,9 @@
         {#{{ transres.projectObjFullInfo(project,cycle) }}#}
         {{ transres.projectIncludeInfo(project,cycle) }}
 
-        {% if transres_util.isAdvancedUser(project) %}
+        {#{% if transres_util.isAdvancedUser(project) %}#}
             {{ transres.projectIncludeGoals(project,cycle) }}
-        {% endif %}
+        {#{% endif %}#}
 
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the work request list</a>
@@ -417,7 +417,7 @@
                         transresPrepopulateProjectDetails($(this),true);
                         //transresPrepopulateProductServices( $(this) );
                         transresIncludeProjectDetails($(this));
-                        //transresIncludeProjectGoals($(this));
+                        transresIncludeProjectGoals($(this));
                     } else {
                         //reload page with project as it was clicked on the "New work request" from the project's action menu
                         var projectId = $(this).val();
@@ -901,15 +901,17 @@
                 return;
             }
 
+            var formcycle = $('#formcycle').val();
+
             $( "#panel-projectIncludeGoals" ).html('Loading project '+projectId+'...');
             $( "#panel-projectIncludeGoals" ).load(
                 Routing.generate(
                         'translationalresearch_project_goals',
-                        {id: projectId}
+                        {id: projectId, cycle: formcycle}
                 ),
                 function( response, status, xhr ) {
                     if ( status == "error" ) {
-                        var msg = "Error loading project "+projectId+": ";
+                        var msg = "Error loading project goals for project ID "+projectId+": ";
                         $( "#panel-projectIncludeGoals" ).html( msg + xhr.status + " " + xhr.statusText );
                     }
                 }

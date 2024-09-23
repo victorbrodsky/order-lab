@@ -1309,7 +1309,8 @@ class ProjectType extends AbstractType
         }
 
         //Project Goals
-        //show it to users with TRP roles other than “basic TRP submitter” and ONLY if it is non-empty
+        //Don't show on the new project page.
+        //On the edit/view pages, show it to users with TRP roles other than “basic TRP submitter” and ONLY if it is non-empty
         if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
             //echo "cycle=".$this->params['cycle']."<br>";
             $builder->add('projectGoals', CollectionType::class, array(
