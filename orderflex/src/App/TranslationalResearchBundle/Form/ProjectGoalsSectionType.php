@@ -44,7 +44,7 @@ class ProjectGoalsSectionType extends AbstractType
         //Used for Work Request page
         //Show this field on “Work Request View” page to all users only if this field is non-empty
         //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
-        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
+        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
             //echo "cycle=".$this->params['cycle']."<br>";
             $builder->add('projectGoals', CollectionType::class, array(
                 'entry_type' => ProjectGoalType::class,

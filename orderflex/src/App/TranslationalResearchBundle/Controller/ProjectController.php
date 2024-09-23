@@ -2299,7 +2299,7 @@ class ProjectController extends OrderAbstractController
         }
 
         $disabled = true;
-        if( $cycle == 'edit' ) {
+        if( $cycle != 'show' ) {
             $disabled = false;
         }
 

@@ -764,45 +764,45 @@ Show this accordion by default in an open + visible state.
 {% macro showExistingProjectGoalSection( form, project, cycle ) %}
 
     {% if form and form.projectGoals is defined %}
-    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+        {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
-    {#{% if cycle == "review" %}#}
-        {% set cycle = "show" %}
-    {#{% endif %}#}
+        {#{% if cycle == "review" %}#}
+            {#{% set cycle = "show" %}#}
+        {#{% endif %}#}
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#projectGoalSection">
-                    Project Goal(s)
-                </a>
-            </h4>
-        </div>
-        <br>
-        <div id="projectGoalSection" class="panel-collapse collapse in transres-projectgoals-holder"
-             role="tabpanel"
-             aria-labelledby="projectGoalSection">
-            <div class="panel-body">
-                {% for projectGoal in form.projectGoals %}
-                    {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','',translationalresearch_sitename,1) }}
-                {% endfor %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#projectGoalSection">
+                        Project Goal(s)
+                    </a>
+                </h4>
+            </div>
+            <br>
+            <div id="projectGoalSection" class="panel-collapse collapse in transres-projectgoals-holder"
+                 role="tabpanel"
+                 aria-labelledby="projectGoalSection">
+                <div class="panel-body">
+                    {% for projectGoal in form.projectGoals %}
+                        {{ transres.projectSingleGoal(projectGoal,'show','transres-projectgoals','',translationalresearch_sitename,1) }}
+                    {% endfor %}
 
-                {% set cycle = "edit" %}
-                {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+                    {% if cycle != 'show' %}
+                        {% set cycle = "edit" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+                        <br>
+                        <div id="project-goals-feedback" class="alert alert-info" style="display: none"></div>
 
-                <br>
+                        <p>
+                            <a id="update-project-include-goals" class="btn btn-primary" onclick="updateProjectIncludeGoals()"
+                            >Update Project Goals</a>
+                        </p>
+                    {% endif %}
 
-                <div id="project-goals-feedback" class="alert alert-info" style="display: none"></div>
-
-                <p>
-                    <a id="update-project-include-goals" class="btn btn-primary" onclick="updateProjectIncludeGoals()"
-                    >Update Project Goals</a>
-                </p>
-
+                </div>
             </div>
         </div>
-    </div>
     {% endif %}
 {% endmacro %}
 {% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
@@ -816,7 +816,7 @@ Show this accordion by default in an open + visible state.
 
     <div class="user-collection-holder well {{ classname }}">
 
-        {% if cycle == 'edit' %}
+        {% if cycle != 'show' %}
             <div class="text-right">
                 <button type="button"
                         class="btn btn-default btn-sm"
