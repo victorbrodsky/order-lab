@@ -69,7 +69,7 @@ class ProjectGoalType extends AbstractType
                 "Enable" => "enable",
                 "Disable" => "disable",
             ),
-            'data' => 'enable',
+            'empty_data' => 'enable', //if empty, empty_data will set this value on form submit
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Status")
         ));

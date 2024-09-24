@@ -98,7 +98,7 @@ function userInitBaseAdd(newForm,callback) {
 }
 
 function newPriceListListener(newForm) {
-    console.log("empty newPriceListListener");
+    //console.log("empty newPriceListListener");
     return;
 }
 

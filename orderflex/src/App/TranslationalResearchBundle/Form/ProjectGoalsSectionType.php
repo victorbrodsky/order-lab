@@ -41,6 +41,10 @@ class ProjectGoalsSectionType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $builder->add('id', HiddenType::class, array(
+            'attr' => array('class'=>'project-hidden-id'),
+        ));
+
         //Used for Work Request page
         //Show this field on “Work Request View” page to all users only if this field is non-empty
         //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page

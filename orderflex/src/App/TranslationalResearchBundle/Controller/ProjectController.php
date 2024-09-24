@@ -2357,6 +2357,18 @@ class ProjectController extends OrderAbstractController
             foreach($projectGoals as $projectGoalData) {
                 $projectGoalId = $projectGoalData['id'];
                 $description = $projectGoalData['description'];
+
+                if( !$description ) {
+                    $message = "Project goal is empty, this project goal has been removed.";
+                    $resultArr[] = array(
+                        'error' => 1,
+                        'id' => $projectGoalId,
+                        'projectGoalEntityId' => null,
+                        'message' => $message
+                    );
+                    continue;
+                }
+
                 //find if the project goal exists
                 //$projectGoalEntity = $em->getRepository(ProjectGoal::class)->findOneByDescription('Pathology and Laboratory Medicine');
                 $projectGoalEntities = $transresUtil->getProjectGoal($description,$projectId);
@@ -2373,12 +2385,18 @@ class ProjectController extends OrderAbstractController
                         'projectGoalEntityId' => null,
                         'message' => $message
                     );
+                    continue;
                 } else {
                     $project = $em->getRepository(Project::class)->find($projectId);
                     if( $project ) {
                         $projectGoalEntity = new ProjectGoal($user);
                         $projectGoalEntity->setProject($project);
                         $projectGoalEntity->setDescription($description);
+
+                        if( $projectGoalEntity->getStatus() === NULL ) {
+                            $projectGoalEntity->setStatus('enable');
+                        }
+
                         $em->persist($projectGoalEntity);
                         $em->flush();
                         //$messageArr[] = "Project goal '$description' has been successfully added.";
@@ -2398,9 +2416,10 @@ class ProjectController extends OrderAbstractController
                             'projectGoalEntityId' => null,
                             'message' => "Project with ID '$projectId' does not exist."
                         );
+                        continue;
                     }
                 }
-            }
+            }//foreach
         }
 
 //        $message = "";

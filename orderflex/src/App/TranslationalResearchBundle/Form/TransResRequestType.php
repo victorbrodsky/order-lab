@@ -151,7 +151,6 @@ class TransResRequestType extends AbstractType
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             //echo "2 project=".$this->params['project']."<br>";
             $builder->add('project', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
                 'class' => Project::class,
                 'choice_label' => 'getProjectInfoNameWithPIsChoice',
                 'choices' => $this->params['availableProjects'],

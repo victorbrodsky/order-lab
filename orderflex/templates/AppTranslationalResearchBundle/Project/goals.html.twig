@@ -65,7 +65,17 @@
             } else {
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
             }
-            console.log("transresRecalculateRemaniningBudget: projectId="+projectId);
+            console.log("1 transresRecalculateRemaniningBudget: projectId="+projectId);
+
+            if( projectId == null || typeof projectId === "undefined" ) {
+                projectId = $('#oleg_translationalresearchbundle_projectgoal_id').val();
+            }
+            console.log("2 transresRecalculateRemaniningBudget: projectId="+projectId);
+
+            if( projectId == null || typeof projectId === "undefined" ) {
+                console.log("transresRecalculateRemaniningBudget: projectId is NULL");
+                return;
+            }
 
             $('#project-goals-feedback').hide();
             $('#project-goals-feedback').html("");
@@ -79,9 +89,8 @@
                 dataType: 'json',
                 async: asyncflag
             }).success(function (response) {
-                console.log('response=', response);
+                //console.log('response=', response);
                 //$('#panel-projectFullInfo').html(response);
-
                 //parse response[0]['result'] to remove non added projectGoal, disable added project goals.
                 response.forEach(function(item){
                     var error = item['error'];
@@ -91,6 +100,7 @@
                     if( error == 0 ) {
                         $("#"+sectionId).prop('disabled', true);
                         $("#"+sectionId).closest('.transres-projectgoals').find('.btn').remove();
+                        //TODO: disable status field
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
                     } else {
