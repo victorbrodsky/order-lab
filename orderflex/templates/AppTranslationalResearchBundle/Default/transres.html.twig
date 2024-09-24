@@ -814,24 +814,39 @@ Show this accordion by default in an open + visible state.
         {% set formfield = field %}
     {% endif %}
 
-    <div class="user-collection-holder well {{ classname }}">
-
-        {% if cycle != 'show' %}
-            <div class="text-right">
-                <button type="button"
-                        class="btn btn-default btn-sm"
-                        onClick="removeExistingObject(this,'{{ classname }}')" >
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
-            </div>
+    {% set showProjectGoal = true %}
+    {% if cycle == 'show' and formfield.vars.value %}
+        {#formfield.vars.value.status={{ formfield.vars.value.status }}#}
+        {% if formfield.vars.value.status == 'disable' %}
+            {% set showProjectGoal = false %}
         {% endif %}
+    {% endif %}
 
-        {#For collection with "Add New ..." must add id to correctly calculate ned section id#}
-        {{ form_widget(formfield.id) }}
+    {% if showProjectGoal == true %}
+        <div class="user-collection-holder well {{ classname }}">
 
-        {{ formmacros.field(formfield.description) }}
+            {% if cycle != 'show' %}
+                <div class="text-right">
+                    <button type="button"
+                            class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+            {% endif %}
 
-    </div>
+            {#For collection with "Add New ..." must add id to correctly calculate ned section id#}
+            {{ form_widget(formfield.id) }}
+
+            {{ formmacros.field(formfield.description) }}
+            {{ formmacros.field(formfield.status) }}
+
+        </div>
+    {% else %}
+        {% do formfield.id.setRendered %}
+        {% do formfield.description.setRendered %}
+        {% do formfield.status.setRendered %}
+    {% endif %}
 {% endmacro %}
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}

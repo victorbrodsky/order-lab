@@ -57,11 +57,21 @@ class ProjectGoalType extends AbstractType
             'attr' => array('class' => 'textarea form-control projectgoal-description')
         ));
 
-        $builder->add('status', null, array(
+//        $builder->add('status', null, array(
+//            'label' => "Status:",
+//            'required' => false,
+//            //'disabled' => $this->disabled,
+//            'attr' => array('class' => 'form-control projectgoal-status')
+//        ));
+        $builder->add('status', ChoiceType::class, array(
             'label' => "Status:",
+            'choices' => array(
+                "Enable" => "enable",
+                "Disable" => "disable",
+            ),
+            'data' => 'enable',
             'required' => false,
-            //'disabled' => $this->disabled,
-            'attr' => array('class' => 'form-control projectgoal-status')
+            'attr' => array('class' => 'combobox', 'placeholder' => "Status")
         ));
     }
 

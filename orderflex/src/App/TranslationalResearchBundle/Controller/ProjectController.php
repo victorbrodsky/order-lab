@@ -2360,13 +2360,18 @@ class ProjectController extends OrderAbstractController
                 //find if the project goal exists
                 //$projectGoalEntity = $em->getRepository(ProjectGoal::class)->findOneByDescription('Pathology and Laboratory Medicine');
                 $projectGoalEntities = $transresUtil->getProjectGoal($description,$projectId);
-                if( $projectGoalEntities && count($projectGoalEntities) ) {
-                    //$messageArr[] = "Project goal '$description' already exists.";
+                if( $projectGoalEntities && count($projectGoalEntities) > 0 ) {
+                    $message = "Project goal '$description' already exists, this project goal has been removed.";
+                    if( count($projectGoalEntities) == 1 ) {
+                        $projectGoalEntity = $projectGoalEntities[0];
+                        $status = $projectGoalEntity->getStatus();
+                        $message = "Project goal '$description' already exists with status '".ucfirst($status)."'; this project goal has been removed.";
+                    }
                     $resultArr[] = array(
                         'error' => 1,
                         'id' => $projectGoalId,
                         'projectGoalEntityId' => null,
-                        'message' => "Project goal '$description' already exists, this project goal has been removed."
+                        'message' => $message
                     );
                 } else {
                     $project = $em->getRepository(Project::class)->find($projectId);

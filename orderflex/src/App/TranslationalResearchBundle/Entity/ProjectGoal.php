@@ -84,7 +84,7 @@ class ProjectGoal {
     // but there must be a way to mark an project goal as “Inactive”
     // so that it stops showing up on the drop down list
     // of “Project View” page when this field is non-empty, and on the Work Request pages
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
 
@@ -235,7 +235,7 @@ class ProjectGoal {
         $this->status = $status;
     }
 
-    
+
 
 
 
