@@ -56,6 +56,13 @@ class ProjectGoalType extends AbstractType
             //'disabled' => $this->disabled,
             'attr' => array('class' => 'textarea form-control projectgoal-description')
         ));
+
+        $builder->add('status', null, array(
+            'label' => "Status:",
+            'required' => false,
+            //'disabled' => $this->disabled,
+            'attr' => array('class' => 'form-control projectgoal-status')
+        ));
     }
 
     /**
