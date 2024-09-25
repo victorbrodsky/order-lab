@@ -1798,6 +1798,9 @@ class ProjectController extends OrderAbstractController
             $transresUtil->removeReviewsFromProject($project, $originalProjectGoals, "ProjectGoal");
             //////////// EOF remove the relationship between the review and the project ////////////
 
+            //assign authors to the project goals
+            $transresUtil->processProjectGoals($project);
+
 //            $currentReviews = $project->getIrbReviews();
 //            foreach( $currentReviews as $currentReview ) {
 //                echo "review=".$currentReview."<br>";

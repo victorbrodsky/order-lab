@@ -844,6 +844,7 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
 
+            {#Optional: show creator and create date#}
             {% if formfield.vars.value %}
                 Created by: {{ formfield.vars.value.author }}<br>
                 Created on: {{ formfield.vars.value.createDate|date("m/d/Y") }}

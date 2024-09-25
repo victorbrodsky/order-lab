@@ -1809,6 +1809,20 @@ class TransResUtil
 //        return $project;
 //    }
 
+    public function processProjectGoals( $project ) {
+        $user = $this->security->getUser();
+        foreach( $project->getProjectGoals() as $projectGoal ) {
+            if( $projectGoal->getAuthor() ) {
+                //set update author and date only if description or status changed
+                //This information can not be retrieved here, but it can be done in the doctrine listener
+                //$projectGoal->setUpdateAuthor($user);
+                //$projectGoal->setUpdatedate(new \DateTime());
+            } else {
+                $projectGoal->setAuthor($user);
+            }
+        }
+    }
+
     //Change review's decision according to the current state, because we search pending project assigned to me by decision == NULL
     public function resetReviewDecision($project, $review=null)
     {
