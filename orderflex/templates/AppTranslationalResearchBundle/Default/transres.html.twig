@@ -839,13 +839,18 @@ Show this accordion by default in an open + visible state.
             {{ form_widget(formfield.id) }}
 
             {{ formmacros.field(formfield.description) }}
-            {{ formmacros.field(formfield.status) }}
+
+            {% if formfield.status is defined %}
+                {{ formmacros.field(formfield.status) }}
+            {% endif %}
 
         </div>
     {% else %}
         {% do formfield.id.setRendered %}
         {% do formfield.description.setRendered %}
-        {% do formfield.status.setRendered %}
+        {% if formfield.status is defined %}
+            {% do formfield.status.setRendered %}
+        {% endif %}
     {% endif %}
 {% endmacro %}
 

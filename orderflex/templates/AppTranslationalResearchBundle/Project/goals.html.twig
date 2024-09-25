@@ -98,9 +98,10 @@
                     var message = item['message'];
                     var projectGoalEntityId = item['projectGoalEntityId'];
                     if( error == 0 ) {
-                        $("#"+sectionId).prop('disabled', true);
+                        //$("#"+sectionId).prop('disabled', true);
+                        $("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-projectgoals').find('.btn').remove();
-                        //TODO: disable status field
+
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
                     } else {

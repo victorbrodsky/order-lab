@@ -2305,24 +2305,13 @@ class ProjectController extends OrderAbstractController
 
         $params = array(
             'cycle' => $cycle,
-            //'user' => $user,
+            'showStatus' => false
         );
 
         $form = $this->createForm(ProjectGoalsSectionType::class, $project, array(
             'form_custom_value' => $params,
             'disabled' => $disabled,
         ));
-
-        //$form->handleRequest($request);
-
-        //if( $form->isSubmitted() ) {
-//            if( $form->isValid() ) {
-//                exit('valid projectGoalsAction');
-//            }
-            //exit('submit projectGoalsAction');
-        //}
-
-        //exit('render projectGoalsAction');
 
         return array(
             'title' => "Project Goals",

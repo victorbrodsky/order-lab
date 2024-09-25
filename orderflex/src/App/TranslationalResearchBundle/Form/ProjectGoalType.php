@@ -36,6 +36,11 @@ class ProjectGoalType extends AbstractType
     public function formConstructor( $params )
     {
         $this->params = $params;
+
+        //Set default showStatus to true
+        if( !isset($params['showStatus']) ) {
+            $this->params['showStatus'] = true;
+        }
     }
 
     /**
@@ -57,22 +62,19 @@ class ProjectGoalType extends AbstractType
             'attr' => array('class' => 'textarea form-control projectgoal-description')
         ));
 
-//        $builder->add('status', null, array(
-//            'label' => "Status:",
-//            'required' => false,
-//            //'disabled' => $this->disabled,
-//            'attr' => array('class' => 'form-control projectgoal-status')
-//        ));
-        $builder->add('status', ChoiceType::class, array(
-            'label' => "Status:",
-            'choices' => array(
-                "Enable" => "enable",
-                "Disable" => "disable",
-            ),
-            'empty_data' => 'enable', //if empty, empty_data will set this value on form submit
-            'required' => false,
-            'attr' => array('class' => 'combobox', 'placeholder' => "Status")
-        ));
+        //Show it only on the project page
+        if( $this->params['showStatus'] ) {
+            $builder->add('status', ChoiceType::class, array(
+                'label' => "Status:",
+                'choices' => array(
+                    "Enable" => "enable",
+                    "Disable" => "disable",
+                ),
+                'empty_data' => 'enable', //if empty, empty_data will set this value on form submit
+                'required' => false,
+                'attr' => array('class' => 'combobox', 'placeholder' => "Status")
+            ));
+        }
     }
 
     /**
