@@ -56,7 +56,7 @@ class ProjectGoalType extends AbstractType
         ));
 
         $builder->add('description', null, array(
-            'label' => "Project Goal:",
+            'label' => "Goal:",
             'required' => false,
             //'disabled' => $this->disabled,
             'attr' => array('class' => 'textarea form-control projectgoal-description')
