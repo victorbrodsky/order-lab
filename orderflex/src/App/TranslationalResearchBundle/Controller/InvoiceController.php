@@ -516,7 +516,7 @@ class InvoiceController extends OrderAbstractController
             $billingadminAllow = false;
             foreach($userSpecialties as $userSpecialty) {
                 $specialtyStr = $userSpecialty->getUppercaseName();
-                //echo "userSpecialty=$userSpecialty <br>";
+                //echo "specialtyStr=$specialtyStr <br>";
                 if( $transresUtil->isAdminOrPrimaryReviewer(null,$userSpecialty) ) {
                     $adminOrReviewerAllow = true;
                 }

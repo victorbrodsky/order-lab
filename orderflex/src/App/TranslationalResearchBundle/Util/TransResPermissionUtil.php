@@ -62,6 +62,7 @@ class TransResPermissionUtil
         }
 
         $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+        //echo "specialtyStr=$specialtyStr <br>";
 
         if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
             return true;
@@ -281,6 +282,7 @@ class TransResPermissionUtil
         }
 
         $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+        //echo "specialtyStr=$specialtyStr <br>";
 
         //ROLE_TRANSRES_BILLING_ADMIN role
         if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {

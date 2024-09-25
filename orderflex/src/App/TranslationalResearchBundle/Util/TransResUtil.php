@@ -710,15 +710,19 @@ class TransResUtil
         //check only if user is admin, executive for the project specialty
         //or user is a primary (final) reviewer of this particular project
 
-        $projectSpecialty = null;
-        $specialtyStr = null;
-        if( $project ) {
-            $projectSpecialty = $project->getProjectSpecialty();
-        }
-        if( $projectSpecialty ) {
-            $specialtyStr = $projectSpecialty->getUppercaseName();
-            $specialtyStr = "_" . $specialtyStr;
-        }
+//        $projectSpecialty = null;
+//        $specialtyStr = null;
+//        if( $project ) {
+//            $projectSpecialty = $project->getProjectSpecialty();
+//        }
+//        if( $projectSpecialty ) {
+//            $specialtyStr = $projectSpecialty->getUppercaseName();
+//            $specialtyStr = "_" . $specialtyStr;
+//        }
+//        echo "1 specialtyStr=$specialtyStr <br>";
+
+        $specialtyStr = $this->getProjectSpecialtyStr($project);
+        //echo "2 specialtyStr=$specialtyStr <br>";
 
         if(
             $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
@@ -739,13 +743,13 @@ class TransResUtil
         }
 
         if(
-            $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr)
+            $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr)
         ) {
             return true;
         }
 
         if(
-            $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr)
+            $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyStr)
         ) {
             return true;
         }
@@ -762,21 +766,22 @@ class TransResUtil
 
     public function isTech( $project=null ) {
         $specialtyStr = $this->getProjectSpecialtyStr($project);
-        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
+        //echo "isTech: specialtyStr=$specialtyStr, role=".'ROLE_TRANSRES_TECHNICIAN'.$specialtyStr."<br>";
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr) ) {
             return true;
         }
         return false;
     }
     public function isAdmin( $project=null ) {
         $specialtyStr = $this->getProjectSpecialtyStr($project);
-        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
             return true;
         }
         return false;
     }
     public function isComiteeReviewer( $project=null ) {
         $specialtyStr = $this->getProjectSpecialtyStr($project);
-        if( $this->security->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER'.$specialtyStr) ) {
             return true;
         }
         return false;

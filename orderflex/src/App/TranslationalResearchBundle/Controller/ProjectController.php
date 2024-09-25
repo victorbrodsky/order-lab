@@ -2261,7 +2261,7 @@ class ProjectController extends OrderAbstractController
         ////////////////// EOF custom rendering ////////////////
     }
 
-    //Used for Work Request page
+    //Show Project Goals on the Work Request page
     //Show this field on “Work Request View” page to all users only if this field is non-empty
     //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
     #[Route(path: '/project/goals/{id}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
@@ -2276,19 +2276,23 @@ class ProjectController extends OrderAbstractController
         //$cycle = "edit";
 
         $transresUtil = $this->container->get('transres_util');
-        if( $cycle == 'edit' && false === $transresUtil->isAdvancedUser($project) ) {
-            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-            return array(
-                'title' => "Project Goals",
-                'project' => $project,
-                'cycle' => $cycle,
-                'form' => null,
-            );
+        if( $cycle == 'edit' ) {
+            if( false === $transresUtil->isAdvancedUser($project) ) {
+                //exit('111');
+                //Don't show project goals on the edit page if user has "basic TRP submitter" role
+                return array(
+                    'title' => "Project Goals",
+                    'project' => $project,
+                    'cycle' => $cycle,
+                    'form' => null,
+                );
+            }
         }
 
         //Show this field on “Work Request View” page to all users only if this field is non-empty.
         if( $cycle == 'show' ) {
             if( count($project->getProjectGoals()) == 0 ) {
+                //Don't show project goals on the view page if empty
                 return array(
                     'title' => "Project Goals",
                     'project' => $project,
