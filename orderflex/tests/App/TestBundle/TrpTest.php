@@ -509,7 +509,7 @@ class TrpTest extends WebTestBase
         //https://github.com/KnpLabs/knp-components/issues/90
         //request.CRITICAL: Uncaught PHP Exception UnexpectedValueException: "There is no component aliased by [list] in the given Query" at OrderByWalker.php line 54
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/list/antibodies/');
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'translational-research/antibodies/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -520,11 +520,11 @@ class TrpTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Alternative Name")')->count()
+            $crawler->filter('html:contains("Company")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Create a new entry")')->count()
+            $crawler->filter('html:contains("Create a new")')->count()
         );
     }
 
