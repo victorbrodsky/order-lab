@@ -63,7 +63,7 @@ class ProjectGoalType extends AbstractType
         ));
 
         //Show it only on the project page
-        if( $this->params['showStatus'] ) {
+        if( $this->params['showStatus'] && $this->params['cycle'] == 'edit' ) {
             $builder->add('status', ChoiceType::class, array(
                 'label' => "Status:",
                 'choices' => array(

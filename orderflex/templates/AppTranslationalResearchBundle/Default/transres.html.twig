@@ -845,7 +845,8 @@ Show this accordion by default in an open + visible state.
             {% endif %}
 
             {#Optional: show creator and create date#}
-            {% if formfield.vars.value %}
+            {% set showCreationInfo = false %}
+            {% if showCreationInfo and formfield.vars.value %}
                 Created by: {{ formfield.vars.value.author }}<br>
                 Created on: {{ formfield.vars.value.createDate|date("m/d/Y") }}
             {% endif %}
