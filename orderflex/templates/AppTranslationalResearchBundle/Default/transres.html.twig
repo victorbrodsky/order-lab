@@ -1135,8 +1135,8 @@ Show this accordion by default in an open + visible state.
 
 {% macro projectHeaders( form, project, cycle ) %}
 
+    {% set showProjectGoal = false %}
     {% if form.projectGoals is defined %}
-        {% set showProjectGoal = false %}
         {% if form.projectGoals|length > 0 %}
             {% set showProjectGoal = true %}
         {% endif %}
