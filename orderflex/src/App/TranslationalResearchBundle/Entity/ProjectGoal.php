@@ -9,10 +9,12 @@
 namespace App\TranslationalResearchBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
+//Project Goal is similar to Sub-Project.
 
 #[ORM\Table(name: 'transres_projectgoal')]
 #[ORM\Entity]
@@ -87,10 +89,27 @@ class ProjectGoal {
     #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
+    //Can have many Work Request, Work Request can have many Project Goals
+//    #[ORM\OneToMany(targetEntity: 'TransResRequest', mappedBy: 'projectGoal', cascade: ['persist'])]
+//    private $workRequests;
+
+// Similar to AntibodyList -> categoryTags
+    #[ORM\ManyToMany(targetEntity: TransResRequest::class, mappedBy: 'projectGoals')]
+    private $workRequests;
+
+//    #[ORM\JoinTable(name: 'transres_price_workqueue')]
+//    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\InverseJoinColumn(name: 'workqueue_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+//    #[ORM\ManyToMany(targetEntity: 'App\TranslationalResearchBundle\Entity\WorkQueueList', cascade: ['persist', 'remove'])]
+//    #[ORM\OrderBy(['createdate' => 'DESC'])]
+//    private $workRequests;
+
 
     public function __construct($user=null) {
         $this->setAuthor($user);
         $this->setCreateDate(new \DateTime());
+
+        $this->workRequests = new ArrayCollection();
     }
 
     /**
@@ -235,7 +254,24 @@ class ProjectGoal {
         $this->status = $status;
     }
 
-
+    /**
+     * @return mixed
+     */
+    public function getWorkRequests()
+    {
+        return $this->workRequests;
+    }
+    public function addWorkRequest($item)
+    {
+        if( $item && !$this->workRequests->contains($item) ) {
+            $this->workRequests->add($item);
+        }
+        return $this;
+    }
+    public function removeWorkRequest($item)
+    {
+        $this->workRequests->removeElement($item);
+    }
 
 
 

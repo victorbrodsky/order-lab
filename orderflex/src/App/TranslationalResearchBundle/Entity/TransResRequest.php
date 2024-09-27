@@ -238,7 +238,11 @@ class TransResRequest {
     #[ORM\Column(type: 'text', nullable: true)]
     private $progressLog;
 
-    
+    #[ORM\JoinTable(name: 'transres_workrequest_projectgoal')]
+    #[ORM\ManyToMany(targetEntity: ProjectGoal::class, inversedBy: 'workRequests')]
+    private $projectGoals;
+
+
     
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -258,6 +262,7 @@ class TransResRequest {
         $this->oldPackingSlipPdfs = new ArrayCollection();
         $this->antibodyReferences = new ArrayCollection();
         $this->businessPurposes = new ArrayCollection();
+        $this->projectGoals = new ArrayCollection();
     }
 
 
@@ -861,6 +866,25 @@ class TransResRequest {
     public function setProgressLog($progressLog)
     {
         $this->progressLog = $progressLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectGoals()
+    {
+        return $this->projectGoals;
+    }
+    public function addProjectGoal($item)
+    {
+        if( $item && !$this->projectGoals->contains($item) ) {
+            $this->projectGoals->add($item);
+        }
+        return $this;
+    }
+    public function removeProjectGoal($item)
+    {
+        $this->projectGoals->removeElement($item);
     }
     //////////////// EOF fields /////////////////////////
 
