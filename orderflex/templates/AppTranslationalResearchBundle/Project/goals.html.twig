@@ -18,7 +18,7 @@
                  data-userid = "{{ app.user.id }}"
                     {#{% if form %}#}
                         {% if form.projectGoals is defined %}
-                            data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+                            data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,null,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
                         {% endif %}
                     {#{% endif %}#}
             ></div>
@@ -77,6 +77,9 @@
                 return;
             }
 
+            //Get work request id
+            var workrequestId = $('#workrequest-id').val();
+
             $('#project-goals-feedback').hide();
             $('#project-goals-feedback').html("");
 
@@ -85,7 +88,7 @@
                 url: url,
                 timeout: _ajaxTimeout,
                 type: "POST",
-                data: {projectId: projectId, projectGoals: projectGoalData},
+                data: {projectId: projectId, workrequestId: workrequestId, projectGoals: projectGoalData},
                 dataType: 'json',
                 async: asyncflag
             }).success(function (response) {

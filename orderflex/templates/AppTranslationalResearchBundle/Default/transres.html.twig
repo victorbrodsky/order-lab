@@ -214,7 +214,7 @@
 {% endmacro %}
 
 {#Showing on Work Request page#}
-{% macro projectIncludeGoals( project, cycle ) %}
+{% macro projectIncludeGoals( project, transresRequest, cycle ) %}
     {#{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}#}
     {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
         {#<div class="panel panel-default">#}
@@ -232,8 +232,15 @@
             {#</div>#}
         {#</div>#}
     {#</div>#}
+
+    {% set transresRequestId = 'na' %}
+    {% if transresRequest %}
+        {% set transresRequestId = transresRequest.id %}
+    {% endif %}
+    {#transres: transresRequestId={{ transresRequestId }}<br>#}
+
     <div id="panel-projectIncludeGoals">
-        {{ render(path('translationalresearch_project_goals', {id: project.id, cycle: cycle})) }}
+        {#{{ render(path('translationalresearch_project_goals', {projectid: project.id, workrequestid: transresRequestId, cycle: cycle})) }}#}
     </div>
 {% endmacro %}
 
@@ -729,7 +736,7 @@ Show this accordion by default in an open + visible state.
     {% endif %}
 {% endmacro %}
 
-
+{#Show project goals on the project page#}
 {% macro projectGoalSection( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
@@ -752,7 +759,7 @@ Show this accordion by default in an open + visible state.
              aria-labelledby="projectGoalSection">
             <div class="panel-body">
                 {% for projectGoal in form.projectGoals %}
-                    {{ transres.projectSingleGoal(projectGoal,cycle,'transres-projectgoals','',translationalresearch_sitename,1) }}
+                    {{ transres.projectSingleGoal(projectGoal,null,cycle,'transres-projectgoals','',translationalresearch_sitename,1) }}
                 {% endfor %}
 
                 {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
@@ -771,6 +778,11 @@ Show this accordion by default in an open + visible state.
             {#{% set cycle = "show" %}#}
         {#{% endif %}#}
 
+        {% set workRequestId = null %}
+        {% if form.vars.value %}
+            {% set workRequestId = form.vars.value.id %}
+        {% endif %}
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -785,7 +797,7 @@ Show this accordion by default in an open + visible state.
                  aria-labelledby="projectGoalSection">
                 <div class="panel-body">
                     {% for projectGoal in form.projectGoals %}
-                        {{ transres.projectSingleGoal(projectGoal,'show','transres-projectgoals','',translationalresearch_sitename,1) }}
+                        {{ transres.projectSingleGoal(projectGoal,workRequestId,'show','transres-projectgoals','',translationalresearch_sitename,1) }}
                     {% endfor %}
 
                     {% if cycle != 'show' %}
@@ -805,7 +817,7 @@ Show this accordion by default in an open + visible state.
         </div>
     {% endif %}
 {% endmacro %}
-{% macro projectSingleGoal( field, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro projectSingleGoal( field, workRequestId, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% if prototype == "prototype" %}
@@ -844,11 +856,34 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(formfield.status) }}
             {% endif %}
 
+            {% if formfield.vars.value %}
+                <p>
+                {% if formfield.vars.value.workRequests|length > 0 %}
+                    {% for thisWorkRequest in formfield.vars.value.workRequests %}
+                        thisWorkRequest.id={{ thisWorkRequest.id }}, workRequestId={{ workRequestId }}<br>
+                        {% if workRequestId %}
+                            {% if workRequestId == thisWorkRequest.id %}
+                                Associated with this Work Request
+                            {% else %}
+                                Not Associated with this Work Request
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No Work Requests associated with this project goal
+                {% endif %}
+                </p>
+            {% else %}
+                {#No workRequests associated with this project goal#}
+            {% endif %}
+
             {#Optional: show creator and create date#}
-            {% set showCreationInfo = false %}
+            {% set showCreationInfo = true %}
             {% if showCreationInfo and formfield.vars.value %}
+                <p>
                 Created by: {{ formfield.vars.value.author }}<br>
                 Created on: {{ formfield.vars.value.createDate|date("m/d/Y") }}
+                </p>
             {% endif %}
 
         </div>
@@ -2144,7 +2179,7 @@ Show this accordion by default in an open + visible state.
                 {#before projectgoals prototype#}
                 {% if form.projectGoals is defined %}
                     {#adding projectgoals prototype#}
-                    data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
+                    data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,null,cycle,'transres-projectgoals','prototype',sitename,1)|e }}"
                 {% endif %}
 
             {% endif %}

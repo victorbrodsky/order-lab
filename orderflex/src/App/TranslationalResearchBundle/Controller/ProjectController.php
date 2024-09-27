@@ -24,6 +24,7 @@ use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py scr
 
 //use App\TranslationalResearchBundle\Entity\ProjectGoal;
 use App\TranslationalResearchBundle\Entity\ProjectGoal;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\ProjectGoalsSectionType;
 use App\TranslationalResearchBundle\Form\ProjectMisiType;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
@@ -2267,9 +2268,9 @@ class ProjectController extends OrderAbstractController
     //Show Project Goals on the Work Request page
     //Show this field on “Work Request View” page to all users only if this field is non-empty
     //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
-    #[Route(path: '/project/goals/{id}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
+    #[Route(path: '/project/goals/{id}/{workrequestid}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/goals.html.twig')]
-    public function projectGoalsAction(Request $request, Project $project, $cycle)
+    public function projectGoalsAction(Request $request, Project $project, $workrequestid=NULL, $cycle)
     {
 //        $transresPermissionUtil = $this->container->get('transres_permission_util');
 //        if( false === $transresPermissionUtil->hasProjectPermission("edit",$project) ) {
@@ -2323,6 +2324,7 @@ class ProjectController extends OrderAbstractController
         return array(
             'title' => "Project Goals",
             'project' => $project,
+            'workRequestId' => $workrequestid,
             'cycle' => $cycle,
             'form' => $form->createView(),
         );
@@ -2340,10 +2342,16 @@ class ProjectController extends OrderAbstractController
         //$productArr = $request->query->get('productArr');
 
         $projectId = $request->get('projectId');
+        $workrequestId = $request->get('workrequestId');
         $projectGoals = $request->get('projectGoals');
 
         //dump($projectGoals);
         //exit('111');
+
+        $workRequest = NULL;
+        if( $workrequestId ) {
+            $workRequest = $em->getRepository(TransResRequest::class)->find($workrequestId);
+        }
 
         $messageArr = array();
         $resultArr = array();
@@ -2388,6 +2396,10 @@ class ProjectController extends OrderAbstractController
                         $projectGoalEntity = new ProjectGoal($user);
                         $projectGoalEntity->setProject($project);
                         $projectGoalEntity->setDescription($description);
+
+                        if( $workRequest ) {
+                            $workRequest->addProjectGoal($projectGoalEntity);
+                        }
 
                         if( $projectGoalEntity->getStatus() === NULL ) {
                             $projectGoalEntity->setStatus('enable');
