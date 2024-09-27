@@ -71,10 +71,6 @@ class ProjectGoal {
     #[ORM\Column(type: 'integer', nullable: true)]
     private $orderinlist;
 
-    #[ORM\ManyToOne(targetEntity: 'Project', inversedBy: 'projectGoals')]
-    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
-    private $project;
-
     /**
      * @var string
      */
@@ -89,13 +85,20 @@ class ProjectGoal {
     #[ORM\Column(type: 'string', nullable: true)]
     private $status;
 
-    //Can have many Work Request, Work Request can have many Project Goals
-//    #[ORM\OneToMany(targetEntity: 'TransResRequest', mappedBy: 'projectGoal', cascade: ['persist'])]
-//    private $workRequests;
+    //ManyToOne is always the owning side of a bidirectional association.
+    //The owning side has to have the inversedBy attribute
+    #[ORM\ManyToOne(targetEntity: 'Project', inversedBy: 'projectGoals')]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id')]
+    private $project;
 
-// Similar to AntibodyList -> categoryTags
+    //Can have many Work Request, Work Request can have many Project Goals
+    //The inverse side has to have the mappedBy.
+    //TransResRequest is the owning side and it will be responsible to make changes to the ProjectGoal
     #[ORM\ManyToMany(targetEntity: TransResRequest::class, mappedBy: 'projectGoals')]
     private $workRequests;
+
+//    #[ORM\OneToMany(targetEntity: 'TransResRequest', mappedBy: 'projectGoal', cascade: ['persist'])]
+//    private $workRequests;
 
 //    #[ORM\JoinTable(name: 'transres_price_workqueue')]
 //    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'id', onDelete: 'CASCADE')]

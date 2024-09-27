@@ -238,6 +238,8 @@ class TransResRequest {
     #[ORM\Column(type: 'text', nullable: true)]
     private $progressLog;
 
+    //This is the owning side and responsible to manage the projectGoals: The owning side has to have the inversedBy
+    //Doctrine will only check the owning side of an association for changes.
     #[ORM\JoinTable(name: 'transres_workrequest_projectgoal')]
     #[ORM\ManyToMany(targetEntity: ProjectGoal::class, inversedBy: 'workRequests')]
     private $projectGoals;

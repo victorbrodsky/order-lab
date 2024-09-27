@@ -820,6 +820,8 @@ class Project {
     // other than “basic TRP submitter” and ONLY if it is non-empty, otherwise hide it.
     // On Work Request page: show on new, view (if non empty), edit pages
     // for all users with TRP roles other than “basic TRP submitter”
+    //OneToMany is always the inverse side of a bidirectional association.
+    //The inverse side has to have the mappedBy attribute 
     #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $projectGoals;
     
