@@ -34,7 +34,15 @@
         $(document).ready(function() {
             //Disable all existing fields. Enable only new fields.
             console.log('goal: disable all existing fields');
-            $('#panel-projectIncludeGoals').find('input, textarea, select').attr('disabled','disabled');
+            //'input, textarea, select'
+            var formcycle = $('#formcycle').val();
+            if( formcycle == 'show' ) {
+                //disable all fields
+                $('#panel-projectIncludeGoals').find('input, textarea, select').attr('disabled','disabled');
+            } else {
+                //disable all except checkbox 'input'
+                $('#panel-projectIncludeGoals').find('textarea, select').attr('disabled','disabled');
+            }
         });
         function updateProjectIncludeGoals() {
             console.log('updateProjectIncludeGoals');
@@ -48,7 +56,8 @@
             $('.projectgoal-description:not(:disabled)').each(function() {
                 var projectGoalId = $(this).attr('id');
                 var description = $(this).val();
-                console.log('projectGoalId='+projectGoalId+', description='+description);
+                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
+                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId);
                 projectGoalData.push(
                     {
                         'id': projectGoalId,
