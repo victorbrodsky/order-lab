@@ -233,15 +233,17 @@
         {#</div>#}
     {#</div>#}
 
-    {% set transresRequestId = 'na' %}
+    {% set transresRequestId = null %}
     {% if transresRequest %}
         {% set transresRequestId = transresRequest.id %}
     {% endif %}
     {#transres: transresRequestId={{ transresRequestId }}<br>#}
 
-    <div id="panel-projectIncludeGoals">
-        {#{{ render(path('translationalresearch_project_goals', {projectid: project.id, workrequestid: transresRequestId, cycle: cycle})) }}#}
-    </div>
+    {% if transresRequestId %}
+        <div id="panel-projectIncludeGoals">
+            {{ render(path('translationalresearch_project_goals', {id: project.id, cycle: cycle, workrequestid: transresRequestId})) }}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro projectBodyFormFields( form, project, cycle ) %}
@@ -768,7 +770,7 @@ Show this accordion by default in an open + visible state.
     </div>
 {% endmacro %}
 {#Showing on Work Request page#}
-{% macro showExistingProjectGoalSection( form, project, cycle ) %}
+{% macro showExistingProjectGoalSection( form, workRequestId, project, cycle ) %}
 
     {% if form and form.projectGoals is defined %}
         {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
@@ -778,10 +780,10 @@ Show this accordion by default in an open + visible state.
             {#{% set cycle = "show" %}#}
         {#{% endif %}#}
 
-        {% set workRequestId = null %}
-        {% if form.vars.value %}
-            {% set workRequestId = form.vars.value.id %}
-        {% endif %}
+        {#{% set workRequestId = null %}#}
+        {#{% if form.vars.value %}#}
+            {#{% set workRequestId = form.vars.value.id %}#}
+        {#{% endif %}#}
 
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -863,6 +865,7 @@ Show this accordion by default in an open + visible state.
                         thisWorkRequest.id={{ thisWorkRequest.id }}, workRequestId={{ workRequestId }}<br>
                         {% if workRequestId %}
                             {% if workRequestId == thisWorkRequest.id %}
+                                {#TODO: make as checkbox#}
                                 Associated with this Work Request
                             {% else %}
                                 Not Associated with this Work Request

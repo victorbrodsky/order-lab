@@ -911,7 +911,7 @@
             $( "#panel-projectIncludeGoals" ).load(
                 Routing.generate(
                         'translationalresearch_project_goals',
-                        {projectid: projectId, workrequestid: workrequestId, cycle: formcycle}
+                        {id: projectId, cycle: formcycle, workrequestid: workrequestId }
                 ),
                 function( response, status, xhr ) {
                     if ( status == "error" ) {

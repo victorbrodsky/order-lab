@@ -2270,7 +2270,7 @@ class ProjectController extends OrderAbstractController
     //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
     #[Route(path: '/project/goals/{id}/{workrequestid}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/goals.html.twig')]
-    public function projectGoalsAction(Request $request, Project $project, $workrequestid=NULL, $cycle)
+    public function projectGoalsAction(Request $request, Project $project, $cycle, $workrequestid=NULL )
     {
 //        $transresPermissionUtil = $this->container->get('transres_permission_util');
 //        if( false === $transresPermissionUtil->hasProjectPermission("edit",$project) ) {
