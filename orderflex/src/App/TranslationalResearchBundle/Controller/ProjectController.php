@@ -2345,8 +2345,8 @@ class ProjectController extends OrderAbstractController
         $workrequestId = $request->get('workrequestId');
         $projectGoals = $request->get('projectGoals');
 
-        //dump($projectGoals);
-        //exit('111');
+        dump($projectGoals);
+        exit('111');
 
         $workRequest = NULL;
         if( $workrequestId ) {

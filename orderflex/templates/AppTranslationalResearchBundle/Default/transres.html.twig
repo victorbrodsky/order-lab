@@ -819,6 +819,7 @@ Show this accordion by default in an open + visible state.
         </div>
     {% endif %}
 {% endmacro %}
+{#workRequestId specified when this section is shown on the Work Request page#}
 {% macro projectSingleGoal( field, workRequestId, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
@@ -889,6 +890,12 @@ Show this accordion by default in an open + visible state.
                                     >Associated with this Work Request</label>
                                 </div>
                             {% endif %}
+                        {% else %}
+                            {#This is shown on the project page#}
+                            {#Associated with work request ID {{ thisWorkRequest.id }}#}
+                            <a class="1btn 1btn-default"
+                               href="{{ path('translationalresearch_request_show', { 'id': thisWorkRequest.id }) }}"
+                               target="_blank">Associated with work request ID {{ thisWorkRequest.id }}</a>
                         {% endif %}
                     {% endfor %}
                 {% else %}

@@ -52,6 +52,7 @@
             //var description = $('.projectgoal-description:not(:disabled)').val();
             //console.log('description='+description);
 
+            //Process only new (enabled) section
             var projectGoalData = [];
             $('.projectgoal-description:not(:disabled)').each(function() {
                 var projectGoalId = $(this).attr('id');
@@ -60,9 +61,25 @@
                 console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId);
                 projectGoalData.push(
                     {
+                        'type': 'new',
                         'id': projectGoalId,
                         'description': description
                     }
+                );
+            });
+            //Process only existing (disabled) section
+            $('.projectgoal-description:disabled').each(function() {
+                var projectGoalId = $(this).attr('id');
+                var description = $(this).val();
+                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
+                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId);
+                projectGoalData.push(
+                        {
+                            'type': 'old',
+                            'id': projectGoalId,
+                            'description': description
+                            //pass checkbox 'associated' status
+                        }
                 );
             });
 
