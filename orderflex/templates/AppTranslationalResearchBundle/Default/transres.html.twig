@@ -900,6 +900,16 @@ Show this accordion by default in an open + visible state.
                     {% endfor %}
                 {% else %}
                     No Work Requests associated with this project goal
+                    {% if workRequestId %}
+                        <div>
+                            <input type="checkbox"
+                                   class="projectgoal-workrequest-associated"
+                                   id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                                   name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"/>
+                            <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                            >Associated with this Work Request</label>
+                        </div>
+                    {% endif %}
                 {% endif %}
                 </p>
             {% else %}

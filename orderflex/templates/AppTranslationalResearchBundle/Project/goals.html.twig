@@ -54,31 +54,89 @@
 
             //Process only new (enabled) section
             var projectGoalData = [];
-            $('.projectgoal-description:not(:disabled)').each(function() {
+//            $('.projectgoal-description:not(:disabled)').each(function() {
+//                var projectGoalId = $(this).attr('id');
+//                var description = $(this).val();
+//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
+//                var associated = false;
+//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
+//                    associated = true;
+//                }
+//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
+//                projectGoalData.push(
+//                    {
+//                        'type': 'new',
+//                        'id': projectGoalId,
+//                        'projectGoalEntityId': projectGoalEntityId,
+//                        'description': description,
+//                        //pass checkbox 'associated' status
+//                        'associated': associated
+//                    }
+//                );
+//            });
+//            //Process only existing (disabled) section
+//            $('.projectgoal-description:disabled').each(function() {
+//                var projectGoalId = $(this).attr('id');
+//                var description = $(this).val();
+//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
+////                var associated = $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').val();
+//                var associated = false;
+//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
+//                    associated = true;
+//                }
+//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
+//                projectGoalData.push(
+//                        {
+//                            'type': 'old',
+//                            'id': projectGoalId,
+//                            'projectGoalEntityId': projectGoalEntityId,
+//                            'description': description,
+//                            //pass checkbox 'associated' status
+//                            'associated': associated
+//                        }
+//                );
+//            });
+
+            $('.projectgoal-description').each(function() {
                 var projectGoalId = $(this).attr('id');
                 var description = $(this).val();
                 var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId);
-                projectGoalData.push(
-                    {
-                        'type': 'new',
-                        'id': projectGoalId,
-                        'description': description
-                    }
-                );
-            });
-            //Process only existing (disabled) section
-            $('.projectgoal-description:disabled').each(function() {
-                var projectGoalId = $(this).attr('id');
-                var description = $(this).val();
-                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId);
+                var associated = false;
+                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
+                    associated = true;
+                }
+                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
                 projectGoalData.push(
                         {
-                            'type': 'old',
+                            //'type': 'new',
                             'id': projectGoalId,
-                            'description': description
+                            'projectGoalEntityId': projectGoalEntityId,
+                            'description': description,
                             //pass checkbox 'associated' status
+                            'associated': associated
+                        }
+                );
+            });
+
+            //for each .transres-projectgoals
+            //TODO: repeated 3 times each???
+            $('.transres-projectgoals').each(function() {
+                var projectGoalId = $(this).find('.projectgoals-id').attr('id');
+                var description = $(this).find('.projectgoal-description').val();
+                var projectGoalEntityId = $(this).find('.projectgoals-id').val();//projectgoals-id
+                var associated = false;
+                if( $(this).find('.projectgoal-workrequest-associated').is(':checked') ) {
+                    associated = true;
+                }
+                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
+                projectGoalData.push(
+                        {
+                            //'type': 'new',
+                            'id': projectGoalId,
+                            'projectGoalEntityId': projectGoalEntityId,
+                            'description': description,
+                            //pass checkbox 'associated' status
+                            'associated': associated
                         }
                 );
             });

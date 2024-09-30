@@ -2360,7 +2360,9 @@ class ProjectController extends OrderAbstractController
 
             foreach($projectGoals as $projectGoalData) {
                 $projectGoalId = $projectGoalData['id'];
+                $projectGoalEntityId = $projectGoalData['projectGoalEntityId'];
                 $description = $projectGoalData['description'];
+                $associated = $projectGoalData['associated'];
 
                 if( !$description ) {
                     $message = "Project goal is empty, this project goal has been removed.";
