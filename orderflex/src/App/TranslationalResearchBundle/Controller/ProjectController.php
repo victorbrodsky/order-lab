@@ -2360,7 +2360,7 @@ class ProjectController extends OrderAbstractController
 
             foreach($projectGoals as $projectGoalData) {
                 $projectGoalId = $projectGoalData['id'];
-                $projectGoalEntityId = $projectGoalData['projectGoalEntityId'];
+                $projectGoalEntityId = $projectGoalData['projectGoalEntityId']; //new if projectGoalEntityId is empty
                 $description = $projectGoalData['description'];
                 $associated = $projectGoalData['associated'];
 
@@ -2373,6 +2373,13 @@ class ProjectController extends OrderAbstractController
                         'message' => $message
                     );
                     continue;
+                }
+
+                //TODO: check if projectGoalEntityId is not null => update associated value
+                //Otherwise => create new
+                if( $projectGoalEntityId ) {
+                    //Project Goal already exists => update associated flag
+
                 }
 
                 //find if the project goal exists

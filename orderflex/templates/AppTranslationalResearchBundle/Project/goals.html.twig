@@ -97,30 +97,31 @@
 //                );
 //            });
 
-            $('.projectgoal-description').each(function() {
-                var projectGoalId = $(this).attr('id');
-                var description = $(this).val();
-                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-                var associated = false;
-                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
-                    associated = true;
-                }
-                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
-                projectGoalData.push(
-                        {
-                            //'type': 'new',
-                            'id': projectGoalId,
-                            'projectGoalEntityId': projectGoalEntityId,
-                            'description': description,
-                            //pass checkbox 'associated' status
-                            'associated': associated
-                        }
-                );
-            });
+//            $('.projectgoal-description').each(function() {
+//                var projectGoalId = $(this).attr('id');
+//                var description = $(this).val();
+//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
+//                var associated = false;
+//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
+//                    associated = true;
+//                }
+//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
+//                projectGoalData.push(
+//                        {
+//                            //'type': 'new',
+//                            'id': projectGoalId,
+//                            'projectGoalEntityId': projectGoalEntityId,
+//                            'description': description,
+//                            //pass checkbox 'associated' status
+//                            'associated': associated
+//                        }
+//                );
+//            });
 
             //for each .transres-projectgoals
-            //TODO: repeated 3 times each???
-            $('.transres-projectgoals').each(function() {
+            //TODO: repeated 2 times each???
+            //One from associted project section, one from projectGoal
+            $('#projectGoalSection').find('.transres-projectgoals').each(function() {
                 var projectGoalId = $(this).find('.projectgoals-id').attr('id');
                 var description = $(this).find('.projectgoal-description').val();
                 var projectGoalEntityId = $(this).find('.projectgoals-id').val();//projectgoals-id
@@ -128,7 +129,7 @@
                 if( $(this).find('.projectgoal-workrequest-associated').is(':checked') ) {
                     associated = true;
                 }
-                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
+                console.log('Each: projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
                 projectGoalData.push(
                         {
                             //'type': 'new',
