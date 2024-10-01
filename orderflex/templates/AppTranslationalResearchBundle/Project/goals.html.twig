@@ -125,9 +125,9 @@
                 var projectGoalId = $(this).find('.projectgoals-id').attr('id');
                 var description = $(this).find('.projectgoal-description').val();
                 var projectGoalEntityId = $(this).find('.projectgoals-id').val();//projectgoals-id
-                var associated = false;
+                var associated = 0;
                 if( $(this).find('.projectgoal-workrequest-associated').is(':checked') ) {
-                    associated = true;
+                    associated = 1;
                 }
                 console.log('Each: projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
                 projectGoalData.push(
@@ -187,8 +187,10 @@
                     var projectGoalEntityId = item['projectGoalEntityId'];
                     if( error == 0 ) {
                         //$("#"+sectionId).prop('disabled', true);
-                        $("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
+                        //$("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
+                        $("#"+sectionId).closest('.transres-projectgoals').find('textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-projectgoals').find('.btn').remove();
+                        //TODO: after update, add project goal is not working
 
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
