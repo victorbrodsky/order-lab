@@ -239,6 +239,11 @@
             {% endif %}
         {% endif %}
 
+        {#Show project goals on top of the work request page. Allow select association on new and edit#}
+        {#{% if transres_util.isAdvancedUser(project) %}#}
+        {{ transres.projectIncludeGoals(project,transresRequest,cycle) }}
+        {#{% endif %}#}
+
         {#{{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}#}
 
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
@@ -350,7 +355,7 @@
         {{ transres.projectIncludeInfo(project,cycle) }}
 
         {#{% if transres_util.isAdvancedUser(project) %}#}
-            {{ transres.projectIncludeGoals(project,transresRequest,cycle) }}
+            {#{{ transres.projectIncludeGoals(project,transresRequest,cycle) }}#}
         {#{% endif %}#}
 
         <p>

@@ -2345,8 +2345,8 @@ class ProjectController extends OrderAbstractController
         $workrequestId = $request->get('workrequestId');
         $projectGoals = $request->get('projectGoals');
 
-        dump($projectGoals);
-        exit('111');
+        //dump($projectGoals);
+        //exit('111');
 
         $workRequest = NULL;
         if( $workrequestId ) {
@@ -2362,7 +2362,7 @@ class ProjectController extends OrderAbstractController
                 $projectGoalId = $projectGoalData['id'];
                 $projectGoalEntityId = $projectGoalData['projectGoalEntityId']; //new if projectGoalEntityId is empty
                 $description = $projectGoalData['description'];
-                $associated = $projectGoalData['associated'];
+                $associated = $projectGoalData['associated']; //TODO: associated does not pass correctly (always false)
 
                 if( !$description ) {
                     $message = "Project goal is empty, this project goal has been removed.";
@@ -2375,11 +2375,30 @@ class ProjectController extends OrderAbstractController
                     continue;
                 }
 
-                //TODO: check if projectGoalEntityId is not null => update associated value
+                //TODO: check if projectGoalEntityId is not null => update associated value with this $workRequest
                 //Otherwise => create new
-                if( $projectGoalEntityId ) {
-                    //Project Goal already exists => update associated flag
-
+                if( $workRequest && $projectGoalEntityId ) {
+                    //Project Goal already exists => update only associated flag
+                    $projectGoal = $em->getRepository(ProjectGoal::class)->find($projectGoalEntityId);
+                    if( $projectGoal ) {
+                        if( $associated ) {
+                            //add association
+                            $workRequest->addProjectGoal($projectGoal);
+                            $message = "Project goal ID $projectGoal ('$description') has been associated with this Work Request.";
+                        } else {
+                            //remove association
+                            $workRequest->removeProjectGoal($projectGoal);
+                            $message = "The association between project goal ID $projectGoal ('$description') and this Work Request has been removed.";
+                        }
+                        $em->flush();
+                    }
+                    $resultArr[] = array(
+                        'error' => 0,
+                        'id' => $projectGoalId,
+                        'projectGoalEntityId' => $projectGoalEntityId,
+                        'message' => $message
+                    );
+                    continue;
                 }
 
                 //find if the project goal exists
