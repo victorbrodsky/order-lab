@@ -2407,6 +2407,7 @@ class ProjectController extends OrderAbstractController
                             'error' => 0,
                             'id' => $projectGoalId,
                             'projectGoalEntityId' => $projectGoalEntityId,
+                            'workRequestId' => $workRequest->getId(),
                             'message' => $message
                         );
                     }

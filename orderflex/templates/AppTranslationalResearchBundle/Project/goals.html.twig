@@ -192,7 +192,16 @@
                         //$("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-reqprojectgoals').find('textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-reqprojectgoals').find('.btn').remove();
-                        //TODO: after update, add project goal is not working
+                        //TODO: add associated checkbox
+                    {#var checkbox = '<div>#}
+                        {#<input type="checkbox"#}
+                    {#class="projectgoal-workrequest-associated"#}
+                        {#id="projectgoal-workrequest-associated-"+workrequestId#}
+                        {#name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"/>#}
+                                {#<label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                                {#>Associated with this Work Request</label>#}
+                        {#</div>';#}
+                        {% endif %}
 
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
