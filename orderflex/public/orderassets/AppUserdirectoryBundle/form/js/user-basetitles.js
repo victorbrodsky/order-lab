@@ -27,6 +27,7 @@ function addNewObject(btn,classname,callback) {
     //console.log("classname="+classname);
 
     var holder = $('.'+classname+'-holder');
+    //console.log("holder="+classname+'-holder');
 
     var titles = holder.find('.'+classname);
     //console.log('titles='+titles.length);
@@ -36,12 +37,13 @@ function addNewObject(btn,classname,callback) {
     newForm = $(newForm);
 
     var lastcollHolder = titles.last();
+    //console.log('lastcollHolder:',lastcollHolder);
 
     if( titles.length == 0 ) {
         //console.log("prepend to:"+'.'+classname+'-holder');
         var addedInst = $('.'+classname+'-holder').prepend(newForm);
     } else {
-        //console.log("add after lastcollHolder");
+        //console.log("add after lastcollHolder:",lastcollHolder);
         var addedInst = lastcollHolder.after(newForm);
     }
 

@@ -794,17 +794,17 @@ Show this accordion by default in an open + visible state.
                 </h4>
             </div>
             <br>
-            <div id="projectGoalSection" class="panel-collapse collapse in transres-projectgoals-holder"
+            <div id="projectGoalSection" class="panel-collapse collapse in transres-reqprojectgoals-holder"
                  role="tabpanel"
                  aria-labelledby="projectGoalSection">
                 <div class="panel-body">
                     {% for projectGoal in form.projectGoals %}
-                        {{ transres.projectSingleGoal(projectGoal,workRequestId,'show','transres-projectgoals','',translationalresearch_sitename,1) }}
+                        {{ transres.projectSingleGoal(projectGoal,workRequestId,'show','transres-reqprojectgoals','',translationalresearch_sitename,1) }}
                     {% endfor %}
 
                     {% if cycle != 'show' %}
                         {% set cycle = "edit" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'transres-projectgoals','Add Project Goal') }}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-reqprojectgoals','Add Project Goal') }}
                         <br>
                         <div id="project-goals-feedback" class="alert alert-info" style="display: none"></div>
 
@@ -899,7 +899,7 @@ Show this accordion by default in an open + visible state.
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    No Work Requests associated with this project goal
+                    {#No Work Requests associated with this project goal#}
                     {% if workRequestId %}
                         <div>
                             <input type="checkbox"

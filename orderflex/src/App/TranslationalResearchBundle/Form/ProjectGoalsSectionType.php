@@ -32,6 +32,10 @@ class ProjectGoalsSectionType extends AbstractType
     public function formConstructor( $params )
     {
         $this->params = $params;
+
+        if( !isset($this->params['prototype_name']) ) {
+            $this->params['prototype_name'] = '__projectgoals__';
+        }
     }
 
     /**
@@ -62,7 +66,8 @@ class ProjectGoalsSectionType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__projectgoals__',
+//                'prototype_name' => '__projectgoals__',
+                'prototype_name' => $this->params['prototype_name'],
             ));
 
 //            $builder->add('save', SubmitType::class, array(

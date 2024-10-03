@@ -5,25 +5,27 @@
 {#{% endblock %}#}
 
 
+{#transres-reqprojectgoals should correspond to the form 'prototype_name' => '__projectgoals__',#}
+
 {% block content %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    {% if form %}
-        {{ form_start(form) }}
+    {% if formProjectGoal %}
+        {{ form_start(formProjectGoal) }}
             <div id="form-prototype-data2"
                  data-userurllink = "{{ usermacros.userUrlLink()|e }}"
                  data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
                  data-userid = "{{ app.user.id }}"
                     {#{% if form %}#}
-                        {% if form.projectGoals is defined %}
-                            data-prototype-transres-projectgoals = "{{ transres.projectSingleGoal(form.projectGoals,null,cycle,'transres-projectgoals','prototype',translationalresearch_sitename,1)|e }}"
+                        {% if formProjectGoal.projectGoals is defined %}
+                            data-prototype-transres-reqprojectgoals = "{{ transres.projectSingleGoal(formProjectGoal.projectGoals,null,cycle,'transres-reqprojectgoals','prototype',translationalresearch_sitename,1)|e }}"
                         {% endif %}
                     {#{% endif %}#}
             ></div>
-            {{ transres.showExistingProjectGoalSection(form,workRequestId,project,cycle) }}
-        {{ form_end(form) }}
+            {{ transres.showExistingProjectGoalSection(formProjectGoal,workRequestId,project,cycle) }}
+        {{ form_end(formProjectGoal) }}
         {#{{ form_end(form, {'render_rest': false}) }}#}
     {% endif %}
 {% endblock %}
@@ -121,7 +123,7 @@
             //for each .transres-projectgoals
             //TODO: repeated 2 times each???
             //One from associted project section, one from projectGoal
-            $('#projectGoalSection').find('.transres-projectgoals').each(function() {
+            $('#projectGoalSection').find('.transres-reqprojectgoals').each(function() {
                 var projectGoalId = $(this).find('.projectgoals-id').attr('id');
                 var description = $(this).find('.projectgoal-description').val();
                 var projectGoalEntityId = $(this).find('.projectgoals-id').val();//projectgoals-id
@@ -188,15 +190,15 @@
                     if( error == 0 ) {
                         //$("#"+sectionId).prop('disabled', true);
                         //$("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
-                        $("#"+sectionId).closest('.transres-projectgoals').find('textarea, select').attr('disabled','disabled');
-                        $("#"+sectionId).closest('.transres-projectgoals').find('.btn').remove();
+                        $("#"+sectionId).closest('.transres-reqprojectgoals').find('textarea, select').attr('disabled','disabled');
+                        $("#"+sectionId).closest('.transres-reqprojectgoals').find('.btn').remove();
                         //TODO: after update, add project goal is not working
 
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
                     } else {
                         //remove parent with class 'transres-projectgoals'
-                        $("#"+sectionId).closest('.transres-projectgoals').remove();
+                        $("#"+sectionId).closest('.transres-reqprojectgoals').remove();
                         //$("#"+sectionId).remove();
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');

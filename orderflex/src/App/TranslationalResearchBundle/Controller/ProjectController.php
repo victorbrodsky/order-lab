@@ -2313,7 +2313,8 @@ class ProjectController extends OrderAbstractController
 
         $params = array(
             'cycle' => $cycle,
-            'showStatus' => false
+            'showStatus' => false,
+            'prototype_name' => '__reqprojectgoals__'
         );
 
         $form = $this->createForm(ProjectGoalsSectionType::class, $project, array(
@@ -2326,7 +2327,7 @@ class ProjectController extends OrderAbstractController
             'project' => $project,
             'workRequestId' => $workrequestid,
             'cycle' => $cycle,
-            'form' => $form->createView(),
+            'formProjectGoal' => $form->createView(),
         );
     }
 
