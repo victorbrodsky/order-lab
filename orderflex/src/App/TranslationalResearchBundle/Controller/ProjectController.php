@@ -2438,8 +2438,13 @@ class ProjectController extends OrderAbstractController
                         $projectGoalEntity->setProject($project);
                         $projectGoalEntity->setDescription($description);
 
-                        if( $workRequest ) {
-                            $workRequest->addProjectGoal($projectGoalEntity);
+                        $message = "Project goal '$description' has been successfully added.";
+
+                        if ($associated == 1) {
+                            if ($workRequest) {
+                                $workRequest->addProjectGoal($projectGoalEntity);
+                                $message = "Project goal '$description' has been successfully added and associated with this work request.";
+                            }
                         }
 
                         if( $projectGoalEntity->getStatus() === NULL ) {
@@ -2454,7 +2459,7 @@ class ProjectController extends OrderAbstractController
                             'error' => 0,
                             'id' => $projectGoalId,
                             'projectGoalEntityId' => $projectGoalEntity->getId(),
-                            'message' => "Project goal '$description' has been successfully added."
+                            'message' => $message
                         );
                     } else {
                         //$messageArr[] = "Project with ID '$projectId' does not exist.";
