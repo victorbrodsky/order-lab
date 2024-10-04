@@ -74,6 +74,14 @@ class ProjectGoalType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'combobox', 'placeholder' => "Status")
             ));
+
+            //orderinlist
+            $builder->add('orderinlist', null, array(
+                'label' => "Order in List:",
+                'required' => false,
+                //'disabled' => $this->disabled,
+                'attr' => array('class' => 'form-control projectgoal-orderinlist')
+            ));
         }
     }
 

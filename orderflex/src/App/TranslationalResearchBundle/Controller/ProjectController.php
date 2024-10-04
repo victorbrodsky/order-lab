@@ -2313,7 +2313,7 @@ class ProjectController extends OrderAbstractController
 
         $params = array(
             'cycle' => $cycle,
-            'showStatus' => false,
+            'showStatus' => false, //true
             'prototype_name' => '__reqprojectgoals__'
         );
 
@@ -2450,6 +2450,8 @@ class ProjectController extends OrderAbstractController
                         if( $projectGoalEntity->getStatus() === NULL ) {
                             $projectGoalEntity->setStatus('enable');
                         }
+
+                        //set orderinlist, maybe use id, but how to edit orderinlist, on the project page?
 
                         $em->persist($projectGoalEntity);
                         $em->flush();

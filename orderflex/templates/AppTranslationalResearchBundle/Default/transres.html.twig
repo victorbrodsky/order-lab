@@ -854,11 +854,15 @@ Show this accordion by default in an open + visible state.
             {#formfield.id={{ formfield.vars.value.id }}<br>#}
             {{ form_widget(formfield.id) }}
 
-                {{ formmacros.field(formfield.description) }}
+            {{ formmacros.field(formfield.description) }}
 
-                {% if formfield.status is defined %}
-                    {{ formmacros.field(formfield.status) }}
-                {% endif %}
+            {% if formfield.status is defined %}
+                {{ formmacros.field(formfield.status) }}
+            {% endif %}
+
+            {% if formfield.orderinlist is defined %}
+                {{ formmacros.field(formfield.orderinlist) }}
+            {% endif %}
 
             {% if formfield.vars.value %}
                 {#formfield.id={{ formfield.vars.value.id }}#}
@@ -942,6 +946,9 @@ Show this accordion by default in an open + visible state.
         {% do formfield.description.setRendered %}
         {% if formfield.status is defined %}
             {% do formfield.status.setRendered %}
+        {% endif %}
+        {% if formfield.orderinlist is defined %}
+            {% do formfield.orderinlist.setRendered %}
         {% endif %}
     {% endif %}
 {% endmacro %}

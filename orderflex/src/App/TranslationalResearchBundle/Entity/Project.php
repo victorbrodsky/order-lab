@@ -823,6 +823,7 @@ class Project {
     //OneToMany is always the inverse side of a bidirectional association.
     //The inverse side has to have the mappedBy attribute 
     #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $projectGoals;
     
 
