@@ -269,6 +269,8 @@ class DefaultController extends OrderAbstractController
 //        $em->persist($grant);
 //        echo "grant id (Auto)=".$grant->getId()."<br>";
 //        exit();
+        //$orderinlist = $transresUtil->findNextProjectGoalOrderinlist(3566);
+        //exit('$orderinlist='.$orderinlist);
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

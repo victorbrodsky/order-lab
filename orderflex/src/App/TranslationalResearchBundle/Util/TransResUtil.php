@@ -9634,18 +9634,24 @@ WHERE
         exit("findOrCreateAntibody: logical error");
         return NULL;
     }
-    
-    function getProjectGoal( $description, $projectId ) {
-        if( $description && $projectId ) {
-            //$projectGoal = $this->em->getRepository(ProjectGoal::class)->findOneByDescription($description);
 
+    function findProjectGoals( $projectId, $description=null ) {
+        if( $projectId ) {
             $repository = $this->em->getRepository(ProjectGoal::class);
             $dql =  $repository->createQueryBuilder("projectGoal");
-            $dql->where("projectGoal.description = :description AND projectGoal.project = :projectId");
-            $parameters = array(
-                'description' => $description,
-                'projectId' => $projectId
-            );
+
+            if( $description ) {
+                $dql->where("projectGoal.description = :description AND projectGoal.project = :projectId");
+                $parameters = array(
+                    'description' => $description,
+                    'projectId' => $projectId
+                );
+            } else {
+                $dql->where("projectGoal.project = :projectId");
+                $parameters = array(
+                    'projectId' => $projectId
+                );
+            }
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameters($parameters);
@@ -9655,6 +9661,35 @@ WHERE
             return $projectGoals;
         }
         return NULL;
+    }
+
+    public function findNextProjectGoalOrderinlist( $projectId ) {
+        //$goals = $this->findProjectGoals();
+        $repository = $this->em->getRepository(ProjectGoal::class);
+        $dql =  $repository->createQueryBuilder("projectGoal");
+        $dql->select("projectGoal.orderinlist");
+        $dql->where("projectGoal.project = :projectId");
+        $parameters = array(
+            'projectId' => $projectId
+        );
+        $dql->orderBy('projectGoal.orderinlist', 'DESC');
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        $query->setMaxResults(1);
+        $projectGoals = $query->getResult();
+
+        if( count($projectGoals) == 0 ) {
+            return 1;
+        }
+
+        $orderinlist = $projectGoals[0]['orderinlist'];
+        if( $orderinlist ) {
+            $orderinlist = (int)$orderinlist + 1;
+        } else {
+            $orderinlist = 1;
+        }
+        //exit('$orderinlist='.$orderinlist);
+        return $orderinlist;
     }
 
 }

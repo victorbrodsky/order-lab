@@ -37,9 +37,9 @@ class ProjectGoalType extends AbstractType
     {
         $this->params = $params;
 
-        //Set default showStatus to true
-        if( !isset($params['showStatus']) ) {
-            $this->params['showStatus'] = true;
+        //Set default showProjectGoalStatus to true
+        if( !isset($params['showProjectGoalStatus']) ) {
+            $this->params['showProjectGoalStatus'] = true;
         }
     }
 
@@ -63,7 +63,7 @@ class ProjectGoalType extends AbstractType
         ));
 
         //Show it only on the project page
-        if( $this->params['showStatus'] && $this->params['cycle'] == 'edit' ) {
+        if( $this->params['showProjectGoalStatus'] && $this->params['cycle'] == 'edit' ) {
             $builder->add('status', ChoiceType::class, array(
                 'label' => "Status:",
                 'choices' => array(

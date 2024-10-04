@@ -2313,7 +2313,7 @@ class ProjectController extends OrderAbstractController
 
         $params = array(
             'cycle' => $cycle,
-            'showStatus' => false, //true
+            'showProjectGoalStatus' => false, //true //Show project goal status and orderinlist on the Work Request
             'prototype_name' => '__reqprojectgoals__'
         );
 
@@ -2416,7 +2416,7 @@ class ProjectController extends OrderAbstractController
 
                 //find if the project goal exists
                 //$projectGoalEntity = $em->getRepository(ProjectGoal::class)->findOneByDescription('Pathology and Laboratory Medicine');
-                $projectGoalEntities = $transresUtil->getProjectGoal($description,$projectId);
+                $projectGoalEntities = $transresUtil->findProjectGoals($projectId,$description);
                 if( $projectGoalEntities && count($projectGoalEntities) > 0 ) {
                     $message = "Project goal '$description' already exists, this project goal has been removed.";
                     if( count($projectGoalEntities) == 1 ) {
@@ -2451,7 +2451,12 @@ class ProjectController extends OrderAbstractController
                             $projectGoalEntity->setStatus('enable');
                         }
 
-                        //set orderinlist, maybe use id, but how to edit orderinlist, on the project page?
+                        //set orderinlist, can be edited orderinlist on the project edit page
+                        //get the latest orderinlist from the project's project goals list
+                        $orderinlist = $transresUtil->findNextProjectGoalOrderinlist($projectId);
+                        if( $orderinlist ) {
+                            $projectGoalEntity->setOrderinlist($orderinlist);
+                        }
 
                         $em->persist($projectGoalEntity);
                         $em->flush();
@@ -2757,7 +2762,8 @@ class ProjectController extends OrderAbstractController
             'reSubmitReview' => false,
             'stateChoiceArr'=>$stateChoiceArr,
             'institutionName'=>$institutionName,
-            'feeScheduleLink' => $feeScheduleLink
+            'feeScheduleLink' => $feeScheduleLink,
+            'showProjectGoalStatus' => true //Show project goal status and orderinlist on the project page
         );
 
         $params['admin'] = false;
