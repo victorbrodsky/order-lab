@@ -9692,4 +9692,30 @@ WHERE
         return $orderinlist;
     }
 
+    public function processExistingProjectGoals( $transresRequest, $form ) {
+        $break = "<br>";
+
+        $existingProjectGoalsIds = $form->get('existingProjectGoals')->getData();
+        //dump($existingProjectGoalsIds);
+
+        $projectGoalMsgArr = array();
+
+        foreach($existingProjectGoalsIds as $projectGoalId) {
+            $projectGoal = $this->em->getRepository(ProjectGoal::class)->find($projectGoalId);
+            //echo $transresRequest->getId().": Project Goal = ".$projectGoal->getId()."<br>";
+            $transresRequest->addProjectGoal($projectGoal);
+            $this->em->flush();
+            $descripton = $this->tokenTruncate($projectGoal->getDescription(), 100);
+            $projectGoalMsgArr[] = "Added project goal ID ".$projectGoal->getId(). ", description=".$descripton;
+        }
+
+        $projectGoalMsg = "";
+        if( count($projectGoalMsgArr) > 0 ) {
+            $projectGoalMsg = $break.$break.implode($break, $projectGoalMsgArr).$break.$break;
+        }
+
+        //exit('processExistingProjectGoals');
+        return $projectGoalMsg;
+    }
+    
 }

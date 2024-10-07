@@ -289,3 +289,10 @@ exit 0
 #        "script": "install-certbot.sh"
 #	  }
 
+#Renew certbot certificate with standalone option:
+#1) stop web server: sudo systemctl stop haproxy.service
+#2) run: sudo certbot certonly --standalone
+#3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
+#3a) cd /etc/letsencrypt/live/view.online/
+#3b) cat cert.pem privkey.pem > cert_key.pem
+#4) start haproxy: sudo systemctl start haproxy.service

@@ -883,25 +883,27 @@ Show this accordion by default in an open + visible state.
                                            id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
                                            name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}" checked />
                                     <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                                    >Associated with this Work Request</label>
+                                    >1 Associated with this Work Request</label>
                                 </div>
                             {% else %}
                                 {#Not Associated with this Work Request#}
-                                <div>
-                                    <input type="checkbox"
-                                           class="projectgoal-workrequest-associated"
-                                           id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                                           name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"/>
-                                    <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                                    >Associated with this Work Request</label>
-                                </div>
+                                {#<div>#}
+                                    {#<input type="checkbox"#}
+                                           {#class="projectgoal-workrequest-associated"#}
+                                           {#id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                                           {#name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"/>#}
+                                    {#<label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                                    {#>2 Associated with this Work Request</label>#}
+                                {#</div>#}
                             {% endif %}
                         {% else %}
                             {#This is shown on the project page#}
                             {#Associated with work request ID {{ thisWorkRequest.id }}#}
+                            <p>
                             <a class="1btn 1btn-default"
                                href="{{ path('translationalresearch_request_show', { 'id': thisWorkRequest.id }) }}"
-                               target="_blank">Associated with work request ID {{ thisWorkRequest.id }}</a>
+                               target="_blank">Associated with Work Request ID {{ thisWorkRequest.id }}</a>
+                            </p>
                         {% endif %}
                     {% endfor %}
                 {% else %}
@@ -928,7 +930,7 @@ Show this accordion by default in an open + visible state.
                            id="projectgoal-workrequest-associated-new"
                            name="projectgoal-workrequest-associated-new"/>
                     <label for="projectgoal-workrequest-associated-new"
-                    >Associated with this Work Request</label>
+                    >Associate with this Work Request</label>
                 </div>
 
             {% endif %}

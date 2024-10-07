@@ -261,6 +261,9 @@ class RequestController extends OrderAbstractController
 
             //exit("Request submitted"); //testing
 
+            //testing process existingProjectGoals
+            //$transresUtil->processExistingProjectGoals($transresRequest,$request,$form);
+
             $project = $transresRequest->getProject();
 
             //new: pre-populate Request's Support End Date by Project's IRB Expiration Date
@@ -348,11 +351,14 @@ class RequestController extends OrderAbstractController
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
             }
 
+            //process existingProjectGoals
+            $projectGoalMsg = $transresUtil->processExistingProjectGoals($transresRequest,$form);
+
             //send over budget email
             $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //new
 
             $msg = "New work request " . $transresRequest->getOid() . " has been submitted.";
-            $msg = $msg . $changedMsg;
+            $msg = $msg . $changedMsg . $projectGoalMsg;
             $msg = str_replace($break,"<br>",$msg);
 
             if ($testing) {
@@ -380,7 +386,7 @@ class RequestController extends OrderAbstractController
             if( $transresRequest->getProgressState() == 'active' ) {
                 $eventType = "Request Created";
                 $msg = "New work request (" . $transresRequest->getOid() . ") has been submitted.";
-                $msg = $msg . $changedMsg;
+                $msg = $msg . $changedMsg . $projectGoalMsg;
 
                 $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
@@ -2764,11 +2770,12 @@ class RequestController extends OrderAbstractController
                 $projectGoals = $transresUtil->findProjectGoals($project->getId());
                 $existingProjectGoals = array();
                 foreach($projectGoals as $existingProjectGoal) {
-                    $description = $existingProjectGoal->getDescription();
-                    $maxlen = 100;
-                    if( strlen((string)$description) > $maxlen ) {
-                        $description = substr((string)$description,0,$maxlen).'...';
-                    }
+//                    $description = $existingProjectGoal->getDescription();
+//                    $maxlen = 100;
+//                    if( strlen((string)$description) > $maxlen ) {
+//                        $description = substr((string)$description,0,$maxlen).'...';
+//                    }
+                    $description = $transresUtil->tokenTruncate($existingProjectGoal->getDescription(), 100);
                     $existingProjectGoals[$description] = $existingProjectGoal->getId();
                 }
                 $params['existingProjectGoals'] = $existingProjectGoals;
