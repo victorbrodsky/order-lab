@@ -553,6 +553,18 @@ This certificate expires on 2024-09-30.
 These files will be updated when the certificate renews.
 Certbot has set up a scheduled task to automatically renew this certificate in the background.
 
+Renew certbot certificate with standalone option:
+1) stop web server: sudo systemctl stop haproxy.service
+2) run: sudo certbot certonly --standalone
+3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
+3a) cd /etc/letsencrypt/live/view.online/
+3b) cat cert.pem privkey.pem > cert_key.pem
+4) start haproxy: sudo systemctl start haproxy.service
+
+sudo certbot certonly --webroot
+domain: view.online
+webroot: /usr/local/bin/order-lab/orderflex/public
+
 Log php-fpm: /var/log/httpd and /var/log/php-fpm
 The “oom-kill” error in PHP-FPM occurs when the system’s Out-Of-Memory (OOM) killer terminates the PHP-FPM process due to excessive memory usage. Here are some steps to help you fix this issue:
 

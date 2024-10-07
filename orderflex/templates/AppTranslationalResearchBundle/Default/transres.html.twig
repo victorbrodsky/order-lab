@@ -239,6 +239,8 @@
     {% endif %}
     {#transres: transresRequestId={{ transresRequestId }}<br>#}
 
+    {#projectIncludeGoals transresRequestId={{ transresRequestId }}#}
+    {#On a new work request page, transresRequestId is null. Show existing project goals as select unmapped field, and then process it on the controller#}
     {% if transresRequestId %}
         <div id="panel-projectIncludeGoals">
             {{ render(path('translationalresearch_project_goals', {id: project.id, cycle: cycle, workrequestid: transresRequestId})) }}

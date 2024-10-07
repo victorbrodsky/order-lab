@@ -426,6 +426,23 @@ class TransResRequestType extends AbstractType
         }
         //////////////// EOF fields /////////////////////////
 
+        if( $this->params['cycle'] == 'new' ) {
+            if( isset($this->params['existingProjectGoals']) ) {
+//            $builder->add('projectGoals', TextType::class, array(
+//                "mapped" => false,
+//                'attr' => array('class' => 'transres-updateinvoiceanswer-field', 'style' => 'display:none;')
+//            ));
+                $builder->add('existingProjectGoals', ChoiceType::class, array(
+                    'label' => 'Project Goal(s):',
+                    'required' => false,
+                    'multiple' => true,
+                    //'disabled' => $disabled,
+                    "mapped" => false,
+                    'choices' => $this->params['existingProjectGoals'],
+                    'attr' => array('class' => 'combobox'),
+                ));
+            }
+        }
 
         if( $this->params['saveAsDraft'] === true ) {
             $saveAsDraftLabel = "Save Work Request as Draft";

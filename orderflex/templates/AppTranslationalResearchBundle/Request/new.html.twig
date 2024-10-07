@@ -222,6 +222,10 @@
     {#Added in the project body#}
     {% if project and project.id %}
         {{ transres.projectIncludeGoals(project,transresRequest,cycle) }}
+
+        {#{% if form.existingProjectGoals is defined %}#}
+            {#{{ formmacros.field(form.existingProjectGoals) }}#}
+        {#{% endif %}#}
     {% endif %}
 
     {{ form_start(form) }}
@@ -254,6 +258,11 @@
         {#{{ transres.projectIncludeGoals(project,transresRequest,cycle) }}#}
         {#{% endif %}#}
         {#{% endif %}#}
+        {% if project and project.id %}
+            {% if form.existingProjectGoals is defined %}
+                {{ formmacros.field(form.existingProjectGoals) }}
+            {% endif %}
+        {% endif %}
 
         {#{{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}#}
 

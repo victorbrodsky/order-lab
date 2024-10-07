@@ -2759,6 +2759,20 @@ class RequestController extends OrderAbstractController
             } else {
                 $params['availableProjects'] = array($project);
             }
+
+            if( $project ) {
+                $projectGoals = $transresUtil->findProjectGoals($project->getId());
+                $existingProjectGoals = array();
+                foreach($projectGoals as $existingProjectGoal) {
+                    $description = $existingProjectGoal->getDescription();
+                    $maxlen = 100;
+                    if( strlen((string)$description) > $maxlen ) {
+                        $description = substr((string)$description,0,$maxlen).'...';
+                    }
+                    $existingProjectGoals[$description] = $existingProjectGoal->getId();
+                }
+                $params['existingProjectGoals'] = $existingProjectGoals;
+            }
         }
 
         if( $cycle == "show" ) {
