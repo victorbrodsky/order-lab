@@ -868,8 +868,9 @@ Show this accordion by default in an open + visible state.
 
 
             {% if workRequestId %}
+                {% set associated = false %}
                 {% if formfield.vars.value and formfield.vars.value.workRequests|length > 0 %}
-                    {% set associated = false %}
+                    {#{% set associated = false %}#}
                     {% for thisWorkRequest in formfield.vars.value.workRequests %}
                         {% if not associated and workRequestId == thisWorkRequest.id %}
                             {#Pass {{ formfield.vars.value.id }} to controller to allow associate project goal to this work request#}
@@ -887,20 +888,34 @@ Show this accordion by default in an open + visible state.
                         {% endif %}
                     {% endfor %}
 
-                    {% if associated == false %}
+                    {#{% if associated == false %}#}
                         {#Not Associated with this Work Request#}
-                        <div>
-                            <input type="checkbox"
-                                   class="projectgoal-workrequest-associated"
-                                   id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                                   name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                            />
-                            <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
-                            >Associated with this Work Request {{ workRequestId }}</label>
-                        </div>
-                    {% endif %}
+                        {#<div>#}
+                            {#<input type="checkbox"#}
+                                   {#class="projectgoal-workrequest-associated"#}
+                                   {#id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                                   {#name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                            {#/>#}
+                            {#<label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
+                            {#>Associated with this Work Request {{ workRequestId }}</label>#}
+                        {#</div>#}
+                    {#{% endif %}#}
 
                 {% endif %}
+
+                {% if associated == false %}
+                    {#Not Associated with this Work Request#}
+                    <div>
+                        <input type="checkbox"
+                               class="projectgoal-workrequest-associated"
+                               id="projectgoal-workrequest-associated"
+                               name="projectgoal-workrequest-associated"
+                        />
+                        <label for="projectgoal-workrequest-associated"
+                        >Associated with this Work Request {{ workRequestId }}</label>
+                    </div>
+                {% endif %}
+
             {% else %}
                 {#Project page - show associated work requests#}
                 {% if formfield.vars.value and formfield.vars.value.workRequests|length > 0 %}
