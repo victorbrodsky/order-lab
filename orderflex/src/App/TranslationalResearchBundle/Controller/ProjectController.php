@@ -2336,7 +2336,7 @@ class ProjectController extends OrderAbstractController
     public function addProjectGoalsAjaxAction(Request $request) {
 
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -2355,7 +2355,7 @@ class ProjectController extends OrderAbstractController
             $workRequest = $em->getRepository(TransResRequest::class)->find($workrequestId);
         }
 
-        $messageArr = array();
+        //$messageArr = array();
         $resultArr = array();
 
         if( $projectGoals && $projectId ) {
@@ -2365,6 +2365,7 @@ class ProjectController extends OrderAbstractController
                 $projectGoalEntityId = $projectGoalData['projectGoalEntityId']; //new if projectGoalEntityId is empty
                 $description = $projectGoalData['description'];
                 $associated = $projectGoalData['associated']; //TODO: associated does not pass correctly (always false)
+                $description = $transresUtil->tokenTruncate($description, 100);
                 //exit('associated='.$associated.", description=".$description);
                 if( !$description ) {
                     $message = "Project goal is empty, this project goal has been removed.";
@@ -2398,7 +2399,7 @@ class ProjectController extends OrderAbstractController
                             if ($workRequest->getProjectGoals()->contains($projectGoal)) {
                                 $workRequest->removeProjectGoal($projectGoal);
                                 $projectGoal->removeWorkRequest($workRequest);
-                                $message = "The association between project goal ID $projectGoal ('$description') and this Work Request has been removed.";
+                                $message = "The association has been removed for project goal ID ". $projectGoal->getId()." ('$description')";
                             }
                         }
                         $em->flush();

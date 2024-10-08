@@ -866,6 +866,58 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(formfield.orderinlist) }}
             {% endif %}
 
+
+            {% if workRequestId %}
+                {% if formfield.vars.value and formfield.vars.value.workRequests|length > 0 %}
+                    {% set associated = false %}
+                    {% for thisWorkRequest in formfield.vars.value.workRequests %}
+                        {% if not associated and workRequestId == thisWorkRequest.id %}
+                            {#Pass {{ formfield.vars.value.id }} to controller to allow associate project goal to this work request#}
+                            {#Work Request page: Associated with this Work Request#}
+                            <div>
+                                <input type="checkbox"
+                                       class="projectgoal-workrequest-associated"
+                                       id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                                       name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}" checked
+                                />
+                                <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                                >Associated with this Work Request {{ workRequestId }}</label>
+                            </div>
+                            {% set associated = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if associated == false %}
+                        {#Not Associated with this Work Request#}
+                        <div>
+                            <input type="checkbox"
+                                   class="projectgoal-workrequest-associated"
+                                   id="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                                   name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                            />
+                            <label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"
+                            >Associated with this Work Request {{ workRequestId }}</label>
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+            {% else %}
+                {#Project page - show associated work requests#}
+                {% if formfield.vars.value and formfield.vars.value.workRequests|length > 0 %}
+                    {% for thisWorkRequest in formfield.vars.value.workRequests %}
+                        {#Project page: Associated with this Work Request#}
+                        <p>
+                            <a class="1btn 1btn-default"
+                               href="{{ path('translationalresearch_request_show', { 'id': thisWorkRequest.id }) }}"
+                               target="_blank">project new: Associated with Work Request ID {{ thisWorkRequest.id }}</a>
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+
+            {% if 0 %}
+            {#TODO: sort out when checkbox is shown as checked. show on project page, show on work request page#}
             {% if formfield.vars.value %}
                 {#formfield.id={{ formfield.vars.value.id }}#}
                 <p>
@@ -902,7 +954,7 @@ Show this accordion by default in an open + visible state.
                             <p>
                             <a class="1btn 1btn-default"
                                href="{{ path('translationalresearch_request_show', { 'id': thisWorkRequest.id }) }}"
-                               target="_blank">Associated with Work Request ID {{ thisWorkRequest.id }}</a>
+                               target="_blank">project old: Associated with Work Request ID {{ thisWorkRequest.id }}</a>
                             </p>
                         {% endif %}
                     {% endfor %}
@@ -933,6 +985,7 @@ Show this accordion by default in an open + visible state.
                     >Associate with this Work Request</label>
                 </div>
 
+            {% endif %}
             {% endif %}
 
             {#Optional: show creator and create date#}
