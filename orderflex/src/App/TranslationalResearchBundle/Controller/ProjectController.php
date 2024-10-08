@@ -2391,7 +2391,7 @@ class ProjectController extends OrderAbstractController
                             if (!$workRequest->getProjectGoals()->contains($projectGoal)) {
                                 $workRequest->addProjectGoal($projectGoal);
                                 //$message = "Project goal ID $projectGoal '$description' has been associated with this Work Request.";
-                                $message = "The association has been created for project goal ID ". $projectGoal->getId()." ('$description')";
+                                $message = "The association has been created for project goal ID ". $projectGoal->getId()." '$description'";
                             }
                         } else {
                             //exit('remove WorkRequest');
@@ -2400,7 +2400,7 @@ class ProjectController extends OrderAbstractController
                             if ($workRequest->getProjectGoals()->contains($projectGoal)) {
                                 $workRequest->removeProjectGoal($projectGoal);
                                 $projectGoal->removeWorkRequest($workRequest);
-                                $message = "The association has been removed for project goal ID ". $projectGoal->getId()." ('$description')";
+                                $message = "The association has been removed for project goal ID ". $projectGoal->getId()." '$description'";
                             }
                         }
                         $em->flush();

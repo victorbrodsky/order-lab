@@ -905,6 +905,7 @@ Show this accordion by default in an open + visible state.
 
                 {% if associated == false %}
                     {#Not Associated with this Work Request#}
+                    {#Add checkbox to make association possible#}
                     <div>
                         <input type="checkbox"
                                class="projectgoal-workrequest-associated"
@@ -928,6 +929,20 @@ Show this accordion by default in an open + visible state.
                         </p>
                     {% endfor %}
                 {% endif %}
+            {% endif %}
+
+            {#prototype={{ prototype }}#}
+            {% if prototype == 'prototype' and classname == 'transres-reqprojectgoals' %}
+                {#Add checkbox to make association possible if added on the work request page via prototype#}
+                <div>
+                    <input type="checkbox"
+                           class="projectgoal-workrequest-associated"
+                           id="projectgoal-workrequest-associated"
+                           name="projectgoal-workrequest-associated"
+                    />
+                    <label for="projectgoal-workrequest-associated"
+                    >Associated with this Work Request {{ workRequestId }}</label>
+                </div>
             {% endif %}
 
 
