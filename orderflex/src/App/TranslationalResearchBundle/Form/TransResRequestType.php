@@ -439,7 +439,7 @@ class TransResRequestType extends AbstractType
                     //'disabled' => $disabled,
                     "mapped" => false,
                     'choices' => $this->params['existingProjectGoals'],
-                    'attr' => array('class' => 'combobox'),
+                    'attr' => array('class' => 'combobox combobox-existing-project-goals'),
                 ));
             }
         }

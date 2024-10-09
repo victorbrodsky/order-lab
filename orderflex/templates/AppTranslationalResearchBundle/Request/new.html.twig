@@ -444,6 +444,7 @@
                         //transresPrepopulateProductServices( $(this) );
                         transresIncludeProjectDetails($(this));
                         transresIncludeProjectGoals($(this));
+                        transresExistingProjectGoals($(this));
                     } else {
                         //reload page with project as it was clicked on the "New work request" from the project's action menu
                         var projectId = $(this).val();
@@ -946,6 +947,75 @@
                     }
                 }
             );
+        }
+
+        //On the top of the new work request page, replace showed existing project goals for this project
+        function transresExistingProjectGoals( projectField ) {
+            var projectId = null;
+            console.log('transresIncludeProjectGoals: projectId='+projectId);
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            //console.log("transresExistingProjectGoals projectId="+projectId);
+            if( projectId ) {
+                var url = Routing.generate('translationalresearch_project_get_project_goals_ajax');
+                //url = url + "/" + projectId;
+
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "GET",
+                    data: {projectId: projectId},
+                    dataType: 'json',
+                    async: asyncflag
+                }).success(function (response) {
+                    //console.log('response: ' + response);
+                    //console.log('error: ' + response['error']);
+                    //console.log('existingProjectGoals: ', response['existingProjectGoals']);
+                    replaceProjectGoals(response);
+                    //$('#panel-projectFullInfo').html(response);
+                }).done(function () {
+                    //
+                }).error(function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error : ' + errorThrown);
+                    //$("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(errorThrown);
+                    //$('#panel-projectFullInfo').html(errorThrown);
+                });
+            }
+        }
+
+        function replaceProjectGoals(response) {
+            if( response['error'] ) {
+                return null;
+            }
+
+            var existingProjectGoals = response['existingProjectGoals'];
+            console.log('replaceProjectGoals: existingProjectGoals: ', existingProjectGoals);
+
+            var comboboxEl = $('select.combobox-existing-project-goals');
+            comboboxEl.empty();//.trigger("change");
+
+            //first empty element
+            var newOption = new Option('', '', false, false);
+            comboboxEl.append(newOption);//.trigger('change');
+
+            if( existingProjectGoals.length > 0 ) {
+                existingProjectGoals.forEach(function (item) {
+                    var thisEncounterId = item['id'];
+                    var thisEncounterText = item['text'];
+                    //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+                    //text += thisEncounterText;
+                    if (thisEncounterText) {
+                        var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                        comboboxEl.append(newOption);//.trigger('change');
+                    }
+                });
+
+                comboboxEl.trigger('change');
+            }
         }
 
         //NOT USED

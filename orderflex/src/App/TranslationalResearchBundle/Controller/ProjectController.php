@@ -2509,6 +2509,75 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * Get existing project goals for this project
+     */
+    #[Route(path: '/project/project-goals/ajax', name: 'translationalresearch_project_get_project_goals_ajax', methods: ['GET'], options: ['expose' => true])]
+    public function getProjectGoalsAction( Request $request )
+    {
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+        $em = $this->getDoctrine()->getManager();
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = $request->get('projectId');
+
+        if( !$projectId ) {
+            $output = array(
+                'error' => "No project id provided"
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        if( $projectId  ) {
+            $project = $em->getRepository(Project::class)->find($projectId);
+        }
+
+        if( !$project ) {
+            $output = array(
+                'error' => "No project found by the project id $projectId"
+            );
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->addFlash(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+        
+        $projectGoals = $transresUtil->findProjectGoals($project->getId());
+        $existingProjectGoals = array();
+        foreach($projectGoals as $existingProjectGoal) {
+            $description = $transresUtil->tokenTruncate($existingProjectGoal->getDescription(), 100);
+            //$existingProjectGoals[$description] = $existingProjectGoal->getId();
+            $existingProjectGoals[] = array(
+                'id' => $existingProjectGoal->getId(),
+                'text' => $description
+            );
+        }
+
+        $output = array(
+            'error' => null,
+            "existingProjectGoals" => $existingProjectGoals,
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    /**
      * Finds and displays a review form for this project entity.
      */
     #[Route(path: '/project/review/{id}', name: 'translationalresearch_project_review', methods: ['GET'])]

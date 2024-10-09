@@ -2770,11 +2770,6 @@ class RequestController extends OrderAbstractController
                 $projectGoals = $transresUtil->findProjectGoals($project->getId());
                 $existingProjectGoals = array();
                 foreach($projectGoals as $existingProjectGoal) {
-//                    $description = $existingProjectGoal->getDescription();
-//                    $maxlen = 100;
-//                    if( strlen((string)$description) > $maxlen ) {
-//                        $description = substr((string)$description,0,$maxlen).'...';
-//                    }
                     $description = $transresUtil->tokenTruncate($existingProjectGoal->getDescription(), 100);
                     $existingProjectGoals[$description] = $existingProjectGoal->getId();
                 }
