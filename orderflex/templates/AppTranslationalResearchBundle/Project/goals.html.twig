@@ -12,7 +12,7 @@
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    {% if formProjectGoal %}
+    {% if formProjectGoal is defined and formProjectGoal %}
         {{ form_start(formProjectGoal) }}
             <div id="form-prototype-data2"
                  data-userurllink = "{{ usermacros.userUrlLink()|e }}"

@@ -1820,6 +1820,21 @@ class TransResUtil
             } else {
                 $projectGoal->setAuthor($user);
             }
+
+            //set orderinlist if not set
+            if( $project->getId() ) {
+                if (!$projectGoal->getOrderinlist()) {
+                    $orderinlist = $this->findNextProjectGoalOrderinlist($project->getId());
+                    if ($orderinlist) {
+                        $projectGoal->setOrderinlist($orderinlist);
+                    }
+                }
+            }
+
+            //set status
+            if( $projectGoal->getStatus() === NULL ) {
+                $projectGoal->setStatus('enable');
+            }
         }
     }
 
