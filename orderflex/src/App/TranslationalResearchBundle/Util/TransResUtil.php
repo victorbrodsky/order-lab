@@ -4024,6 +4024,9 @@ class TransResUtil
             'typeadd' => 'user-added',
         );
 
+        //Sort by list orderinlist
+        $dql->orderBy("list.orderinlist","ASC");
+
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($parameters);

@@ -5,6 +5,8 @@
     {{ title|raw }}
 {% endblock %}
 
+{% block header %}
+{% endblock %}
 
 {% block content %}
 
@@ -12,6 +14,7 @@
         {{ title|raw }}
     </h4>
 
+    <input type="hidden" id="disableIdleTimeout" value="1" />
 
     {% for panel in panels %}
         {#<p>#}

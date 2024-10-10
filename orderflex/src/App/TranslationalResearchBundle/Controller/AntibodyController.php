@@ -1152,7 +1152,6 @@ class AntibodyController extends OrderAbstractController
     #[Route(path: '/public/antibodies/group-by-panel/{labs}', methods: ['GET'], name: 'translationalresearch_antibodies_group_by_panel')]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_group_by_panel.html.twig')]
     public function groupByPanelAction(Request $request, $labs=NULL) {
-
         $transresUtil = $this->container->get('transres_util');
 
         //get all panels
