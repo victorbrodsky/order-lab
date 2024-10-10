@@ -593,6 +593,22 @@
                                         {% endfor %}
                                     </ul>
                                 </li>
+
+                                <li class="dropdown-submenu">
+                                    {#<a href="{{ path('translationalresearch_antibodies_public_react') }}"#}
+                                    {#>Published Antibody Panel List</a>#}
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                    >Published Antibody Panel List</a>
+                                    <ul class="dropdown-menu">
+                                        {% for antibodyLab in antibodyLabs %}
+                                            <li>
+                                                <a href="{{ path('translationalresearch_antibodies_group_by_panel',
+                                                {'labs':antibodyLab.name}) }}"
+                                                >Published {{ antibodyLab.name }} Antibody Panel List</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
                             {% endif %}
 
                             <li>
@@ -633,6 +649,24 @@
                                             {% endfor %}
                                         </ul>
                                     </li>
+
+                                    {#Complete antibody panel list#}
+                                    <li id="nav-bar-translationalresearch-antibodies" class="dropdown-submenu">
+                                        {#<a href="{{ path('translationalresearch_antibodies_group_by_panel') }}"#}
+                                        {#>Complete Antibody Panel List</a>#}
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                        >Complete Antibody Panel List</a>
+                                        <ul class="dropdown-menu">
+                                            {% for antibodyLab in antibodyLabs %}
+                                                <li id="nav-bar-translationalresearch-antibodies">
+                                                    <a href="{{ path('translationalresearch_antibodies_group_by_panel',
+                                                    {'labs':antibodyLab.name}) }}"
+                                                    >Complete {{ antibodyLab.name }} Antibody Panel List</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+
                                 {% endif %}
 
                             {% endif %}

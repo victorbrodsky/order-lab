@@ -49,80 +49,9 @@
         function updateProjectIncludeGoals() {
             console.log('updateProjectIncludeGoals');
 
-            //get new goals (enabled, not dosabled) and send by ajax to update the goals
-            //var description = $(':textarea[class=projectgoal-description]:not(:disabled)').val();
-            //var description = $('.projectgoal-description:not(:disabled)').val();
-            //console.log('description='+description);
-
-            //Process only new (enabled) section
             var projectGoalData = [];
-//            $('.projectgoal-description:not(:disabled)').each(function() {
-//                var projectGoalId = $(this).attr('id');
-//                var description = $(this).val();
-//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-//                var associated = false;
-//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
-//                    associated = true;
-//                }
-//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
-//                projectGoalData.push(
-//                    {
-//                        'type': 'new',
-//                        'id': projectGoalId,
-//                        'projectGoalEntityId': projectGoalEntityId,
-//                        'description': description,
-//                        //pass checkbox 'associated' status
-//                        'associated': associated
-//                    }
-//                );
-//            });
-//            //Process only existing (disabled) section
-//            $('.projectgoal-description:disabled').each(function() {
-//                var projectGoalId = $(this).attr('id');
-//                var description = $(this).val();
-//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-////                var associated = $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').val();
-//                var associated = false;
-//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
-//                    associated = true;
-//                }
-//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
-//                projectGoalData.push(
-//                        {
-//                            'type': 'old',
-//                            'id': projectGoalId,
-//                            'projectGoalEntityId': projectGoalEntityId,
-//                            'description': description,
-//                            //pass checkbox 'associated' status
-//                            'associated': associated
-//                        }
-//                );
-//            });
 
-//            $('.projectgoal-description').each(function() {
-//                var projectGoalId = $(this).attr('id');
-//                var description = $(this).val();
-//                var projectGoalEntityId = $(this).closest('.user-collection-holder').find('.projectgoals-id').val();//projectgoals-id
-//                var associated = false;
-//                if( $(this).closest('.user-collection-holder').find('.projectgoal-workrequest-associated').is(':checked') ) {
-//                    associated = true;
-//                }
-//                console.log('projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
-//                projectGoalData.push(
-//                        {
-//                            //'type': 'new',
-//                            'id': projectGoalId,
-//                            'projectGoalEntityId': projectGoalEntityId,
-//                            'description': description,
-//                            //pass checkbox 'associated' status
-//                            'associated': associated
-//                        }
-//                );
-//            });
-
-            //for each .transres-projectgoals
-            //TODO: repeated 2 times each???
-            //One from associted project section, one from projectGoal
+            //One from associated project section, one from projectGoal
             $('#projectGoalSection').find('.transres-reqprojectgoals').each(function() {
                 var projectGoalId = $(this).find('.projectgoals-id').attr('id');
                 var description = $(this).find('.projectgoal-description').val();
@@ -134,11 +63,9 @@
                 console.log('Each: projectGoalId='+projectGoalId+', description='+description+', projectGoalEntityId='+projectGoalEntityId+', associated='+associated);
                 projectGoalData.push(
                         {
-                            //'type': 'new',
                             'id': projectGoalId,
                             'projectGoalEntityId': projectGoalEntityId,
                             'description': description,
-                            //pass checkbox 'associated' status
                             'associated': associated
                         }
                 );
@@ -152,12 +79,12 @@
             } else {
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
             }
-            console.log("1 transresRecalculateRemaniningBudget: projectId="+projectId);
+            //console.log("1 transresRecalculateRemaniningBudget: projectId="+projectId);
 
             if( projectId == null || typeof projectId === "undefined" ) {
                 projectId = $('#oleg_translationalresearchbundle_projectgoal_id').val();
             }
-            console.log("2 transresRecalculateRemaniningBudget: projectId="+projectId);
+            //console.log("2 transresRecalculateRemaniningBudget: projectId="+projectId);
 
             if( projectId == null || typeof projectId === "undefined" ) {
                 console.log("transresRecalculateRemaniningBudget: projectId is NULL");
@@ -189,19 +116,8 @@
                     var projectGoalEntityId = item['projectGoalEntityId'];
                     if( error == 0 ) {
                         //$("#"+sectionId).prop('disabled', true);
-                        //$("#"+sectionId).closest('.transres-projectgoals').find('input, textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-reqprojectgoals').find('textarea, select').attr('disabled','disabled');
                         $("#"+sectionId).closest('.transres-reqprojectgoals').find('.btn').remove();
-                        //TODO: add associated checkbox
-                    {#var checkbox = '<div>#}
-                        {#<input type="checkbox"#}
-                    {#class="projectgoal-workrequest-associated"#}
-                        {#id="projectgoal-workrequest-associated-"+workrequestId#}
-                        {#name="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"/>#}
-                                {#<label for="projectgoal-workrequest-associated-{{ formfield.vars.value.id }}"#}
-                                {#>Associated with this Work Request</label>#}
-                        {#</div>';#}
-                        {#{% endif %}#}
 
 //                        $('#project-goals-feedback').show();
 //                        $('#project-goals-feedback').append('<p>'+message+'</p>');
@@ -209,12 +125,12 @@
                         //remove parent with class 'transres-projectgoals'
                         $("#"+sectionId).closest('.transres-reqprojectgoals').remove();
                         //$("#"+sectionId).remove();
-//                        $('#project-goals-feedback').show();
-//                        $('#project-goals-feedback').append('<p>'+message+'</p>');
                     }
                     $('#project-goals-feedback').show();
                     $('#project-goals-feedback').append('<p>'+message+'</p>');
                 });
+//                        $('#project-goals-feedback').show();
+//                        $('#project-goals-feedback').append('<p>'+message+'</p>');
 
 //                $('#project-goals-feedback').show();
 //                $('#project-goals-feedback').html(response[0]['message']);
