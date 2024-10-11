@@ -121,6 +121,12 @@
         </div>
     {% endif %}
 
+    {% if internationalTravelRegistry is defined and internationalTravelRegistry %}
+        <div class="alert alert-success">
+            <p id="vacreq-internationa-travel-registry-str">{{ internationalTravelRegistry|raw }}</p>
+        </div>
+    {% endif %}
+
 
     <h4 class="text-info" align="center">
         {{ title }}
