@@ -3974,11 +3974,21 @@ class TransResUtil
         return $requesterGroup;
     }
 
-    public function getTransResAntibodyLabs() {
+    public function getTransResAntibodyLabs( $onlyWithPanel=false ) {
         $repository = $this->em->getRepository(AntibodyLabList::class);
         $dql =  $repository->createQueryBuilder("list");
 
         $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        //Check if antibody has panels to show it on the navbar's "Antibody Panel List"
+        if( $onlyWithPanel ) {
+            $dql->leftJoin("list.antibodies", "antibodies");
+            //$dql->leftJoin("antibodies.antibodyLabs", "antibodyLabs");
+            $dql->leftJoin("antibodies.antibodyPanels", "antibodyPanels");
+
+            //$dql->andWhere("antibodyLabs IS NOT NULL");
+            $dql->andWhere("antibodyPanels IS NOT NULL");
+        }
 
         $parameters = array(
             'typedef' => 'default',

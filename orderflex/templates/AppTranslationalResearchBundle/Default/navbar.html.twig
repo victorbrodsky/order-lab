@@ -567,6 +567,7 @@
                     {# EOF simpleMenu #}
 
                     {% set antibodyLabs = transres_util.getTransResAntibodyLabs() %}
+                    {% set antibodyLabsPanels = transres_util.getTransResAntibodyLabs(true) %}
 
                     {#multi-level#}
                     <li id="nav-bar-translationalresearch-catalogs" class="dropdown">
@@ -600,7 +601,7 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                                     >Published Antibody Panel List</a>
                                     <ul class="dropdown-menu">
-                                        {% for antibodyLab in antibodyLabs %}
+                                        {% for antibodyLab in antibodyLabsPanels %}
                                             <li>
                                                 <a href="{{ path('translationalresearch_antibodies_group_by_panel',
                                                 {'labs':antibodyLab.name}) }}"
@@ -657,7 +658,7 @@
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                                         >Complete Antibody Panel List</a>
                                         <ul class="dropdown-menu">
-                                            {% for antibodyLab in antibodyLabs %}
+                                            {% for antibodyLab in antibodyLabsPanels %}
                                                 <li id="nav-bar-translationalresearch-antibodies">
                                                     <a href="{{ path('translationalresearch_antibodies_group_by_panel',
                                                     {'labs':antibodyLab.name}) }}"
