@@ -127,8 +127,12 @@ class VacReqSiteParameter
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Institution', cascade: ['persist'])]
     private $institutions;
 
+    //International Travel Registry
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $intTravelNote;
+    
 
-
+    
     public function __construct() {
         $this->institutions = new ArrayCollection();
     }
@@ -381,6 +385,22 @@ class VacReqSiteParameter
     public function removeInstitution($institution)
     {
         $this->institutions->removeElement($institution);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntTravelNote()
+    {
+        return $this->intTravelNote;
+    }
+
+    /**
+     * @param mixed $intTravelNote
+     */
+    public function setIntTravelNote($intTravelNote)
+    {
+        $this->intTravelNote = $intTravelNote;
     }
 
 

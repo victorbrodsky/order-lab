@@ -441,20 +441,21 @@ class RequestController extends OrderAbstractController
 
         $overlappedMessage = $vacreqUtil->getHeaderOverlappedMessage($user);
 
-        $internationalTravelRegistryLink = '<a target="_blank" '.
-            'href="https://riskmanagement.weill.cornell.edu/travel/travel-registration">'.
-            'International Travel Registry</a>';
-        $internationalTravelRegistryLink2 = '<a target="_blank" '.
-            'href="https://weillcornell.az1.qualtrics.com/jfe/form/SV_5oTGNyMbGzai074">'.
-            'Complete a brief registration form</a>';
+//        $internationalTravelRegistryLink = '<a target="_blank" '.
+//            'href="https://riskmanagement.weill.cornell.edu/travel/travel-registration">'.
+//            'International Travel Registry</a>';
+//        $internationalTravelRegistryLink2 = '<a target="_blank" '.
+//            'href="https://weillcornell.az1.qualtrics.com/jfe/form/SV_5oTGNyMbGzai074">'.
+//            'Complete a brief registration form</a>';
+//        $internationalTravelRegistry = "WCM is committed to ensuring that faculty, staff,".
+//        " and students remain safe when traveling. Moving forward, all individuals conducting".
+//        " WCM activities will be required to document their trip in the $internationalTravelRegistryLink.".
+//        " Registering your trip allows you to receive real-time alerts and notices that are specific".
+//        " to your travel and facilitates WCM emergency support when needed.".
+//        "<br><br>".
+//        " $internationalTravelRegistryLink2";
 
-        $internationalTravelRegistry = "WCM is committed to ensuring that faculty, staff,".
-        " and students remain safe when traveling. Moving forward, all individuals conducting".
-        " WCM activities will be required to document their trip in the $internationalTravelRegistryLink.".
-        " Registering your trip allows you to receive real-time alerts and notices that are specific".
-        " to your travel and facilitates WCM emergency support when needed.".
-        "<br><br>".
-        " $internationalTravelRegistryLink2";
+        $internationalTravelRegistry = $userSecUtil->getSiteSettingParameter('intTravelNote','vacreq');
 
         return array(
             'entity' => $entity,

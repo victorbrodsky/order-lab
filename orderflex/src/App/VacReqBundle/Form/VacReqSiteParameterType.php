@@ -132,8 +132,13 @@ class VacReqSiteParameterType extends AbstractType
                     ));
             },
         ));
-        
-        
+
+        $builder->add('intTravelNote', null, array(
+            'label' => 'International Travel Registry Note:',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Submit',
