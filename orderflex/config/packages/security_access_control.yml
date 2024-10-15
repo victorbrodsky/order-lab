@@ -255,6 +255,10 @@ security:
 #       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
 #       - { path: ^/dashboards, role: PUBLIC_ACCESS }
 
+       ### SAML testing ###
+       - { path: ^/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
+       ### EOF SAML testing ###
+
 #when@test:
 #    security:
 #        password_hashers:
@@ -267,4 +271,5 @@ security:
 #                cost: 4 # Lowest possible value for bcrypt
 #                time_cost: 3 # Lowest possible value for argon
 #                memory_cost: 10 # Lowest possible value for argon
+
 

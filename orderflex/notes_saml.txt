@@ -45,3 +45,9 @@ urn:oasis:names:tc:SAML:2.0:nameid-format:transient
 <md:EmailAddress>mailto:idm@med.cornell.edu</md:EmailAddress>
 </md:ContactPerson>
 </md:EntityDescriptor>
+
+
+TODO:
+https://medium.com/@cyrilgeorgespereira/multiple-sso-with-symfony-and-onelogin-saml-bundle-5e1d44838f1a
+Load a configuration dynamically
+

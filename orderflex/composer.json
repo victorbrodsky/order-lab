@@ -18,6 +18,7 @@
         "google/apiclient": "^2.12.1",
         "knplabs/knp-paginator-bundle": "^5.8",
         "knplabs/knp-snappy-bundle": "^1.7",
+        "onelogin/php-saml": "^4.2",
         "oneup/uploader-bundle": "^4.0",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "^1.22",
