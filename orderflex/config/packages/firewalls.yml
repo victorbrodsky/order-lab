@@ -255,14 +255,14 @@ security:
 #                authenticator: custom_guard_authenticator
 
         ### SAML testing ###
-#        dev:
-#            pattern: ^/(_(profiler|wdt)|css|images|js)/
-#            security: false
-#        saml:
-#            pattern: ^/saml
-#            stateless: true
-#            custom_authenticator: App\Security\SamlAuthenticator
-#        main:
-#            lazy: true
-#            provider: saml_provider
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        saml:
+            pattern: ^/saml
+            stateless: true
+            custom_authenticator: App\Security\SamlAuthenticator
+        main:
+            lazy: true
+            provider: saml_provider
         ### EOF SAML testing ###

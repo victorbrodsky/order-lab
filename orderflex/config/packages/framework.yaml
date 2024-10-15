@@ -30,6 +30,12 @@ framework:
 #    trusted_proxies: ~
 #    session:         ~
 #        save_path: ~
+
+    ### SAML testing ###
+    trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto' ]
+    trusted_proxies: '127.0.0.1,::1'
+    ### EOF SAML testing ###
+
     session:
         handler_id: null
         cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
