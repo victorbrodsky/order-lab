@@ -8,7 +8,7 @@
 
 namespace App\UserdirectoryBundle\Security\Authentication;
 
-use App\UserdirectoryBundle\Services\SamlConfigProvider;
+use App\UserdirectoryBundle\Util\SamlConfigProvider;
 use App\UserdirectoryBundle\Security\Authentication\SamlUserProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;

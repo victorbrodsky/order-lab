@@ -10,12 +10,10 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-class SamlConfig
-{
 
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\SamlConfigRepository")
-     */
+/**
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Util\SamlConfigRepository")
+ */
 class SamlConfig
 {
     /**

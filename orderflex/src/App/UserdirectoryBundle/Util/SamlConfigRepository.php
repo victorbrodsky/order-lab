@@ -6,7 +6,7 @@
  * Time: 11:24 AM
  */
 
-namespace App\UserdirectoryBundle\Repository;
+namespace App\UserdirectoryBundle\Util;
 
 
 

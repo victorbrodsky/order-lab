@@ -9,7 +9,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Security\Authentication\SamlUserProvider;
-use App\UserdirectoryBundle\Services\SamlConfigProvider;
+use App\UserdirectoryBundle\Util\SamlConfigProvider;
 use OneLogin\Saml2\Auth;
 use Psr\Log\LoggerInterface;
 
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OneLogin\Saml2\Settings;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-//use App\Security\SamlAuthenticator;
+use App\UserdirectoryBundle\Security\Authentication\SamlAuthenticator;
 
 class SamlController extends AbstractController
 {

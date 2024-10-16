@@ -6,10 +6,10 @@
  * Time: 11:44 AM
  */
 
-namespace App\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Util;
 
 
-use App\UserdirectoryBundle\Repository\SamlConfigRepository;
+use App\UserdirectoryBundle\Util\SamlConfigRepository;
 use OneLogin\Saml2\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 
