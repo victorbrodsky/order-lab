@@ -8,7 +8,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
-use App\UserdirectoryBundle\Security\SamlUserProvider;
+use App\UserdirectoryBundle\Security\Authentication\SamlUserProvider;
 use App\UserdirectoryBundle\Services\SamlConfigProvider;
 use OneLogin\Saml2\Auth;
 use Psr\Log\LoggerInterface;
@@ -31,6 +31,7 @@ class SamlController extends AbstractController
         private SamlUserProvider $samlUserProvider,
         private LoggerInterface $logger
     ) {
+        //empty constructor
     }
 
     /**

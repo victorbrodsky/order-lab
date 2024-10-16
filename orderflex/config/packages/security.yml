@@ -208,3 +208,8 @@ security:
                 class: 'App\UserdirectoryBundle\Entity\User'
                 property: 'username'
 
+       ### SAML testing ###
+        saml_provider:
+            id: App\UserdirectoryBundle\Security\SamlUserProvider
+       ### EOF SAML testing ###
+
