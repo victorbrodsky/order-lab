@@ -34,9 +34,13 @@ class SamlController extends AbstractController
         //empty constructor
     }
 
-    /**
-     * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
-     */
+    //#[Route(path: '/about', name: 'employees_about_page')]
+    //#[Template('AppUserdirectoryBundle/Default/about.html.twig')]
+    ///**
+    // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
+    //*/
+    //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
+    #[Route(path: '/saml/login/{client}', name: 'saml_login', requirements: ['client' => '.+'])]
     public function login(Request $request, $client): Response
     {
         $this->logger->info("Starting SAML login for client: $client");

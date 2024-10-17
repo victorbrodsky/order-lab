@@ -6,21 +6,22 @@
  * Time: 11:24 AM
  */
 
-namespace App\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Repository;
 
 
 
 //use App\Entity\SamlConfig;
 use App\UserdirectoryBundle\Entity\SamlConfig;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class SamlConfigRepository extends ServiceEntityRepository
+class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, SamlConfig::class);
-    }
+//    public function __construct(ManagerRegistry $registry)
+//    {
+//        parent::__construct($registry, SamlConfig::class);
+//    }
 
     public function findByClient(string $client): ?SamlConfig
     {

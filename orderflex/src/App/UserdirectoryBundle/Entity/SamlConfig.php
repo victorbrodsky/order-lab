@@ -11,76 +11,94 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-/**
- * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Util\SamlConfigRepository")
- */
+///**
+// * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Util\SamlConfigRepository")
+// */
+//#[ORM\Table(name: 'user_saml_config')]
+#[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\SamlConfigRepository')]
 class SamlConfig
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+//    /**
+//     * @ORM\Id
+//     * @ORM\GeneratedValue
+//     * @ORM\Column(type="integer")
+//     */
+//    private $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+//    /**
+//     * @ORM\Column(type="string", length=255)
+//     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $client;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $idpEntityId;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $idpSsoUrl;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $idpSloUrl;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $idpCert;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $spEntityId;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $spAcsUrl;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $spSloUrl;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+//    /**
+//     * @ORM\Column(type="text")
+//     */
+    #[ORM\Column(type: 'text')]
     private $spPrivateKey;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+//    /**
+//     * @ORM\Column(type="string", length=255)
+//     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $identifierAttribute;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+//    /**
+//     * @ORM\Column(type="boolean")
+//     */
+    #[ORM\Column(type: 'boolean')]
     private $autoCreate;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+//    /**
+//     * @ORM\Column(type="json")
+//     */
+    #[ORM\Column(type: 'json')]
     private $attributeMapping;
 
     // Getters and setters

@@ -8,23 +8,31 @@
 
 namespace App\UserdirectoryBundle\Util;
 
-
-use App\UserdirectoryBundle\Util\SamlConfigRepository;
+use App\UserdirectoryBundle\Entity\SamlConfig;
+use Doctrine\ORM\EntityManagerInterface;
+//use App\UserdirectoryBundle\Repository\SamlConfigRepository;
 use OneLogin\Saml2\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class SamlConfigProvider
 {
 
+    //private $samlConfigRepository;
+
     public function __construct(
-        private SamlConfigRepository $samlConfigRepository,
+        private EntityManagerInterface $em,
+        //private SamlConfigRepository $samlConfigRepository,
         private RequestStack $requestStack
     ) {
+        //$this->samlConfigRepository = $samlConfigRepository;
+        //$this->samlConfigRepository = $doctrine->getRepository('CmsBundle:Page');
+        //$this->samlConfigRepository = SamlConfig::getRepository($this->em);
     }
 
     public function getConfig(string $client): array
     {
-        $config = $this->samlConfigRepository->findByClient($client);
+        //$config = $this->samlConfigRepository->findByClient($client);
+        $config = $this->em->getRepository(SamlConfig::class)->findByClient($client);
 
         if (!$config) {
             throw new \Exception('SAML configuration not found for client ' . $client);

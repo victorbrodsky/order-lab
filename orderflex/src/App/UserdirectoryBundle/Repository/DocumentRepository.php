@@ -18,11 +18,8 @@
 namespace App\UserdirectoryBundle\Repository;
 
 
-
-use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
-
-
-use App\UserdirectoryBundle\Entity\DocumentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DocumentTypeList
+use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\DocumentTypeList;
 use Doctrine\ORM\EntityRepository;
 
 
