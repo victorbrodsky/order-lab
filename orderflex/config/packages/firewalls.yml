@@ -273,7 +273,7 @@ security:
             pattern: ^/saml
             stateless: true
             custom_authenticator: App\UserdirectoryBundle\Security\Authentication\SamlAuthenticator
-        main:
+        saml_firewall:
             lazy: true
             provider: saml_provider
         ### EOF SAML testing ###

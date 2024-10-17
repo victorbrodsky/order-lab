@@ -101,8 +101,8 @@ class SamlConfig
     #[ORM\Column(type: 'json')]
     private $attributeMapping;
 
-    // Getters and setters
 
+    // Getters and setters
     public function getId(): ?int
     {
         return $this->id;

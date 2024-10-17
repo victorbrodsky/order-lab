@@ -31,6 +31,8 @@ class SamlConfigProvider
 
     public function getConfig(string $client): array
     {
+        return $this->getTestConfig($client);
+
         //$config = $this->samlConfigRepository->findByClient($client);
         $config = $this->em->getRepository(SamlConfig::class)->findByClient($client);
 
@@ -82,6 +84,65 @@ class SamlConfigProvider
         }
 
         return [$scheme, $host];
+    }
+
+    private function getTestConfig( string $client ): array
+    {
+
+        $config = new SamlConfig();
+
+        $IdpSsoUrl = "https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO";
+        $config->setIdpSsoUrl($IdpSsoUrl);
+
+        $IdpSloUrl = "https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SLO";
+        $config->setIdpSloUrl($IdpSloUrl);
+
+        $IdpCert = 'testttt';
+        $config->setIdpCert($IdpCert);
+
+        $SpPrivateKey = 'testttt';
+        $config->setSpPrivateKey($SpPrivateKey);
+
+        $IdentifierAttribute = ''; //limit 255
+        $config->setIdentifierAttribute($IdentifierAttribute);
+
+        $autoCreate = true; //bool
+        $config->setAutoCreate($autoCreate);
+
+        $attributeMapping = array(); //json
+        $config->setAttributeMapping($attributeMapping);
+
+        $spEntityId = ''; //text
+        $config->setSpEntityId($spEntityId);
+
+        list($scheme, $host) = $this->getSPEntityId();
+
+        $schemeAndHost = sprintf('%s://%s', $scheme, $host);
+
+        return [
+            'settings' => new Settings([
+                'idp' => [
+                    'entityId' => $schemeAndHost."/saml/metadata/".$client,
+                    'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
+                    'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
+                    'x509cert' => $config->getIdpCert(),
+                ],
+                'sp' => [
+                    'entityId' => $schemeAndHost,
+                    'assertionConsumerService' => [
+                        'url' => $schemeAndHost."/saml/acs/".$client,
+                    ],
+                    'singleLogoutService' => [
+                        'url' => $schemeAndHost."/saml/logout/".$client,
+                    ],
+                    'privateKey' => $config->getSpPrivateKey(),
+                ],
+            ]),
+            'identifier' => $config->getIdentifierAttribute(),
+            'autoCreate' => $config->getAutoCreate(),
+            'attributeMapping' => $config->getAttributeMapping(),
+            'CustomerUrl' => $config->getSpEntityId(),
+        ];
     }
 
 }
