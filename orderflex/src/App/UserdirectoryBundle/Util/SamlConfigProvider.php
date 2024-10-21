@@ -116,28 +116,52 @@ class SamlConfigProvider
         $config->setSpEntityId($spEntityId);
 
         list($scheme, $host) = $this->getSPEntityId();
+        $scheme = 'https';
+        $host = 'view.online/c/wcm/pathology/';
+
+        //exit('$scheme='.$scheme.', host='.$host);
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
 
+        $settings = array(
+            'idp' => [
+                'entityId' => $schemeAndHost."/saml/metadata/".$client,
+                'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
+                'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
+                'x509cert' => $config->getIdpCert(),
+            ],
+            'sp' => [
+                'entityId' => $schemeAndHost,
+                'assertionConsumerService' => [
+                    'url' => $schemeAndHost."/saml/acs/".$client,
+                ],
+                'singleLogoutService' => [
+                    'url' => $schemeAndHost."/saml/logout/".$client,
+                ],
+                'privateKey' => $config->getSpPrivateKey(),
+            ],
+        );
+
         return [
-            'settings' => new Settings([
-                'idp' => [
-                    'entityId' => $schemeAndHost."/saml/metadata/".$client,
-                    'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
-                    'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
-                    'x509cert' => $config->getIdpCert(),
-                ],
-                'sp' => [
-                    'entityId' => $schemeAndHost,
-                    'assertionConsumerService' => [
-                        'url' => $schemeAndHost."/saml/acs/".$client,
-                    ],
-                    'singleLogoutService' => [
-                        'url' => $schemeAndHost."/saml/logout/".$client,
-                    ],
-                    'privateKey' => $config->getSpPrivateKey(),
-                ],
-            ]),
+//            'settings' => new Settings([
+//                'idp' => [
+//                    'entityId' => $schemeAndHost."/saml/metadata/".$client,
+//                    'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
+//                    'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
+//                    'x509cert' => $config->getIdpCert(),
+//                ],
+//                'sp' => [
+//                    'entityId' => $schemeAndHost,
+//                    'assertionConsumerService' => [
+//                        'url' => $schemeAndHost."/saml/acs/".$client,
+//                    ],
+//                    'singleLogoutService' => [
+//                        'url' => $schemeAndHost."/saml/logout/".$client,
+//                    ],
+//                    'privateKey' => $config->getSpPrivateKey(),
+//                ],
+//            ]),
+            'settings' => $settings,
             'identifier' => $config->getIdentifierAttribute(),
             'autoCreate' => $config->getAutoCreate(),
             'attributeMapping' => $config->getAttributeMapping(),

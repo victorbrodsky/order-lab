@@ -1875,6 +1875,8 @@ class PdfUtil {
         if( count($handsomtableJsonData) == 0 ) {
             return NULL;
         }
+
+        //dump($rowArr);
         //dump($handsomtableJsonData);
         //exit('111');
 
@@ -1893,6 +1895,8 @@ class PdfUtil {
         $erasApplicantId = NULL;
         if( isset($rowArr['ERAS Application ID']) ) {
             $erasApplicantId = $rowArr['ERAS Application ID']['value'];
+        } else {
+            $erasApplicantId = NULL;
         }
 
         //make the first row index 1
@@ -1929,7 +1933,10 @@ class PdfUtil {
 
             $thisErasApplicantId = NULL;
             if( isset($rowArr['ERAS Application ID']) ) {
-                $thisErasApplicantId = $rowArr['ERAS Application ID']['value'];
+                //$thisErasApplicantId = $rowArr['ERAS Application ID']['value'];
+                $thisErasApplicantId = $thisRowArr['ERAS Application ID']['value'];
+            } else {
+                $thisErasApplicantId = NULL;
             }
 
             $erasApplicantIdSame = false; //ignore by default
@@ -1941,6 +1948,9 @@ class PdfUtil {
                 }
             }
             if( $erasApplicantIdSame ) {
+                //dump($rowArr);
+                //dump($handsomtableJsonData);
+                //exit('$erasApplicantIdSame'.', $erasApplicantId='.$erasApplicantId.', $thisErasApplicantId='.$thisErasApplicantId);
                 return $thisRowArr;
             }
 
@@ -1967,15 +1977,18 @@ class PdfUtil {
             if( $expectedResidencyStartDate == $thisExpectedResidencyStartDate ) {
 
                 if( $aamcId == $thisAamcId ) {
+                    //exit('$aamcId == $thisAamcId');
                     return $thisRowArr;
                 }
 
                 if( $email == $thisEmail ) {
+                    //exit('$email == $thisEmail');
                     return $thisRowArr;
                 }
 
                 if( $lastName && $thisLastName && $firstName && $thisFirstName ) {
                     if ($lastName == $thisLastName && $firstName == $thisFirstName) {
+                        //exit('$lastName == $thisLastName && $firstName == $thisFirstName');
                         return $thisRowArr;
                     }
                 }
@@ -1986,6 +1999,7 @@ class PdfUtil {
 
         }//foreach
 
+        //exit('No duplicate');
         return NULL;
     }
 

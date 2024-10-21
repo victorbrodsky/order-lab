@@ -270,7 +270,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         saml:
-            pattern: ^/saml
+            #pattern: ^/saml
+            pattern: ^.*/saml
             stateless: true
             custom_authenticator: App\UserdirectoryBundle\Security\Authentication\SamlAuthenticator
         saml_firewall:

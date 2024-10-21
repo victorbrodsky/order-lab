@@ -34,6 +34,7 @@ class SamlController extends AbstractController
         //empty constructor
     }
 
+    // 127.0.0.1/directory/saml/login/oli2002
     //#[Route(path: '/about', name: 'employees_about_page')]
     //#[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     ///**
@@ -43,6 +44,7 @@ class SamlController extends AbstractController
     #[Route(path: '/saml/login/{client}', name: 'saml_login', requirements: ['client' => '.+'])]
     public function login(Request $request, $client): Response
     {
+        exit('saml login');
         $this->logger->info("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
