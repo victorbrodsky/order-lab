@@ -1932,7 +1932,7 @@ class PdfUtil {
             //echo "thisAamcId=$thisAamcId, thisLastName=$thisLastName<br>";
 
             $thisErasApplicantId = NULL;
-            if( isset($rowArr['ERAS Application ID']) ) {
+            if( isset($thisRowArr['ERAS Application ID']) ) {
                 //$thisErasApplicantId = $rowArr['ERAS Application ID']['value'];
                 $thisErasApplicantId = $thisRowArr['ERAS Application ID']['value'];
             } else {
