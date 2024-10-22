@@ -60,7 +60,7 @@ class SamlController extends AbstractController
 //    /**
 //     * @Route("/saml/acs/{client}", name="saml_acs", requirements={"client"=".+"})
 //     */
-    #[Route(path: '/saml/acs/{client}', name: 'saml_acs', requirements: ['client' => '.+'])]
+    #[Route(path: '/acs/{client}', name: 'saml_acs', requirements: ['client' => '.+'])]
     public function acs(Request $request, $client): Response
     {
         $this->logger->info("Processing SAML ACS for client: $client");
@@ -94,7 +94,7 @@ class SamlController extends AbstractController
 //    /**
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
-    #[Route(path: '/saml/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
+    #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
     public function logout(Request $request, string $client): Response
     {
         $this->logger->info("Starting SAML logout for client: $client");
@@ -114,7 +114,7 @@ class SamlController extends AbstractController
 //    /**
 //     * @Route("/saml/sls/{client}", name="saml_sls", requirements={"client"=".+"})
 //     */
-    #[Route(path: '/saml/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
+    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
     public function sls(Request $request, string $client): Response
     {
         $this->logger->info("Processing SAML Logout for client: $client");
@@ -134,7 +134,7 @@ class SamlController extends AbstractController
     }
 
     /**
-     * @Route("/saml/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
+     * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
      */
     public function metadata(string $client): Response
     {
