@@ -147,6 +147,11 @@ class DefaultController extends OrderAbstractController
 //            echo "residencyStartYear=$residencyStartYear, residencyEndYear=$residencyEndYear"."<br>";
 //        }
 
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $filename = 'AP_CP-Residency-Application-2025-ID1048-Mulè-Matthew-generated-on-10-22-2024-at-12-36-17-pm_UTC.pdf';
+//        $filename = $userServiceUtil->replaceAccentedChars($filename);
+//        exit('$filename='.$filename);
+
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
 

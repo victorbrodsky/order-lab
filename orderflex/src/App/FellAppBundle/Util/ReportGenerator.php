@@ -1712,6 +1712,7 @@ class ReportGenerator {
     protected function constructUniqueFileName($entity,$filenameStr) {
 
         $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $currentDate = new \DateTime();
         $subjectUser = $entity->getUser();
@@ -1758,6 +1759,9 @@ class ReportGenerator {
         $filename = str_replace("___","_",$filename);
 
         $filename = str_replace("'","_",$filename);
+
+        //replace accented chars (diacritics)
+        $filename = $userServiceUtil->replaceAccentedChars($filename);
 
         return $filename;
     }
