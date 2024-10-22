@@ -256,7 +256,7 @@ security:
 #       - { path: ^/dashboards, role: PUBLIC_ACCESS }
 
        ### SAML testing ###
-       - { path: ^.*/directory/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
+       - { path: ^.*/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
        ### EOF SAML testing ###
 
 #when@test:

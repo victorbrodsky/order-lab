@@ -210,6 +210,6 @@ security:
 
        ### SAML testing ###
         saml_provider:
-            id: App\UserdirectoryBundle\Security\Authentication\SamlUserProvider
+            id: App\Saml\Security\SamlUserProvider
        ### EOF SAML testing ###
 

@@ -6,7 +6,7 @@
  * Time: 11:44 AM
  */
 
-namespace App\UserdirectoryBundle\Util;
+namespace App\Saml\Util;
 
 use App\UserdirectoryBundle\Entity\SamlConfig;
 use Doctrine\ORM\EntityManagerInterface;

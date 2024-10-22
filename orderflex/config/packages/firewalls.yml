@@ -269,12 +269,21 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        saml:
-            #pattern: ^/saml
-            pattern: ^.*/saml
-            stateless: true
-            custom_authenticator: App\UserdirectoryBundle\Security\Authentication\SamlAuthenticator
+#        saml:
+#            #pattern: ^/saml
+#            pattern: ^.*/saml
+#            stateless: true
+#            custom_authenticator: App\Saml\Security\Authentication\SamlAuthenticator
+#        saml_firewall:
+#            lazy: true
+#            provider: saml_provider
+
         saml_firewall:
+            pattern: ^.*/saml
+            context: scan_auth
             lazy: true
             provider: saml_provider
+            custom_authenticator: App\Saml\Security\SamlAuthenticator
+            #custom_authenticators:
+            #   authenticator: App\Saml\Security\SamlAuthenticator
         ### EOF SAML testing ###

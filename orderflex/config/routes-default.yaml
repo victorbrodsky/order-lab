@@ -111,6 +111,11 @@ fellapp_instructions:
         _controller: FrameworkBundle:Template:template
         template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
 
+app_saml:
+    resource: "../src/App/Saml/Controller/"
+    type:     attribute
+    prefix:   /saml
+
 #system_special_home:
 #    path:      /system/home/
 #    controller: App\SystemBundle\Controller\SystemTenancyController::systemHomeAction

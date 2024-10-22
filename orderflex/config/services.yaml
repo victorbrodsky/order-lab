@@ -15,6 +15,7 @@ imports:
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/UtilBundles/FOSCommentBundle/Resources/config/services.yml" }
+#    - { resource: "../src/App/Saml/Resources/config/services.yml" }
 
     - { resource: "setparameters.php" } #must run after importing services
     #- { resource: "setparameters-multy.php" }
@@ -82,6 +83,7 @@ services:
             - '../src/App/*/Tests'
             - '../src/App/*/DependencyInjection'
             - '../src/App/*/{Entity,Repository,Tests,Security,Services}'
+            #- '../src/App/*/{Entity,Repository,Tests}'
             #- '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
             #- '../src/App/*/{Security,Services}'
 
@@ -92,6 +94,9 @@ services:
     App\UserdirectoryBundle\Security\Authentication\:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
         exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
+
+    App\Saml\Security\:
+        resource: '../src/App/Saml/Security'
 
 
 #If controllers are defined here as services, then util services are not available
@@ -123,6 +128,9 @@ services:
 
     App\FineUploader\Controller\:
         resource: '../src/App/FineUploader/Controller/'
+
+    App\Saml\Controller\:
+        resource: '../src/App/Saml/Controller/'
 
     #https://symfony.com/doc/6.4/routing/custom_route_loader.html
     #Enable Routing Controller for the home page
