@@ -116,8 +116,14 @@ class SamlConfigProvider
         $config->setSpEntityId($spEntityId);
 
         list($scheme, $host) = $this->getSPEntityId();
+
+        //testing
         $scheme = 'https';
         $host = 'view.online/c/wcm/pathology/';
+
+        //testing
+        //$scheme = 'https';
+        //$host = 'view-test.med.cornell.edu/directory/';
 
         //exit('$scheme='.$scheme.', host='.$host);
 

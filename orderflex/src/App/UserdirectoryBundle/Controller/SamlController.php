@@ -44,7 +44,7 @@ class SamlController extends AbstractController
     #[Route(path: '/saml/login/{client}', name: 'saml_login', requirements: ['client' => '.+'])]
     public function login(Request $request, $client): Response
     {
-        exit('saml login');
+        //exit('saml login');
         $this->logger->info("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
