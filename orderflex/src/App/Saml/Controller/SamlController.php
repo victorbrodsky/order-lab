@@ -146,8 +146,8 @@ class SamlController extends AbstractController
         $metadata = (new Settings($config['settings']))->getSPMetadata();
 
         //Unable to locate metadata for 'https://view.online/c/wcm/pathology/directory/'
-        dump($metadata);
-        exit('testing metadata');
+        //dump($metadata);
+        //exit('testing metadata');
 
         return new Response($metadata, 200, ['Content-Type' => 'text/xml']);
     }
