@@ -37,6 +37,7 @@ class SamlController extends AbstractController
     }
 
     // 127.0.0.1/saml/login/oli2002
+    // https://view.online/c/wcm/pathology/saml/login/oli2002
     //#[Route(path: '/about', name: 'employees_about_page')]
     //#[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     ///**
@@ -136,6 +137,7 @@ class SamlController extends AbstractController
     /**
      * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
      */
+    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
         exit('0 testing metadata');
