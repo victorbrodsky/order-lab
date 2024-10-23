@@ -137,7 +137,7 @@ class SamlController extends AbstractController
     /**
      * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
      */
-    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
+    #[Route(path: '/sls/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
         exit('0 testing metadata');
