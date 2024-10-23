@@ -41,7 +41,7 @@ class SamlController extends AbstractController
     // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
     //*/
     //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
-    #[Route(path: '/saml/login/{client}', name: 'user_saml_login', requirements: ['client' => '.+'])]
+    //#[Route(path: '/saml/login/{client}', name: 'user_saml_login', requirements: ['client' => '.+'])]
     public function login(Request $request, $client): Response
     {
         //exit('saml login');
@@ -137,7 +137,8 @@ class SamlController extends AbstractController
     //https://view.online/c/wcm/pathology/saml/metadata/oli2002@med.cornell.edu
     //https://view.online/c/wcm/pathology/directory/saml/metadata/oli2002@med.cornell.edu
     //127.0.0.1/directory/saml/metadata/oli2002@med.cornell.edu
-    #[Route(path: '/directory/saml/metadata/{client}', name: 'user_saml_metadata', requirements: ['client' => '.+'])]
+    //#[Route(path: '/directory/saml/metadata/{client}', name: 'user_saml_metadata', requirements: ['client' => '.+'])]
+    //#[Route(path: '/saml/metadata/{client}', name: 'user_saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
         $config = $this->samlConfigProvider->getConfig($client);

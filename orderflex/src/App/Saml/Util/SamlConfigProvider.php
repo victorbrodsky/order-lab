@@ -8,7 +8,7 @@
 
 namespace App\Saml\Util;
 
-use App\UserdirectoryBundle\Entity\SamlConfig;
+use App\Saml\Entity\SamlConfig;
 use Doctrine\ORM\EntityManagerInterface;
 //use App\UserdirectoryBundle\Repository\SamlConfigRepository;
 use OneLogin\Saml2\Settings;

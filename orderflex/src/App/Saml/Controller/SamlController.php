@@ -9,7 +9,7 @@
 namespace App\Saml\Controller;
 
 use App\Saml\Security\SamlUserProvider;
-use App\UserdirectoryBundle\Util\SamlConfigProvider;
+use App\Saml\Util\SamlConfigProvider;
 use App\Saml\Security\SamlAuthenticator;
 
 use OneLogin\Saml2\Auth;
