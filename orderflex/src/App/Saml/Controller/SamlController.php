@@ -61,11 +61,10 @@ class SamlController extends AbstractController
 //    /**
 //     * @Route("/saml/acs/{client}", name="saml_acs", requirements={"client"=".+"})
 //     */
-    #[Route(path: '/acs/{client}', name: 'saml_acs', requirements: ['client' => '.+'])]
+    #[Route(path: '/saml/acs/{client}', name: 'saml_acs', requirements: ['client' => '.+'])]
     public function acs(Request $request, $client): Response
     {
         $this->logger->info("Processing SAML ACS for client: $client");
-
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
