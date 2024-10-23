@@ -134,8 +134,9 @@ class SamlController extends AbstractController
 //    /**
 //     * @Route("/saml/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
 //     */
+    //https://view.online/c/wcm/pathology/saml/metadata/oli2002@med.cornell.edu
     //127.0.0.1/directory/saml/metadata/oli2002@med.cornell.edu
-    #[Route(path: '/saml/metadata/{client}', name: 'user_saml_metadata', requirements: ['client' => '.+'])]
+    #[Route(path: '/directory/saml/metadata/{client}', name: 'user_saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
         $config = $this->samlConfigProvider->getConfig($client);
