@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 //use App\UserdirectoryBundle\Repository\SamlConfigRepository;
 use OneLogin\Saml2\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SamlConfigProvider
 {
@@ -22,7 +23,8 @@ class SamlConfigProvider
     public function __construct(
         private EntityManagerInterface $em,
         //private SamlConfigRepository $samlConfigRepository,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private ContainerInterface $container
     ) {
         //$this->samlConfigRepository = $samlConfigRepository;
         //$this->samlConfigRepository = $doctrine->getRepository('CmsBundle:Page');

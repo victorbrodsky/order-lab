@@ -1230,10 +1230,8 @@ class UserTenantUtil
     }
 
     public function getCurrentTenantUrl() {
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-
         $tenantManagerName = 'tenantmanager';
-        $tenants = $userTenantUtil->getTenantsFromTenantManager($tenantManagerName);
+        $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
         echo "host=$host <br>"; //view.online
