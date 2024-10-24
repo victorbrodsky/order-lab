@@ -1229,7 +1229,7 @@ class UserTenantUtil
         return $conn;
     }
 
-    public function getCurrentTenantUrl() {
+    public function getCurrentTenantHost() {
         $tenantManagerName = 'tenantmanager';
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
 
