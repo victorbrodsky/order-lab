@@ -101,11 +101,11 @@ class SamlController extends AbstractController
         //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
-        //exit('relayState='.$relayState);
+        echo 'relayState='.$relayState."<br>";
 
         $client = NULL;
         $somestring = '/login/';
-        if( str_contains($relayState,'/login/')) {
+        if( str_contains($relayState,'login')) {
             $client = (string) substr($somestring, strrpos("/$somestring", '/'));
         }
         exit('client='.$client);
