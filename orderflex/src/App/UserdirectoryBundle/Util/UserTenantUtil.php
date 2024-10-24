@@ -1229,14 +1229,14 @@ class UserTenantUtil
         return $conn;
     }
 
-    public function getCurrentTenantHost() {
+    public function getCurrentTenantHost( $request ) {
         $tenantManagerName = 'tenantmanager';
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
 
-        $host = $this->requestStack->getCurrentRequest()->getHost();
+        $host = $request->getHost();
         echo "host=$host <br>"; //view.online
 
-        $currentFullUri = $this->requestStack->getCurrentRequest()->getUri();
+        $currentFullUri = $request->getUri();
         echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
         foreach ($tenants as $tenantArr) {
