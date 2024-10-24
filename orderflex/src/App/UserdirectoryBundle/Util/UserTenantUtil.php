@@ -1131,8 +1131,8 @@ class UserTenantUtil
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
-        //dump($tenantDataArr);
-        //exit('111');
+        dump($tenantDataArr);
+        exit('111');
 
         $host = $tenantDataArr[$tenantManagerName]['databaseHost'];
         $dbname = $tenantDataArr[$tenantManagerName]['databaseName'];
