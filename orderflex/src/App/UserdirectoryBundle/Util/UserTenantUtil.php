@@ -1232,6 +1232,7 @@ class UserTenantUtil
     public function getCurrentTenantHost( $request ) {
         $tenantManagerName = 'tenantmanager';
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
+        echo "tenants=".count($tenants)."<br>";
 
         $host = $request->getHost();
         echo "host=$host <br>"; //view.online
@@ -1244,9 +1245,11 @@ class UserTenantUtil
             if($tenantArr) {
                 $urlslug = $tenantArr['urlslug'];
                 echo "urlslug=$urlslug <br>"; //c/wcm/pathology
-                if( $urlslug && $currentFullUri && str_contains($currentFullUri,$urlslug) ) {
-                    $host = $host."/".$urlslug;
-                    break;
+                if( $urlslug != '/' ) {
+                    if ($urlslug && $currentFullUri && str_contains($currentFullUri, $urlslug)) {
+                        $host = $host . "/" . $urlslug;
+                        break;
+                    }
                 }
             }
         }
