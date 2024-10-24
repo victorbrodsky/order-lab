@@ -126,7 +126,7 @@ class SamlConfigProvider
     {
 
         $projectRoot = $this->appKernel->getProjectDir();
-        echo "projectRoot=".$projectRoot."<br>";
+        //echo "projectRoot=".$projectRoot."<br>";
 
         $samlconfigYamlPath = $projectRoot . "/" . "config" . "/" . "samlconfig.yaml";
 
