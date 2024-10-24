@@ -30,7 +30,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         private SamlConfigProvider $samlConfigProvider,
         private SamlUserProvider $userProvider,
         private JWTTokenManagerInterface $jWTManager,
-        private LoggerInterface $logger
+        //private LoggerInterface $logger
     ) {
     }
 
@@ -41,9 +41,9 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        //exit('SamlAuthenticator: authenticate');
-        $this->logger->notice("SamlAuthenticator: authenticate");
-        
+        exit('SamlAuthenticator: authenticate');
+        //$this->logger->notice("SamlAuthenticator: authenticate");
+
         $client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
