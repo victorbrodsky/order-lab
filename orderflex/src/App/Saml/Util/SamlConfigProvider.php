@@ -73,6 +73,8 @@ class SamlConfigProvider
 
     private function getSPEntityId()
     {
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
         echo "1 scheme=$scheme <br>"; //http
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
@@ -82,6 +84,8 @@ class SamlConfigProvider
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
         echo "1 host=$host <br>"; //view.online
+
+        $host = $userTenantUtil->getCurrentTenantHost(); //view.online/c/wcm/pathology
 
         //$uri = $this->requestStack->getCurrentRequest()->getUri();
         //echo "1 uri=$uri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
