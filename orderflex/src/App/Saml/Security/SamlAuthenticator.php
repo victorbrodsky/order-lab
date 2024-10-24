@@ -44,10 +44,23 @@ class SamlAuthenticator extends AbstractAuthenticator
         //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
-        dump($request);
-        exit('authenticate');
+        //dump($request);
+        //exit('authenticate');
 
-        $client = $request->attributes->get('client');
+        $relayState = $request->getPayload()->get('RelayState');
+        $samlResponse = $request->getPayload()->get('SAMLResponse');
+        //echo 'relayState='.$relayState."<br>";
+
+        $client = '';
+        //$somestring = '/login/';
+        if( str_contains($relayState,'/login/')) {
+            //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+            $parts = explode('/', $relayState);
+            $client = array_pop($parts);
+        }
+        //exit('client='.$client);
+
+        //$client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
         $auth->processResponse();
