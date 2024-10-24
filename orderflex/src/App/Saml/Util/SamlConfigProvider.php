@@ -74,20 +74,22 @@ class SamlConfigProvider
     private function getSPEntityId()
     {
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
-        echo "1 scheme=$scheme <br>";
+        echo "1 scheme=$scheme <br>"; //http
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
+        echo "2 scheme=$scheme <br>"; //http
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
-        echo "1 host=$host <br>";
+        echo "1 host=$host <br>"; //view.online
 
-        $uri = $this->requestStack->getCurrentRequest()->getUri();
-        echo "1 uri=$uri <br>";
+        //$uri = $this->requestStack->getCurrentRequest()->getUri();
+        //echo "1 uri=$uri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
         if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
         }
+        echo "2 host=$host <br>";
 
         return [$scheme, $host];
     }

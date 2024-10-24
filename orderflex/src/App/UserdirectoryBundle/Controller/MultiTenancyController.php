@@ -112,7 +112,7 @@ class MultiTenancyController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
         //echo "tenantManager ID=".$tenantManager->getId()."<br>";
@@ -139,7 +139,7 @@ class MultiTenancyController extends OrderAbstractController
         }
         //echo "tenantManagerUrl=".$tenantManagerUrl."<br>";
 
-        //TODO: check if tenant initialized, if not replace the url with
+        //check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
         $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
