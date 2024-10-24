@@ -1243,6 +1243,7 @@ class UserTenantUtil
             //$tenant as array
             if($tenantArr) {
                 $urlslug = $tenantArr['urlslug'];
+                echo "urlslug=$urlslug <br>"; //c/wcm/pathology
                 if( $urlslug && $currentFullUri && str_contains($currentFullUri,$urlslug) ) {
                     $host = $host."/".$urlslug;
                     break;
