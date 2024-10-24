@@ -128,8 +128,10 @@ class SamlConfigProvider
         $projectRoot = $this->appKernel->getProjectDir();
         echo "projectRoot=".$projectRoot."<br>";
 
-        $values = Yaml::parse(file_get_contents('/path/to/name.yml'));
-        $certificate = $values['saml']['certificate'];
+        $samlconfigYamlPath = $projectRoot . "/" . "config" . "/" . "samlconfig.yaml";
+
+        $samlconfig = Yaml::parse(file_get_contents($samlconfigYamlPath));
+        $certificate = $samlconfig['saml']['certificate'];
         exit('getTestConfig: certificate='.$certificate);
 
         $config = new SamlConfig();
