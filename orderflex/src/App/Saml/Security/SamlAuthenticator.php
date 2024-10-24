@@ -41,7 +41,7 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        exit('SamlAuthenticator: authenticate');
+        //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
         $client = $request->attributes->get('client');
