@@ -132,7 +132,7 @@ class SamlConfigProvider
 
         $samlconfig = Yaml::parse(file_get_contents($samlconfigYamlPath));
         $certificate = $samlconfig['saml']['certificate'];
-        exit('getTestConfig: certificate='.$certificate);
+        //exit('getTestConfig: certificate='.$certificate);
 
         $config = new SamlConfig();
 
