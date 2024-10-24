@@ -48,7 +48,7 @@ class SamlController extends AbstractController
     public function login(Request $request, $client): Response
     {
         //exit('saml login');
-        $this->logger->info("Starting SAML login for client: $client");
+        $this->logger->notice("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
@@ -64,7 +64,7 @@ class SamlController extends AbstractController
     #[Route(path: '/acs/{client}', name: 'saml_acs', requirements: ['client' => '.+'])]
     public function acs(Request $request, $client): Response
     {
-        $this->logger->info("Processing SAML ACS for client: $client");
+        $this->logger->notice("Processing SAML ACS for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
@@ -95,7 +95,7 @@ class SamlController extends AbstractController
     #[Route(path: '/acs', name: 'saml_acs_test')]
     public function acsTest(Request $request): Response
     {
-        $this->logger->info("Processing SAML ACS for client");
+        $this->logger->notice("Processing SAML ACS for client");
 
         //dump($request);
         //exit('acsTest');
@@ -131,7 +131,7 @@ class SamlController extends AbstractController
     #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
     public function logout(Request $request, string $client): Response
     {
-        $this->logger->info("Starting SAML logout for client: $client");
+        $this->logger->notice("Starting SAML logout for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
             $auth = new Auth($config['settings']);
@@ -151,7 +151,7 @@ class SamlController extends AbstractController
     #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
     public function sls(Request $request, string $client): Response
     {
-        $this->logger->info("Processing SAML Logout for client: $client");
+        $this->logger->notice("Processing SAML Logout for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
@@ -177,7 +177,7 @@ class SamlController extends AbstractController
     {
         //dump($client);
         //exit('metadata');
-        $this->logger->info("metadata: client: $client");
+        $this->logger->notice("metadata: client: $client");
 
         //exit('0 testing metadata');
         $config = $this->samlConfigProvider->getConfig($client);
