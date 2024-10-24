@@ -142,10 +142,10 @@ class SamlConfigProvider
         $IdpSloUrl = "https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SLO";
         $config->setIdpSloUrl($IdpSloUrl);
 
-        $IdpCert = 'testttt';
+        $IdpCert = $certificate;
         $config->setIdpCert($IdpCert);
 
-        $SpPrivateKey = 'testttt';
+        $SpPrivateKey = $certificate;
         $config->setSpPrivateKey($SpPrivateKey);
 
         $IdentifierAttribute = 'email'; //limit 255
