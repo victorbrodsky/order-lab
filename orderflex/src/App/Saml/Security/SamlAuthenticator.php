@@ -34,12 +34,13 @@ class SamlAuthenticator extends AbstractAuthenticator
     }
 
     public function supports(Request $request): ?bool
-        {
-            return $request->attributes->get('_route') === 'saml_acs';
-        }
-
-        public function authenticate(Request $request): Passport
     {
+        return $request->attributes->get('_route') === 'saml_acs';
+    }
+
+    public function authenticate(Request $request): Passport
+    {
+        exit('SamlAuthenticator: authenticate');
         $client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
@@ -69,29 +70,29 @@ class SamlAuthenticator extends AbstractAuthenticator
         }));
     }
 
-        public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
-        {
-            // On success, generate JWT and return it
-            $user = $token->getUser();
-            $jwt = $this->generateJwtToken($user);
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
+    {
+        // On success, generate JWT and return it
+        $user = $token->getUser();
+        $jwt = $this->generateJwtToken($user);
 
-            $client = $request->attributes->get('client');
-            $config = $this->samlConfigProvider->getConfig($client);
+        $client = $request->attributes->get('client');
+        $config = $this->samlConfigProvider->getConfig($client);
 
-            $opw = $config['CustomerUrl'];
+        $opw = $config['CustomerUrl'];
 
-            $url = sprintf("%s?j=%s", $opw, $jwt);
-            return new RedirectResponse($url);
+        $url = sprintf("%s?j=%s", $opw, $jwt);
+        return new RedirectResponse($url);
 
-        }
+    }
 
-        public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-        {
-            // On failure, return appropriate response
-            return new JsonResponse(['error' => $exception->getMessageKey()], Response::HTTP_UNAUTHORIZED);
-        }
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        // On failure, return appropriate response
+        return new JsonResponse(['error' => $exception->getMessageKey()], Response::HTTP_UNAUTHORIZED);
+    }
 
-        private function generateJwtToken($user)
+    private function generateJwtToken($user)
     {
         return $this->jWTManager->create($user);
     }

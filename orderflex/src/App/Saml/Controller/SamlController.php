@@ -101,6 +101,7 @@ class SamlController extends AbstractController
         //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
+        //$samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
 
         $client = NULL;

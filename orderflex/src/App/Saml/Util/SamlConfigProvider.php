@@ -137,7 +137,7 @@ class SamlConfigProvider
         $SpPrivateKey = 'testttt';
         $config->setSpPrivateKey($SpPrivateKey);
 
-        $IdentifierAttribute = ''; //limit 255
+        $IdentifierAttribute = 'email'; //limit 255
         $config->setIdentifierAttribute($IdentifierAttribute);
 
         $autoCreate = true; //bool
