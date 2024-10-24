@@ -101,7 +101,14 @@ class SamlController extends AbstractController
         //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
-        exit('$relayState='.$relayState);
+        //exit('relayState='.$relayState);
+
+        $client = NULL;
+        $somestring = '/login/';
+        if( str_contains($relayState,'/login/')) {
+            $client = (string) substr($somestring, strrpos("/$somestring", '/'));
+        }
+        exit('client='.$client);
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
