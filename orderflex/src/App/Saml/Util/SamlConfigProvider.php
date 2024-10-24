@@ -84,7 +84,7 @@ class SamlConfigProvider
         }
         //echo "2 scheme=$scheme <br>"; //http
 
-        $host = $this->requestStack->getCurrentRequest()->getHost();
+        //$host = $this->requestStack->getCurrentRequest()->getHost();
         //echo "1 host=$host <br>"; //view.online
 
         $host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
@@ -94,6 +94,11 @@ class SamlConfigProvider
 
         if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+
+            $urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
+            if( $urlslug && $urlslug != '/' ) {
+                $host = $host . "/" . $urlslug;
+            }
         }
         //echo "2 host=$host <br>";
 
