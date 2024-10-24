@@ -104,9 +104,11 @@ class SamlController extends AbstractController
         echo 'relayState='.$relayState."<br>";
 
         $client = NULL;
-        $somestring = '/login/';
-        if( str_contains($relayState,'login')) {
-            $client = (string) substr($somestring, strrpos("/$somestring", '/'));
+        //$somestring = '/login/';
+        if( str_contains($relayState,'/login/')) {
+            //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+            $parts = explode('/', $relayState);
+            $client = array_pop($parts);
         }
         exit('client='.$client);
 
