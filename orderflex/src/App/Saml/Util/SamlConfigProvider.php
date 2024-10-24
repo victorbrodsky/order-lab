@@ -118,9 +118,9 @@ class SamlConfigProvider
         list($scheme, $host) = $this->getSPEntityId();
 
         //testing
-        $scheme = 'https';
+        //$scheme = 'https';
         //$host = 'view.online/c/wcm/pathology/directory/';
-        $host = 'view.online/c/wcm/pathology/';
+        //$host = 'view.online/c/wcm/pathology/';
         //$host = 'view.online/c/wcm/pathology/index_dev.php/directory/';
 
         //testing

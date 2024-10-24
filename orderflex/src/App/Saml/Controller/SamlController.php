@@ -91,6 +91,39 @@ class SamlController extends AbstractController
         }
     }
 
+    #[Route(path: '/acs', name: 'saml_acs')]
+    public function acsTest(Request $request): Response
+    {
+        $this->logger->info("Processing SAML ACS for client");
+
+        debug($request);
+        exit('acsTest');
+
+        $config = $this->samlConfigProvider->getConfig($client);
+        $auth = new Auth($config['settings']);
+        $auth->processResponse();
+
+        if (!$auth->isAuthenticated()) {
+            $this->logger->error("SAML authentication failed for client: $client");
+            return new Response('SAML authentication failed.', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $attributes = $auth->getAttributes();
+        $identifier = $attributes[$config['identifier']][0];
+
+        try {
+            $user = $this->samlUserProvider->loadUserByIdentifier($identifier);
+            return $this->userAuthenticator->authenticateUser(
+                $user,
+                $this->authenticator,
+                $request
+            );
+        } catch (\Exception $e) {
+            $this->logger->error("Error during SAML authentication for client: $client, error: " . $e->getMessage());
+            return new Response('Authentication exception occurred.', Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
 //    /**
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
@@ -136,6 +169,7 @@ class SamlController extends AbstractController
     /**
      * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
      */
+    //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     //https://view.online/c/wcm/pathology/saml/metadata/oli2002@med.cornell.edu
     #[Route(path: '/metadata/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
