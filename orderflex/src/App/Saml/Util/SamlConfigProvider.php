@@ -146,7 +146,7 @@ class SamlConfigProvider
         $attributeMapping = array(); //json
         $config->setAttributeMapping($attributeMapping);
 
-        $spEntityId = ''; //text
+        $spEntityId = 'https://login-proxy-test.weill.cornell.edu/idp'; //text
         $config->setSpEntityId($spEntityId);
 
         list($scheme, $host) = $this->getSPEntityId();
