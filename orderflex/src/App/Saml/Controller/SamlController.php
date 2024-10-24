@@ -175,6 +175,9 @@ class SamlController extends AbstractController
     #[Route(path: '/metadata/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
+        dump($client);
+        exit('metadata');
+
         //exit('0 testing metadata');
         $config = $this->samlConfigProvider->getConfig($client);
         $metadata = (new Settings($config['settings']))->getSPMetadata();
