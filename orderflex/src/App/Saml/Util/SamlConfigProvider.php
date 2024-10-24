@@ -135,8 +135,8 @@ class SamlConfigProvider
         $config->setSpEntityId($spEntityId);
 
         list($scheme, $host) = $this->getSPEntityId();
-        echo '$scheme='.$scheme.', host='.$host."<br>";
-        exit('getTestConfig');
+        //echo '$scheme='.$scheme.', host='.$host."<br>";
+        //exit('getTestConfig');
 
         //testing
         $scheme = 'https';
