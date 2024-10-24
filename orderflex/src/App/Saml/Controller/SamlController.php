@@ -62,7 +62,7 @@ class SamlController extends AbstractController
 //     * @Route("/saml/acs/{client}", name="saml_acs", requirements={"client"=".+"})
 //     */
     #[Route(path: '/acs/original/{client}', name: 'saml_acs_orig', requirements: ['client' => '.+'])]
-    public function acs(Request $request, $client): Response
+    public function acsOrig(Request $request, $client): Response
     {
         $this->logger->notice("Processing SAML ACS for client: $client");
 
@@ -93,12 +93,12 @@ class SamlController extends AbstractController
 
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     #[Route(path: '/acs', name: 'saml_acs')]
-    public function acsTest(Request $request): Response
+    public function acs(Request $request): Response
     {
         $this->logger->notice("Processing SAML ACS Test for client");
 
-        //dump($request);
-        //exit('acsTest');
+        dump($request);
+        exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
