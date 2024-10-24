@@ -27,7 +27,7 @@
 /vendor/
 
 /config/parameters.yml
-/config/saml-config.yml
+/config/samlconfig.yml
 
 ###< symfony/framework-bundle ###
 
