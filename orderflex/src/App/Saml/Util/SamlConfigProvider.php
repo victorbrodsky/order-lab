@@ -76,18 +76,33 @@ class SamlConfigProvider
     private function getSPEntityId()
     {
         $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantArr = $userTenantUtil->getCurrentTenantArr($this->requestStack->getCurrentRequest());
 
+        $urlslug = '';
+        if( $tenantArr && isset($tenantArr['urlslug']) ) {
+            $urlslug = $tenantArr['urlslug'];
+        }
+        
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
-        //echo "1 scheme=$scheme <br>"; //http
+        echo "1 scheme=$scheme <br>"; //http
+        $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
+        echo "2 scheme=$scheme <br>"; //http
+
+        //TODO: get $scheme from this tenant's DB
+
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
         //echo "2 scheme=$scheme <br>"; //http
 
-        //$host = $this->requestStack->getCurrentRequest()->getHost();
+        $host = $this->requestStack->getCurrentRequest()->getHost();
         //echo "1 host=$host <br>"; //view.online
 
-        $host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
+        //$host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
+
+        if( $urlslug && $urlslug != '/' ) {
+            $host = $host . "/" . $urlslug . "/";
+        }
 
         //$uri = $this->requestStack->getCurrentRequest()->getUri();
         //echo "1 uri=$uri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
@@ -95,7 +110,7 @@ class SamlConfigProvider
         if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
 
-            $urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
+            //$urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
             if( $urlslug && $urlslug != '/' ) {
                 $host = $host . "/" . $urlslug . "/";
             }
@@ -139,7 +154,7 @@ class SamlConfigProvider
         //exit('getTestConfig');
 
         //testing
-        $scheme = 'https';
+        //$scheme = 'https';
         //$host = 'view.online/c/wcm/pathology/directory/';
         //$host = 'view.online/c/wcm/pathology/';
         //$host = 'view.online/c/wcm/pathology/index_dev.php/directory/';
