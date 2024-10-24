@@ -93,19 +93,19 @@ class SamlController extends AbstractController
 
     //acs TEST
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
-    #[Route(path: '/acs', name: 'saml_acs_test')]
+    #[Route(path: '/acs', name: 'saml_acs')]
     public function acs(Request $request): Response
     {
         $this->logger->notice("Processing SAML ACS Test for client");
 
-        dump($request);
-        exit('acsTest');
+        //dump($request);
+        //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
 
-        $client = NULL;
+        $client = '';
         //$somestring = '/login/';
         if( str_contains($relayState,'/login/')) {
             //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
