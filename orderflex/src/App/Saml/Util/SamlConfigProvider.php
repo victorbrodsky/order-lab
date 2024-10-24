@@ -81,6 +81,10 @@ class SamlConfigProvider
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
         echo "1 host=$host <br>";
+
+        $uri = $this->requestStack->getCurrentRequest()->getUri();
+        echo "1 uri=$uri <br>";
+
         if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
         }
