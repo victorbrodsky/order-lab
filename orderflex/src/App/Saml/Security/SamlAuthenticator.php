@@ -44,6 +44,9 @@ class SamlAuthenticator extends AbstractAuthenticator
         //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
+        dump($request);
+        exit('authenticate');
+
         $client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
