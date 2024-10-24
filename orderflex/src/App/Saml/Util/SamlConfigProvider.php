@@ -74,6 +74,7 @@ class SamlConfigProvider
     private function getSPEntityId()
     {
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
+        echo "1 scheme=$scheme <br>";
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
