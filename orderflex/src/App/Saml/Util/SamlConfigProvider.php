@@ -78,14 +78,14 @@ class SamlConfigProvider
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
-        echo "1 scheme=$scheme <br>"; //http
+        //echo "1 scheme=$scheme <br>"; //http
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
-        echo "2 scheme=$scheme <br>"; //http
+        //echo "2 scheme=$scheme <br>"; //http
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
-        echo "1 host=$host <br>"; //view.online
+        //echo "1 host=$host <br>"; //view.online
 
         $host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
 
@@ -95,7 +95,7 @@ class SamlConfigProvider
         if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
         }
-        echo "2 host=$host <br>";
+        //echo "2 host=$host <br>";
 
         return [$scheme, $host];
     }
@@ -130,8 +130,8 @@ class SamlConfigProvider
         $config->setSpEntityId($spEntityId);
 
         list($scheme, $host) = $this->getSPEntityId();
-        echo '$scheme='.$scheme.', host='.$host."<br>";
-        exit('getTestConfig');
+        //echo '$scheme='.$scheme.', host='.$host."<br>";
+        //exit('getTestConfig');
 
         //testing
         //$scheme = 'https';
