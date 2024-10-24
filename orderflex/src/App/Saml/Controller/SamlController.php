@@ -97,8 +97,8 @@ class SamlController extends AbstractController
     {
         $this->logger->notice("Processing SAML ACS Test for client");
 
-        dump($request);
-        exit('acsTest');
+        //dump($request);
+        //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
