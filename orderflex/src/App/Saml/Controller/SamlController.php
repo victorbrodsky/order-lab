@@ -97,8 +97,8 @@ class SamlController extends AbstractController
     {
         $this->logger->info("Processing SAML ACS for client");
 
-        dump($request);
-        exit('acsTest');
+        //dump($request);
+        //exit('acsTest');
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
@@ -175,8 +175,9 @@ class SamlController extends AbstractController
     #[Route(path: '/metadata/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
-        dump($client);
-        exit('metadata');
+        //dump($client);
+        //exit('metadata');
+        $this->logger->info("metadata: client: $client");
 
         //exit('0 testing metadata');
         $config = $this->samlConfigProvider->getConfig($client);
