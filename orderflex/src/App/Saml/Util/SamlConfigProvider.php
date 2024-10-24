@@ -97,7 +97,7 @@ class SamlConfigProvider
 
             $urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
             if( $urlslug && $urlslug != '/' ) {
-                $host = $host . "/" . $urlslug;
+                $host = $host . "/" . $urlslug . "/";
             }
         }
         //echo "2 host=$host <br>";

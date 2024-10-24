@@ -1266,7 +1266,7 @@ class UserTenantUtil
 
         $urlslug = $this->getCurrentTenantUrlslug($request);
         if( $urlslug && $urlslug != '/' ) {
-            $host = $host . "/" . $urlslug;
+            $host = $host . "/" . $urlslug . "/";
         }
 
         return $host;
