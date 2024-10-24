@@ -14,6 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use OneLogin\Saml2\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 
 class SamlConfigProvider
 {
@@ -24,7 +27,8 @@ class SamlConfigProvider
         private EntityManagerInterface $em,
         //private SamlConfigRepository $samlConfigRepository,
         private RequestStack $requestStack,
-        private ContainerInterface $container
+        private ContainerInterface $container,
+        private KernelInterface $appKernel,
     ) {
         //$this->samlConfigRepository = $samlConfigRepository;
         //$this->samlConfigRepository = $doctrine->getRepository('CmsBundle:Page');
@@ -122,6 +126,13 @@ class SamlConfigProvider
 
     private function getTestConfig( string $client ): array
     {
+
+        $projectRoot = $this->appKernel->getProjectDir();
+        echo "projectRoot=".$projectRoot."<br>";
+
+        $values = Yaml::parse(file_get_contents('/path/to/name.yml'));
+        echo $values['name'];
+        exit('$projectRoot');
 
         $config = new SamlConfig();
 
