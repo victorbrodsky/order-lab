@@ -137,7 +137,7 @@ class SamlController extends AbstractController
      * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
      */
     //https://view.online/c/wcm/pathology/saml/metadata/oli2002@med.cornell.edu
-    #[Route(path: '/metadata/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
+    #[Route(path: '/metadata1/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
     public function metadata(string $client): Response
     {
         //exit('0 testing metadata');
