@@ -92,8 +92,6 @@ class SamlConfigProvider
         $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
         //echo "2 scheme=$scheme <br>"; //http
 
-        //TODO: get $scheme from this tenant's DB
-
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
@@ -131,8 +129,8 @@ class SamlConfigProvider
         echo "projectRoot=".$projectRoot."<br>";
 
         $values = Yaml::parse(file_get_contents('/path/to/name.yml'));
-        echo $values['name'];
-        exit('$projectRoot');
+        $certificate = $values['saml']['certificate'];
+        exit('getTestConfig: certificate='.$certificate);
 
         $config = new SamlConfig();
 
