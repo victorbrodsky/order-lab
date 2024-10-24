@@ -101,7 +101,7 @@ class SamlController extends AbstractController
         //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
-        echo 'relayState='.$relayState."<br>";
+        //echo 'relayState='.$relayState."<br>";
 
         $client = NULL;
         //$somestring = '/login/';
@@ -110,7 +110,7 @@ class SamlController extends AbstractController
             $parts = explode('/', $relayState);
             $client = array_pop($parts);
         }
-        exit('client='.$client);
+        //exit('client='.$client);
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
