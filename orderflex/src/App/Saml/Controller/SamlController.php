@@ -95,10 +95,13 @@ class SamlController extends AbstractController
     #[Route(path: '/acs', name: 'saml_acs_test')]
     public function acsTest(Request $request): Response
     {
-        $this->logger->notice("Processing SAML ACS for client");
+        $this->logger->notice("Processing SAML ACS Test for client");
 
         //dump($request);
         //exit('acsTest');
+
+        $relayState = $request->getPayload()->get('RelayState');
+        exit('$relayState='.$relayState);
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
