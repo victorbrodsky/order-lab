@@ -31,7 +31,7 @@ class SamlController extends AbstractController
         private UserAuthenticatorInterface $userAuthenticator,
         private SamlAuthenticator $authenticator,
         private SamlUserProvider $samlUserProvider,
-        //private LoggerInterface $logger
+        private LoggerInterface $logger
     ) {
         //empty constructor
     }
