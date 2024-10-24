@@ -91,12 +91,13 @@ class SamlController extends AbstractController
         }
     }
 
+    //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     #[Route(path: '/acs', name: 'saml_acs_test')]
     public function acsTest(Request $request): Response
     {
         $this->logger->info("Processing SAML ACS for client");
 
-        debug($request);
+        dump($request);
         exit('acsTest');
 
         $config = $this->samlConfigProvider->getConfig($client);
