@@ -69,6 +69,7 @@ class SamlController extends AbstractController
     #[Route(path: '/acs/original/{client}', name: 'saml_acs_orig', requirements: ['client' => '.+'])]
     public function acsOrig(Request $request, $client): Response
     {
+        exit('acsOrig');
         $this->logger->notice("Processing SAML ACS for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
@@ -101,6 +102,7 @@ class SamlController extends AbstractController
     #[Route(path: '/acs', name: 'saml_acs')]
     public function acs(Request $request): Response
     {
+        exit('acs Test');
         $this->logger->notice("Processing SAML ACS Test for client");
 
         //dump($request);
@@ -150,6 +152,7 @@ class SamlController extends AbstractController
     #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
     public function logout(Request $request, string $client): Response
     {
+        exit('logout');
         $this->logger->notice("Starting SAML logout for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
@@ -170,6 +173,7 @@ class SamlController extends AbstractController
     #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
     public function sls(Request $request, string $client): Response
     {
+        exit('sls');
         $this->logger->notice("Processing SAML Logout for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
@@ -195,7 +199,7 @@ class SamlController extends AbstractController
     public function metadata(string $client): Response
     {
         //dump($client);
-        //exit('metadata');
+        exit('metadata');
         $this->logger->notice("metadata: client: $client");
 
         //exit('0 testing metadata');

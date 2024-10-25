@@ -37,6 +37,7 @@ class SamlAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         //exit('SamlAuthenticator: supports');
+        return false;//testing
         return $request->attributes->get('_route') === 'saml_acs';
     }
 
@@ -71,6 +72,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         $auth->processResponse();
         //exit('after processResponse');
 
+        //isAuthenticated fail
         if (!$auth->isAuthenticated()) {
             exit('after isAuthenticated');
             throw new AuthenticationException('SAML authentication failed.');
