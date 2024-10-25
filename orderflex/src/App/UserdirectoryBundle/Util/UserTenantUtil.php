@@ -1233,70 +1233,7 @@ class UserTenantUtil
         return $conn;
     }
 
-//    public function getCurrentTenantHost( $request ) {
-////        $tenantManagerName = 'tenantmanager';
-////        $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
-////        echo "tenants=".count($tenants)."<br>";
-////
-////        $host = $request->getHost();
-////        echo "host=$host <br>"; //view.online
-////
-////        $currentFullUri = $request->getUri();
-////        echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
-////
-////        foreach ($tenants as $tenantArr) {
-////            //$tenant as array
-////            if($tenantArr) {
-////                $urlslug = $tenantArr['urlslug'];
-////                echo "urlslug=$urlslug <br>"; //c/wcm/pathology
-////                if( $urlslug != '/' ) {
-////                    if ($urlslug && $currentFullUri && str_contains($currentFullUri, $urlslug)) {
-////                        $host = $host . "/" . $urlslug;
-////                        break;
-////                    }
-////                }
-////            }
-////        }
-//
-//        $host = $request->getHost();
-//        //echo "host=$host <br>"; //view.online
-//
-//        //$currentFullUri = $request->getUri();
-//        //echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
-//
-//        $urlslug = $this->getCurrentTenantUrlslug($request);
-//        if( $urlslug && $urlslug != '/' ) {
-//            $host = $host . "/" . $urlslug . "/";
-//        }
-//
-//        return $host;
-//    }
-//    public function getCurrentTenantUrlslug( $request ) {
-//        $tenantManagerName = 'tenantmanager';
-//        $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
-//        //echo "tenants=".count($tenants)."<br>";
-//
-//        $host = $request->getHost();
-//        //echo "host=$host <br>"; //view.online
-//
-//        $currentFullUri = $request->getUri();
-//        //echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
-//
-//        foreach ($tenants as $tenantArr) {
-//            //$tenant as array
-//            if($tenantArr) {
-//                $urlslug = $tenantArr['urlslug'];
-//                echo "urlslug=$urlslug <br>"; //c/wcm/pathology
-//                if( $urlslug != '/' ) {
-//                    if ($urlslug && $currentFullUri && str_contains($currentFullUri, $urlslug)) {
-//                        //$host = $host . "/" . $urlslug;
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        return $urlslug;
-//    }
+    //Get current tenant data based on the current url based on request.
     public function getCurrentTenantArr( $request ) {
         $tenantManagerName = 'tenantmanager';
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
