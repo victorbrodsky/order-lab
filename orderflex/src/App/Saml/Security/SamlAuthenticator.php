@@ -42,7 +42,7 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        exit('SamlAuthenticator: authenticate');
+        //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
         //dump($request);
@@ -59,14 +59,18 @@ class SamlAuthenticator extends AbstractAuthenticator
             $parts = explode('/', $relayState);
             $client = array_pop($parts);
         }
-        //exit('client='.$client);
+        exit('client='.$client);
 
         //TODO: {"error":"An authentication exception occurred."}. Where occurs
 
         //$client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
+        exit('after new Auth');
+
         $auth->processResponse();
+        exit('after processResponse');
+
         if (!$auth->isAuthenticated()) {
             throw new AuthenticationException('SAML authentication failed.');
         }

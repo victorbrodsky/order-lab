@@ -38,6 +38,8 @@ class SamlController extends AbstractController
 
     //1) https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     //2) SamlAuthenticator->supports
+    //3) SamlAuthenticator->authenticate
+    //4) 
 
     // 127.0.0.1/saml/login/oli2002
     // https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
