@@ -60,6 +60,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         }
         //exit('client='.$client);
 
+        //TODO: {"error":"An authentication exception occurred."}. Where occurs
+
         //$client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);

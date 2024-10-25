@@ -271,11 +271,8 @@ class Invoice {
         $this->setCreateDate(new \DateTime());
         $this->setVersion(1);
 
-        //$this->transresRequests = new ArrayCollection();
         $this->invoiceItems = new ArrayCollection();
-//        $this->invoiceAddItems = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        //$this->principalInvestigators = new ArrayCollection();
     }
 
 

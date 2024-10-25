@@ -115,10 +115,9 @@
 
         {#{{ formmacros.field(form.updateUser) }}#}
 
-        {% if form.createDate is defined %}
-            {#{{ formmacros.field_left(form.createDate) }}#}
-            {{ formmacros.field(form.createDate) }}
-        {% endif %}
+        {#{% if form.createDate is defined %}#}
+            {#{{ formmacros.field(form.createDate) }}#}
+        {#{% endif %}#}
 
         {#{% if form.submitter is defined %}#}
             {#{{ formmacros.field_left(form.submitter) }}#}
@@ -205,6 +204,11 @@
         {% if transresRequest and transresRequest.getCreateDate() %}
             {#{{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled", "", "", "2-6") }}#}
             {{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled") }}
+        {% endif %}
+
+        {#Billing Date: Invoice's createDate#}
+        {% if form.createDate is defined %}
+            {{ formmacros.fieldDateLabel(form.createDate,'allow-future-date') }}
         {% endif %}
 
         {% if form.dueDate is defined %}

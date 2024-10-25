@@ -63,6 +63,9 @@
                 </p>
             {% endif %}
             <p>
+                Billing Date: {{ invoice.createDate|date("m/d/Y",false) }}
+            </p>
+            <p>
                 Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
             </p>
             <p>

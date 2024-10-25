@@ -37,10 +37,9 @@ class InvoiceType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //$builder->add('createDate')->add('updateDate')->add('oid')->add('invoiceNumber')->add('dueDate')->add('status')->add('to')->add('discountNumeric')->add('discountPercent')->add('submitter')->add('updateUser')->add('transresRequests')->add('salesperson');
-
 //        $builder->add('createDate', DateType::class, array(
 //            'widget' => 'single_text',
-//            'label' => "Create Date:",
+//            'label' => "Billing Date:",
 //            'disabled' => true,
 //            'format' => 'MM/dd/yyyy',
 //            'attr' => array('class' => 'datepicker form-control'),
@@ -164,6 +163,16 @@ class InvoiceType extends AbstractType
             'label' => "Fund Number:",
             'required' => false,
             'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('createDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => "Billing Date:",
+            //'disabled' => true,
+            'format' => 'MM/dd/yyyy',
+            'html5' => false,
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
         ));
 
         $builder->add('dueDate', DateType::class, array(
