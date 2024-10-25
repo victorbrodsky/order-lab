@@ -123,7 +123,10 @@ class SamlController extends AbstractController
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
+        exit('acsTest after new Auth');
+
         $auth->processResponse();
+        exit('acsTest after processResponse');
 
         if (!$auth->isAuthenticated()) {
             $this->logger->error("SAML authentication failed for client: $client");
