@@ -69,9 +69,10 @@ class SamlAuthenticator extends AbstractAuthenticator
         //exit('after new Auth');
 
         $auth->processResponse();
-        exit('after processResponse');
+        //exit('after processResponse');
 
         if (!$auth->isAuthenticated()) {
+            exit('after isAuthenticated');
             throw new AuthenticationException('SAML authentication failed.');
         }
 
