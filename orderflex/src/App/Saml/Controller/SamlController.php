@@ -102,7 +102,7 @@ class SamlController extends AbstractController
     #[Route(path: '/acs', name: 'saml_acs')]
     public function acs(Request $request): Response
     {
-        exit('acs Test');
+        //exit('acs Test');
         $this->logger->notice("Processing SAML ACS Test for client");
 
         //dump($request);
