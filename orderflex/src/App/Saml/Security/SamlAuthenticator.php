@@ -59,7 +59,7 @@ class SamlAuthenticator extends AbstractAuthenticator
             $parts = explode('/', $relayState);
             $client = array_pop($parts);
         }
-        exit('client='.$client);
+        //exit('client='.$client);
 
         //TODO: {"error":"An authentication exception occurred."}. Where occurs
 
