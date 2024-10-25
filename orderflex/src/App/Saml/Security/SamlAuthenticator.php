@@ -66,7 +66,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         //$client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
-        exit('after new Auth');
+        //exit('after new Auth');
 
         $auth->processResponse();
         exit('after processResponse');
