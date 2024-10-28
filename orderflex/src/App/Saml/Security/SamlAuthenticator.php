@@ -74,7 +74,8 @@ class SamlAuthenticator extends AbstractAuthenticator
 
         //isAuthenticated fail
         if (!$auth->isAuthenticated()) {
-            //exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
+            dump($auth->getErrors());
+            exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
             throw new AuthenticationException('SAML authentication failed.');
         }
         exit('after isAuthenticated');
