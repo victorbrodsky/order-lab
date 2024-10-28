@@ -1,4 +1,5 @@
 https://github.com/nbgrp/onelogin-saml-bundle
+https://github.com/SAML-Toolkits/php-saml
 https://medium.com/@cyrilgeorgespereira/multiple-sso-with-symfony-and-onelogin-saml-bundle-5e1d44838f1a
 
 composer require nbgrp/onelogin-saml-bundle

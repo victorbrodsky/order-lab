@@ -74,13 +74,16 @@ class SamlAuthenticator extends AbstractAuthenticator
 
         //isAuthenticated fail
         if (!$auth->isAuthenticated()) {
-            exit('after isAuthenticated');
+            //exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
             throw new AuthenticationException('SAML authentication failed.');
         }
+        exit('after isAuthenticated');
 
         $attributes = $auth->getAttributes();
         $identifierAttribute = $config['identifier'];
         $identifierValue = $attributes[$identifierAttribute][0];
+
+        exit('before setIdentifierField');
 
         // Load or create the user
         $this->userProvider->setIdentifierField($identifierAttribute);
