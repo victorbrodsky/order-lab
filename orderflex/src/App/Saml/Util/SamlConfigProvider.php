@@ -89,7 +89,7 @@ class SamlConfigProvider
         
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
         //echo "1 scheme=$scheme <br>"; //http
-        //$scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
+        $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
         //echo "2 scheme=$scheme <br>"; //http
 
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
