@@ -181,7 +181,7 @@ class SamlConfigProvider
         //TRy to set 'security' => array ('destinationStrictlyMatches' => false)
 
         $settings = array(
-            'strict' => false,
+            //'strict' => false,
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
