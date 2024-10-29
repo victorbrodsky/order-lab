@@ -129,10 +129,10 @@ class SamlConfigProvider
         //echo "projectRoot=".$projectRoot."<br>";
 
         $samlconfigYamlPath = $projectRoot . "/" . "config" . "/" . "samlconfig.yaml";
-
         $samlconfig = Yaml::parse(file_get_contents($samlconfigYamlPath));
         $certificate = $samlconfig['saml']['certificate'];
         //exit('getTestConfig: certificate='.$certificate);
+        $privatekey = $samlconfig['saml']['privatekey'];
 
         $config = new SamlConfig();
 
@@ -145,7 +145,7 @@ class SamlConfigProvider
         $IdpCert = $certificate;
         $config->setIdpCert($IdpCert);
 
-        $SpPrivateKey = $certificate;
+        $SpPrivateKey = $privatekey;
         $config->setSpPrivateKey($SpPrivateKey);
 
         $IdentifierAttribute = 'email'; //limit 255
