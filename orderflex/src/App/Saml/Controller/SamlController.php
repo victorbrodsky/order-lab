@@ -98,6 +98,8 @@ class SamlController extends AbstractController
     }
 
     //acs TEST
+    //The root 'saml_acs' is authenticated by SamlAuthenticator->authenticate(Request $request)
+    //If the root is different, then this controller authentication is used
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     #[Route(path: '/acs', name: 'saml_acs')]
     public function acs(Request $request): Response
