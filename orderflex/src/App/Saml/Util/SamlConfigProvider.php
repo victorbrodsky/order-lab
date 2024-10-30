@@ -134,6 +134,10 @@ class SamlConfigProvider
         //exit('getTestConfig: certificate='.$certificate);
         $privatekey = $samlconfig['saml']['privatekey'];
 
+        //Signature validation failed. SAML Response rejected
+        echo "privat key= [$privatekey] <br>";
+
+
         $config = new SamlConfig();
 
         $IdpSsoUrl = "https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO";
