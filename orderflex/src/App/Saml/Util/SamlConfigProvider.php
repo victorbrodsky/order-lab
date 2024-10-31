@@ -211,14 +211,14 @@ class SamlConfigProvider
         //TRy to set 'security' => array ('destinationStrictlyMatches' => false)
 
         $settings = array(
-            'strict' => false,
-            'security' => [
-                'nameIdEncrypted' => false,
-                'authnRequestsSigned' => false,
-                'logoutRequestSigned' => false,
-                'logoutResponseSigned' => false,
-                'signMetadata' => false,
-            ],
+            'strict' => true,
+//            'security' => [
+//                'nameIdEncrypted' => false,
+//                'authnRequestsSigned' => false,
+//                'logoutRequestSigned' => false,
+//                'logoutResponseSigned' => false,
+//                'signMetadata' => false,
+//            ],
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
