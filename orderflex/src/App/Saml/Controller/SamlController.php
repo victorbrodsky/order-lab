@@ -8,10 +8,12 @@
 
 namespace App\Saml\Controller;
 
+use App\Saml\Entity\SamlConfig;
 use App\Saml\Security\SamlUserProvider;
 use App\Saml\Util\SamlConfigProvider;
 use App\Saml\Security\SamlAuthenticator;
 
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use OneLogin\Saml2\Auth;
 use Psr\Log\LoggerInterface;
 
@@ -23,7 +25,7 @@ use OneLogin\Saml2\Settings;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 
-class SamlController extends AbstractController
+class SamlController extends OrderAbstractController //AbstractController
 {
 
     public function __construct(
@@ -204,7 +206,7 @@ class SamlController extends AbstractController
     public function metadata(string $client): Response
     {
         //dump($client);
-        exit('metadata');
+        //exit('metadata');
         $this->logger->notice("metadata: client: $client");
 
         //exit('0 testing metadata');
@@ -219,16 +221,37 @@ class SamlController extends AbstractController
     }
 
 
-    //http://127.0.0.1/saml/settings
-    #[Route(path: '/settings', name: 'saml_settings')]
-    public function settingsAction(): Response
+    //#[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
+    //http://127.0.0.1/saml/settings/oli2002
+    #[Route(path: '/settings/{client}', name: 'saml_settings', requirements: ['client' => '.+'])]
+    public function settingsAction( string $client ): Response
     {
         $this->logger->notice("settingsAction");
         //exit('0 testing metadata');
         //$config = $this->samlConfigProvider->getConfig($client);
         //$metadata = (new Settings($config['settings']))->getSPMetadata();
 
-        exit('Exit: settingsAction');
+        $title = "SAML configuration";
+
+        $em = $this->getDoctrine()->getManager();
+        $configEntity = $em->getRepository(SamlConfig::class)->findByClient($client);
+        if( !$configEntity ) {
+            //Create $configEntity
+            exit('Create $configEntity');
+
+        }
+
+        $config = $this->samlConfigProvider->getConfig($client);
+
+        //exit('Exit: settingsAction');
+
+        return $this->render('AppSaml/config.html.twig', [
+            // this array defines the variables passed to the template,
+            // where the key is the variable name and the value is the variable value
+            // (Twig recommends using snake_case variable names: 'foo_bar' instead of 'fooBar')
+            'config' => $config,
+            'title' => $title,
+        ]);
     }
 
 }

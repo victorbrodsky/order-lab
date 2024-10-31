@@ -143,6 +143,13 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/DashboardBundle/Entity'
                         prefix: 'App\DashboardBundle\Entity'
                         alias: 'AppDashboardBundle'
+                    App\Saml:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/App/Saml/Entity'
+                        prefix: 'App\Saml\Entity'
+                        alias: 'AppSaml'
+
 #                    AppOrderformBundle: ~
 #                    AppUserdirectoryBundle: ~
 #                    AppFellAppBundle: ~

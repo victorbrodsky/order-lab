@@ -37,7 +37,7 @@ class SamlConfigProvider
 
     public function getConfig(string $client): array
     {
-        return $this->getTestConfig($client);
+        //return $this->getTestConfig($client);
 
         //$config = $this->samlConfigRepository->findByClient($client);
         $config = $this->em->getRepository(SamlConfig::class)->findByClient($client);
