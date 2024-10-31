@@ -143,6 +143,8 @@ class SamlConfigProvider
         $certificate = file_get_contents($certPath);
         $certificate = file($certPath,FILE_IGNORE_NEW_LINES);
         //Signature validation failed. SAML Response rejected
+        dump($certificate);
+        exit('111');
         echo "certificate= [$certificate] <br>";
         //dump($certificate);
 
