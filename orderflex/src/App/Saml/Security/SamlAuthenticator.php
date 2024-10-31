@@ -82,6 +82,8 @@ class SamlAuthenticator extends AbstractAuthenticator
             // instead of
             // https://view.online/c/wcm/pathology/saml/acs
             dump($auth->getLastErrorReason());
+
+            //Error in Response.php line 428: If find a Signature on the Response, validates it checking the original response
             exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
             throw new AuthenticationException('SAML authentication failed.');
         }
