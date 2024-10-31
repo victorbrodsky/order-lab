@@ -257,6 +257,7 @@ security:
 
        ### SAML testing ###
        - { path: ^.*/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
+       - { path: ^.*/saml/settings, role: ROLE_PLATFORM_DEPUTY_ADMIN }
        ### EOF SAML testing ###
 
 #when@test:

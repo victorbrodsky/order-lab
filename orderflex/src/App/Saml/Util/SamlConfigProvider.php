@@ -137,6 +137,7 @@ class SamlConfigProvider
         //Signature validation failed. SAML Response rejected
         echo "privat key= [$privatekey] <br>";
 
+        //Use separate file for private key
 
         $config = new SamlConfig();
 

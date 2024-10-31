@@ -218,4 +218,17 @@ class SamlController extends AbstractController
         return new Response($metadata, 200, ['Content-Type' => 'text/xml']);
     }
 
+
+    //http://127.0.0.1/saml/settings
+    #[Route(path: '/settings', name: 'saml_settings')]
+    public function settingsAction(): Response
+    {
+        $this->logger->notice("settingsAction");
+        //exit('0 testing metadata');
+        //$config = $this->samlConfigProvider->getConfig($client);
+        //$metadata = (new Settings($config['settings']))->getSPMetadata();
+
+        exit('Exit: settingsAction');
+    }
+
 }

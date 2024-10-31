@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 ///**
 // * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Util\SamlConfigRepository")
 // */
-//#[ORM\Table(name: 'user_saml_config')]
+//#[ORM\Table(name: 'saml_config')]
 #[ORM\Entity(repositoryClass: 'App\Saml\Repository\SamlConfigRepository')]
 class SamlConfig
 {
