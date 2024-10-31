@@ -128,12 +128,19 @@ class SamlConfigProvider
         $projectRoot = $this->appKernel->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
 
-        $samlconfigYamlPath = $projectRoot . "/" . "config" . "/" . "samlconfig.yaml";
-        $samlconfig = Yaml::parse(file_get_contents($samlconfigYamlPath));
-        $certificate = $samlconfig['saml']['certificate'];
+        //$samlconfigYamlPath = $projectRoot . "/" . "config" . "/" . "samlconfig.yaml";
+        //$samlconfig = Yaml::parse(file_get_contents($samlconfigYamlPath));
+        //$certificate = $samlconfig['saml']['certificate'];
         //exit('getTestConfig: certificate='.$certificate);
-        $privatekey = $samlconfig['saml']['privatekey'];
+        //$privatekey = $samlconfig['saml']['privatekey'];
 
+        $certPath = $projectRoot . "/" . "config" . "/" . "saml_cert.pem";
+        $certificate = file_get_contents($certPath);
+        //Signature validation failed. SAML Response rejected
+        echo "certificate= [$certificate] <br>";
+
+        $privatekeyPath = $projectRoot . "/" . "config" . "/" . "saml_private.pem";
+        $privatekey = file_get_contents($privatekeyPath);
         //Signature validation failed. SAML Response rejected
         echo "privat key= [$privatekey] <br>";
 
