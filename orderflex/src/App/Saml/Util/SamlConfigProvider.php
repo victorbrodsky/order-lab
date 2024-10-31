@@ -135,11 +135,22 @@ class SamlConfigProvider
         //$privatekey = $samlconfig['saml']['privatekey'];
 
         $certPath = $projectRoot . "/" . "config" . "/" . "saml_cert.pem";
+        if (file_exists($certPath)) {
+            echo "The file $certPath exists";
+        } else {
+            echo "The file $certPath does not exist";
+        }
         $certificate = file_get_contents($certPath);
         //Signature validation failed. SAML Response rejected
-        echo "certificate= [$certificate] <br>";
+        //echo "certificate= [$certificate] <br>";
+        dump($certificate);
 
         $privatekeyPath = $projectRoot . "/" . "config" . "/" . "saml_private.pem";
+        if (file_exists($privatekeyPath)) {
+            echo "The file $privatekeyPath exists";
+        } else {
+            echo "The file $privatekeyPath does not exist";
+        }
         $privatekey = file_get_contents($privatekeyPath);
         //Signature validation failed. SAML Response rejected
         echo "privat key= [$privatekey] <br>";
