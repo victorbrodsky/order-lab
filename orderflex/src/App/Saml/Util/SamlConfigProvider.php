@@ -143,8 +143,9 @@ class SamlConfigProvider
         $certificate = file_get_contents($certPath);
         $certificate = file($certPath,FILE_IGNORE_NEW_LINES);
         //Signature validation failed. SAML Response rejected
-        dump($certificate);
-        exit('111');
+        $certificate = implode('',$certificate);
+        //dump($certificate);
+        //exit('111');
         echo "certificate= [$certificate] <br>";
         //dump($certificate);
 
@@ -156,6 +157,8 @@ class SamlConfigProvider
 //        }
         $privatekey = file_get_contents($privatekeyPath);
         $privatekey = file($privatekeyPath,FILE_IGNORE_NEW_LINES);
+        //Signature validation failed. SAML Response rejected
+        $privatekey = implode('',$privatekey);
         //Signature validation failed. SAML Response rejected
         echo "private key= [$privatekey] <br>";
 
