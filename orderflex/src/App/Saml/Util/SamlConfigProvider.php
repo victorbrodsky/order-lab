@@ -141,9 +141,9 @@ class SamlConfigProvider
 //            echo "The file $certPath does not exist <br>";
 //        }
         $certificate = file_get_contents($certPath);
-        $certificate = file($certPath,FILE_IGNORE_NEW_LINES);
+        //$certificate = file($certPath,FILE_IGNORE_NEW_LINES);
         //Signature validation failed. SAML Response rejected
-        $certificate = implode('',$certificate);
+        //$certificate = implode('',$certificate);
         //dump($certificate);
         //exit('111');
         echo "certificate= [$certificate] <br>";
@@ -156,9 +156,9 @@ class SamlConfigProvider
 //            echo "The file $privatekeyPath does not exist <br>";
 //        }
         $privatekey = file_get_contents($privatekeyPath);
-        $privatekey = file($privatekeyPath,FILE_IGNORE_NEW_LINES);
+        //$privatekey = file($privatekeyPath,FILE_IGNORE_NEW_LINES);
         //Signature validation failed. SAML Response rejected
-        $privatekey = implode('',$privatekey);
+        //$privatekey = implode('',$privatekey);
         //Signature validation failed. SAML Response rejected
         echo "private key= [$privatekey] <br>";
 
