@@ -146,7 +146,7 @@ class SamlConfigProvider
         //$certificate = implode('',$certificate);
         //dump($certificate);
         //exit('111');
-        echo "certificate= [$certificate] <br>";
+        //echo "certificate= [$certificate] <br>";
         //dump($certificate);
 
         $privatekeyPath = $projectRoot . "/" . "config" . "/" . "saml_private.pem";
@@ -160,7 +160,7 @@ class SamlConfigProvider
         //Signature validation failed. SAML Response rejected
         //$privatekey = implode('',$privatekey);
         //Signature validation failed. SAML Response rejected
-        echo "private key= [$privatekey] <br>";
+        //echo "private key= [$privatekey] <br>";
 
         //Use separate file for private key
 
@@ -211,7 +211,7 @@ class SamlConfigProvider
         //TRy to set 'security' => array ('destinationStrictlyMatches' => false)
 
         $settings = array(
-            'strict' => true,
+            'strict' => false,
 //            'security' => [
 //                'nameIdEncrypted' => false,
 //                'authnRequestsSigned' => false,
