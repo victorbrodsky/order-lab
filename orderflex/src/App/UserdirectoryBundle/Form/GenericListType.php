@@ -1756,6 +1756,71 @@ class GenericListType extends AbstractType
 
         }
 
+        if( strtolower($this->mapper['className']) == strtolower("SamlConfig") ) {
+            $builder->add('client', null, array(
+                'label' => "Client:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('idpEntityId', null, array(
+                'label' => "IDP Entity Id:",
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea'),
+            ));
+            $builder->add('idpSsoUrl', null, array(
+                'label' => "IDP Sso Url:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('idpSloUrl', null, array(
+                'label' => "IDP Slo Url:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('idpCert', null, array(
+                'label' => "IDP Cert:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('spEntityId', null, array(
+                'label' => "SP Entity Id:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('spAcsUrl', null, array(
+                'label' => "SP Acs Url:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('spSloUrl', null, array(
+                'label' => "SP Slo Url:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('spPrivateKey', null, array(
+                'label' => "SP Private Key:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+            $builder->add('identifierAttribute', null, array(
+                'label' => "Identifier Attribute:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('autoCreate', null, array(
+                'label' => "autoCreate:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('attributeMapping', null, array(
+                'label' => "attributeMapping:",
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+        }
+
     }
 
     public function hostedGroupHoldersFields($builder) {

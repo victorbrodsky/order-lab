@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 // */
 //#[ORM\Table(name: 'saml_config')]
 #[ORM\Entity(repositoryClass: 'App\Saml\Repository\SamlConfigRepository')]
-class SamlConfig
+class SamlConfig extends ListAbstract
 {
 //    /**
 //     * @ORM\Id
@@ -24,10 +24,17 @@ class SamlConfig
 //     * @ORM\Column(type="integer")
 //     */
 //    private $id;
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+//    #[ORM\Id]
+//    #[ORM\Column(type: 'integer')]
+//    #[ORM\GeneratedValue(strategy: 'AUTO')]
+//    private $id;
+
+    #[ORM\OneToMany(targetEntity: 'SamlConfig', mappedBy: 'original', cascade: ['persist'])]
+    protected $synonyms;
+
+    #[ORM\ManyToOne(targetEntity: 'SamlConfig', inversedBy: 'synonyms', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
+    protected $original;
 
 //    /**
 //     * @ORM\Column(type="string", length=255)
@@ -102,11 +109,19 @@ class SamlConfig
     private $attributeMapping;
 
 
-    // Getters and setters
-    public function getId(): ?int
-    {
-        return $this->id;
+
+    
+    public function __construct($author=null) {
+        parent::__construct($author);
     }
+    
+    
+    
+    // Getters and setters
+//    public function getId(): ?int
+//    {
+//        return $this->id;
+//    }
 
     public function getClient(): ?string
     {
