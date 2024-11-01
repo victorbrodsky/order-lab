@@ -174,6 +174,8 @@ class SamlConfigProvider
 
         $IdpCert = $certificate;
         $config->setIdpCert($IdpCert);
+        echo "cert=".$config->getIdpCert()."<br>";
+        exit('111');
 
         $SpPrivateKey = $privatekey;
         $config->setSpPrivateKey($SpPrivateKey);
