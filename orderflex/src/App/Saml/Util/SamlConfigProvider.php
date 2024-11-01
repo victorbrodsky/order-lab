@@ -177,8 +177,8 @@ class SamlConfigProvider
 
         $SpPrivateKey = $privatekey;
         $config->setSpPrivateKey($SpPrivateKey);
-        echo "SpPrivateKey=".$config->getSpPrivateKey()."<br>";
-        exit('111');
+        //echo "SpPrivateKey=".$config->getSpPrivateKey()."<br>";
+        //exit('111');
 
         $IdentifierAttribute = 'email'; //limit 255
         $config->setIdentifierAttribute($IdentifierAttribute);
@@ -215,11 +215,11 @@ class SamlConfigProvider
         $settings = array(
             'strict' => false,
             'security' => [
-                //'nameIdEncrypted' => false,
-                'authnRequestsSigned' => true,
-                //'logoutRequestSigned' => false,
-                //'logoutResponseSigned' => false,
-                'signMetadata' => true,
+                'nameIdEncrypted' => false,
+                'authnRequestsSigned' => false,
+                'logoutRequestSigned' => false,
+                'logoutResponseSigned' => false,
+                'signMetadata' => false,
             ],
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
