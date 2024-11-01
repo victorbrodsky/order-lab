@@ -46,8 +46,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
-        //dump($request);
-        //exit('authenticate');
+        dump($request);
+        exit('authenticate');
 
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');

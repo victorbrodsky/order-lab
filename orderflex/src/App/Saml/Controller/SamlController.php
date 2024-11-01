@@ -236,7 +236,8 @@ class SamlController extends OrderAbstractController //AbstractController
         $em = $this->getDoctrine()->getManager();
         $configEntity = $em->getRepository(SamlConfig::class)->findByClient($client);
         if( !$configEntity ) {
-            //Create $configEntity
+            //create or add $configEntity for this tenant.
+            $configEntity = new SamlConfig();
             exit('Create $configEntity');
 
         }
