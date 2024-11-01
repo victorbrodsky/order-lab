@@ -219,10 +219,10 @@ class SamlConfigProvider
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
-                'nameIdEncrypted' => false,
+                //'nameIdEncrypted' => false,
                 'authnRequestsSigned' => true,
-                'logoutRequestSigned' => false,
-                'logoutResponseSigned' => false,
+                //'logoutRequestSigned' => false,
+                //'logoutResponseSigned' => false,
                 'signMetadata' => true,
                 //'wantMessagesSigned' => false,
                 //'wantAssertionsEncrypted' => false,
