@@ -213,10 +213,10 @@ class SamlConfigProvider
         $settings = array(
             'strict' => false,
             'security' => [
-                'nameIdEncrypted' => false,
+                //'nameIdEncrypted' => false,
                 'authnRequestsSigned' => true,
-                'logoutRequestSigned' => false,
-                'logoutResponseSigned' => false,
+                //'logoutRequestSigned' => false,
+                //'logoutResponseSigned' => false,
                 'signMetadata' => true,
             ],
             'idp' => [
