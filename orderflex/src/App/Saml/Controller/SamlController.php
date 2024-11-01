@@ -43,6 +43,7 @@ class SamlController extends OrderAbstractController //AbstractController
     //3) SamlAuthenticator->authenticate
     //4) 
 
+    //Test: https://login-proxy-test.weill.cornell.edu/idp/saml2/idp/SSOService.php?spentityid=https://view.online/c/wcm/pathology/
     // 127.0.0.1/saml/login/oli2002
     // https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     //#[Route(path: '/about', name: 'employees_about_page')]

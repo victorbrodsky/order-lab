@@ -214,10 +214,10 @@ class SamlConfigProvider
             'strict' => false,
             'security' => [
                 'nameIdEncrypted' => false,
-                'authnRequestsSigned' => false,
+                'authnRequestsSigned' => true,
                 'logoutRequestSigned' => false,
                 'logoutResponseSigned' => false,
-                'signMetadata' => false,
+                'signMetadata' => true,
             ],
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
