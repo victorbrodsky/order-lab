@@ -212,13 +212,13 @@ class SamlConfigProvider
 
         $settings = array(
             'strict' => false,
-//            'security' => [
-//                'nameIdEncrypted' => false,
-//                'authnRequestsSigned' => false,
-//                'logoutRequestSigned' => false,
-//                'logoutResponseSigned' => false,
-//                'signMetadata' => false,
-//            ],
+            'security' => [
+                'nameIdEncrypted' => false,
+                'authnRequestsSigned' => false,
+                'logoutRequestSigned' => false,
+                'logoutResponseSigned' => false,
+                'signMetadata' => false,
+            ],
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],

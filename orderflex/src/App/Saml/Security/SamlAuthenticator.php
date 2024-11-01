@@ -72,8 +72,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         $auth->processResponse();
         //exit('after processResponse');
 
-        $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-        dump($xmlDocument);
+        //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+        //dump($xmlDocument);
         //exit('after $xmlDocument');
 
         //isAuthenticated fail
