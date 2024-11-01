@@ -293,6 +293,7 @@ class SamlConfigProvider
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
                 'x509cert' => $config->getIdpCert(),
+                'privateKey' => $config->getSpPrivateKey(),
             ],
             'sp' => [
                 'entityId' => $schemeAndHost,
@@ -304,6 +305,7 @@ class SamlConfigProvider
                     'url' => $schemeAndHost."/saml/logout/".$client,
                     "binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
                 ],
+                'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
             ],
         );
