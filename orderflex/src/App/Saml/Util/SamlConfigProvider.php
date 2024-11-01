@@ -216,6 +216,8 @@ class SamlConfigProvider
 
         $settings = array(
             'strict' => false,
+            // Enable debug mode (to print errors).
+            'debug' => true,
             'security' => [
                 'nameIdEncrypted' => false,
                 'authnRequestsSigned' => false,
