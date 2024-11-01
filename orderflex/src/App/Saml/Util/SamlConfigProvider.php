@@ -219,26 +219,26 @@ class SamlConfigProvider
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
-                //'nameIdEncrypted' => false,
-                'authnRequestsSigned' => true,
-                //'logoutRequestSigned' => false,
-                //'logoutResponseSigned' => false,
-                'signMetadata' => true,
-                //'wantMessagesSigned' => false,
-                //'wantAssertionsEncrypted' => false,
+                'nameIdEncrypted' => false,
+                'authnRequestsSigned' => false,
+                'logoutRequestSigned' => false,
+                'logoutResponseSigned' => false,
+                'signMetadata' => false,
+                'wantMessagesSigned' => false,
+                'wantAssertionsEncrypted' => false,
 
-//                // Indicates a requirement for the <saml:Assertion> elements received by
-//                // this SP to be signed. [Metadata of the SP will offer this info]
-//                'wantAssertionsSigned' => false,
-//
+                // Indicates a requirement for the <saml:Assertion> elements received by
+                // this SP to be signed. [Metadata of the SP will offer this info]
+                'wantAssertionsSigned' => false,
+
 //                // Indicates a requirement for the NameID element on the SAMLResponse
 //                // received by this SP to be present.
 //                'wantNameId' => true,
-//
-//                // Indicates a requirement for the NameID received by
-//                // this SP to be encrypted.
-//                'wantNameIdEncrypted' => false,
-//
+
+                // Indicates a requirement for the NameID received by
+                // this SP to be encrypted.
+                'wantNameIdEncrypted' => false,
+
 //                // Authentication context.
 //                // Set to false and no AuthContext will be sent in the AuthNRequest.
 //                // Set true or don't present this parameter and you will get an AuthContext 'exact' 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'.
