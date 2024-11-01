@@ -249,7 +249,7 @@ class SamlConfigProvider
 
                 // If true, SAMLResponses with an empty value at its Destination
                 // attribute will not be rejected for this fact.
-                'relaxDestinationValidation' => false,
+                'relaxDestinationValidation' => true, //false,
 
                 // If true, the toolkit will not raised an error when the Statement Element
                 // contain atribute elements with name duplicated
@@ -272,7 +272,7 @@ class SamlConfigProvider
                 //    'http://www.w3.org/2001/04/xmldsig-more#rsa-sha384'
                 //    'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512'
                 // Notice that sha1 is a deprecated algorithm and should not be used
-                'signatureAlgorithm' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                //'signatureAlgorithm' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
 
                 // Algorithm that the toolkit will use on digest process. Options:
                 //    'http://www.w3.org/2000/09/xmldsig#sha1'
@@ -280,11 +280,11 @@ class SamlConfigProvider
                 //    'http://www.w3.org/2001/04/xmldsig-more#sha384'
                 //    'http://www.w3.org/2001/04/xmlenc#sha512'
                 // Notice that sha1 is a deprecated algorithm and should not be used
-                'digestAlgorithm' => 'http://www.w3.org/2001/04/xmlenc#sha256',
+                //'digestAlgorithm' => 'http://www.w3.org/2001/04/xmlenc#sha256',
 
                 // ADFS URL-Encodes SAML data as lowercase, and the toolkit by default uses
                 // uppercase. Turn it True for ADFS compatibility on signature verification
-                'lowercaseUrlencoding' => false,
+                //'lowercaseUrlencoding' => false,
             ],
             'idp' => [
                 'entityId' => $schemeAndHost."/saml/metadata/".$client,
