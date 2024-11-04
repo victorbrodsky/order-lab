@@ -311,6 +311,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers-list', methods: ['GET'])]
     #[Route(path: '/list/antibodylabs/', name: 'antibodylabs-list', methods: ['GET'])]
     #[Route(path: '/list/antibodypanels/', name: 'antibodypanels-list', methods: ['GET'])]
+    #[Route(path: '/list/samlconfig/', name: 'samlconfig-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -1015,6 +1016,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/', name: 'interfacetransfers_create', methods: ['POST'])]
     #[Route(path: '/list/antibodylabs/', name: 'antibodylabs_create', methods: ['POST'])]
     #[Route(path: '/list/antibodypanels/', name: 'antibodypanels_create', methods: ['POST'])]
+    #[Route(path: '/list/samlconfig/', name: 'samlconfig_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1392,6 +1394,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/new', name: 'interfacetransfers_new', methods: ['GET'])]
     #[Route(path: '/list/antibodylabs/new', name: 'antibodylabs_new', methods: ['GET'])]
     #[Route(path: '/list/antibodypanels/new', name: 'antibodypanels_new', methods: ['GET'])]
+    #[Route(path: '/list/samlconfig/new', name: 'samlconfig_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1714,6 +1717,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_show', methods: ['GET'])]
     #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_show', methods: ['GET'])]
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_show', methods: ['GET'])]
+    #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -2025,6 +2029,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/{id}/edit', name: 'interfacetransfers_edit', methods: ['GET'])]
     #[Route(path: '/list/antibodylabs/{id}/edit', name: 'antibodylabs_edit', methods: ['GET'])]
     #[Route(path: '/list/antibodypanels/{id}/edit', name: 'antibodypanels_edit', methods: ['GET'])]
+    #[Route(path: '/list/samlconfig/{id}/edit', name: 'samlconfig_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2390,6 +2395,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_update', methods: ['PUT'])]
     #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_update', methods: ['PUT'])]
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_update', methods: ['PUT'])]
+    #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3630,6 +3636,12 @@ class ListController extends OrderAbstractController
                 $displayName = "Interface Transfer List";
                 break;
 
+            case "samlconfig":
+                $className = "SamlConfig";
+                $displayName = "Saml Configuration List";
+                $bundleName = "Saml";
+                break;
+
 
             case "custom000":
                 $className = "Custom000List";
@@ -4365,6 +4377,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/interfacetransfers/{id}', name: 'interfacetransfers_delete', methods: ['DELETE'])]
     #[Route(path: '/list/antibodylabs/{id}', name: 'antibodylabs_delete', methods: ['DELETE'])]
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

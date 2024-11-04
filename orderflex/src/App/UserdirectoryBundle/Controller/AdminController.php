@@ -8078,6 +8078,8 @@ class AdminController extends OrderAbstractController
 
             "transferstatus" => array('TransferStatusList','transferstatus-list','Transfer Status List'),
             "interfacetransfers" => array('InterfaceTransferList','interfacetransfers-list','Interface Transfer List'),
+
+            "samlconfig" => array('SamlConfig','samlconfig-list','Saml Configuration List'),
         );
 
         if( $withcustom ) {
