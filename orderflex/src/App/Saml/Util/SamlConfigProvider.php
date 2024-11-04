@@ -58,17 +58,17 @@ class SamlConfigProvider
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
-                'nameIdEncrypted' => false,
-                'authnRequestsSigned' => false,
-                'logoutRequestSigned' => false,
-                'logoutResponseSigned' => false,
-                'signMetadata' => false,
-                'wantMessagesSigned' => false,
-                'wantAssertionsEncrypted' => false,
+//                'nameIdEncrypted' => false,
+//                'authnRequestsSigned' => false,
+//                'logoutRequestSigned' => false,
+//                'logoutResponseSigned' => false,
+//                'signMetadata' => false,
+//                'wantMessagesSigned' => false,
+//                'wantAssertionsEncrypted' => false,
 
                 // Indicates a requirement for the <saml:Assertion> elements received by
                 // this SP to be signed. [Metadata of the SP will offer this info]
-                'wantAssertionsSigned' => false,
+                //'wantAssertionsSigned' => false,
 
 //                // Indicates a requirement for the NameID element on the SAMLResponse
 //                // received by this SP to be present.
@@ -76,7 +76,7 @@ class SamlConfigProvider
 
                 // Indicates a requirement for the NameID received by
                 // this SP to be encrypted.
-                'wantNameIdEncrypted' => false,
+                //'wantNameIdEncrypted' => false,
 
 //                // Authentication context.
 //                // Set to false and no AuthContext will be sent in the AuthNRequest.
