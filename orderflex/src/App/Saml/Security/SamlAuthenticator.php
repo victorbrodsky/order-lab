@@ -43,6 +43,8 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        $testing = true;
+        $testing = false;
         //exit('SamlAuthenticator: authenticate');
         //$this->logger->notice("SamlAuthenticator: authenticate");
 
@@ -50,8 +52,10 @@ class SamlAuthenticator extends AbstractAuthenticator
         //exit('authenticate');
 
         $relayState = $request->getPayload()->get('RelayState');
-        $samlResponse = $request->getPayload()->get('SAMLResponse');
-        //echo 'relayState='.$relayState."<br>";
+        if( $testing ) {
+            $samlResponse = $request->getPayload()->get('SAMLResponse');
+            //echo 'relayState='.$relayState."<br>";
+        }
 
         $client = '';
         //$somestring = '/login/';
@@ -72,23 +76,27 @@ class SamlAuthenticator extends AbstractAuthenticator
         $auth->processResponse();
         //exit('after processResponse');
 
-        $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-        dump($xmlDocument);
-        //exit('after $xmlDocument');
+        if( $testing ) {
+            $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+            dump($xmlDocument);
+            //exit('after $xmlDocument');
+        }
 
         //isAuthenticated fail
         if (!$auth->isAuthenticated()) {
-            dump($auth->getErrors());
-            dump($auth->getLastErrorException());
-            //getLastErrorException:
-            // The response was received at
-            // http://view.online/c/wcm/pathology/saml/acs
-            // instead of
-            // https://view.online/c/wcm/pathology/saml/acs
-            dump($auth->getLastErrorReason());
+            if( $testing ) {
+                dump($auth->getErrors());
+                dump($auth->getLastErrorException());
+                //getLastErrorException:
+                // The response was received at
+                // http://view.online/c/wcm/pathology/saml/acs
+                // instead of
+                // https://view.online/c/wcm/pathology/saml/acs
+                dump($auth->getLastErrorReason());
 
-            //Error in Response.php line 428: If find a Signature on the Response, validates it checking the original response
-            exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
+                //Error in Response.php line 428: If find a Signature on the Response, validates it checking the original response
+                exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
+            }
             throw new AuthenticationException('SAML authentication failed.');
         }
         //exit('after isAuthenticated');
