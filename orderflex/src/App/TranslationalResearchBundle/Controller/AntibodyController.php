@@ -919,7 +919,7 @@ class AntibodyController extends OrderAbstractController
 
         $limit = 50;
         $onlyPublic = true;
-        $onlyPublic = false;
+        //$onlyPublic = false;
         $listArr = $this->getList($request,$onlyPublic,$limit); //list react main page
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";

@@ -3315,7 +3315,7 @@ class DefaultController extends OrderAbstractController
     //set antibody's openToPublic according to the categoryTags' openToPublic
     #[Route(path: '/antibody-category-set-public/', name: 'translationalresearch_antibody-category-tag-create', methods: ['GET'])]
     public function antibodyCategorySetPublicAction( Request $request ) {
-        exit("antibodyCategorySetPublicAction not allowed");
+        //exit("antibodyCategorySetPublicAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
@@ -3348,10 +3348,11 @@ class DefaultController extends OrderAbstractController
 //            }
             echo $antibody->getId().": ".$antibody->getName(). "<br>";
             $antibody->setOpenToPublic(true);
-            $em->flush();
+            //$em->flush();
+            $count++;
         }
 
-        exit('111');
+        exit('antibodyCategorySetPublicAction count='.$count);
     }
 
     #[Route(path: '/populate-project-comment-ihc/', name: 'translationalresearch_populate_project_comment_ihc', methods: ['GET'])]
