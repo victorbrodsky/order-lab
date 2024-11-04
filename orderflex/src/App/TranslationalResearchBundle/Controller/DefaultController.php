@@ -3157,7 +3157,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/antibody-add-category-tag/', name: 'translationalresearch_antibody-add-category-tag', methods: ['GET'])]
     public function antibodyAddCategoryTagAction( Request $request ) {
-        //exit("antibodyAddCategoryTagAction not allowed");
+        exit("antibodyAddCategoryTagAction not allowed");
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
@@ -3348,7 +3348,7 @@ class DefaultController extends OrderAbstractController
 //            }
             echo $antibody->getId().": ".$antibody->getName(). "<br>";
             $antibody->setOpenToPublic(true);
-            //$em->flush();
+            $em->flush();
             $count++;
         }
 
