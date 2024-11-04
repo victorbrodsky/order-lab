@@ -348,7 +348,7 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        echo "antibodylabs=".count($antibodylabs)."<br>";
+        //echo "antibodylabs=".count($antibodylabs)."<br>";
 //        foreach($antibodylabs as $antibodylab) {
 //            echo "antibodylab=".$antibodylab."<br>";
 //        }
