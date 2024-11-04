@@ -40,7 +40,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
     }
 
     public function findAnyOne() {
-        $configs = $this->em->getRepository(SamlConfig::class)->findAll();
+        $configs = $this->getDoctrine()->getRepository(SamlConfig::class)->findAll();
         if( count($configs) > 0 ) {
             return $configs[0];
         }
