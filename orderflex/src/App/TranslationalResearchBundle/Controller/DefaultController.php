@@ -3331,7 +3331,8 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.categoryTags','categoryTags');
         $dql->andWhere("categoryTags.openToPublic = TRUE");
-        $dql->andWhere("(antibody.openToPublic IS NULL OR antibody.openToPublic = FALSE)");
+        $dql->andWhere("(antibody.openToPublic IS NULL)");
+        //$dql->andWhere("(antibody.openToPublic IS NULL OR antibody.openToPublic = FALSE)");
         $dql->orderBy("antibody.id","ASC");
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
