@@ -348,7 +348,7 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
-//        echo "antibodylabs=".count($antibodylabs)."<br>";
+        echo "antibodylabs=".count($antibodylabs)."<br>";
 //        foreach($antibodylabs as $antibodylab) {
 //            echo "antibodylab=".$antibodylab."<br>";
 //        }
@@ -367,7 +367,7 @@ class AntibodyController extends OrderAbstractController
 
         //echo "dql=".$dql."<br>";
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         //$limit = 50;
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
