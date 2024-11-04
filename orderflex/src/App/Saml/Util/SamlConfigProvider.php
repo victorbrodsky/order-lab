@@ -58,7 +58,7 @@ class SamlConfigProvider
         //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
         $settings = array(
-            'strict' => false,
+            //'strict' => false,
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
