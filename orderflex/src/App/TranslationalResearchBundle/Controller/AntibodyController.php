@@ -924,7 +924,7 @@ class AntibodyController extends OrderAbstractController
         $listArr = $this->getList($request,$onlyPublic,$limit); //list react main page
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
-        echo "entities=".count($listArr['entities'])."<br>";
+        //echo "entities=".count($listArr['entities'])."<br>";
 
         $filterFormObject = $listArr['filterFormObject'];
 
