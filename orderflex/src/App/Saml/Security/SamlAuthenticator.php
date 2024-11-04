@@ -99,7 +99,7 @@ class SamlAuthenticator extends AbstractAuthenticator
             }
             throw new AuthenticationException('SAML authentication failed.');
         } else {
-            exit('isAuthenticated Success!');
+            echo '<br> isAuthenticated Success! <br>';
         }
         //exit('after isAuthenticated');
 
@@ -108,8 +108,9 @@ class SamlAuthenticator extends AbstractAuthenticator
         $identifierAttribute = $config['identifier'];
         echo 'authenticate: identifierAttribute='.$identifierAttribute."<br>";
         $identifierValue = $attributes[$identifierAttribute][0];
+        echo 'authenticate: identifierValue='.$identifierValue."<br>";
 
-        //exit('before setIdentifierField');
+        exit('before setIdentifierField');
 
         // Load or create the user
         $this->userProvider->setIdentifierField($identifierAttribute);
