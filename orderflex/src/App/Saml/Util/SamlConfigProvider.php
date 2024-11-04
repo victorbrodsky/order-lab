@@ -53,6 +53,9 @@ class SamlConfigProvider
         echo '$schemeAndHost='.$schemeAndHost."<br>";
         //exit();
 
+        echo 'idp cert='.$config->getIdpCert()."<br>";
+        echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
+
         $settings = array(
             'strict' => false,
             // Enable debug mode (to print errors).
@@ -132,19 +135,19 @@ class SamlConfigProvider
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
                 'x509cert' => $config->getIdpCert(),
-                'privateKey' => $config->getSpPrivateKey(),
+                //'privateKey' => $config->getSpPrivateKey(),
             ],
             'sp' => [
                 'entityId' => $schemeAndHost,
                 'assertionConsumerService' => [
                     'url' => $schemeAndHost."/saml/acs/".$client,
-                    "binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                    //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                 ],
                 'singleLogoutService' => [
                     'url' => $schemeAndHost."/saml/logout/".$client,
-                    "binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                    //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
                 ],
-                'x509cert' => $config->getIdpCert(),
+                //'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
             ],
         );
