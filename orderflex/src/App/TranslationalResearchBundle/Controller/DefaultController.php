@@ -3348,7 +3348,7 @@ class DefaultController extends OrderAbstractController
 //            }
             echo $antibody->getId().": ".$antibody->getName(). "<br>";
             $antibody->setOpenToPublic(true);
-            $em->flush();
+            //$em->flush();
             $count++;
         }
 
