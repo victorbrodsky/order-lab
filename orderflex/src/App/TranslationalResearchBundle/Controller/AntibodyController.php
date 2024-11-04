@@ -988,7 +988,9 @@ class AntibodyController extends OrderAbstractController
         //Correct  : http://127.0.0.1/translational-research/public/antibodies/api?page=1&antibodylabs[]=2
         //Currently: http://127.0.0.1/translational-research/public/antibodies/api?page=1&filter[antibodylabs][]=2
 
-        $listArr = $this->getList($request,$onlyPublic,$limit); //api
+        //$listArr = $this->getList($request,$onlyPublic,$limit); //api
+        $listArr = $this->getList($request); //api
+
         $antibodies = $listArr['entities'];
         $totalAntibodiesCount = $listArr['totalAntibodiesCount'];
         //echo "react antibodies=".count($antibodies)."<br>";
