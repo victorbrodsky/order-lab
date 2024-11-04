@@ -3322,7 +3322,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->getUser();
+        //$user = $this->getUser();
         $count = 1;
 
         $repository = $em->getRepository(AntibodyList::class);
@@ -3331,6 +3331,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.categoryTags','categoryTags');
         $dql->andWhere("categoryTags.openToPublic = TRUE");
+        $dql->andWhere("antibody.openToPublic != TRUE");
         $dql->orderBy("antibody.id","ASC");
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
@@ -3342,7 +3343,7 @@ class DefaultController extends OrderAbstractController
 
         foreach($antibodys as $antibody) {
             //echo $antibody . "<br>";
-            $categoryTags = $antibody->getCategoryTags();
+//            $categoryTags = $antibody->getCategoryTags();
 //            foreach($categoryTags as $categoryTag) {
 //                echo $antibody->getId()." (".$antibody->getName()."): ".$categoryTag . "<br>";
 //            }
