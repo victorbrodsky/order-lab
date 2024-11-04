@@ -53,9 +53,9 @@ class SamlConfigProvider
         echo '$schemeAndHost='.$schemeAndHost."<br>";
         //exit();
 
-        echo 'idp cert='.$config->getIdpCert()."<br>";
-        echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
-        echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
+        //echo 'idp cert='.$config->getIdpCert()."<br>";
+        //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
+        //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
         $settings = array(
             'strict' => false,
