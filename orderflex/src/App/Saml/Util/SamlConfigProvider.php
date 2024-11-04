@@ -58,10 +58,10 @@ class SamlConfigProvider
         //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
         $encriptionFlag = true;
-        $encriptionFlag = false;
+        //$encriptionFlag = false;
 
         $settings = array(
-            'strict' => true,
+            'strict' => false,
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
