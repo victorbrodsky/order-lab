@@ -354,6 +354,7 @@ class AntibodyController extends OrderAbstractController
 //        }
 //        exit('111');
         if( $antibodylabs && count($antibodylabs) > 0 ) {
+            //echo "antibodylabs=".count($antibodylabs)."<br>";
             $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
             $dqlParameters['antibodyLabs'] = $antibodylabs;
             $advancedFilter++;
