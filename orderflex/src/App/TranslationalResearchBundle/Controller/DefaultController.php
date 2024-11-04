@@ -3331,9 +3331,9 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.categoryTags','categoryTags');
 
-        $dql->andWhere("antibody.openToPublic = TRUE");
+        //$dql->andWhere("antibody.openToPublic = TRUE");
 
-        //$dql->andWhere("categoryTags.openToPublic = TRUE");
+        $dql->andWhere("categoryTags.openToPublic = TRUE");
         //$dql->andWhere("(antibody.openToPublic IS NULL)");
         //$dql->andWhere("(antibody.openToPublic IS NULL OR antibody.openToPublic = FALSE)");
         //$dql->orderBy("antibody.id","ASC");
@@ -3341,7 +3341,7 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $antibodys = $query->getResult();
-        echo "antibodys=".count($antibodys)."<br>";
+        echo "public antibodys=".count($antibodys)."<br>";
         exit('111');
 
         $categoryArr = array();
