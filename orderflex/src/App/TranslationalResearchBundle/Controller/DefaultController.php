@@ -3323,7 +3323,7 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //$user = $this->getUser();
-        $count = 1;
+        $count = 0;
 
         $repository = $em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");

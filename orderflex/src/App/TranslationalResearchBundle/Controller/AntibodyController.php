@@ -928,6 +928,7 @@ class AntibodyController extends OrderAbstractController
 
         //'antibodypanels'
         $antibodyLabs = $filterFormObject['antibodylabs']->getData();
+        echo "antibodyLabs count=".count($antibodyLabs)."<br>";
 
         $antibodyLabsStr = "";
         if( $antibodyLabs ) {
