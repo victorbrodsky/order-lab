@@ -57,37 +57,40 @@ class SamlConfigProvider
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
         //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
+        $encriptionFlag = true;
+        //$encriptionFlag = false;
+
         $settings = array(
-            //'strict' => false,
+            'strict' => true,
             // Enable debug mode (to print errors).
             'debug' => true,
             'security' => [
-//                'nameIdEncrypted' => false,
-//                'authnRequestsSigned' => false,
-//                'logoutRequestSigned' => false,
-//                'logoutResponseSigned' => false,
-//                'signMetadata' => false,
-//                'wantMessagesSigned' => false,
-//                'wantAssertionsEncrypted' => false,
-//
+                'nameIdEncrypted' => $encriptionFlag,
+                'authnRequestsSigned' => $encriptionFlag,
+                'logoutRequestSigned' => $encriptionFlag,
+                'logoutResponseSigned' => $encriptionFlag,
+                'signMetadata' => $encriptionFlag,
+                'wantMessagesSigned' => $encriptionFlag,
+                'wantAssertionsEncrypted' => $encriptionFlag,
+
 //                // Indicates a requirement for the <saml:Assertion> elements received by
 //                // this SP to be signed. [Metadata of the SP will offer this info]
 //                'wantAssertionsSigned' => false,
-//
+
 ////                // Indicates a requirement for the NameID element on the SAMLResponse
 ////                // received by this SP to be present.
 ////                'wantNameId' => true,
-//
+
 //                // Indicates a requirement for the NameID received by
 //                // this SP to be encrypted.
 //                'wantNameIdEncrypted' => false,
-//
+
 ////                // Authentication context.
 ////                // Set to false and no AuthContext will be sent in the AuthNRequest.
 ////                // Set true or don't present this parameter and you will get an AuthContext 'exact' 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'.
 ////                // Set an array with the possible auth context values: array ('urn:oasis:names:tc:SAML:2.0:ac:classes:Password', 'urn:oasis:names:tc:SAML:2.0:ac:classes:X509').
 //                'requestedAuthnContext' => false,
-//
+
 ////                // Indicates if the SP will validate all received xmls.
 ////                // (In order to validate the xml, 'strict' and 'wantXMLValidation' must be true).
 //                'wantXMLValidation' => true,
@@ -99,13 +102,13 @@ class SamlConfigProvider
 //                // If true, the toolkit will not raised an error when the Statement Element
 //                // contain atribute elements with name duplicated
 //                'allowRepeatAttributeName' => false,
-//
+
 //                // If true, Destination URL should strictly match to the address to
 //                // which the response has been sent.
 //                // Notice that if 'relaxDestinationValidation' is true an empty Destination
 //                // will be accepted.
 //                'destinationStrictlyMatches' => false,
-//
+
 //                // If true, SAMLResponses with an InResponseTo value will be rejected if not
 //                // AuthNRequest ID provided to the validation method.
 //                'rejectUnsolicitedResponsesWithInResponseTo' => false,
