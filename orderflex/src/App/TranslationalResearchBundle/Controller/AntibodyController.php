@@ -933,7 +933,7 @@ class AntibodyController extends OrderAbstractController
 
         $antibodyLabsStr = "";
         if( $antibodyLabs ) {
-            echo "antibodyLabs count=".count($antibodyLabs)."<br>";
+            //echo "antibodyLabs count=".count($antibodyLabs)."<br>";
             foreach ($antibodyLabs as $antibodyLab) {
                 $antibodyLabsStr = $antibodyLabsStr . $antibodyLab->getName();
             }
