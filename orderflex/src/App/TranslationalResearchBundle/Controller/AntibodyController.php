@@ -992,7 +992,7 @@ class AntibodyController extends OrderAbstractController
 
         $antibodies = $listArr['entities'];
         $totalAntibodiesCount = $listArr['totalAntibodiesCount'];
-        echo "react antibodies=".count($antibodies)."<br>";
+        //echo "react antibodies=".count($antibodies)."<br>";
         //exit('111');
         //echo "totalAntibodiesCount=".$totalAntibodiesCount."<br>";
         //$limit = $listArr['limit'];
