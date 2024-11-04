@@ -88,7 +88,7 @@ class SamlAuthenticator extends AbstractAuthenticator
             dump($auth->getLastErrorReason());
 
             //Error in Response.php line 428: If find a Signature on the Response, validates it checking the original response
-            //exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
+            exit('after isAuthenticated false'); //OneLogin: Auth -> Response->isValid
             throw new AuthenticationException('SAML authentication failed.');
         }
         //exit('after isAuthenticated');

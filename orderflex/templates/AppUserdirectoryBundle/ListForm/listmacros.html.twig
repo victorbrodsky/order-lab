@@ -1415,6 +1415,44 @@
         {{ formmacros.field(form.remoteCertificate) }}
     {% endif %}
 
+    {#SAML#}
+    {% if form.client is defined %}
+        {{ formmacros.field(form.client) }}
+    {% endif %}
+    {% if form.idpEntityId is defined %}
+        {{ formmacros.field(form.idpEntityId) }}
+    {% endif %}
+    {% if form.idpSsoUrl is defined %}
+        {{ formmacros.field(form.idpSsoUrl) }}
+    {% endif %}
+    {% if form.idpSloUrl is defined %}
+        {{ formmacros.field(form.idpSloUrl) }}
+    {% endif %}
+    {% if form.idpCert is defined %}
+        {{ formmacros.field(form.idpCert) }}
+    {% endif %}
+    {% if form.spEntityId is defined %}
+        {{ formmacros.field(form.spEntityId) }}
+    {% endif %}
+    {% if form.spAcsUrl is defined %}
+        {{ formmacros.field(form.spAcsUrl) }}
+    {% endif %}
+    {% if form.spSloUrl is defined %}
+        {{ formmacros.field(form.spSloUrl) }}
+    {% endif %}
+    {% if form.spPrivateKey is defined %}
+        {{ formmacros.field(form.spPrivateKey) }}
+    {% endif %}
+    {% if form.identifierAttribute is defined %}
+        {{ formmacros.field(form.identifierAttribute) }}
+    {% endif %}
+    {% if form.autoCreate is defined %}
+        {{ formmacros.field(form.autoCreate) }}
+    {% endif %}
+    {% if form.attributeMapping is defined %}
+        {{ formmacros.field(form.attributeMapping) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

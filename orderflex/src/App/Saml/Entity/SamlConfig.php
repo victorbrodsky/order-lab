@@ -8,13 +8,14 @@
 
 namespace App\Saml\Entity;
 
+use App\UserdirectoryBundle\Entity\ListAbstract;
 use Doctrine\ORM\Mapping as ORM;
 
 
 ///**
 // * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Util\SamlConfigRepository")
 // */
-//#[ORM\Table(name: 'saml_config')]
+#[ORM\Table(name: 'saml_config')]
 #[ORM\Entity(repositoryClass: 'App\Saml\Repository\SamlConfigRepository')]
 class SamlConfig extends ListAbstract
 {
@@ -39,73 +40,73 @@ class SamlConfig extends ListAbstract
 //    /**
 //     * @ORM\Column(type="string", length=255)
 //     */
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $client;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $idpEntityId;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $idpSsoUrl;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $idpSloUrl;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $idpCert;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $spEntityId;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $spAcsUrl;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $spSloUrl;
 
 //    /**
 //     * @ORM\Column(type="text")
 //     */
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $spPrivateKey;
 
 //    /**
 //     * @ORM\Column(type="string", length=255)
 //     */
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $identifierAttribute;
 
 //    /**
 //     * @ORM\Column(type="boolean")
 //     */
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $autoCreate;
 
 //    /**
 //     * @ORM\Column(type="json")
 //     */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'array', nullable: true)]
     private $attributeMapping;
 
 
@@ -128,7 +129,7 @@ class SamlConfig extends ListAbstract
         return $this->client;
     }
 
-    public function setClient(string $client): self
+    public function setClient( $client ): self
     {
         $this->client = $client;
 
@@ -140,10 +141,9 @@ class SamlConfig extends ListAbstract
         return $this->idpEntityId;
     }
 
-    public function setIdpEntityId(string $idpEntityId): self
+    public function setIdpEntityId( $idpEntityId )
     {
         $this->idpEntityId = $idpEntityId;
-
         return $this;
     }
 
@@ -152,7 +152,7 @@ class SamlConfig extends ListAbstract
         return $this->idpSsoUrl;
     }
 
-    public function setIdpSsoUrl(string $idpSsoUrl): self
+    public function setIdpSsoUrl( $idpSsoUrl ): self
     {
         $this->idpSsoUrl = $idpSsoUrl;
 
@@ -164,7 +164,7 @@ class SamlConfig extends ListAbstract
         return $this->idpSloUrl;
     }
 
-    public function setIdpSloUrl(string $idpSloUrl): self
+    public function setIdpSloUrl( $idpSloUrl ): self
     {
         $this->idpSloUrl = $idpSloUrl;
 
@@ -176,7 +176,7 @@ class SamlConfig extends ListAbstract
         return $this->idpCert;
     }
 
-    public function setIdpCert(string $idpCert): self
+    public function setIdpCert( $idpCert ): self
     {
         $this->idpCert = $idpCert;
 
@@ -188,7 +188,7 @@ class SamlConfig extends ListAbstract
         return $this->spEntityId;
     }
 
-    public function setSpEntityId(string $spEntityId): self
+    public function setSpEntityId( $spEntityId ): self
     {
         $this->spEntityId = $spEntityId;
 
@@ -200,7 +200,7 @@ class SamlConfig extends ListAbstract
         return $this->spAcsUrl;
     }
 
-    public function setSpAcsUrl(string $spAcsUrl): self
+    public function setSpAcsUrl( $spAcsUrl ): self
     {
         $this->spAcsUrl = $spAcsUrl;
 
@@ -212,7 +212,7 @@ class SamlConfig extends ListAbstract
         return $this->spSloUrl;
     }
 
-    public function setSpSloUrl(string $spSloUrl): self
+    public function setSpSloUrl( $spSloUrl ): self
     {
         $this->spSloUrl = $spSloUrl;
 
@@ -224,7 +224,7 @@ class SamlConfig extends ListAbstract
         return $this->spPrivateKey;
     }
 
-    public function setSpPrivateKey(string $spPrivateKey): self
+    public function setSpPrivateKey( $spPrivateKey ): self
     {
         $this->spPrivateKey = $spPrivateKey;
 
@@ -236,7 +236,7 @@ class SamlConfig extends ListAbstract
         return $this->identifierAttribute;
     }
 
-    public function setIdentifierAttribute(string $identifierAttribute): self
+    public function setIdentifierAttribute( $identifierAttribute ): self
     {
         $this->identifierAttribute = $identifierAttribute;
 
@@ -260,7 +260,7 @@ class SamlConfig extends ListAbstract
         return $this->attributeMapping;
     }
 
-    public function setAttributeMapping(array $attributeMapping): self
+    public function setAttributeMapping( $attributeMapping ): self
     {
         $this->attributeMapping = $attributeMapping;
 

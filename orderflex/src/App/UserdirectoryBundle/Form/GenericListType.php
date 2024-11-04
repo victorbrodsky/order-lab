@@ -1806,7 +1806,7 @@ class GenericListType extends AbstractType
             $builder->add('identifierAttribute', null, array(
                 'label' => "Identifier Attribute:",
                 'required' => false,
-                'attr' => array('class' => 'form-control textarea'),
+                'attr' => array('class' => 'form-control'),
             ));
 
             $builder->add('autoCreate', null, array(
@@ -1816,7 +1816,7 @@ class GenericListType extends AbstractType
             ));
 
             //JSON
-            $builder->add('attributeMapping', null, array(
+            $builder->add('attributeMapping', TextType::class, array(
                 'label' => "attributeMapping:",
                 'required' => false,
                 'attr' => array('class' => 'form-control textarea'),
