@@ -366,7 +366,7 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         //$em = $this->getDoctrine()->getManager();
         //$limit = 50;
@@ -924,6 +924,7 @@ class AntibodyController extends OrderAbstractController
         $listArr = $this->getList($request,$onlyPublic,$limit); //list react main page
         //$listArr['title'] = "Antibodies";
         //$listArr['postPath'] = "_translationalresearch";
+        echo "entities=".count($listArr['entities'])."<br>";
 
         $filterFormObject = $listArr['filterFormObject'];
 
