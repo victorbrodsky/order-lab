@@ -3342,7 +3342,7 @@ class DefaultController extends OrderAbstractController
 
         $antibodys = $query->getResult();
         echo "public antibodys=".count($antibodys)."<br>";
-        exit('111');
+        //exit('111');
 
         $categoryArr = array();
 
@@ -3354,7 +3354,7 @@ class DefaultController extends OrderAbstractController
 //            }
             echo $antibody->getId().": ".$antibody->getName(). "<br>";
             $antibody->setOpenToPublic(true);
-            //$em->flush();
+            $em->flush();
             $count++;
         }
 
