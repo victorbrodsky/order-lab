@@ -366,7 +366,7 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
 
         //$em = $this->getDoctrine()->getManager();
         //$limit = 50;
