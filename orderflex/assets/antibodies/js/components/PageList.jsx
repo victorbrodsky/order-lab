@@ -71,7 +71,7 @@ const PageList = () => {
     //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     let apiUrl = Routing.generate('translationalresearch_antibodies_api');
-    console.log("PageList: apiUrl=["+apiUrl+"]");
+    //console.log("PageList: apiUrl=["+apiUrl+"]");
 
     const callProduct = async () => {
         //console.log("callProduct, pageNum="+pageNum);
@@ -86,7 +86,7 @@ const PageList = () => {
             url = apiUrl+'/?page='+pageNum
         }
         //url = API_URL;
-        //console.log("callProduct: url=["+url+"]");
+        console.log("PageList: callProduct: url=["+url+"]");
 
         let response = await axios.get(
             url
