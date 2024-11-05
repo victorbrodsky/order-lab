@@ -88,6 +88,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {#AxiosError al%5D='. This request has been blocked; the content must be served over HTTPS#}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
