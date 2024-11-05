@@ -9467,9 +9467,9 @@ WHERE
             $count++;
 
             //stop for testing
-//            if( $panel > 4 ) {
-//                exit("Exit on panel $panel");
-//            }
+            if( $panel > 4 ) {
+                exit("Exit on panel $panel");
+            }
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
