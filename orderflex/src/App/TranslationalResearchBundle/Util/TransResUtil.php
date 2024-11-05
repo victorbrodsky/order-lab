@@ -9651,7 +9651,7 @@ WHERE
             $antibody->setClone($clone);
             $antibody->setReactivity($reactivity);
             if( !$testing ) {
-                echo "findOrCreateAntibody: create new antibody: before flash<br>";
+                echo "findOrCreateAntibody: create new antibody: before flash. Antibody ID=".$antibody->getId()."<br>";
                 $this->em->persist($antibody);
                 $this->em->flush();
                 $logger->notice("findOrCreateAntibody: New antibody created: [$name] [$host] [$clone] [$reactivity]");
