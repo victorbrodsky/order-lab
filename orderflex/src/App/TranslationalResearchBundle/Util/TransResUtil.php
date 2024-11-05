@@ -9535,6 +9535,7 @@ WHERE
 
     public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab, $testing=false ) {
         $logger = $this->container->get('logger');
+        echo "processPanel: panelObject=".$panelObject->getId()."<br>";
 
         if( !$thisReactivity ) {
             exit("Logical error: Reactivity [$thisReactivity] not found for antibody=".$panelArr[0][0]);
@@ -9625,6 +9626,7 @@ WHERE
         $query->setParameters($parameters);
 
         $antibodies = $query->getResult();
+        echo "findOrCreateAntibody: found antibodies=".count($antibodies)."<br>";
 
         if( count($antibodies) == 1 ) {
             //exit("!!! Antibodies found name=[$name], ID=".$antibodies[0]->getId());
