@@ -9513,6 +9513,8 @@ WHERE
                     exit("Panel not found by name $panel");
                 }
 
+                $this->em->flush(); //testing
+
                 //2 find or create antibodies from array $panelArr
                 $antibodyCount = $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab,$testing);
                 echo "EOF panel: $panel thisReactivity=$thisReactivity, antibody count=".$antibodyCount."<br><br>";
