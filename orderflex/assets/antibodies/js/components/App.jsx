@@ -34,7 +34,7 @@ const App = () => {
 
 
     let apiUrl = Routing.generate('translationalresearch_antibodies_api');
-    //console.log("apiUrl=["+apiUrl+"]");
+    console.log("App: apiUrl=["+apiUrl+"]");
 
     const callProduct = async () => {
         setLoading(true);
