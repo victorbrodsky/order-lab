@@ -9535,7 +9535,7 @@ WHERE
 
     public function processPanel( $panelArr, $thisReactivity, $panelObject, $misiLab, $testing=false ) {
         $logger = $this->container->get('logger');
-        echo "processPanel: panelObject=".$panelObject->getId()."<br>";
+        echo "processPanel: panelObject ID=".$panelObject->getId()."<br>";
 
         if( !$thisReactivity ) {
             exit("Logical error: Reactivity [$thisReactivity] not found for antibody=".$panelArr[0][0]);
