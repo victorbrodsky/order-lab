@@ -9467,9 +9467,9 @@ WHERE
             $count++;
 
             //stop for testing
-            if( $panel > 4 ) {
-                exit("Exit on panel $panel");
-            }
+//            if( $panel > 4 ) {
+//                exit("Exit on panel $panel");
+//            }
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -9513,7 +9513,7 @@ WHERE
                     exit("Panel not found by name $panel");
                 }
 
-                $this->em->flush(); //testing
+                //$this->em->flush(); //testing
 
                 //2 find or create antibodies from array $panelArr
                 $antibodyCount = $this->processPanel($panelArr[$panel],$thisReactivity,$panelObject,$misiLab,$testing);
