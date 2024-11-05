@@ -9407,8 +9407,8 @@ WHERE
     public function processExcelMisiPanels($filename, $startRaw=2, $endRaw=null) {
         //exit('<br>exit processExcelMisiPanels: run only once');
 
-        //$testing = false;
-        $testing = true;
+        $testing = false;
+        //$testing = true;
 
         if (file_exists($filename)) {
             echo "EXISTS: The file $filename <br><br>";
