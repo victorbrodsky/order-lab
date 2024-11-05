@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block meta %}
+    {#let apiUrl = Routing.generate('translationalresearch_antibodies_api');#}
+    {#This url generated with 'http', but the parent url is https. As the result error:#}
     {#AxiosError al%5D='. This request has been blocked; the content must be served over HTTPS#}
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 {% endblock %}
