@@ -21,6 +21,9 @@
     {#{% stopwatch "### TransRes navbar ###" %}#}
     {% include 'AppTranslationalResearchBundle/Default/navbar.html.twig' %}
     {#{% endstopwatch %}#}
+
+    {#AxiosError al%5D='. This request has been blocked; the content must be served over HTTPS#}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 {% endblock %}
 
 {% block favicon %}
