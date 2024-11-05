@@ -958,7 +958,8 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    #[Route(path: '/public/antibodies/api', name: 'translationalresearch_antibodies_api', schemes: ['http','https'], options: ['expose' => true])]
+    //schemes: ['http','https'],
+    #[Route(path: '/public/antibodies/api', name: 'translationalresearch_antibodies_api', options: ['expose' => true])]
     public function getAntibodiesApiAction( Request $request ) {
         //For the sorting function, I would recommend to use built in pre-sorting
         // so we put the antibodies with pictures, and control slides available for purchase,
