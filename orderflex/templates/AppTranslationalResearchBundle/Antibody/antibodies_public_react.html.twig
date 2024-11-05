@@ -7,6 +7,10 @@
     {{ title|raw }}
 {% endblock %}
 
+{% block meta %}
+    {#AxiosError al%5D='. This request has been blocked; the content must be served over HTTPS#}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+{% endblock %}
 
 {% block content %}
     <h4 class="text-secondary" align="center">
