@@ -3494,6 +3494,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
         $misiLab = $em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
@@ -3507,10 +3508,12 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin('antibody.antibodyLabs','antibodyLabs');
 
-        $dql->andWhere("antibodyLabs = :misiId");
+        $dql->where("antibodyLabs = :misiId");
         $params = array(
             'misiId' => $misiLab->getId()
         );
+
+        $dql->andWhere("antibody.openToPublic IS NULL");
 
         $query = $dql->getQuery();
 
