@@ -113,8 +113,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         exit('before setIdentifierField');
 
         // Load or create the user
-        $this->userProvider->setIdentifierField($identifierAttribute);
-        $user = $this->userProvider->loadUserByIdentifier($identifierValue);
+        $this->userProvider->setIdentifierField($identifierAttribute);          //'email'
+        $user = $this->userProvider->loadUserByIdentifier($identifierValue);    //'oli2002@med.cornell.edu'
 
         if (!$user && $config['autoCreate']) {
             $user = $this->userProvider->createUserFromSamlAttributes($identifierValue, $attributes, $config['attributeMapping']);
