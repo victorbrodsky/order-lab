@@ -33,6 +33,9 @@ class SamlUserProvider implements UserProviderInterface
             throw new \LogicException('Identifier field must be set before calling loadUserByIdentifier.');
         }
 
+        echo "identifierField=".$this->identifierField."<br>";
+        echo "identifier=$identifier <br>";
+
         return $this->entityManager->getRepository(User::class)
             ->findOneBy([$this->identifierField => $identifier]);
     }
