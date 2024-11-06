@@ -107,6 +107,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         $attributes = $auth->getAttributes();
         $identifierAttribute = $config['identifier'];
         echo 'authenticate: identifierAttribute='.$identifierAttribute."<br>";
+        dump($attributes);
+        exit('authenticate');
         $identifierValue = $attributes[$identifierAttribute][0];
         echo 'authenticate: identifierValue='.$identifierValue."<br>";
 

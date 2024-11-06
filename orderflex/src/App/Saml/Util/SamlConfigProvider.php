@@ -36,9 +36,13 @@ class SamlConfigProvider
         //$this->samlConfigRepository = SamlConfig::getRepository($this->em);
     }
 
+    //$client is the user's email
     public function getConfig(string $client): array
     {
         //return $this->getTestConfig($client);
+
+        //$client is the user's email, findByClient is using the email's domain
+        // and find configuration file by name=email's domain (name='med.cornell.edu')
 
         //$config = $this->samlConfigRepository->findByClient($client);
         $config = $this->em->getRepository(SamlConfig::class)->findByClient($client);
