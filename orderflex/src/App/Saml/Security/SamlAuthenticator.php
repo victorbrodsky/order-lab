@@ -109,8 +109,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         echo 'authenticate: identifierAttribute='.$identifierAttribute."<br>";
         //dump($attributes);
         //exit('authenticate');
-        $identifierAttribute = 'user.'.$identifierAttribute; //saml has 'user.email' attribute; or use 'userPrincipalName'
-        $identifierValue = $attributes[$identifierAttribute][0];
+        $modifiedIdentifierAttribute = 'user.'.$identifierAttribute; //saml has 'user.email' attribute; or use 'userPrincipalName'
+        $identifierValue = $attributes[$modifiedIdentifierAttribute][0];
         echo 'authenticate: identifierValue='.$identifierValue."<br>"; //identifierValue=oli2002@med.cornell.edu
 
         //exit('before setIdentifierField');
