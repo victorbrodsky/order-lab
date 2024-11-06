@@ -3484,5 +3484,51 @@ class DefaultController extends OrderAbstractController
 
         exit('EOF antibodyCreatePanelsAction');
     }
-    
+
+    //127.0.0.1/translational-research/antibody-make-public-misi
+    #[Route(path: '/antibody-make-public-misi/', name: 'translationalresearch_antibody_make_public_misi', methods: ['GET'])]
+    public function makePublicMISIAction( Request $request )
+    {
+        //exit("makePublicMISIAction not allowed");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $misiLab = $em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
+        if( !$misiLab ) {
+            exit("AntibodyLabList MISI does not exist");
+        }
+
+        $repository = $em->getRepository(AntibodyList::class);
+        $dql =  $repository->createQueryBuilder("antibody");
+        $dql->select('antibody');
+
+        $dql->leftJoin('antibody.antibodyLabs','antibodyLabs');
+
+        $dql->andWhere("antibodyLabs = :misiId");
+        $params = array(
+            'misiId' => $misiLab->getId()
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $antibodies = $query->getResult();
+        echo "makePublicMISIAction: antibodies=".count($antibodies)."<br>";
+
+        $count = 0;
+        foreach($antibodies as $antibody) {
+            $antibody->setOpenToPublic(true);
+            //$em->flush();
+            $count++;
+        }
+        //$em->flush();
+
+        exit('EOF makePublicMISIAction: count='.$count);
+    }
+
 }

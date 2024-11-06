@@ -211,9 +211,15 @@ class UserRepository extends EntityRepository {
     //find user by both: primaryPublicUserId and email
     public function findOneUserByUserInfoUseridEmail( $email ) {
         $user = NULL;
-        
+
         $domain = explode('@', $email);
         $cwid = $domain[0];
+
+        if( $email &&  $cwid ) {
+            //ok continue
+        } else {
+            return $user;
+        }
 
         $query = $this->_em->createQueryBuilder()
             ->from(User::class, 'user')
