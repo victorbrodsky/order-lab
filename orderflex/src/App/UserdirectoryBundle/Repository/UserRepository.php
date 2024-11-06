@@ -208,6 +208,37 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
+    //find user by both: primaryPublicUserId and email
+    public function findOneUserByUserInfoUseridEmail( $email ) {
+        $user = NULL;
+        
+        $domain = explode('@', $email);
+        $cwid = $domain[0];
+
+        $query = $this->_em->createQueryBuilder()
+            ->from(User::class, 'user')
+            ->select("user")
+            ->leftJoin("user.infos","infos")
+            ->where('user.primaryPublicUserId = :primaryPublicUserId')
+            ->andWhere("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
+            ->orderBy("user.id","ASC")
+            //->setParameter('userInfoEmail', $email)
+            ->setParameters( array(
+                'userInfoEmail' => $email,
+                'primaryPublicUserId' => $cwid,
+            ))
+        ;
+
+        $users = $query->getQuery()->getResult();
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+
+        return $user;
+
+    }
+
 
     public function findOneUserByRole($role) {
 
