@@ -13,13 +13,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SamlUserProvider implements UserProviderInterface
 {
     private $identifierField;
+    private $container;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager, ContainerInterface $container)
     {
+        $this->container = $container;
     }
 
     public function setIdentifierField(string $identifierField)
@@ -36,8 +39,14 @@ class SamlUserProvider implements UserProviderInterface
         echo "identifierField=".$this->identifierField."<br>";
         echo "identifier=$identifier <br>";
 
-        return $this->entityManager->getRepository(User::class)
-            ->findOneBy([$this->identifierField => $identifier]);
+        //$user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
+
+        $authUtil = $this->container->get('authenticator_utility');
+        $user = $authUtil->findOneUserByUserInfoEmail($identifier);
+        return $user;
+
+        //return $this->entityManager->getRepository(User::class)
+        //    ->findOneBy([$this->identifierField => $identifier]);
     }
 
     public function loadUserByUsername(string $username): UserInterface

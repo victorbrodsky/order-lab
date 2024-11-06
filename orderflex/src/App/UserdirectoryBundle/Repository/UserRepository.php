@@ -199,6 +199,15 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
+    public function findOneUserByUserInfoEmail( $email ) {
+        $user = NULL;
+        $users = $this->findUserByUserInfoEmail($email);
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+        return $user;
+    }
+
 
     public function findOneUserByRole($role) {
 
