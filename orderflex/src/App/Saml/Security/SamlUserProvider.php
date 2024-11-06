@@ -41,8 +41,8 @@ class SamlUserProvider implements UserProviderInterface
 
         //$user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
 
-        $authUtil = $this->container->get('authenticator_utility');
-        $user = $authUtil->findOneUserByUserInfoEmail($identifier);
+        //$authUtil = $this->container->get('authenticator_utility');
+        $user = $this->entityManager->getRepository(User::class)->findOneUserByUserInfoEmail($identifier);
         return $user;
 
         //return $this->entityManager->getRepository(User::class)
