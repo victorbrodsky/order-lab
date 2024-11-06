@@ -107,21 +107,23 @@ class SamlAuthenticator extends AbstractAuthenticator
         $attributes = $auth->getAttributes();
         $identifierAttribute = $config['identifier'];
         echo 'authenticate: identifierAttribute='.$identifierAttribute."<br>";
-        dump($attributes);
+        //dump($attributes);
         //exit('authenticate');
         $identifierAttribute = 'user.'.$identifierAttribute; //saml has 'user.email' attribute; or use 'userPrincipalName'
         $identifierValue = $attributes[$identifierAttribute][0];
-        echo 'authenticate: identifierValue='.$identifierValue."<br>";
+        echo 'authenticate: identifierValue='.$identifierValue."<br>"; //identifierValue=oli2002@med.cornell.edu
 
-        exit('before setIdentifierField');
+        //exit('before setIdentifierField');
 
         // Load or create the user
         $this->userProvider->setIdentifierField($identifierAttribute);          //'email'
         $user = $this->userProvider->loadUserByIdentifier($identifierValue);    //'oli2002@med.cornell.edu'
 
-        if (!$user && $config['autoCreate']) {
-            $user = $this->userProvider->createUserFromSamlAttributes($identifierValue, $attributes, $config['attributeMapping']);
-        }
+        echo "user=".$user."<br>";
+
+        //if (!$user && $config['autoCreate']) {
+        //    $user = $this->userProvider->createUserFromSamlAttributes($identifierValue, $attributes, $config['attributeMapping']);
+        //}
 
         if (!$user) {
             throw new AuthenticationException('User not found and auto-creation is disabled.');
