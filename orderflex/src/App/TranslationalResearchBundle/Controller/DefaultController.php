@@ -3489,13 +3489,13 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-make-public-misi/', name: 'translationalresearch_antibody_make_public_misi', methods: ['GET'])]
     public function makePublicMISIAction( Request $request )
     {
-        exit("makePublicMISIAction not allowed");
+        //exit("makePublicMISIAction not allowed");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->container->get('transres_util');
 
         $misiLab = $em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
         if( !$misiLab ) {
@@ -3523,15 +3523,21 @@ class DefaultController extends OrderAbstractController
         $antibodies = $query->getResult();
         echo "makePublicMISIAction: antibodies=".count($antibodies)."<br>";
 
+        $antibodyIds = array();
         $count = 0;
         foreach($antibodies as $antibody) {
             $antibody->setOpenToPublic(true);
+            $antibodyIds[] = $antibody->getId();
             //$em->flush();
             $count++;
         }
         //$em->flush();
 
-        exit('EOF makePublicMISIAction: count='.$count);
+        $msg = "Set to OpenToPublic MISI antibodies count=".$count.".";
+        $msg = $msg . " IDs:" . implode(", ",$antibodyIds);
+        $logger->notice($msg);
+
+        exit('EOF makePublicMISIAction: '.$msg);
     }
 
 }
