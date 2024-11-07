@@ -152,11 +152,12 @@ class SamlController extends OrderAbstractController //AbstractController
         $identifierValue = $attributes[$modifiedIdentifierAttribute][0];
         echo 'acs: identifierValue='.$identifierValue."<br>"; //identifierValue=oli2002@med.cornell.edu
 
-        $this->samlUserProvider->setIdentifierField($identifierAttribute);          //'email'
-        $user = $this->samlUserProvider->loadUserByIdentifier($identifierValue);
-        exit('111 user='.$user);
+        //$this->samlUserProvider->setIdentifierField($identifierAttribute);          //'email'
+        //$user = $this->samlUserProvider->loadUserByIdentifier($identifierValue);
+        //exit('111 user='.$user);
 
         try {
+            $this->samlUserProvider->setIdentifierField($identifierAttribute);          //'email'
             $user = $this->samlUserProvider->loadUserByIdentifier($identifierValue);
             //exit('111 user='.$user);
             return $this->userAuthenticator->authenticateUser(
