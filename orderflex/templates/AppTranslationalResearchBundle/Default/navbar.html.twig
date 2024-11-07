@@ -582,13 +582,16 @@
                             {#</li>#}
 
                             {% if antibodyLabs|length > 0 %}
+                                {#change antibodyLab.id to antibodyLab.name#}
                                 <li class="dropdown-submenu">
                                     <a href="{{ path('translationalresearch_antibodies_public_react') }}"
                                     >Published Antibody List</a>
                                     <ul class="dropdown-menu">
                                         {% for antibodyLab in antibodyLabs %}
                                             <li>
-                                                <a href="{{ path('translationalresearch_antibodies_public_react',{'filter[antibodylabs][]':antibodyLab.id}) }}"
+                                                <a href="{{
+                                                    path('translationalresearch_antibodies_public_react',{'filter[antibodylabs][]':antibodyLab.name})
+                                                }}"
                                                 >Published {{ antibodyLab.name }} Antibody List</a>
                                             </li>
                                         {% endfor %}
@@ -644,7 +647,7 @@
                                         <ul class="dropdown-menu">
                                             {% for antibodyLab in antibodyLabs %}
                                                 <li id="nav-bar-translationalresearch-antibodies">
-                                                    <a href="{{ path('translationalresearch_antibodies',{'filter[antibodylabs][]':antibodyLab.id}) }}"
+                                                    <a href="{{ path('translationalresearch_antibodies',{'filter[antibodylabs][]':antibodyLab.name}) }}"
                                                     >Complete {{ antibodyLab.name }} Antibody List</a>
                                                 </li>
                                             {% endfor %}

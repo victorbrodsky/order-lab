@@ -44,7 +44,9 @@ class AntibodyController extends OrderAbstractController
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-        
+
+        echo "indexAntibodiesAction <br>";
+
         $listArr = $this->getList($request); //list
         //$listArr['title'] = "Antibodies";
         $listArr['postPath'] = "_translationalresearch";
@@ -152,6 +154,9 @@ class AntibodyController extends OrderAbstractController
 
         //$filterform->submit($request);
         $filterform->handleRequest($request);
+
+        dump($filterform['antibodylabs']);
+
         $search = $filterform['search']->getData();
 
         if( $publicFormPage === false ) {
@@ -348,13 +353,13 @@ class AntibodyController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        //echo "antibodylabs=".count($antibodylabs)."<br>";
+//        echo "antibodylabs=".$antibodylabs."<br>";
+//        echo "antibodylabs=".count($antibodylabs)."<br>";
 //        foreach($antibodylabs as $antibodylab) {
 //            echo "antibodylab=".$antibodylab."<br>";
 //        }
 //        exit('111');
         if( $antibodylabs && count($antibodylabs) > 0 ) {
-            //echo "antibodylabs=".count($antibodylabs)."<br>";
             $dql->andWhere("antibodyLabs.id IN (:antibodyLabs)");
             $dqlParameters['antibodyLabs'] = $antibodylabs;
             $advancedFilter++;

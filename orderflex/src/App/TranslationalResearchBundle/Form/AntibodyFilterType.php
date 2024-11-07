@@ -144,10 +144,10 @@ class AntibodyFilterType extends AbstractType
 
             $builder->add('antibodylabs', EntityType::class, array(
                 'class' => AntibodyLabList::class,
-                //'choice_label' => 'getTreeName',
                 'label' => 'Antibody Lab(s):',
                 'required' => false,
                 'multiple' => true,
+                'choice_value'=> 'name', //use name instead of id in the filter url: published-antibodies?filter[antibodylabs][]=TRP
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Lab(s)"),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
