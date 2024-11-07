@@ -3528,10 +3528,10 @@ class DefaultController extends OrderAbstractController
         foreach($antibodies as $antibody) {
             $antibody->setOpenToPublic(true);
             $antibodyIds[] = $antibody->getId();
-            $em->flush();
+            //$em->flush();
             $count++;
         }
-        $em->flush();
+        //$em->flush();
 
         $msg = "Set to OpenToPublic MISI antibodies count=".$count.".";
         $msg = $msg . " IDs:" . implode(", ",$antibodyIds);
