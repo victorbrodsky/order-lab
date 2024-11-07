@@ -142,6 +142,7 @@ class SamlController extends OrderAbstractController //AbstractController
         $attributes = $auth->getAttributes();
         $identifier = $attributes[$config['identifier']][0];
 
+        dump($attributes);
         dump($config);
         exit('111');
 
