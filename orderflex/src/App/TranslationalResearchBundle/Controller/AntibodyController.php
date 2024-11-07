@@ -160,7 +160,7 @@ class AntibodyController extends OrderAbstractController
 
         $search = $filterform['search']->getData();
 
-        if( $publicFormPage === false ) {
+        //if( $publicFormPage === false ) {
             $name = $filterform['name']->getData();
             $description = $filterform['description']->getData();
             $categorytags = $filterform['categorytags']->getData();
@@ -184,7 +184,7 @@ class AntibodyController extends OrderAbstractController
             $hasVisualInfo = $filterform['visual']->getData();
             //$hasRoi = $filterform['hasRoi']->getData();
             //$hasWsi = $filterform['hasWsi']->getData();
-        }
+        //}
 
         //echo "search=".$search."<br>";
         //$search = $request->request->get('filter')['search'];
@@ -206,6 +206,14 @@ class AntibodyController extends OrderAbstractController
         $filterTypes = null;
         if( isset($filterform['type']) ) {
             $filterTypes = $filterform['type']->getData();
+        }
+
+        if( $publicFormPage === true ) {
+            //set type to
+//            'filter[public]' => 'Public',
+//                    'filter[type][0]' => 'default',
+//                    'filter[type][1]' => 'user-added',
+            $filterTypes = array('default','user-added');
         }
 
         if( $search ) {
@@ -355,7 +363,7 @@ class AntibodyController extends OrderAbstractController
         }
 
 //        echo "antibodylabs=".$antibodylabs."<br>";
-//        echo "antibodylabs=".count($antibodylabs)."<br>";
+        //echo "antibodylabs=".count($antibodylabs)."<br>";
 //        foreach($antibodylabs as $antibodylab) {
 //            echo "antibodylab=".$antibodylab."<br>";
 //        }
@@ -858,8 +866,7 @@ class AntibodyController extends OrderAbstractController
         exit;
     }
 
-    //Classical approach using html
-    //[Route(path: '/public/antibodies/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    //Classical approach using html table
     #[Route(path: '/public/published-antibodies', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_table.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
@@ -874,16 +881,16 @@ class AntibodyController extends OrderAbstractController
         //dump($filterPublic);
         //exit();
 
-        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
-            return $this->redirectToRoute(
-                'translationalresearch_antibodies_public',
-                array(
-                    'filter[public]' => 'Public',
-                    'filter[type][0]' => 'default',
-                    'filter[type][1]' => 'user-added',
-                )
-            );
-        }
+//        if( $filterPublic === null || strtolower($filterPublic) != 'public' ) {
+//            return $this->redirectToRoute(
+//                'translationalresearch_antibodies_public',
+//                array(
+//                    'filter[public]' => 'Public',
+//                    'filter[type][0]' => 'default',
+//                    'filter[type][1]' => 'user-added',
+//                )
+//            );
+//        }
 
         //$request->request->set('public', 'Public');
         //$all['filter']['public'] = 'Public';
@@ -896,7 +903,25 @@ class AntibodyController extends OrderAbstractController
         $listArr = $this->getList($request,$onlyPublic,$limit);
         //$listArr['title'] = "Antibodies";
         $listArr['postPath'] = "_translationalresearch";
-        $listArr['title'] = "Public ".$listArr['title'];
+        //$listArr['title'] = "Public ".$listArr['title'];
+
+        $filterFormObject = $listArr['filterFormObject'];
+
+        //'antibodypanels'
+        $antibodyLabs = $filterFormObject['antibodylabs']->getData();
+
+        $antibodyLabsStr = "";
+        if( $antibodyLabs ) {
+            //echo "antibodyLabs count=".count($antibodyLabs)."<br>";
+            foreach ($antibodyLabs as $antibodyLab) {
+                $antibodyLabsStr = $antibodyLabsStr . $antibodyLab->getName();
+            }
+            if( $antibodyLabsStr ) {
+                $antibodyLabsStr = $antibodyLabsStr . " ";
+            }
+        }
+
+        $listArr['title'] = "Published ".$antibodyLabsStr.$listArr['title'];
 
         return $listArr;
     }

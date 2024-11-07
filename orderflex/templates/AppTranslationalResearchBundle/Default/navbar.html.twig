@@ -667,7 +667,11 @@
                                         <ul class="dropdown-menu">
                                             {% for antibodyLab in antibodyLabs %}
                                                 <li id="nav-bar-translationalresearch-antibodies">
-                                                    <a href="{{ path('translationalresearch_antibodies',{'filter[antibodylabs][]':antibodyLab.name}) }}"
+                                                    <a href="{{ path('translationalresearch_antibodies',{
+                                                        'filter[antibodylabs][]':antibodyLab.name,
+                                                        'filter[type][0]':'default',
+                                                        'filter[type][1]':'user-added'
+                                                    }) }}"
                                                     >Complete {{ antibodyLab.name }} Antibody List</a>
                                                 </li>
                                             {% endfor %}
