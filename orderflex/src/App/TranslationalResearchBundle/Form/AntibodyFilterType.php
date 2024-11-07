@@ -66,7 +66,7 @@ class AntibodyFilterType extends AbstractType
 //            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Control'),
 //        ));
 
-        if( $this->params['publicFormPage'] === false ) {
+        //if( $this->params['publicFormPage'] === false ) {
 
             //Filter by Name, Description, Category Tags, Clone, Host, Reactivity, Company
             $builder->add('name', TextType::class, array(
@@ -84,34 +84,6 @@ class AntibodyFilterType extends AbstractType
                 'label' => false,
                 'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder' => "Description"),
             ));
-
-            ///// Open to Public ////
-            //echo "publicFormPage=".$this->params['publicFormPage']."<br>";
-            if ($this->params['publicFormPage'] === false) {
-//        $builder->add('public', CheckboxType::class, array(
-//            'label' => 'Open to public:',
-//            'required' => false,
-//            'attr' => array('style' => 'width: 20px; height: 20px;')
-//        ));
-                $publicTypes = array(
-                    "Public" => "Public",
-                    "Private" => "Private",
-                );
-                $builder->add('public', ChoiceType::class, array(
-                    'label' => false,
-                    'choices' => $publicTypes,
-                    //'data' => array('default','user-added'),
-                    //'choices_as_values' => true,
-                    //'multiple' => true,
-                    'required' => false,
-                    'attr' => array(
-                        'class' => 'combobox',
-                        'placeholder' => "Public/Private",
-                        //'style' => 'width: 20px; height: 20px;'
-                    )
-                ));
-            }
-            ///// EOF Open to Public ////
 
 //        $builder->add('categorytags', ChoiceType::class, array(
 //            'label' => false, //"Category Tags:",
@@ -210,25 +182,6 @@ class AntibodyFilterType extends AbstractType
                 'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field', 'placeholder' => 'Company'),
             ));
 
-
-            //Show list type filter
-            $types = array(
-                "default" => "default",
-                "user-added" => "user-added",
-                "disabled" => "disabled",
-                "draft" => "draft",
-                "hidden" => "hidden"
-            );
-            $builder->add('type', ChoiceType::class, array(
-                'label' => false,
-                'choices' => $types,
-                'data' => array('default', 'user-added'),
-                //'choices_as_values' => true,
-                'multiple' => true,
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder' => "Type")
-            ));
-
             $builder->add('catalog', TextType::class, array(
                 'required' => false,
                 'label' => false,
@@ -292,7 +245,53 @@ class AntibodyFilterType extends AbstractType
 //            'choices' => $this->booleanChoices,
 //            'attr' => array('class' => 'form-control')
 //        ));
+        //}
+
+        ///// Show only if page is not public ////
+        //echo "publicFormPage=".$this->params['publicFormPage']."<br>";
+        if( $this->params['publicFormPage'] === false ) {
+            //        $builder->add('public', CheckboxType::class, array(
+            //            'label' => 'Open to public:',
+            //            'required' => false,
+            //            'attr' => array('style' => 'width: 20px; height: 20px;')
+            //        ));
+            $publicTypes = array(
+                "Public" => "Public",
+                "Private" => "Private",
+            );
+            $builder->add('public', ChoiceType::class, array(
+                'label' => false,
+                'choices' => $publicTypes,
+                //'data' => array('default','user-added'),
+                //'choices_as_values' => true,
+                //'multiple' => true,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'combobox',
+                    'placeholder' => "Public/Private",
+                    //'style' => 'width: 20px; height: 20px;'
+                )
+            ));
+
+            //Show list type filter
+            $types = array(
+                "default" => "default",
+                "user-added" => "user-added",
+                "disabled" => "disabled",
+                "draft" => "draft",
+                "hidden" => "hidden"
+            );
+            $builder->add('type', ChoiceType::class, array(
+                'label' => false,
+                'choices' => $types,
+                'data' => array('default', 'user-added'),
+                //'choices_as_values' => true,
+                'multiple' => true,
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder' => "Type")
+            ));
         }
+        ///// EOF Open to Public ////
 
     }
 

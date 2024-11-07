@@ -583,20 +583,40 @@
 
                             {% if antibodyLabs|length > 0 %}
                                 {#change antibodyLab.id to antibodyLab.name#}
-                                <li class="dropdown-submenu">
-                                    <a href="{{ path('translationalresearch_antibodies_public_react') }}"
-                                    >Published Antibody List</a>
-                                    <ul class="dropdown-menu">
-                                        {% for antibodyLab in antibodyLabs %}
-                                            <li>
-                                                <a href="{{
+                                {% set viewtype = 'table' %}
+                                {#{% set viewtype = 'react-card' %}#}
+                                {% if viewtype == 'table' %}
+                                    <li class="dropdown-submenu">
+                                        <a href="{{ path('translationalresearch_antibodies_public') }}"
+                                        >Published Antibody List</a>
+                                        <ul class="dropdown-menu">
+                                            {% for antibodyLab in antibodyLabs %}
+                                                <li>
+                                                    <a href="{{
+                                                        path('translationalresearch_antibodies_public',{'filter[antibodylabs][]':antibodyLab.name})
+                                                    }}"
+                                                    >Published {{ antibodyLab.name }} Antibody List</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                {% if viewtype == 'react-card' %}
+                                    <li class="dropdown-submenu">
+                                        <a href="{{ path('translationalresearch_antibodies_public_react') }}"
+                                        >Published Antibody List (Cards)</a>
+                                        <ul class="dropdown-menu">
+                                            {% for antibodyLab in antibodyLabs %}
+                                                <li>
+                                                    <a href="{{
                                                     path('translationalresearch_antibodies_public_react',{'filter[antibodylabs][]':antibodyLab.name})
-                                                }}"
-                                                >Published {{ antibodyLab.name }} Antibody List</a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
+                                                    }}"
+                                                    >Published {{ antibodyLab.name }} Antibody List</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
 
                                 <li class="dropdown-submenu">
                                     {#<a href="{{ path('translationalresearch_antibodies_public_react') }}"#}
@@ -615,9 +635,9 @@
                                 </li>
                             {% endif %}
 
-                            <li>
-                                <a href="{{ path('translationalresearch_misi_antibody_panels') }}" target="_blank">MISI Antibody Panels</a>
-                            </li>
+                            {#<li>#}
+                                {#<a href="{{ path('translationalresearch_misi_antibody_panels') }}" target="_blank">MISI Antibody Panels</a>#}
+                            {#</li>#}
                         </ul>
                     </li>
 

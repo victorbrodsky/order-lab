@@ -119,6 +119,9 @@ class AntibodyController extends OrderAbstractController
         $dqlParameters = array();
 
         $publicFormPage = false;
+        if( $onlyPublic ) {
+            $publicFormPage = true;
+        }
         //echo "1 publicFormPage=".$publicFormPage."<br>";
         $params = array(
             "className" => $mapper['className'],
@@ -154,7 +157,7 @@ class AntibodyController extends OrderAbstractController
 
         //$filterform->submit($request);
         $filterform->handleRequest($request);
-        
+
         $search = $filterform['search']->getData();
 
         if( $publicFormPage === false ) {
@@ -856,8 +859,9 @@ class AntibodyController extends OrderAbstractController
     }
 
     //Classical approach using html
-    #[Route(path: '/public/antibodies/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
-    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_orig.html.twig')]
+    //[Route(path: '/public/antibodies/orig/', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    #[Route(path: '/public/published-antibodies', name: 'translationalresearch_antibodies_public', methods: ['GET'])]
+    #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_table.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
         $filterType = trim((string)$request->get('public'));
@@ -887,7 +891,9 @@ class AntibodyController extends OrderAbstractController
         //dump($request);
         //exit();
 
-        $listArr = $this->getList($request);
+        $limit = 50;
+        $onlyPublic = true;
+        $listArr = $this->getList($request,$onlyPublic,$limit);
         //$listArr['title'] = "Antibodies";
         $listArr['postPath'] = "_translationalresearch";
         $listArr['title'] = "Public ".$listArr['title'];
@@ -895,7 +901,7 @@ class AntibodyController extends OrderAbstractController
         return $listArr;
     }
 
-    #[Route(path: '/public/published-antibodies', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
+    #[Route(path: '/public/published-antibodies-card', name: 'translationalresearch_antibodies_public_react', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_react.html.twig')]
     public function indexPublicAntibodiesReactAction(Request $request)
     {

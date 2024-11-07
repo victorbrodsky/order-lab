@@ -61,10 +61,12 @@
                         {{ form_widget(filterform.categorytags) }}
                     </div>
 
-                    <div class="col-xs-2">
-                        {{ form_widget(filterform.public) }}
-                        {#{{ formmacros.checkbox(filterform.public) }}#}
-                    </div>
+                    {% if filterform.public is defined %}
+                        <div class="col-xs-2">
+                            {#{{ form_widget(filterform.public) }}#}
+                            {{ formmacros.checkbox(filterform.public) }}
+                        </div>
+                    {% endif %}
 
                     {#<div class="col-xs-1">#}
                         {#<button type="submit" class="btn btn-sm btn-default">Filter</button>#}
@@ -98,9 +100,9 @@
             <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-2">
-                            {{ form_widget(filterform.type) }}
-                        </div>
+                        {#<div class="col-xs-2">#}
+                            {#{{ form_widget(filterform.type) }}#}
+                        {#</div>#}
 
                         <div class="col-xs-2">
                             {{ form_widget(filterform.clone) }}
@@ -144,6 +146,32 @@
                             {{ form_widget(filterform.comment) }}
                         </div>
                     </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodylabs) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.antibodypanels) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.document) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                            {{ form_widget(filterform.visual) }}
+                        </div>
+
+                        <div class="col-xs-2">
+                        </div>
+
+                        <div class="col-xs-2">
+                        </div>
+                    </div>
+
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
             {{ form_rest(filterform) }}
@@ -156,7 +184,7 @@
             <tr>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Alternative Name', 'ent.altname') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Company', 'ent.company') }}</th>
@@ -171,27 +199,28 @@
                 <th>{{ knp_pagination_sortable(entities, 'Retrieval', 'ent.retrieval') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Dilution', 'ent.dilution') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Storage', 'ent.storage') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Comment', 'ent.comment') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Associated Antibodies', 'associates.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Data sheet', 'ent.datasheet') }}</th>
                 {#<th>Docs</th>#}
-                <th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>
+                {#<th>{{ knp_pagination_sortable(entities, 'Type', 'ent.type') }}</th>#}
 
-                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-                    <th>Actions</th>
-                {% endif %}
+                {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+                    {#<th>Actions</th>#}
+                {#{% endif %}#}
             </tr>
         </thead>
 
-        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
+        {#data-link="row" class="rowlink" data-target="a.list-row-mainlink"#}
+        <tbody1>
         {% for ent in entities %}
 
             <tr>
                 <td>
-                    {#{{ ent.id }}#}
-                    <a class="list-row-mainlink"
-                       href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"
-                       target="_blank">{{ ent.id }}</a>
+                    {{ ent.id }}
+                    {#<a class="list-row-mainlink"#}
+                       {#href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"#}
+                       {#target="_blank">{{ ent.id }}</a>#}
                 </td>
 
                 <td>
@@ -200,26 +229,26 @@
                     {% endfor %}
                 </td>
 
-                <td>
-                    {% if ent.openToPublic == true %}
+                {#<td>#}
+                    {#{% if ent.openToPublic == true %}#}
                         {#Yes#}
-                        <input
-                                type="checkbox"
-                                id="openToPublic"
-                                name="openToPublic"
-                                value="true"
-                                checked disabled
-                        >
-                    {% else %}
+                        {#<input#}
+                                {#type="checkbox"#}
+                                {#id="openToPublic"#}
+                                {#name="openToPublic"#}
+                                {#value="true"#}
+                                {#checked disabled#}
+                        {#>#}
+                    {#{% else %}#}
                         {#No#}
-                        <input
-                                type="checkbox"
-                                id="openToPublic"
-                                name="openToPublic"
-                                value="false" disabled
-                        >
-                    {% endif %}
-                </td>
+                        {#<input#}
+                                {#type="checkbox"#}
+                                {#id="openToPublic"#}
+                                {#name="openToPublic"#}
+                                {#value="false" disabled#}
+                        {#>#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 <td>
                     {{ ent.name }}
@@ -277,17 +306,17 @@
                     {{ ent.storage }}
                 </td>
 
-                <td data-toggle="tooltip" title="{{ ent.getAllComments()|raw }}">
-                    {{ transres_util.tokenTruncate(ent.comment,50) }}
-                    {% if ent.comment1 %}
-                        <br>
-                        {{ transres_util.tokenTruncate(ent.comment1,50) }}
-                    {% endif %}
-                    {% if ent.comment2 %}
-                        <br>
-                        {{ transres_util.tokenTruncate(ent.comment2,50) }}
-                    {% endif %}
-                </td>
+                {#<td data-toggle="tooltip" title="{{ ent.getAllComments()|raw }}">#}
+                    {#{{ transres_util.tokenTruncate(ent.comment,50) }}#}
+                    {#{% if ent.comment1 %}#}
+                        {#<br>#}
+                        {#{{ transres_util.tokenTruncate(ent.comment1,50) }}#}
+                    {#{% endif %}#}
+                    {#{% if ent.comment2 %}#}
+                        {#<br>#}
+                        {#{{ transres_util.tokenTruncate(ent.comment2,50) }}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 <td>
                     {% for associate in ent.associates %}
@@ -314,55 +343,55 @@
                     {#{% endfor %}#}
                 {#</td>#}
 
-                <td>
-                    {{ ent.type }}
-                </td>
+                {#<td>#}
+                    {#{{ ent.type }}#}
+                {#</td>#}
 
-                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                    <td class="rowlink-skip">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                Action <span class="caret"></span>
-                            </button>
+                {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
+                    {#<td class="rowlink-skip">#}
+                        {#<div class="btn-group">#}
+                            {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                                {#Action <span class="caret"></span>#}
+                            {#</button>#}
 
-                            <ul class="dropdown-menu dropdown-menu-right">
+                            {#<ul class="dropdown-menu dropdown-menu-right">#}
 
-                                <li>
-                                    <a href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"
-                                       target="_blank"
-                                    >Show</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path('translationalresearch_antibody_show', { 'id': ent.id }) }}"#}
+                                       {#target="_blank"#}
+                                    {#>Show</a>#}
+                                {#</li>#}
 
-                                <li>
-                                    <a href="{{ path('translationalresearch_antibody_edit', { 'id': ent.id }) }}"
-                                    >Edit</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path('translationalresearch_antibody_edit', { 'id': ent.id }) }}"#}
+                                    {#>Edit</a>#}
+                                {#</li>#}
 
-                                {% if ent.getType()|lower != 'disabled' %}
-                                    <li>
-                                        <a general-data-confirm="Are you sure you would like to disable this entry?"
-                                           href="{{ path('translationalresearch_change_antibody_type',
-                                            { 'entityId':ent.id, 'type':'disabled' }) }}">Disable
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}
-                                    <li>
-                                        <a general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
-                                           href="{{ path('translationalresearch_change_antibody_type',
-                                            { 'entityId':ent.id, 'type':'default' }) }}">Enable
-                                        </a>
-                                    </li>
-                                {% endif %}
+                                {#{% if ent.getType()|lower != 'disabled' %}#}
+                                    {#<li>#}
+                                        {#<a general-data-confirm="Are you sure you would like to disable this entry?"#}
+                                           {#href="{{ path('translationalresearch_change_antibody_type',#}
+                                            {#{ 'entityId':ent.id, 'type':'disabled' }) }}">Disable#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
+                                {#{% if ent.getType()|lower != 'default' and ent.getType()|lower != 'user-added' %}#}
+                                    {#<li>#}
+                                        {#<a general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"#}
+                                           {#href="{{ path('translationalresearch_change_antibody_type',#}
+                                            {#{ 'entityId':ent.id, 'type':'default' }) }}">Enable#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
 
-                            </ul>
+                            {#</ul>#}
 
-                        </div>
-                    </td>
-                {% endif %}
+                        {#</div>#}
+                    {#</td>#}
+                {#{% endif %}#}
             </tr>
         {% endfor %}
-        </tbody>
+        </tbody1>
     </table>
 
     {# display navigation #}
@@ -370,21 +399,21 @@
         {{ knp_pagination_render(entities) }}
     </div>
 
-    <p>
-        <a href="{{ path('translationalresearch_antibody_new') }}">
-            Create a new Antibody
-        </a>
-    </p>
+    {#<p>#}
+        {#<a href="{{ path('translationalresearch_antibody_new') }}">#}
+            {#Create a new Antibody#}
+        {#</a>#}
+    {#</p>#}
 
 
 
 {% endblock %}
 
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('antibodies-css') }}
-{% endblock %}
+{#{% block stylesheets %}#}
+    {#{{ encore_entry_link_tags('antibodies-css') }}#}
+{#{% endblock %}#}
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('antibodies') }}
-{% endblock %}
+{#{% block javascripts %}#}
+    {#{{ encore_entry_script_tags('antibodies') }}#}
+{#{% endblock %}#}
