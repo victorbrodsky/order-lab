@@ -166,6 +166,7 @@ class SamlController extends OrderAbstractController //AbstractController
                 $request
             );
         } catch (\Exception $e) {
+            //Error during SAML authentication for client: oli2002@med.cornell.edu, error: Unable to create a signed JWT from the given configuration.
             $this->logger->error("Error during SAML authentication for client: $client, error: " . $e->getMessage());
             return new Response('Authentication exception occurred.', Response::HTTP_UNAUTHORIZED);
         }
