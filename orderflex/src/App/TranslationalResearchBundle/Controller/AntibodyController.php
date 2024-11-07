@@ -45,7 +45,7 @@ class AntibodyController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        echo "indexAntibodiesAction <br>";
+        //echo "indexAntibodiesAction <br>";
 
         $listArr = $this->getList($request); //list
         //$listArr['title'] = "Antibodies";
@@ -154,9 +154,7 @@ class AntibodyController extends OrderAbstractController
 
         //$filterform->submit($request);
         $filterform->handleRequest($request);
-
-        dump($filterform['antibodylabs']);
-
+        
         $search = $filterform['search']->getData();
 
         if( $publicFormPage === false ) {
