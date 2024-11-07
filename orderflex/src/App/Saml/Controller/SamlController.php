@@ -142,6 +142,9 @@ class SamlController extends OrderAbstractController //AbstractController
         $attributes = $auth->getAttributes();
         $identifier = $attributes[$config['identifier']][0];
 
+        dump($config);
+        exit('111');
+
         try {
             $user = $this->samlUserProvider->loadUserByIdentifier($identifier);
             return $this->userAuthenticator->authenticateUser(
