@@ -3489,7 +3489,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/antibody-make-public-misi/', name: 'translationalresearch_antibody_make_public_misi', methods: ['GET'])]
     public function makePublicMISIAction( Request $request )
     {
-        //exit("makePublicMISIAction not allowed");
+        exit("makePublicMISIAction not allowed");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
