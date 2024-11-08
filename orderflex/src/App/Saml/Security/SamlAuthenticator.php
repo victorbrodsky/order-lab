@@ -141,7 +141,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         // On success, generate JWT and return it
         $user = $token->getUser();
         $jwt = $this->generateJwtToken($user);
-        echo "jwt=".$jwt."<br>";
+        //echo "jwt=".$jwt."<br>";
 
         //dump($token);
         //dump($request->attributes);
@@ -157,8 +157,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         $opw = $config['CustomerUrl'];
 
         $url = sprintf("%s?j=%s", $opw, $jwt);
-        echo "url=".$url."<br>";
-        exit('onAuthenticationSuccess');
+        //echo "url=".$url."<br>";
+        //exit('onAuthenticationSuccess');
 
         return new RedirectResponse($url);
 

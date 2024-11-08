@@ -25,6 +25,11 @@ use OneLogin\Saml2\Settings;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 
+//Set in .env:
+//JWT_SECRET_KEY=%kernel.project_dir%/config/saml_private.pem
+//JWT_PUBLIC_KEY=%kernel.project_dir%/config/saml_cert.pem
+//JWT_PASSPHRASE=
+
 class SamlController extends OrderAbstractController //AbstractController
 {
 

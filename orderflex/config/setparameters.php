@@ -225,6 +225,11 @@ if( $conn ) {
                 $mailer_port = NULL;
             }
 
+            //JWT keys for SAML
+            $secret_key = null;
+            $public_key = null;
+            $pass_phrase = null;
+
             if( $row && is_array($row) ) {
 
                 //print_r($row);
@@ -299,6 +304,11 @@ if( $conn ) {
                 $database_password_pacsvendor = getDBParameter($row, $database_password_pacsvendor, 'pacsvendorSlideManagerDBPassword');
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
+
+                //$secret_key = null;
+                //$public_key = null;
+                //$pass_phrase = null;
+
                 //$connection_channel = 'http'; //testing
                 echo "*** siteparameters.php: site settings connection_channel=[".$connection_channel."] ***\n"; //testing
             }//if $row
