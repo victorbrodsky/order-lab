@@ -142,16 +142,22 @@ class SamlAuthenticator extends AbstractAuthenticator
         $user = $token->getUser();
         $jwt = $this->generateJwtToken($user);
 
-        dump($token);
-        dump($request->attributes);
-        exit('onAuthenticationSuccess');
+        //dump($token);
+        //dump($request->attributes);
+        //exit('onAuthenticationSuccess');
 
-        $client = $request->attributes->get('client');
+        //$client = $request->attributes->get('client');
+
+        //get email domain from $user email
+        $client = $user->getSingleEmail();
+
         $config = $this->samlConfigProvider->getConfig($client);
 
         $opw = $config['CustomerUrl'];
 
         $url = sprintf("%s?j=%s", $opw, $jwt);
+        echo "url=".$url."<br>";
+
         return new RedirectResponse($url);
 
     }
