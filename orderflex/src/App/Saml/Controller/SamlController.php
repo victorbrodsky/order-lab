@@ -103,7 +103,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
     //acs TEST
     //The root 'saml_acs' is authenticated by SamlAuthenticator->authenticate(Request $request)
-    //If the root is different, then this controller authentication is used
+    //If the root is different, then th  is controller authentication is used
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     #[Route(path: '/acs', name: 'saml_acs')]
     public function acs(Request $request): Response
@@ -166,7 +166,8 @@ class SamlController extends OrderAbstractController //AbstractController
                 $request
             );
         } catch (\Exception $e) {
-            //Error during SAML authentication for client: oli2002@med.cornell.edu, error: Unable to create a signed JWT from the given configuration.
+            //Error during SAML authentication for client: oli2002@med.cornell.edu, error:
+            // Unable to create a signed JWT from the given configuration.
             $this->logger->error("Error during SAML authentication for client: $client, error: " . $e->getMessage());
             return new Response('Authentication exception occurred.', Response::HTTP_UNAUTHORIZED);
         }
