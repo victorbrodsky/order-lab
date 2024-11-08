@@ -142,6 +142,9 @@ class SamlAuthenticator extends AbstractAuthenticator
         $user = $token->getUser();
         $jwt = $this->generateJwtToken($user);
 
+        dump($request->attributes);
+        exit('onAuthenticationSuccess');
+
         $client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
 

@@ -179,6 +179,7 @@ class SamlConfigProvider
 //                    'privateKey' => $config->getSpPrivateKey(),
 //                ],
 //            ]),
+            'client' => $client,
             'settings' => $settings,
             'identifier' => $config->getIdentifierAttribute(),
             'autoCreate' => $config->getAutoCreate(),
