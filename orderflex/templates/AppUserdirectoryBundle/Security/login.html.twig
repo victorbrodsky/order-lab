@@ -150,6 +150,7 @@
 
                 userPnotifyDisplay();
                 regularCombobox();
+                loginTypeOnchange();
 
                 $("#login-form").on("submit", function () {
                     setFullUsername();
@@ -184,7 +185,23 @@
 //                });
                 //userLoginVisit();
 
+
+
             });
+
+
+            function loginTypeOnchange() {
+
+                $('#usernametypeid_show').on( 'change', function() {
+                    $('#password').show();
+                    var loginType = $(this).val();
+                    console.log('loginTypeOnchange: loginType='+loginType);
+                    if( loginType == 'saml-sso' ) {
+                        $('#password').hide();
+                    }
+                });
+
+            }
 
 //            //NOT USED
 //            function userLoginVisit() {

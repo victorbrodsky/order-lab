@@ -29,6 +29,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 //JWT_SECRET_KEY=%kernel.project_dir%/config/saml_private.pem
 //JWT_PUBLIC_KEY=%kernel.project_dir%/config/saml_cert.pem
 //JWT_PASSPHRASE=
+//TODO: set these keys dynamically from DB
 
 class SamlController extends OrderAbstractController //AbstractController
 {

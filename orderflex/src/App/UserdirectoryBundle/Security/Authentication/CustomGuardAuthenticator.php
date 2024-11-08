@@ -131,7 +131,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //No need auth on login page with GET
         if( strpos((string)$route, 'login') !== false ) {
             if( $request->isMethod('POST') ) {
-                //exit('true');
+                //exit('supports: true');
                 //$logger->notice("supports: Yes. route=".$route);
                 return true;
             }
@@ -456,6 +456,16 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //////////////////////////////////////////////////////////////////////
                 $user = $authUtil->identifierAuthentication($token);
                 ////////////////////EOF External IDs authentication //////////////////
+                break;
+
+            case "saml-sso":
+                //////////////////////////////////////////////////////////////////////
+                //                       5) SAML/SSO authentication                        //
+                //////////////////////////////////////////////////////////////////////
+//                if( $usernametype && $usernametype == 'saml-sso' ) {
+//                    return $this->redirect( $this->generateUrl('saml_login', {'client': }) );
+//                }
+                $user = $authUtil->samlAuthentication($token);
                 break;
 
             default:

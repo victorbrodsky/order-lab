@@ -86,6 +86,34 @@ class AuthUtil {
     }
 
 
+    public function samlAuthentication($token) {
+
+        if( !$token->getCredentials() ) {
+            //empty password
+            $this->logger->notice("samlAuthentication: no credentials in the token => exit without authentication.");
+            return NULL;
+        }
+
+        //get clean username
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
+
+        $this->logger->notice("samlAuthentication: get user by uesrname=".$token->getUsername());
+
+        //check if user already exists in DB
+        $user = $this->findUserByUsername($token->getUsername());
+
+        if( $user ) {
+            $userEmail = $user->getSingleEmail();
+            if( $userEmail ) {
+                $response = $this->redirect($this->generateUrl('saml_login', array('client' => $userEmail)));
+                dump($response);
+                exit('samlAuthentication');
+            }
+        }
+
+        return NULL;
+    }
 
     public function LocalAuthentication($token) {
 
