@@ -246,6 +246,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$user = $userManager->findUserByEmail($usernametype);
             //$user = $this->getAuthUser($credentials);
             $username = str_replace('_@_saml-sso','',$username);
+            //convert to lower case
+            $username = strtolower($username);
             echo 'before new Passport: username='.$username."<br>";
             $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
             if( $user->getSingleEmail() ) {
