@@ -29,6 +29,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 //use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 //use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -233,12 +234,33 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$connection = $this->em->getConnection();
         //$currentDb = $connection->getDatabase();
         //$logger->notice('authenticate: currentDb='.$currentDb);
+        //exit('before new Passport: usernametype='.$usernametype);
+
+        if( $usernametype == 'saml-sso' ) {
+            //$authUtil = $this->container->get('authenticator_utility');
+            //username = username=oli2002l_@_local-user
+            //$user = $authUtil->findUserByUsername($username);
+            //$userManager = $this->container->get('user_manager');
+            //$user = $userManager->findUserByEmail($usernametype);
+            //$user = $this->getAuthUser($credentials);
+            $username = str_replace('_@_saml-sso','',$username);
+            echo 'before new Passport: username='.$username."<br>";
+            $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
+            if( $user->getSingleEmail() ) {
+                $router = $this->container->get('router');
+                $response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
+                //dump($response);
+                //exit('samlAuthentication');
+            }
+            //exit('after saml-sso: user='.$user);
+        }
 
         return new Passport(
             new UserBadge($credentials['username']),
             new CustomCredentials(
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
+                    //exit('new Passport: CustomCredentials');
                     //$logger = $this->container->get('logger');
                     //$logger->notice('authenticate: new CustomCredentials');
                     //return true; //$user->getApiToken() === $credentials;

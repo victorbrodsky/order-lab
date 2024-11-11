@@ -125,6 +125,8 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <input type="hidden" name="_sitename" id="sitename" value="{{ sitename }}" />
 
+        <div id="message" type="hidden"></div>
+
         <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
 
         {#<button class="btn btn-lg btn-primary" type="submit">#}

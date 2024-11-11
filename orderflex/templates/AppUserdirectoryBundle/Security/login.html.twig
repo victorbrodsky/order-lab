@@ -154,6 +154,17 @@
 
                 $("#login-form").on("submit", function () {
                     setFullUsername();
+
+                    var usernametypeid = $('#usernametypeid_show').val();
+                    console.log("usernametypeid="+usernametypeid);
+                    $('#message').html("").hide();
+                    if( usernametypeid == 'saml-sso' ) {
+                        if (validateUsername() == false) {
+                            $('#message').html("Please enter your full email").show();
+                            return false;
+                        }
+                    }
+
                     //alert("username="+document.getElementById("username").value + ", password=" + document.getElementById("password").value );
                     return true;
                 });
@@ -193,6 +204,7 @@
             function loginTypeOnchange() {
 
                 $('#usernametypeid_show').on( 'change', function() {
+                    $('#message').html("").hide();
                     $('#password').show();
                     var loginType = $(this).val();
                     console.log('loginTypeOnchange: loginType='+loginType);
@@ -202,6 +214,21 @@
                 });
 
             }
+
+            function validateUsername() {
+                var username = $('#display-username').val();
+                if( loginValidateEmail(username) ) {
+                    return true;
+                }
+                return false;
+            }
+            function loginValidateEmail(email) {
+                return String(email)
+                        .toLowerCase()
+                        .match(
+                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        );
+            };
 
 //            //NOT USED
 //            function userLoginVisit() {
