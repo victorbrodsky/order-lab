@@ -66,8 +66,16 @@ class SamlConfigProvider
 
         $settings = array(
             'strict' => false,
+
+            // Set a BaseURL to be used instead of try to guess
+            // the BaseURL of the view that process the SAML Message.
+            // Ex http://sp.example.com/
+            //    http://example.com/sp/
+            'baseurl' => null, //'https://view.online/c/wcm/pathology/'
+
             // Enable debug mode (to print errors).
             'debug' => true,
+
             'security' => [
                 //'nameIdEncrypted' => $encriptionFlag,
                 //'authnRequestsSigned' => $encriptionFlag,

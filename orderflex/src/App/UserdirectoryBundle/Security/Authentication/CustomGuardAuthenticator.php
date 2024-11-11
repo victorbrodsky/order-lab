@@ -249,8 +249,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             if( $user->getSingleEmail() ) {
                 $router = $this->container->get('router');
                 $response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
-                //dump($response);
-                //exit('samlAuthentication');
+                dump($response);
+                exit('samlAuthentication');
             }
             //exit('after saml-sso: user='.$user);
         }
