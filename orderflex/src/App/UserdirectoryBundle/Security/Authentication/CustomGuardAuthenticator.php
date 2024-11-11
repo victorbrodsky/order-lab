@@ -256,7 +256,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //return $response;
                 
                 $authUtil = $this->container->get('authenticator_utility');
-                $authUtil->samlAuthentication();
+                $authUtil->samlAuthenticationTest($user);
             }
             //exit('after saml-sso: user='.$user);
         }
