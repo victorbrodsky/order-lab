@@ -35,6 +35,7 @@ use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced n
 
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use OneLogin\Saml2\Auth;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 //use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
