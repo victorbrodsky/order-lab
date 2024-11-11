@@ -250,7 +250,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $username = strtolower($username);
             echo 'before new Passport: username='.$username."<br>";
             $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
-            if( $user->getSingleEmail() ) {
+            if( $user && $user->getSingleEmail() ) {
                 //$router = $this->container->get('router');
                 //$response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
                 //dump($response);
