@@ -27,7 +27,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 
 use App\OrderformBundle\Security\Util\PacsvendorUtil;
-use App\Saml\Util\SamlConfigProvider;
+//use App\Saml\Util\SamlConfigProvider;
 use App\UserdirectoryBundle\Entity\IdentifierTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IdentifierTypeList
 
 
@@ -53,7 +53,7 @@ class AuthUtil {
     private $logger;
     private $requestStack;
     private $passwordHasher;
-    private $samlConfigProvider;
+    //private $samlConfigProvider;
     //protected $session;
     //private $hasherFactory;
 
@@ -67,7 +67,7 @@ class AuthUtil {
         //Session $session,
         RequestStack $requestStack,
         UserPasswordHasherInterface $passwordHasher,
-        SamlConfigProvider $samlConfigProvider
+        //SamlConfigProvider $samlConfigProvider
         //PasswordHasherFactory $hasherFactory
     )
     {
@@ -118,7 +118,8 @@ class AuthUtil {
         return NULL;
     }
     public function samlAuthenticationTest( $user ) {
-        $config = $this->samlConfigProvider->getConfig($user->getSingleEmail());
+        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+        $config = $samlConfigProviderUtil->getConfig($user->getSingleEmail());
         $auth = new Auth($config['settings']);
         $auth->login();
 
