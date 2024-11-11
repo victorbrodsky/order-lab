@@ -188,14 +188,16 @@ class EmailUtil {
         }
         //$logger->notice("sendEmail: sending email: subject=".$subject."; body=".$body."; fromEmail=".$fromEmail);
 
-        //send copy email to siteEmail via bcc
-        $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
-        //$bcc = NULL; //testing copy
-
         //$allEmails = "";
         $emails = $this->checkEmails($emails); //,'to',$allEmails);
         $ccs = $this->checkEmails($ccs); //,'css',$allEmails);
-        $bcc = $this->checkEmails($bcc); //,'bcc',$allEmails);
+
+        //send copy email to siteEmail via bcc
+        $bcc = NULL;
+        if( $sitenameAbbreviation != 'translationalresearch' ) {
+            $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $bcc = $this->checkEmails($bcc); //,'bcc',$allEmails);
+        }
 
         $resCc = array();
         $resBcc = array();
