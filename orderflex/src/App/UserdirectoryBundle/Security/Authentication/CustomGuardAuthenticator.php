@@ -249,13 +249,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             echo 'before new Passport: username='.$username."<br>";
             $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
             if( $user->getSingleEmail() ) {
-                $router = $this->container->get('router');
-                $response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
+                //$router = $this->container->get('router');
+                //$response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
                 //dump($response);
                 //exit('samlAuthentication');
-                return $response;
+                //return $response;
 
-                $config = $this->samlConfigProvider->getConfig($user->getSingleEmail());
+                $config = $samlConfigProvider->getConfig($user->getSingleEmail());
                 $auth = new Auth($config['settings']);
                 $auth->login();
 
