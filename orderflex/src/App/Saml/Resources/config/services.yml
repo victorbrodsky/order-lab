@@ -21,3 +21,5 @@ services:
     saml_util:
         class: App\Saml\Util\SamlConfigProvider
 
+    saml_config_provider_util:
+        class: App\Saml\Util\SamlConfigProvider

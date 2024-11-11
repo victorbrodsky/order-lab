@@ -173,10 +173,6 @@ services:
         class: App\UserdirectoryBundle\User\Model\UserManager
 #        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
 
-
-    saml_config_provider_util:
-            class: App\Saml\Util\SamlConfigProvider
-
     #dynamic_connection:
     #App\UserdirectoryBundle\Services\MultiDbConnectionWrapper:
     #    class: App\UserdirectoryBundle\Services\MultiDbConnectionWrapper
