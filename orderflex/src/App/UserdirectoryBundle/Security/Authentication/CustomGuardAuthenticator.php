@@ -169,7 +169,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      *
      * @throws AuthenticationException
      */
-    public function authenticate(Request $request, SamlConfigProvider $samlConfigProvider) : Passport
+    public function authenticate(Request $request) : Passport
     {
         //dump($request->request);
         //exit('authenticate');
@@ -254,25 +254,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //dump($response);
                 //exit('samlAuthentication');
                 //return $response;
-
-                $config = $samlConfigProvider->getConfig($user->getSingleEmail());
-                $auth = new Auth($config['settings']);
-                $auth->login();
-
-                $errors = $auth->getErrors();  // This method receives an array with the errors
-                // that could took place during the process
-
-//                if (!empty($errors)) {
-//                    echo '<p>', implode(', ', $errors), '</p>';
-//                }
-                // This check if the response was
-                if( !$auth->isAuthenticated() ) {      // successfully validated and the user
-                    echo "<p>Not authenticated</p>";  // data retrieved or not
-                    exit('111');
-                } else {
-                    exit('authenticated!!!');
-                }
-
+                
+                $authUtil = $this->container->get('authenticator_utility');
+                $authUtil->samlAuthentication();
             }
             //exit('after saml-sso: user='.$user);
         }

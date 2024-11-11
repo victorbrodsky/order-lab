@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 
 use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\Saml\Util\SamlConfigProvider;
 use App\UserdirectoryBundle\Entity\IdentifierTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IdentifierTypeList
 
 
@@ -52,6 +53,7 @@ class AuthUtil {
     private $logger;
     private $requestStack;
     private $passwordHasher;
+    private $samlConfigProvider;
     //protected $session;
     //private $hasherFactory;
 
@@ -64,7 +66,8 @@ class AuthUtil {
         EntityManagerInterface $em,
         //Session $session,
         RequestStack $requestStack,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        SamlConfigProvider $samlConfigProvider
         //PasswordHasherFactory $hasherFactory
     )
     {
@@ -113,6 +116,26 @@ class AuthUtil {
         }
 
         return NULL;
+    }
+    public function samlAuthenticationTest( $user ) {
+        $config = $this->samlConfigProvider->getConfig($user->getSingleEmail());
+        $auth = new Auth($config['settings']);
+        $auth->login();
+
+        $errors = $auth->getErrors();  // This method receives an array with the errors
+        // that could took place during the process
+
+        if (!empty($errors)) {
+            echo '<p>', implode(', ', $errors), '</p>';
+        }
+
+        // This check if the response was
+        if( !$auth->isAuthenticated() ) {      // successfully validated and the user
+            echo "<p>Not authenticated</p>";  // data retrieved or not
+            exit('not authenticated');
+        } else {
+            exit('authenticated!!!');
+        }
     }
 
     public function LocalAuthentication($token) {
