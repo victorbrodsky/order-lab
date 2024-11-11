@@ -29,7 +29,9 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 //use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 //use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Saml\Util\SamlConfigProvider;
 use App\UserdirectoryBundle\Entity\User;
+use OneLogin\Saml2\Auth;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -167,7 +169,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      *
      * @throws AuthenticationException
      */
-    public function authenticate(Request $request) : Passport
+    public function authenticate(Request $request, SamlConfigProvider $samlConfigProvider) : Passport
     {
         //dump($request->request);
         //exit('authenticate');
@@ -252,6 +254,25 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //dump($response);
                 //exit('samlAuthentication');
                 return $response;
+
+                $config = $this->samlConfigProvider->getConfig($user->getSingleEmail());
+                $auth = new Auth($config['settings']);
+                $auth->login();
+
+                $errors = $auth->getErrors();  // This method receives an array with the errors
+                // that could took place during the process
+
+//                if (!empty($errors)) {
+//                    echo '<p>', implode(', ', $errors), '</p>';
+//                }
+                // This check if the response was
+                if( !$auth->isAuthenticated() ) {      // successfully validated and the user
+                    echo "<p>Not authenticated</p>";  // data retrieved or not
+                    exit('111');
+                } else {
+                    exit('authenticated!!!');
+                }
+
             }
             //exit('after saml-sso: user='.$user);
         }
