@@ -1202,6 +1202,26 @@ class AntibodyController extends OrderAbstractController
         $labsArr = $res['labsArr'];
         $labsStr = implode(', ',$labsArr);
 
+        //MISI => Multiparametric In Situ (MISI)
+        //Find project specialty by 'name' AntibodyLabList
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(AntibodyLabList::class);
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        );
+        $dql->orderBy("list.orderinlist","ASC");
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        $labEntities = $query->getResult();
+        $labFullNameArray = array();
+        foreach( $labEntities as $labEntity) {
+            //TODO: add short name to AntibodyLabList
+            $labFullNameArray[] = $labEntity->getName();
+        }
+
         return array(
             'panels' => $panels,
             'title' => "Antibodies $labsStr Grouped by Panel",
