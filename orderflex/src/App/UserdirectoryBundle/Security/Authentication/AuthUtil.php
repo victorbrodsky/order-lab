@@ -67,7 +67,7 @@ class AuthUtil {
         EntityManagerInterface $em,
         //Session $session,
         RequestStack $requestStack,
-        UserPasswordHasherInterface $passwordHasher,
+        UserPasswordHasherInterface $passwordHasher
         //SamlConfigProvider $samlConfigProvider
         //PasswordHasherFactory $hasherFactory
     )
@@ -118,8 +118,47 @@ class AuthUtil {
 
         return NULL;
     }
-    public function samlAuthenticationTest( $user ) {
+    public function samlAuthenticationByDomain( $domain ) {
+        if( !$domain ) {
+            return NULL;
+        }
+
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+
+        echo "domain=$domain <br>";
+        //$emailArr = explode('@', $email);
+        //$domain = $emailArr[1];
+    
+        //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+
+        $config = $samlConfigProviderUtil->getConfig($domain);
+        $auth = new Auth($config['settings']);
+        $auth->login();
+
+        $errors = $auth->getErrors();  // This method receives an array with the errors
+        // that could took place during the process
+
+        if (!empty($errors)) {
+            echo '<p>', implode(', ', $errors), '</p>';
+        }
+
+        // This check if the response was
+        if( !$auth->isAuthenticated() ) {      // successfully validated and the user
+            echo "<p>Not authenticated</p>";  // data retrieved or not
+            exit('not authenticated');
+        } else {
+            exit('authenticated!!!');
+        }
+    }
+    public function samlAuthenticationByEmail( $email ) {
+        if( !$email ) {
+            return NULL;
+        }
+
+        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+
+        $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+
         $config = $samlConfigProviderUtil->getConfig($user->getSingleEmail());
         $auth = new Auth($config['settings']);
         $auth->login();

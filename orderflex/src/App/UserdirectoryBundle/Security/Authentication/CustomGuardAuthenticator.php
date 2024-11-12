@@ -245,20 +245,31 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$userManager = $this->container->get('user_manager');
             //$user = $userManager->findUserByEmail($usernametype);
             //$user = $this->getAuthUser($credentials);
-            $username = str_replace('_@_saml-sso','',$username);
+            //$username = str_replace('_@_saml-sso','',$username);
             //convert to lower case
-            $username = strtolower($username);
-            echo 'before new Passport: username='.$username."<br>";
-            $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
-            if( $user && $user->getSingleEmail() ) {
-                //$router = $this->container->get('router');
-                //$response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
-                //dump($response);
-                //exit('samlAuthentication');
-                //return $response;
-                
+            $username = strtolower($username); //username is entered email
+            //echo 'before new Passport: username='.$username."<br>";
+            //exit('samlAuthentication');
+
+            if( $username ) {
+                $emailArr = explode('@', $username);
+                $domain = $emailArr[1];
                 $authUtil = $this->container->get('authenticator_utility');
-                $authUtil->samlAuthenticationTest($user);
+                $authUtil->samlAuthenticationByDomain($domain);
+            }
+
+            if( 0 ) {
+                $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
+                if ($user && $user->getSingleEmail()) {
+                    //$router = $this->container->get('router');
+                    //$response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
+                    //dump($response);
+                    //exit('samlAuthentication');
+                    //return $response;
+
+                    $authUtil = $this->container->get('authenticator_utility');
+                    $authUtil->samlAuthenticationByEmail($user);
+                }
             }
             //exit('after saml-sso: user='.$user);
         }

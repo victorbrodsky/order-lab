@@ -39,6 +39,22 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
         return $config;
     }
 
+    public function findByDomain(string $domain): ?SamlConfig
+    {
+        //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
+        //$domain = explode('@', $client);
+        //$client = $domain[1];
+        //exit('client='.$client);
+
+        $config = $this->findOneBy(['client' => $domain]);
+
+        if( !$config ) {
+            $config = $this->findAnyOne();
+        }
+
+        return $config;
+    }
+
     public function findAnyOne() {
         $configs = $this->_em->getRepository(SamlConfig::class)->findAll();
         if( count($configs) > 0 ) {
