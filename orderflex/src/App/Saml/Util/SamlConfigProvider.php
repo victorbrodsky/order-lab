@@ -48,7 +48,7 @@ class SamlConfigProvider
 
         //check if $client is email
         if( str_contains($client, '@') ) {
-            $config = $this->samlConfigRepository->findByClient($client);
+            $config = $this->em->getRepository(SamlConfig::class)->findByClient($client);
         }
 
         if( !$config ) {
