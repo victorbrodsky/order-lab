@@ -119,7 +119,8 @@ class AntibodyFilterType extends AbstractType
                 'label' => 'Antibody Lab(s):',
                 'required' => false,
                 'multiple' => true,
-                'choice_value'=> 'name', //use name instead of id in the filter url: published-antibodies?filter[antibodylabs][]=TRP
+                'choice_label' => 'getAbbreviation',
+                'choice_value'=> 'abbreviation', //use name instead of id in the filter url: published-antibodies?filter[antibodylabs][]=TRP
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Lab(s)"),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
