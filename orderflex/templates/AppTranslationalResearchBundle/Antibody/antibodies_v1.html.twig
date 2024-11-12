@@ -119,7 +119,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'ent.id') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Category', 'ent.category') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Category Tags', 'categoryTags.name') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Labs', 'antibodyLabs.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Labs', 'antibodyLabs.abbreviation') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Panels', 'antibodyPanels.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Show on public list?', 'ent.openToPublic') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Name', 'ent.name') }}</th>
@@ -169,7 +169,7 @@
 
                 <td>
                     {% for lab in ent.antibodyLabs %}
-                        {{ lab }}<br>
+                        {{ lab.getAbbreviation() }}<br>
                     {% endfor %}
                 </td>
 

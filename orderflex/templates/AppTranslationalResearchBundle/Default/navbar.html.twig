@@ -582,7 +582,7 @@
                             {#</li>#}
 
                             {% if antibodyLabs|length > 0 %}
-                                {#change antibodyLab.id to antibodyLab.name#}
+                                {#change antibodyLab.id to antibodyLab.abbreviation#}
                                 {% set viewtype = 'table' %}
                                 {#{% set viewtype = 'react-card' %}#}
                                 {% if viewtype == 'table' %}
@@ -593,9 +593,9 @@
                                             {% for antibodyLab in antibodyLabs %}
                                                 <li>
                                                     <a href="{{
-                                                        path('translationalresearch_antibodies_public',{'filter[antibodylabs][]':antibodyLab.name})
+                                                        path('translationalresearch_antibodies_public',{'filter[antibodylabs][]':antibodyLab.abbreviation})
                                                     }}"
-                                                    >Published {{ antibodyLab.name }} Antibody List</a>
+                                                    >Published {{ antibodyLab.abbreviation }} Antibody List</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -609,9 +609,9 @@
                                             {% for antibodyLab in antibodyLabs %}
                                                 <li>
                                                     <a href="{{
-                                                    path('translationalresearch_antibodies_public_react',{'filter[antibodylabs][]':antibodyLab.name})
+                                                    path('translationalresearch_antibodies_public_react',{'filter[antibodylabs][]':antibodyLab.abbreviation})
                                                     }}"
-                                                    >Published {{ antibodyLab.name }} Antibody List</a>
+                                                    >Published {{ antibodyLab.abbreviation }} Antibody List</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -627,8 +627,8 @@
                                         {% for antibodyLab in antibodyLabsPanels %}
                                             <li>
                                                 <a href="{{ path('translationalresearch_antibodies_group_by_panel',
-                                                {'labs':antibodyLab.name}) }}"
-                                                >Published {{ antibodyLab.name }} Antibody Panel List</a>
+                                                {'labs':antibodyLab.abbreviation}) }}"
+                                                >Published {{ antibodyLab.abbreviation }} Antibody Panel List</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -668,11 +668,11 @@
                                             {% for antibodyLab in antibodyLabs %}
                                                 <li id="nav-bar-translationalresearch-antibodies">
                                                     <a href="{{ path('translationalresearch_antibodies',{
-                                                        'filter[antibodylabs][]':antibodyLab.name,
+                                                        'filter[antibodylabs][]':antibodyLab.abbreviation,
                                                         'filter[type][0]':'default',
                                                         'filter[type][1]':'user-added'
                                                     }) }}"
-                                                    >Complete {{ antibodyLab.name }} Antibody List</a>
+                                                    >Complete {{ antibodyLab.abbreviation }} Antibody List</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -688,8 +688,8 @@
                                             {% for antibodyLab in antibodyLabsPanels %}
                                                 <li id="nav-bar-translationalresearch-antibodies">
                                                     <a href="{{ path('translationalresearch_antibodies_group_by_panel',
-                                                    {'labs':antibodyLab.name}) }}"
-                                                    >Complete {{ antibodyLab.name }} Antibody Panel List</a>
+                                                    {'labs':antibodyLab.abbreviation}) }}"
+                                                    >Complete {{ antibodyLab.abbreviation }} Antibody Panel List</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>

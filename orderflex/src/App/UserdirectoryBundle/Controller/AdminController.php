@@ -10965,20 +10965,27 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "TRP",
-            "MISI"
+            'Translational Research Program' => "TRP",
+            'Multiparametric In Situ Imaging' => "MISI"
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name => $abbreviation ) {
 
             $listEntity = $em->getRepository(AntibodyLabList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
+            $listEntity = $em->getRepository(AntibodyLabList::class)->findOneByAbbreviation($abbreviation);
+            if( $listEntity ) {
+                continue;
+            }
+
+            exit('generateAntibodyLabList');
             $listEntity = new AntibodyLabList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+            $listEntity->setAbbreviation($abbreviation);
 
             $em->persist($listEntity);
             $em->flush();

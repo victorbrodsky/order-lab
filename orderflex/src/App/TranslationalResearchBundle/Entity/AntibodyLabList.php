@@ -70,5 +70,15 @@ class AntibodyLabList extends ListAbstract
 
         return $this;
     }
+
+    //Name (abbreviation)
+    public function getFullName() {
+        $fullName = $this->getName();
+        $abbreviation = $this->getAbbreviation();
+        if( $abbreviation ) {
+            $fullName = $fullName . " (" . $abbreviation . ") Laboratory";
+        }
+        return $fullName;
+    }
     
 }

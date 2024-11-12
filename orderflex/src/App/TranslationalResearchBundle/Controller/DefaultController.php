@@ -3394,7 +3394,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $trpLab = $em->getRepository(AntibodyLabList::class)->findOneByName("TRP");
+        $trpLab = $em->getRepository(AntibodyLabList::class)->findOneByAbbreviation("TRP");
         if( !$trpLab ) {
             exit("AntibodyLabList TRP does not exist");
         }
@@ -3497,7 +3497,7 @@ class DefaultController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        $misiLab = $em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
+        $misiLab = $em->getRepository(AntibodyLabList::class)->findOneByAbbreviation("MISI");
         if( !$misiLab ) {
             exit("AntibodyLabList MISI does not exist");
         }

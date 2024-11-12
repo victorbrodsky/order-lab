@@ -4015,12 +4015,19 @@ class TransResUtil
         $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
 
         //echo "labsStr=$labsStr <br>";
+        $labFullNameArr = array();
         $labsArr = array();
         if( $labsStr ) {
             $labsArr = explode('|',$labsStr);
             $labsCriterionArr = array();
             foreach($labsArr as $lab) {
-                $labsCriterionArr[] = "antibodyLabs.name = '".$lab."'";
+                $labsCriterionArr[] = "antibodyLabs.abbreviation = '".$lab."'";
+
+                //get AntibodyLabList entity and then get fulle name
+                $labEntity = $this->em->getRepository(AntibodyLabList::class)->findOneByAbbreviation($lab);
+                if( $labEntity ) {
+                    $labFullNameArr[] = $labEntity->getFullName(); //Multiparametric In Situ (MISI)
+                }
             }
             $labsCriterionStr = implode(' OR ',$labsCriterionArr);
             //echo "labsCriterionStr=$labsCriterionStr <br>";
@@ -4046,7 +4053,7 @@ class TransResUtil
         $res = array(
             'panels' => $panels,
             //'labsStr' => $labsStr,
-            'labsArr' => $labsArr
+            'labsArr' => $labFullNameArr
         );
 
         return $res;
@@ -9422,7 +9429,7 @@ WHERE
         //$transresUtil = $this->container->get('transres_util');
         //$logger = $this->container->get('logger');
 
-        $misiLab = $this->em->getRepository(AntibodyLabList::class)->findOneByName("MISI");
+        $misiLab = $this->em->getRepository(AntibodyLabList::class)->findOneByAbbreviation("MISI");
         if( !$misiLab ) {
             exit("Lab is not found by name MISI");
         }
@@ -9610,6 +9617,7 @@ WHERE
         $dql->andWhere("LOWER(list.reactivity) LIKE LOWER(:reactivity)"); //has string?
         //$dql->andWhere("LOWER(list.reactivity) = LOWER(:reactivity)");
         $dql->andWhere("LOWER(antibodyLabs.name) = LOWER(:antibodyLab)");
+        $dql->andWhere("LOWER(antibodyLabs.abbreviation) = LOWER(:antibodyLab)");
 
         //$dql->andWhere("list.type = :typedef OR list.type = :typeadd");
 

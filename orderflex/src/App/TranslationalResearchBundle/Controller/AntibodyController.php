@@ -91,7 +91,8 @@ class AntibodyController extends OrderAbstractController
         $dql->leftJoin("ent.categoryTags", "categoryTags");
         $dql->addGroupBy('categoryTags.name');
         $dql->leftJoin("ent.antibodyLabs", "antibodyLabs");
-        $dql->addGroupBy('antibodyLabs.name');
+        //$dql->addGroupBy('antibodyLabs.name');
+        $dql->addGroupBy('antibodyLabs.abbreviation');
         $dql->leftJoin("ent.antibodyPanels", "antibodyPanels");
         $dql->addGroupBy('antibodyPanels.name');
         $dql->leftJoin("ent.associates", "associates");
@@ -241,6 +242,7 @@ class AntibodyController extends OrderAbstractController
             $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(antibodyLabs.name) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(antibodyLabs.abbreviation) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(antibodyPanels.name) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
             $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
@@ -1202,29 +1204,9 @@ class AntibodyController extends OrderAbstractController
         $labsArr = $res['labsArr'];
         $labsStr = implode(', ',$labsArr);
 
-        //MISI => Multiparametric In Situ (MISI)
-        //Find project specialty by 'name' AntibodyLabList
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(AntibodyLabList::class);
-        $dql =  $repository->createQueryBuilder("list");
-        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
-        $parameters = array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        );
-        $dql->orderBy("list.orderinlist","ASC");
-        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters($parameters);
-        $labEntities = $query->getResult();
-        $labFullNameArray = array();
-        foreach( $labEntities as $labEntity) {
-            //TODO: add short name to AntibodyLabList
-            $labFullNameArray[] = $labEntity->getName();
-        }
-
         return array(
             'panels' => $panels,
-            'title' => "Antibodies $labsStr Grouped by Panel",
+            'title' => $labsStr . " Antibodies - Grouped by Panel",
             //'cycle' => $cycle
         );
     }
