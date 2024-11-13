@@ -238,7 +238,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$logger->notice('authenticate: currentDb='.$currentDb);
         //exit('before new Passport: usernametype='.$usernametype);
 
-        if( 0 && $usernametype == 'saml-sso' ) {
+        if( $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
             //username = username=oli2002l_@_local-user
             //$user = $authUtil->findUserByUsername($username);
