@@ -30,7 +30,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         private SamlConfigProvider $samlConfigProvider,
         private SamlUserProvider $userProvider,
         private JWTTokenManagerInterface $jWTManager,
-        //private LoggerInterface $logger
+        private LoggerInterface $logger
     ) {
     }
 
@@ -46,7 +46,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         $testing = true;
         $testing = false;
         //exit('SamlAuthenticator: authenticate');
-        //$this->logger->notice("SamlAuthenticator: authenticate");
+        $this->logger->notice("SamlAuthenticator: authenticate");
 
         //dump($request);
         //exit('authenticate');

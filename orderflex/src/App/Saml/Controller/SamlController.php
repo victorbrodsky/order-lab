@@ -87,8 +87,8 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/acs/original/{client}', name: 'saml_acs_orig', requirements: ['client' => '.+'])]
     public function acsOrig(Request $request, $client): Response
     {
-        exit('acsOrig');
-        $this->logger->notice("Processing SAML ACS for client: $client");
+        //exit('acsOrig');
+        $this->logger->notice("Processing SAML ACS original for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
         $auth = new Auth($config['settings']);
