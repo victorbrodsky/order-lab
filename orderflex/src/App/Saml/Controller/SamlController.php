@@ -185,8 +185,8 @@ class SamlController extends OrderAbstractController //AbstractController
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
     //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    #[Route(path: '/logout/{client}', name: 'saml_logout_orig', requirements: ['client' => '.+'])]
-    public function logoutOrig(Request $request, string $client): Response
+    #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
+    public function logout(Request $request, string $client): Response
     {
         //exit('logoutOrig');
         $this->logger->notice("Starting SAML logout for client: $client");
@@ -202,8 +202,8 @@ class SamlController extends OrderAbstractController //AbstractController
             throw new UnprocessableEntityHttpException('Error while trying to logout');
         }
     }
-    #[Route(path: '/logout/', name: 'saml_logout')]
-    public function logout(Request $request): Response
+    #[Route(path: '/logout-new/', name: 'saml_logout_new')]
+    public function logoutNew(Request $request): Response
     {
         //exit('logout');
         $relayState = $request->getPayload()->get('RelayState');
