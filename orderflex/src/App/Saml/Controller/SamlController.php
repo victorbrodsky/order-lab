@@ -67,8 +67,13 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
+        $this->logger->notice("SAML login after config");
+
         $auth = new Auth($config['settings']);
+        $this->logger->notice("SAML login after new Auth");
+
         $auth->login();
+        $this->logger->notice("SAML login after login");
 
         // The login method does a redirect, so we won't reach this line
         return new Response('Redirecting to IdP...', 302);
