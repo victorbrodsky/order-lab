@@ -68,9 +68,11 @@ class SamlController extends OrderAbstractController //AbstractController
 
         $config = $this->samlConfigProvider->getConfig($client);
         $this->logger->notice("SAML login after config");
+        dump($config);
 
         $auth = new Auth($config['settings']);
         $this->logger->notice("SAML login after new Auth");
+        exit('111');
 
         $auth->login();
         $this->logger->notice("SAML login after login");
