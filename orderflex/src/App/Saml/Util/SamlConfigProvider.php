@@ -69,8 +69,8 @@ class SamlConfigProvider
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
         //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
-        $encriptionFlag = true;
-        //$encriptionFlag = false;
+        //$encriptionFlag = true;
+        $encriptionFlag = false;
 
         $settings = array(
             'strict' => false,
@@ -85,13 +85,13 @@ class SamlConfigProvider
             'debug' => true,
 
             'security' => [
-                //'nameIdEncrypted' => $encriptionFlag,
-                //'authnRequestsSigned' => $encriptionFlag,
-                //'logoutRequestSigned' => $encriptionFlag,
-                //'logoutResponseSigned' => $encriptionFlag,
-                //'signMetadata' => $encriptionFlag,
-                //'wantMessagesSigned' => $encriptionFlag,
-                //'wantAssertionsEncrypted' => $encriptionFlag,
+                'nameIdEncrypted' => $encriptionFlag,
+                'authnRequestsSigned' => $encriptionFlag,
+                'logoutRequestSigned' => $encriptionFlag,
+                'logoutResponseSigned' => $encriptionFlag,
+                'signMetadata' => $encriptionFlag,
+                'wantMessagesSigned' => $encriptionFlag,
+                'wantAssertionsEncrypted' => $encriptionFlag,
 
 //                // Indicates a requirement for the <saml:Assertion> elements received by
 //                // this SP to be signed. [Metadata of the SP will offer this info]
