@@ -185,10 +185,41 @@ class SamlController extends OrderAbstractController //AbstractController
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
     //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
+    #[Route(path: '/logout/{client}', name: 'saml_logout_orig', requirements: ['client' => '.+'])]
+    public function logoutOrig(Request $request, string $client): Response
+    {
+        //exit('logout');
+        $this->logger->notice("Starting SAML logout for client: $client");
+        $config = $this->samlConfigProvider->getConfig($client);
+        try {
+            $auth = new Auth($config['settings']);
+            $auth->logout();
+
+            // The logout method does a redirect, so we won't reach this line
+            return new Response('Redirecting to IdP for logout...', 302);
+        } catch (Error $e) {
+            $this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
+            throw new UnprocessableEntityHttpException('Error while trying to logout');
+        }
+    }
+    #[Route(path: '/logout/', name: 'saml_logout', requirements: ['client' => '.+'])]
     public function logout(Request $request, string $client): Response
     {
         //exit('logout');
+
+        $relayState = $request->getPayload()->get('RelayState');
+        $samlResponse = $request->getPayload()->get('SAMLResponse');
+        //echo 'relayState='.$relayState."<br>";
+
+        $client = '';
+        //$somestring = '/login/';
+        if( str_contains($relayState,'/login/')) {
+            //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+            $parts = explode('/', $relayState);
+            $client = array_pop($parts);
+        }
+        //exit('client='.$client);
+
         $this->logger->notice("Starting SAML logout for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
