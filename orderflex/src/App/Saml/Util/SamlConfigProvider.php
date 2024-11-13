@@ -62,8 +62,8 @@ class SamlConfigProvider
         list($scheme, $host) = $this->getSPEntityId();
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
-        echo '$schemeAndHost='.$schemeAndHost."<br>";
-        exit('111');
+        //echo '$schemeAndHost='.$schemeAndHost."<br>";
+        //exit('111');
 
         //echo 'idp cert='.$config->getIdpCert()."<br>";
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
@@ -223,15 +223,15 @@ class SamlConfigProvider
         }
         
         $scheme = $this->requestStack->getCurrentRequest()->getScheme();
-        echo "1 scheme=$scheme <br>"; //http
+        //echo "1 scheme=$scheme <br>"; //http
 
         if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
-        echo "2 scheme=$scheme <br>"; //http
+        //echo "2 scheme=$scheme <br>"; //http
 
         $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
-        echo "3 scheme=$scheme <br>"; //http
+        //echo "3 scheme=$scheme <br>"; //http
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
         //echo "1 host=$host <br>"; //view.online
