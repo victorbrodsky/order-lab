@@ -73,7 +73,7 @@ class SamlConfigProvider
         $encriptionFlag = false;
 
         $settings = array(
-            'strict' => false,
+            //'strict' => false,
 
             // Set a BaseURL to be used instead of try to guess
             // the BaseURL of the view that process the SAML Message.
@@ -85,17 +85,17 @@ class SamlConfigProvider
             'debug' => true,
 
             'security' => [
-                'nameIdEncrypted' => $encriptionFlag,
-                'authnRequestsSigned' => $encriptionFlag,
-                'logoutRequestSigned' => $encriptionFlag,
-                'logoutResponseSigned' => $encriptionFlag,
-                'signMetadata' => $encriptionFlag,
-                'wantMessagesSigned' => $encriptionFlag,
-                'wantAssertionsEncrypted' => $encriptionFlag,
+//                'nameIdEncrypted' => $encriptionFlag,
+//                'authnRequestsSigned' => $encriptionFlag,
+//                'logoutRequestSigned' => $encriptionFlag,
+//                'logoutResponseSigned' => $encriptionFlag,
+//                'signMetadata' => $encriptionFlag,
+//                'wantMessagesSigned' => $encriptionFlag,
+//                'wantAssertionsEncrypted' => $encriptionFlag,
 
 //                // Indicates a requirement for the <saml:Assertion> elements received by
 //                // this SP to be signed. [Metadata of the SP will offer this info]
-                'wantAssertionsSigned' => false,
+                //'wantAssertionsSigned' => false,
 
 ////                // Indicates a requirement for the NameID element on the SAMLResponse
 ////                // received by this SP to be present.
@@ -103,13 +103,13 @@ class SamlConfigProvider
 
 //                // Indicates a requirement for the NameID received by
 //                // this SP to be encrypted.
-                'wantNameIdEncrypted' => false,
+                //'wantNameIdEncrypted' => false,
 
 ////                // Authentication context.
 ////                // Set to false and no AuthContext will be sent in the AuthNRequest.
 ////                // Set true or don't present this parameter and you will get an AuthContext 'exact' 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'.
 ////                // Set an array with the possible auth context values: array ('urn:oasis:names:tc:SAML:2.0:ac:classes:Password', 'urn:oasis:names:tc:SAML:2.0:ac:classes:X509').
-                'requestedAuthnContext' => false,
+                //'requestedAuthnContext' => false,
 
 ////                // Indicates if the SP will validate all received xmls.
 ////                // (In order to validate the xml, 'strict' and 'wantXMLValidation' must be true).
