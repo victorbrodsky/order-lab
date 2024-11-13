@@ -37,6 +37,7 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        $this->logger->notice("SamlAuthenticator: supports");
         //exit('SamlAuthenticator: supports');
         //return false;//testing
         return $request->attributes->get('_route') === 'saml_acs_default';
