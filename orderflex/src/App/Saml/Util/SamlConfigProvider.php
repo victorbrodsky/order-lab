@@ -69,6 +69,10 @@ class SamlConfigProvider
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
         //echo 'IdentifierAttribute='.$config->getIdentifierAttribute()."<br>";
 
+        //with encryption error:
+        //https://login-test.weill.cornell.edu/idp/saml2/idp/SSOService.php?
+        //SAMLRequest=fVJdb9swDPwrht5txcpHVyEJkC0YFqBbgzjbQ18KWaIbAbKkiXLT%2FPspdlN0WxG9EDryjkeCcxSt8XzVxYPdwe8OMGYvrbHI%2B8SCdMFyJ1Ajt6IF5FHyavX9jrNixH1w0UlnyDvKdYZAhBC1syTbrBfk8XY8HovZtJasLsv6ZtKUM3arPrGRAsWaaXqTRkI9umlI9gsCJuaCJKFER%2BxgYzEKGxM0YpO8LPNyvGclL2d8On0g2TpNo62IPesQo0dOqXFP2uYxpYojaGMK6YKFFEF1VCtP01SNNkDPphndgdIBZKRVdU%2By1cX%2FF2exayFUEJ61hJ%2B7u387JJmX07U%2BrVOdgcIfPD0vjuIQWS4k9uiggJ5k29dFf9ZWaft0fcf1UIT8236%2Fzbf31Z4s52dl3u8sLD%2Fw%2BYFF9HP6njUfLuVH6rdZb53R8pR9daEV8bqdM6JV3vSlPAZhUYONhF4UK%2Bl88nv5vl4hhM36zemzhmPhrNEWqKRH2VIv4sGlAU50cPk374K9SdP%2Fz3z5Bw%3D%3D
+
         //$encriptionFlag = true;
         $encriptionFlag = false;
 
