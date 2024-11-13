@@ -84,8 +84,8 @@ class SamlConfigProvider
             // the BaseURL of the view that process the SAML Message.
             // Ex http://sp.example.com/
             //    http://example.com/sp/
-            //'baseurl' => null, //'https://view.online/c/wcm/pathology/',
-            'baseurl' => 'http://view.online/c/wcm/pathology/',
+            'baseurl' => null, //'https://view.online/c/wcm/pathology/',
+            //'baseurl' => 'http://view.online/c/wcm/pathology/',
 
             // Enable debug mode (to print errors).
             'debug' => true,
@@ -206,8 +206,8 @@ class SamlConfigProvider
             'identifier' => $config->getIdentifierAttribute(),
             'autoCreate' => $config->getAutoCreate(),
             'attributeMapping' => $config->getAttributeMapping(),
-            //'CustomerUrl' => $config->getSpEntityId(),
-            'CustomerUrl' => 'http://view.online/c/wcm/pathology/'
+            'CustomerUrl' => $config->getSpEntityId(),
+            //'CustomerUrl' => 'http://view.online/c/wcm/pathology/'
         ];
     }
 

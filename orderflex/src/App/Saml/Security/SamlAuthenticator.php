@@ -10,6 +10,7 @@ namespace App\Saml\Security;
 
 use App\Saml\Util\SamlConfigProvider;
 use App\Saml\Security\SamlUserProvider;
+use Psr\Log\LoggerInterface;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use OneLogin\Saml2\Auth;
