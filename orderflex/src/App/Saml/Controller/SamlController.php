@@ -203,7 +203,7 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
     #[Route(path: '/logout/', name: 'saml_logout')]
-    public function logout(Request $request, string $client): Response
+    public function logout(Request $request): Response
     {
         //exit('logout');
         $relayState = $request->getPayload()->get('RelayState');
