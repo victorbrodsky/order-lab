@@ -184,7 +184,7 @@ class SamlController extends OrderAbstractController //AbstractController
 //    /**
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
-    //https://view.online/c/wcm/pathology/saml/logout-orig/oli2002@med.cornell.edu
+    //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
     #[Route(path: '/logout/{client}', name: 'saml_logout_orig', requirements: ['client' => '.+'])]
     public function logoutOrig(Request $request, string $client): Response
     {
