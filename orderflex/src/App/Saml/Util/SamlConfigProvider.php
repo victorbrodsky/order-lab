@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\KernelInterface;
-
+use Psr\Log\LoggerInterface;
 
 class SamlConfigProvider
 {
@@ -30,6 +30,7 @@ class SamlConfigProvider
         private RequestStack $requestStack,
         private ContainerInterface $container,
         private KernelInterface $appKernel,
+        private LoggerInterface $logger
     ) {
         //$this->samlConfigRepository = $samlConfigRepository;
         //$this->samlConfigRepository = $doctrine->getRepository('CmsBundle:Page');
@@ -62,6 +63,7 @@ class SamlConfigProvider
         list($scheme, $host) = $this->getSPEntityId();
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
+        $this->logger->notice("SamlConfigProvider->getConfig: schemeAndHost".$schemeAndHost);
         //echo '$schemeAndHost='.$schemeAndHost."<br>"; //https://view.online/c/wcm/pathology/
         //exit('111');
 

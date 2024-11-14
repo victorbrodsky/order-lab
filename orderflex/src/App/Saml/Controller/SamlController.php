@@ -191,6 +191,7 @@ class SamlController extends OrderAbstractController //AbstractController
 //    /**
 //     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
 //     */
+    //check symfony available routes: No route found for "POST http://view.online/c/wcm/pathology/saml/logout
     //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
     #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
     public function logout(Request $request, string $client): Response
