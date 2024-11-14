@@ -161,7 +161,7 @@ class SamlConfigProvider
                 //'lowercaseUrlencoding' => false,
             ],
             'idp' => [
-                'entityId' => $schemeAndHost."/saml/metadata/".$client,
+                'entityId' => $schemeAndHost."saml/metadata/".$client,
                 'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
                 'x509cert' => $config->getIdpCert(),
@@ -170,11 +170,11 @@ class SamlConfigProvider
             'sp' => [
                 'entityId' => $schemeAndHost,
                 'assertionConsumerService' => [
-                    'url' => $schemeAndHost."/saml/acs/".$client,
+                    'url' => $schemeAndHost."saml/acs/".$client,
                     //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                 ],
                 'singleLogoutService' => [
-                    'url' => $schemeAndHost."/saml/logout/".$client,
+                    'url' => $schemeAndHost."saml/logout/".$client,
                     //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
                 ],
                 //'x509cert' => $config->getIdpCert(),
@@ -239,7 +239,7 @@ class SamlConfigProvider
         //$host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
 
         if( $urlslug && $urlslug != '/' ) {
-            $host = $host . "/" . $urlslug; // . "/";
+            $host = $host . "/" . $urlslug . "/";
         }
 
         //$uri = $this->requestStack->getCurrentRequest()->getUri();
@@ -250,7 +250,7 @@ class SamlConfigProvider
 
             //$urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
             if( $urlslug && $urlslug != '/' ) {
-                $host = $host . "/" . $urlslug; // . "/";
+                $host = $host . "/" . $urlslug . "/";
             }
         }
         //echo "2 host=$host <br>";
