@@ -210,9 +210,11 @@ class SamlController extends OrderAbstractController //AbstractController
             $this->logger->notice("Starting SAML logout: before logout");
 
             $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
-            $logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
-            $this->logger->notice("Starting SAML logout: after logout: logoutUrl=".$logoutUrl);
-            exit('logout');
+            //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
+            $logoutUrl = $auth->logout();
+            $this->logger->notice("Starting SAML logout: after logout");
+            //$this->logger->notice("Starting SAML logout: after logout: logoutUrl=".$logoutUrl);
+            //exit('logout');
 
             // The logout method does a redirect, so we won't reach this line
             return new Response('Redirecting to IdP for logout...', 302);
@@ -252,8 +254,10 @@ class SamlController extends OrderAbstractController //AbstractController
             $this->logger->notice("logoutNew: before new Auth");
             $auth = new Auth($config['settings']);
             $this->logger->notice("logoutNew: before logout");
-            $auth->logout('https://view.online/c/wcm/pathology/directory/login');
-            $this->logger->notice("logoutNew: after logout");
+            //$auth->logout('https://view.online/c/wcm/pathology/directory/login');
+            $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
+            $logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
+            $this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
