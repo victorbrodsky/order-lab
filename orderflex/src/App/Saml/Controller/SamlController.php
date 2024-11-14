@@ -241,15 +241,15 @@ class SamlController extends OrderAbstractController //AbstractController
         try {
             //exit('logout');
 
-            $sitename = 'employees';
-            $userSecUtil = $this->container->get('user_security_utility');
-            return $userSecUtil->userLogout($request,$sitename );
+            //$sitename = 'employees';
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //return $userSecUtil->userLogout($request,$sitename );
 
-//            $this->logger->notice("logoutNew: before new Auth");
-//            $auth = new Auth($config['settings']);
-//            $this->logger->notice("logoutNew: before logout");
-//            $auth->logout();
-//            $this->logger->notice("logoutNew: after logout");
+            $this->logger->notice("logoutNew: before new Auth");
+            $auth = new Auth($config['settings']);
+            $this->logger->notice("logoutNew: before logout");
+            $auth->logout();
+            $this->logger->notice("logoutNew: after logout");
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
