@@ -208,7 +208,9 @@ class SamlController extends OrderAbstractController //AbstractController
             $auth = new Auth($config['settings']);
 
             $this->logger->notice("Starting SAML logout: before logout");
-            $auth->logout();
+
+            $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
+            $auth->logout($returnTo);
             $this->logger->notice("Starting SAML logout: after logout");
 
             // The logout method does a redirect, so we won't reach this line
@@ -221,7 +223,7 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
-        //exit('logoutNew');
+        exit('logoutNew');
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
@@ -244,12 +246,12 @@ class SamlController extends OrderAbstractController //AbstractController
             //$userSecUtil = $this->container->get('user_security_utility');
             //return $userSecUtil->userLogout($request,$sitename );
             //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-            return $this->redirect($this->generateUrl('employees_login'));
+            //return $this->redirect($this->generateUrl('employees_login'));
 
             $this->logger->notice("logoutNew: before new Auth");
             $auth = new Auth($config['settings']);
             $this->logger->notice("logoutNew: before logout");
-            $auth->logout();
+            $auth->logout('https://view.online/c/wcm/pathology/directory/login');
             $this->logger->notice("logoutNew: after logout");
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
