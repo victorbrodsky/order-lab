@@ -243,7 +243,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
             $sitename = 'employees';
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->userLogout($request,$sitename );
+            return $userSecUtil->userLogout($request,$sitename );
 
 //            $this->logger->notice("logoutNew: before new Auth");
 //            $auth = new Auth($config['settings']);
