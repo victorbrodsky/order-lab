@@ -239,6 +239,7 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("logoutNew: Starting SAML logout new for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
+            exit('logout');
             $this->logger->notice("logoutNew: before new Auth");
             $auth = new Auth($config['settings']);
             $this->logger->notice("logoutNew: before logout");
