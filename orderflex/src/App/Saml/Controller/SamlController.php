@@ -239,14 +239,19 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("logoutNew: Starting SAML logout new for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
-            exit('logout');
-            $this->logger->notice("logoutNew: before new Auth");
-            $auth = new Auth($config['settings']);
-            $this->logger->notice("logoutNew: before logout");
-            $auth->logout();
-            $this->logger->notice("logoutNew: after logout");
-            // The logout method does a redirect, so we won't reach this line
-            return new Response('Redirecting to IdP for logout...', 302);
+            //exit('logout');
+
+            $sitename = 'employees';
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->userLogout($request,$sitename );
+
+//            $this->logger->notice("logoutNew: before new Auth");
+//            $auth = new Auth($config['settings']);
+//            $this->logger->notice("logoutNew: before logout");
+//            $auth->logout();
+//            $this->logger->notice("logoutNew: after logout");
+//            // The logout method does a redirect, so we won't reach this line
+//            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
             $this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
             throw new UnprocessableEntityHttpException('Error while trying to logout');
