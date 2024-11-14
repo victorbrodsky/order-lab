@@ -243,7 +243,7 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("logoutNew: Starting SAML logout new for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
-            exit('logoutNew: try');
+            //exit('logoutNew: try');
 
             //$sitename = 'employees';
             //$userSecUtil = $this->container->get('user_security_utility');
@@ -258,6 +258,7 @@ class SamlController extends OrderAbstractController //AbstractController
             $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
             $logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
             $this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
+            exit('logoutNew: after logout');
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
