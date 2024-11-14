@@ -222,7 +222,7 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
-        exit('logoutNew');
+        //exit('logoutNew');
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
@@ -236,12 +236,14 @@ class SamlController extends OrderAbstractController //AbstractController
         }
         //exit('client='.$client);
 
-        $this->logger->notice("Starting SAML logout for client: $client");
+        $this->logger->notice("logoutNew: Starting SAML logout new for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
+            $this->logger->notice("logoutNew: before new Auth");
             $auth = new Auth($config['settings']);
+            $this->logger->notice("logoutNew: before logout");
             $auth->logout();
-
+            $this->logger->notice("logoutNew: after logout");
             // The logout method does a redirect, so we won't reach this line
             return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
