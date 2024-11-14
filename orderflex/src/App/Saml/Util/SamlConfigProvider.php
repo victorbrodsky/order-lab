@@ -63,9 +63,12 @@ class SamlConfigProvider
         list($scheme, $host) = $this->getSPEntityId();
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
-        $this->logger->notice("SamlConfigProvider->getConfig: schemeAndHost".$schemeAndHost);
+        $this->logger->notice("SamlConfigProvider->getConfig: schemeAndHost=".$schemeAndHost);
         //echo '$schemeAndHost='.$schemeAndHost."<br>"; //https://view.online/c/wcm/pathology/
         //exit('111');
+
+        $this->logger->notice("SamlConfigProvider->getConfig: idp singleLogoutService=".$config->getIdpSloUrl());
+        $this->logger->notice("SamlConfigProvider->getConfig: sp singleLogoutService=".$schemeAndHost."saml/logout/".$client);
 
         //echo 'idp cert='.$config->getIdpCert()."<br>";
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
