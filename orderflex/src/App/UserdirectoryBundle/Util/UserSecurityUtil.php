@@ -451,6 +451,26 @@ class UserSecurityUtil {
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
+    function userLogoutSymfony7( $request, $sitename ) {
+        // logout the user in on the current firewall
+        $response = $this->security->logout();
+
+        // you can also disable the csrf logout
+        $response = $this->security->logout(false);
+
+        return $response;
+
+        //$this->container->get('security.token_storage')->setToken(null);
+        //$this->security->setToken(null); //testing
+        //$this->get('request')->getSession()->invalidate();
+        //$request->getSession()->invalidate();
+
+        $this->tokenStorage->setToken(null);
+
+        //return $this->redirect($this->generateUrl($sitename.'_login'));
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+    }
     
     function getLoggedInUsers($request) {
         //to list logged in users we can search for users with following:

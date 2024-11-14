@@ -223,6 +223,7 @@ class SamlController extends OrderAbstractController //AbstractController
             throw new UnprocessableEntityHttpException('Error while trying to logout');
         }
     }
+    //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
     #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
@@ -231,6 +232,8 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("logoutNew: Start");
 
         $userSecUtil = $this->container->get('user_security_utility');
+        return $userSecUtil->userLogoutSymfony7();
+
         return $userSecUtil->userLogout($request,$sitename='employees');
 
         $relayState = $request->getPayload()->get('RelayState');
