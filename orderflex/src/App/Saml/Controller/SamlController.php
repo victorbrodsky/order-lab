@@ -266,7 +266,11 @@ class SamlController extends OrderAbstractController //AbstractController
             }
 
             //exit('logoutNew: after logout');
-            return $this->redirect($this->generateUrl('employees_login'));
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            return $userSecUtil->userLogout($request,$sitename='employees');
+
+            //return $this->redirect($this->generateUrl('employees_login'));
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
