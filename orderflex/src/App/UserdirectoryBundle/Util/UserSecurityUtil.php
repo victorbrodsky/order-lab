@@ -451,7 +451,7 @@ class UserSecurityUtil {
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
-    function userLogoutSymfony7( $request, $sitename ) {
+    function userLogoutSymfony7() {
         // logout the user in on the current firewall
         $response = $this->security->logout();
 
