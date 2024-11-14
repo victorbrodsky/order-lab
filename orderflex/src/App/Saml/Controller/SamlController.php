@@ -227,6 +227,12 @@ class SamlController extends OrderAbstractController //AbstractController
     public function logoutNew(Request $request): Response
     {
         //exit('logoutNew');
+
+        $this->logger->notice("logoutNew: Start");
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        return $userSecUtil->userLogout($request,$sitename='employees');
+
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
