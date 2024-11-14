@@ -80,8 +80,8 @@ class SamlConfigProvider
         $encriptionFlag = false;
 
         $settings = array(
-            //'strict' => false,
-            'strict' => true,
+            'strict' => false,
+            //'strict' => true,
 
             // Set a BaseURL to be used instead of try to guess
             // the BaseURL of the view that process the SAML Message.
