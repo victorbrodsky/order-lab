@@ -199,8 +199,13 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("Starting SAML logout for client: $client");
         $config = $this->samlConfigProvider->getConfig($client);
         try {
+
+            $this->logger->notice("Starting SAML logout: before new Auth");
             $auth = new Auth($config['settings']);
+
+            $this->logger->notice("Starting SAML logout: before logout");
             $auth->logout();
+            $this->logger->notice("Starting SAML logout: after logout");
 
             // The logout method does a redirect, so we won't reach this line
             return new Response('Redirecting to IdP for logout...', 302);
