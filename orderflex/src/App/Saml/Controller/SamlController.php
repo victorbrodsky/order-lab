@@ -218,7 +218,7 @@ class SamlController extends OrderAbstractController //AbstractController
             throw new UnprocessableEntityHttpException('Error while trying to logout');
         }
     }
-    #[Route(path: '/logout-new/', name: 'saml_logout_new')]
+    #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
         exit('logoutNew');
