@@ -254,11 +254,19 @@ class SamlController extends OrderAbstractController //AbstractController
             $this->logger->notice("logoutNew: before new Auth");
             $auth = new Auth($config['settings']);
             $this->logger->notice("logoutNew: before logout");
-            //$auth->logout('https://view.online/c/wcm/pathology/directory/login');
-            $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
-            $logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
-            $this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
-            exit('logoutNew: after logout');
+
+            if( $auth->isAuthenticated() ) {
+                $auth->logout();
+                //$auth->logout('https://view.online/c/wcm/pathology/directory/login');
+                //$returnTo = 'https://view.online/c/wcm/pathology/directory/login';
+                //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
+                //$logoutUrl = $auth->logout();
+                //$this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
+                $this->logger->notice("logoutNew: after logout");
+            }
+
+            //exit('logoutNew: after logout');
+            return $this->redirect($this->generateUrl('employees_login'));
 //            // The logout method does a redirect, so we won't reach this line
 //            return new Response('Redirecting to IdP for logout...', 302);
         } catch (Error $e) {
