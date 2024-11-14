@@ -62,8 +62,8 @@ class SamlConfigProvider
         list($scheme, $host) = $this->getSPEntityId();
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
-        echo '$schemeAndHost='.$schemeAndHost."<br>";
-        exit('111');
+        //echo '$schemeAndHost='.$schemeAndHost."<br>"; //https://view.online/c/wcm/pathology/
+        //exit('111');
 
         //echo 'idp cert='.$config->getIdpCert()."<br>";
         //echo 'SpPrivateKey='.$config->getSpPrivateKey()."<br>";
@@ -239,7 +239,7 @@ class SamlConfigProvider
         //$host = $userTenantUtil->getCurrentTenantHost($this->requestStack->getCurrentRequest()); //view.online/c/wcm/pathology
 
         if( $urlslug && $urlslug != '/' ) {
-            $host = $host . "/" . $urlslug . "/";
+            $host = $host . "/" . $urlslug; // . "/";
         }
 
         //$uri = $this->requestStack->getCurrentRequest()->getUri();
@@ -250,7 +250,7 @@ class SamlConfigProvider
 
             //$urlslug = $userTenantUtil->getCurrentTenantUrlslug($this->requestStack->getCurrentRequest());
             if( $urlslug && $urlslug != '/' ) {
-                $host = $host . "/" . $urlslug . "/";
+                $host = $host . "/" . $urlslug; // . "/";
             }
         }
         //echo "2 host=$host <br>";
