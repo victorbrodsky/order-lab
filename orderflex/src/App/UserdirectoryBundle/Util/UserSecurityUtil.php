@@ -464,7 +464,7 @@ class UserSecurityUtil {
         $response = $this->security->logout();
 
         // you can also disable the csrf logout
-        $response = $this->security->logout(false);
+        //$response = $this->security->logout(false);
 
         if( $stay ) {
             return $response;
