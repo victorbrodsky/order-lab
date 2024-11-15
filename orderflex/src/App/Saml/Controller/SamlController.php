@@ -218,11 +218,15 @@ class SamlController extends OrderAbstractController //AbstractController
             $this->logger->notice("Starting SAML logout: before new Auth");
             $auth = new Auth($config['settings']);
 
+            if( !$auth->isAuthenticated() ) {
+                return $this->redirect( $this->generateUrl('employees_login') );
+            }
+
             $this->logger->notice("Starting SAML logout: before logout");
 
-            $returnTo = 'https://view.online/c/wcm/pathology/directory/login';
+            //$returnTo = 'https://view.online/c/wcm/pathology/directory/login';
             //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
-            $logoutUrl = $auth->logout();
+            //$logoutUrl = $auth->logout();
             $this->logger->notice("Starting SAML logout: after logout");
             //$this->logger->notice("Starting SAML logout: after logout: logoutUrl=".$logoutUrl);
             //exit('logout');
