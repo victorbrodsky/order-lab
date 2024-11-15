@@ -453,18 +453,18 @@ class UserSecurityUtil {
     }
     function userLogoutSymfony7( $stay = false ) {
 
-        $user = $this->security->getUser();
-        if( $user ) {
-            //exit('User exists='.$user->getId());
-            $this->tokenStorage->setToken(null);
-        }
+//        $user = $this->security->getUser();
+//        if( $user ) {
+//            //exit('User exists='.$user->getId());
+//            $this->tokenStorage->setToken(null);
+//        }
         //exit('User does not exist');
 
         // logout the user in on the current firewall
         $response = $this->security->logout();
 
         // you can also disable the csrf logout
-        //$response = $this->security->logout(false);
+        $response = $this->security->logout(false);
 
         if( $stay ) {
             return $response;
