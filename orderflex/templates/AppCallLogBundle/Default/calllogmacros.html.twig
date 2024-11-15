@@ -844,7 +844,7 @@
 
                         {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                             <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
-                                   target="_blank">View Patient Record</a>
+                                   target="_blank">View Full Patient Record</a>
                             </li>
                         {% endif %}
 
@@ -1349,7 +1349,7 @@
 
                     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                         <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
-                               target="_blank">View Patient Record</a>
+                               target="_blank">View Full Patient Record</a>
                         </li>
                     {% endif %}
 
@@ -1427,7 +1427,7 @@
 
                         {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                             <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
-                                   target="_blank">View Patient Record</a>
+                                   target="_blank">View Full Patient Record</a>
                             </li>
                         {% endif %}
 

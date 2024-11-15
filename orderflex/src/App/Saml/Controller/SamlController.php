@@ -276,6 +276,9 @@ class SamlController extends OrderAbstractController //AbstractController
 
             //exit('logoutNew: after logout');
 
+            $user = $this->getUser();
+            echo "User=".$user."<br>";
+            exit('111');
             $userSecUtil = $this->container->get('user_security_utility');
             return $userSecUtil->userLogout($request,$sitename='employees');
 
