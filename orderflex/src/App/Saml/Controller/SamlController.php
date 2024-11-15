@@ -238,7 +238,7 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
-        exit('logoutNew');
+        /exit('logoutNew');
 
         $this->logger->notice("logoutNew: Start");
         //return new Response('Redirecting to IdP for logout...', 302);
