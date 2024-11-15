@@ -204,15 +204,15 @@ class SamlController extends OrderAbstractController //AbstractController
             //dump($config);
             //exit('logout');
 
-            $user = $this->getUser();
-            if( $user ) {
-                //exit('User exists='.$user->getId());
-                if( $this->tokenStorage ) {
-                    $this->tokenStorage->setToken(null);
-                }
-                //$userSecUtil = $this->container->get('user_security_utility');
-                //$userSecUtil->userLogoutSymfony7(true);
-            }
+//            $user = $this->getUser();
+//            if( $user ) {
+//                //exit('User exists='.$user->getId());
+//                if( $this->tokenStorage ) {
+//                    $this->tokenStorage->setToken(null);
+//                }
+//                //$userSecUtil = $this->container->get('user_security_utility');
+//                //$userSecUtil->userLogoutSymfony7(true);
+//            }
             //exit('User does not exist');
 
             $this->logger->notice("Starting SAML logout: before new Auth");
@@ -241,15 +241,15 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('logoutNew');
 
         $this->logger->notice("logoutNew: Start");
-        return $this->redirect( $this->generateUrl('employees_login') );
+        //return $this->redirect( $this->generateUrl('employees_login') );
 
         //$user = $this->getUser();
         //echo "User=".$user."<br>";
         //exit('111');
-        $userSecUtil = $this->container->get('user_security_utility');
-        return $userSecUtil->userLogoutSymfony7();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //return $userSecUtil->userLogoutSymfony7();
 
-        return $userSecUtil->userLogout($request,$sitename='employees');
+        //return $userSecUtil->userLogout($request,$sitename='employees');
 
         $relayState = $request->getPayload()->get('RelayState');
         $samlResponse = $request->getPayload()->get('SAMLResponse');
