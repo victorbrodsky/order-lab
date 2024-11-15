@@ -206,10 +206,12 @@ class SamlController extends OrderAbstractController //AbstractController
 
             $user = $this->getUser();
             if( $user ) {
-                exit('User exists='.$user->getId());
+                //exit('User exists='.$user->getId());
                 //$this->tokenStorage->setToken(null);
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->userLogoutSymfony7(true);
             }
-            exit('User does not exist');
+            //exit('User does not exist');
 
             $this->logger->notice("Starting SAML logout: before new Auth");
             $auth = new Auth($config['settings']);
@@ -237,7 +239,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('logoutNew');
 
         $this->logger->notice("logoutNew: Start");
-        //return $this->redirect( $this->generateUrl('employees_login') );
+        return $this->redirect( $this->generateUrl('employees_login') );
 
         //$user = $this->getUser();
         //echo "User=".$user."<br>";

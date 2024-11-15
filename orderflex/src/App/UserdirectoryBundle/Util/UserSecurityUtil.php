@@ -451,7 +451,7 @@ class UserSecurityUtil {
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
-    function userLogoutSymfony7() {
+    function userLogoutSymfony7( $stay = false ) {
 
         $user = $this->security->getUser();
         if( $user ) {
@@ -466,7 +466,11 @@ class UserSecurityUtil {
         // you can also disable the csrf logout
         //$response = $this->security->logout(false);
 
-        return $response;
+        if( $stay ) {
+            return $response;
+        }
+
+        return true;
 
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->security->setToken(null); //testing
