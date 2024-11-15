@@ -455,8 +455,10 @@ class UserSecurityUtil {
 
         $user = $this->security->getUser();
         if( $user ) {
+            exit('User exists='.$user->getId());
             $this->tokenStorage->setToken(null);
         }
+        exit('User does not exist');
 
         // logout the user in on the current firewall
         $response = $this->security->logout();
