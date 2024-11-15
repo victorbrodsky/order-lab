@@ -230,6 +230,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('logoutNew');
 
         $this->logger->notice("logoutNew: Start");
+        return $this->redirect( $this->generateUrl('employees_login') );
 
         $user = $this->getUser();
         echo "User=".$user."<br>";
