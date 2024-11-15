@@ -238,11 +238,11 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
-        exit('logoutNew');
+        //exit('logoutNew');
 
-        $this->logger->notice("logoutNew: Start");
+        //$this->logger->notice("logoutNew: Start");
         //return new Response('Redirecting to IdP for logout...', 302);
-        return $this->redirect( $this->generateUrl('employees_login') );
+        //return $this->redirect( $this->generateUrl('employees_login') );
 
         //$user = $this->getUser();
         //echo "User=".$user."<br>";
@@ -253,7 +253,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //return $userSecUtil->userLogout($request,$sitename='employees');
 
         $relayState = $request->getPayload()->get('RelayState');
-        $samlResponse = $request->getPayload()->get('SAMLResponse');
+        //$samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
 
         $client = '';
