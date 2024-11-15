@@ -204,6 +204,13 @@ class SamlController extends OrderAbstractController //AbstractController
             //dump($config);
             //exit('logout');
 
+            $user = $this->getUser();
+            if( $user ) {
+                exit('User exists='.$user->getId());
+                //$this->tokenStorage->setToken(null);
+            }
+            exit('User does not exist');
+
             $this->logger->notice("Starting SAML logout: before new Auth");
             $auth = new Auth($config['settings']);
 
