@@ -207,7 +207,9 @@ class SamlController extends OrderAbstractController //AbstractController
             $user = $this->getUser();
             if( $user ) {
                 //exit('User exists='.$user->getId());
-                $this->tokenStorage->setToken(null);
+                if( $this->tokenStorage ) {
+                    $this->tokenStorage->setToken(null);
+                }
                 //$userSecUtil = $this->container->get('user_security_utility');
                 //$userSecUtil->userLogoutSymfony7(true);
             }
