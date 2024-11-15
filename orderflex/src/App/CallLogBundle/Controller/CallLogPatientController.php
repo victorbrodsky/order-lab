@@ -82,6 +82,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 // */
 class CallLogPatientController extends PatientController {
 
+    private $defaultShowTreeDepth = 0;
+
     /**
      * Finds and displays a Patient entity.
      */
@@ -96,7 +98,8 @@ class CallLogPatientController extends PatientController {
 
         ini_set('memory_limit', '5120M');
 
-        $showtreedepth = 2;
+        //$showtreedepth = 2;
+        $showtreedepth = $this->defaultShowTreeDepth;
 
         $params = array(
             'sitename' => $this->getParameter('calllog.sitename'),
@@ -176,9 +179,12 @@ class CallLogPatientController extends PatientController {
             return $this->redirect($this->generateUrl('calllog_home'));
         }
 
+        //Replace this memory hungry logic by return patient-demographics 'calllog_single_patient_view'
+        //return $this->redirect( $this->generateUrl('calllog_single_patient_view', array('id' => $patient->getId())) );
 
         if( !$showtreedepth ) {
-            $showtreedepth = 2;
+            //$showtreedepth = 2;
+            $showtreedepth = $this->defaultShowTreeDepth;
         }
         //echo "showtreedepth=".$showtreedepth."<br>";
 
@@ -207,7 +213,8 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $showtreedepth = 2;
+        //$showtreedepth = 2;
+        $showtreedepth = $this->defaultShowTreeDepth;
 
         $params = array(
             'sitename' => $this->getParameter('calllog.sitename'),
@@ -305,7 +312,8 @@ class CallLogPatientController extends PatientController {
 //        );
 
         if( !$showtreedepth ) {
-            $showtreedepth = 2;
+            //$showtreedepth = 2;
+            $showtreedepth = $this->defaultShowTreeDepth;
         }
         //echo "showtreedepth=".$showtreedepth."<br>";
 

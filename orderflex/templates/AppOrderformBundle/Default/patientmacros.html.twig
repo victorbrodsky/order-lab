@@ -45,6 +45,7 @@
                 ) }}
 
                 {############# encounter #############}
+                {% if patient.encounter is defined %}
                 {% set encounterCount = 0 %}
                 {% for encounter in patient.encounter %}
 
@@ -218,7 +219,7 @@
                     </div>{#end of encounter #}
                     {% set encounterCount = encounterCount + 1 %}
                 {% endfor %} {# encounter loop #}
-
+                {% endif %} {#if patient.encounter#}
 
             </div>{# end of form_body_patient_ #}
 

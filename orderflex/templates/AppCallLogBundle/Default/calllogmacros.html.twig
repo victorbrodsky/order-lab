@@ -842,7 +842,11 @@
 
                         <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
 
-                        <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">View Patient Record</a></li>
+                        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
+                                   target="_blank">View Patient Record</a>
+                            </li>
+                        {% endif %}
 
                         {#Not used because, this link gives 500 error. Use 'Edit Patient Demographics' instead.#}
                         {#<li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>#}
@@ -855,6 +859,9 @@
                     {#{% endif %}#}
                 {% endif %}
 
+                <li><a href="{{ path('calllog_single_patient_view', {'id': patient.id}) }}"
+                       target="_blank">View Patient Demographics</a>
+                </li>
                 <li><a href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
 
                 <li><a data-confirm="Are you sure you want to add this patient to Complex List?"
@@ -1340,10 +1347,15 @@
                            target="_blank">Show all entries</a>
                     </li>
 
-                    <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
-                           target="_blank">View Patient Record</a>
-                    </li>
+                    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                        <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
+                               target="_blank">View Patient Record</a>
+                        </li>
+                    {% endif %}
 
+                    <li><a href="{{ path('calllog_single_patient_view', {'id': patient.id}) }}"
+                           target="_blank">View Patient Demographics</a>
+                    </li>
                     <li>
                         {#<a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"#}
                            {#target="_blank">Edit Patient Record</a>#}
@@ -1413,8 +1425,14 @@
                                target="_blank">Show all entries for this patient</a>
                         </li>
 
-                        <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
-                               target="_blank">View Patient Record</a>
+                        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 1}) }}"
+                                   target="_blank">View Patient Record</a>
+                            </li>
+                        {% endif %}
+
+                        <li><a href="{{ path('calllog_single_patient_view', {'id': patient.id}) }}"
+                               target="_blank">View Patient Demographics</a>
                         </li>
 
                         <li>
