@@ -289,8 +289,8 @@ security:
 #            form_login:
 #                login_path: employees_login
 #                check_path: employees_login_check
-            #logout:
-                #path:   saml_logout
+            logout:
+                path:   logout
                 #target: login
 #            access_denied_url: employees_access_request_new_plain
 
