@@ -222,7 +222,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
             //$returnTo = 'https://view.online/c/wcm/pathology/directory/login';
             //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
-            //$logoutUrl = $auth->logout();
+            $auth->logout();
             $this->logger->notice("Starting SAML logout: after logout");
             //$this->logger->notice("Starting SAML logout: after logout: logoutUrl=".$logoutUrl);
             //exit('logout');
