@@ -87,35 +87,5 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $eventType                                              //$action (Event Type)
         );
     }
-    
-//    public function samlLogout( $user ) {
-//        if( !$user ) {
-//            return false;
-//        }
-//        $logger = $this->container->get('logger');
-//        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-//        $email = $user->getSingleEmail();
-//        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
-//        if( $email ) {
-//            $config = $samlConfigProviderUtil->getConfig($email);
-//            try {
-//                $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
-//                $auth = new Auth($config['settings']);
-//                //if( $auth->isAuthenticated() ) {
-//                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
-//                    $auth->logout();
-//                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
-//                    //exit('logout');
-//                //}
-//                // The logout method does a redirect, so we won't reach this line
-//                //return new Response('Redirecting to IdP for logout...', 302);
-//                return true;
-//            } catch (Error $e) {
-//                //$this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
-//                throw new UnprocessableEntityHttpException('Error while trying to logout');
-//            }
-//        }
-//        $logger->debug("LogoutEventSubscriber: End of SAML logout");
-//        return false;
-//    }
+
 }

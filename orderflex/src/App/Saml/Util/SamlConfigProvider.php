@@ -57,7 +57,8 @@ class SamlConfigProvider
         }
 
         if (!$config) {
-            throw new \Exception('SAML configuration not found for client ' . $client);
+            return NULL;
+            //throw new \Exception('SAML configuration not found for client ' . $client);
         }
 
         list($scheme, $host) = $this->getSPEntityId();
