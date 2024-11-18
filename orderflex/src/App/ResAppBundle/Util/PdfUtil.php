@@ -1388,6 +1388,7 @@ class PdfUtil {
             if( $aamcId ) {
                 if( strpos((string)$pdfText, $aamcId) !== false ) {
                     $foundResappId = $resappId;
+                    $logger->notice("findResappByApplicant: found by aamcId=".$aamcId);
                     break;
                 }
             }
@@ -1397,6 +1398,7 @@ class PdfUtil {
             if( $erasApplicantId ) {
                 if( strpos((string)$pdfText, $erasApplicantId) !== false ) {
                     $foundResappId = $resappId;
+                    $logger->notice("findResappByApplicant: found by erasApplicantId=".$erasApplicantId);
                     break;
                 }
             }
@@ -1407,6 +1409,7 @@ class PdfUtil {
                 if( strpos((string)$pdfText, $email) !== false ) {
                     //Found by email
                     $foundResappId = $resappId;
+                    $logger->notice("findResappByApplicant: found by email=".$email);
                     break;
                 }
             }
@@ -1421,6 +1424,7 @@ class PdfUtil {
                         if( strpos((string)$pdfText, $firstname) !== false ) {
                             //Found by firstname
                             $foundResappId = $resappId;
+                            $logger->notice("findResappByApplicant: found by name: firstname=".$firstname. ", lastname".$lastname);
                             break;
                         }
                     }
@@ -1430,6 +1434,7 @@ class PdfUtil {
 
         if( $foundResappId ) {
             $residencyApplicationDb = $this->em->getRepository(ResidencyApplication::class)->find($foundResappId);
+            $logger->notice("findResappByApplicant: found in DB ID=".$residencyApplicationDb->getId());
             return $residencyApplicationDb;
         }
 
