@@ -1144,7 +1144,7 @@ class PdfUtil {
 
                 $foundResapp = $this->findResappByApplicant($resappInfoArr,$pdfFileArr); //find match for resapp info and given pdf
                 if( $foundResapp ) {
-
+                    $logger->notice("addNotUsedPDFtoTable: res applicant has been found: ID=".$foundResapp->getId());
                     //check If PDF is Existed In Resapp
                     $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($foundResapp));
 
@@ -1344,12 +1344,14 @@ class PdfUtil {
     //return first matched residency application or NULL
     //Used in addNotUsedPDFtoTable
     public function findResappByApplicant($resappInfoArr,$pdfInfoArr) {
+        $logger = $this->container->get('logger');
 
         //try to find by filename notation "...aid=12345678.pdf"
         if( isset($pdfInfoArr['originalName']) ) {
             $originalFileName = $pdfInfoArr['originalName'];
             $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
             if( $residencyApplicationDb ) {
+                $logger->notice("findResappByApplicant: found by PDF originalName=".$originalFileName);
                 return $residencyApplicationDb;
             }
         }
@@ -1375,6 +1377,8 @@ class PdfUtil {
         if( !$pdfText ) {
             return NULL;
         }
+
+        dump($pdfText); //testing
 
         //find file has Email, LastName FirstName
         foreach($resappInfoArr as $resappId=>$thisResappInfoArr) {
@@ -1425,7 +1429,6 @@ class PdfUtil {
         }
 
         if( $foundResappId ) {
-        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
             $residencyApplicationDb = $this->em->getRepository(ResidencyApplication::class)->find($foundResappId);
             return $residencyApplicationDb;
         }
