@@ -347,8 +347,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         ];
         $this->sitename = $credentials['sitename'];
 
-        dump($credentials);
-        exit('111');
+        //dump($credentials);
+        //exit('111');
 
         return $credentials;
     }
