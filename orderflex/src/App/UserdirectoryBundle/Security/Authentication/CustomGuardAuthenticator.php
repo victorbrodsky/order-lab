@@ -333,8 +333,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //dump($request->request);
 
+        //testing: use clean username without _@_local-user
+        $username = $request->request->get('_username');
+        $usernameArr = explode('_@_',$username);
+        $username = $usernameArr[0];
+
         $credentials = [
-            'username' => $request->request->get('_username'),
+            'username' => $username, //$request->request->get('_username'),
             'password' => $request->request->get('_password'),
             'usernametype' => $request->request->get('_usernametype'),
             'sitename' => $request->request->get('_sitename'),
