@@ -446,6 +446,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         }
 
         //exit("usernamePrefix=".$usernamePrefix);
+        $logger->notice("authenticateToken: 2 usernamePrefix=[$usernamePrefix]");
 
         //usernametype can be used instead of $usernamePrefix
         switch( $usernamePrefix ) {
