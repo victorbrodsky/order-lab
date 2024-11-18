@@ -42,6 +42,10 @@ class SamlAuthenticator extends AbstractAuthenticator
     {
         $client = $request->attributes->get('client');
         $config = $this->samlConfigProvider->getConfig($client);
+        if( !$config ) {
+            throw new AuthenticationException('SAML config is NULL for client='.$client);
+        }
+
         $auth = new Auth($config['settings']);
         $auth->processResponse();
         if (!$auth->isAuthenticated()) {
@@ -77,6 +81,9 @@ class SamlAuthenticator extends AbstractAuthenticator
 
             $client = $request->attributes->get('client');
             $config = $this->samlConfigProvider->getConfig($client);
+            if( !$config ) {
+                throw new AuthenticationException('SAML config is NULL for client='.$client);
+            }
 
             $opw = $config['CustomerUrl'];
 

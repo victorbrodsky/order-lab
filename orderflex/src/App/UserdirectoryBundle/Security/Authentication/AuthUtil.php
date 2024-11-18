@@ -132,6 +132,10 @@ class AuthUtil {
         //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
 
         $config = $samlConfigProviderUtil->getConfig($domain);
+        if( !$config ) {
+            return NULL;
+        }
+
         $auth = new Auth($config['settings']);
         $auth->login();
 
@@ -160,6 +164,10 @@ class AuthUtil {
         $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
 
         $config = $samlConfigProviderUtil->getConfig($user->getSingleEmail());
+        if( !$config ) {
+            return NULL;
+        }
+        
         $auth = new Auth($config['settings']);
         $auth->login();
 
