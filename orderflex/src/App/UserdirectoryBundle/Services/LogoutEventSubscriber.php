@@ -9,7 +9,6 @@
 namespace App\UserdirectoryBundle\Services;
 
 
-use OneLogin\Saml2\Auth;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -60,19 +59,25 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $user = $event->getToken()->getUser();
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         //$user = $event->getToken()->getUser();
         //exit("logout user=".$user);
         //$this->updateUserLastLogin($user);
         //$vacreqUtil = $this->container->get('vacreq_util');
 
         //Saml logout
-        $this->samlLogout($user);
+        //TODO: add if user logged in by SAML
+        $samlLogoutStr = "";
+        $samlLogout = $userSecUtil->samlLogout($user);
+        if( $samlLogout ) {
+            $samlLogoutStr = ", with SAML logout";
+        }
         
         //EventLog
         $request = $event->getRequest();
-        $eventStr = "User $user manually logged out";
+        $eventStr = "User $user manually logged out".$samlLogoutStr;
         $eventType = "User Manually Logged Out";
-        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
             $this->container->getParameter('employees.sitename'),   //$sitename
             $eventStr,                                              //$event (Event description)
@@ -83,34 +88,34 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
     }
     
-    public function samlLogout( $user ) {
-        if( !$user ) {
-            return false;
-        }
-        $logger = $this->container->get('logger');
-        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-        $email = $user->getSingleEmail();
-        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
-        if( $email ) {
-            $config = $samlConfigProviderUtil->getConfig($email);
-            try {
-                $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
-                $auth = new Auth($config['settings']);
-                //if( $auth->isAuthenticated() ) {
-                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
-                    $auth->logout();
-                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
-                    //exit('logout');
-                //}
-                // The logout method does a redirect, so we won't reach this line
-                //return new Response('Redirecting to IdP for logout...', 302);
-                return true;
-            } catch (Error $e) {
-                //$this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
-                throw new UnprocessableEntityHttpException('Error while trying to logout');
-            }
-        }
-        $logger->debug("LogoutEventSubscriber: End of SAML logout");
-        return false;
-    }
+//    public function samlLogout( $user ) {
+//        if( !$user ) {
+//            return false;
+//        }
+//        $logger = $this->container->get('logger');
+//        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+//        $email = $user->getSingleEmail();
+//        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
+//        if( $email ) {
+//            $config = $samlConfigProviderUtil->getConfig($email);
+//            try {
+//                $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
+//                $auth = new Auth($config['settings']);
+//                //if( $auth->isAuthenticated() ) {
+//                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
+//                    $auth->logout();
+//                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
+//                    //exit('logout');
+//                //}
+//                // The logout method does a redirect, so we won't reach this line
+//                //return new Response('Redirecting to IdP for logout...', 302);
+//                return true;
+//            } catch (Error $e) {
+//                //$this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
+//                throw new UnprocessableEntityHttpException('Error while trying to logout');
+//            }
+//        }
+//        $logger->debug("LogoutEventSubscriber: End of SAML logout");
+//        return false;
+//    }
 }

@@ -69,6 +69,7 @@ use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use OneLogin\Saml2\Auth;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 //use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -82,6 +83,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Entity\Logger;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use Sinergi\BrowserDetector\Browser;
@@ -466,7 +468,7 @@ class UserSecurityUtil {
         // you can also disable the csrf logout
         //$response = $this->security->logout(false);
 
-        if( $stay ) {
+        if( $stay == false ) {
             return $response;
         }
 
@@ -477,11 +479,41 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        $this->tokenStorage->setToken(null);
+        //$this->tokenStorage->setToken(null);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
-        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+    }
+    public function samlLogout( $user ) {
+        if( !$user ) {
+            return false;
+        }
+        $logger = $this->container->get('logger');
+        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+        $email = $user->getSingleEmail();
+        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
+        if( $email ) {
+            $config = $samlConfigProviderUtil->getConfig($email);
+            try {
+                $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
+                $auth = new Auth($config['settings']);
+                //if( $auth->isAuthenticated() ) {
+                $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
+                $auth->logout();
+                $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
+                //exit('logout');
+                //}
+                // The logout method does a redirect, so we won't reach this line
+                //return new Response('Redirecting to IdP for logout...', 302);
+                return true;
+            } catch (Error $e) {
+                //$this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
+                throw new UnprocessableEntityHttpException('Error while trying to logout');
+            }
+        }
+        $logger->debug("LogoutEventSubscriber: End of SAML logout");
+        return false;
     }
     
     function getLoggedInUsers($request) {
