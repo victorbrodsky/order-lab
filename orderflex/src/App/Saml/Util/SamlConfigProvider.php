@@ -37,7 +37,7 @@ class SamlConfigProvider
         //$this->samlConfigRepository = SamlConfig::getRepository($this->em);
     }
 
-    //$client is the user's domain
+    //$client is the user's email or domain
     public function getConfig(string $client): array
     {
         //return $this->getTestConfig($client);

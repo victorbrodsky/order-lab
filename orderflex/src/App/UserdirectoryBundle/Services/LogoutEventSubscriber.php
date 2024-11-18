@@ -9,6 +9,7 @@
 namespace App\UserdirectoryBundle\Services;
 
 
+use OneLogin\Saml2\Auth;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -64,6 +65,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //$this->updateUserLastLogin($user);
         //$vacreqUtil = $this->container->get('vacreq_util');
 
+        //Saml logout
+        $this->samlLogout($user);
+        
         //EventLog
         $request = $event->getRequest();
         $eventStr = "User $user manually logged out";
@@ -77,5 +81,30 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $request,                                               //$request
             $eventType                                              //$action (Event Type)
         );
+    }
+    
+    public function samlLogout( $user ) {
+        if( !$user ) {
+            return false;
+        }
+        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+        $email = $user->getSingleEmail();
+        if( $email ) {
+            $config = $samlConfigProviderUtil->getConfig($email);
+            try {
+                $auth = new Auth($config['settings']);
+                if( $auth->isAuthenticated() ) {
+                    $auth->logout();
+                    //$this->logger->notice("Starting SAML logout: after logout: logoutUrl=".$logoutUrl);
+                    //exit('logout');
+                }
+                // The logout method does a redirect, so we won't reach this line
+                //return new Response('Redirecting to IdP for logout...', 302);
+                return true;
+            } catch (Error $e) {
+                //$this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
+                throw new UnprocessableEntityHttpException('Error while trying to logout');
+            }
+        }
     }
 }
