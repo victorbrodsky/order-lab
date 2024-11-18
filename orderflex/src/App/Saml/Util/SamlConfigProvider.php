@@ -38,7 +38,7 @@ class SamlConfigProvider
     }
 
     //$client is the user's email or domain
-    public function getConfig(string $client): array
+    public function getConfig(string $client): ?array
     {
         //return $this->getTestConfig($client);
 
