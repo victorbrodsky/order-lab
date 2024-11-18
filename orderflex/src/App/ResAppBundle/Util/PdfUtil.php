@@ -1024,6 +1024,8 @@ class PdfUtil {
 
     //Used in getCsvApplicationsData
     public function checkDuplicate( $rowArr, $handsomtableJsonData ) {
+        $logger = $this->container->get('logger');
+
         ////////////// check for duplicate //////////////////
         $duplicateIds = array();
         $duplicateResapps = array();
@@ -1043,6 +1045,7 @@ class PdfUtil {
         
         //check for duplicate in DB
         $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+        $logger->notice("checkDuplicate: duplicateDbResApps count=".count($duplicateDbResApps));
         if( count($duplicateDbResApps) > 0  ) {
             //$rowArr['Status']['id'] = implode(",",$duplicateDbResApps);
             //$rowArr['Status']['value'] = "Previously Imported";
@@ -1764,6 +1767,8 @@ class PdfUtil {
     //1) $erasApplicantId
     // 'Expected Residency Start Date' AND (email or aamcId or ($firstName and $lastName))
     public function getDuplicateDbResApps($rowArr) {
+        $logger = $this->container->get('logger');
+
         //A- By ERAS Application ID, then separately
         //B- By Preferred e-mail + Expected Residency Start Date, and lastly, separately
         //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
@@ -1806,6 +1811,9 @@ class PdfUtil {
 
         //echo "aamcId=[$aamcId], email=[$email], expectedResidencyStartDate=[$expectedResidencyStartDate],
         //    applicationReceiptDate=[$applicationReceiptDate], erasApplicantId=[$erasApplicantId] <br>";
+        $logger->notice("getDuplicateDbResApps: ".
+            "aamcId=[$aamcId], email=[$email], expectedResidencyStartDate=[$expectedResidencyStartDate], applicationReceiptDate=[$applicationReceiptDate], erasApplicantId=[$erasApplicantId]"
+        );
 
         $parameters = array();
 
@@ -1824,6 +1832,7 @@ class PdfUtil {
             $query = $dql->getQuery();
             $query->setParameters($parameters);
             $resapps = $query->getResult();
+            $logger->notice("getDuplicateDbResApps: A: resapps  count=".count($resapps));
             return $resapps;
         }
 
@@ -1867,6 +1876,8 @@ class PdfUtil {
         //echo "sql=".$query->getSql()."<br>";
         //echo "resapps count=".count($resapps)."<br>";
         //exit('111');
+
+        $logger->notice("getDuplicateDbResApps: EOF: resapps  count=".count($resapps));
 
         return $resapps;
     }
