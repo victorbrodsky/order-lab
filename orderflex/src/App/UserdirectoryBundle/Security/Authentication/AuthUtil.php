@@ -102,17 +102,25 @@ class AuthUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
-        $this->logger->notice("samlAuthentication: get user by uesrname=".$token->getUsername());
+        $username = $token->getUsername();
+
+        $this->logger->notice("samlAuthentication: get user by uesrname=".$username);
+
+        if( $username ) {
+            $emailArr = explode('@', $username);
+            $domain = $emailArr[1];
+            $authUtil = $this->container->get('authenticator_utility');
+            $authUtil->samlAuthenticationByDomain($domain);
+            //TODO: use stay and return user (if success) or null (if fail) like all other auth methods.
+        }
 
         //check if user already exists in DB
-        $user = $this->findUserByUsername($token->getUsername());
+        $user = $this->findUserByUsername($username);
 
         if( $user ) {
             $userEmail = $user->getSingleEmail();
             if( $userEmail ) {
-                $response = $this->redirect($this->generateUrl('saml_login', array('client' => $userEmail)));
-                dump($response);
-                exit('samlAuthentication');
+                exit('samlAuthentication: OK user='.$user->getId());
             }
         }
 
@@ -137,21 +145,23 @@ class AuthUtil {
         }
 
         $auth = new Auth($config['settings']);
-        $auth->login();
+        $auth->login(); //make redirect to SAML page
 
-        $errors = $auth->getErrors();  // This method receives an array with the errors
-        // that could took place during the process
+        if(0) {
+            $errors = $auth->getErrors();  // This method receives an array with the errors
+            // that could took place during the process
 
-        if (!empty($errors)) {
-            echo '<p>', implode(', ', $errors), '</p>';
-        }
+            if (!empty($errors)) {
+                echo '<p>', implode(', ', $errors), '</p>';
+            }
 
-        // This check if the response was
-        if( !$auth->isAuthenticated() ) {      // successfully validated and the user
-            echo "<p>Not authenticated</p>";  // data retrieved or not
-            exit('not authenticated');
-        } else {
-            exit('authenticated!!!');
+            // This check if the response was
+            if (!$auth->isAuthenticated()) {      // successfully validated and the user
+                echo "<p>Not authenticated</p>";  // data retrieved or not
+                exit('not authenticated');
+            } else {
+                exit('authenticated!!!');
+            }
         }
     }
     public function samlAuthenticationByEmail( $email ) {
