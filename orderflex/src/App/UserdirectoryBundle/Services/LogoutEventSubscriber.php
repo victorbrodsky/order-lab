@@ -90,16 +90,16 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $logger = $this->container->get('logger');
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
-        $logger->notice("LogoutEventSubscriber: Starting SAML logout: email=".$email);
+        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
         if( $email ) {
             $config = $samlConfigProviderUtil->getConfig($email);
             try {
-                $logger->notice("LogoutEventSubscriber: Starting SAML logout: try");
+                $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
                 $auth = new Auth($config['settings']);
                 //if( $auth->isAuthenticated() ) {
-                    $logger->notice("LogoutEventSubscriber: Starting SAML logout: user authenticated");
+                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
                     $auth->logout();
-                    $logger->notice("LogoutEventSubscriber: Starting SAML logout: after logout");
+                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
                     //exit('logout');
                 //}
                 // The logout method does a redirect, so we won't reach this line
@@ -110,7 +110,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
                 throw new UnprocessableEntityHttpException('Error while trying to logout');
             }
         }
-        $logger->notice("LogoutEventSubscriber: End of SAML logout");
+        $logger->debug("LogoutEventSubscriber: End of SAML logout");
         return false;
     }
 }
