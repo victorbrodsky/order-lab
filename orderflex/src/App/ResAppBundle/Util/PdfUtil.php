@@ -1089,7 +1089,7 @@ class PdfUtil {
         //return $handsomtableJsonData; //testing
         $logger = $this->container->get('logger');
 
-        dump($pdfInfoArr);
+        //dump($pdfInfoArr);
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
         $resapps = $this->getEnabledResapps();
@@ -1206,8 +1206,8 @@ class PdfUtil {
 
                 //Check if this row already exists in table
                 if(1) {
-                    dump($rowArr);
-                    exit('addNotUsedPDFtoTable');
+                    //dump($rowArr);
+                    //exit('addNotUsedPDFtoTable');
                     //add $rowArr['Expected Residency Start Date']['value']; $residencyStartDate->format('m/d/Y'); //07/01/2021
                     $duplicateRes = $this->checkDuplicate($rowArr, $handsomtableJsonData);
                     $duplicateArr = $duplicateRes['duplicateInfoArr'];
@@ -1378,7 +1378,7 @@ class PdfUtil {
             return NULL;
         }
 
-        dump($pdfText); //testing
+        //dump($pdfText); //testing
 
         //find file has Email, LastName FirstName
         foreach($resappInfoArr as $resappId=>$thisResappInfoArr) {
