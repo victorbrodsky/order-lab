@@ -1414,17 +1414,18 @@ class PdfUtil {
                 }
             }
 
-            //Search by lastname and firstname
+            //Search by lastname and firstname.
+            //Check the name separated by space in front and end to prevent matching 'Wei' with 'Weight' and 'Weill Cornell Medicine' etc
             $lastname = $thisResappInfoArr['lastname'];
             if( $lastname ) {
-                if( strpos((string)$pdfText, $lastname) !== false ) {
+                if( strpos((string)$pdfText, " ".$lastname." ") !== false ) {
                     //Search by firstname
                     $firstname = $thisResappInfoArr['firstname'];
                     if( $firstname ) {
-                        if( strpos((string)$pdfText, $firstname) !== false ) {
+                        if( strpos((string)$pdfText, " ".$firstname." ") !== false ) {
                             //Found by firstname
                             $foundResappId = $resappId;
-                            $logger->notice("findResappByApplicant: found by name: firstname=".$firstname. ", lastname".$lastname);
+                            $logger->notice("findResappByApplicant: found by name: firstname=".$firstname. ", lastname=".$lastname);
                             break;
                         }
                     }
