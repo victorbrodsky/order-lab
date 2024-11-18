@@ -1089,6 +1089,8 @@ class PdfUtil {
         //return $handsomtableJsonData; //testing
         $logger = $this->container->get('logger');
 
+        dump($pdfInfoArr);
+
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
         $resapps = $this->getEnabledResapps();
         //echo "resapps count=".count($resapps)."<br>";
@@ -1113,7 +1115,9 @@ class PdfUtil {
         foreach($pdfInfoArr as $fileId=>$pdfFileArr) {
             if( isset($usedPdfArr[$fileId]) && $usedPdfArr[$fileId] ) {
                 //used
+                $logger->notice("addNotUsedPDFtoTable: PDF is already used: fileId=".$usedPdfArr[$fileId]);
             } else {
+                $logger->notice("addNotUsedPDFtoTable: PDF has not been associated in CSV or CSV is not provided");
                 //PDF has not been associated in CSV or CSV is not provided
                 $pdfFile = $pdfFileArr['file'];
 
@@ -1202,7 +1206,7 @@ class PdfUtil {
 
                 //Check if this row already exists in table
                 if(1) {
-                    dump($pdfInfoArr);
+                    dump($rowArr);
                     exit('addNotUsedPDFtoTable');
                     //add $rowArr['Expected Residency Start Date']['value']; $residencyStartDate->format('m/d/Y'); //07/01/2021
                     $duplicateRes = $this->checkDuplicate($rowArr, $handsomtableJsonData);
@@ -1240,7 +1244,7 @@ class PdfUtil {
 
                 $handsomtableJsonData[] = $rowArr;
             }
-        }
+        }//foreach($pdfInfoArr
 
         return $handsomtableJsonData;
     }
