@@ -96,12 +96,12 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             try {
                 $logger->notice("LogoutEventSubscriber: Starting SAML logout: try");
                 $auth = new Auth($config['settings']);
-                if( $auth->isAuthenticated() ) {
+                //if( $auth->isAuthenticated() ) {
                     $logger->notice("LogoutEventSubscriber: Starting SAML logout: user authenticated");
                     $auth->logout();
                     $logger->notice("LogoutEventSubscriber: Starting SAML logout: after logout");
                     //exit('logout');
-                }
+                //}
                 // The logout method does a redirect, so we won't reach this line
                 //return new Response('Redirecting to IdP for logout...', 302);
                 return true;
