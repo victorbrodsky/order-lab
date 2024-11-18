@@ -238,7 +238,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$logger->notice('authenticate: currentDb='.$currentDb);
         //exit('before new Passport: usernametype='.$usernametype);
 
-        if( 0 && $usernametype == 'saml-sso' ) {
+        if( $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
             //username = username=oli2002l_@_local-user
             //$user = $authUtil->findUserByUsername($username);
@@ -334,7 +334,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //dump($request->request);
 
         $username = $request->request->get('_username');
-        
+
         //testing: use clean username without _@_local-user
         //$usernameArr = explode('_@_',$username);
         //$username = $usernameArr[0];
@@ -447,16 +447,16 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $token->setUser($token->getUsername()."_@_".$usernamePrefix);
         }
 
-        if( $token->getUsernametype() === 'saml-sso' ) {
-            $usernamePrefix = $token->getUsernametype();
-        }
+//        if( $token->getUsernametype() === 'saml-sso' ) {
+//            $usernamePrefix = $token->getUsernametype();
+//        }
 
         //exit("usernamePrefix=".$usernamePrefix);
-        $logger->notice("authenticateToken: 2 usernamePrefix=[$usernamePrefix]");
+        //$logger->notice("authenticateToken: 2 usernamePrefix=[$usernamePrefix]");
 
         //usernametype can be used instead of $usernamePrefix
-        //switch( $usernamePrefix )
-        switch( $token->getUsernametype() )
+        switch( $usernamePrefix )
+        //switch( $token->getUsernametype() )
         {
 
             //case "wcmc-cwid": //use for auth transition. Remove after transition.
