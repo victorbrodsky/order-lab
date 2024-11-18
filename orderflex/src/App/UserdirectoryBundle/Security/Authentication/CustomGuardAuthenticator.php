@@ -454,7 +454,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $logger->notice("authenticateToken: 2 usernamePrefix=[$usernamePrefix]");
 
         //usernametype can be used instead of $usernamePrefix
-        switch( $usernamePrefix ) {
+        //switch( $usernamePrefix )
+        switch( $token->getUsernametype() )
+        {
 
             //case "wcmc-cwid": //use for auth transition. Remove after transition.
             case "ldap-user":
