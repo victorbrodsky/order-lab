@@ -212,6 +212,8 @@ class PdfUtil {
 
     public function getCsvApplicationsData( $csvFileName, $pdfFiles ) {
 
+        $logger = $this->container->get('logger');
+
         //echo "csvFileName=$csvFileName <br>";
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -595,6 +597,7 @@ class PdfUtil {
                 $duplicateArr = $duplicateRes['duplicateInfoArr'];
                 $duplicateResapps = $duplicateRes['duplicateResapps'];
                 $duplicateIdArr = $duplicateRes['duplicateIdArr'];
+                $logger->notice("getCsvApplicationsData: duplicateArr count=".count($duplicateArr));
 
                 if( count($duplicateArr) > 0 ) {
 
@@ -1084,6 +1087,7 @@ class PdfUtil {
     //This function will mark PDF for existing, active application from previous application season year as "Create New Record"
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,$csvStatus) {
         //return $handsomtableJsonData; //testing
+        $logger = $this->container->get('logger');
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
         $resapps = $this->getEnabledResapps();
@@ -1203,6 +1207,7 @@ class PdfUtil {
                     $duplicateArr = $duplicateRes['duplicateInfoArr'];
                     //$duplicateResapps = $duplicateRes['duplicateResapps'];
                     $duplicateIdArr = $duplicateRes['duplicateIdArr'];
+                    $logger->notice("addNotUsedPDFtoTable: duplicateArr count=".count($duplicateArr));
                     if (count($duplicateArr) > 0) {
                         //change the value in the “Action” column to “Do not add”
                         $rowArr['Action']['id'] = null;
