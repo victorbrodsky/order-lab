@@ -279,10 +279,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             new CustomCredentials(
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
-                    exit('new Passport: CustomCredentials');
-                    $logger = $this->container->get('logger');
-                    $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
-                    //return true; //$user->getApiToken() === $credentials;
+                    //exit('new Passport: CustomCredentials');
+                    //$logger = $this->container->get('logger');
+                    //$logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
+                    return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {
                         //if user exists here then it's already authenticated
