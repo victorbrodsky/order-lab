@@ -19,13 +19,15 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     private $firewallName;
     private $username;
     private $credentials;
+    private $usernametype;
 
 
     //UserInterface $user,
-    public function __construct(string $username, $credentials, string $firewallName, array $roles = [])
+    public function __construct(string $username, $credentials, $usernametype, string $firewallName, array $roles = [])
     {
         $this->credentials = $credentials ?? null;
         $this->username = $username ?? null;
+        $this->usernametype = $usernametype ?? null;
 
         //parent::__construct($user,$firewallName,$roles);
         parent::__construct($roles);
@@ -63,5 +65,23 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     {
         return $this->username = $username;
     }
+
+    /**
+     * @return null
+     */
+    public function getUsernametype()
+    {
+        return $this->usernametype;
+    }
+
+    /**
+     * @param null $usernametype
+     */
+    public function setUsernametype($usernametype)
+    {
+        $this->usernametype = $usernametype;
+    }
+
+    
 
 }

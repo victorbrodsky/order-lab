@@ -364,6 +364,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $request = null;
         $username = $credentials['username'];
         $password = $credentials['password'];
+        $usernametype = $credentials['usernametype'];
 
         //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
         $providerKey = 'ldap_employees_firewall';
@@ -377,6 +378,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username
             $password,
+            $usernametype,
             $providerKey
         );
 
@@ -439,8 +441,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $token->setUser($token->getUsername()."_@_".$usernamePrefix);
         }
 
+        if( $token->getUsernametype() === 'saml-sso' ) {
+            $usernamePrefix = $token->getUsernametype();
+        }
+
         //exit("usernamePrefix=".$usernamePrefix);
 
+        //usernametype can be used instead of $usernamePrefix
         switch( $usernamePrefix ) {
 
             //case "wcmc-cwid": //use for auth transition. Remove after transition.
