@@ -1202,6 +1202,8 @@ class PdfUtil {
 
                 //Check if this row already exists in table
                 if(1) {
+                    dump($pdfInfoArr);
+                    exit('addNotUsedPDFtoTable');
                     //add $rowArr['Expected Residency Start Date']['value']; $residencyStartDate->format('m/d/Y'); //07/01/2021
                     $duplicateRes = $this->checkDuplicate($rowArr, $handsomtableJsonData);
                     $duplicateArr = $duplicateRes['duplicateInfoArr'];
