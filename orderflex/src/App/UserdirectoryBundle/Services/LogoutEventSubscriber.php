@@ -67,7 +67,6 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //$vacreqUtil = $this->container->get('vacreq_util');
 
         //Saml logout
-        //TODO: add if user logged in by SAML
         $samlLogoutStr = "";
         $samlLogout = $userSecUtil->samlLogout($user);
         if( $samlLogout ) {
