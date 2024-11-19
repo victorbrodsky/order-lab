@@ -260,6 +260,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$firewallName = 'ldap_employees_firewall';
             $indexLastRoute = '_security.'.$firewallName.'.target_path';
             $lastRoute = $request->getSession()->get($indexLastRoute);
+            //replace hhtp to https
+            $lastRoute = str_replace('http','https',$lastRoute);
             echo 'authenticate: lastRoute='.$lastRoute."<br>";
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
