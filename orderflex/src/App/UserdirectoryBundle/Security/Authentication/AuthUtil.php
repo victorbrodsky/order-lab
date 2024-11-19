@@ -133,7 +133,7 @@ class AuthUtil {
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
 
-        echo "domain=$domain <br>";
+        //echo "domain=$domain <br>";
         //$emailArr = explode('@', $email);
         //$domain = $emailArr[1];
     

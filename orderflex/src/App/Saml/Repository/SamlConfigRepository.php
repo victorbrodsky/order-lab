@@ -32,9 +32,9 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = $this->findOneBy(['client' => $client]);
 
-//        if( !$config ) {
-//            $config = $this->findAnyOne();
-//        }
+        if( !$config ) {
+            $config = $this->findAnyOne();
+        }
 
         return $config;
     }
@@ -48,9 +48,9 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = $this->findOneBy(['client' => $domain]);
 
-//        if( !$config ) {
-//            $config = $this->findAnyOne();
-//        }
+        if( !$config ) {
+            $config = $this->findAnyOne();
+        }
 
         return $config;
     }

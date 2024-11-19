@@ -280,13 +280,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
                     //exit('new Passport: CustomCredentials');
-                    //$logger = $this->container->get('logger');
-                    //$logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
+                    //return true;
+                    $logger = $this->container->get('logger');
+                    $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
                     //return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {
                         //if user exists here then it's already authenticated
-                        return true; //this enough
+                        //return true; //this enough
 
                         //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
                         //exit($user->getUserIdentifier()."?=".$credentials['username']);
@@ -334,19 +335,29 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //dump($request->request);
 
         $username = $request->request->get('_username');
+        $usernametype = $request->request->get('_usernametype');
 
-        //testing: use clean username without _@_local-user
-        $usernameArr = explode('_@_',$username);
-        $username = $usernameArr[0];
+        //testing: use clean username without _@_local-user saml-sso
+        if( 0 ) {
+            //Original: username=[oli2002@med.cornell.edu_@_saml-sso], usernametype=[saml-sso], sitename=[employees]
+            $usernameArr = explode('_@_', $username);
+            $username = $usernameArr[0];
 
-        //oli2002@med.cornell.edu => oli2002
-        $usernameArr = explode('_@_',$username);
-        $username = $usernameArr[0];
+            //oli2002@med.cornell.edu => oli2002
+            $usernameArr = explode('@', $username);
+            $username = $usernameArr[0];
+            //$username = $username."_@_local-user";
+            //oli2002_@_ldap-user
+            $username = $username."_@_ldap-user";
+            $username = 'oli2002_@_saml-sso';
+        }
+
+        $usernametype = 'saml-sso'; //testing
 
         $credentials = [
             'username' => $username, //$request->request->get('_username'),
             'password' => $request->request->get('_password'),
-            'usernametype' => $request->request->get('_usernametype'),
+            'usernametype' => $usernametype, //$request->request->get('_usernametype'),
             'sitename' => $request->request->get('_sitename'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
