@@ -256,14 +256,15 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
             //testing: https://view.online/c/wcm/pathology/directory/event-log/
             //http://127.0.0.1/translational-research/request/fee-schedule
+            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
             //$firewallName = 'ldap_employees_firewall';
             $indexLastRoute = '_security.'.$firewallName.'.target_path';
             $lastRoute = $request->getSession()->get($indexLastRoute);
-            //echo 'authenticate: lastRoute='.$lastRoute."<br>";
+            echo 'authenticate: lastRoute='.$lastRoute."<br>";
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
             //dump($request);
-            //exit('saml');
+            exit('saml');
 
             if( $username ) {
                 $emailArr = explode('@', $username);
