@@ -75,6 +75,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->firewallName = 'ldap_employees_firewall';
     }
 
+    public function getFirewallName() {
+        return $this->firewallName;
+    }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
     {
         //exit('onAuthenticationSuccess');

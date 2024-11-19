@@ -595,4 +595,5 @@ pm = ondemand
 pm.process_idle_timeout = 3s
 systemctl status php-fpm
 
+To initilize tenant: https://view.online/tenant-manager/directory/settings/tenant-manager/configure/
 

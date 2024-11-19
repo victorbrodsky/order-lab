@@ -110,7 +110,7 @@ class AuthUtil {
             $emailArr = explode('@', $username);
             $domain = $emailArr[1];
             $authUtil = $this->container->get('authenticator_utility');
-            $authUtil->samlAuthenticationByDomain($domain,true);
+            $authUtil->samlAuthenticationByDomain($domain);
             //TODO: use stay and return user (if success) or null (if fail) like all other auth methods.
         }
 
@@ -126,7 +126,8 @@ class AuthUtil {
 
         return NULL;
     }
-    public function samlAuthenticationByDomain( $domain, $stay=false ) {
+    //$stay=false
+    public function samlAuthenticationByDomain( $domain, $lastRoute=null ) {
         if( !$domain ) {
             return NULL;
         }
@@ -146,15 +147,16 @@ class AuthUtil {
 
         $auth = new Auth($config['settings']);
 
-        if( $stay == true ) {
-            $newTargetUrl = "";
-            //$parameters, $forceAuthn, $isPassive, $stay, $setNameIdPolicy, $nameIdValueReq
-            $urlString = $auth->login(null, array(), false, $stay, true); //make redirect to SAML page
-            exit('$urlString='.$urlString);
-        } else {
-            $newTargetUrl = ""; //original target url
-            $auth->login(); //make redirect to SAML page
-        }
+        $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
+
+//        if( $stay == true ) {
+//            $newTargetUrl = "";
+//            //$parameters, $forceAuthn, $isPassive, $stay, $setNameIdPolicy, $nameIdValueReq
+//            $urlString = $auth->login(null, array(), false, $stay, true); //make redirect to SAML page
+//            exit('$urlString='.$urlString);
+//        } else {
+//            $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
+//        }
 
         if(0) {
             $errors = $auth->getErrors();  // This method receives an array with the errors
