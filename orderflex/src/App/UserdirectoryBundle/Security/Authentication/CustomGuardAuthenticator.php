@@ -352,7 +352,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $username = 'oli2002_@_saml-sso';
         }
 
-        $usernametype = 'saml-sso'; //testing
+        //$usernametype = 'saml-sso'; //testing
 
         $credentials = [
             'username' => $username, //$request->request->get('_username'),
