@@ -110,7 +110,7 @@ class AuthUtil {
             $emailArr = explode('@', $username);
             $domain = $emailArr[1];
             $authUtil = $this->container->get('authenticator_utility');
-            $authUtil->samlAuthenticationByDomain($domain);
+            $authUtil->samlAuthenticationByDomain($domain,true);
             //TODO: use stay and return user (if success) or null (if fail) like all other auth methods.
         }
 
