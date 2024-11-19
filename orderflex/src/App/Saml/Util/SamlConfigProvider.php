@@ -173,6 +173,7 @@ class SamlConfigProvider
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
                 'x509cert' => $config->getIdpCert(),
                 //'privateKey' => $config->getSpPrivateKey(),
+                'url' => '',
             ],
             'sp' => [
                 'entityId' => $schemeAndHost,
@@ -186,6 +187,7 @@ class SamlConfigProvider
                 ],
                 //'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
+                'url' => '',
             ],
         );
 
