@@ -238,7 +238,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$logger->notice('authenticate: currentDb='.$currentDb);
         //exit('before new Passport: usernametype='.$usernametype);
 
-        if( 0 && $usernametype == 'saml-sso' ) {
+        if( 1 && $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
             //username = username=oli2002l_@_local-user
             //$user = $authUtil->findUserByUsername($username);
@@ -281,8 +281,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 function( $credentials ) {
                     //exit('new Passport: CustomCredentials');
                     //return true;
-                    $logger = $this->container->get('logger');
-                    $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
+                    //$logger = $this->container->get('logger');
+                   // $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
                     //return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {

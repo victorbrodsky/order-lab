@@ -126,7 +126,7 @@ class AuthUtil {
 
         return NULL;
     }
-    public function samlAuthenticationByDomain( $domain ) {
+    public function samlAuthenticationByDomain( $domain, $stay=false ) {
         if( !$domain ) {
             return NULL;
         }
@@ -145,7 +145,15 @@ class AuthUtil {
         }
 
         $auth = new Auth($config['settings']);
-        $auth->login(); //make redirect to SAML page
+
+        if( $stay == true ) {
+            $newTargetUrl = "";
+            //$parameters, $forceAuthn, $isPassive, $stay, $setNameIdPolicy, $nameIdValueReq
+            $urlString = $auth->login(null, array(), false, $stay, true); //make redirect to SAML page
+            exit('$urlString='.$urlString);
+        } else {
+            $auth->login(); //make redirect to SAML page
+        }
 
         if(0) {
             $errors = $auth->getErrors();  // This method receives an array with the errors
