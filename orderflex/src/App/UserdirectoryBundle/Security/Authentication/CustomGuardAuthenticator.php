@@ -262,7 +262,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $lastRoute = $request->getSession()->get($indexLastRoute);
             //replace http to https
             $protocol = 'http';
-            if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1 )) {
+            if( isset($_SERVER['HTTPS']) ) {
                 $protocol = 'https';
             }
             else {
