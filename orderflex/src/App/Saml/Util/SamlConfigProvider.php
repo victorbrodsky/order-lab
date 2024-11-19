@@ -81,7 +81,7 @@ class SamlConfigProvider
         //https://login-test.weill.cornell.edu/idp/module.php/core/loginuserpassorg.php?
 
         //$encriptionFlag = true;
-        $encriptionFlag = false;
+        //$encriptionFlag = false;
 
         $settings = array(
             'strict' => false,
@@ -92,10 +92,10 @@ class SamlConfigProvider
             // Ex http://sp.example.com/
             //    http://example.com/sp/
             //'baseurl' => null, //'https://view.online/c/wcm/pathology/',
-            'baseurl' => 'https://view.online/c/wcm/pathology/',
+            //'baseurl' => 'https://view.online/c/wcm/pathology/',
 
             // Enable debug mode (to print errors).
-            'debug' => true,
+            //'debug' => true,
 
             'security' => [
 //                'nameIdEncrypted' => $encriptionFlag,
