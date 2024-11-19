@@ -262,11 +262,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $lastRoute = $request->getSession()->get($indexLastRoute);
             //replace hhtp to https
             $lastRoute = str_replace('http','https',$lastRoute);
-            echo 'authenticate: lastRoute='.$lastRoute."<br>";
+            //echo 'authenticate: lastRoute='.$lastRoute."<br>";
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
             //dump($request);
-            exit('saml');
+            //exit('saml');
 
             if( $username ) {
                 $emailArr = explode('@', $username);
