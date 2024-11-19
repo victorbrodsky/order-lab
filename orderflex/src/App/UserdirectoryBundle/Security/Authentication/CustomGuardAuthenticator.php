@@ -282,11 +282,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     //exit('new Passport: CustomCredentials');
                     //$logger = $this->container->get('logger');
                     //$logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
-                    return true; //$user->getApiToken() === $credentials;
+                    //return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {
                         //if user exists here then it's already authenticated
-                        //return true; //this enough
+                        return true; //this enough
 
                         //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
                         //exit($user->getUserIdentifier()."?=".$credentials['username']);
