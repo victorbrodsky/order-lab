@@ -339,6 +339,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $usernameArr = explode('_@_',$username);
         $username = $usernameArr[0];
 
+        //oli2002@med.cornell.edu => oli2002
+        $usernameArr = explode('_@_',$username);
+        $username = $usernameArr[0];
+
         $credentials = [
             'username' => $username, //$request->request->get('_username'),
             'password' => $request->request->get('_password'),
