@@ -260,13 +260,24 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$firewallName = 'ldap_employees_firewall';
             $indexLastRoute = '_security.'.$firewallName.'.target_path';
             $lastRoute = $request->getSession()->get($indexLastRoute);
-            //replace hhtp to https
-            $lastRoute = str_replace('http','https',$lastRoute);
+            //replace http to https
+            $protocol = 'http';
+            if (isset($_SERVER['HTTPS']) &&
+                ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+                $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+                $protocol = 'https';
+            }
+            else {
+                $protocol = 'http';
+            }
+            echo 'authenticate: protocol='.$protocol."<br>";
+            $lastRoute = str_replace('http',$protocol,$lastRoute);
             //echo 'authenticate: lastRoute='.$lastRoute."<br>";
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
             //dump($request);
-            //exit('saml');
+            exit('saml');
 
             if( $username ) {
                 $emailArr = explode('@', $username);
