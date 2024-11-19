@@ -147,7 +147,7 @@ class AuthUtil {
 
         $auth = new Auth($config['settings']);
 
-        exit('$lastRoute='.$lastRoute);
+        //exit('$lastRoute='.$lastRoute);
         $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
 
 //        if( $stay == true ) {
