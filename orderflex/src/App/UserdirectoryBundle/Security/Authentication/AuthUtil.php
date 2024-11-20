@@ -235,8 +235,8 @@ class AuthUtil {
             return NULL;
         }
 
-        dump($config['settings']);
-        exit('samlAuthenticationStayByDomain');
+        //dump($config['settings']);
+        //exit('samlAuthenticationStayByDomain');
 
         $this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
         $auth = new Auth($config['settings']);
