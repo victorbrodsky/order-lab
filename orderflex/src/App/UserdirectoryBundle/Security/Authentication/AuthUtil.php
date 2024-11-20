@@ -149,13 +149,13 @@ class AuthUtil {
 
         //exit('$lastRoute='.$lastRoute);
         //TODO: $lastRoute is not working
-        $parameters = array();
-        $parameters['RelayState'] = $lastRoute;
-        //$auth->login(null,$parameters); //make redirect to SAML page and after to $lastRoute
+        $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
 
+        //$parameters = array();
+        //$parameters['RelayState'] = $lastRoute;
         //$stay = true;
         //$stay = false;
-        $auth->login($lastRoute, $parameters); //make redirect to SAML page
+        //$auth->login($lastRoute, $parameters); //make redirect to SAML page
         //exit('$urlString='.$urlString);
 
 //        if( $stay == true ) {
