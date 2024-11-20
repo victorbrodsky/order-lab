@@ -179,11 +179,11 @@ class SamlConfigProvider
                 'entityId' => $schemeAndHost,
                 'assertionConsumerService' => [
                     'url' => $schemeAndHost."saml/acs/".$client,
-                    "binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                    //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                 ],
                 'singleLogoutService' => [
                     'url' => $schemeAndHost."saml/logout/".$client,
-                    "binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                    //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
                 ],
                 //'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
