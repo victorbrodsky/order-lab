@@ -216,6 +216,34 @@ class AuthUtil {
             exit('authenticated!!!');
         }
     }
+    public function samlAuthenticationStayByDomain( $domain, $lastRoute=null ) {
+        if( !$domain ) {
+            return NULL;
+        }
+
+        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+
+        //echo "domain=$domain <br>";
+        //$emailArr = explode('@', $email);
+        //$domain = $emailArr[1];
+
+        //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+
+        $config = $samlConfigProviderUtil->getConfig($domain);
+        if( !$config ) {
+            return NULL;
+        }
+
+        $auth = new Auth($config['settings']);
+
+        $auth->processResponse();
+
+        if( $auth->isAuthenticated() ) {
+            return TRUE;
+        }
+
+        return NULL;
+    }
 
     public function LocalAuthentication($token) {
 

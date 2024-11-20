@@ -281,6 +281,21 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $domain = $emailArr[1];
                 $authUtil = $this->container->get('authenticator_utility');
                 $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
+
+                $authenticated = $authUtil->samlAuthenticationStayByDomain($domain);
+                if( $authenticated ) {
+                    $email = str_replace('_@_saml-sso','',$username);
+                    $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+                    if (!$user) {
+                        throw new AuthenticationException('User not found and auto-creation is disabled.');
+                    }
+                    return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
+                        echo "SelfValidatingPassport OK, user=".$user."<br>";
+                        return $user;
+                    }));
+                } else {
+                    throw new AuthenticationException('SAML authentication failed.');
+                }
             }
 
             if( 0 ) {
