@@ -224,6 +224,7 @@ class AuthUtil {
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
 
         //echo "domain=$domain <br>";
+        $this->logger->notice("samlAuthenticationStayByDomain: domain=".$domain);
         //$emailArr = explode('@', $email);
         //$domain = $emailArr[1];
 
@@ -234,11 +235,15 @@ class AuthUtil {
             return NULL;
         }
 
+        $this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
         $auth = new Auth($config['settings']);
+        $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
         $auth->processResponse();
+        $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
         if( $auth->isAuthenticated() ) {
+            $this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
             return TRUE;
         }
 

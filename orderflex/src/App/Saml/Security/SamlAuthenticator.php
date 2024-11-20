@@ -47,7 +47,7 @@ class SamlAuthenticator extends AbstractAuthenticator
     {
         $testing = true;
         $testing = false;
-        exit('SamlAuthenticator: authenticate');
+        //exit('SamlAuthenticator: authenticate');
         $this->logger->notice("SamlAuthenticator: authenticate");
 
         //dump($request);
@@ -144,6 +144,11 @@ class SamlAuthenticator extends AbstractAuthenticator
         }));
     }
 
+//    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
+//    {
+//        $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
+//        return $authenticationSuccess->onAuthenticationSuccess($request,$token);
+//    }
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
     {
         // On success, generate JWT and return it
