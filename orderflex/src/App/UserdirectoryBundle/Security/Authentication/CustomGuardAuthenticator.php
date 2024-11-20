@@ -280,7 +280,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $emailArr = explode('@', $username);
                 $domain = $emailArr[1];
                 $authUtil = $this->container->get('authenticator_utility');
-                $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
+                //$authUtil->samlAuthenticationByDomain($domain,$lastRoute);
 
                 $authenticated = $authUtil->samlAuthenticationStayByDomain($domain);
                 if( $authenticated ) {
@@ -289,6 +289,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     if (!$user) {
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
+                    //we can use primarypublicuserid (i.e. oli2002) in UserBadge
                     return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
                         echo "SelfValidatingPassport OK, user=".$user."<br>";
                         return $user;
