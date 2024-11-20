@@ -94,7 +94,7 @@ class MaintenanceListener {
         //testing
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
-        $logger->notice("onLogout: logintype=".$logintype);
+        $logger->notice("onKernelRequest: logintype=".$logintype);
 
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
