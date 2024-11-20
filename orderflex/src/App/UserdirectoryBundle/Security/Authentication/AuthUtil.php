@@ -154,6 +154,7 @@ class AuthUtil {
         //$auth->login(null,$parameters); //make redirect to SAML page and after to $lastRoute
 
         $stay = true;
+        $stay = false;
         $urlString = $auth->login(null, $parameters, false, $stay, true); //make redirect to SAML page
         exit('$urlString='.$urlString);
 
