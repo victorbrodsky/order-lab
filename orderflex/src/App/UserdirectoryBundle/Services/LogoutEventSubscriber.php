@@ -69,8 +69,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //$this->updateUserLastLogin($user);
         //$vacreqUtil = $this->container->get('vacreq_util');
 
-        //Saml logout
-        $request = $event->getRequest();
+        //Saml logout: TODO: session is empty
+        //$request = $event->getRequest();
         $session = $this->requestStack->getSession();
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
