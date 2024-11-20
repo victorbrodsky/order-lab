@@ -155,7 +155,7 @@ class AuthUtil {
 
         //$stay = true;
         $stay = false;
-        $urlString = $auth->login(null, $parameters); //make redirect to SAML page
+        $urlString = $auth->login(null, $parameters, false, false, true); //make redirect to SAML page
         //exit('$urlString='.$urlString);
 
 //        if( $stay == true ) {
