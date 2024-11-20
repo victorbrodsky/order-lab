@@ -150,6 +150,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //set original site name
         $session->set('sitename',$this->siteName);
 
+        //Logout type for SAML logout
         $session->set('logintype','normal');
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
