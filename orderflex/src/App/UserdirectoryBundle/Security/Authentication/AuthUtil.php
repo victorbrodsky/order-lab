@@ -242,6 +242,24 @@ class AuthUtil {
         $auth = new Auth($config['settings']);
         $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
+        //public function login(
+        //$returnTo = null,
+        // array $parameters = array(),
+        // $forceAuthn = false,
+        // $isPassive = false,
+        // $stay = false,
+        // $setNameIdPolicy = true,
+        // $nameIdValueReq = null
+        //)
+        $returnUrl = $auth->login(
+            $lastRoute,
+            array(),
+            false,
+            false,
+            true
+        );
+        $this->logger->notice("samlAuthenticationStayByDomain: after login stay returnUrl=".$returnUrl);
+
         $auth->processResponse();
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
