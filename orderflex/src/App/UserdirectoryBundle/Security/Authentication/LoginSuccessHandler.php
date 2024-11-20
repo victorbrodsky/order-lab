@@ -149,6 +149,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //set original site name
         $session->set('sitename',$this->siteName);
+
+        $session->set('logintype','normal');
         ///////////////// EOF set session variables /////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {

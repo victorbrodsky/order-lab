@@ -131,6 +131,10 @@ class SamlAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException('User not found and auto-creation is disabled.');
         }
 
+        //set session: $session->set('logintype','saml-sso');
+        $session = $request->getSession();
+        $session->set('logintype','saml-sso');
+
         echo "before SelfValidatingPassport, user=".$user."<br>";
         return new SelfValidatingPassport(new UserBadge($identifierValue, function () use ($user) {
             echo "SelfValidatingPassport OK, user=".$user."<br>";

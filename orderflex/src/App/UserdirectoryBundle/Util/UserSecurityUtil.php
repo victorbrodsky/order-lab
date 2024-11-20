@@ -490,7 +490,19 @@ class UserSecurityUtil {
         if( !$user ) {
             return false;
         }
+
         $logger = $this->container->get('logger');
+
+        //check $session = $request->getSession();
+        $session = $this->requestStack->getCurrentRequest()->getSession();
+        $logintype = $session->get('logintype');
+        $logger->notice("samlLogout: logintype=".$logintype);
+        if( $logintype != 'saml-sso' ) {
+            $logger->notice("samlLogout: NO SAML logout");
+            return false;
+        }
+        $logger->notice("samlLogout: SAML logout");
+
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
         $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
