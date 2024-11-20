@@ -134,6 +134,8 @@ class SamlAuthenticator extends AbstractAuthenticator
         //set session: $session->set('logintype','saml-sso');
         $session = $request->getSession();
         $session->set('logintype','saml-sso');
+        $logintype = $session->get('logintype');
+        $this->logger->notice("authenticate: logintype=".$logintype);
 
         echo "before SelfValidatingPassport, user=".$user."<br>";
         return new SelfValidatingPassport(new UserBadge($identifierValue, function () use ($user) {
