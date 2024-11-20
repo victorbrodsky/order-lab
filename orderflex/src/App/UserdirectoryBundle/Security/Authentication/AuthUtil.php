@@ -148,7 +148,10 @@ class AuthUtil {
         $auth = new Auth($config['settings']);
 
         //exit('$lastRoute='.$lastRoute);
-        $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
+        //TODO: $lastRoute is not working
+        $parameters = array();
+        $parameters['RelayState'] = $lastRoute;
+        $auth->login(null,$parameters); //make redirect to SAML page and after to $lastRoute
 
 //        if( $stay == true ) {
 //            $newTargetUrl = "";
