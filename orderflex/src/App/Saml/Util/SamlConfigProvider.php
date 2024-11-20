@@ -91,7 +91,7 @@ class SamlConfigProvider
             // the BaseURL of the view that process the SAML Message.
             // Ex http://sp.example.com/
             //    http://example.com/sp/
-            //'baseurl' => null, //'https://view.online/c/wcm/pathology/',
+            'baseurl' => null, //'https://view.online/c/wcm/pathology/',
             //'baseurl' => 'https://view.online/c/wcm/pathology/',
 
             // Enable debug mode (to print errors).
@@ -187,7 +187,7 @@ class SamlConfigProvider
                 ],
                 //'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
-                'url' => '',
+                //'url' => '',
             ],
         );
 
