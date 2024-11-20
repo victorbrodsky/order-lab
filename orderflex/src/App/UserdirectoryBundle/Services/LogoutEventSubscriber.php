@@ -72,8 +72,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
         $logger->notice("onLogout: logintype=".$logintype);
-        dump($session);
-        exit('onLogout');
+        //dump($session);
+        //exit('onLogout');
         $samlLogoutStr = "";
         $samlLogout = $userSecUtil->samlLogout($user);
         if( $samlLogout ) {
