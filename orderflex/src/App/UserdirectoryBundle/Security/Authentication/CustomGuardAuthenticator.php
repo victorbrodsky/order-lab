@@ -277,8 +277,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //exit('saml');
 
             if( $username ) {
-                $emailArr = explode('@', $username);
-                $domain = $emailArr[1];
+                $email = str_replace('_@_saml-sso','',$username);
+                //username=[oli2002@med.cornell.edu_@_saml-sso]
+                $emailArr = explode('@', $email);
+                $domain = $emailArr[1]; //domain=med.cornell.edu
                 $authUtil = $this->container->get('authenticator_utility');
                 //$authUtil->samlAuthenticationByDomain($domain,$lastRoute);
 
