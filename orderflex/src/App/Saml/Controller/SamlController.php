@@ -82,6 +82,8 @@ class SamlController extends OrderAbstractController //AbstractController
         //$firewallName = 'ldap_employees_firewall';
         $indexLastRoute = '_security.'.$firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
+        $protocol = 'https';
+        $lastRoute = str_replace('http',$protocol,$lastRoute);
         $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
 
         $config['settings']['sitename'] = $sitename;
