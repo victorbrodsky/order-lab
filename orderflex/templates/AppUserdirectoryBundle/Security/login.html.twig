@@ -167,9 +167,8 @@
                         //redirect to saml controller
                         var username = $('#display-username').val();
                         if( username ) {
-                            var redirectUrl = Routing.generate('saml_login', {
-                                client: type
-                            });
+                            var redirectUrl = Routing.generate('saml_login', {client: username});
+                            console.log("redirectUrl="+redirectUrl);
                             window.location.replace(redirectUrl);
                         }
                     }
