@@ -143,6 +143,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            }
         }
 
+        //SAML authentication
+        if( $route == 'saml_acs_default' ) {
+            return true;
+        }
+
         // if there is already an authenticated user (likely due to the session)
         // then return false and skip authentication: there is no need.
         if( $this->security->getUser() ) {
@@ -236,7 +241,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$connection = $this->em->getConnection();
         //$currentDb = $connection->getDatabase();
         //$logger->notice('authenticate: currentDb='.$currentDb);
-        //exit('before new Passport: usernametype='.$usernametype);
+        exit('before new Passport: usernametype='.$usernametype);
 
         if( 1 && $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');

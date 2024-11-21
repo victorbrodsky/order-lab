@@ -40,7 +40,7 @@ class SamlAuthenticator extends AbstractAuthenticator
         $this->logger->notice("SamlAuthenticator: supports");
         //exit('SamlAuthenticator: supports');
         //return false;//testing
-        return $request->attributes->get('_route') === 'saml_acs_default';
+        return $request->attributes->get('_route') === 'saml_acs_default_disable';
     }
 
     public function authenticate(Request $request): Passport
