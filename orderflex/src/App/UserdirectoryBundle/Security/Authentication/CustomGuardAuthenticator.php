@@ -347,7 +347,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+                    $logger->notice('authenticate: $user='.$user->getId());
                     if (!$user) {
+                        $logger->notice('authenticate: $user not found');
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
@@ -356,6 +358,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         return $user;
                     }));
                 } else {
+                    $logger->notice('authenticate: SAML authentication failed');
                     throw new AuthenticationException('SAML authentication failed.');
                 }
             }
