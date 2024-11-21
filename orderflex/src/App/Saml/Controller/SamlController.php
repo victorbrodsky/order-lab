@@ -70,8 +70,11 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("SAML login after config");
         //dump($config);
 
-        $authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
-        $firewallName = $authenticationSuccess->getFirewallName();
+        $this->logger->notice("SAML login after config: sitename=$sitename");
+
+        //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
+        //$firewallName = $authenticationSuccess->getFirewallName();
+        $firewallName = 'ldap_'.$sitename.'_firewall';
 
         //testing: https://view.online/c/wcm/pathology/directory/event-log/
         //http://127.0.0.1/translational-research/request/fee-schedule
