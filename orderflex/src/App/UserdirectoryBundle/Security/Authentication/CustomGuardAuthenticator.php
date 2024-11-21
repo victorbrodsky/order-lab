@@ -262,12 +262,24 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         if( $route == 'saml_acs_default' ) {
             $logger->notice('authenticate: saml_acs_default: $username=['.$username."]");
             //TODO: For SAML, login form is not used and all credentials are empty
-            if( $username == 'N/A' ) {
+            if( 0 && $username == 'N/A' ) {
                 dump($request);
                 $samlResponse = $request->getPayload()->get('SAMLResponse');
                 $relayState = $request->getPayload()->get('RelayState');
                 echo 'relayState='.$relayState."<br>";
                 dump($samlResponse);
+
+                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+                if( str_contains($relayState,'/login/')) {
+                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+                    $parts = explode('/', $relayState);
+                    $sitename = array_pop($parts);
+                    $client = array_pop($parts);
+
+                    $credentials['username'] = $client;
+                    $this->sitename = $sitename;
+                }
+                
                 exit('after dump request');
             }
 
@@ -424,6 +436,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         $username = $request->request->get('_username');
         $usernametype = $request->request->get('_usernametype');
+        $sitename = $request->request->get('_sitename');
 
         //testing: use clean username without _@_local-user saml-sso
         if( 0 ) {
@@ -440,13 +453,37 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $username = 'oli2002_@_saml-sso';
         }
 
+        if( !$username ) {
+            //dump($request);
+            //$samlResponse = $request->getPayload()->get('SAMLResponse');
+            $relayState = $request->getPayload()->get('RelayState');
+            echo 'relayState='.$relayState."<br>";
+            //dump($samlResponse);
+
+            //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+            if( str_contains($relayState,'/login/')) {
+                //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+                $parts = explode('/', $relayState);
+                $sitenameUrl = array_pop($parts);
+                $client = array_pop($parts);
+
+                $username = $client;
+
+                if( !$sitename ) {
+                    $sitename = $sitenameUrl;
+                }
+            }
+
+            //exit('after dump request');
+        }
+
         //$usernametype = 'saml-sso'; //testing
 
         $credentials = [
             'username' => $username, //$request->request->get('_username'),
             'password' => $request->request->get('_password'),
             'usernametype' => $usernametype, //$request->request->get('_usernametype'),
-            'sitename' => $request->request->get('_sitename'),
+            'sitename' => $sitename, //$request->request->get('_sitename'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $this->sitename = $credentials['sitename'];
