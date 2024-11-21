@@ -241,7 +241,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$connection = $this->em->getConnection();
         //$currentDb = $connection->getDatabase();
         //$logger->notice('authenticate: currentDb='.$currentDb);
-        exit('before new Passport: usernametype='.$usernametype);
+        //exit('before new Passport: usernametype='.$usernametype);
+
+//        //SAML 1: redirect login request to 'saml_login'
+//        if( 1 && $usernametype == 'saml-sso' ) {
+//            $route = $request->attributes->get('_route');
+//            if( strpos((string)$route, 'login') !== false ) {
+//                if( $request->isMethod('POST') ) {
+//                    return new RedirectResponse( $this->router->generate('saml_login',array('client'=>)) );
+//                }
+//            }
+//        }
 
         if( 1 && $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
@@ -284,6 +294,16 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             if( $username ) {
                 $email = str_replace('_@_saml-sso','',$username);
                 //username=[oli2002@med.cornell.edu_@_saml-sso]
+
+                //SAML 1: redirect login request to 'saml_login'
+                $route = $request->attributes->get('_route');
+                if( strpos((string)$route, 'login') !== false ) {
+                    if( $request->isMethod('POST') ) {
+                        return new RedirectResponse( $this->container->get('router')->generate('saml_login',array('client'=>$email)) );
+                    }
+                }
+
+                //SAML 2: process acs response
                 $emailArr = explode('@', $email);
                 $domain = $emailArr[1]; //domain=med.cornell.edu
                 $authUtil = $this->container->get('authenticator_utility');
