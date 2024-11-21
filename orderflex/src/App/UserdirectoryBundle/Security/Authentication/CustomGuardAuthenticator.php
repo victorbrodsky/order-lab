@@ -471,8 +471,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 echo "sitename=".$sitenameUrl."<br>";
                 $client = array_pop($parts);
                 echo "client=".$client."<br>";
-                exit('after dump request');
-
                 $username = $client;
 
                 if( !$sitename ) {
@@ -480,6 +478,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 }
             }
         }
+        exit('after dump request: $username='.$username);
 
         //$usernametype = 'saml-sso'; //testing
 
