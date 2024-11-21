@@ -254,12 +254,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //        }
 
         $route = $request->attributes->get('_route');
-        $logger->notice('authenticate: $route='.$route);
+        $logger->notice('authenticate: $route=['.$route."]");
         //if( $route == 'saml_acs_default' ) {
         //    exit('authenticate: saml_acs_default');
         //}
 
         if( $route == 'saml_acs_default' ) {
+            $logger->notice('authenticate: saml_acs_default: $username=['.$username."]");
             //TODO: For SAML, login form is not used and all credentials are empty
             if( !$username ) {
                 dump($request);
