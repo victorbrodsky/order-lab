@@ -70,6 +70,17 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("SAML login after config");
         //dump($config);
 
+        $authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
+        $firewallName = $authenticationSuccess->getFirewallName();
+
+        //testing: https://view.online/c/wcm/pathology/directory/event-log/
+        //http://127.0.0.1/translational-research/request/fee-schedule
+        //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
+        //$firewallName = 'ldap_employees_firewall';
+        $indexLastRoute = '_security.'.$firewallName.'.target_path';
+        $lastRoute = $request->getSession()->get($indexLastRoute);
+        $this->logger->notice("Starting SAML login for client: lastRoute=: $lastRoute");
+
         $config['settings']['sitename'] = $sitename;
         $config['settings']['client'] = $client;
         
