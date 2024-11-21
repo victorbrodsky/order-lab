@@ -94,7 +94,8 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("SAML login after new Auth");
         //exit('111');
 
-        $auth->login($lastRoute);
+        //$auth->login($lastRoute);
+        $auth->login();
 
         $this->logger->notice("SAML login after login");
 
