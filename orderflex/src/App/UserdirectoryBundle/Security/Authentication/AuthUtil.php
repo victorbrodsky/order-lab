@@ -299,7 +299,7 @@ class AuthUtil {
         $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
         //$this->logger->notice("samlAuthenticationStayByDomain: lastRoute=$lastRoute");
-        //$auth->redirectTo($lastRoute);
+        $auth->redirectTo($lastRoute);
         
         $auth->processResponse();
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
