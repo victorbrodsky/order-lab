@@ -459,7 +459,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         }
 
         if( !$username ) {
-            dump($request);
+            //dump($request);
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
             //echo 'relayState='.$relayState."<br>";
@@ -469,7 +469,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             if( str_contains($relayState,'/login/')) {
                 //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
                 $parts = explode('/', $relayState);
-                dump($parts);
+                //dump($parts);
                 $sitenameUrl = array_pop($parts);
                 //echo "sitename=".$sitenameUrl."<br>";
                 $client = array_pop($parts);

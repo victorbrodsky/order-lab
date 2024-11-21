@@ -151,7 +151,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('acsTest');
 
         $relayState = $request->getPayload()->get('RelayState');
-        $samlResponse = $request->getPayload()->get('SAMLResponse');
+        //$samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";
 
         $client = '';
@@ -186,7 +186,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
         $modifiedIdentifierAttribute = 'user.'.$identifierAttribute; //saml has 'user.email' attribute; or use 'userPrincipalName'
         $identifierValue = $attributes[$modifiedIdentifierAttribute][0];
-        echo 'acs: identifierValue='.$identifierValue."<br>"; //identifierValue=oli2002@med.cornell.edu
+        //echo 'acs: identifierValue='.$identifierValue."<br>"; //identifierValue=oli2002@med.cornell.edu
 
         //$this->samlUserProvider->setIdentifierField($identifierAttribute);          //'email'
         //$user = $this->samlUserProvider->loadUserByIdentifier($identifierValue);
