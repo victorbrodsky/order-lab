@@ -316,6 +316,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            echo 'authenticate: protocol='.$protocol."<br>";
             $lastRoute = str_replace('http',$protocol,$lastRoute);
             //echo 'authenticate: lastRoute='.$lastRoute."<br>";
+            $logger->notice('authenticate: saml_acs_default: $lastRoute=['.$lastRoute."]");
+
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
             //dump($request);
@@ -349,26 +351,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
-//                    return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
-//                        echo "SelfValidatingPassport OK, user=".$user."<br>";
-//                        return $user;
-//                    }));
-
-                    return new Passport(
-                        new UserBadge($credentials['username'], function () use ($user) {
-                            return $user;
-                        }),
-                        new CustomCredentials(
-                        // If this function returns anything else than `true`, the credentials are marked as invalid.
-                            function( $credentials ) {
-                                //exit('new Passport: CustomCredentials');
-                                return true;
-                            },
-                            // The custom credentials
-                            $credentials
-                        )
-                    );
-
+                    return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
+                        echo "SelfValidatingPassport OK, user=".$user."<br>";
+                        return $user;
+                    }));
                 } else {
                     throw new AuthenticationException('SAML authentication failed.');
                 }
