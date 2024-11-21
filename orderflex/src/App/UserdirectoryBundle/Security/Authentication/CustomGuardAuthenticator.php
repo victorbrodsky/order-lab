@@ -352,7 +352,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     }
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
                     return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
-                        echo "SelfValidatingPassport OK, user=".$user."<br>";
+                        //echo "SelfValidatingPassport OK, user=".$user."<br>";
                         return $user;
                     }));
                 } else {
@@ -457,10 +457,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         if( !$username ) {
             dump($request);
-            $samlResponse = $request->getPayload()->get('SAMLResponse');
+            //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
-            echo 'relayState='.$relayState."<br>";
-            dump($samlResponse);
+            //echo 'relayState='.$relayState."<br>";
+            //dump($samlResponse);
 
             //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
             if( str_contains($relayState,'/login/')) {
@@ -468,9 +468,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $parts = explode('/', $relayState);
                 dump($parts);
                 $sitenameUrl = array_pop($parts);
-                echo "sitename=".$sitenameUrl."<br>";
+                //echo "sitename=".$sitenameUrl."<br>";
                 $client = array_pop($parts);
-                echo "client=".$client."<br>";
+                //echo "client=".$client."<br>";
                 $username = $client;
 
                 if( !$sitename ) {
