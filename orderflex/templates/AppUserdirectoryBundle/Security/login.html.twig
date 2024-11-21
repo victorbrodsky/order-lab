@@ -163,6 +163,15 @@
                             $('#message').html("Please enter your full email").show();
                             return false;
                         }
+
+                        //redirect to saml controller
+                        var username = $('#display-username').val();
+                        if( username ) {
+                            var redirectUrl = Routing.generate('saml_login', {
+                                client: type
+                            });
+                            window.location.replace(redirectUrl);
+                        }
                     }
 
                     //alert("username="+document.getElementById("username").value + ", password=" + document.getElementById("password").value );
