@@ -349,10 +349,39 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
-                    return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
-                        echo "SelfValidatingPassport OK, user=".$user."<br>";
-                        return $user;
-                    }));
+//                    return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
+//                        echo "SelfValidatingPassport OK, user=".$user."<br>";
+//                        return $user;
+//                    }));
+
+                    return new Passport(
+                        new UserBadge($credentials['username'], function () use ($user) {
+                            return $user;
+                        }),
+                        new CustomCredentials(
+                        // If this function returns anything else than `true`, the credentials are marked as invalid.
+                            function( $credentials ) {
+                                //exit('new Passport: CustomCredentials');
+                                //return true;
+                                //$logger = $this->container->get('logger');
+                                // $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
+                                //return true; //$user->getApiToken() === $credentials;
+                                $user = $this->getAuthUser($credentials);
+                                if( $user ) {
+                                    //if user exists here then it's already authenticated
+                                    //return true; //this enough
+
+                                    //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
+                                    //exit($user->getUserIdentifier()."?=".$credentials['username']);
+                                    return $user->getUserIdentifier() === $credentials['username'];
+                                }
+                                return false;
+                            },
+                            // The custom credentials
+                            $credentials
+                        )
+                    );
+
                 } else {
                     throw new AuthenticationException('SAML authentication failed.');
                 }
