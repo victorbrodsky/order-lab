@@ -283,7 +283,9 @@ security:
             context: scan_auth
             lazy: true
             provider: saml_provider
-            custom_authenticator: App\Saml\Security\SamlAuthenticator
+            #custom_authenticator: App\Saml\Security\SamlAuthenticator
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
             #custom_authenticators:
             #   authenticator: App\Saml\Security\SamlAuthenticator
 #            form_login:
