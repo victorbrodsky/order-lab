@@ -264,6 +264,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //TODO: For SAML, login form is not used and all credentials are empty
             if( $username == 'N/A' ) {
                 dump($request);
+                $samlResponse = $request->getPayload()->get('SAMLResponse');
+                $relayState = $request->getPayload()->get('RelayState');
+                echo 'relayState='.$relayState."<br>";
+                dump($samlResponse);
                 exit('after dump request');
             }
 
