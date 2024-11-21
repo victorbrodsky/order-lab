@@ -253,7 +253,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            }
 //        }
 
-        if( 1 && $usernametype == 'saml-sso' ) {
+        $route = $request->attributes->get('_route');
+        $logger->notice('authenticate: $route='.$route);
+        if( $route == 'saml_acs_default' ) {
+            exit('authenticate: saml_acs_default');
+        }
+
+        if( 0 && $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
             //username = username=oli2002l_@_local-user
             //$user = $authUtil->findUserByUsername($username);

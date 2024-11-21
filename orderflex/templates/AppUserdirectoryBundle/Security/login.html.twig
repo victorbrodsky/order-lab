@@ -166,13 +166,13 @@
                             return false;
                         }
 
-                        //redirect to saml controller
+                        //redirect to SAML controller (SamlController->login)
                         var username = $('#display-username').val();
                         console.log("username="+username);
                         if( username ) {
                             var redirectUrl = Routing.generate('saml_login', {client: username});
                             console.log("redirectUrl="+redirectUrl);
-                            return false;
+                            //return false;
                             window.location.replace(redirectUrl);
                         }
                     }
