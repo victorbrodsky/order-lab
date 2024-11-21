@@ -60,7 +60,7 @@ class SamlController extends OrderAbstractController //AbstractController
     // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
     //*/
     //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
-    #[Route(path: '/login/{client}', name: 'saml_login', requirements: ['client' => '.+'])]
+    #[Route(path: '/login/{client}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
     public function login(Request $request, $client): Response
     {
         //exit('saml login');
@@ -75,7 +75,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('111');
 
         $auth->login();
-        
+
         $this->logger->notice("SAML login after login");
 
         // The login method does a redirect, so we won't reach this line
