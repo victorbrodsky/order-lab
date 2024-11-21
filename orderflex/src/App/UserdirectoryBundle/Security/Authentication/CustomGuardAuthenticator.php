@@ -456,7 +456,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         }
 
         if( !$username ) {
-            //dump($request);
+            dump($request);
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
             echo 'relayState='.$relayState."<br>";
