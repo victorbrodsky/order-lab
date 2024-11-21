@@ -60,8 +60,8 @@ class SamlController extends OrderAbstractController //AbstractController
     // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
     //*/
     //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
-    #[Route(path: '/login/{client}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
-    public function login(Request $request, $client): Response
+    #[Route(path: '/login/{client}/{sitename}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
+    public function login(Request $request, $client, $sitename): Response
     {
         //exit('saml login');
         $this->logger->notice("Starting SAML login for client: $client");
@@ -70,6 +70,9 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("SAML login after config");
         //dump($config);
 
+        $config['settings']['sitename'] = $sitename;
+        $config['settings']['client'] = $client;
+        
         $auth = new Auth($config['settings']);
         $this->logger->notice("SAML login after new Auth");
         //exit('111');
