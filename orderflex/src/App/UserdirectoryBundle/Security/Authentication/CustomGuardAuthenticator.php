@@ -466,8 +466,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             if( str_contains($relayState,'/login/')) {
                 //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
                 $parts = explode('/', $relayState);
+                dump($parts);
                 $sitenameUrl = array_pop($parts);
+                echo "sitename=".$sitenameUrl."<br>";
                 $client = array_pop($parts);
+                echo "client=".$client."<br>";
+                exit('after dump request');
 
                 $username = $client;
 
@@ -475,8 +479,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     $sitename = $sitenameUrl;
                 }
             }
-
-            //exit('after dump request');
         }
 
         //$usernametype = 'saml-sso'; //testing
