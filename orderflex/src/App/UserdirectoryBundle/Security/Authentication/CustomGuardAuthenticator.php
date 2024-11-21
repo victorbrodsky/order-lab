@@ -295,13 +295,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $email = str_replace('_@_saml-sso','',$username);
                 //username=[oli2002@med.cornell.edu_@_saml-sso]
 
-                //SAML 1: redirect login request to 'saml_login'
-                $route = $request->attributes->get('_route');
-                if( strpos((string)$route, 'login') !== false ) {
-                    if( $request->isMethod('POST') ) {
-                        return new RedirectResponse( $this->container->get('router')->generate('saml_login',array('client'=>$email)) );
-                    }
-                }
+//                //SAML 1: redirect login request to 'saml_login'
+//                $route = $request->attributes->get('_route');
+//                if( strpos((string)$route, 'login') !== false ) {
+//                    if( $request->isMethod('POST') ) {
+//                        return new RedirectResponse( $this->container->get('router')->generate('saml_login',array('client'=>$email)) );
+//                    }
+//                }
 
                 //SAML 2: process acs response
                 $emailArr = explode('@', $email);
