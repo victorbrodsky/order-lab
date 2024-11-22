@@ -306,6 +306,10 @@ class AuthUtil {
         $auth->processResponse();
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
+        $attributes = $auth->getAttributes();
+        dump($attributes);
+        exit('samlAuthenticationStayByDomain');
+
         if( $auth->isAuthenticated() ) {
             $this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
             return TRUE;
