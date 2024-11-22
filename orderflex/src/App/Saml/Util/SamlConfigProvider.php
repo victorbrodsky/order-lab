@@ -112,12 +112,12 @@ class SamlConfigProvider
 
 ////                // Indicates a requirement for the NameID element on the SAMLResponse
 ////                // received by this SP to be present.
-////                'wantNameId' => true,
+                'wantNameId' => true,
 
 //                // Indicates a requirement for the NameID received by
 //                // this SP to be encrypted.
-                //'wantNameIdEncrypted' => false,
-
+//                'wantNameIdEncrypted' => false,
+//
 ////                // Authentication context.
 ////                // Set to false and no AuthContext will be sent in the AuthNRequest.
 ////                // Set true or don't present this parameter and you will get an AuthContext 'exact' 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'.
@@ -169,7 +169,10 @@ class SamlConfigProvider
             ],
             'idp' => [
                 'entityId' => $schemeAndHost."saml/metadata/".$client,
-                'singleSignOnService' => ['url' => $config->getIdpSsoUrl()],
+                'singleSignOnService' => [
+                    'url' => $config->getIdpSsoUrl(),
+                    'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                ],
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
                 'x509cert' => $config->getIdpCert(),
                 //'privateKey' => $config->getSpPrivateKey(),
@@ -180,10 +183,12 @@ class SamlConfigProvider
                 'assertionConsumerService' => [
                     'url' => $schemeAndHost."saml/acs/".$client,
                     //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                    'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
                 ],
                 'singleLogoutService' => [
                     'url' => $schemeAndHost."saml/logout/".$client,
                     //"binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                    'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
                 ],
                 //'x509cert' => $config->getIdpCert(),
                 'privateKey' => $config->getSpPrivateKey(),
@@ -378,7 +383,7 @@ class SamlConfigProvider
 //
 ////                // Indicates a requirement for the NameID element on the SAMLResponse
 ////                // received by this SP to be present.
-////                'wantNameId' => true,
+//                'wantNameId' => true,
 //
 //                // Indicates a requirement for the NameID received by
 //                // this SP to be encrypted.
