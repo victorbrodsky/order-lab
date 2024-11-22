@@ -475,39 +475,29 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //Exception for SAML
         if( !$username && $route == 'saml_acs_default' ) {
-            //dump($request);
+            dump($request->getPayload());
+            //$samlResponse = $request->getPayload()->get('SAMLResponse');
+            $relayState = $request->getPayload()->get('RelayState');
+            //echo 'relayState='.$relayState."<br>";
+            //dump($samlResponse);
 
-            //request->parameters->client
-            if(0) {
-                $username = $request->query->get('client');
-                $sitename = $request->query->get('sitename');
-                $usernametype = 'saml-sso'; //testing
-            }
+            //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+            if (str_contains($relayState, '/login/')) {
+                //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+                $parts = explode('/', $relayState);
+                //dump($parts);
+                $sitenameUrl = array_pop($parts);
+                //echo "sitename=".$sitenameUrl."<br>";
+                $client = array_pop($parts);
+                //echo "client=".$client."<br>";
+                $username = $client;
 
-            if(1) {
-                //$samlResponse = $request->getPayload()->get('SAMLResponse');
-                $relayState = $request->getPayload()->get('RelayState');
-                //echo 'relayState='.$relayState."<br>";
-                //dump($samlResponse);
-
-                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-                if (str_contains($relayState, '/login/')) {
-                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
-                    $parts = explode('/', $relayState);
-                    //dump($parts);
-                    $sitenameUrl = array_pop($parts);
-                    //echo "sitename=".$sitenameUrl."<br>";
-                    $client = array_pop($parts);
-                    //echo "client=".$client."<br>";
-                    $username = $client;
-
-                    if (!$sitename) {
-                        $sitename = $sitenameUrl;
-                    }
+                if (!$sitename) {
+                    $sitename = $sitenameUrl;
                 }
             }
         }
-        //exit('after dump request: $username='.$username);
+        exit('after dump request: $username='.$username);
 
         //$usernametype = 'saml-sso'; //testing
 
