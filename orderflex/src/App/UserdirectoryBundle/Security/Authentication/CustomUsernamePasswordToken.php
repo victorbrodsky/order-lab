@@ -20,7 +20,6 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     private $username;
     private $credentials;
     private $usernametype;
-    //private $user;
 
 
     //UserInterface $user,
@@ -83,22 +82,5 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
         $this->usernametype = $usernametype;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getUser()
-//    {
-//        return $this->user;
-//    }
-//
-//    /**
-//     * @param mixed $user
-//     */
-//    public function setUser($user)
-//    {
-//        $this->user = $user;
-//    }
-
-    
 
 }

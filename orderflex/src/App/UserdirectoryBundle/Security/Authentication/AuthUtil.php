@@ -373,7 +373,6 @@ class AuthUtil {
         return NULL;
     }
 
-
     public function PacsvendorAuthentication($token) {
 
         //echo "PacsvendorAuthentication<br>";

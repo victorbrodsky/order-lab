@@ -261,30 +261,31 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //    exit('authenticate: saml_acs_default');
         //}
 
+        //Exception for SAML
         if( $route == 'saml_acs_default' ) {
             $logger->notice('authenticate: saml_acs_default: $username=['.$username."]");
 
             //TODO: For SAML, login form is not used and all credentials are empty
-            if( 0 && $username == 'N/A' ) {
-                dump($request);
-                $samlResponse = $request->getPayload()->get('SAMLResponse');
-                $relayState = $request->getPayload()->get('RelayState');
-                echo 'relayState='.$relayState."<br>";
-                dump($samlResponse);
-
-                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-                if( str_contains($relayState,'/login/')) {
-                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
-                    $parts = explode('/', $relayState);
-                    $sitename = array_pop($parts);
-                    $client = array_pop($parts);
-
-                    $credentials['username'] = $client;
-                    $this->sitename = $sitename;
-                }
-                
-                exit('after dump request');
-            }
+//            if( 0 && $username == 'N/A' ) {
+//                dump($request);
+//                $samlResponse = $request->getPayload()->get('SAMLResponse');
+//                $relayState = $request->getPayload()->get('RelayState');
+//                echo 'relayState='.$relayState."<br>";
+//                dump($samlResponse);
+//
+//                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+//                if( str_contains($relayState,'/login/')) {
+//                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+//                    $parts = explode('/', $relayState);
+//                    $sitename = array_pop($parts);
+//                    $client = array_pop($parts);
+//
+//                    $credentials['username'] = $client;
+//                    $this->sitename = $sitename;
+//                }
+//
+//                exit('after dump request');
+//            }
 
         //if( 0 && $usernametype == 'saml-sso' ) {
             //$authUtil = $this->container->get('authenticator_utility');
