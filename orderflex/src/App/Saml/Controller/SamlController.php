@@ -115,8 +115,8 @@ class SamlController extends OrderAbstractController //AbstractController
             'myparam' => 'myparam'
         );
 
-        $auth->login($lastRoute,$parameters);
-        //$auth->login(null,$parameters);
+        //$auth->login($lastRoute,$parameters);
+        $auth->login(null,$parameters);
 
         $this->logger->notice("SAML login after login");
 
@@ -162,10 +162,11 @@ class SamlController extends OrderAbstractController //AbstractController
     //The root 'saml_acs' is authenticated by SamlAuthenticator->authenticate(Request $request)
     //If the root is different, then th  is controller authentication is used
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
-    #[Route(path: '/acs', name: 'saml_acs_default')]
-    public function acs(Request $request): Response
+    #[Route(path: '/acs/{client}', name: 'saml_acs_default')]
+    public function acs(Request $request, $client): Response
     {
-        //exit('acs Test');
+        echo "client=$client <br>";
+        exit('acs Test');
         $this->logger->notice("Processing SAML ACS Test for client");
 
         //dump($request);
