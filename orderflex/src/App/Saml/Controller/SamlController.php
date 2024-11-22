@@ -384,6 +384,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
         //exit('0 testing metadata');
         $config = $this->samlConfigProvider->getConfig($client);
+        $config['settings']['client'] = $client;
         $metadata = (new Settings($config['settings']))->getSPMetadata();
 
         //Unable to locate metadata for 'https://view.online/c/wcm/pathology/directory/'
