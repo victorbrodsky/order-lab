@@ -289,7 +289,7 @@ class AuthUtil {
             return NULL;
         }
 
-        //dump($config['settings']);
+        dump($config);
         //exit('samlAuthenticationStayByDomain');
 
         //$lastRoute = $config['settings']['lastroute'];
