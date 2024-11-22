@@ -289,7 +289,7 @@ class AuthUtil {
             return NULL;
         }
 
-        //dump($config);
+        dump($config);
         //exit('samlAuthenticationStayByDomain');
 
         //$lastRoute = $config['settings']['lastroute'];
@@ -307,7 +307,7 @@ class AuthUtil {
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
         //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-        //dump($xmlDocument);
+        dump($xmlDocument);
 
         $attributes = $auth->getAttributes();
         dump($attributes);
