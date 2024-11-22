@@ -115,8 +115,8 @@ class SamlController extends OrderAbstractController //AbstractController
             'myparam' => 'myparam'
         );
 
-        //$auth->login($lastRoute);
-        $auth->login(null,$parameters);
+        $auth->login($lastRoute,$parameters);
+        //$auth->login(null,$parameters);
 
         $this->logger->notice("SAML login after login");
 
@@ -384,7 +384,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
         //exit('0 testing metadata');
         $config = $this->samlConfigProvider->getConfig($client);
-        $config['settings']['client'] = $client;
+        //$config['settings']['client'] = $client;
         $metadata = (new Settings($config['settings']))->getSPMetadata();
 
         //Unable to locate metadata for 'https://view.online/c/wcm/pathology/directory/'

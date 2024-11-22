@@ -112,7 +112,7 @@ class SamlConfigProvider
 
 ////                // Indicates a requirement for the NameID element on the SAMLResponse
 ////                // received by this SP to be present.
-                'wantNameId' => true,
+//                'wantNameId' => true,
 
 //                // Indicates a requirement for the NameID received by
 //                // this SP to be encrypted.
