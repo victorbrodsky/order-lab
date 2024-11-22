@@ -106,7 +106,7 @@ class SamlController extends OrderAbstractController //AbstractController
 //        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
 
         //store current user in the RelayState: client_#_$lastRoute
-        //$lastRoute = $client."_#_".$lastRoute;
+        $lastRoute = $client."_#_".$lastRoute;
 
         $auth = new Auth($config['settings']);
         $this->logger->notice("SAML login after new Auth");
