@@ -115,8 +115,8 @@ class SamlController extends OrderAbstractController //AbstractController
             'client' => $client
         );
 
-        $auth->login($lastRoute,$parameters);
-        //$auth->login(null,$parameters);
+        //$auth->login($lastRoute,$parameters);
+        $auth->login(null,$parameters);
 
         $this->logger->notice("SAML login after login");
 

@@ -477,11 +477,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //dump($request);
 
             //request->parameters->client
-            $username = $request->query->get('client');
-            $sitename = $request->query->get('sitename');
-            $usernametype = 'saml-sso'; //testing
-
             if(0) {
+                $username = $request->query->get('client');
+                $sitename = $request->query->get('sitename');
+                $usernametype = 'saml-sso'; //testing
+            }
+
+            if(1) {
                 //$samlResponse = $request->getPayload()->get('SAMLResponse');
                 $relayState = $request->getPayload()->get('RelayState');
                 //echo 'relayState='.$relayState."<br>";
