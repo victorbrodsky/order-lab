@@ -151,9 +151,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session->set('sitename',$this->siteName);
 
         //Logout type for SAML logout
-        $credentials = $token->getCredentials();
-        dump($credentials);
-        exit('$usernametype');
+        $usernametype = $token->getUsernametype();
+        exit('$usernametype='.$usernametype);
         $session->set('logintype',$token->getUsernametype());
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
