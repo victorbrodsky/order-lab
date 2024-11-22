@@ -568,7 +568,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $this->usernametype,
             $providerKey
         );
-        $customToken->setUser($token->getUser());
+        $customToken->setAttributes(array('tokenUser'=>$token->getUser()));
         return $authenticationSuccess->onAuthenticationSuccess($request,$customToken);
         //return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }
