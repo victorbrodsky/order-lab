@@ -341,12 +341,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //                    }
 //                }
 
-                dump($request);
+                //dump($request);
                 //$relayState = $request->getPayload()->get('RelayState');
-                $samlResponse = $request->getPayload()->get('SAMLResponse');
+                //$samlResponse = $request->getPayload()->get('SAMLResponse');
                 //echo 'relayState='.$relayState."<br>";
-                dump($samlResponse);
-                exit('111 saml');
+                //dump($samlResponse);
+                //exit('111 saml');
 
                 //SAML 2: process acs response
                 $emailArr = explode('@', $email);
