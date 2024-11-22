@@ -170,7 +170,7 @@ class SamlConfigProvider
             'idp' => [
                 'entityId' => $schemeAndHost."saml/metadata/".$client,
                 'singleSignOnService' => [
-                    'url' => $config->getIdpSsoUrl(),
+                    'url' => 'https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO/'.$client, //$config->getIdpSsoUrl(),
                     'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
                 ],
                 'singleLogoutService' => ['url' => $config->getIdpSloUrl()],
