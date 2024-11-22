@@ -79,7 +79,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         return $this->firewallName;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $usernametype) : Response
     {
         //exit('onAuthenticationSuccess');
         //testing
@@ -151,7 +151,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session->set('sitename',$this->siteName);
 
         //Logout type for SAML logout
-        $usernametype = $token->getUsernametype();
+        //$usernametype = $token->getUsernametype();
         exit('$usernametype='.$usernametype);
         $session->set('logintype',$token->getUsernametype());
         $logintype = $session->get('logintype');

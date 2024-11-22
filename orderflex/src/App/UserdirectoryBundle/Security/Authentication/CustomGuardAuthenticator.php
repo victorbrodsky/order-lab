@@ -561,7 +561,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
-        return $authenticationSuccess->onAuthenticationSuccess($request,$token);
+        return $authenticationSuccess->onAuthenticationSuccess($request,$token,$this->usernametype);
     }
     
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
@@ -671,15 +671,15 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 ////////////////////EOF External IDs authentication //////////////////
                 break;
 
-            case "saml-sso":
-                //////////////////////////////////////////////////////////////////////
-                //                       5) SAML/SSO authentication                        //
-                //////////////////////////////////////////////////////////////////////
-//                if( $usernametype && $usernametype == 'saml-sso' ) {
-//                    return $this->redirect( $this->generateUrl('saml_login', {'client': }) );
-//                }
-                $user = $authUtil->samlAuthentication($token);
-                break;
+//            case "saml-sso":
+//                //////////////////////////////////////////////////////////////////////
+//                //                       5) SAML/SSO authentication                        //
+//                //////////////////////////////////////////////////////////////////////
+////                if( $usernametype && $usernametype == 'saml-sso' ) {
+////                    return $this->redirect( $this->generateUrl('saml_login', {'client': }) );
+////                }
+//                $user = $authUtil->samlAuthentication($token);
+//                break;
 
             default:
                 throw new AuthenticationException('Invalid username or password');
