@@ -81,6 +81,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     private $passwordToken;
     //private $credentials;
 
+    private $usernametype = null;
+
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $em,
@@ -325,6 +327,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //exit('saml');
 
             if( $username ) {
+                $this->usernametype = 'saml-sso';
                 $email = str_replace('_@_saml-sso','',$username);
                 //username=[oli2002@med.cornell.edu_@_saml-sso]
 
