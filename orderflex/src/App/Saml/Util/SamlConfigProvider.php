@@ -175,7 +175,7 @@ class SamlConfigProvider
                     'url' => $config->getIdpSsoUrl(),
                     //'url' => $schemeAndHost."saml/acs/".$client,
                     //'url' => $schemeAndHost."saml/acs/"."?client=".$client,
-                    'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                    //'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
                 ],
                 'singleLogoutService' => [
                     'url' => $config->getIdpSloUrl(),
