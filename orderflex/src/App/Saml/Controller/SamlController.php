@@ -110,8 +110,8 @@ class SamlController extends OrderAbstractController //AbstractController
         //exit('111');
 
         $parameters = array(
-            'lastRoute' => $lastRoute,
-            'sitename' => $sitename
+            'RelayState' => $lastRoute,
+            //'sitename' => $sitename
         );
 
         //$auth->login($lastRoute);
