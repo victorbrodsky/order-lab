@@ -475,11 +475,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //Exception for SAML
         if( !$username && $route == 'saml_acs_default' ) {
-            dump( $request->getPayload() );
+            //dump( $request->getPayload() );
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
+            //$relayState = oli2002@med.cornell.edu_#_https://view.online/c/wcm/pathology/directory/
             //echo 'relayState='.$relayState."<br>";
             //dump($samlResponse);
+
+            //$relayStateParts = explode('_#_', $relayState);
 
             //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
             if (str_contains($relayState, '/login/')) {
@@ -497,7 +500,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 }
             }
         }
-        exit('after dump request: $username='.$username);
+        //exit('after dump request: $username='.$username);
 
         //$usernametype = 'saml-sso'; //testing
 
