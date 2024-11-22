@@ -171,7 +171,7 @@ class SamlConfigProvider
                 'entityId' => $schemeAndHost."saml/metadata/".$client,
                 'singleSignOnService' => [
                     //'url' => 'https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO/'.$client, //$config->getIdpSsoUrl(),
-                    'url' => 'https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO?client='.$client,
+                    'url' => 'https://login-proxy-test.weill.cornell.edu/idp/profile/SAML2/Redirect/SSO/'.$client,
                     //'url' => $config->getIdpSsoUrl(),
                     //'url' => $schemeAndHost."saml/acs/".$client,
                     //'url' => $schemeAndHost."saml/acs/"."?client=".$client,
