@@ -475,7 +475,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //Exception for SAML
         if( !$username && $route == 'saml_acs_default' ) {
-            dump($request->getPayload());
+            dump( $request->getPayload() );
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
             //echo 'relayState='.$relayState."<br>";
