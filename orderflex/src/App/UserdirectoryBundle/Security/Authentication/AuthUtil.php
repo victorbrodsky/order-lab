@@ -306,7 +306,7 @@ class AuthUtil {
         $auth->processResponse();
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
-        //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+        $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
         dump($xmlDocument);
 
         $attributes = $auth->getAttributes();
