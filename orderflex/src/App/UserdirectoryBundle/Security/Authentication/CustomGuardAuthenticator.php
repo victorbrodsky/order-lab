@@ -324,8 +324,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
             //$this->sitename
             //echo 'authenticate: sitename='.$this->sitename."<br>";
-            //dump($request);
-            //exit('saml');
+            dump($request);
+            exit('saml');
 
             if( $username ) {
                 $this->usernametype = 'saml-sso';
