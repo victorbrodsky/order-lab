@@ -561,16 +561,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
-        $credentials = $this->getCredentials($request);
-        $customToken = new CustomUsernamePasswordToken(
-            $credentials['username'],
-            $credentials['password'],
-            $this->usernametype,
-            $providerKey
-        );
-        $customToken->setAttributes(array('tokenUser'=>$token->getUser()));
-        return $authenticationSuccess->onAuthenticationSuccess($request,$customToken);
-        //return $authenticationSuccess->onAuthenticationSuccess($request,$token);
+//        $credentials = $this->getCredentials($request);
+//        $customToken = new CustomUsernamePasswordToken(
+//            $credentials['username'],
+//            $credentials['password'],
+//            $this->usernametype,
+//            $providerKey
+//        );
+//        $customToken->setAttributes(array('tokenUser'=>$token->getUser()));
+//        return $authenticationSuccess->onAuthenticationSuccess($request,$customToken);
+        $token->setAttributes(array('usernametype' => $this->usernametype));
+        return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }
     
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
