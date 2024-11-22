@@ -292,16 +292,16 @@ class AuthUtil {
         //dump($config['settings']);
         //exit('samlAuthenticationStayByDomain');
 
-        $lastRoute = $config['settings']['lastroute'];
+        //$lastRoute = $config['settings']['lastroute'];
 
         $this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
         $auth = new Auth($config['settings']);
         $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
-        $this->logger->notice("samlAuthenticationStayByDomain: lastRoute=$lastRoute");
-        if( $lastRoute ) {
-            $auth->redirectTo($lastRoute);
-        }
+        //$this->logger->notice("samlAuthenticationStayByDomain: lastRoute=$lastRoute");
+        //if( $lastRoute ) {
+            //$auth->redirectTo($lastRoute);
+        //}
 
         $auth->processResponse();
         $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");

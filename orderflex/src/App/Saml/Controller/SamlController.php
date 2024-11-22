@@ -86,9 +86,9 @@ class SamlController extends OrderAbstractController //AbstractController
         $lastRoute = str_replace('http',$protocol,$lastRoute);
         $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
 
-        $config['settings']['sitename'] = $sitename;
-        $config['settings']['client'] = $client;
-        $config['settings']['lastroute'] = $lastRoute;
+        //$config['settings']['sitename'] = $sitename;
+        //$config['settings']['client'] = $client;
+        //$config['settings']['lastroute'] = $lastRoute;
         
         $attributeConsumingService = array(
             "serviceName" => "SP test",
