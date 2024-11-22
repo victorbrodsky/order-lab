@@ -90,20 +90,20 @@ class SamlController extends OrderAbstractController //AbstractController
         //$config['settings']['client'] = $client;
         //$config['settings']['lastroute'] = $lastRoute;
         
-        $attributeConsumingService = array(
-            "serviceName" => "SP test",
-            "serviceDescription" => "Test Service",
-            "requestedAttributes" => array(
-                array(
-                    "name" => "lastRoute",
-                    "isRequired" => false,
-                    "nameFormat" => "",
-                    "friendlyName" => "lastRoute",
-                    "attributeValue" => array($lastRoute)
-                )
-            )
-        );
-        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
+//        $attributeConsumingService = array(
+//            "serviceName" => "SP test",
+//            "serviceDescription" => "Test Service",
+//            "requestedAttributes" => array(
+//                array(
+//                    "name" => "lastRoute",
+//                    "isRequired" => false,
+//                    "nameFormat" => "",
+//                    "friendlyName" => "lastRoute",
+//                    "attributeValue" => array($lastRoute)
+//                )
+//            )
+//        );
+//        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
         
         $auth = new Auth($config['settings']);
         $this->logger->notice("SAML login after new Auth");
@@ -112,11 +112,11 @@ class SamlController extends OrderAbstractController //AbstractController
         $parameters = array(
             'RelayState' => $lastRoute,
             'sitename' => $sitename,
-            'myparam' => 'myparam'
+            'client' => $client
         );
 
-        //$auth->login($lastRoute,$parameters);
-        $auth->login(null,$parameters);
+        $auth->login($lastRoute,$parameters);
+        //$auth->login(null,$parameters);
 
         $this->logger->notice("SAML login after login");
 
@@ -165,8 +165,8 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/acs/{client}', name: 'saml_acs_default')]
     public function acs(Request $request, $client): Response
     {
-        echo "client=$client <br>";
-        exit('acs Test');
+        //echo "client=$client <br>";
+        //exit('acs Test');
         $this->logger->notice("Processing SAML ACS Test for client");
 
         //dump($request);

@@ -234,7 +234,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $uri = $request->getUri();
         $logger->notice(
             "authenticate: ".
-            " DB=".$connection->getDatabase().", uri=".$uri .
+            " DB=[".$connection->getDatabase()."], uri=[".$uri . "]".
             " login attempt username=[$username],".
             " usernametype=[$usernametype], sitename=[$sitename], "
 
@@ -339,7 +339,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //                        return new RedirectResponse( $this->container->get('router')->generate('saml_login',array('client'=>$email)) );
 //                    }
 //                }
-                
+
                 dump($request);
                 $relayState = $request->getPayload()->get('RelayState');
                 $samlResponse = $request->getPayload()->get('SAMLResponse');
