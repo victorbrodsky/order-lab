@@ -212,7 +212,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$userSecUtil->switchDb();
         ///////// EOF Switch DB according to the locale ////////
 
-        $credentials = $this->getCredentials($request);
+        //$credentials = $this->getCredentials($request);
+        $credentials = $this->getCredentialsNew($request);
 
         //dump($credentials);
         //exit('111');
@@ -504,6 +505,46 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         $sitename = $sitenameUrl;
                     }
                 }
+            }
+        }
+        //exit('after dump request: $username='.$username);
+
+        //$usernametype = 'saml-sso'; //testing
+
+        $credentials = [
+            'username' => $username, //$request->request->get('_username'),
+            'password' => $request->request->get('_password'),
+            'usernametype' => $usernametype, //$request->request->get('_usernametype'),
+            'sitename' => $sitename, //$request->request->get('_sitename'),
+            'csrf_token' => $request->request->get('_csrf_token'),
+        ];
+        $this->sitename = $credentials['sitename'];
+
+        //dump($credentials);
+        //exit('111');
+
+        return $credentials;
+    }
+    public function getCredentialsNew(Request $request) : mixed
+    {
+
+        //dump($request->request);
+
+        $username = $request->request->get('_username');
+        $usernametype = $request->request->get('_usernametype');
+        $sitename = $request->request->get('_sitename');
+
+        $route = $request->attributes->get('_route');
+
+        //Exception for SAML
+        if( !$username && $route == 'saml_acs_default' ) {
+            //dump($request);
+
+            //request->parameters->client
+            if(1) {
+                $username = $request->query->get('client');
+                $sitename = $request->query->get('sitename');
+                $usernametype = 'saml-sso'; //testing
             }
         }
         //exit('after dump request: $username='.$username);
