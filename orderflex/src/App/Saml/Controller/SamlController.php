@@ -90,27 +90,32 @@ class SamlController extends OrderAbstractController //AbstractController
         //$config['settings']['client'] = $client;
         //$config['settings']['lastroute'] = $lastRoute;
         
-        $attributeConsumingService = array(
-            "serviceName" => "SP test",
-            "serviceDescription" => "Test Service",
-            "requestedAttributes" => array(
-                array(
-                    "name" => "lastRoute",
-                    "isRequired" => false,
-                    "nameFormat" => "",
-                    "friendlyName" => "lastRoute",
-                    "attributeValue" => array($lastRoute)
-                )
-            )
-        );
-        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
+//        $attributeConsumingService = array(
+//            "serviceName" => "SP test",
+//            "serviceDescription" => "Test Service",
+//            "requestedAttributes" => array(
+//                array(
+//                    "name" => "lastRoute",
+//                    "isRequired" => false,
+//                    "nameFormat" => "",
+//                    "friendlyName" => "lastRoute",
+//                    "attributeValue" => array($lastRoute)
+//                )
+//            )
+//        );
+//        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
         
         $auth = new Auth($config['settings']);
         $this->logger->notice("SAML login after new Auth");
         //exit('111');
 
+        $parameters = array(
+            'lastRoute' => $lastRoute,
+            'sitename' => $sitename
+        );
+
         //$auth->login($lastRoute);
-        $auth->login();
+        $auth->login(null,$parameters);
 
         $this->logger->notice("SAML login after login");
 
