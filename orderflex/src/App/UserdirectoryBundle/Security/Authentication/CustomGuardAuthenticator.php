@@ -212,8 +212,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$userSecUtil->switchDb();
         ///////// EOF Switch DB according to the locale ////////
 
-        //$credentials = $this->getCredentials($request);
-        $credentials = $this->getCredentialsNew($request);
+        $credentials = $this->getCredentials($request);
+        //$credentials = $this->getCredentialsNew($request);
 
         //dump($credentials);
         //exit('111');
