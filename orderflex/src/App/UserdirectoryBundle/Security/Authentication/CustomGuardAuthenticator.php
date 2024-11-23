@@ -488,7 +488,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             if (str_contains($relayState, '/login/')) {
                 //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
                 $parts = explode('/', $relayState);
-                dump($parts);
+                //dump($parts);
                 $sitenameUrl = array_pop($parts);
                 //echo "sitename=".$sitenameUrl."<br>";
                 $client = array_pop($parts);
