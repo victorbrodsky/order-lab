@@ -500,7 +500,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 }
             }
         }
-        exit('after dump request: $username='.$username);
+        //exit('after dump request: $username='.$username);
 
         //$usernametype = 'saml-sso'; //testing
 
