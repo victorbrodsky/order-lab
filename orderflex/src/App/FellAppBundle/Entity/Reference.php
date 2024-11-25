@@ -394,14 +394,35 @@ class Reference
         $nameArr = array();
         $firstName = $this->getFirstName();
         if( $firstName ) {
+            $firstName = $this->capitalizeIfNotAllCapital($firstName);
             $nameArr[] = trim((string)$firstName);
         }
         $lastName = $this->getName();
         if( $lastName ) {
+            $lastName = $this->capitalizeIfNotAllCapital($lastName);
             $nameArr[] = trim((string)$lastName);
         }
 
         return implode(" ",$nameArr);
+    }
+
+    public function capitalizeIfNotAllCapital($s) {
+        if( !$s ) {
+            return $s;
+        }
+        $convert = false;
+        //check if all UPPER
+        if( strtoupper($s) == $s ) {
+            $convert = true;
+        }
+        //check if all lower
+        if( strtolower($s) == $s ) {
+            $convert = true;
+        }
+        if( $convert ) {
+            return ucwords( strtolower($s) );
+        }
+        return $s;
     }
 
 }

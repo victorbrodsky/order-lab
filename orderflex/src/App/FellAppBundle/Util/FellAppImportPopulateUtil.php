@@ -1998,6 +1998,14 @@ class FellAppImportPopulateUtil {
             return true;
         }
 
+        //Capitalize
+        if( $recommendationFirstName ) {
+            $recommendationFirstName = $this->capitalizeIfNotAllCapital($recommendationFirstName);
+        }
+        if( $recommendationLastName ) {
+            $recommendationLastName = $this->capitalizeIfNotAllCapital($recommendationLastName);
+        }
+
         $reference = new Reference($author);
 
         //recommendation1FirstName
