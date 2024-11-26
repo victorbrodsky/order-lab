@@ -125,7 +125,6 @@ class RequestController extends OrderAbstractController
         //set request type
         if( $routeName == "vacreq_carryoverrequest" ) {
             //carryover request
-        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
             $requestType = $em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("carryover");
             $title = "Request carry over of vacation days";
             $eventType = "Carry Over Request Created";
@@ -338,7 +337,7 @@ class RequestController extends OrderAbstractController
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
-
+            
             //set confirmation email to approver and email users
             $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
@@ -407,6 +406,8 @@ class RequestController extends OrderAbstractController
         $accruedDaysString = $messages['accruedDaysString'];
         $carriedOverDaysString = $messages['carriedOverDaysString'];
         $remainingDaysString = $messages['remainingDaysString'];
+        $totalAccruedDays = $messages['totalAccruedDays'];
+        $remainingDays = $messages['remainingDays'];
 
         //Notes are getting from VacReqApprovalTypeList (currently 'fellow' and 'faculty' approval group types)
         $noteForVacationDays = NULL;
@@ -466,6 +467,8 @@ class RequestController extends OrderAbstractController
             'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
             'title' => $title,
             'overlappedMessage' => $overlappedMessage, //function
+            'totalAccruedDays' => $totalAccruedDays,
+            'remainingDays' => $remainingDays,
             //Get header's note from VacReqApprovalTypeList
             'noteForVacationDays' => $noteForVacationDays,
             'noteForCarryOverDays' => $noteForCarryOverDays,
@@ -627,6 +630,20 @@ class RequestController extends OrderAbstractController
             $carryOverWarningMessageLog = null;
         }
 
+        ///// Set totalAccruedDays and remainingDays for carry-over validation /////
+        $approvalGroupType = NULL;
+        $vacreqSettings = $vacreqUtil->getSettingsByVacreq($entity);
+        if( $vacreqSettings ) {
+            $approvalGroupType = $vacreqSettings->getApprovalType();
+        }
+        $messages = $vacreqUtil->getHeaderInfoMessages($user, $approvalGroupType);
+        //$accruedDaysString = $messages['accruedDaysString'];
+        //$carriedOverDaysString = $messages['carriedOverDaysString'];
+        //$remainingDaysString = $messages['remainingDaysString'];
+        $totalAccruedDays = $messages['totalAccruedDays'];
+        $remainingDays = $messages['remainingDays'];
+        ///// EOF Set totalAccruedDays and remainingDays for carry-over validation /////
+
         $form = $this->createRequestForm($entity,$cycle,$request); //edit/review
 
         $form->handleRequest($request);
@@ -671,6 +688,8 @@ class RequestController extends OrderAbstractController
             }
         }
 
+        $totalAccruedDays = NULL;
+        $remainingDays = NULL;
         //check carry over days limit (edit). Should we have this only for "new" request?
         if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -962,7 +981,9 @@ class RequestController extends OrderAbstractController
             'cycle' => $cycle,
             'review' => $review,
             'title' => $title,
-            'carryOverWarningMessage' => $carryOverWarningMessage
+            'carryOverWarningMessage' => $carryOverWarningMessage,
+            'totalAccruedDays' => $totalAccruedDays,
+            'remainingDays' => $remainingDays
             //'delete_form' => $deleteForm->createView(),
         );
     }

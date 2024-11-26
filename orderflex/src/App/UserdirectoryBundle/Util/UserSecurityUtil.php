@@ -1794,7 +1794,7 @@ class UserSecurityUtil {
         $userServiceUtil = $this->container->get('user_service_utility');
         $param = $userServiceUtil->getSingleSiteSettingParameter();
         //$this->em->refresh($param);
-        $this->em->detach($param);
+        //$this->em->detach($param);
 
         if( $param === null ) {
             return null;
@@ -1830,6 +1830,8 @@ class UserSecurityUtil {
         } else {
             $res = $param->$getSettingMethod();
         }
+        
+        $this->em->detach($param);
 
         return $res;
     }

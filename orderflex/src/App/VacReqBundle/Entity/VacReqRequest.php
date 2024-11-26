@@ -1286,6 +1286,7 @@ class VacReqRequest
             $subject = $this->getUser()->getUsernameOptimal()." requests your approval to carry over ".$this->getCarryOverDays().
                 " vacation days from ".$this->getSourceYearRange() . " to " . $this->getDestinationYearRange().
                 " via request ID #".$this->getId();
+
         }
 
         if( $requestType && $requestType->getAbbreviation() == "business-vacation" ) {

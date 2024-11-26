@@ -48,6 +48,13 @@
     <input type="hidden" id="maxcarryovervacationdays" value="{{ vacreq_util.getValueApprovalGroupTypeByUser('maxCarryOverVacationDays') }}" />
     <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
 
+    {% if totalAccruedDays is defined %}
+        <input type="hidden" id="totalAccruedDays" value="{{ totalAccruedDays }}" />
+    {% endif %}
+    {% if remainingDays is defined %}
+        <input type="hidden" id="remainingDays" value="{{ remainingDays }}" />
+    {% endif %}
+
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         <input type="hidden" id="vacreq_admin" value="admin" />
     {% else %}
@@ -275,6 +282,11 @@
                         {{ formmacros.field(form.carryOverDays) }}
 
                         {{ formmacros.field(form.comment) }}
+
+                        {#Note fore remaining days#}
+                        {#{% if remainingDays is defined and remainingDays %}#}
+                            {#<p>Note: you have {{ remainingDays }} remaining vacation days</p>#}
+                        {#{% endif %}#}
 
                     </div> <!-- panel-body -->
                 </div> <!-- panel-collapse -->
@@ -1079,8 +1091,36 @@
                 }
             }
 
+            //var totalAccruedDays = $('#totalAccruedDays').val();
+            var remainingDays = $('#remainingDays').val();
+            if( carryOverDays && remainingDays ) {
+                if( carryOverDays > remainingDays ) {
+                    var siteEmail = $('#siteEmail').val();
+                    var lessDays = Number(carryOverDays) - Number(remainingDays);
+                    var warningMsg = "You are about to request "+carryOverDays+
+                    " days to be carried over to the following year. "+
+                    "According to system records you have "+remainingDays+" remaining vacation days ("+
+                        lessDays+" less). "+
+                    "If you require a correction, please contact the system administrator by e-mail "+
+                    "at "+siteEmail+" before submitting. "+
+                    "Are you sure you would like to submit this request?";
+                    //$('.vacreq-carryOverDays').addClass('alert-danger');
+
+                    var warningConfirm = confirm(warningMsg);
+                    if( warningConfirm == true ) {
+                        //"You pressed OK!";
+                    } else {
+                        //$('#error-box').html(warningMsg);
+                        //$('#error-box').show();
+                        lbtn.stop();
+                        return false;
+                    }
+                }
+            }
+
             var sourceYear = $('.vacreq-sourceYear').select2('val');
             var destinationYear = $('.vacreq-destinationYear').select2('val');
+            console.log('sourceYear='+sourceYear+', destinationYear='+destinationYear);
             if( sourceYear == destinationYear ) {
                 error = "Please select two consecutive academic years as source and destination.";
             }

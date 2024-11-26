@@ -846,6 +846,55 @@ class VacReqUtil
 //            $message .= " and has been approved for ".$approvedVacationDays." days and ".$approvedBusinessDays.
 //                " business travel days during ".$yearRange." so far.";
 
+            ///// Add warning message if carry over days > remainingDays /////
+            $warningCarryOverMsg = "";
+            $carryOverDays = $entity->getCarryOverDays();
+            $remainingDaysRes = $this->totalVacationRemainingDays($submitter);
+            $remainingDays = $remainingDaysRes['numberOfDays'];
+            if( $carryOverDays > $remainingDays ) {
+                //$remainingDaysString .= " (" . $this->getInaccuracyMessage() . ")";
+                // According to system records FirstName LastName had Y remaining vacation days
+                // (Z less than the requested X carry-over days) during request
+                // submission at HH:MM on MM/DD/YYYY.
+                // To review the summary statistics, please visit:
+                // https://LINK
+                //VacReqApprovalTypeList
+                $approverTypes = $this->getApprovalGroupTypes();
+                $summaryStatLinkArr = array();
+                $summaryStatLinkArr['filter[users][0]'] = $submitter->getId();
+                $filterTypesCount = 0;
+                foreach($approverTypes as $approverType) {
+                    $summaryStatLinkArr['filter[types]['.$filterTypesCount.']'] = $approverType->getId();
+                    $filterTypesCount++;
+                }
+                $summaryStatLink = $this->container->get('router')->generate(
+                    'vacreq_summary',
+                    $summaryStatLinkArr,
+//                    array(
+//                        'filter[users][0]' => $submitter->getId(),
+//                        'filter[types][0]' => '',
+//                        'filter[types][1]' => ''
+//                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                //$href = '<a href="'.$summaryStatLink.'">Summary Stats'</a>';
+
+                $lessDays = (int) $carryOverDays - (int) $remainingDays;
+                //$submissionDateStr = $entity->getCreateDate()->format("M d Y h:i A T");
+                $creationDate = $entity->getCreateDate();
+                $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+                $submissionDateStr = $creationDate->format("M d Y h:i A");
+                $warningCarryOverMsg = "According to system records " . $submitter->getUsernameOptimal().
+                    " had ".$remainingDays." remaining vacation days (".$lessDays.
+                    " less than the requested ".$carryOverDays." carry-over days) ".
+                    "during request submission at ".$submissionDateStr.".".$break.
+                    "To review the summary statistics, please visit:".$break.
+                    $summaryStatLink
+                ;
+                $message = $message . $warningCarryOverMsg . $break.$break;
+            }
+
+
             //subject + SubmitterFirstName SubmitterLastName has M approved vacation days during [CURRENT 20XX-20YY] year.
             $message .= $entity->getUser()->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
 
@@ -5477,7 +5526,7 @@ class VacReqUtil
         $messages['carriedOverDaysString'] = $carriedOverDaysString;
         //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
         $messages['remainingDaysString'] = $remainingDaysString;
-
+        $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
 
         return $messages;
     }
