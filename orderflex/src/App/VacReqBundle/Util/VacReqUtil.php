@@ -1050,10 +1050,11 @@ class VacReqUtil
             //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
         }
 
-//        echo "yearRange=".$yearRange."<br>";
-//        echo "totalAllocatedDays=".$totalAllocatedDays."<br>";
-//        echo "vacationDays=".$vacationDays."<br>";
-//        echo "carryOverDays=".$carryOverDays."<br>";
+        //echo "yearRange=".$yearRange."<br>";
+        //echo "totalAllocatedDays=".$totalAllocatedDays."<br>";
+        //echo "vacationDays=".$vacationDays."<br>";
+        //echo "carryOverDaysFromPreviousYear=".$carryOverDaysFromPreviousYear."<br>";
+        //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
 
         $res = array(
             'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDaysFromPreviousYear ) - (int)$carryOverDaysToNextYear,
@@ -3046,7 +3047,24 @@ class VacReqUtil
         }
         //echo "academicYearEdge Str=[".$academicYearEdge->format('m-d-Y H:s:i')."]<br>";
 
+//        //Testing
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $param = $userServiceUtil->getSingleSiteSettingParameter();
+//        $getterSiteParameter = "get".'vacreq'."SiteParameter";
+//        $specificSiteSettingParameter = $param->$getterSiteParameter();
+//        $resStart = $specificSiteSettingParameter->getAcademicYearStart();
+//        echo 'testing $resStart='.$resStart->format('Y-m-d H:i:s T')."<br>";
+//        $param = NULL;
+//
+//        $param = $userServiceUtil->getSingleSiteSettingParameter();
+//        $getterSiteParameter = "get".'vacreq'."SiteParameter";
+//        $specificSiteSettingParameter = $param->$getterSiteParameter();
+//        $resEnd = $specificSiteSettingParameter->getAcademicYearEnd();
+//        echo 'testing $resEnd='.$resEnd->format('Y-m-d H:i:s T')."<br>";
+//        //EOF Testing
+
         //academicYearEdge
+        //echo 'academicYearEdgeStr='.$academicYearEdge->format('Y-m-d H:i:s T')."<br>";
         $academicYearEdgeStr = $academicYearEdge->format('m-d');
         //echo "year=$year, edge=[$edge], academicYearEdgeStr=[".$academicYearEdgeStr."]<br>";
 
@@ -3056,6 +3074,8 @@ class VacReqUtil
 
         $academicYearEdgeStr = $year."-".$academicYearEdgeStr;
         //echo "academicYearEdgeStr=".$academicYearEdgeStr."<br>";
+
+        //$this->em->detach($academicYearEdge);
 
         return $academicYearEdgeStr;
     }
@@ -4630,6 +4650,7 @@ class VacReqUtil
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
+        //echo "user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
 
         $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
         //$totalAccruedMonths = 12; //Old version without user's start/end dates
@@ -4645,7 +4666,7 @@ class VacReqUtil
         //echo "totalAccruedDays=".$totalAccruedDays."<br>";
 
         $totalAccruedDays = round($totalAccruedDays);
-        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
+        //echo "### totalAccruedDays=".$totalAccruedDays."<br>";
 
         return $totalAccruedDays;
     }
@@ -4680,11 +4701,14 @@ class VacReqUtil
         $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
         //$previousYear = $yearRangeArr[0];
         $currentYear = $yearRangeArr[1];
-        //echo "previousYear=$previousYear, currentYear=$currentYear <br>";
+        //echo "currentYear=$currentYear <br>";
 
         //Use the class global academicYearStartDateStr and academicYearEndDateStr
-        // to prevent modification on the repeating DB calls. As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
+        // to prevent modification on the repeating DB calls.
+        // As the result the end date is not consistent: 2025-06-30, 2025-06-30, 2025-05-30
         //TODO: why end year date is changed?
+        //??? https://stackoverflow.com/questions/7956027/how-to-stop-doctrine-2-from-caching-a-result-in-symfony-2
+        //Use $entityManager->detach($post);
         if(0) {
             if (!$this->academicYearStartDateStr || !$this->academicYearEndDateStr) {
                 $academicYearStartDateStrThis = $this->getEdgeAcademicYearDate($currentYear, 'Start');
@@ -4871,6 +4895,9 @@ class VacReqUtil
         //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.
         //", monthCount=".$monthCount.
         //": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
+
+        //$this->academicYearStartDateStr = '';
+        //$this->academicYearEndDateStr = '';
 
         return $totalAccruedMonths;
     }

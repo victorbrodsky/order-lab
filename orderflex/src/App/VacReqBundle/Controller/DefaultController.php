@@ -128,6 +128,22 @@ class DefaultController extends OrderAbstractController
         //$wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         //echo "$wcmc=$wcmc <br>";
 
+//        //$securityUtil = $this->container->get('user_security_utility');
+//        $vacreqUtil = $this->container->get('vacreq_util');
+//        $currentYear = '2025';
+//        $academicYearStartDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'Start');
+//        $academicYearEndDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'End');
+//        echo "1 academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+//        $academicYearStartDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'Start');
+//        $academicYearEndDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'End');
+//        echo "2 academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+//        $academicYearStartDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'Start');
+//        $academicYearEndDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'End');
+//        echo "3 academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+//        $academicYearStartDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'Start');
+//        $academicYearEndDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'End');
+//        echo "4 academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
+
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
 

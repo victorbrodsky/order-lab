@@ -486,7 +486,7 @@ class UserSecurityUtil {
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
     public function samlLogout( $user ) {
-        //return false; //testing. TODO: implement the logic to verify if user logged in by SAML (event log can be used)
+        return false; //testing. TODO: implement the logic to verify if user logged in by SAML (event log can be used)
         if( !$user ) {
             return false;
         }
@@ -1788,9 +1788,13 @@ class UserSecurityUtil {
         return $res;
     }
 
+    //Prevent doctrine to cache the result, use: $this->em->detach
+    //https://stackoverflow.com/questions/7956027/how-to-stop-doctrine-2-from-caching-a-result-in-symfony-2
     public function getSiteSettingParameter( $parameter, $sitename=null ) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $param = $userServiceUtil->getSingleSiteSettingParameter();
+        //$this->em->refresh($param);
+        $this->em->detach($param);
 
         if( $param === null ) {
             return null;
@@ -1815,6 +1819,9 @@ class UserSecurityUtil {
                 }
 
                 $res = $specificSiteSettingParameter->$getSettingMethod();
+
+                //$this->em->refresh($specificSiteSettingParameter);
+                $this->em->detach($specificSiteSettingParameter);
             } else {
                 return null;
                 //return "[$sitename Site Settings is not initialized]";
