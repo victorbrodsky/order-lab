@@ -105,13 +105,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request) : bool
     {
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
 
         // GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
-        //$logger->notice("supports: route=".$route);
+        $logger->notice("supports: route=".$route);
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('exit support');
 
@@ -147,6 +147,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //SAML authentication
         if( $route == 'saml_acs_default' ) {
+            $logger->notice("supports: Yes. saml_acs_default route=".$route);
             return true;
         }
 
@@ -245,6 +246,47 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //$currentDb = $connection->getDatabase();
         //$logger->notice('authenticate: currentDb='.$currentDb);
         //exit('before new Passport: usernametype='.$usernametype);
+
+        //SAML case: username=[oli2002@med.cornell.edu_@_saml-sso]
+
+        if( $usernametype == 'saml-sso' ) {
+            $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
+            $firewallName = $authenticationSuccess->getFirewallName();
+
+            //testing: https://view.online/c/wcm/pathology/directory/event-log/
+            //http://127.0.0.1/translational-research/request/fee-schedule
+            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
+            //$firewallName = 'ldap_employees_firewall';
+            $indexLastRoute = '_security.'.$firewallName.'.target_path';
+            $lastRoute = $request->getSession()->get($indexLastRoute);
+            //replace http to https
+            $protocol = 'https';
+//            if( isset($_SERVER['HTTPS']) ) {
+//                $protocol = 'https';
+//            }
+//            else {
+//                $protocol = 'http';
+//            }
+//            echo 'authenticate: protocol='.$protocol."<br>";
+            $lastRoute = str_replace('http',$protocol,$lastRoute);
+            //echo 'authenticate: lastRoute='.$lastRoute."<br>";
+            $logger->notice('authenticate: saml-sso: $lastRoute=['.$lastRoute."]");
+
+            //$username: oli2002@med.cornell.edu_@_saml-sso
+
+            $username = strtolower($username); //username is entered email
+
+            $username = str_replace('_@_saml-sso','',$username); //oli2002@med.cornell.edu
+
+            //SAML 2: process acs response
+            $emailArr = explode('@', $username);
+            $domain = $emailArr[1]; //domain=med.cornell.edu
+            $authUtil = $this->container->get('authenticator_utility');
+
+            $lastRoute = $username . "_#_" . $lastRoute; //email_#_lastroot
+
+            $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
+        }
 
 //        //SAML 1: redirect login request to 'saml_login'
 //        if( 1 && $usernametype == 'saml-sso' ) {
