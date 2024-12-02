@@ -2093,8 +2093,28 @@ Pathology and Laboratory Medicine",
 
     public function updateMigrateDb() {
         //run: php bin/console doctrine:migrations:migrate --all-or-nothing
-        $res = $this->runProcess("git pull");
-        return "DB update result: ".$res;
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $phpPath = $this->getPhpPath();
+
+        if( $this->isWinOs() ) {
+            $command = $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
+        } else {
+            $command = $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
+        }
+
+        $info = $this->runProcess($command);
+
+//        //$process = new Process($command);
+//        $process = Process::fromShellCommandline($command);
+//        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+//        $process->run();
+//        if( !$process->isSuccessful() ) {
+//            throw new ProcessFailedException($process);
+//        }
+//        $info = $process->getOutput();
+
+        return "DB update result: ".$info;
     }
 
     public function checkAndCreateNewDBs( $request, $authServerNetwork, $kernel ) {

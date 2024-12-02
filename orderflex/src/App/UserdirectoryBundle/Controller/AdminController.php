@@ -408,8 +408,8 @@ class AdminController extends OrderAbstractController
     }
 
     //user_update_migrate_db
-    #[Route(path: '/update-update-db/', name: 'user_update_migrate_db')]
-    public function updateDbAction(Request $request) {
+    #[Route(path: '/update-migrate-db/', name: 'user_update_migrate_db')]
+    public function updateMigrateDbAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
