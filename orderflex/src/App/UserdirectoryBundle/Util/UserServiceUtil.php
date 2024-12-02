@@ -2098,9 +2098,9 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
 
         if( $this->isWinOs() ) {
-            $command = $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
+            $command = "yes | " . $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
         } else {
-            $command = $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
+            $command = "yes | " . $phpPath . " " . $projectRoot . "/bin/console" . " doctrine:migrations:migrate --all-or-nothing";
         }
 
         $info = $this->runProcess($command);
