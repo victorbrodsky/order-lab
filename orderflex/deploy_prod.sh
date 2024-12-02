@@ -186,6 +186,8 @@ function prep(){
     chmod 744 /etc/httpd/conf/*.conf
     chown -R "$WEB_USER" /etc/haproxy/haproxy.cfg
     chmod 744 /etc/haproxy/haproxy.cfg
+
+    chown -R "$WEB_USER" .git/
 }
 
 
