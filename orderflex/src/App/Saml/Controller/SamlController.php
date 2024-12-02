@@ -72,24 +72,31 @@ class SamlController extends OrderAbstractController //AbstractController
 
         $this->logger->notice("SAML login after config: sitename=$sitename");
 
-        //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
-        //$firewallName = $authenticationSuccess->getFirewallName();
-        $firewallName = 'ldap_'.$sitename.'_firewall';
+        $useEmailLastRoute = true;
+        $useEmailLastRoute = false;
 
-        //testing: https://view.online/c/wcm/pathology/directory/event-log/
-        //http://127.0.0.1/translational-research/request/fee-schedule
-        //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
-        //$firewallName = 'ldap_employees_firewall';
-        $indexLastRoute = '_security.'.$firewallName.'.target_path';
-        $lastRoute = $request->getSession()->get($indexLastRoute);
-        $protocol = 'https';
-        $lastRoute = str_replace('http',$protocol,$lastRoute);
-        $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
+        $auth = new Auth($config['settings']);
+        $this->logger->notice("SAML login after new Auth");
 
-        //$config['settings']['sitename'] = $sitename;
-        //$config['settings']['client'] = $client;
-        //$config['settings']['lastroute'] = $lastRoute;
-        
+        if( $useEmailLastRoute ) {
+            //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
+            //$firewallName = $authenticationSuccess->getFirewallName();
+            $firewallName = 'ldap_' . $sitename . '_firewall';
+
+            //testing: https://view.online/c/wcm/pathology/directory/event-log/
+            //http://127.0.0.1/translational-research/request/fee-schedule
+            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
+            //$firewallName = 'ldap_employees_firewall';
+            $indexLastRoute = '_security.' . $firewallName . '.target_path';
+            $lastRoute = $request->getSession()->get($indexLastRoute);
+            $protocol = 'https';
+            $lastRoute = str_replace('http', $protocol, $lastRoute);
+            $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
+
+            //$config['settings']['sitename'] = $sitename;
+            //$config['settings']['client'] = $client;
+            //$config['settings']['lastroute'] = $lastRoute;
+
 //        $attributeConsumingService = array(
 //            "serviceName" => "SP test",
 //            "serviceDescription" => "Test Service",
@@ -105,12 +112,10 @@ class SamlController extends OrderAbstractController //AbstractController
 //        );
 //        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
 
-        //store current user in the RelayState: client_#_$lastRoute
-        //$lastRoute = $client."_#_".$lastRoute;
+            //store current user in the RelayState: client_#_$lastRoute
+            $lastRoute = $client . "_#_" . $lastRoute;
 
-        $auth = new Auth($config['settings']);
-        $this->logger->notice("SAML login after new Auth");
-        //exit('111');
+            //exit('111');
 
 //        $parameters = array(
 //            'RelayState' => $lastRoute,
@@ -118,9 +123,11 @@ class SamlController extends OrderAbstractController //AbstractController
 //            'client' => $client
 //        );
 
-        //$auth->login($lastRoute,$parameters);
-        //$auth->login($lastRoute);
-        $auth->login();
+            //$auth->login($lastRoute,$parameters);
+            $auth->login($lastRoute);
+        } else {
+            $auth->login();
+        }
 
         $this->logger->notice("SAML login after login");
 

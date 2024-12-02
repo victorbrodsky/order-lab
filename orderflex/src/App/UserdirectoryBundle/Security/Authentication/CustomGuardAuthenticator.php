@@ -451,7 +451,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
 
         //dump($request->request);
-
+        $logger = $this->container->get('logger');
         $username = $request->request->get('_username');
         $usernametype = $request->request->get('_usernametype');
         $sitename = $request->request->get('_sitename');
@@ -478,27 +478,33 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //dump( $request->getPayload() );
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
+            $logger->notice("getCredentials: relayState=".$relayState);
             //$relayState = oli2002@med.cornell.edu_#_https://view.online/c/wcm/pathology/directory/
             //echo 'relayState='.$relayState."<br>";
             //dump($samlResponse);
 
-            //$relayStateParts = explode('_#_', $relayState);
+            $useEmailLastRoute = true;
+            $useEmailLastRoute = false;
 
-            //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-            if (str_contains($relayState, '/login/')) {
-                //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
-                $parts = explode('/', $relayState);
-                //dump($parts);
-                $sitenameUrl = array_pop($parts);
-                //echo "sitename=".$sitenameUrl."<br>";
-                $client = array_pop($parts);
-                //echo "client=".$client."<br>";
-                $username = $client;
+            if( $useEmailLastRoute ) {
+                $relayStateParts = explode('_#_', $relayState);
+            } else {
+                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+                if (str_contains($relayState, '/login/')) {
+                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
+                    $parts = explode('/', $relayState);
+                    //dump($parts);
+                    $sitenameUrl = array_pop($parts);
+                    //echo "sitename=".$sitenameUrl."<br>";
+                    $client = array_pop($parts); //Pop the element off the end of array
+                    //echo "client=".$client."<br>";
+                    $username = $client;
 
-                if (!$sitename) {
-                    $sitename = $sitenameUrl;
+                    if (!$sitename) {
+                        $sitename = $sitenameUrl;
+                    }
                 }
-            }
+            }//if $useEmailLastRoute
         }
         //exit('after dump request: $username='.$username);
 
