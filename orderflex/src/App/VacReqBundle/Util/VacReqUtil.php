@@ -887,7 +887,7 @@ class VacReqUtil
                 $warningCarryOverMsg = "According to system records " . $submitter->getUsernameOptimal().
                     " had ".$remainingDays." remaining vacation days (".$lessDays.
                     " less than the requested ".$carryOverDays." carry-over days) ".
-                    "during request submission at ".$submissionDateStr.".".$break.
+                    "during request submission on ".$submissionDateStr.".".$break.
                     "To review the summary statistics, please visit:".$break.
                     $summaryStatLink
                 ;

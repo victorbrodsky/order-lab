@@ -104,6 +104,9 @@ class HomeController extends OrderAbstractController {
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        //TODO: set title according to the url base: 'View.Online'
+        $baseUrl = $request->getBaseUrl();
+        echo '$baseUrl='.$baseUrl.'<br>';
         $title = "Multi-tenancy home page";
 
         $width = "300";
