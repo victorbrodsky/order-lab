@@ -534,7 +534,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //dump($samlResponse);
 
             $useEmailLastRoute = true;
-            //$useEmailLastRoute = false;
+            $useEmailLastRoute = false;
 
             if( $useEmailLastRoute ) {
                 $relayStateParts = explode('_#_', $relayState);
