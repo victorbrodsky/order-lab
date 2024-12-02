@@ -249,7 +249,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //SAML case: username=[oli2002@med.cornell.edu_@_saml-sso]
 
-        if( $usernametype == 'saml-sso' ) {
+        if( 0 && $usernametype == 'saml-sso' ) {
             $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
             $firewallName = $authenticationSuccess->getFirewallName();
 
