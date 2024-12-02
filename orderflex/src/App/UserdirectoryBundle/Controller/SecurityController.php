@@ -264,9 +264,11 @@ class SecurityController extends OrderAbstractController
         ///// Get last rout /////
         //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
         //ldap_translationalresearch_firewall
+        $logger = $this->container->get('logger');
         $firewallName = 'ldap_'.$sitename.'_firewall';
         $indexLastRoute = '_security.'.$firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
+        $logger->notice('1 loginPage: $lastRoute=['.$lastRoute."]");
         //replace http to https
         $protocol = 'https';
 //            if( isset($_SERVER['HTTPS']) ) {
@@ -278,8 +280,7 @@ class SecurityController extends OrderAbstractController
 //            echo 'authenticate: protocol='.$protocol."<br>";
         $lastRoute = str_replace('http',$protocol,$lastRoute);
         //echo 'authenticate: lastRoute='.$lastRoute."<br>";
-        $logger = $this->container->get('logger');
-        $logger->notice('loginPage: $lastRoute=['.$lastRoute."]");
+        $logger->notice('2 loginPage: $lastRoute=['.$lastRoute."]");
         ///// EOF Get last rout /////
 
         //$messageToUsers = $this->getMessageToUsers();
