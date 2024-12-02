@@ -99,6 +99,8 @@ class MaintenanceListener {
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
 
+        $this->logger->notice("MaintenanceListener: onKernelRequest: uri=[$uri]");
+
         //$routeName = $request->get('_route');
         //$referer = $request->headers->get('referer');
         //echo "referer=".$referer."<br>";
