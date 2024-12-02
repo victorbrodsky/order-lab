@@ -105,13 +105,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request) : bool
     {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         // GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
-        $logger->notice("supports: route=".$route);
+        //$logger->notice("supports: route=".$route);
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('exit support');
 
@@ -147,7 +147,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //SAML authentication
         if( $route == 'saml_acs_default' ) {
-            $logger->notice("supports: Yes. saml_acs_default route=".$route);
+            //$logger->notice("supports: Yes. saml_acs_default route=".$route);
             return true;
         }
 
