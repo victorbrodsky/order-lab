@@ -534,10 +534,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //dump($samlResponse);
 
             $useEmailLastRoute = true;
-            $useEmailLastRoute = false;
+            //$useEmailLastRoute = false;
 
             if( $useEmailLastRoute ) {
                 $relayStateParts = explode('_#_', $relayState);
+                $username = $relayStateParts[0];
+                $lastRoute = $relayStateParts[1];
             } else {
                 //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
                 if (str_contains($relayState, '/login/')) {
