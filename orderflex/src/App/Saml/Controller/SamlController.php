@@ -60,8 +60,8 @@ class SamlController extends OrderAbstractController //AbstractController
     // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
     //*/
     //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
-    #[Route(path: '/login/{client}/{sitename}/{lastroute}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
-    public function login(Request $request, $client, $sitename, $lastroute): Response
+    #[Route(path: '/login/{client}/{sitename}/{lastRoute}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
+    public function login(Request $request, $client, $sitename, $lastRoute): Response
     {
         //exit('saml login');
         $this->logger->notice("Starting SAML login for client: $client");
@@ -71,7 +71,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //dump($config);
 
         $this->logger->notice("SAML login after config: sitename=$sitename");
-        $this->logger->notice("SAML login after config: lastroute=$lastroute");
+        $this->logger->notice("SAML login after config: lastRoute=$lastRoute");
 
         $useEmailLastRoute = true;
         $useEmailLastRoute = false;
@@ -84,15 +84,17 @@ class SamlController extends OrderAbstractController //AbstractController
             //$firewallName = $authenticationSuccess->getFirewallName();
             $firewallName = 'ldap_' . $sitename . '_firewall';
 
-            //testing: https://view.online/c/wcm/pathology/directory/event-log/
-            //http://127.0.0.1/translational-research/request/fee-schedule
-            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
-            //$firewallName = 'ldap_employees_firewall';
-            $indexLastRoute = '_security.' . $firewallName . '.target_path';
-            $lastRoute = $request->getSession()->get($indexLastRoute);
-            $protocol = 'https';
-            $lastRoute = str_replace('http', $protocol, $lastRoute);
-            $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
+            if(0) {
+                //testing: https://view.online/c/wcm/pathology/directory/event-log/
+                //http://127.0.0.1/translational-research/request/fee-schedule
+                //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
+                //$firewallName = 'ldap_employees_firewall';
+                $indexLastRoute = '_security.' . $firewallName . '.target_path';
+                $lastRoute = $request->getSession()->get($indexLastRoute);
+                $protocol = 'https';
+                $lastRoute = str_replace('http', $protocol, $lastRoute);
+                $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
+            }
 
             //$config['settings']['sitename'] = $sitename;
             //$config['settings']['client'] = $client;

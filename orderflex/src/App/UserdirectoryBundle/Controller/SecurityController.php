@@ -124,7 +124,7 @@ class SecurityController extends OrderAbstractController
         /////////////// EOF set browser info ///////////////
 
         //$sitename = $this->getParameter('employees.sitename');
-        $formArr = $this->loginPage($sitename,$authenticationUtils);
+        $formArr = $this->loginPage($request,$sitename,$authenticationUtils);
 
         if( $formArr == null ) {
             //exit('111');
@@ -210,7 +210,7 @@ class SecurityController extends OrderAbstractController
 //        exit('111');
 //    }
 
-    public function loginPage($sitename,$authenticationUtils) {
+    public function loginPage($request,$sitename,$authenticationUtils) {
 
         if(
             $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
@@ -261,6 +261,27 @@ class SecurityController extends OrderAbstractController
             }
         }
 
+        ///// Get last rout /////
+        //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
+        //ldap_translationalresearch_firewall
+        $firewallName = 'ldap_'.$sitename.'_firewall';
+        $indexLastRoute = '_security.'.$firewallName.'.target_path';
+        $lastRoute = $request->getSession()->get($indexLastRoute);
+        //replace http to https
+        $protocol = 'https';
+//            if( isset($_SERVER['HTTPS']) ) {
+//                $protocol = 'https';
+//            }
+//            else {
+//                $protocol = 'http';
+//            }
+//            echo 'authenticate: protocol='.$protocol."<br>";
+        $lastRoute = str_replace('http',$protocol,$lastRoute);
+        //echo 'authenticate: lastRoute='.$lastRoute."<br>";
+        $logger = $this->container->get('logger');
+        $logger->notice('loginPage: $lastRoute=['.$lastRoute."]");
+        ///// EOF Get last rout /////
+
         //$messageToUsers = $this->getMessageToUsers();
         //$messageToUsers = null;
 
@@ -275,6 +296,7 @@ class SecurityController extends OrderAbstractController
                             'sitename'     => $sitename,
                             'logo'  => $logoPath,
                             'messageToUsers' => $noteOnLoginPage,
+                            'lastRoute' => $lastRoute,
                             'logoHeight' => 80,
                             'logoWidth' => 300
                         );
