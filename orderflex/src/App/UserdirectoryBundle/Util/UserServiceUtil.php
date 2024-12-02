@@ -2001,8 +2001,8 @@ Pathology and Laboratory Medicine",
         // Everything for owner and for others
         //chmod($old_path, 0777);
 
-        //$command = "git pull";
-        $command = "/usr/bin/git pull";
+        $command = "git pull";
+        //$command = "/usr/bin/git pull";
 
         //$linux
         if( $linux ) {
