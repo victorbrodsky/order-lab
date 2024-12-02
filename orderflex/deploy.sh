@@ -152,6 +152,8 @@ function prep()
     chown -R "$WEB_USER" /usr/bin/git/
     chown -R "$WEB_USER" .git
     chown -R "$WEB_USER" .git/
+    chown -R "$WEB_USER" .git/FETCH_HEAD
+    chmod a+rw .git/FETCH_HEAD
 }
 
 
