@@ -284,6 +284,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $authUtil = $this->container->get('authenticator_utility');
 
             $lastRoute = $username . "_#_" . $lastRoute; //email_#_lastroot
+            $logger->notice('2 authenticate: saml-sso: $lastRoute=['.$lastRoute."]");
 
             $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
         }
