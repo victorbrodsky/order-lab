@@ -275,7 +275,7 @@
                                             href="{{ path('user_update_system_source_code') }}">Update System's Source Code (Updates Without Changes in DB) (Do not run if not sure!)</a>
                                         </li>
                                         <li><a
-                                            general-data-confirm="Updating via web-browser may result in unpredictable malfunctions and should only be used for minor code changes without changes to the database. To properly update the source code, log in as root via ssh, and run 'cd /usr/local/bin/order-lab/orderflex/', 'git pull', and 'bash deploy_prod.sh' in that order. Optionally, run 'composer.phar install' to update vendor source codes. Would you like to proceed with the update via the web browser?"
+                                            general-data-confirm="Are you sure you would like to update DB by running doctrine:migrations:migrate?"
                                             href="{{ path('user_update_migrate_db') }}">Update (run doctrine:migrations:migrate) DB</a>
                                         </li>
                                         <li><a
