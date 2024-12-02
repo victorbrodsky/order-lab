@@ -2091,6 +2091,12 @@ Pathology and Laboratory Medicine",
         return $content1."; ".$content2;
     }
 
+    public function updateMigrateDb() {
+        //run: php bin/console doctrine:migrations:migrate --all-or-nothing
+        $res = $this->runProcess("git pull");
+        return "DB update result: ".$res;
+    }
+
     public function checkAndCreateNewDBs( $request, $authServerNetwork, $kernel ) {
 
         //$authServerNetwork

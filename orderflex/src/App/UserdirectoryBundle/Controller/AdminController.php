@@ -406,7 +406,25 @@ class AdminController extends OrderAbstractController
 
         return $updateres;
     }
-    
+
+    //user_update_migrate_db
+    #[Route(path: '/update-update-db/', name: 'user_update_migrate_db')]
+    public function updateDbAction(Request $request) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $updateres = $userServiceUtil->updateMigrateDb();
+
+        $this->addFlash(
+            'pnotify',
+            $updateres
+        );
+
+        return $this->redirect($this->generateUrl('employees_home'));
+    }
+
 //    public function runDeployScript_ORIG($update, $composer, $cache) {
 //        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
