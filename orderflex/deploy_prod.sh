@@ -187,7 +187,8 @@ function prep(){
     chown -R "$WEB_USER" /etc/haproxy/haproxy.cfg
     chmod 744 /etc/haproxy/haproxy.cfg
 
-    chown -R "$WEB_USER" .git/
+    echo "*** Set permissions to run git ***"
+    chown -R "$WEB_USER" /usr/bin/git
 }
 
 
