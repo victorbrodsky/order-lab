@@ -286,14 +286,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $lastRoute = $username . "_#_" . $lastRoute; //email_#_lastroot
             $logger->notice('2 authenticate: saml-sso: $lastRoute=['.$lastRoute."]");
 
-            //$authUtil->samlAuthenticationByDomain($domain,$lastRoute);
-            $sitename = 'translationalresearch_sitename';
-            $router = $this->container->get('router');
-            $response = new RedirectResponse($router->generate('saml_login', array(
-                'client' => $username,
-                'sitename' => $sitename,
-                'lastroute' => $lastRoute
-            )));
+            $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
+//            $sitename = 'translationalresearch_sitename';
+//            $router = $this->container->get('router');
+//            $response = new RedirectResponse($router->generate('saml_login', array(
+//                'client' => $username,
+//                'sitename' => $sitename,
+//                'lastroute' => $lastRoute
+//            )));
         }
 
 //        //SAML 1: redirect login request to 'saml_login'
