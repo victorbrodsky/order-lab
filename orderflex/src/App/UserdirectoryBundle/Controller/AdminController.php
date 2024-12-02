@@ -10982,7 +10982,7 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            exit('generateAntibodyLabList');
+            //exit('generateAntibodyLabList');
             $listEntity = new AntibodyLabList();
             $this->setDefaultList($listEntity,$count,$username,$name);
             $listEntity->setAbbreviation($abbreviation);
