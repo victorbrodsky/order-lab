@@ -105,13 +105,10 @@ class HomeController extends OrderAbstractController {
         $userServiceUtil = $this->container->get('user_service_utility');
 
         //TODO: set title according to the url base: 'View.Online'
-        $baseUrl = $request->getUri();
-        echo '$baseUrl='.$baseUrl.'<br>';
         $baseUrl = $request->getHttpHost();
-        echo '$baseUrl='.$baseUrl.'<br>';
-        $baseUrl = $request->getBasePath();
-        echo '$baseUrl='.$baseUrl.'<br>';
-        $title = "Multi-tenancy home page";
+        //echo '$baseUrl='.$baseUrl.'<br>';
+        $baseUrl = ucwords($baseUrl);
+        $title = $baseUrl; //"Multi-tenancy home page";
 
         $width = "300";
         $height = "80";
