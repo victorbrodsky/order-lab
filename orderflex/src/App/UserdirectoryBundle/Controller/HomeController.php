@@ -107,7 +107,7 @@ class HomeController extends OrderAbstractController {
         //TODO: set title according to the url base: 'View.Online'
         $baseUrl = $request->getHttpHost();
         $baseUrl = ucwords($baseUrl,'.');
-        echo '$baseUrl='.$baseUrl.'<br>';
+        //echo '$baseUrl='.$baseUrl.'<br>';
         $title = $baseUrl; //"Multi-tenancy home page";
 
         $width = "300";
