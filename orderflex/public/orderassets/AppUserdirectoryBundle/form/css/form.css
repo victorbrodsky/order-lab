@@ -390,6 +390,13 @@ div.fellapp-application-holder .ajax-combobox-trainingmajors .select2-default {
     background-color: #F8ECE0;
 }
 
+.user-alert-secondary {
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #D0D0D0;
+    color: #686868;
+}
+
 /*.user-alert-success {*/
     /*color: #3c763d;*/
     /*background-color: #7cc198;*/

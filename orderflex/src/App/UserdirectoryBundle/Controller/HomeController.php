@@ -110,6 +110,25 @@ class HomeController extends OrderAbstractController {
         //echo '$baseUrl='.$baseUrl.'<br>';
         $title = $baseUrl; //"Multi-tenancy home page";
 
+//        //Test
+//        return $this->render('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-home.html.twig',
+//            array(
+//                'title' => $title,
+//                'tenantBaseUrlArr' => null,
+//                'platformLogo' => null,
+//                'greetingText' => null,
+//                'mainText' => null,
+//                'footer' => null,
+//                'width' => null,
+//                'height' => null,
+//                'aboutusLogoPath' => null,
+//                'aboutusText' => null,
+//                'aboutusFooter' => null,
+//            )
+//        );
+//        //Test
+
+
         $width = "300";
         $height = "80";
 
