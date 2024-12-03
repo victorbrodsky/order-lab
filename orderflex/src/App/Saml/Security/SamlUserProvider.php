@@ -36,17 +36,14 @@ class SamlUserProvider implements UserProviderInterface
             throw new \LogicException('Identifier field must be set before calling loadUserByIdentifier.');
         }
 
-        echo "identifierField=".$this->identifierField."<br>";
-        echo "identifier=$identifier <br>";
+        //echo "identifierField=".$this->identifierField."<br>";
+        //echo "identifier=$identifier <br>";
 
         //$user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
 
         //$authUtil = $this->container->get('authenticator_utility');
         $user = $this->entityManager->getRepository(User::class)->findOneUserByUserInfoUseridEmail($identifier);
         return $user;
-
-        //return $this->entityManager->getRepository(User::class)
-        //    ->findOneBy([$this->identifierField => $identifier]);
     }
 
     public function loadUserByUsername(string $username): UserInterface
@@ -55,27 +52,28 @@ class SamlUserProvider implements UserProviderInterface
     }
 
     public function refreshUser(UserInterface $user): ?UserInterface
-        {
-            if (!$user instanceof User) {
-                throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
-            }
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+        }
 
-            $getter  = 'get' . ucfirst($this->identifierField);
-            $value = "";
-            if (method_exists($user, $getter)) {
-                $value = $user->$getter();
-                if($value !== "") {
-                    return $this->loadUserByIdentifier($value);
-                }
+        $getter  = 'get' . ucfirst($this->identifierField);
+        if (method_exists($user, $getter)) {
+            $value = $user->$getter();
+            if($value !== "") {
+                return $this->loadUserByIdentifier($value);
             }
         }
 
-        public function supportsClass(string $class): bool
+        return NULL;
+    }
+
+    public function supportsClass(string $class): bool
     {
         return User::class === $class || is_subclass_of($class, User::class);
     }
 
-        public function createUserFromSamlAttributes(string $identifier, array $attributes, array $attributeMapping): User
+    public function createUserFromSamlAttributes(string $identifier, array $attributes, array $attributeMapping): User
     {
         $user = new User();
         $setter = 'set' . ucfirst($this->identifierField);

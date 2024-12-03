@@ -242,7 +242,6 @@ class UserRepository extends EntityRepository {
         }
 
         return $user;
-
     }
 
 

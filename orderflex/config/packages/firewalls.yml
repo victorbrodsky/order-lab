@@ -252,6 +252,7 @@ security:
             pattern: ^.*/api
             #logout_on_user_change: true
             context: scan_auth
+            provider: users
             lazy:  true
             #provider: users
 #            remember_me:

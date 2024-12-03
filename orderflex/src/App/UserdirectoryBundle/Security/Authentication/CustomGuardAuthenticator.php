@@ -415,6 +415,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         $logger->notice('authenticate: $user not found');
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
+
+                    //Set lastRoute
+                    if( isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
+                        $lastRoute = $credentials['lastRoute'];
+                        $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
+                        $firewallName = $authenticationSuccess->getFirewallName();
+                        $indexLastRoute = '_security.' . $firewallName . '.target_path';
+                        $logger->notice('authenticate: Set lastRoute $lastRoute='.$lastRoute);
+                        $request->getSession()->set($indexLastRoute,$lastRoute);
+                    }
+
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
                     return new SelfValidatingPassport(new UserBadge($email, function () use ($user) {
                         //echo "SelfValidatingPassport OK, user=".$user."<br>";
@@ -505,6 +516,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $username = $request->request->get('_username');
         $usernametype = $request->request->get('_usernametype');
         $sitename = $request->request->get('_sitename');
+        $lastRoute = NULL;
 
         //testing: use clean username without _@_local-user saml-sso
         if( 0 ) {
@@ -534,7 +546,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //dump($samlResponse);
 
             $useEmailLastRoute = true;
-            $useEmailLastRoute = false;
+            //$useEmailLastRoute = false;
 
             if( $useEmailLastRoute ) {
                 $relayStateParts = explode('_#_', $relayState);
@@ -568,6 +580,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             'usernametype' => $usernametype, //$request->request->get('_usernametype'),
             'sitename' => $sitename, //$request->request->get('_sitename'),
             'csrf_token' => $request->request->get('_csrf_token'),
+            'lastRoute' => $lastRoute
         ];
         $this->sitename = $credentials['sitename'];
 
