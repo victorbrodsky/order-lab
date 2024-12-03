@@ -51,11 +51,19 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 //    }
 
 
+    //There is an optional attribute for the kernel.event_listener tag called priority,
+    // which is a positive or negative integer that defaults to 0 and it controls
+    // the order in which listeners are executed (the higher the number,
+    // the earlier a listener is executed). This is useful when you need
+    // to guarantee that one listener is executed before another.
+    // The priorities of the internal Symfony listeners usually
+    // range from -256 to 256 but your own listeners can use any positive or negative integer.
+
     //LogoutEvent
     public static function getSubscribedEvents(): array
     {
         return [
-            LogoutEvent::class => ['onLogout', 2] //9999 is priority, priority defaults to 0
+            LogoutEvent::class => ['onLogout', -256] //9999 is priority, priority defaults to 0
             //LogoutEvent::class => 'onLogout'
         ];
     }
