@@ -129,10 +129,11 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $logger = $this->container->get('logger');
         $logger->notice("onLogout");
 
-        $user = NULL;
-        if( $event->getToken() ) {
-            $user = $event->getToken()->getUser();
-        }
+//        $user = NULL;
+//        if( $event->getToken() ) {
+//            $user = $event->getToken()->getUser();
+//        }
+        $user = $this->security->getUser();
 
         $userSecUtil = $this->container->get('user_security_utility');
 
