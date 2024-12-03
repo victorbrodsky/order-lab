@@ -126,8 +126,21 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onSamlLogout(ResponseEvent $event): void
     {
+        if( !$event->isMasterRequest() ) {
+            return;
+        }
+
         $logger = $this->container->get('logger');
-        $logger->notice("onLogout");
+        $logger->notice("onSamlLogout");
+
+        $request = $event->getRequest();
+
+        $pathInfo = $request->getPathInfo();
+        $logger->notice("onSamlLogout: pathInfo=".$pathInfo);
+
+        if( '/logout' !== substr($request->getPathInfo(), 0, 4) ) {
+            return;
+        }
 
 //        $user = NULL;
 //        if( $event->getToken() ) {
