@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Bundle\SecurityBundle\Security;
 //use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 
 //https://stackoverflow.com/questions/60848727/how-to-listen-to-the-log-out-event-to-record-the-event-on-the-database
@@ -25,10 +26,12 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     protected $container;
     protected $requestStack;
+    protected $security;
 
-    public function __construct( ContainerInterface $container, RequestStack $requestStack ) {
+    public function __construct( ContainerInterface $container, RequestStack $requestStack, Security $security ) {
         $this->container = $container;
         $this->requestStack = $requestStack;
+        $this->security = $security;
     }
 
     //TokenDeauthenticatedEvent
@@ -99,6 +102,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $request,                                               //$request
             $eventType                                              //$action (Event Type)
         );
+
+        $this->security->logout();
+        //$session->invalidate();
     }
 
 }
