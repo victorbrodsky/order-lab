@@ -67,9 +67,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //0 - session does not exist
         //1 - session exists
         return [
-            LogoutEvent::class => ['onSamlLogout', 1],
-            LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
-            //LogoutEvent::class => 'onLogout'
+            LogoutEvent::class => ['onSamlLogout', 7],
+            //LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
+            LogoutEvent::class => 'onLogout'
         ];
     }
 
@@ -137,7 +137,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //exit('logout');
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
-        $logger->notice("onLogout: logintype=".$logintype);
+        $logger->notice("onSamlLogout: logintype=".$logintype);
         //dump($session);
         //exit('onLogout');
         $samlLogoutStr = "";
