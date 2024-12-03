@@ -62,8 +62,12 @@ class LogoutEventSubscriber implements EventSubscriberInterface
     //LogoutEvent
     public static function getSubscribedEvents(): array
     {
+        //priority:
+        //-1 - session does not exist
+        //0 - session does not exist
+        //1 - session exists
         return [
-            LogoutEvent::class => ['onLogout', 1] //9999 is priority, priority defaults to 0
+            LogoutEvent::class => ['onLogout', -1] //9999 is priority, priority defaults to 0
             //LogoutEvent::class => 'onLogout'
         ];
     }
