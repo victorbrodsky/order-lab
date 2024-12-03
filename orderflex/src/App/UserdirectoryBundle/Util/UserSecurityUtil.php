@@ -499,7 +499,7 @@ class UserSecurityUtil {
         $logger->notice("samlLogout: logintype=".$logintype);
         if( $logintype != 'saml-sso' ) {
             $logger->notice("samlLogout: NO SAML logout");
-            //return false;
+            return false;
         }
         $logger->notice("samlLogout: SAML logout");
 

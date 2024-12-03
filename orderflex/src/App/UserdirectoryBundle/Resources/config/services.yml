@@ -148,6 +148,8 @@ services:
     oleg.logout.listener:
           class: App\UserdirectoryBundle\Services\LogoutEventSubscriber
 
+#    App\UserdirectoryBundle\Services\LogoutEventSubscriber:
+
     user_tenant_utility:
             class: App\UserdirectoryBundle\Util\UserTenantUtil
 

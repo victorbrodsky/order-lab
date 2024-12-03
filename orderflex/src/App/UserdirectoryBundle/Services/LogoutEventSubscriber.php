@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 //https://stackoverflow.com/questions/60848727/how-to-listen-to-the-log-out-event-to-record-the-event-on-the-database
 //https://php.tutorialink.com/symfony-how-to-return-all-logged-in-active-users/
 //https://symfony.com/doc/current/security.html#logging-out
+//priority: https://stackoverflow.com/questions/62815732/symfony-redirect-user-before-logout-event
 
 class LogoutEventSubscriber implements EventSubscriberInterface
 {
@@ -51,7 +52,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            LogoutEvent::class => 'onLogout',
+            LogoutEvent::class => ['onLogout', 8]
         ];
     }
 
