@@ -55,7 +55,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            LogoutEvent::class => ['onLogout', 1] //9999 is priority
+            LogoutEvent::class => ['onLogout', 1] //9999 is priority, priority defaults to 0
             //LogoutEvent::class => 'onLogout'
         ];
     }
@@ -104,7 +104,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         $this->security->logout();
-        //$session->invalidate();
+        $session->invalidate();
     }
 
 }
