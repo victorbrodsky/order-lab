@@ -104,6 +104,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         $this->security->logout();
+        $this->security->logout(false);
         $session->invalidate();
     }
 
