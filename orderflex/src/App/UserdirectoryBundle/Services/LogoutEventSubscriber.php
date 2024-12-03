@@ -137,11 +137,11 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         $pathInfo = $request->getPathInfo();
         $logger->notice("onSamlLogout: pathInfo=".$pathInfo);
-        $logger->notice("onSamlLogout: 2 pathInfo=".substr($request->getPathInfo(), 0, 4)."");
+        //$logger->notice("onSamlLogout: 2 pathInfo=".substr($request->getPathInfo(), 0, 4)."");
 
-        if( '/logout' !== substr($request->getPathInfo(), 0, 4) ) {
-            return;
-        }
+//        if( '/logout' !== substr($request->getPathInfo(), 0, 4) ) {
+//            return;
+//        }
 
         if( !str_contains($pathInfo, '/logout') ) {
             return;
