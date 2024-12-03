@@ -126,9 +126,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onSamlLogout(ResponseEvent $event): void
     {
-        if( !$event->isMasterRequest() ) {
-            return;
-        }
+        //if( !$event->isMasterRequest() ) {
+        //    return;
+        //}
 
         $logger = $this->container->get('logger');
         $logger->notice("onSamlLogout");
