@@ -419,11 +419,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     //Set lastRoute
                     if( $this->sitename && isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
                         $lastRoute = $credentials['lastRoute'];
-                        $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
-                        $firewallName = $authenticationSuccess->getFirewallName();
-                        $indexLastRoute = '_security.' . $firewallName . '.target_path';
-                        $logger->notice('authenticate: Set lastRoute $lastRoute='.$lastRoute);
-                        $request->getSession()->set($indexLastRoute,$lastRoute);
+                        $logger->notice('authenticate: set session $lastRoute=['.$lastRoute.']');
+                        if( $lastRoute != '/' ) {
+                            $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
+                            $firewallName = $authenticationSuccess->getFirewallName();
+                            $indexLastRoute = '_security.' . $firewallName . '.target_path';
+                            $logger->notice('authenticate: Set lastRoute $lastRoute=' . $lastRoute);
+                            $request->getSession()->set($indexLastRoute, $lastRoute);
+                        }
                     }
 
                     //we can use primarypublicuserid (i.e. oli2002) in UserBadge
