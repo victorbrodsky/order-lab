@@ -72,6 +72,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //Saml logout: TODO: session is empty
         //$request = $event->getRequest();
         $session = $this->requestStack->getSession();
+        dump($session);
+        exit('logout');
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
         $logger->notice("onLogout: logintype=".$logintype);
