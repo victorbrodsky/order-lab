@@ -417,7 +417,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     }
 
                     //Set lastRoute
-                    if( 0 && isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
+                    if( $this->sitename && isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
                         $lastRoute = $credentials['lastRoute'];
                         $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
                         $firewallName = $authenticationSuccess->getFirewallName();
@@ -542,6 +542,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             $relayState = $request->getPayload()->get('RelayState');
             $logger->notice("getCredentials: relayState=".$relayState);
             //$relayState = oli2002@med.cornell.edu_#_https://view.online/c/wcm/pathology/directory/
+            //oli2002@med.cornell.edu__employees__https://view.online/c/wcm/pathology/directory/user/new
             //echo 'relayState='.$relayState."<br>";
             //dump($samlResponse);
 
@@ -553,7 +554,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $deliemeter = "__";
                 $relayStateParts = explode($deliemeter, $relayState);
                 $username = $relayStateParts[0];
-                $lastRoute = $relayStateParts[1];
+                $sitename = $relayStateParts[1];
+                $lastRoute = $relayStateParts[2];
             } else {
                 //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
                 if (str_contains($relayState, '/login/')) {

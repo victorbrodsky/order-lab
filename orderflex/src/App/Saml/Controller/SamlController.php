@@ -119,7 +119,7 @@ class SamlController extends OrderAbstractController //AbstractController
             //store current user in the RelayState: client_#_$lastRoute
             $deliemeter = "_#_";
             $deliemeter = "__";
-            $lastRoute = $client . $deliemeter . $lastRoute;
+            $lastRoute = $client . $deliemeter . $sitename . $deliemeter . $lastRoute;
             $this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");
 
             //exit('111');
