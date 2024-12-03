@@ -67,7 +67,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //0 - session does not exist
         //1 - session exists
         return [
-            LogoutEvent::class => ['onSamlLogout', 7],
+            LogoutEvent::class => ['onSamlLogout', 0], //does not invoke
             //LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
             LogoutEvent::class => 'onLogout'
         ];

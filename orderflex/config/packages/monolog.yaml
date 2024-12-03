@@ -7,9 +7,9 @@ when@dev:
         handlers:
             main:
                 type: rotating_file #stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
-                channels: ["!event", "!deprecation", "!doctrine"]
+                path: "%kernel.logs_dir%/%kernel.environment%_NOTICE.log"
+                level: error #debug
+                channels: ["!event", "!deprecation", "!doctrine", "!debug"]
                 max_files: 30 #10 days rotating
             nested_error:
                 type: rotating_file #stream
@@ -24,6 +24,12 @@ when@dev:
             #chromephp:
             #    type: chromephp
             #    level: info
+            debugnotes:
+                type: rotating_file #stream
+                path: "%kernel.logs_dir%/%kernel.environment%_DEBUG.log"
+                level: debug
+                channels: ["!event", "!deprecation", "!doctrine"]
+                max_files: 30 #10 days rotating
             console:
                 type: console
                 process_psr_3_messages: false
