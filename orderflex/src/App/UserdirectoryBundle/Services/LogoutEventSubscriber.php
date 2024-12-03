@@ -11,9 +11,11 @@ namespace App\UserdirectoryBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\KernelEvents;
 //use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 
 //https://stackoverflow.com/questions/60848727/how-to-listen-to-the-log-out-event-to-record-the-event-on-the-database
@@ -67,14 +69,20 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //0 - session does not exist
         //1 - session exists
         return [
-            LogoutEvent::class => ['onSamlLogout', 0], //does not invoke
+            //LogoutEvent::class => ['onSamlLogout', 0], //does not invoke
             //LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
+            KernelEvents::RESPONSE => [
+                ['onSamlLogout', 10]
+            ],
             LogoutEvent::class => 'onLogout'
         ];
     }
 
     public function onLogout(LogoutEvent $event): void
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("onLogout");
+
         $user = NULL;
         if( $event->getToken() ) {
             $user = $event->getToken()->getUser();
@@ -116,8 +124,11 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //$session->invalidate();
     }
 
-    public function onSamlLogout(LogoutEvent $event): void
+    public function onSamlLogout(ResponseEvent $event): void
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("onLogout");
+
         $user = NULL;
         if( $event->getToken() ) {
             $user = $event->getToken()->getUser();
