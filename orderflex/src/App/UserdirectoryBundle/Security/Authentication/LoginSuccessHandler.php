@@ -158,6 +158,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
         $logger->notice("onAuthenticationSuccess: logintype=".$logintype);
+        dump($session);
+        exit('logout');
         ///////////////// EOF set session variables /////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
