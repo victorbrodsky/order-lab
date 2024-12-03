@@ -417,7 +417,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                     }
 
                     //Set lastRoute
-                    if( isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
+                    if( 0 && isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
                         $lastRoute = $credentials['lastRoute'];
                         $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
                         $firewallName = $authenticationSuccess->getFirewallName();
