@@ -82,15 +82,14 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("SAML login after new Auth");
 
         if( $useEmailLastRoute ) {
-            //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
-            //$firewallName = $authenticationSuccess->getFirewallName();
-            $firewallName = 'ldap_' . $sitename . '_firewall';
-
             if(0) {
                 //testing: https://view.online/c/wcm/pathology/directory/event-log/
                 //http://127.0.0.1/translational-research/request/fee-schedule
                 //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
                 //$firewallName = 'ldap_employees_firewall';
+                //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
+                //$firewallName = $authenticationSuccess->getFirewallName();
+                $firewallName = 'ldap_' . $sitename . '_firewall';
                 $indexLastRoute = '_security.' . $firewallName . '.target_path';
                 $lastRoute = $request->getSession()->get($indexLastRoute);
                 $protocol = 'https';
@@ -119,6 +118,7 @@ class SamlController extends OrderAbstractController //AbstractController
 
             //store current user in the RelayState: client_#_$lastRoute
             $lastRoute = $client . "_#_" . $lastRoute;
+            $this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");
 
             //exit('111');
 
