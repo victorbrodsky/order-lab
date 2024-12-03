@@ -52,7 +52,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            LogoutEvent::class => ['onLogout', 8]
+            LogoutEvent::class => ['onLogout', 9999] //9999 is priority
         ];
     }
 
