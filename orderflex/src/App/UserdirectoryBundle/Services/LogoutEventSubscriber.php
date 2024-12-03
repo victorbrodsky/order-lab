@@ -67,12 +67,56 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //0 - session does not exist
         //1 - session exists
         return [
-            LogoutEvent::class => ['onLogout', -1] //9999 is priority, priority defaults to 0
+            LogoutEvent::class => ['onSamlLogout', 1],
+            LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
             //LogoutEvent::class => 'onLogout'
         ];
     }
 
     public function onLogout(LogoutEvent $event): void
+    {
+        $user = NULL;
+        if( $event->getToken() ) {
+            $user = $event->getToken()->getUser();
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $samlLogoutStr = "";
+
+//        //Saml logout:
+//        //$request = $event->getRequest();
+//        $session = $this->requestStack->getSession();
+//        //dump($session);
+//        //exit('logout');
+//        $logintype = $session->get('logintype');
+//        $logger = $this->container->get('logger');
+//        $logger->notice("onLogout: logintype=".$logintype);
+//        //dump($session);
+//        //exit('onLogout');
+//        $samlLogout = $userSecUtil->samlLogout($user);
+//        if( $samlLogout ) {
+//            $samlLogoutStr = ", with SAML logout";
+//        }
+        
+        //EventLog
+        $request = $event->getRequest();
+        $eventStr = "User $user manually logged out".$samlLogoutStr;
+        $eventType = "User Manually Logged Out";
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('employees.sitename'),   //$sitename
+            $eventStr,                                              //$event (Event description)
+            $user,                                                  //$user
+            $user,                                                  //$subjectEntities
+            $request,                                               //$request
+            $eventType                                              //$action (Event Type)
+        );
+
+        //$this->security->logout();
+        //$this->security->logout(false);
+        //$session->invalidate();
+    }
+
+    public function onSamlLogout(LogoutEvent $event): void
     {
         $user = NULL;
         if( $event->getToken() ) {
@@ -101,23 +145,6 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         if( $samlLogout ) {
             $samlLogoutStr = ", with SAML logout";
         }
-        
-        //EventLog
-        $request = $event->getRequest();
-        $eventStr = "User $user manually logged out".$samlLogoutStr;
-        $eventType = "User Manually Logged Out";
-        $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('employees.sitename'),   //$sitename
-            $eventStr,                                              //$event (Event description)
-            $user,                                                  //$user
-            $user,                                                  //$subjectEntities
-            $request,                                               //$request
-            $eventType                                              //$action (Event Type)
-        );
-
-        $this->security->logout();
-        $this->security->logout(false);
-        $session->invalidate();
     }
 
 }
