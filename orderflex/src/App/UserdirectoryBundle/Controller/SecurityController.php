@@ -849,7 +849,7 @@ class SecurityController extends OrderAbstractController
             $eventType                                              //$action (Event Type)
         );
 
-        $returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
+        //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
 
         //Saml logout
         if( 1 ) {
@@ -857,7 +857,7 @@ class SecurityController extends OrderAbstractController
             //exit('onLogout');
             //$samlLogoutStr = "";
             //samlLogout will redirect to the $returnUrl
-            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$returnUrl);
+            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$sitename);
             //if ($samlLogout) {
             //    $samlLogoutStr = ", with SAML logout";
             //}

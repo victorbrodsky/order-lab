@@ -11,7 +11,6 @@ namespace App\UserdirectoryBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -89,6 +88,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $samlLogoutStr = "";
 
         $sitename = $this->getSitename($request);
+        $logger->notice("onLogout: sitename=$sitename");
 
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
@@ -126,10 +126,10 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $logger->notice("onLogout: End");
 
         //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
-        $returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        //$returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
 
         //samlLogout will redirect by $auth->logout();
-        $userSecUtil->samlLogout($user,$logintype,$returnUrl);
+        $userSecUtil->samlLogout($user,$logintype,$sitename);
     }
 
     public function getSitename( $request ) {
@@ -139,7 +139,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $routename = $request->get('_route');
 
         $logger = $this->container->get('logger');
-        $logger->notice("onLogout: getSitename: routename=$routename");
+        $logger->notice("onLogout: getSitename: routename=$routename"); //translationalresearch_logout
 
         if( $routename == "employees_logout" ) {
             $sitename = $this->container->getParameter('employees.sitename');
