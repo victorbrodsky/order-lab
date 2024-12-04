@@ -11,6 +11,7 @@ namespace App\UserdirectoryBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
