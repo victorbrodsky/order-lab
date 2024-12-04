@@ -814,18 +814,20 @@ class SecurityController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         //Saml logout
-        $session = $request->getSession();
-        //dump($session);
-        //exit('logout');
-        $logintype = $session->get('logintype');
-        $logger = $this->container->get('logger');
-        $logger->notice("logoutAction: logintype=".$logintype);
-        //dump($session);
-        //exit('onLogout');
-        $samlLogoutStr = "";
-        $samlLogout = $userSecUtil->samlLogout($user);
-        if( $samlLogout ) {
-            $samlLogoutStr = ", with SAML logout";
+        if(0) {
+            $session = $request->getSession();
+            //dump($session);
+            //exit('logout');
+            $logintype = $session->get('logintype');
+            $logger = $this->container->get('logger');
+            $logger->notice("logoutAction: logintype=" . $logintype);
+            //dump($session);
+            //exit('onLogout');
+            $samlLogoutStr = "";
+            $samlLogout = $userSecUtil->samlLogout($user);
+            if ($samlLogout) {
+                $samlLogoutStr = ", with SAML logout";
+            }
         }
 
         //Symfony logout
