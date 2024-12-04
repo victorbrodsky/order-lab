@@ -799,8 +799,8 @@ class SecurityController extends OrderAbstractController
 //     * @Route("/directory/logout", name="employees_logout")
 //     * @Template()
 //     */
-    //#[Route(path: '/logout', name: 'employees_logout')]
-    public function logoutAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
+    //[Route(path: '/logout', name: 'employees_logout')]
+    public function logoutTestAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
         echo "logout Action! <br>";
         exit();

@@ -54,7 +54,8 @@ security:
               logout:
                   #path:   logout #/%tenantprefix%directory/logout
                   path: employees_logout
-                  target: login #/%tenantprefix%directory/login
+                  target: employees_login
+                  #target: login #/%tenantprefix%directory/login
                   #path:   /en/directory/logout
                   #target: /en/directory/login
                   invalidate_session: false
