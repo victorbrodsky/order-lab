@@ -812,34 +812,27 @@ class SecurityController extends OrderAbstractController
         $user = $this->getUser();
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+        $samlLogoutStr = "";
 
-        //Saml logout
-        if(0) {
-            $session = $request->getSession();
-            //dump($session);
-            //exit('logout');
-            $logintype = $session->get('logintype');
-            $logger = $this->container->get('logger');
-            $logger->notice("logoutAction: logintype=" . $logintype);
-            //dump($session);
-            //exit('onLogout');
-            $samlLogoutStr = "";
-            $samlLogout = $userSecUtil->samlLogout($user);
-            if ($samlLogout) {
-                $samlLogoutStr = ", with SAML logout";
-            }
-        }
+        $session = $request->getSession();
+        //dump($session);
+        //exit('logout');
+        $logintype = $session->get('logintype');
+        $logger->notice("logoutAction: logintype=" . $logintype);
 
         //Symfony logout
         //$response = $security->logout();
         // you can also disable the csrf logout
-        $response = $security->logout(false);
+        $security->logout(false);
         //$session->invalidate();
         //$tokenStorage->setToken(null);
         //exit('logoutAction: after logout');
 
         //$routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
+
+
 
         //EventLog
         //$request = $event->getRequest();
@@ -853,6 +846,19 @@ class SecurityController extends OrderAbstractController
             $request,                                               //$request
             $eventType                                              //$action (Event Type)
         );
+
+        $returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
+
+        //Saml logout
+        if( 1 ) {
+            //dump($session);
+            //exit('onLogout');
+            $samlLogoutStr = "";
+            $samlLogout = $userSecUtil->samlLogout($user,$returnUrl);
+            if ($samlLogout) {
+                $samlLogoutStr = ", with SAML logout";
+            }
+        }
 
         return $this->redirect($this->generateUrl($sitename.'_login'));
     }

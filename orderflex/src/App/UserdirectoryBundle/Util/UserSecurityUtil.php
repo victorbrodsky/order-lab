@@ -485,7 +485,7 @@ class UserSecurityUtil {
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
-    public function samlLogout( $user ) {
+    public function samlLogout( $user, $returnUrl=null ) {
         //return false; //testing - disable. TODO: implement the logic to verify if user logged in by SAML (event log can be used)
 
         if( !$user ) {
@@ -506,17 +506,17 @@ class UserSecurityUtil {
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
-        $logger->debug("LogoutEventSubscriber: Starting SAML logout: email=".$email);
+        $logger->debug("samlLogout: Starting SAML logout: email=".$email);
         if( $email ) {
             $config = $samlConfigProviderUtil->getConfig($email);
             if( $config) {
                 try {
-                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: try");
+                    $logger->debug("samlLogout: Starting SAML logout: try");
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
-                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: user authenticated");
-                    $auth->logout();
-                    $logger->debug("LogoutEventSubscriber: Starting SAML logout: after logout");
+                    $logger->debug("samlLogout: Starting SAML logout: user authenticated");
+                    $auth->logout($returnUrl);
+                    $logger->debug("samlLogout: Starting SAML logout: after logout");
                     //exit('logout');
                     //}
                     // The logout method does a redirect, so we won't reach this line
@@ -528,7 +528,7 @@ class UserSecurityUtil {
                 }
             }
         }
-        $logger->debug("LogoutEventSubscriber: End of SAML logout");
+        $logger->debug("samlLogout: End of SAML logout");
         return false;
     }
     
