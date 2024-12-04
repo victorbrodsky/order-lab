@@ -832,7 +832,9 @@ class SecurityController extends OrderAbstractController
         //$routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
 
-
+        if( $logintype === 'saml-sso' ) {
+            $samlLogoutStr = ", with SAML logout";
+        }
 
         //EventLog
         //$request = $event->getRequest();
@@ -853,11 +855,12 @@ class SecurityController extends OrderAbstractController
         if( 1 ) {
             //dump($session);
             //exit('onLogout');
-            $samlLogoutStr = "";
-            $samlLogout = $userSecUtil->samlLogout($user,$returnUrl);
-            if ($samlLogout) {
-                $samlLogoutStr = ", with SAML logout";
-            }
+            //$samlLogoutStr = "";
+            //samlLogout will redirect to the $returnUrl
+            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$returnUrl);
+            //if ($samlLogout) {
+            //    $samlLogoutStr = ", with SAML logout";
+            //}
         }
 
         return $this->redirect($this->generateUrl($sitename.'_login'));
