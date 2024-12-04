@@ -69,11 +69,6 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //0 - session does not exist
         //1 - session exists
         return [
-            //LogoutEvent::class => ['onSamlLogout', 0], //does not invoke
-            //LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
-            //KernelEvents::RESPONSE => [
-            //    ['onSamlLogout', 1]
-            //],
             LogoutEvent::class => 'onLogout'
         ];
     }
@@ -131,57 +126,57 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $samlLogout = $userSecUtil->samlLogout($user,$logintype);
     }
 
-    public function onSamlLogout(ResponseEvent $event): void
-    {
-        //if( !$event->isMasterRequest() ) {
-        //    return;
-        //}
-
-        $logger = $this->container->get('logger');
-        $logger->notice("onSamlLogout");
-
-        $request = $event->getRequest();
-
-        $pathInfo = $request->getPathInfo();
-        $logger->notice("onSamlLogout: pathInfo=".$pathInfo);
-        //$logger->notice("onSamlLogout: 2 pathInfo=".substr($request->getPathInfo(), 0, 4)."");
-
-//        if( '/logout' !== substr($request->getPathInfo(), 0, 4) ) {
+//    public function onSamlLogout(ResponseEvent $event): void
+//    {
+//        //if( !$event->isMasterRequest() ) {
+//        //    return;
+//        //}
+//
+//        $logger = $this->container->get('logger');
+//        $logger->notice("onSamlLogout");
+//
+//        $request = $event->getRequest();
+//
+//        $pathInfo = $request->getPathInfo();
+//        $logger->notice("onSamlLogout: pathInfo=".$pathInfo);
+//        //$logger->notice("onSamlLogout: 2 pathInfo=".substr($request->getPathInfo(), 0, 4)."");
+//
+////        if( '/logout' !== substr($request->getPathInfo(), 0, 4) ) {
+////            return;
+////        }
+//
+//        if( !str_contains($pathInfo, '/logout') ) {
 //            return;
 //        }
-
-        if( !str_contains($pathInfo, '/logout') ) {
-            return;
-        }
-
-//        $user = NULL;
-//        if( $event->getToken() ) {
-//            $user = $event->getToken()->getUser();
+//
+////        $user = NULL;
+////        if( $event->getToken() ) {
+////            $user = $event->getToken()->getUser();
+////        }
+//        $user = $this->security->getUser();
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        //$user = $event->getToken()->getUser();
+//        //exit("logout user=".$user);
+//        //$this->updateUserLastLogin($user);
+//        //$vacreqUtil = $this->container->get('vacreq_util');
+//
+//        //Saml logout: TODO: session is empty
+//        //$request = $event->getRequest();
+//        $session = $this->requestStack->getSession();
+//        //dump($session);
+//        //exit('logout');
+//        $logintype = $session->get('logintype');
+//        $logger = $this->container->get('logger');
+//        $logger->notice("onSamlLogout: logintype=".$logintype);
+//        //dump($session);
+//        //exit('onLogout');
+//        $samlLogoutStr = "";
+//        $samlLogout = $userSecUtil->samlLogout($user);
+//        if( $samlLogout ) {
+//            $samlLogoutStr = ", with SAML logout";
 //        }
-        $user = $this->security->getUser();
-
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //$user = $event->getToken()->getUser();
-        //exit("logout user=".$user);
-        //$this->updateUserLastLogin($user);
-        //$vacreqUtil = $this->container->get('vacreq_util');
-
-        //Saml logout: TODO: session is empty
-        //$request = $event->getRequest();
-        $session = $this->requestStack->getSession();
-        //dump($session);
-        //exit('logout');
-        $logintype = $session->get('logintype');
-        $logger = $this->container->get('logger');
-        $logger->notice("onSamlLogout: logintype=".$logintype);
-        //dump($session);
-        //exit('onLogout');
-        $samlLogoutStr = "";
-        $samlLogout = $userSecUtil->samlLogout($user);
-        if( $samlLogout ) {
-            $samlLogoutStr = ", with SAML logout";
-        }
-    }
+//    }
 
 }
