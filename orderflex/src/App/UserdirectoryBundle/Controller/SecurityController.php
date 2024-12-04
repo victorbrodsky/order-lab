@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 //use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends OrderAbstractController
@@ -799,7 +800,7 @@ class SecurityController extends OrderAbstractController
 //     * @Template()
 //     */
     #[Route(path: '/logout', name: 'employees_logout')]
-    public function logoutAction( Request $request, Security $security )
+    public function logoutAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
         //echo "logout Action! <br>";
         //exit();
@@ -807,6 +808,7 @@ class SecurityController extends OrderAbstractController
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->container->get('request')->getSession()->invalidate();
 
+        $sitename = $this->getSitename($request);
         $user = $this->getUser();
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -830,6 +832,8 @@ class SecurityController extends OrderAbstractController
         //$response = $security->logout();
         // you can also disable the csrf logout
         $response = $security->logout(false);
+        $session->invalidate();
+        //$tokenStorage->setToken(null);
 
         //$routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
@@ -839,7 +843,7 @@ class SecurityController extends OrderAbstractController
         $eventStr = "User $user manually logged out".$samlLogoutStr;
         $eventType = "User Manually Logged Out";
         $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('employees.sitename'),   //$sitename
+            $sitename,                                              //$sitename
             $eventStr,                                              //$event (Event description)
             $user,                                                  //$user
             $user,                                                  //$subjectEntities
@@ -847,7 +851,6 @@ class SecurityController extends OrderAbstractController
             $eventType                                              //$action (Event Type)
         );
 
-        $sitename = $this->getSitename($request);
         return $this->redirect($this->generateUrl($sitename.'_login'));
     }
 
