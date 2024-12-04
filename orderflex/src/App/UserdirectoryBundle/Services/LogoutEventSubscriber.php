@@ -132,39 +132,39 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function getSitename( $request ) {
         //default
-        $sitename = $this->getParameter('employees.sitename');
+        $sitename = $this->container->getParameter('employees.sitename');
 
         $routename = $request->get('_route');
 
         if( $routename == "employees_logout" ) {
-            $sitename = $this->getParameter('employees.sitename');
+            $sitename = $this->container->getParameter('employees.sitename');
         }
         if( $routename == "fellapp_logout" ) {
-            $sitename = $this->getParameter('fellapp.sitename');
+            $sitename = $this->container->getParameter('fellapp.sitename');
         }
         if( $routename == "resapp_logout" ) {
-            $sitename = $this->getParameter('resapp.sitename');
+            $sitename = $this->container->getParameter('resapp.sitename');
         }
         if( $routename == "deidentifier_logout" ) {
-            $sitename = $this->getParameter('deidentifier.sitename');
+            $sitename = $this->container->getParameter('deidentifier.sitename');
         }
         if( $routename == "scan_logout" ) {
-            $sitename = $this->getParameter('scan.sitename');
+            $sitename = $this->container->getParameter('scan.sitename');
         }
         if( $routename == "vacreq_logout" ) {
-            $sitename = $this->getParameter('vacreq.sitename');
+            $sitename = $this->container->getParameter('vacreq.sitename');
         }
         if( $routename == "calllog_logout" ) {
-            $sitename = $this->getParameter('calllog.sitename');
+            $sitename = $this->container->getParameter('calllog.sitename');
         }
         if( $routename == "crn_logout" ) {
-            $sitename = $this->getParameter('crn.sitename');
+            $sitename = $this->container->getParameter('crn.sitename');
         }
         if( $routename == "translationalresearch_logout" ) {
-            $sitename = $this->getParameter('translationalresearch.sitename');
+            $sitename = $this->container->getParameter('translationalresearch.sitename');
         }
         if( $routename == "dashboard_logout" ) {
-            $sitename = $this->getParameter('dashboard.sitename');
+            $sitename = $this->container->getParameter('dashboard.sitename');
         }
 
         return $sitename;
