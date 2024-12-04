@@ -92,16 +92,20 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $samlLogoutStr = "";
 
+        //In order to get session, set firewall logout: invalidate_session: false
         $session = $request->getSession();
 //        //dump($session);
 //        //exit('logout');
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
         $logger->notice("onLogout: logintype=".$logintype);
+        $session->invalidate(); //invalidate session manually
 
         if( $logintype === 'saml-sso' ) {
             $samlLogoutStr = ", with SAML logout";
         }
+
+        $samlLogout = $userSecUtil->samlLogout($user,$logintype);
         
         //EventLog
         //$request = $event->getRequest();
@@ -116,10 +120,14 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $eventType                                              //$action (Event Type)
         );
 
+        //
+        $this->container->get('request')->getSession()->invalidate();
+
         //Saml logout:
 
 //        //dump($session);
 //        //exit('onLogout');
+        $logger->notice("onLogout: End");
         $samlLogout = $userSecUtil->samlLogout($user,$logintype);
     }
 
