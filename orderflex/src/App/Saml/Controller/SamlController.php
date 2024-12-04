@@ -297,7 +297,7 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
     // https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    #[Route(path: '/logout', name: 'saml_logout_new')]
+    //[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
         //exit('logoutNew');
