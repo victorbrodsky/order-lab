@@ -24,7 +24,7 @@ security:
             logout:
                 path:   scan_logout
                 target: scan_login
-                invalidate_session: false
+                #invalidate_session: false
             lazy:  true
             provider: users
             access_denied_url: scan_access_request_new_plain #/scan/access-requests/new/create  #/scan/scan-order/no-permission
@@ -105,7 +105,7 @@ security:
                 check_path: resapp_login_check
             logout:
                 path:   resapp_logout
-                target: resapp_logout
+                target: resapp_login
                 invalidate_session: false
             lazy:  true
             provider: users
