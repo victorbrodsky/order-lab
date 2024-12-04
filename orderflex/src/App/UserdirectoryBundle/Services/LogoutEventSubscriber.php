@@ -89,8 +89,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         //In order to get session, set firewall logout: invalidate_session: false
         $session = $request->getSession();
-        dump($session);
-        exit('logout');
+        //dump($session);
+        //exit('logout');
 
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
