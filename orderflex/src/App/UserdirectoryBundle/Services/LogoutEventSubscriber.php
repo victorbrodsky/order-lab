@@ -105,7 +105,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $samlLogoutStr = ", with SAML logout";
         }
 
-        //$samlLogout = $userSecUtil->samlLogout($user,$logintype);
+        $samlLogout = $userSecUtil->samlLogout($user,$logintype);
         
         //EventLog
         //$request = $event->getRequest();
@@ -121,7 +121,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         //
-        $this->container->get('request')->getSession()->invalidate();
+        //$this->container->get('request')->getSession()->invalidate();
 
         //Saml logout:
 
