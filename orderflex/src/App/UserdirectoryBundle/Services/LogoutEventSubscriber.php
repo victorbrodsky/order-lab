@@ -87,6 +87,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $samlLogoutStr = "";
 
+        $sitename = $this->getSitename($request);
+
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
         //dump($session);
@@ -105,7 +107,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $eventStr = "User $user manually logged out".$samlLogoutStr;
         $eventType = "User Manually Logged Out";
         $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('employees.sitename'),   //$sitename
+            $sitename, //$this->container->getParameter('employees.sitename'),   //$sitename
             $eventStr,                                              //$event (Event description)
             $user,                                                  //$user
             $user,                                                  //$subjectEntities
@@ -122,8 +124,50 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 //        //exit('onLogout');
         $logger->notice("onLogout: End");
 
+        $returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
+
         //samlLogout will redirect by $auth->logout();
-        $userSecUtil->samlLogout($user,$logintype);
+        $userSecUtil->samlLogout($user,$logintype,$returnUrl);
+    }
+
+    public function getSitename( $request ) {
+        //default
+        $sitename = $this->getParameter('employees.sitename');
+
+        $routename = $request->get('_route');
+
+        if( $routename == "employees_logout" ) {
+            $sitename = $this->getParameter('employees.sitename');
+        }
+        if( $routename == "fellapp_logout" ) {
+            $sitename = $this->getParameter('fellapp.sitename');
+        }
+        if( $routename == "resapp_logout" ) {
+            $sitename = $this->getParameter('resapp.sitename');
+        }
+        if( $routename == "deidentifier_logout" ) {
+            $sitename = $this->getParameter('deidentifier.sitename');
+        }
+        if( $routename == "scan_logout" ) {
+            $sitename = $this->getParameter('scan.sitename');
+        }
+        if( $routename == "vacreq_logout" ) {
+            $sitename = $this->getParameter('vacreq.sitename');
+        }
+        if( $routename == "calllog_logout" ) {
+            $sitename = $this->getParameter('calllog.sitename');
+        }
+        if( $routename == "crn_logout" ) {
+            $sitename = $this->getParameter('crn.sitename');
+        }
+        if( $routename == "translationalresearch_logout" ) {
+            $sitename = $this->getParameter('translationalresearch.sitename');
+        }
+        if( $routename == "dashboard_logout" ) {
+            $sitename = $this->getParameter('dashboard.sitename');
+        }
+
+        return $sitename;
     }
 
 //    public function onSamlLogout(ResponseEvent $event): void

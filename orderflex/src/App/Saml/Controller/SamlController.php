@@ -297,11 +297,10 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
     // https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    //[Route(path: '/logout', name: 'saml_logout_new')]
+    #[Route(path: '/logout', name: 'saml_logout_new')]
     public function logoutNew(Request $request): Response
     {
         //exit('logoutNew');
-
         $this->logger->notice("logoutNew: Start");
         //return new Response('Redirecting to IdP for logout...', 302);
         return $this->redirect( $this->generateUrl('employees_login') );
