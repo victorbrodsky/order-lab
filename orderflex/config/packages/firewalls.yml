@@ -52,9 +52,9 @@ security:
                   login_path: employees_login #/%tenantprefix%directory/login
                   check_path: employees_login_check #/%tenantprefix%directory/login
               logout:
-                  #path:   logout #/%tenantprefix%directory/logout
-                  path: employees_logout
-                  target: employees_login
+                  path:   logout #/%tenantprefix%directory/logout
+                  #path: employees_logout
+                  target: login
                   #target: login #/%tenantprefix%directory/login
                   #path:   /en/directory/logout
                   #target: /en/directory/login
