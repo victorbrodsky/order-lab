@@ -87,7 +87,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $samlLogoutStr = "";
 
-        //In order to get session, set firewall logout: invalidate_session: false
+        //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
         //dump($session);
         //exit('logout');
@@ -101,7 +101,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $samlLogoutStr = ", with SAML logout";
         }
 
-        //$samlLogout = $userSecUtil->samlLogout($user,$logintype);
+        $samlLogout = $userSecUtil->samlLogout($user,$logintype);
         
         //EventLog
         //$request = $event->getRequest();
@@ -124,7 +124,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 //        //dump($session);
 //        //exit('onLogout');
         $logger->notice("onLogout: End");
-        $samlLogout = $userSecUtil->samlLogout($user,$logintype);
+        //$samlLogout = $userSecUtil->samlLogout($user,$logintype);
     }
 
 //    public function onSamlLogout(ResponseEvent $event): void

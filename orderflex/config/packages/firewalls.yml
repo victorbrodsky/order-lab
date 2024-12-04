@@ -53,11 +53,7 @@ security:
                   check_path: employees_login_check #/%tenantprefix%directory/login
               logout:
                   path:   logout #/%tenantprefix%directory/logout
-                  #path: employees_logout
-                  target: login
-                  #target: login #/%tenantprefix%directory/login
-                  #path:   /en/directory/logout
-                  #target: /en/directory/login
+                  target: login #/%tenantprefix%directory/login
                   invalidate_session: false
               lazy:  true
               provider: users
