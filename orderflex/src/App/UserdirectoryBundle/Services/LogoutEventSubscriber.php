@@ -71,9 +71,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         return [
             //LogoutEvent::class => ['onSamlLogout', 0], //does not invoke
             //LogoutEvent::class => ['onLogout', 0] //9999 is priority, priority defaults to 0
-            KernelEvents::RESPONSE => [
-                ['onSamlLogout', 1]
-            ],
+            //KernelEvents::RESPONSE => [
+            //    ['onSamlLogout', 1]
+            //],
             LogoutEvent::class => 'onLogout'
         ];
     }

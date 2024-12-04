@@ -167,8 +167,8 @@ login_check:
 
 employees_login_check:
     path:   /directory/login_check
-employees_logout:
-    path:   /directory/logout
+#employees_logout:
+#    path:   /directory/logout
 
 dashboard_login_check:
     path:   /dashboards/login_check
