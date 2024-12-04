@@ -52,10 +52,11 @@ security:
                   check_path: employees_login_check #/%tenantprefix%directory/login
               logout:
                   #path:   logout #/%tenantprefix%directory/logout
-                  #path: employees_logout
+                  path: employees_logout
                   target: login #/%tenantprefix%directory/login
                   #path:   /en/directory/logout
                   #target: /en/directory/login
+                  invalidate_session: false
               lazy:  true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create

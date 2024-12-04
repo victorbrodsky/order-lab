@@ -89,25 +89,22 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $request = $event->getRequest();
         $samlLogoutStr = "";
 
-//        //Saml logout:
-//        //$request = $event->getRequest();
-//        $session = $this->requestStack->getSession();
+        $session = $request->getSession();
 //        //dump($session);
 //        //exit('logout');
-//        $logintype = $session->get('logintype');
-//        $logger = $this->container->get('logger');
-//        $logger->notice("onLogout: logintype=".$logintype);
-//        //dump($session);
-//        //exit('onLogout');
-//        $samlLogout = $userSecUtil->samlLogout($user);
-//        if( $samlLogout ) {
-//            $samlLogoutStr = ", with SAML logout";
-//        }
+        $logintype = $session->get('logintype');
+        $logger = $this->container->get('logger');
+        $logger->notice("onLogout: logintype=".$logintype);
+
+        if( $logintype === 'saml-sso' ) {
+            $samlLogoutStr = ", with SAML logout";
+        }
         
         //EventLog
-        $request = $event->getRequest();
+        //$request = $event->getRequest();
         $eventStr = "User $user manually logged out".$samlLogoutStr;
         $eventType = "User Manually Logged Out";
         $userSecUtil->createUserEditEvent(
@@ -119,9 +116,11 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $eventType                                              //$action (Event Type)
         );
 
-        //$this->security->logout();
-        //$this->security->logout(false);
-        //$session->invalidate();
+        //Saml logout:
+
+//        //dump($session);
+//        //exit('onLogout');
+        $samlLogout = $userSecUtil->samlLogout($user,$logintype);
     }
 
     public function onSamlLogout(ResponseEvent $event): void

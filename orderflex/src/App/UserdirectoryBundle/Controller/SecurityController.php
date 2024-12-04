@@ -802,8 +802,8 @@ class SecurityController extends OrderAbstractController
     #[Route(path: '/logout', name: 'employees_logout')]
     public function logoutAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
-        //echo "logout Action! <br>";
-        //exit();
+        echo "logout Action! <br>";
+        exit();
 
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->container->get('request')->getSession()->invalidate();
@@ -857,7 +857,7 @@ class SecurityController extends OrderAbstractController
             //exit('onLogout');
             //$samlLogoutStr = "";
             //samlLogout will redirect to the $returnUrl
-            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$returnUrl);
+            $samlLogout = $userSecUtil->samlLogout($user,$returnUrl,$logintype);
             //if ($samlLogout) {
             //    $samlLogoutStr = ", with SAML logout";
             //}
