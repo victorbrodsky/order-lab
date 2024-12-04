@@ -125,7 +125,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $logger->notice("onLogout: End");
 
         //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
-        $returnUrl = $this->container->get('router')->generate($sitename.'_login');
+        $returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
 
         //samlLogout will redirect by $auth->logout();
         $userSecUtil->samlLogout($user,$logintype,$returnUrl);
@@ -136,6 +136,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $sitename = $this->container->getParameter('employees.sitename');
 
         $routename = $request->get('_route');
+
+        $logger = $this->container->get('logger');
+        $logger->notice("onLogout: getSitename: routename=$routename");
 
         if( $routename == "employees_logout" ) {
             $sitename = $this->container->getParameter('employees.sitename');
