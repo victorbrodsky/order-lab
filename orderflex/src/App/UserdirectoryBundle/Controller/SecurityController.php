@@ -829,11 +829,12 @@ class SecurityController extends OrderAbstractController
         }
 
         //Symfony logout
-        $response = $security->logout();
+        //$response = $security->logout();
         // you can also disable the csrf logout
         $response = $security->logout(false);
         $session->invalidate();
         $tokenStorage->setToken(null);
+        exit('logoutAction: after logout');
 
         //$routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
