@@ -485,7 +485,7 @@ class UserSecurityUtil {
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
-    public function samlLogout( $user, $returnUrl=NULL, $logintype=NULL ) {
+    public function samlLogout( $user, $logintype=NULL, $returnUrl=NULL ) {
         //return false; //testing - disable. TODO: implement the logic to verify if user logged in by SAML (event log can be used)
 
         if( !$user ) {

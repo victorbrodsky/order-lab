@@ -857,7 +857,7 @@ class SecurityController extends OrderAbstractController
             //exit('onLogout');
             //$samlLogoutStr = "";
             //samlLogout will redirect to the $returnUrl
-            $samlLogout = $userSecUtil->samlLogout($user,$returnUrl,$logintype);
+            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$returnUrl);
             //if ($samlLogout) {
             //    $samlLogoutStr = ", with SAML logout";
             //}
