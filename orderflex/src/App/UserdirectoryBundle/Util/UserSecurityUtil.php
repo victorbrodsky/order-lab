@@ -511,6 +511,7 @@ class UserSecurityUtil {
         //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
         $returnUrl = $this->container->get('router')->generate(
             $sitename.'_login',
+            array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         //TODO: make sure $auth->logout($returnUrl) is working
