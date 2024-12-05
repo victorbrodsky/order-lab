@@ -358,8 +358,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$useEmailLastRoute = false;
 
             if( $useEmailLastRoute ) {
-                $deliemeter = "_#_";
-                //$deliemeter = "__";
+                //$deliemeter = "_#_";
+                $deliemeter = "__";
                 $relayStateParts = explode($deliemeter, $relayState);
                 $username = $relayStateParts[0];
                 $sitename = $relayStateParts[1];
