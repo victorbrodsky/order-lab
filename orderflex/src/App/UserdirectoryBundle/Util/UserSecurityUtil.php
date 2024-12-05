@@ -509,7 +509,10 @@ class UserSecurityUtil {
 
         //$returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
-        $returnUrl = $this->container->get('router')->generate($sitename.'_login');
+        $returnUrl = $this->container->get('router')->generate(
+            $sitename.'_login',
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
         //TODO: make sure $auth->logout($returnUrl) is working
         
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
@@ -523,7 +526,6 @@ class UserSecurityUtil {
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
                     $logger->notice("samlLogout: returnUrl={$returnUrl}");
-                    $logger->notice(sprintf('samlLogout: returnUrl=%d',$returnUrl));
                     $auth->logout($returnUrl);
                     $logger->notice("samlLogout: Starting SAML logout: after logout");
                     //exit('logout');
