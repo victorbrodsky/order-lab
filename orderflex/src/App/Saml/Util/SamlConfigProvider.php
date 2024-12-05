@@ -250,14 +250,19 @@ class SamlConfigProvider
 //        }
         //echo "2 scheme=$scheme <br>"; //http
 
+        $scheme = NULL;
         //TODO: probably we need to get the scheme from url or sitesettings
         $spEntityId = $config->getSpEntityId();
-        $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
-        $this->logger->notice('getSPEntityId: $scheme='.$scheme);
-        //$request = $this->requestStack->getCurrentRequest();
-        //$uri = $request->getUri();
-        //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-        $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
+        if( $spEntityId ) {
+            $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
+            //$this->logger->notice('getSPEntityId: $scheme='.$scheme);
+            //$request = $this->requestStack->getCurrentRequest();
+            //$uri = $request->getUri();
+            //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+        }
+        if( !$scheme ) {
+            $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
+        }
         //echo "3 scheme=$scheme <br>"; //http
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
