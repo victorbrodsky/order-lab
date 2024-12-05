@@ -147,75 +147,40 @@ class AuthUtil {
 
         $auth = new Auth($config['settings']);
 
-        //exit('$lastRoute='.$lastRoute);
-        //TODO: $lastRoute is not working
         $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
-
-        //$parameters = array();
-        //$parameters['RelayState'] = $lastRoute;
-        //$stay = true;
-        //$stay = false;
-        //$auth->login($lastRoute, $parameters); //make redirect to SAML page
-        //exit('$urlString='.$urlString);
-
-//        if( $stay == true ) {
-//            $newTargetUrl = "";
-//            //$parameters, $forceAuthn, $isPassive, $stay, $setNameIdPolicy, $nameIdValueReq
-//            $urlString = $auth->login(null, array(), false, $stay, true); //make redirect to SAML page
-//            exit('$urlString='.$urlString);
-//        } else {
-//            $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
+    }
+//    public function samlAuthenticationByEmail( $email ) {
+//        if( !$email ) {
+//            return NULL;
 //        }
-
-        if(0) {
-            $errors = $auth->getErrors();  // This method receives an array with the errors
-            // that could took place during the process
-
-            if (!empty($errors)) {
-                echo '<p>', implode(', ', $errors), '</p>';
-            }
-
-            // This check if the response was
-            if (!$auth->isAuthenticated()) {      // successfully validated and the user
-                echo "<p>Not authenticated</p>";  // data retrieved or not
-                exit('not authenticated');
-            } else {
-                exit('authenticated!!!');
-            }
-        }
-    }
-    public function samlAuthenticationByEmail( $email ) {
-        if( !$email ) {
-            return NULL;
-        }
-
-        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-
-        $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
-
-        $config = $samlConfigProviderUtil->getConfig($user->getSingleEmail());
-        if( !$config ) {
-            return NULL;
-        }
-        
-        $auth = new Auth($config['settings']);
-        $auth->login();
-
-        $errors = $auth->getErrors();  // This method receives an array with the errors
-        // that could took place during the process
-
-        if (!empty($errors)) {
-            echo '<p>', implode(', ', $errors), '</p>';
-        }
-
-        // This check if the response was
-        if( !$auth->isAuthenticated() ) {      // successfully validated and the user
-            echo "<p>Not authenticated</p>";  // data retrieved or not
-            exit('not authenticated');
-        } else {
-            exit('authenticated!!!');
-        }
-    }
+//
+//        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+//
+//        $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
+//
+//        $config = $samlConfigProviderUtil->getConfig($user->getSingleEmail());
+//        if( !$config ) {
+//            return NULL;
+//        }
+//        
+//        $auth = new Auth($config['settings']);
+//        $auth->login();
+//
+//        $errors = $auth->getErrors();  // This method receives an array with the errors
+//        // that could took place during the process
+//
+//        if (!empty($errors)) {
+//            echo '<p>', implode(', ', $errors), '</p>';
+//        }
+//
+//        // This check if the response was
+//        if( !$auth->isAuthenticated() ) {      // successfully validated and the user
+//            echo "<p>Not authenticated</p>";  // data retrieved or not
+//            exit('not authenticated');
+//        } else {
+//            exit('authenticated!!!');
+//        }
+//    }
     
     public function samlAuthenticationStayByDomain( $domain, $lastRoute=null ) {
         if( !$domain ) {
