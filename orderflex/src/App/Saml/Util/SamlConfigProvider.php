@@ -61,7 +61,7 @@ class SamlConfigProvider
             //throw new \Exception('SAML configuration not found for client ' . $client);
         }
 
-        list($scheme, $host) = $this->getSPEntityId();
+        list($scheme, $host) = $this->getSPEntityId($config);
 
         $schemeAndHost = sprintf('%s://%s', $scheme, $host);
         //$this->logger->notice("SamlConfigProvider->getConfig: schemeAndHost=".$schemeAndHost);
@@ -233,7 +233,7 @@ class SamlConfigProvider
     }
 
 
-    private function getSPEntityId()
+    private function getSPEntityId( $config )
     {
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantArr = $userTenantUtil->getCurrentTenantArr($this->requestStack->getCurrentRequest());
@@ -250,10 +250,13 @@ class SamlConfigProvider
 //        }
         //echo "2 scheme=$scheme <br>"; //http
 
-        //TODO: probably we need to get the scheme from url
-        $request = $this->requestStack->getCurrentRequest();
-        $uri = $request->getUri();
-        $this->logger->notice('getSPEntityId: $uri='.$uri);
+        //TODO: probably we need to get the scheme from url or sitesettings
+        $spEntityId = $config->getSpEntityId();
+        $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
+        $this->logger->notice('getSPEntityId: $scheme='.$scheme);
+        //$request = $this->requestStack->getCurrentRequest();
+        //$uri = $request->getUri();
+        //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
         $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
         //echo "3 scheme=$scheme <br>"; //http
 
