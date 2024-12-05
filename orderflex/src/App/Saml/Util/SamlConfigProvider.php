@@ -251,6 +251,9 @@ class SamlConfigProvider
         //echo "2 scheme=$scheme <br>"; //http
 
         //TODO: probably we need to get the scheme from url
+        $request = $this->requestStack->getCurrentRequest();
+        $uri = $request->getUri();
+        $this->logger->notice('getSPEntityId: $uri='.$uri);
         $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
         //echo "3 scheme=$scheme <br>"; //http
 

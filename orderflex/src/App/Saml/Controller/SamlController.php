@@ -138,7 +138,7 @@ class SamlController extends OrderAbstractController //AbstractController
     {
         //echo "client=$client <br>";
         //exit('acs Test');
-        $this->logger->notice("Processing SAML ACS Test for client");
+        $this->logger->notice("Processing SAML ACS saml_acs_default for client");
 
         //dump($request);
         //exit('acsTest');
