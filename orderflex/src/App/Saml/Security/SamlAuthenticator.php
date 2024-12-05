@@ -25,6 +25,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+//NOT USED
+//USE CustomGuardAuthenticator instead
+
 class SamlAuthenticator extends AbstractAuthenticator
 {
     public function __construct(

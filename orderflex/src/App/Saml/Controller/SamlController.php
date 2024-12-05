@@ -64,87 +64,41 @@ class SamlController extends OrderAbstractController //AbstractController
     public function login(Request $request, $client, $sitename): Response
     {
         //exit('saml login');
-        $this->logger->notice("Starting SAML login for client: $client");
+        //$this->logger->notice("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);
-        $this->logger->notice("SAML login after config");
+        //$this->logger->notice("SAML login after config");
         //dump($config);
 
-        $this->logger->notice("SAML login after config: sitename=$sitename");
+        //$this->logger->notice("SAML login after config: sitename=$sitename");
 
         $lastRoute = $request->query->get('lastroute');
-        $this->logger->notice("SAML login after config: lastRoute=$lastRoute");
+        //$this->logger->notice("SAML login after config: lastRoute=$lastRoute");
+
+        $auth = new Auth($config['settings']);
+        //$this->logger->notice("SAML login after new Auth");
 
         $useEmailLastRoute = true;
         //$useEmailLastRoute = false;
-
-        $auth = new Auth($config['settings']);
-        $this->logger->notice("SAML login after new Auth");
-
         if( $useEmailLastRoute ) {
-            if(0) {
-                //testing: https://view.online/c/wcm/pathology/directory/event-log/
-                //http://127.0.0.1/translational-research/request/fee-schedule
-                //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
-                //$firewallName = 'ldap_employees_firewall';
-                //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
-                //$firewallName = $authenticationSuccess->getFirewallName();
-                $firewallName = 'ldap_' . $sitename . '_firewall';
-                $indexLastRoute = '_security.' . $firewallName . '.target_path';
-                $lastRoute = $request->getSession()->get($indexLastRoute);
-                $protocol = 'https';
-                $lastRoute = str_replace('http', $protocol, $lastRoute);
-                $this->logger->notice("Starting SAML login for client: lastRoute=$lastRoute");
-            }
-
-            //$config['settings']['sitename'] = $sitename;
-            //$config['settings']['client'] = $client;
-            //$config['settings']['lastroute'] = $lastRoute;
-
-//        $attributeConsumingService = array(
-//            "serviceName" => "SP test",
-//            "serviceDescription" => "Test Service",
-//            "requestedAttributes" => array(
-//                array(
-//                    "name" => "lastRoute",
-//                    "isRequired" => false,
-//                    "nameFormat" => "",
-//                    "friendlyName" => "lastRoute",
-//                    "attributeValue" => array($lastRoute)
-//                )
-//            )
-//        );
-//        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
 
             //store current user in the RelayState: client_#_$lastRoute
             //$deliemeter = "_#_";
             $deliemeter = "__";
             $lastRoute = $client . $deliemeter . $sitename . $deliemeter . $lastRoute;
-            $this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");
+            //$this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");
 
-            //exit('111');
-
-//        $parameters = array(
-//            'RelayState' => $lastRoute,
-//            'sitename' => $sitename,
-//            'client' => $client
-//        );
-
-            //$auth->login($lastRoute,$parameters);
             $auth->login($lastRoute);
         } else {
             $auth->login();
         }
 
-        $this->logger->notice("SAML login after login");
+        //$this->logger->notice("SAML login after login");
 
         // The login method does a redirect, so we won't reach this line
         return new Response('Redirecting to IdP...', 302);
     }
 
-//    /**
-//     * @Route("/saml/acs/{client}", name="saml_acs", requirements={"client"=".+"})
-//     */
     #[Route(path: '/acs/original/{client}', name: 'saml_acs_orig', requirements: ['client' => '.+'])]
     public function acsOrig(Request $request, $client): Response
     {
@@ -176,7 +130,6 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
 
-    //acs TEST
     //The root 'saml_acs' is authenticated by SamlAuthenticator->authenticate(Request $request)
     //If the root is different, then th  is controller authentication is used
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
@@ -250,9 +203,6 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
 
-//    /**
-//     * @Route("/saml/logout/{client}", name="saml_logout", requirements={"client"=".+"})
-//     */
     //check symfony available routes: No route found for "POST http://view.online/c/wcm/pathology/saml/logout
     //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
     #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
@@ -363,32 +313,26 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
 
-//    /**
-//     * @Route("/saml/sls/{client}", name="saml_sls", requirements={"client"=".+"})
-//     */
-    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
-    public function sls(Request $request, string $client): Response
-    {
-        exit('sls');
-        $this->logger->notice("Processing SAML Logout for client: $client");
+//    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
+//    public function sls(Request $request, string $client): Response
+//    {
+//        exit('sls');
+//        $this->logger->notice("Processing SAML Logout for client: $client");
+//
+//        $config = $this->samlConfigProvider->getConfig($client);
+//        $auth = new Auth($config['settings']);
+//
+//        $auth->processSLO();
+//
+//        $errors = $auth->getErrors();
+//        if (!empty($errors)) {
+//            return new Response('SAML Logout failed: ' . implode(', ', $errors), Response::HTTP_INTERNAL_SERVER_ERROR);
+//        }
+//
+//        // Redirection après une déconnexion réussie
+//        return $this->redirect(sprintf('https://%s/sign-in?nosso=1', $config['CustomerUrl']));
+//    }
 
-        $config = $this->samlConfigProvider->getConfig($client);
-        $auth = new Auth($config['settings']);
-
-        $auth->processSLO();
-
-        $errors = $auth->getErrors();
-        if (!empty($errors)) {
-            return new Response('SAML Logout failed: ' . implode(', ', $errors), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        // Redirection après une déconnexion réussie
-        return $this->redirect(sprintf('https://%s/sign-in?nosso=1', $config['CustomerUrl']));
-    }
-
-    /**
-     * @Route("/metadata/{client}", name="saml_metadata", requirements={"client"=".+"})
-     */
     //https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     //https://view.online/c/wcm/pathology/saml/metadata/oli2002@med.cornell.edu
     #[Route(path: '/metadata/{client}', name: 'saml_metadata', requirements: ['client' => '.+'])]
@@ -410,39 +354,38 @@ class SamlController extends OrderAbstractController //AbstractController
         return new Response($metadata, 200, ['Content-Type' => 'text/xml']);
     }
 
-
-    //#[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
-    //http://127.0.0.1/saml/settings/oli2002
-    #[Route(path: '/settings/{client}', name: 'saml_settings', requirements: ['client' => '.+'])]
-    public function settingsAction( string $client ): Response
-    {
-        $this->logger->notice("settingsAction");
-        //exit('0 testing metadata');
-        //$config = $this->samlConfigProvider->getConfig($client);
-        //$metadata = (new Settings($config['settings']))->getSPMetadata();
-
-        $title = "SAML configuration";
-
-        $em = $this->getDoctrine()->getManager();
-        $configEntity = $em->getRepository(SamlConfig::class)->findByClient($client);
-        if( !$configEntity ) {
-            //create or add $configEntity for this tenant.
-            $configEntity = new SamlConfig();
-            exit('Create $configEntity');
-
-        }
-
-        $config = $this->samlConfigProvider->getConfig($client);
-
-        //exit('Exit: settingsAction');
-
-        return $this->render('AppSaml/config.html.twig', [
-            // this array defines the variables passed to the template,
-            // where the key is the variable name and the value is the variable value
-            // (Twig recommends using snake_case variable names: 'foo_bar' instead of 'fooBar')
-            'config' => $config,
-            'title' => $title,
-        ]);
-    }
+//    //#[Template('AppUserdirectoryBundle/Default/thanksfordownloading.html.twig')]
+//    //http://127.0.0.1/saml/settings/oli2002
+//    #[Route(path: '/settings/{client}', name: 'saml_settings', requirements: ['client' => '.+'])]
+//    public function settingsAction( string $client ): Response
+//    {
+//        $this->logger->notice("settingsAction");
+//        //exit('0 testing metadata');
+//        //$config = $this->samlConfigProvider->getConfig($client);
+//        //$metadata = (new Settings($config['settings']))->getSPMetadata();
+//
+//        $title = "SAML configuration";
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $configEntity = $em->getRepository(SamlConfig::class)->findByClient($client);
+//        if( !$configEntity ) {
+//            //create or add $configEntity for this tenant.
+//            $configEntity = new SamlConfig();
+//            exit('Create $configEntity');
+//
+//        }
+//
+//        $config = $this->samlConfigProvider->getConfig($client);
+//
+//        //exit('Exit: settingsAction');
+//
+//        return $this->render('AppSaml/config.html.twig', [
+//            // this array defines the variables passed to the template,
+//            // where the key is the variable name and the value is the variable value
+//            // (Twig recommends using snake_case variable names: 'foo_bar' instead of 'fooBar')
+//            'config' => $config,
+//            'title' => $title,
+//        ]);
+//    }
 
 }

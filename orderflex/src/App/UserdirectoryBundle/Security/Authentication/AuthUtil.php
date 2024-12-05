@@ -89,77 +89,12 @@ class AuthUtil {
 //        }
     }
 
-
-//    public function samlAuthentication($token) {
-//
-//        if( !$token->getCredentials() ) {
-//            //empty password
-//            $this->logger->notice("samlAuthentication: no credentials in the token => exit without authentication.");
-//            return NULL;
-//        }
-//
-//        //get clean username
-//        //$userSecUtil = $this->container->get('user_security_utility');
-//        //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
-//
-//        $username = $token->getUsername();
-//
-//        $this->logger->notice("samlAuthentication: get user by uesrname=".$username);
-//
-//        if( $username ) {
-//            $emailArr = explode('@', $username);
-//            $domain = $emailArr[1];
-//            $authUtil = $this->container->get('authenticator_utility');
-//            $authUtil->samlAuthenticationByDomain($domain);
-//        }
-//
-//        //check if user already exists in DB
-//        $user = $this->findUserByUsername($username);
-//
-//        if( $user ) {
-//            $userEmail = $user->getSingleEmail();
-//            if( $userEmail ) {
-//                exit('samlAuthentication: OK user='.$user->getId());
-//            }
-//        }
-//
-//        return NULL;
-//    }
-
-    public function samlAuthenticationByDomain_ORIG( $domain, $lastRoute=null ) {
-        if( !$domain ) {
-            return NULL;
-        }
-
-        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-
-        //echo "domain=$domain <br>";
-        //$emailArr = explode('@', $email);
-        //$domain = $emailArr[1];
-    
-        //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
-
-        $config = $samlConfigProviderUtil->getConfig($domain);
-        if( !$config ) {
-            return NULL;
-        }
-
-        $auth = new Auth($config['settings']);
-
-        $auth->login($lastRoute); //make redirect to SAML page and after to $lastRoute
-    }
-
     public function samlAuthenticationByDomain( $domain, $lastRoute=null ) {
         if( !$domain ) {
             return NULL;
         }
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-
-        //echo "domain=$domain <br>";
-        //$this->logger->notice("samlAuthenticationStayByDomain: domain=".$domain);
-
-        //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
 
         $config = $samlConfigProviderUtil->getConfig($domain);
         if( !$config ) {
@@ -171,11 +106,9 @@ class AuthUtil {
         //$this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
         $auth->processResponse();
-        //$this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
         //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
         //dump($xmlDocument);
-
         //$attributes = $auth->getAttributes();
         //dump($attributes);
         //exit('samlAuthenticationStayByDomain');
