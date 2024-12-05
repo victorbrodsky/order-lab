@@ -251,7 +251,7 @@ class SamlConfigProvider
         //echo "2 scheme=$scheme <br>"; //http
 
         $scheme = NULL;
-        //TODO: probably we need to get the scheme from url or sitesettings
+        //get the scheme from url (use url getSpEntityId)
         $spEntityId = $config->getSpEntityId();
         if( $spEntityId ) {
             $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
