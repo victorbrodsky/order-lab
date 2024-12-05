@@ -216,60 +216,7 @@ class AuthUtil {
             exit('authenticated!!!');
         }
     }
-    public function samlAuthenticationStayByDomainOrig( $domain, $lastRoute=null ) {
-        if( !$domain ) {
-            return NULL;
-        }
-
-        $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-
-        //echo "domain=$domain <br>";
-        $this->logger->notice("samlAuthenticationStayByDomain: domain=".$domain);
-        //$emailArr = explode('@', $email);
-        //$domain = $emailArr[1];
-
-        //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
-
-        $config = $samlConfigProviderUtil->getConfig($domain);
-        if( !$config ) {
-            return NULL;
-        }
-
-        //dump($config['settings']);
-        //exit('samlAuthenticationStayByDomain');
-
-        $this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
-        $auth = new Auth($config['settings']);
-        $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
-
-        //public function login(
-        //$returnTo = null,
-        // array $parameters = array(),
-        // $forceAuthn = false,
-        // $isPassive = false,
-        // $stay = false,
-        // $setNameIdPolicy = true,
-        // $nameIdValueReq = null
-        //)
-        $returnUrl = $auth->login(
-            $lastRoute,
-            array(),
-            false,
-            false,
-            true
-        );
-        $this->logger->notice("samlAuthenticationStayByDomain: after login stay returnUrl=".$returnUrl);
-
-        $auth->processResponse();
-        $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
-
-        if( $auth->isAuthenticated() ) {
-            $this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
-            return TRUE;
-        }
-
-        return NULL;
-    }
+    
     public function samlAuthenticationStayByDomain( $domain, $lastRoute=null ) {
         if( !$domain ) {
             return NULL;
@@ -278,9 +225,7 @@ class AuthUtil {
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
 
         //echo "domain=$domain <br>";
-        $this->logger->notice("samlAuthenticationStayByDomain: domain=".$domain);
-        //$emailArr = explode('@', $email);
-        //$domain = $emailArr[1];
+        //$this->logger->notice("samlAuthenticationStayByDomain: domain=".$domain);
 
         //$user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
 
@@ -288,23 +233,13 @@ class AuthUtil {
         if( !$config ) {
             return NULL;
         }
-
-        //dump($config);
-        //exit('samlAuthenticationStayByDomain');
-
-        //$lastRoute = $config['settings']['lastroute'];
-
-        $this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
+        
+        //$this->logger->notice("samlAuthenticationStayByDomain: before new Auth");
         $auth = new Auth($config['settings']);
-        $this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
-
-        //$this->logger->notice("samlAuthenticationStayByDomain: lastRoute=$lastRoute");
-        //if( $lastRoute ) {
-            //$auth->redirectTo($lastRoute);
-        //}
+        //$this->logger->notice("samlAuthenticationStayByDomain: after new Auth");
 
         $auth->processResponse();
-        $this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
+        //$this->logger->notice("samlAuthenticationStayByDomain: after processResponse");
 
         //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
         //dump($xmlDocument);
@@ -314,7 +249,7 @@ class AuthUtil {
         //exit('samlAuthenticationStayByDomain');
 
         if( $auth->isAuthenticated() ) {
-            $this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
+            //$this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
             return TRUE;
         }
 

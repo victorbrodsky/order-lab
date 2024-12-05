@@ -117,7 +117,7 @@ class SamlController extends OrderAbstractController //AbstractController
 //        $config['settings']['sp']['attributeConsumingService'] = $attributeConsumingService;
 
             //store current user in the RelayState: client_#_$lastRoute
-            $deliemeter = "_#_";
+            //$deliemeter = "_#_";
             $deliemeter = "__";
             $lastRoute = $client . $deliemeter . $sitename . $deliemeter . $lastRoute;
             $this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");
@@ -309,7 +309,7 @@ class SamlController extends OrderAbstractController //AbstractController
         //return new Response('Redirecting to IdP for logout...', 302);
         return $this->redirect( $relayState );
 
-        
+
         $relayState = $request->getPayload()->get('RelayState');
         //$samlResponse = $request->getPayload()->get('SAMLResponse');
         //echo 'relayState='.$relayState."<br>";

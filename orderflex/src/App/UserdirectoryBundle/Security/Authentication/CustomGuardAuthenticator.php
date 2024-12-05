@@ -107,7 +107,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         //$logger = $this->container->get('logger');
 
-        // GOOD behavior: only authenticate (i.e. return true) on a specific route
+        //GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
@@ -140,9 +140,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //$logger->notice("supports: Yes. route=".$route);
                 return true;
             }
-//            if( $request->isMethod('GET') ) {
-//                return false;
-//            }
         }
 
         //SAML authentication
@@ -179,7 +176,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request) : Passport
     {
-        //dump($request->request);
         //exit('authenticate');
         $logger = $this->container->get('logger');
 
@@ -214,7 +210,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         ///////// EOF Switch DB according to the locale ////////
 
         $credentials = $this->getCredentials($request);
-        //$credentials = $this->getCredentialsNew($request);
 
         //dump($credentials);
         //exit('111');
@@ -248,183 +243,50 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //exit('before new Passport: usernametype='.$usernametype);
 
         //SAML case: username=[oli2002@med.cornell.edu_@_saml-sso]
-
-        if( 0 && $usernametype == 'saml-sso' ) {
-            $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
-            $firewallName = $authenticationSuccess->getFirewallName();
-
-            //testing: https://view.online/c/wcm/pathology/directory/event-log/
-            //http://127.0.0.1/translational-research/request/fee-schedule
-            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
-            //$firewallName = 'ldap_employees_firewall';
-            $indexLastRoute = '_security.'.$firewallName.'.target_path';
-            $lastRoute = $request->getSession()->get($indexLastRoute);
-            //replace http to https
-            $protocol = 'https';
-//            if( isset($_SERVER['HTTPS']) ) {
-//                $protocol = 'https';
-//            }
-//            else {
-//                $protocol = 'http';
-//            }
-//            echo 'authenticate: protocol='.$protocol."<br>";
-            $lastRoute = str_replace('http',$protocol,$lastRoute);
-            //echo 'authenticate: lastRoute='.$lastRoute."<br>";
-            $logger->notice('authenticate: saml-sso: $lastRoute=['.$lastRoute."]");
-
-            //$username: oli2002@med.cornell.edu_@_saml-sso
-
-            $username = strtolower($username); //username is entered email
-
-            $username = str_replace('_@_saml-sso','',$username); //oli2002@med.cornell.edu
-
-            //SAML 2: process acs response
-            $emailArr = explode('@', $username);
-            $domain = $emailArr[1]; //domain=med.cornell.edu
-            $authUtil = $this->container->get('authenticator_utility');
-
-            $lastRoute = $username . "_#_" . $lastRoute; //email_#_lastroot
-            $logger->notice('2 authenticate: saml-sso: $lastRoute=['.$lastRoute."]");
-
-            $authUtil->samlAuthenticationByDomain($domain,$lastRoute);
-//            $sitename = 'translationalresearch_sitename';
-//            $router = $this->container->get('router');
-//            $response = new RedirectResponse($router->generate('saml_login', array(
-//                'client' => $username,
-//                'sitename' => $sitename,
-//                'lastroute' => $lastRoute
-//            )));
-        }
-
-//        //SAML 1: redirect login request to 'saml_login'
-//        if( 1 && $usernametype == 'saml-sso' ) {
-//            $route = $request->attributes->get('_route');
-//            if( strpos((string)$route, 'login') !== false ) {
-//                if( $request->isMethod('POST') ) {
-//                    return new RedirectResponse( $this->router->generate('saml_login',array('client'=>)) );
-//                }
-//            }
-//        }
-
         $route = $request->attributes->get('_route');
-        $logger->notice('authenticate: $route=['.$route."]");
-        //if( $route == 'saml_acs_default' ) {
-        //    exit('authenticate: saml_acs_default');
-        //}
+        //$logger->notice('authenticate: $route=['.$route."]");
+
 
         //Exception for SAML
+        //Login page redirect to SamlController->login (/login/{client}/{sitename}?lastroute)
+        //SAML login return response to saml_acs_default route and intercepted by this authentication CustomGuardAuthenticator
         if( $route == 'saml_acs_default' ) {
             $logger->notice('authenticate: saml_acs_default: $username=['.$username."]");
 
-            //TODO: For SAML, login form is not used and all credentials are empty
-//            if( 0 && $username == 'N/A' ) {
-//                dump($request);
-//                $samlResponse = $request->getPayload()->get('SAMLResponse');
-//                $relayState = $request->getPayload()->get('RelayState');
-//                echo 'relayState='.$relayState."<br>";
-//                dump($samlResponse);
-//
-//                //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-//                if( str_contains($relayState,'/login/')) {
-//                    //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
-//                    $parts = explode('/', $relayState);
-//                    $sitename = array_pop($parts);
-//                    $client = array_pop($parts);
-//
-//                    $credentials['username'] = $client;
-//                    $this->sitename = $sitename;
-//                }
-//
-//                exit('after dump request');
-//            }
-
-        //if( 0 && $usernametype == 'saml-sso' ) {
-            //$authUtil = $this->container->get('authenticator_utility');
-            //username = username=oli2002l_@_local-user
-            //$user = $authUtil->findUserByUsername($username);
-            //$userManager = $this->container->get('user_manager');
-            //$user = $userManager->findUserByEmail($usernametype);
-            //$user = $this->getAuthUser($credentials);
-            //$username = str_replace('_@_saml-sso','',$username);
             //convert to lower case
             $username = strtolower($username); //username is entered email
-            //echo 'before new Passport: username='.$username."<br>";
-            //exit('samlAuthentication');
-
-//            $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
-//            $firewallName = $authenticationSuccess->getFirewallName();
-//
-//            //testing: https://view.online/c/wcm/pathology/directory/event-log/
-//            //http://127.0.0.1/translational-research/request/fee-schedule
-//            //https://view.online/c/wcm/pathology/translational-research/request/fee-schedule
-//            //$firewallName = 'ldap_employees_firewall';
-//            $indexLastRoute = '_security.'.$firewallName.'.target_path';
-//            $lastRoute = $request->getSession()->get($indexLastRoute);
-//            //replace http to https
-//            $protocol = 'https';
-////            if( isset($_SERVER['HTTPS']) ) {
-////                $protocol = 'https';
-////            }
-////            else {
-////                $protocol = 'http';
-////            }
-////            echo 'authenticate: protocol='.$protocol."<br>";
-//            $lastRoute = str_replace('http',$protocol,$lastRoute);
-//            //echo 'authenticate: lastRoute='.$lastRoute."<br>";
-//            $logger->notice('authenticate: saml_acs_default: $lastRoute=['.$lastRoute."]");
-
-            //$this->sitename
-            //echo 'authenticate: sitename='.$this->sitename."<br>";
-            //dump($request);
-            //exit('saml');
 
             if( $username ) {
                 $this->usernametype = 'saml-sso';
                 $email = str_replace('_@_saml-sso','',$username);
                 //username=[oli2002@med.cornell.edu_@_saml-sso]
 
-//                //SAML 1: redirect login request to 'saml_login'
-//                $route = $request->attributes->get('_route');
-//                if( strpos((string)$route, 'login') !== false ) {
-//                    if( $request->isMethod('POST') ) {
-//                        return new RedirectResponse( $this->container->get('router')->generate('saml_login',array('client'=>$email)) );
-//                    }
-//                }
-
-                //dump($request);
-                //$relayState = $request->getPayload()->get('RelayState');
-                //$samlResponse = $request->getPayload()->get('SAMLResponse');
-                //echo 'relayState='.$relayState."<br>";
-                //dump($samlResponse);
-                //exit('111 saml');
-
                 //SAML 2: process acs response
                 $emailArr = explode('@', $email);
                 $domain = $emailArr[1]; //domain=med.cornell.edu
                 $authUtil = $this->container->get('authenticator_utility');
-                //$authUtil->samlAuthenticationByDomain($domain,$lastRoute);
 
-                $logger->notice('authenticate: Before samlAuthenticationStayByDomain');
+                //$logger->notice('authenticate: Before samlAuthenticationStayByDomain');
                 $authenticated = $authUtil->samlAuthenticationStayByDomain($domain);
-                $logger->notice('authenticate: After samlAuthenticationStayByDomain');
+                //$logger->notice('authenticate: After samlAuthenticationStayByDomain');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
-                    $logger->notice('authenticate: $user='.$user->getId());
+                    $logger->notice('authenticate: authenticated $user='.$user->getId());
                     if (!$user) {
-                        $logger->notice('authenticate: $user not found');
+                        //$logger->notice('authenticate: $user not found');
                         throw new AuthenticationException('User not found and auto-creation is disabled.');
                     }
 
                     //Set lastRoute
                     if( $this->sitename && isset($credentials['lastRoute']) && $credentials['lastRoute'] ) {
                         $lastRoute = $credentials['lastRoute'];
-                        $logger->notice('authenticate: set session $lastRoute=['.$lastRoute.']');
+                        //$logger->notice('authenticate: set session $lastRoute=['.$lastRoute.']');
                         if( $lastRoute != '/' ) {
                             $authenticationSuccess = $this->container->get($this->sitename . '_authentication_handler');
                             $firewallName = $authenticationSuccess->getFirewallName();
                             $indexLastRoute = '_security.' . $firewallName . '.target_path';
-                            $logger->notice('authenticate: Set lastRoute $lastRoute=' . $lastRoute);
+                            //$logger->notice('authenticate: Set lastRoute $lastRoute=' . $lastRoute);
                             $request->getSession()->set($indexLastRoute, $lastRoute);
                         }
                     }
@@ -435,37 +297,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         return $user;
                     }));
                 } else {
-                    $logger->notice('authenticate: SAML authentication failed');
+                    //$logger->notice('authenticate: SAML authentication failed');
                     throw new AuthenticationException('SAML authentication failed.');
-                }
-            }
-
-            if( 0 ) {
-                $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
-                if ($user && $user->getSingleEmail()) {
-                    //$router = $this->container->get('router');
-                    //$response = new RedirectResponse($router->generate('saml_login', array('client' => $user->getSingleEmail())));
-                    //dump($response);
-                    //exit('samlAuthentication');
-                    //return $response;
-
-                    $authUtil = $this->container->get('authenticator_utility');
-                    $authUtil->samlAuthenticationByEmail($user);
-                }
-            }
-            //exit('after saml-sso: user='.$user);
-        }
+                } //if $authenticated
+            } //if($username)
+        } //if $route == 'saml_acs_default'
 
         return new Passport(
             new UserBadge($credentials['username']),
             new CustomCredentials(
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
-                    //exit('new Passport: CustomCredentials');
-                    //return true;
-                    //$logger = $this->container->get('logger');
-                   // $logger->notice('authenticate: new CustomCredentials. Before getAuthUser');
-                    //return true; //$user->getApiToken() === $credentials;
                     $user = $this->getAuthUser($credentials);
                     if( $user ) {
                         //if user exists here then it's already authenticated
@@ -481,28 +323,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $credentials
             )
         );
-
-
-//        $user = $this->getAuthUser($credentials);
-//        if( $user ) {
-//            return new SelfValidatingPassport(new UserBadge($credentials['username']));
-//
-//            return new Passport(
-//                new UserBadge($credentials['username']),
-//                new CustomCredentials(
-//                    // If this function returns anything else than `true`, the credentials
-//                    // are marked as invalid.
-//                    // The $credentials parameter is equal to the next argument of this class
-//                    function ($credentials, UserInterface $user) {
-//                        return true; //$user->getApiToken() === $credentials;
-//                    },
-//                    // The custom credentials
-//                    $credentials
-//            ));
-//
-//        } else {
-//            throw new CustomUserMessageAuthenticationException('Authentication failed');
-//        }
 
     }
 
@@ -521,24 +341,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $sitename = $request->request->get('_sitename');
         $lastRoute = NULL;
 
-        //testing: use clean username without _@_local-user saml-sso
-        if( 0 ) {
-            //Original: username=[oli2002@med.cornell.edu_@_saml-sso], usernametype=[saml-sso], sitename=[employees]
-            $usernameArr = explode('_@_', $username);
-            $username = $usernameArr[0];
-
-            //oli2002@med.cornell.edu => oli2002
-            $usernameArr = explode('@', $username);
-            $username = $usernameArr[0];
-            //$username = $username."_@_local-user";
-            //oli2002_@_ldap-user
-            $username = $username."_@_ldap-user";
-            $username = 'oli2002_@_saml-sso';
-        }
-
         $route = $request->attributes->get('_route');
 
-        //Exception for SAML
+        //Exception for SAML auth
         if( !$username && $route == 'saml_acs_default' ) {
             //dump( $request->getPayload() );
             //$samlResponse = $request->getPayload()->get('SAMLResponse');
@@ -553,7 +358,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$useEmailLastRoute = false;
 
             if( $useEmailLastRoute ) {
-                $deliemeter = "_#_";
+                //$deliemeter = "_#_";
                 $deliemeter = "__";
                 $relayStateParts = explode($deliemeter, $relayState);
                 $username = $relayStateParts[0];
@@ -588,46 +393,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             'sitename' => $sitename, //$request->request->get('_sitename'),
             'csrf_token' => $request->request->get('_csrf_token'),
             'lastRoute' => $lastRoute
-        ];
-        $this->sitename = $credentials['sitename'];
-
-        //dump($credentials);
-        //exit('111');
-
-        return $credentials;
-    }
-    public function getCredentialsNew(Request $request) : mixed
-    {
-
-        //dump($request->request);
-
-        $username = $request->request->get('_username');
-        $usernametype = $request->request->get('_usernametype');
-        $sitename = $request->request->get('_sitename');
-
-        $route = $request->attributes->get('_route');
-
-        //Exception for SAML
-        if( !$username && $route == 'saml_acs_default' ) {
-            //dump($request);
-
-            //request->parameters->client
-            if(1) {
-                $username = $request->query->get('client');
-                $sitename = $request->query->get('sitename');
-                $usernametype = 'saml-sso'; //testing
-            }
-        }
-        //exit('after dump request: $username='.$username);
-
-        //$usernametype = 'saml-sso'; //testing
-
-        $credentials = [
-            'username' => $username, //$request->request->get('_username'),
-            'password' => $request->request->get('_password'),
-            'usernametype' => $usernametype, //$request->request->get('_usernametype'),
-            'sitename' => $sitename, //$request->request->get('_sitename'),
-            'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $this->sitename = $credentials['sitename'];
 

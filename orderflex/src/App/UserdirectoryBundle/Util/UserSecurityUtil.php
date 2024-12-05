@@ -486,26 +486,26 @@ class UserSecurityUtil {
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
     public function samlLogout( $user, $logintype=NULL, $sitename=NULL ) {
-        //return false; //testing - disable. TODO: implement the logic to verify if user logged in by SAML (event log can be used)
+        //return false; //testing - disable.
 
         if( !$user ) {
             return false;
         }
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         //check $session = $request->getSession();
         if( !$logintype ) {
             $session = $this->requestStack->getCurrentRequest()->getSession();
             $logintype = $session->get('logintype');
-            $logger->notice("samlLogout: logintype=".$logintype);
+            //$logger->notice("samlLogout: logintype=".$logintype);
         }
 
         if( $logintype != 'saml-sso' ) {
-            $logger->notice("samlLogout: NO SAML logout");
+            //$logger->notice("samlLogout: NO SAML logout");
             return false;
         }
-        $logger->notice("samlLogout: SAML logout");
+        //$logger->notice("samlLogout: SAML logout");
 
         $returnUrl = $this->container->get('router')->generate(
             $sitename.'_login',
@@ -515,17 +515,17 @@ class UserSecurityUtil {
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
-        $logger->debug("samlLogout: Starting SAML logout: email=".$email);
+        //$logger->debug("samlLogout: Starting SAML logout: email=".$email);
         if( $email ) {
             $config = $samlConfigProviderUtil->getConfig($email);
             if( $config) {
                 try {
-                    $logger->notice("samlLogout: Starting SAML logout: try");
+                    //$logger->notice("samlLogout: Starting SAML logout: try");
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
-                    $logger->notice("samlLogout: returnUrl={$returnUrl}");
+                    //$logger->notice("samlLogout: returnUrl={$returnUrl}");
                     $auth->logout($returnUrl);
-                    $logger->notice("samlLogout: Starting SAML logout: after logout");
+                    //$logger->notice("samlLogout: Starting SAML logout: after logout");
                     // The logout method does a redirect, so we won't reach this line
                     //return new Response('Redirecting to IdP for logout...', 302);
                     return true;
@@ -535,7 +535,7 @@ class UserSecurityUtil {
                 }
             }
         }
-        $logger->debug("samlLogout: End of SAML logout");
+        //$logger->debug("samlLogout: End of SAML logout");
         return false;
     }
     
