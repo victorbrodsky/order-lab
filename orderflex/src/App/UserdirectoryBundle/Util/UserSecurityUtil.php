@@ -514,6 +514,7 @@ class UserSecurityUtil {
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $returnUrl = 'https://view.online/c/wcm/pathology/translational-research/login';
         //TODO: make sure $auth->logout($returnUrl) is working
         
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
