@@ -204,10 +204,11 @@ class SamlController extends OrderAbstractController //AbstractController
         }
     }
 
+    //NOT USED: because client is not provided, use /logout/ instead
     //check symfony available routes: No route found for "POST http://view.online/c/wcm/pathology/saml/logout
     //https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    #[Route(path: '/logout/{client}', name: 'saml_logout', requirements: ['client' => '.+'])]
-    public function logout(Request $request, string $client): Response
+    #[Route(path: '/logout/{client}', name: 'saml_logout_orig', requirements: ['client' => '.+'])]
+    public function logoutOrig(Request $request, string $client): Response
     {
         //exit('logoutOrig');
         $this->logger->notice("Starting SAML logout for client: $client");
@@ -247,11 +248,12 @@ class SamlController extends OrderAbstractController //AbstractController
             throw new UnprocessableEntityHttpException('Error while trying to logout');
         }
     }
+    //Used in SAML logout final step
     // https://view.online/c/wcm/pathology/saml/logout/oli2002@med.cornell.edu
-    #[Route(path: '/logout', name: 'saml_logout_new')]
-    public function logoutNew(Request $request): Response
+    #[Route(path: '/logout', name: 'saml_logout')]
+    public function logout(Request $request): Response
     {
-        //exit('logoutNew');
+        //exit('logout');
         //$this->logger->notice("logoutNew: Start");
 
         $relayState = $request->getPayload()->get('RelayState');
@@ -259,59 +261,6 @@ class SamlController extends OrderAbstractController //AbstractController
 
         //return new Response('Redirecting to IdP for logout...', 302);
         return $this->redirect( $relayState );
-
-
-        $relayState = $request->getPayload()->get('RelayState');
-        //$samlResponse = $request->getPayload()->get('SAMLResponse');
-        //echo 'relayState='.$relayState."<br>";
-
-        $client = '';
-        //$somestring = '/login/';
-        if( str_contains($relayState,'/login/')) {
-            //$client = (string) substr($somestring, strrpos("/$somestring", '/'));
-            $parts = explode('/', $relayState);
-            $client = array_pop($parts);
-        }
-        //exit('client='.$client);
-
-        $this->logger->notice("logoutNew: Starting SAML logout new for client: $client");
-        $config = $this->samlConfigProvider->getConfig($client);
-        try {
-            //exit('logoutNew: try');
-
-            //$sitename = 'employees';
-            //$userSecUtil = $this->container->get('user_security_utility');
-            //return $userSecUtil->userLogout($request,$sitename );
-            //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-            //return $this->redirect($this->generateUrl('employees_login'));
-
-            $this->logger->notice("logoutNew: before new Auth");
-            $auth = new Auth($config['settings']);
-            $this->logger->notice("logoutNew: before logout");
-
-            if( $auth->isAuthenticated() ) {
-                $auth->logout();
-                //$auth->logout('https://view.online/c/wcm/pathology/directory/login');
-                //$returnTo = 'https://view.online/c/wcm/pathology/directory/login';
-                //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
-                //$logoutUrl = $auth->logout();
-                //$this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
-                // The logout method does a redirect, so we won't reach this line
-                $this->logger->notice("logoutNew: after logout");
-            }
-
-            //exit('logoutNew: after logout');
-
-            $userSecUtil = $this->container->get('user_security_utility');
-            return $userSecUtil->userLogout($request,$sitename='employees');
-
-            //return $this->redirect($this->generateUrl('employees_login'));
-//            // The logout method does a redirect, so we won't reach this line
-//            return new Response('Redirecting to IdP for logout...', 302);
-        } catch (Error $e) {
-            $this->logger->critical(sprintf('Unable to logout client with message: "%s"', $e->getMessage()));
-            throw new UnprocessableEntityHttpException('Error while trying to logout');
-        }
     }
 
 //    #[Route(path: '/sls/{client}', name: 'saml_sls', requirements: ['client' => '.+'])]
