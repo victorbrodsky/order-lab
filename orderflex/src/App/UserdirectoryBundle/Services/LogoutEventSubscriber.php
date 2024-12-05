@@ -75,8 +75,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
-        $logger = $this->container->get('logger');
-        $logger->notice("onLogout");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("onLogout");
 
         $user = NULL;
         if( $event->getToken() ) {
@@ -88,7 +88,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $samlLogoutStr = "";
 
         $sitename = $this->getSitename($request);
-        $logger->notice("onLogout: sitename=$sitename");
+        //$logger->notice("onLogout: sitename=$sitename");
 
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
@@ -96,8 +96,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //exit('logout');
 
         $logintype = $session->get('logintype');
-        $logger = $this->container->get('logger');
-        $logger->notice("onLogout: logintype=".$logintype);
+        //$logger = $this->container->get('logger');
+        //$logger->notice("onLogout: logintype=".$logintype);
 
         if( $logintype === 'saml-sso' ) {
             $samlLogoutStr = ", with SAML logout";
@@ -119,16 +119,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //invalidate_session manually
         $session->invalidate();
 
-        //Saml logout:
-
-//        //dump($session);
-//        //exit('onLogout');
-        $logger->notice("onLogout: End");
-
-        //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
-        //$returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-
-        //samlLogout will redirect by $auth->logout();
+        //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $userSecUtil->samlLogout($user,$logintype,$sitename);
     }
 
@@ -138,8 +129,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         $routename = $request->get('_route');
 
-        $logger = $this->container->get('logger');
-        $logger->notice("onLogout: getSitename: routename=$routename"); //translationalresearch_logout
+        //$logger = $this->container->get('logger');
+        //$logger->notice("onLogout: getSitename: routename=$routename"); //translationalresearch_logout
 
         if( $routename == "employees_logout" ) {
             $sitename = $this->container->getParameter('employees.sitename');

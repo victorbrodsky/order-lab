@@ -688,15 +688,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
-//        $credentials = $this->getCredentials($request);
-//        $customToken = new CustomUsernamePasswordToken(
-//            $credentials['username'],
-//            $credentials['password'],
-//            $this->usernametype,
-//            $providerKey
-//        );
-//        $customToken->setAttributes(array('tokenUser'=>$token->getUser()));
-//        return $authenticationSuccess->onAuthenticationSuccess($request,$customToken);
+        //Set usernametype for SAML authentication and logout to determine is SAML logout required
         $token->setAttributes(array('usernametype' => $this->usernametype));
         return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }

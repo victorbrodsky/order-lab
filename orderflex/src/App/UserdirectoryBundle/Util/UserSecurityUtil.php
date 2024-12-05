@@ -507,16 +507,12 @@ class UserSecurityUtil {
         }
         $logger->notice("samlLogout: SAML logout");
 
-        //$returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-        //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
         $returnUrl = $this->container->get('router')->generate(
             $sitename.'_login',
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $returnUrl = 'https://view.online/c/wcm/pathology/translational-research/login';
-        //TODO: make sure $auth->logout($returnUrl) is working
-        
+
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
         $logger->debug("samlLogout: Starting SAML logout: email=".$email);
@@ -524,14 +520,12 @@ class UserSecurityUtil {
             $config = $samlConfigProviderUtil->getConfig($email);
             if( $config) {
                 try {
-                    $logger->debug("samlLogout: Starting SAML logout: try");
+                    $logger->notice("samlLogout: Starting SAML logout: try");
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
                     $logger->notice("samlLogout: returnUrl={$returnUrl}");
                     $auth->logout($returnUrl);
                     $logger->notice("samlLogout: Starting SAML logout: after logout");
-                    //exit('logout');
-                    //}
                     // The logout method does a redirect, so we won't reach this line
                     //return new Response('Redirecting to IdP for logout...', 302);
                     return true;
