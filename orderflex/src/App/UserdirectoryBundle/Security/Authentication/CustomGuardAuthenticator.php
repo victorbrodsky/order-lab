@@ -266,9 +266,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $domain = $emailArr[1]; //domain=med.cornell.edu
                 $authUtil = $this->container->get('authenticator_utility');
 
-                //$logger->notice('authenticate: Before samlAuthenticationStayByDomain');
-                $authenticated = $authUtil->samlAuthenticationStayByDomain($domain);
-                //$logger->notice('authenticate: After samlAuthenticationStayByDomain');
+                //$logger->notice('authenticate: Before samlAuthenticationByDomain');
+                $authenticated = $authUtil->samlAuthenticationByDomain($domain);
+                //$logger->notice('authenticate: After samlAuthenticationByDomain');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
@@ -564,16 +564,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $user = $authUtil->identifierAuthentication($token);
                 ////////////////////EOF External IDs authentication //////////////////
                 break;
-
-//            case "saml-sso":
-//                //////////////////////////////////////////////////////////////////////
-//                //                       5) SAML/SSO authentication                        //
-//                //////////////////////////////////////////////////////////////////////
-////                if( $usernametype && $usernametype == 'saml-sso' ) {
-////                    return $this->redirect( $this->generateUrl('saml_login', {'client': }) );
-////                }
-//                $user = $authUtil->samlAuthentication($token);
-//                break;
 
             default:
                 throw new AuthenticationException('Invalid username or password');
