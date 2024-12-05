@@ -510,6 +510,7 @@ class UserSecurityUtil {
         //$returnUrl = new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
         $returnUrl = $this->container->get('router')->generate($sitename.'_login');
+        //TODO: make sure $auth->logout($returnUrl) is working
         
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
@@ -521,9 +522,10 @@ class UserSecurityUtil {
                     $logger->debug("samlLogout: Starting SAML logout: try");
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
-                    $logger->debug("samlLogout: Starting SAML logout: user authenticated");
+                    $logger->notice("samlLogout: returnUrl={$returnUrl}");
+                    $logger->notice(sprintf('samlLogout: returnUrl=%d',$returnUrl));
                     $auth->logout($returnUrl);
-                    $logger->debug("samlLogout: Starting SAML logout: after logout");
+                    $logger->notice("samlLogout: Starting SAML logout: after logout");
                     //exit('logout');
                     //}
                     // The logout method does a redirect, so we won't reach this line
