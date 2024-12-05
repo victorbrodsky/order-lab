@@ -307,7 +307,7 @@ class SamlController extends OrderAbstractController //AbstractController
         $this->logger->notice("logoutNew: relayState=".$relayState);
 
         //return new Response('Redirecting to IdP for logout...', 302);
-        return $this->redirect( $this->generateUrl('employees_login') );
+        return $this->redirect( $relayState );
 
         $relayState = $request->getPayload()->get('RelayState');
         //$samlResponse = $request->getPayload()->get('SAMLResponse');
