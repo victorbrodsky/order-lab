@@ -792,13 +792,7 @@ class SecurityController extends OrderAbstractController
     //////////////// EOF Idle Time Out (NOT USED ANYMORE) ////////////////////
 
 
-
-
-//    //* @Route("/logout2", name="employees_custom_logout")
-//    /**
-//     * @Route("/directory/logout", name="employees_logout")
-//     * @Template()
-//     */
+    //Custom logout
     //[Route(path: '/logout', name: 'employees_logout')]
     public function logoutTestAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
@@ -808,103 +802,12 @@ class SecurityController extends OrderAbstractController
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->container->get('request')->getSession()->invalidate();
 
-        $sitename = $this->getSitename($request);
-        $user = $this->getUser();
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $logger = $this->container->get('logger');
-        $samlLogoutStr = "";
-
-        $session = $request->getSession();
-        //dump($session);
-        //exit('logout');
-        $logintype = $session->get('logintype');
-        $logger->notice("logoutAction: logintype=" . $logintype);
-
-        //Symfony logout
-        //$response = $security->logout();
-        // you can also disable the csrf logout
-        $security->logout(false);
-        //$session->invalidate();
-        //$tokenStorage->setToken(null);
-        //exit('logoutAction: after logout');
-
-        //$routename = $request->get('_route');
-        //echo "routename=".$routename."<br>";
-
-        if( $logintype === 'saml-sso' ) {
-            $samlLogoutStr = ", with SAML logout";
-        }
-
-        //EventLog
-        //$request = $event->getRequest();
-        $eventStr = "User $user manually logged out".$samlLogoutStr;
-        $eventType = "User Manually Logged Out";
-        $userSecUtil->createUserEditEvent(
-            $sitename,                                              //$sitename
-            $eventStr,                                              //$event (Event description)
-            $user,                                                  //$user
-            $user,                                                  //$subjectEntities
-            $request,                                               //$request
-            $eventType                                              //$action (Event Type)
-        );
-
-        //$returnUrl = $this->redirect($this->generateUrl($sitename.'_login'));
-
-        //Saml logout
-        if( 1 ) {
-            //dump($session);
-            //exit('onLogout');
-            //$samlLogoutStr = "";
-            //samlLogout will redirect to the $returnUrl
-            $samlLogout = $userSecUtil->samlLogout($user,$logintype,$sitename);
-            //if ($samlLogout) {
-            //    $samlLogoutStr = ", with SAML logout";
-            //}
-        }
-
-        return $this->redirect($this->generateUrl($sitename.'_login'));
+//        $session = $request->getSession();
+//        // you can also disable the csrf logout
+//        $security->logout(false);
+//        return $this->redirect($this->generateUrl($sitename.'_login'));
     }
 
-    public function getSitename( $request ) {
-        //default
-        $sitename = $this->getParameter('employees.sitename');
-
-        $routename = $request->get('_route');
-
-        if( $routename == "employees_logout" ) {
-            $sitename = $this->getParameter('employees.sitename');
-        }
-        if( $routename == "fellapp_logout" ) {
-            $sitename = $this->getParameter('fellapp.sitename');
-        }
-        if( $routename == "resapp_logout" ) {
-            $sitename = $this->getParameter('resapp.sitename');
-        }
-        if( $routename == "deidentifier_logout" ) {
-            $sitename = $this->getParameter('deidentifier.sitename');
-        }
-        if( $routename == "scan_logout" ) {
-            $sitename = $this->getParameter('scan.sitename');
-        }
-        if( $routename == "vacreq_logout" ) {
-            $sitename = $this->getParameter('vacreq.sitename');
-        }
-        if( $routename == "calllog_logout" ) {
-            $sitename = $this->getParameter('calllog.sitename');
-        }
-        if( $routename == "crn_logout" ) {
-            $sitename = $this->getParameter('crn.sitename');
-        }
-        if( $routename == "translationalresearch_logout" ) {
-            $sitename = $this->getParameter('translationalresearch.sitename');
-        }
-        if( $routename == "dashboard_logout" ) {
-            $sitename = $this->getParameter('dashboard.sitename');
-        }
-
-        return $sitename;
-    }
 
 //    /**
 //     * @Route("/access-request-logout/", name="employees_accreq_logout")

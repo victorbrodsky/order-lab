@@ -302,16 +302,12 @@ class SamlController extends OrderAbstractController //AbstractController
     {
         //exit('logoutNew');
         $this->logger->notice("logoutNew: Start");
+
+        $relayState = $request->getPayload()->get('RelayState');
+        $this->logger->notice("logoutNew: relayState=".$relayState);
+
         //return new Response('Redirecting to IdP for logout...', 302);
         return $this->redirect( $this->generateUrl('employees_login') );
-
-        //$user = $this->getUser();
-        //echo "User=".$user."<br>";
-        //exit('111');
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //return $userSecUtil->userLogoutSymfony7();
-
-        //return $userSecUtil->userLogout($request,$sitename='employees');
 
         $relayState = $request->getPayload()->get('RelayState');
         //$samlResponse = $request->getPayload()->get('SAMLResponse');
@@ -348,6 +344,7 @@ class SamlController extends OrderAbstractController //AbstractController
                 //$logoutUrl = $auth->logout($returnTo,array(),null,null,$stay = true);
                 //$logoutUrl = $auth->logout();
                 //$this->logger->notice("logoutNew: after logout: logoutUrl=".$logoutUrl);
+                // The logout method does a redirect, so we won't reach this line
                 $this->logger->notice("logoutNew: after logout");
             }
 

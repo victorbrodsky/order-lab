@@ -108,12 +108,12 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         $eventStr = "User $user manually logged out".$samlLogoutStr;
         $eventType = "User Manually Logged Out";
         $userSecUtil->createUserEditEvent(
-            $sitename, //$this->container->getParameter('employees.sitename'),   //$sitename
-            $eventStr,                                              //$event (Event description)
-            $user,                                                  //$user
-            $user,                                                  //$subjectEntities
-            $request,                                               //$request
-            $eventType                                              //$action (Event Type)
+            $sitename,                             //$sitename
+            $eventStr,                             //$event (Event description)
+            $user,                                 //$user
+            $user,                                 //$subjectEntities
+            $request,                              //$request
+            $eventType                             //$action (Event Type)
         );
 
         //invalidate_session manually
