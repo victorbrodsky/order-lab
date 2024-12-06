@@ -162,6 +162,20 @@
                     //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
                     // => user exists => user domain has SAML => redirect to SAML
 
+                    if(0) {
+                        var username = $('#display-username').val();
+                        var sitename = $('#sitename').val();
+                        var lastRoute = $('#lastRoute').val();
+                        var redirectUrl = Routing.generate('employees_login_check2', {
+                            client: username,
+                            sitename: sitename,
+                        });
+                        redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
+                        console.log("redirectUrl=" + redirectUrl);
+//                    window.location.replace(redirectUrl);
+                        return false;
+                    }
+
                     if(1) {
                         var usernametypeid = $('#usernametypeid_show').val();
                         //console.log("usernametypeid="+usernametypeid);

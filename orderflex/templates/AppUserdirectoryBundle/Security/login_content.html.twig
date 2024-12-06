@@ -90,7 +90,7 @@
 <input type="hidden" name="lastRoute" id="lastRoute" value={{ lastRoute }} />
 
 {% if user_security_utility.allowSiteLogin(sitename) %}
-    {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">#}
+    {#<form id="login-form2" class="form-signin" action="{{ path('employees_login_check2') }}" method="post">#}
     <form id="login-form" class="form-signin" method="post">
     {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
     {#<form id="login-form" class="form-signin" action="{{ path('employees_login_check') }}" method="post">#}

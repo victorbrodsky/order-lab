@@ -141,6 +141,11 @@
 
             {% set idColor = transres_util.getPriceListColorByInvoice(invoice) %}
 
+            {% set latestInvoice = NULL %}
+            {% if not invoice.latestVersion %}
+                {% set latestInvoice = transres_request_util.getLatestInvoice(invoice.getTransresRequest()) %}
+            {% endif %}
+
             <tr>
                 <td style="display: none">
                     <a target="_blank"
@@ -178,7 +183,22 @@
                         {{ invoice.dueDate|date('m/d/Y',false) }}
                     {% endif %}
                 </td>
-                <td>{{ invoice.status }}</td>
+                <td class="rowlink-skip">
+                    {#If invoice.latestVersion is not true => display status as "Old Invoice Version (view latest)"#}
+                    {% if invoice.latestVersion %}
+                        {{ invoice.status }}
+                    {% else %}
+                        {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                            Old Invoice Version (
+                            <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">
+                                view latest
+                            </a>
+                            )
+                        {% else %}
+                            Old Invoice Version
+                        {% endif %}
+                    {% endif %}
+                </td>
                 <td class="rowlink-skip">
                     {% if invoice.invoiceTo %}
                         {{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
@@ -331,9 +351,9 @@
                             {% else %}
 
                                 {#Add “Show latest version of this invoice” and “Edit latest version of this invoice” links in the Action button for all non-latest invoices#}
-                                {% set latestInvoice = transres_request_util.getLatestInvoice(invoice.getTransresRequest()) %}
+                                {#{% set latestInvoice = transres_request_util.getLatestInvoice(invoice.getTransresRequest()) %}#}
 
-                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                                {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
                                     <li>
                                         <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">
                                             Show latest version of this invoice
@@ -341,7 +361,7 @@
                                     </li>
                                 {% endif %}
 
-                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
                                     <li>
                                         <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">
                                             Edit latest version of this invoice
