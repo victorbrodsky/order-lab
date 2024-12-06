@@ -45,6 +45,7 @@ security:
               #pattern: ^/(system|default)/directory
               context: scan_auth
               switch_user: true
+              user_checker: App\UserdirectoryBundle\Security\Authentication\UserChecker
               custom_authenticators:
                   authenticator: custom_guard_authenticator
               form_login:

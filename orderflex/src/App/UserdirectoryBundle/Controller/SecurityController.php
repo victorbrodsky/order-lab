@@ -44,18 +44,19 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends OrderAbstractController
 {
 
-//    #[Route(path: '/login_check', name: 'employees_login_check', methods: ["POST"])]
-//    #[Template("AppUserdirectoryBundle/Security/login.html.twig")]
-//    public function loginCheckAction( Request $request )
-//    {
-//
-//        $username = $request->get('_username');
-//        $password = $request->get('_password');
-//
-//        echo "username=".$username.", password=".$password."<br>";
-//
-//        exit("my login check!");
-//    }
+    #[Route(path: '/login_check', name: 'employees_login_check', methods: ["POST"])]
+    #[Template("AppUserdirectoryBundle/Security/login.html.twig")]
+    public function loginCheckAction( Request $request )
+    {
+
+        $username = $request->get('_username');
+        $password = $request->get('_password');
+
+        echo "username=".$username.", password=".$password."<br>";
+
+        exit("my login check!");
+    }
+
     //    /**
     //     * @Route("/login_check", name="dummy_login_check")
     //     * @Route("/directory/login_check", name="employees_dummy_login_check")

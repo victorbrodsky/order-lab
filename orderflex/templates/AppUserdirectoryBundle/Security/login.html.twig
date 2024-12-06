@@ -157,6 +157,11 @@
                 $("#login-form").on("submit", function () {
                     setFullUsername();
 
+                    //Add 2 cases:
+                    //1) SAML login type => user enters the user name => user exists => user domain has SAML => redirect to SAML
+                    //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
+                    // => user exists => user domain has SAML => redirect to SAML
+
                     var usernametypeid = $('#usernametypeid_show').val();
                     //console.log("usernametypeid="+usernametypeid);
                     $('#message').html("").hide();
