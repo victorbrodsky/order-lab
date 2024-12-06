@@ -44,8 +44,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends OrderAbstractController
 {
 
-    #[Route(path: '/login_check', name: 'employees_login_check', methods: ["POST"])]
-    #[Template("AppUserdirectoryBundle/Security/login.html.twig")]
+    //https://stackoverflow.com/questions/76895321/enable-symfony-6-3-login-via-username-and-via-email-at-the-same-time
+
+    //[Template("AppUserdirectoryBundle/Security/login.html.twig")]
+    #[Route(path: '/login_check2', name: 'employees_login_check2', methods: ["POST"])]
     public function loginCheckAction( Request $request )
     {
 

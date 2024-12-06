@@ -45,13 +45,13 @@ security:
               #pattern: ^/(system|default)/directory
               context: scan_auth
               switch_user: true
-              #user_checker: App\UserdirectoryBundle\Security\Authentication\UserChecker
               custom_authenticators:
                   authenticator: custom_guard_authenticator
               form_login:
-                  # "login" is the name of the route created previously
                   login_path: employees_login #/%tenantprefix%directory/login
-                  check_path: employees_login_check #/%tenantprefix%directory/login
+                  check_path: employees_login_check2 #/%tenantprefix%directory/login
+              #form_login:
+
               logout:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login

@@ -165,8 +165,8 @@ login_check:
 #system_logout:
 #    path:   /system/logout
 
-employees_login_check:
-    path:   /directory/login_check
+#employees_login_check:
+#    path:   /directory/login_check
 employees_logout:
     path:   /directory/logout
 
