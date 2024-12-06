@@ -162,30 +162,32 @@
                     //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
                     // => user exists => user domain has SAML => redirect to SAML
 
-                    var usernametypeid = $('#usernametypeid_show').val();
-                    //console.log("usernametypeid="+usernametypeid);
-                    $('#message').html("").hide();
-                    if( usernametypeid == 'saml-sso' ) {
-                        if (validateUsername() == false) {
-                            $('#message').html("Please enter your full email").show();
-                            return false;
-                        }
+                    if(1) {
+                        var usernametypeid = $('#usernametypeid_show').val();
+                        //console.log("usernametypeid="+usernametypeid);
+                        $('#message').html("").hide();
+                        if (usernametypeid == 'saml-sso') {
+                            if (validateUsername() == false) {
+                                $('#message').html("Please enter your full email").show();
+                                return false;
+                            }
 
-                        //redirect to SAML controller (SamlController->login)
-                        var username = $('#display-username').val();
-                        var sitename = $('#sitename').val();
-                        var lastRoute = $('#lastRoute').val();
-                        //console.log("username="+username);
-                        //console.log("lastRoute="+lastRoute);
-                        if( username ) {
-                            var redirectUrl = Routing.generate('saml_login', {
-                                client: username,
-                                sitename: sitename,
-                            });
-                            redirectUrl = redirectUrl + "?lastroute="+lastRoute;
-                            //console.log("redirectUrl="+redirectUrl);
-                            window.location.replace(redirectUrl);
-                            return false;
+                            //redirect to SAML controller (SamlController->login)
+                            var username = $('#display-username').val();
+                            var sitename = $('#sitename').val();
+                            var lastRoute = $('#lastRoute').val();
+                            //console.log("username="+username);
+                            //console.log("lastRoute="+lastRoute);
+                            if (username) {
+                                var redirectUrl = Routing.generate('saml_login', {
+                                    client: username,
+                                    sitename: sitename,
+                                });
+                                redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
+                                //console.log("redirectUrl="+redirectUrl);
+                                window.location.replace(redirectUrl);
+                                return false;
+                            }
                         }
                     }
 

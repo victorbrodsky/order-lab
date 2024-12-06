@@ -49,9 +49,12 @@ security:
                   authenticator: custom_guard_authenticator
               form_login:
                   login_path: employees_login #/%tenantprefix%directory/login
-                  check_path: employees_login_check2 #/%tenantprefix%directory/login
-              #form_login:
-
+                  check_path: employees_login_check #/%tenantprefix%directory/login
+#              form_login:
+#                  login_path: employees_login
+#                  check_path: employees_login_check2
+#                  form_only: false
+#                  post_only: false
               logout:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login

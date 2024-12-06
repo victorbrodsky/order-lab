@@ -93,6 +93,7 @@
     {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">#}
     <form id="login-form" class="form-signin" method="post">
     {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
+    {#<form id="login-form" class="form-signin" action="{{ path('employees_login_check') }}" method="post">#}
 
         <div class="row">
         <div class="col-xs-12">
@@ -130,6 +131,8 @@
         <div id="message" type="hidden"></div>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
+        {#<input type="submit" name="login" value="Login">#}
+        {#<input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}">#}
 
         {#<button class="btn btn-lg btn-primary" type="submit">#}
             {#Sign in#}
