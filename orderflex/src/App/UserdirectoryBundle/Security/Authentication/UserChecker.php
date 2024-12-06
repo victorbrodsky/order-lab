@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusExce
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+//NOT USED
 class UserChecker implements UserCheckerInterface
 {
     public function checkPreAuth(UserInterface $user): void
@@ -32,7 +33,7 @@ class UserChecker implements UserCheckerInterface
         //}
 
         //redirect
-        return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
+        //return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
 
     }
 
