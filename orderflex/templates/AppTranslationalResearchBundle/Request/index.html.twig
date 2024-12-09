@@ -116,7 +116,7 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Fund Number', 'transresRequest.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Work Request Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
                 {% if showValue %}
@@ -126,7 +126,7 @@
                 {#<th title="Total calculated work request's default fee">Total</th>#}
                 <th title="Total amount of the most recent invoice including subsidy (Paid + Due + Positive Subsidy)">Total</th>
                 <th title="Number of all invoices">Invoice Version</th>
-                <th title="Status of the most recent invoice status">Status</th>
+                <th title="Status of the most recent invoice">Status of Latest Version of Associated Invoice</th>
                 <th title="Total amount of the most recent issued invoice charge to the customer (or expected, unbilled charge if invoice is not issued)">Charge</th>
                 <th title="Paid amount of the most recent issued invoices">Paid</th>
                 <th title="Due amount of the most recent issued invoices">Due</th>
