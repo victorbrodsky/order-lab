@@ -24,6 +24,7 @@ use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced n
 //use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Repository\UserRepository;
 use App\UserdirectoryBundle\Security\Authentication\CustomUsernamePasswordToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -46,8 +47,9 @@ class SecurityController extends OrderAbstractController
 
     //https://stackoverflow.com/questions/76895321/enable-symfony-6-3-login-via-username-and-via-email-at-the-same-time
 
+
     //[Template("AppUserdirectoryBundle/Security/login.html.twig")]
-    #[Route(path: '/directory/login_check', name: 'employees_login_check', methods: ["POST"], options: ['expose' => true])]
+    #[Route(path: '/directory/login_check2', name: 'employees_login_check2', methods: ["POST"], options: ['expose' => true])]
     public function loginCheckAction( Request $request )
     {
 

@@ -32,6 +32,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 use App\Saml\Util\SamlConfigProvider;
 use App\UserdirectoryBundle\Entity\User;
 use OneLogin\Saml2\Auth;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -67,6 +68,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCre
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
 
 class CustomGuardAuthenticator extends AbstractAuthenticator
@@ -80,14 +82,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     private $userProvider;
     private $passwordToken;
     //private $credentials;
-
     private $usernametype = null;
 
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $em,
         Security $security=null,
-        CsrfTokenManagerInterface $csrfTokenManager=null
+        CsrfTokenManagerInterface $csrfTokenManager=null,
     )
     {
         //$this->encoder = $encoder;
@@ -463,11 +464,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         $authenticationSuccess = $this->container->get('employees_authentication_handler');
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
-    }
-
-    public function start(Request $request, AuthenticationException $authException = null): Response
-    {
-        return new RedirectResponse($this->urlGenerator->generate('login'));
     }
 
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)

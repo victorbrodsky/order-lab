@@ -45,22 +45,27 @@ security:
               #pattern: ^/(system|default)/directory
               context: scan_auth
               switch_user: true
-              #user_checker: App\UserdirectoryBundle\Security\Authentication\UserChecker
               custom_authenticators:
                   authenticator: custom_guard_authenticator
+              #working version
               form_login:
                   login_path: employees_login #/%tenantprefix%directory/login
                   check_path: employees_login_check #employees_login_check #/%tenantprefix%directory/login
+              #TODO: check_path does not redirect to my custom controller?
 #              form_login:
 #                  login_path: employees_login
-#                  check_path: employees_login_check2
+#                  check_path: /directory/login_check2
+#              form_login:
+#                  login_path: employees_login
+#                  check_path: pre_security_login
 #                  form_only: false
 #                  post_only: false
+#                  enable_csrf: true
               logout:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
                   invalidate_session: false
-              #lazy:  true
+              lazy:  true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
               #access_denied_url: /directory/access-requests/new/create
