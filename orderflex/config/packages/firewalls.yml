@@ -45,12 +45,12 @@ security:
               #pattern: ^/(system|default)/directory
               context: scan_auth
               switch_user: true
-              entry_point: App\UserdirectoryBundle\Security\Authentication\AuthenticationEntryPoint
+              #user_checker: App\UserdirectoryBundle\Security\Authentication\UserChecker
               custom_authenticators:
                   authenticator: custom_guard_authenticator
               form_login:
                   login_path: employees_login #/%tenantprefix%directory/login
-                  check_path: employees_login_check #/%tenantprefix%directory/login
+                  check_path: employees_login_check #employees_login_check #/%tenantprefix%directory/login
 #              form_login:
 #                  login_path: employees_login
 #                  check_path: employees_login_check2
@@ -60,7 +60,7 @@ security:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
                   invalidate_session: false
-              lazy:  true
+              #lazy:  true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
               #access_denied_url: /directory/access-requests/new/create

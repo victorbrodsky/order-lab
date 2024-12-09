@@ -465,6 +465,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
     }
 
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
+        return new RedirectResponse($this->urlGenerator->generate('login'));
+    }
+
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     public function authenticateToken($token, $providerKey)
     {
