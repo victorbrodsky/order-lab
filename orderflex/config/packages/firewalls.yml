@@ -51,10 +51,12 @@ security:
               form_login:
                   login_path: employees_login #/%tenantprefix%directory/login
                   check_path: employees_login_check #employees_login_check #/%tenantprefix%directory/login
+                  enable_csrf: true
               #TODO: check_path does not redirect to my custom controller?
-#              form_login:
-#                  login_path: employees_login
-#                  check_path: /directory/login_check2
+              #form_login:
+              #    login_path: employees_login
+              #    check_path: login_check #/directory/login_check2
+                  #form_only: true
 #              form_login:
 #                  login_path: employees_login
 #                  check_path: pre_security_login

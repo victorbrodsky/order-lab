@@ -162,36 +162,96 @@
                     //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
                     // => user exists => user domain has SAML => redirect to SAML
 
+                    var samlenabled = $('#samlenabled').val();
+                    //console.log("samlenabled="+samlenabled);
+                    //return false;
+                    var usesaml = false;
+                    if( samlenabled ) {
+                        console.log("samlenabled="+samlenabled);
+                        //return false;
+                        var username = $('#display-username').val();
+                        var sitename = $('#sitename').val();
+                        //var password = $('#password').val();
+                        var lastRoute = $('#lastRoute').val();
+                        console.log("username="+username);
+                        //return false;
+                        var url = Routing.generate('employees_user_check_custom');
+                        $.ajax({
+                            url: url,
+                            timeout: 180000,
+                            type: "POST",
+                            async: false,
+                            data: {
+                                _username: username,
+                                _sitename: sitename,
+                                //_password: password,
+                                _lastroute: lastRoute,
+                            }
+                        }).success(function(data) {
+                            jsonData = JSON.parse(data);
+                            //console.log("data="+data);
+                            //usesaml = jsonData.usesaml;
+                            //console.log("1usesaml="+usesaml);
+                            //usesaml = jsonData['usesaml'];
+                            //console.log("2usesaml="+usesaml);
+                            if( jsonData['usesaml'] ) {
+                                usesaml = true;
+                                console.log("useremail="+jsonData['useremail']);
+                                $('#display-username').val(jsonData['useremail'])
+                            }
+                            //$('#lastRoute').val(data['lastroute']);
+                        }).fail(function(jqXHR, exception) {
+                            alert(error);
+                        }).done(function() {
+                            //userStopBtn(btn,lbtn);
+                            console.log("token verification done");
+                        });
+                        //return false;
+                    }
+
                     if(0) {
                         var username = $('#display-username').val();
                         var sitename = $('#sitename').val();
+                        var password = $('#password').val();
                         var lastRoute = $('#lastRoute').val();
-                        var redirectUrl = Routing.generate('employees_login_check2', {
-                            client: username,
-                            sitename: sitename,
+                        //var redirectUrl = Routing.generate('employees_login_check_custom');
+                        var redirectUrl = Routing.generate('employees_login_check_custom', {
+                            _username: username,
+                            _password: password,
+                            _sitename: sitename,
+                            lastRoute: lastRoute
                         });
                         redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
                         console.log("redirectUrl=" + redirectUrl);
-//                    window.location.replace(redirectUrl);
+                        window.location.replace(redirectUrl);
                         return false;
                     }
+
+                    console.log("before saml: usesaml="+usesaml);
+                    //return false;
 
                     if(1) {
                         var usernametypeid = $('#usernametypeid_show').val();
                         //console.log("usernametypeid="+usernametypeid);
                         $('#message').html("").hide();
-                        if (usernametypeid == 'saml-sso') {
-                            if (validateUsername() == false) {
-                                $('#message').html("Please enter your full email").show();
-                                return false;
+                        if( usesaml || usernametypeid == 'saml-sso' ) {
+                            if( usernametypeid == 'saml-sso' ) {
+                                if( validateUsername() == false ) {
+                                    $('#message').html("Please enter your full email").show();
+                                    return false;
+                                }
                             }
+
+                            //set user type to saml to enable saml authentication response
+                            //usernametypeid = 'saml-sso';
 
                             //redirect to SAML controller (SamlController->login)
                             var username = $('#display-username').val();
                             var sitename = $('#sitename').val();
                             var lastRoute = $('#lastRoute').val();
-                            //console.log("username="+username);
-                            //console.log("lastRoute="+lastRoute);
+                            console.log("username="+username);
+                            console.log("lastRoute="+lastRoute);
+                            //return false;
                             if (username) {
                                 var redirectUrl = Routing.generate('saml_login', {
                                     client: username,

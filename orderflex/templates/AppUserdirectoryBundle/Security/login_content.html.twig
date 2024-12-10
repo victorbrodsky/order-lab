@@ -88,11 +88,16 @@
 <input type="hidden" name="display_width" id="display_width" value="" />
 <input type="hidden" name="sitename" id="sitename" value={{ sitename }} />
 <input type="hidden" name="lastRoute" id="lastRoute" value={{ lastRoute }} />
+<input type="hidden" name="samlenabled" id="samlenabled" value={{ samlenabled }} />
 
 {% if user_security_utility.allowSiteLogin(sitename) %}
 
-    {#<form id="login-form2" class="form-signin" action="{{ path('employees_login_check2') }}" method="post">#}
+
+    {#working#}
     <form id="login-form" class="form-signin" method="post">
+    {#testing#}
+    {#<form action="{{ path('employees_login_check_custom') }}" method="post" class="form-signin">#}
+    {#<form id="login-form2" class="form-signin" action="{{ path('employees_login_check2') }}" method="post">#}
     {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
     {#<form id="login-form" class="form-signin" action="{{ path('employees_login_check') }}" method="post">#}
 

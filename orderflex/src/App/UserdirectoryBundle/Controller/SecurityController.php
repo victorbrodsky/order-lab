@@ -47,36 +47,58 @@ class SecurityController extends OrderAbstractController
 
     //https://stackoverflow.com/questions/76895321/enable-symfony-6-3-login-via-username-and-via-email-at-the-same-time
 
-
-    //[Template("AppUserdirectoryBundle/Security/login.html.twig")]
-    #[Route(path: '/directory/login_check2', name: 'employees_login_check2', methods: ["POST"], options: ['expose' => true])]
-    public function loginCheckAction( Request $request )
+    #[Route(path: '/directory/user_check_custom', name: 'employees_user_check_custom', methods: ["POST"], options: ['expose' => true])]
+    public function userCheckCustomAction( Request $request )
     {
-
+        //dump($request);
         $username = $request->get('_username');
-        $password = $request->get('_password');
+        $sitename = $request->get('_sitename');
+        $lastroute = $request->get('_lastroute');
 
-        echo "username=".$username.", password=".$password."<br>";
+        //echo "username=".$username.', sitename='.$sitename.', lastroute='.$lastroute."<br>";
 
-        exit("my login check!");
+        //exit("my login check!");
+
+        $output = array();
+        $output['usesaml'] = true;
+        $output['useremail'] = 'dddd';
+
+        $response = new Response();
+        $response->setContent(json_encode($output));
+        return $response;
     }
 
-    //    /**
-    //     * @Route("/login_check", name="dummy_login_check")
-    //     * @Route("/directory/login_check", name="employees_dummy_login_check")
-    //     * @Route("/call-log-book/login_check", name="calllog_dummy_login_check")
-    //     */
-    //    public function loginCheckAction( Request $request )
-    //    {
-    //        //Reroute to home page
-    //        //exit("Reroute to home page");
-    //        return $this->redirect( $this->generateUrl('main_common_home') );
-    //    }
-    /**
-     * //Method("GET")
-     *
-     *
-     */
+
+//    //[Template("AppUserdirectoryBundle/Security/login.html.twig")]
+//    #[Route(path: '/directory/login_check_custom', name: 'employees_login_check_custom', methods: ["GET","POST"], options: ['expose' => true])]
+//    public function loginCheckCustomAction( Request $request )
+//    {
+//
+//        //dump($request);
+//        //$username = $request->get('_username');
+//        //$password = $request->get('_password');
+//
+//        $username = $request->query->get('_username');
+//        $password = $request->query->get('_password');
+//        $sitename = $request->query->get('_sitename');
+//        $lastroute = $request->query->get('_lastroute');
+//
+//        echo "username=".$username.", password=".$password.', sitename='.$sitename.', lastroute='.$lastroute."<br>";
+//
+//        exit("my login check!");
+//    }
+
+//    /**
+//     * @Route("/login_check", name="login_check")
+//     * @Route("/directory/login_check", name="employees_dummy_login_check")
+//     * @Route("/call-log-book/login_check", name="calllog_dummy_login_check")
+//     */
+//    public function loginCheckAction( Request $request )
+//    {
+//        //Reroute to home page
+//        exit("Reroute to home page");
+//        return $this->redirect( $this->generateUrl('main_common_home') );
+//    }
 
     #[Route(path: '/directory/login', name: 'directory_login')]
     #[Route(path: '/login', name: 'employees_login')]
@@ -180,6 +202,11 @@ class SecurityController extends OrderAbstractController
         }
         ///////////// EOF read cookies /////////////
 
+        //check if SAML enabled
+        $samlenabled = false;
+        $samlenabled = true;
+        $formArr['samlenabled'] = $samlenabled;
+        
         //not live warning
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         //echo "environment=$environment <br>"; //dev

@@ -61,6 +61,7 @@ security:
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^.*/directory/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/user_check_custom, role: PUBLIC_ACCESS }
 #       - { path: ^/directory/login, role: PUBLIC_ACCESS, requires_channel: https }
        - { path: ^.*/directory/setloginvisit, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/account-requests/, role: PUBLIC_ACCESS }
