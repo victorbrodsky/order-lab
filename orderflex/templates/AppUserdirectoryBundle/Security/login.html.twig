@@ -200,8 +200,10 @@
                                 $('#display-username').val(jsonData['useremail'])
                             }
                             //$('#lastRoute').val(data['lastroute']);
-                        }).fail(function(jqXHR, exception) {
-                            alert(error);
+                        }).fail(function(jqXHR, exception, error) {
+                            var failMsg = "exception="+exception+", error="+error;
+                            console.log(failMsg);
+                            alert(failMsg);
                         }).done(function() {
                             //userStopBtn(btn,lbtn);
                             console.log("token verification done");

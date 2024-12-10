@@ -19,6 +19,8 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\Saml\Entity\SamlConfig;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 
 //use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
@@ -47,21 +49,49 @@ class SecurityController extends OrderAbstractController
 
     //https://stackoverflow.com/questions/76895321/enable-symfony-6-3-login-via-username-and-via-email-at-the-same-time
 
+    //Add 2 cases:
+    //1) SAML login type => user enters the user name => user exists => user domain has SAML => redirect to SAML
+    //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
+    // => user exists => user domain has SAML => redirect to SAML
     #[Route(path: '/directory/user_check_custom', name: 'employees_user_check_custom', methods: ["POST"], options: ['expose' => true])]
     public function userCheckCustomAction( Request $request )
     {
+        $em = $this->getDoctrine()->getManager();
+
         //dump($request);
         $username = $request->get('_username');
-        $sitename = $request->get('_sitename');
-        $lastroute = $request->get('_lastroute');
+        //$sitename = $request->get('_sitename');
+        //$lastroute = $request->get('_lastroute');
 
         //echo "username=".$username.', sitename='.$sitename.', lastroute='.$lastroute."<br>";
 
         //exit("my login check!");
 
+        //1) check user by username as user->'primarypublicuserid' (i.e. johndoe)
+        $user = NULL;
+        $userEmail = NULL;
+        $useSaml = FALSE;
+        $users = $em->getRepository(User::class)->findBy(array('primaryPublicUserId'=>$username));
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+        if( $user ) {
+            $userEmail = $user->getSingleEmail();
+            //check if domain has SAML config
+            //$samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+            //$config = $samlConfigProviderUtil->getConfig($userEmail);
+            $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
+            if( $config ) {
+                $useSaml = true;
+            }
+        }
+
+        //2) check user by username as user->userinfo->'emailcanonical' (i.e. johndoe@yahoo.com)
+        //findOneUserByUserInfoUseridEmail
+
         $output = array();
-        $output['usesaml'] = true;
-        $output['useremail'] = 'dddd';
+        $output['usesaml'] = $useSaml;
+        $output['useremail'] = $userEmail;
 
         $response = new Response();
         $response->setContent(json_encode($output));

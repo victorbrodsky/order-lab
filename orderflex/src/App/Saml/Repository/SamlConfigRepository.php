@@ -23,7 +23,8 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 //        parent::__construct($registry, SamlConfig::class);
 //    }
 
-    public function findByClient(string $client): ?SamlConfig
+    //$client - email
+    public function findByClientSimple(string $client)
     {
         //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
         $domain = explode('@', $client);
@@ -32,14 +33,40 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = $this->findOneBy(['client' => $client]);
 
-        if( !$config ) {
-            $config = $this->findAnyOne();
+        //if( !$config ) {
+        //    $config = $this->findAnyOne();
+        //}
+
+        return $config;
+    }
+    public function findByClient( $client ) {
+
+        $config = NULL;
+
+        $domain = explode('@', $client);
+        $client = $domain[1];
+
+        $query = $this->_em->createQueryBuilder()
+            ->from(SamlConfig::class, 'config')
+            ->select("config")
+            ->where('config.client = :client AND config.type IN (:type)')
+            ->orderBy("config.id","ASC")
+            ->setParameters( array(
+                'client' => $client,
+                'type' => array('default','user-added'),
+            ))
+        ;
+
+        $configs = $query->getQuery()->getResult();
+
+        if( count($configs) > 0 ) {
+            $config = $configs[0];
         }
 
         return $config;
     }
 
-    public function findByDomain(string $domain): ?SamlConfig
+    public function findByDomainSimple(string $domain)
     {
         //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
         //$domain = explode('@', $client);
@@ -48,12 +75,37 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = $this->findOneBy(['client' => $domain]);
 
-        if( !$config ) {
-            $config = $this->findAnyOne();
+        //if( !$config ) {
+        //    $config = $this->findAnyOne();
+        //}
+
+        return $config;
+    }
+    public function findByDomain( $domain ) {
+
+        $config = NULL;
+
+        $query = $this->_em->createQueryBuilder()
+            ->from(SamlConfig::class, 'config')
+            ->select("config")
+            ->where('config.client = :client AND config.type IN (:type)')
+            ->orderBy("config.id","ASC")
+            ->setParameters( array(
+                'client' => $domain,
+                'type' => array('default','user-added'),
+            ))
+        ;
+
+        $configs = $query->getQuery()->getResult();
+
+        if( count($configs) > 0 ) {
+            $config = $configs[0];
         }
 
         return $config;
     }
+
+
 
     public function findAnyOne() {
         $configs = $this->_em->getRepository(SamlConfig::class)->findAll();
