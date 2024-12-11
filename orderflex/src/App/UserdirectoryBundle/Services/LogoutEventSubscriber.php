@@ -116,13 +116,18 @@ class LogoutEventSubscriber implements EventSubscriberInterface
             $eventType                             //$action (Event Type)
         );
 
+        //invalidate_session manually
+        //$this->security->setToken(null);
+        $session->invalidate();
+        $this->security->logout(false);
+
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $userSecUtil->samlLogout($user,$logintype,$sitename);
 
         //invalidate_session manually
         //$this->security->setToken(null);
-        $session->invalidate();
-        $this->security->logout(false);
+        //$session->invalidate();
+        //$this->security->logout(false);
     }
 
     public function getSitename( $request ) {
