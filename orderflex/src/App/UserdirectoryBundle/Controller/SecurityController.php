@@ -67,10 +67,11 @@ class SecurityController extends OrderAbstractController
 
         //exit("my login check!");
 
-        //1) check user by username as user->'primarypublicuserid' (i.e. johndoe)
         $user = NULL;
         $userEmail = NULL;
-        $useSaml = FALSE;
+        $useSaml = false;
+
+        //1) check user by username as user->'primarypublicuserid' (i.e. johndoe)
         $users = $em->getRepository(User::class)->findBy(array('primaryPublicUserId'=>$username));
         if( count($users) > 0 ) {
             $user = $users[0];
@@ -89,8 +90,23 @@ class SecurityController extends OrderAbstractController
             }
         }
 
-        //2) check user by username as user->userinfo->'emailcanonical' (i.e. johndoe@yahoo.com)
-        //findOneUserByUserInfoUseridEmail
+        if( !$useSaml ) {
+            //2) check user by username as email: user->userinfo->'emailcanonical' (i.e. johndoe@yahoo.com)
+            //Warning we might have multiple users with the same email, therefore, findOneUserByUserInfoUseridEmail is safer
+            //$user = $em->getRepository(User::class)->findOneUserByEmail($username);
+            $user = $em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($username);
+            if ($user) {
+                $userEmail = $user->getSingleEmail();
+                //exit($user->getId().": userEmail=".$userEmail);
+                if ($userEmail) {
+                    //check if domain has SAML config
+                    $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
+                    if ($config) {
+                        $useSaml = true;
+                    }
+                }
+            }
+        }
 
         $output = array();
         $output['usesaml'] = $useSaml;

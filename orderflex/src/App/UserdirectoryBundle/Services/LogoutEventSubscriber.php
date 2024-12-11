@@ -117,6 +117,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         //invalidate_session manually
+        $this->security->logout(false);
         $session->invalidate();
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage

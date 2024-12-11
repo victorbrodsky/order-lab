@@ -244,6 +244,33 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
+    public function findOneUserByEmail( $email ) {
+        $user = NULL;
+
+        if( !$email ) {
+            return $user;
+        }
+
+        $query = $this->_em->createQueryBuilder()
+            ->from(User::class, 'user')
+            ->select("user")
+            ->leftJoin("user.infos","infos")
+            ->where("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
+            ->orderBy("user.id","ASC")
+            //->setParameter('userInfoEmail', $email)
+            ->setParameters( array(
+                'userInfoEmail' => $email
+            ))
+        ;
+
+        $users = $query->getQuery()->getResult();
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+
+        return $user;
+    }
 
     public function findOneUserByRole($role) {
 
