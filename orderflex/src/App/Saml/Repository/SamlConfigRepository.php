@@ -39,12 +39,23 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         return $config;
     }
-    public function findByClient( $client ) {
+    public function findByClient( $clientEmail ) {
+        if( !$clientEmail ) {
+            return NULL;
+        }
 
+        //exit('findByClient: $clientEmail='.$clientEmail);
+        $client = NULL;
         $config = NULL;
 
-        $domain = explode('@', $client);
-        $client = $domain[1];
+        $domainArr = explode('@', $clientEmail);
+        if( count($domainArr) > 1 ) {
+            $client = $domainArr[1];
+        }
+
+        if( !$client ) {
+            return NULL;
+        }
 
         $query = $this->_em->createQueryBuilder()
             ->from(SamlConfig::class, 'config')
@@ -82,6 +93,10 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
         return $config;
     }
     public function findByDomain( $domain ) {
+
+        if( !$domain ) {
+            return NULL;
+        }
 
         $config = NULL;
 

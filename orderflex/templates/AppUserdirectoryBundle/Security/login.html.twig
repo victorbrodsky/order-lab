@@ -183,21 +183,24 @@
                             async: false,
                             data: {
                                 _username: username,
-                                _sitename: sitename,
+                                //_sitename: sitename,
                                 //_password: password,
-                                _lastroute: lastRoute,
+                                //_lastroute: lastRoute,
                             }
                         }).success(function(data) {
-                            jsonData = JSON.parse(data);
-                            //console.log("data="+data);
-                            //usesaml = jsonData.usesaml;
-                            //console.log("1usesaml="+usesaml);
-                            //usesaml = jsonData['usesaml'];
-                            //console.log("2usesaml="+usesaml);
-                            if( jsonData['usesaml'] ) {
-                                usesaml = true;
-                                console.log("useremail="+jsonData['useremail']);
-                                $('#display-username').val(jsonData['useremail'])
+                            console.log("data="+data);
+                            if(1) {
+                                var jsonData = JSON.parse(data);
+                                console.log("jsonData=" + jsonData);
+                                //usesaml = jsonData.usesaml;
+                                //console.log("1usesaml="+usesaml);
+                                //usesaml = jsonData['usesaml'];
+                                //console.log("2usesaml="+usesaml);
+                                if (jsonData['usesaml']) {
+                                    usesaml = true;
+                                    console.log("useremail=" + jsonData['useremail']);
+                                    $('#display-username').val(jsonData['useremail'])
+                                }
                             }
                             //$('#lastRoute').val(data['lastroute']);
                         }).fail(function(jqXHR, exception, error) {
@@ -209,6 +212,7 @@
                             console.log("token verification done");
                         });
                         //return false;
+                        //usesaml = false; //disable saml
                     }
 
                     if(0) {

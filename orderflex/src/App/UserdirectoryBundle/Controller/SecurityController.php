@@ -77,12 +77,15 @@ class SecurityController extends OrderAbstractController
         }
         if( $user ) {
             $userEmail = $user->getSingleEmail();
-            //check if domain has SAML config
-            //$samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-            //$config = $samlConfigProviderUtil->getConfig($userEmail);
-            $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
-            if( $config ) {
-                $useSaml = true;
+            //exit($user->getId().": userEmail=".$userEmail);
+            if( $userEmail ) {
+                //check if domain has SAML config
+                //$samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+                //$config = $samlConfigProviderUtil->getConfig($userEmail);
+                $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
+                if ($config) {
+                    $useSaml = true;
+                }
             }
         }
 
