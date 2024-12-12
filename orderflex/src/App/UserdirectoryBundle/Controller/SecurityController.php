@@ -270,8 +270,12 @@ class SecurityController extends OrderAbstractController
         ///////////// EOF read cookies /////////////
 
         //check if SAML enabled
-        //$samlenabled = 0;
-        $samlenabled = 1;
+        $samlenabled = 0;
+        //get enabled configs
+        $config = $em->getRepository(SamlConfig::class)->findAnyEnabledOne();
+        if( $config ) {
+            $samlenabled = 1;
+        }
         $formArr['samlenabled'] = $samlenabled;
         
         //not live warning

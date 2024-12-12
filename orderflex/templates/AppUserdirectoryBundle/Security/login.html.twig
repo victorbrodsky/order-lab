@@ -163,18 +163,18 @@
                     // => user exists => user domain has SAML => redirect to SAML
 
                     var samlenabled = $('#samlenabled').val();
-                    console.log("samlenabled=["+samlenabled+"]");
+                    //console.log("samlenabled=["+samlenabled+"]");
                     //return false;
                     var usesaml = false;
                     var samlusername = null;
                     if( Number(samlenabled) == 1 ) {
-                        console.log("samlenabled="+samlenabled);
+                        //console.log("samlenabled="+samlenabled);
                         //return false;
                         var username = $('#display-username').val();
                         var sitename = $('#sitename').val();
                         //var password = $('#password').val();
                         var lastRoute = $('#lastRoute').val();
-                        console.log("username="+username);
+                        //console.log("username="+username);
                         //return false;
                         var url = Routing.generate('employees_user_check_custom');
                         $.ajax({
@@ -189,10 +189,10 @@
                                 //_lastroute: lastRoute,
                             }
                         }).success(function(data) {
-                            console.log("data="+data);
+                            //console.log("data="+data);
                             if(1) {
                                 var jsonData = JSON.parse(data);
-                                console.log("jsonData=" + jsonData);
+                                //console.log("jsonData=" + jsonData);
                                 //usesaml = jsonData.usesaml;
                                 //console.log("1usesaml="+usesaml);
                                 //usesaml = jsonData['usesaml'];
@@ -200,7 +200,7 @@
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
                                     samlusername = jsonData['useremail'];
-                                    console.log("useremail=" + jsonData['useremail']);
+                                    //console.log("useremail=" + jsonData['useremail']);
                                     //$('#samlusername').val(jsonData['useremail'])
                                 }
                             }
@@ -211,7 +211,7 @@
                             alert(failMsg);
                         }).done(function() {
                             //userStopBtn(btn,lbtn);
-                            console.log("token verification done");
+                            console.log("employees_user_check_custom done");
                         });
                         //return false;
                         //usesaml = false; //disable saml
@@ -230,17 +230,17 @@
                             lastRoute: lastRoute
                         });
                         redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
-                        console.log("redirectUrl=" + redirectUrl);
+                        //console.log("redirectUrl=" + redirectUrl);
                         window.location.replace(redirectUrl);
                         return false;
                     }
 
-                    console.log("before saml: usesaml="+usesaml);
+                    //console.log("before saml: usesaml="+usesaml);
                     //return false;
 
                     if( usesaml ) {
                         var usernametypeid = $('#usernametypeid_show').val();
-                        console.log("usesaml: usernametypeid="+usernametypeid);
+                        //console.log("usesaml: usernametypeid="+usernametypeid);
                         $('#message').html("").hide();
 
                         if( usesaml || usernametypeid == 'saml-sso' ) {
@@ -262,8 +262,8 @@
                             //var samlusername = $('#samlusername').val();
                             var sitename = $('#sitename').val();
                             var lastRoute = $('#lastRoute').val();
-                            console.log("username="+username);
-                            console.log("lastRoute="+lastRoute);
+                            //console.log("username="+username);
+                            //console.log("lastRoute="+lastRoute);
                             //return false;
                             if (username) {
                                 var redirectUrl = Routing.generate('saml_login', {

@@ -347,13 +347,15 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //Exception for SAML auth
         if( !$username && $route == 'saml_acs_default' ) {
             //dump( $request->getPayload() );
-            //$samlResponse = $request->getPayload()->get('SAMLResponse');
+            $samlResponse = $request->getPayload()->get('SAMLResponse');
             $relayState = $request->getPayload()->get('RelayState');
             $logger->notice("getCredentials: relayState=".$relayState);
             //$relayState = oli2002@med.cornell.edu_#_https://view.online/c/wcm/pathology/directory/
             //oli2002@med.cornell.edu__employees__https://view.online/c/wcm/pathology/directory/user/new
             //echo 'relayState='.$relayState."<br>";
-            //dump($samlResponse);
+            dump($request);
+            dump($samlResponse);
+            exit('111');
 
             $useEmailLastRoute = true;
             //$useEmailLastRoute = false;

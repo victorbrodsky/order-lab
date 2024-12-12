@@ -130,6 +130,30 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
         return NULL;
     }
 
+    public function findAnyEnabledOne() {
+        $config = NULL;
+        
+        $query = $this->_em->createQueryBuilder()
+            ->from(SamlConfig::class, 'config')
+            ->select("config")
+            ->where('config.type IN (:type)')
+            ->orderBy("config.id","ASC")
+            ->setParameters( array(
+                'type' => array('default','user-added'),
+            ))
+        ;
+
+        $configs = $query->getQuery()->getResult();
+        echo "configs=".count($configs)."<br>";
+
+        if( count($configs) > 0 ) {
+            $config = $configs[0];
+        }
+
+        return $config;
+    }
+
+
 //    public function findOneBy(array $criteria, ?array $orderBy = null)
 //    {
 //        $persister = $this->_em->getUnitOfWork()->getEntityPersister($this->_entityName);
