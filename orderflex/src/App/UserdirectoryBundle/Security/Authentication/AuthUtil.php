@@ -107,8 +107,8 @@ class AuthUtil {
 
         $auth->processResponse();
 
-        //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-        //dump($xmlDocument);
+        $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+        dump($xmlDocument);
         //$attributes = $auth->getAttributes();
         //dump($attributes);
         //exit('samlAuthenticationStayByDomain');
