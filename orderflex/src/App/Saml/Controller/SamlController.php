@@ -60,8 +60,8 @@ class SamlController extends OrderAbstractController //AbstractController
     // * @Route("/saml/login/{client}", name="saml_login", requirements={"client"=".+"})
     //*/
     //#[Route(path: '/saml/login/{client}', name: 'saml_login'), requirements:["client"=>".+"]]
-    #[Route(path: '/login/{client}/{sitename}/{samlusername}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
-    public function login(Request $request, $client, $sitename, $samlusername): Response
+    #[Route(path: '/login/{client}/{sitename}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
+    public function login(Request $request, $client, $sitename): Response
     {
         //exit('saml login');
         //$this->logger->notice("Starting SAML login for client: $client");
@@ -90,10 +90,6 @@ class SamlController extends OrderAbstractController //AbstractController
             //$deliemeter = "_#_";
             //$deliemeter = "__";
             $deliemeter = "_**_";
-
-            if( $samlusername ) {
-                $client = $samlusername;
-            }
 
             $lastRoute = $client . $deliemeter . $sitename . $deliemeter . $lastRoute;
             //$this->logger->notice("Starting SAML login for client: modified lastRoute=$lastRoute");

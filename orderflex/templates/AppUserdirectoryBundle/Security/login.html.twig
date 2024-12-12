@@ -166,6 +166,7 @@
                     console.log("samlenabled=["+samlenabled+"]");
                     //return false;
                     var usesaml = false;
+                    var samlusername = null;
                     if( Number(samlenabled) == 1 ) {
                         console.log("samlenabled="+samlenabled);
                         //return false;
@@ -198,8 +199,9 @@
                                 //console.log("2usesaml="+usesaml);
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
+                                    samlusername = jsonData['useremail'];
                                     console.log("useremail=" + jsonData['useremail']);
-                                    $('#samlusername').val(jsonData['useremail'])
+                                    //$('#samlusername').val(jsonData['useremail'])
                                 }
                             }
                             //$('#lastRoute').val(data['lastroute']);
@@ -254,7 +256,10 @@
 
                             //redirect to SAML controller (SamlController->login)
                             var username = $('#display-username').val();
-                            var samlusername = $('#samlusername').val();
+                            if( samlusername ) {
+                                username = samlusername;
+                            }
+                            //var samlusername = $('#samlusername').val();
                             var sitename = $('#sitename').val();
                             var lastRoute = $('#lastRoute').val();
                             console.log("username="+username);
@@ -264,7 +269,7 @@
                                 var redirectUrl = Routing.generate('saml_login', {
                                     client: username,
                                     sitename: sitename,
-                                    samlusername: samlusername
+                                    //samlusername: samlusername
                                 });
                                 redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
                                 //console.log("redirectUrl="+redirectUrl);
