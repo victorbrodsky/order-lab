@@ -109,9 +109,9 @@ class AuthUtil {
 
         $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
         dump($xmlDocument);
-        //$attributes = $auth->getAttributes();
-        //dump($attributes);
-        //exit('samlAuthenticationStayByDomain');
+        $attributes = $auth->getAttributes();
+        dump($attributes);
+        exit('samlAuthenticationStayByDomain');
 
         if( $auth->isAuthenticated() ) {
             //$this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
