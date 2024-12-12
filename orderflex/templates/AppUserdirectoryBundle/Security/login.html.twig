@@ -200,8 +200,7 @@
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
                                     samlusername = jsonData['useremail'];
-                                    //console.log("useremail=" + jsonData['useremail']);
-                                    //$('#samlusername').val(jsonData['useremail'])
+                                    //console.log("samlusername=" + samlusername);
                                 }
                             }
                             //$('#lastRoute').val(data['lastroute']);
@@ -259,7 +258,6 @@
                             if( samlusername ) {
                                 username = samlusername;
                             }
-                            //var samlusername = $('#samlusername').val();
                             var sitename = $('#sitename').val();
                             var lastRoute = $('#lastRoute').val();
                             //console.log("username="+username);
@@ -269,7 +267,6 @@
                                 var redirectUrl = Routing.generate('saml_login', {
                                     client: username,
                                     sitename: sitename,
-                                    //samlusername: samlusername
                                 });
                                 redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
                                 //console.log("redirectUrl="+redirectUrl);
