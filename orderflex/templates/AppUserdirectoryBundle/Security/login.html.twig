@@ -199,7 +199,7 @@
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
                                     console.log("useremail=" + jsonData['useremail']);
-                                    $('#display-username').val(jsonData['useremail'])
+                                    $('#samlusername').val(jsonData['useremail'])
                                 }
                             }
                             //$('#lastRoute').val(data['lastroute']);
@@ -254,6 +254,7 @@
 
                             //redirect to SAML controller (SamlController->login)
                             var username = $('#display-username').val();
+                            var samlusername = $('#samlusername').val();
                             var sitename = $('#sitename').val();
                             var lastRoute = $('#lastRoute').val();
                             console.log("username="+username);
@@ -263,6 +264,7 @@
                                 var redirectUrl = Routing.generate('saml_login', {
                                     client: username,
                                     sitename: sitename,
+                                    samlusername: samlusername
                                 });
                                 redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
                                 //console.log("redirectUrl="+redirectUrl);

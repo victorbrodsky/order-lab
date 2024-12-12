@@ -337,6 +337,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //dump($request->request);
         $logger = $this->container->get('logger');
         $username = $request->request->get('_username');
+        $samlusername = $request->request->get('_samlusername');
         $usernametype = $request->request->get('_usernametype');
         $sitename = $request->request->get('_sitename');
         $lastRoute = NULL;
