@@ -115,8 +115,8 @@ class AuthUtil {
             dump($xmlDocument);
             $attributes = $auth->getAttributes();
             dump($attributes);
-            $userPrincipalName = $attributes['userPrincipalName'];
-            $samlResponseEmail = $attributes['user.email'];
+            $userPrincipalName = $attributes['userPrincipalName'][0];
+            $samlResponseEmail = $attributes['user.email'][0];
             echo "userPrincipalName=".$userPrincipalName.", samlResponseEmail=".$samlResponseEmail."<br>";
 
             if( $email && $samlResponseEmail != $email ) {
