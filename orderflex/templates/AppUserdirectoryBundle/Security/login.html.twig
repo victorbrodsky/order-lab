@@ -166,7 +166,7 @@
                     console.log("samlenabled=["+samlenabled+"]");
                     //return false;
                     var usesaml = false;
-                    if( samlenabled == 1 ) {
+                    if( Number(samlenabled) == 1 ) {
                         console.log("samlenabled="+samlenabled);
                         //return false;
                         var username = $('#display-username').val();
@@ -199,7 +199,7 @@
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
                                     console.log("useremail=" + jsonData['useremail']);
-                                    //$('#display-username').val(jsonData['useremail'])
+                                    $('#display-username').val(jsonData['useremail'])
                                 }
                             }
                             //$('#lastRoute').val(data['lastroute']);

@@ -71,21 +71,28 @@ class SecurityController extends OrderAbstractController
         $userEmail = NULL;
         $useSaml = false;
 
-        //1) check user by username as user->'primarypublicuserid' (i.e. johndoe)
-        $users = $em->getRepository(User::class)->findBy(array('primaryPublicUserId'=>$username));
-        if( count($users) > 0 ) {
-            $user = $users[0];
-        }
-        if( $user ) {
-            $userEmail = $user->getSingleEmail();
-            //exit($user->getId().": userEmail=".$userEmail);
-            if( $userEmail ) {
-                //check if domain has SAML config
-                //$samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
-                //$config = $samlConfigProviderUtil->getConfig($userEmail);
-                $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
-                if ($config) {
-                    $useSaml = true;
+        if( !$useSaml ) {
+            //1) check user by username as user->'primarypublicuserid' (i.e. johndoe)
+            $users = $em->getRepository(User::class)->findBy(array('primaryPublicUserId' => $username));
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+            if ($user) {
+                $userEmail = $user->getSingleEmail();
+                //exit($user->getId().": userEmail=".$userEmail);
+                if( $userEmail ) {
+                    //get CWID from email. Only proceed if CWID is the same as $username to prevent
+                    //situations when username 'testadmin' has oli2002@med.cornell.edu email
+                    $cwid = $this->getCwidFromEmail($userEmail);
+                    if( $cwid == $username ) {
+                        //check if domain has SAML config
+                        //$samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
+                        //$config = $samlConfigProviderUtil->getConfig($userEmail);
+                        $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
+                        if ($config) {
+                            $useSaml = true;
+                        }
+                    }
                 }
             }
         }
@@ -99,10 +106,14 @@ class SecurityController extends OrderAbstractController
                 $userEmail = $user->getSingleEmail();
                 //exit($user->getId().": userEmail=".$userEmail);
                 if ($userEmail) {
-                    //check if domain has SAML config
-                    $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
-                    if ($config) {
-                        $useSaml = true;
+                    $cwid1 = $this->getCwidFromEmail($userEmail);
+                    $cwid2 = $this->getCwidFromEmail($username);
+                    if( $cwid1 == $cwid2 ) {
+                        //check if domain has SAML config
+                        $config = $em->getRepository(SamlConfig::class)->findByClient($userEmail);
+                        if ($config) {
+                            $useSaml = true;
+                        }
                     }
                 }
             }
@@ -116,7 +127,14 @@ class SecurityController extends OrderAbstractController
         $response->setContent(json_encode($output));
         return $response;
     }
-
+    public function getCwidFromEmail( $userEmail ) {
+        $cwid = NULL;
+        $domainArr = explode('@', $userEmail);
+        if( count($domainArr) > 0 ) {
+            $cwid = $domainArr[0];
+        }
+        return $cwid;
+    }
 
 //    //[Template("AppUserdirectoryBundle/Security/login.html.twig")]
 //    #[Route(path: '/directory/login_check_custom', name: 'employees_login_check_custom', methods: ["GET","POST"], options: ['expose' => true])]
@@ -252,7 +270,7 @@ class SecurityController extends OrderAbstractController
         ///////////// EOF read cookies /////////////
 
         //check if SAML enabled
-        $samlenabled = 0;
+        //$samlenabled = 0;
         $samlenabled = 1;
         $formArr['samlenabled'] = $samlenabled;
         
