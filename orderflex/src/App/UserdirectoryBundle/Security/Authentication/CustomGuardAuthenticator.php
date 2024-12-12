@@ -268,7 +268,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $authUtil = $this->container->get('authenticator_utility');
 
                 //$logger->notice('authenticate: Before samlAuthenticationByDomain');
-                $authenticated = $authUtil->samlAuthenticationByDomain($domain);
+                $authenticated = $authUtil->samlAuthenticationByDomain($domain,$email);
                 //$logger->notice('authenticate: After samlAuthenticationByDomain');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);

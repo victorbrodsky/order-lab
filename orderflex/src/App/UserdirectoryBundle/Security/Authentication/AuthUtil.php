@@ -89,7 +89,7 @@ class AuthUtil {
 //        }
     }
 
-    public function samlAuthenticationByDomain( $domain, $lastRoute=null ) {
+    public function samlAuthenticationByDomain( $domain, $email=null ) {
         if( !$domain ) {
             return NULL;
         }
@@ -107,18 +107,28 @@ class AuthUtil {
 
         $auth->processResponse();
 
-        $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-        dump($xmlDocument);
-        $attributes = $auth->getAttributes();
-        dump($attributes);
-        exit('samlAuthenticationStayByDomain');
-
         if( $auth->isAuthenticated() ) {
             //$this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
+
+            //Additional check: compare SAML response email with provided original email
+            $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+            dump($xmlDocument);
+            $attributes = $auth->getAttributes();
+            dump($attributes);
+            $userPrincipalName = $attributes['userPrincipalName'];
+            $samlResponseEmail = $attributes['user.email'];
+            echo "userPrincipalName=".$userPrincipalName.", samlResponseEmail=".$samlResponseEmail."<br>";
+
+            if( $email && $samlResponseEmail != $email ) {
+                return FALSE;
+            }
+
+            exit('samlAuthenticationStayByDomain');
+
             return TRUE;
         }
 
-        return NULL;
+        return FALSE;
     }
 
 //    public function samlAuthenticationByEmail( $email ) {
