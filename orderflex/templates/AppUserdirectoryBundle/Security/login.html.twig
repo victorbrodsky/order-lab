@@ -163,10 +163,10 @@
                     // => user exists => user domain has SAML => redirect to SAML
 
                     var samlenabled = $('#samlenabled').val();
-                    //console.log("samlenabled="+samlenabled);
+                    console.log("samlenabled=["+samlenabled+"]");
                     //return false;
                     var usesaml = false;
-                    if( samlenabled ) {
+                    if( samlenabled == 1 ) {
                         console.log("samlenabled="+samlenabled);
                         //return false;
                         var username = $('#display-username').val();
@@ -198,7 +198,7 @@
                                 //console.log("2usesaml="+usesaml);
                                 if (jsonData['usesaml']) {
                                     usesaml = true;
-                                    //console.log("useremail=" + jsonData['useremail']);
+                                    console.log("useremail=" + jsonData['useremail']);
                                     //$('#display-username').val(jsonData['useremail'])
                                 }
                             }
@@ -236,10 +236,11 @@
                     console.log("before saml: usesaml="+usesaml);
                     //return false;
 
-                    if(1) {
+                    if( usesaml ) {
                         var usernametypeid = $('#usernametypeid_show').val();
-                        //console.log("usernametypeid="+usernametypeid);
+                        console.log("usesaml: usernametypeid="+usernametypeid);
                         $('#message').html("").hide();
+
                         if( usesaml || usernametypeid == 'saml-sso' ) {
                             if( usernametypeid == 'saml-sso' ) {
                                 if( validateUsername() == false ) {
@@ -272,7 +273,7 @@
                     }
 
                     //alert("username="+document.getElementById("username").value + ", password=" + document.getElementById("password").value );
-                    return true;
+                    //return true;
                 });
 
                 //cursor would only be moved to the password field if the user name is non-empty

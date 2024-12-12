@@ -334,7 +334,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function getCredentials(Request $request) : mixed
     {
-
         //dump($request->request);
         $logger = $this->container->get('logger');
         $username = $request->request->get('_username');

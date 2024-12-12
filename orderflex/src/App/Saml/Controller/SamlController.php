@@ -70,10 +70,14 @@ class SamlController extends OrderAbstractController //AbstractController
         //$this->logger->notice("SAML login after config");
         //dump($config);
 
-        //$this->logger->notice("SAML login after config: sitename=$sitename");
+        $this->logger->notice("SAML login after config: sitename=$sitename");
 
         $lastRoute = $request->query->get('lastroute');
-        //$this->logger->notice("SAML login after config: lastRoute=$lastRoute");
+        $this->logger->notice("SAML login after config: lastRoute=$lastRoute");
+
+        if( !$config ) {
+            return $this->redirect($this->generateUrl($sitename.'_login'));
+        }
 
         $auth = new Auth($config['settings']);
         //$this->logger->notice("SAML login after new Auth");

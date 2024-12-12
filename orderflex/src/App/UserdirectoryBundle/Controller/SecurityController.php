@@ -252,8 +252,8 @@ class SecurityController extends OrderAbstractController
         ///////////// EOF read cookies /////////////
 
         //check if SAML enabled
-        $samlenabled = false;
-        $samlenabled = true;
+        $samlenabled = 0;
+        $samlenabled = 1;
         $formArr['samlenabled'] = $samlenabled;
         
         //not live warning

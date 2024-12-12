@@ -118,10 +118,24 @@
                 </select>
 
                 {#display username field and hidden real fields using by security#}
-                <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username Hidden" style="display:none;">
-                <input type="text" id="display-username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username" style="{{ inputStyle }}">
+                <input type="text"
+                       id="username"
+                       name="_username"
+                       value="{{ last_username }}"
+                       class="form-control limit-font-size"
+                       placeholder="Username Hidden" style="display:none;">
 
-                <input type="password" id="password" name="_password" class="form-control limit-font-size" placeholder="Password" style="{{ inputStyle }}">
+                <input type="text"
+                       id="display-username"
+                       value="{{ last_username }}"
+                       class="form-control limit-font-size"
+                       placeholder="Username" style="{{ inputStyle }}">
+
+                <input type="password"
+                       id="password"
+                       name="_password"
+                       class="form-control limit-font-size"
+                       placeholder="Password" style="{{ inputStyle }}">
 
                 {#<input type="checkbox" id="remember_me" name="_remember_me" checked />#}
                 {#<label for="remember_me">Keep me logged in</label>#}
