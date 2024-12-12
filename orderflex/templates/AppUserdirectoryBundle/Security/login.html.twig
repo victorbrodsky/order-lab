@@ -179,7 +179,7 @@
                         var url = Routing.generate('employees_user_check_custom');
                         $.ajax({
                             url: url,
-                            timeout: 180000,
+                            timeout: 5000, // sets timeout to 5 seconds
                             type: "POST",
                             async: false,
                             data: {
