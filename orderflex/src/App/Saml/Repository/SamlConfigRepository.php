@@ -132,7 +132,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
     public function findAnyEnabledOne() {
         $config = NULL;
-        
+
         $query = $this->_em->createQueryBuilder()
             ->from(SamlConfig::class, 'config')
             ->select("config")
@@ -144,7 +144,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
         ;
 
         $configs = $query->getQuery()->getResult();
-        echo "configs=".count($configs)."<br>";
+        //echo "configs=".count($configs)."<br>";
 
         if( count($configs) > 0 ) {
             $config = $configs[0];

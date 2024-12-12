@@ -111,19 +111,19 @@ class AuthUtil {
             //$this->logger->notice("samlAuthenticationStayByDomain: isAuthenticated!");
 
             //Additional check: compare SAML response email with provided original email
-            $xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
-            dump($xmlDocument);
+            //$xmlDocument = $auth->getLastResponseXML(); //getXMLDocument();
+            //dump($xmlDocument);
             $attributes = $auth->getAttributes();
-            dump($attributes);
-            $userPrincipalName = $attributes['userPrincipalName'][0];
+            //dump($attributes);
+            //$userPrincipalName = $attributes['userPrincipalName'][0];
             $samlResponseEmail = $attributes['user.email'][0];
-            echo "userPrincipalName=".$userPrincipalName.", samlResponseEmail=".$samlResponseEmail."<br>";
+            //echo "userPrincipalName=".$userPrincipalName.", samlResponseEmail=".$samlResponseEmail."<br>";
 
             if( $email && $samlResponseEmail != $email ) {
                 return FALSE;
             }
 
-            exit('samlAuthenticationStayByDomain');
+            //exit('samlAuthenticationStayByDomain');
 
             return TRUE;
         }
