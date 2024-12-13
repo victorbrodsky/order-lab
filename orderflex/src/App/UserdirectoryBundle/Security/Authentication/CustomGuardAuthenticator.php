@@ -267,9 +267,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //                $domain = $emailArr[1]; //domain=med.cornell.edu
 
                 $authUtil = $this->container->get('authenticator_utility');
-                //$logger->notice('authenticate: Before samlAuthenticationByEmail');
+                $logger->notice('authenticate: Before samlAuthenticationByEmail');
                 $authenticated = $authUtil->samlAuthenticationByEmail($email);
-                //$logger->notice('authenticate: After samlAuthenticationByEmail');
+                $logger->notice('authenticate: After samlAuthenticationByEmail');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
