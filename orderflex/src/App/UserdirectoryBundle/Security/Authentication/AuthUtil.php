@@ -99,9 +99,9 @@ class AuthUtil {
 
         $emailArr = explode('@', $email);
 
-        //if( count($emailArr) > 0 ) {
+        if( count($emailArr) > 0 ) {
             $domain = $emailArr[1]; //domain=med.cornell.edu
-        //}
+        }
 
         if( !$domain ) {
             return NULL;
