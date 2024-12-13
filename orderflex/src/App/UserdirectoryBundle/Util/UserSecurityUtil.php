@@ -450,7 +450,7 @@ class UserSecurityUtil {
 
         //invalidate_session manually
         //$this->security->setToken(null);
-        $session->invalidate();
+        //$session->invalidate();
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
