@@ -387,6 +387,16 @@ class UserSecurityUtil {
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
+        //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
+        $samlLogoutStr = "";
+        $session = $request->getSession();
+        $logintype = $session->get('logintype');
+        $logger = $this->container->get('logger');
+        $logger->notice("samlLogout: logintype=".$logintype);
+        if( $logintype === 'saml-sso' ) {
+            $samlLogoutStr = "(with SAML logout)";
+        }
+
         if( $maintenance ) {
 
             //$msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
@@ -395,16 +405,6 @@ class UserSecurityUtil {
             $msg = $this->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
 
         } else {
-
-            //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
-            $samlLogoutStr = "";
-            $session = $request->getSession();
-            $logintype = $session->get('logintype');
-            $logger = $this->container->get('logger');
-            $logger->notice("samlLogout: logintype=".$logintype);
-            if( $logintype === 'saml-sso' ) {
-                $samlLogoutStr = "(with SAML logout)";
-            }
 
             if( $flag && $flag == 'saveorder' ) {
                 $msg = 'You have been logged out '.$samlLogoutStr.' after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
