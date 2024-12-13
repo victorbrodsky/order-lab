@@ -396,10 +396,18 @@ class UserSecurityUtil {
 
         } else {
 
+            //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
+            $samlLogoutStr = "";
+            $session = $request->getSession();
+            $logintype = $session->get('logintype');
+            if( $logintype === 'saml-sso' ) {
+                $samlLogoutStr = "(with SAML logout)";
+            }
+
             if( $flag && $flag == 'saveorder' ) {
-                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+                $msg = 'You have been logged out '.$samlLogoutStr.' after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
             } else {
-                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+                $msg = 'You have been logged out '.$samlLogoutStr.' after '.($maxIdleTime/60).' minutes of inactivity.';
             }
 
         }
@@ -435,8 +443,8 @@ class UserSecurityUtil {
         //$request->getSession()->invalidate();
 
         //$this->tokenStorage->setToken(null);
-        $this->security->logout();
-        //$this->security->logout(false);
+        //$this->security->logout();
+        $this->security->logout(false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
