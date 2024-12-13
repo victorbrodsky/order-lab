@@ -153,6 +153,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //Logout type for SAML logout
         $usernametype = $token->getAttribute('usernametype');
         $session->set('logintype',$usernametype);
+        $usernametypeStr = '';
+        if( $usernametype ) {
+            $usernametypeStr = ' with '.$usernametype;
+        }
         ///////////////// EOF set session variables /////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
@@ -189,7 +193,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //exit('user ok');
         $options['eventtype'] = "Successful Login";
-        $options['event'] = 'Successful login to '.$this->siteNameStr.' site with '.$usernametype.'. Username='.$username;
+        $options['event'] = 'Successful login to '.$this->siteNameStr.' site'.$usernametypeStr.'. Username='.$username;
 
         //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
