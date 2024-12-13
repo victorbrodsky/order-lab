@@ -75,8 +75,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
-        //$logger = $this->container->get('logger');
-        //$logger->notice("onLogout");
+        $logger = $this->container->get('logger');
+        $logger->notice("onLogout");
 
         $user = NULL;
         if( $event->getToken() ) {
@@ -97,7 +97,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         $logintype = $session->get('logintype');
         //$logger = $this->container->get('logger');
-        //$logger->notice("onLogout: logintype=".$logintype);
+        $logger->notice("onLogout: logintype=".$logintype);
 
         if( $logintype === 'saml-sso' ) {
             $samlLogoutStr = ", with SAML logout";
@@ -118,7 +118,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         //invalidate_session manually
         //$this->security->setToken(null);
-        $session->invalidate(); //auto loggout flash bad not display
+        $session->invalidate(); //auto loggout flashbag message not display
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
