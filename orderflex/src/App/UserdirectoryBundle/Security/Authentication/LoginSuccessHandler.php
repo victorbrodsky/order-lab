@@ -189,7 +189,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //exit('user ok');
         $options['eventtype'] = "Successful Login";
-        $options['event'] = 'Successful login to '.$this->siteNameStr.' site. Username='.$username;
+        $options['event'] = 'Successful login to '.$this->siteNameStr.' site with '.$usernametype.'. Username='.$username;
 
         //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
