@@ -384,7 +384,7 @@ class SecurityController extends OrderAbstractController
         $lastRoute = $request->getSession()->get($indexLastRoute);
         //$logger->notice('1 loginPage: $lastRoute=['.$lastRoute."]");
         //replace http to https
-        $protocol = 'https'; //TODO: looks like we need a scheme parameter in site settings
+        $protocol = 'https'; //TODO: looks like we need a real scheme parameter in site settings (case of haproxy)
 //            if( isset($_SERVER['HTTPS']) ) {
 //                $protocol = 'https';
 //            }
