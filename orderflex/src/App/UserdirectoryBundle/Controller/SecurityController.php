@@ -285,7 +285,7 @@ class SecurityController extends OrderAbstractController
             $samlenabled = 1;
         }
         $formArr['samlenabled'] = $samlenabled;
-        echo "samlenabled=$samlenabled <br>"; //dev
+        //echo "samlenabled=$samlenabled <br>"; //dev
         
         //not live warning
         $environment = $userSecUtil->getSiteSettingParameter('environment');

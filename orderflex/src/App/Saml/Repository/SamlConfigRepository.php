@@ -23,75 +23,6 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 //        parent::__construct($registry, SamlConfig::class);
 //    }
 
-    //$client - email
-    public function findByClientSimple(string $client)
-    {
-        //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
-        $domain = explode('@', $client);
-        $client = $domain[1];
-        //exit('client='.$client);
-
-        $config = $this->findOneBy(['client' => $client]);
-
-        //if( !$config ) {
-        //    $config = $this->findAnyOne();
-        //}
-
-        return $config;
-    }
-    public function findByClient( $clientEmail ) {
-        if( !$clientEmail ) {
-            return NULL;
-        }
-
-        //exit('findByClient: $clientEmail='.$clientEmail);
-        $client = NULL;
-        $config = NULL;
-
-        $domainArr = explode('@', $clientEmail);
-        if( count($domainArr) > 1 ) {
-            $client = $domainArr[1];
-        }
-
-        if( !$client ) {
-            return NULL;
-        }
-
-        $query = $this->_em->createQueryBuilder()
-            ->from(SamlConfig::class, 'config')
-            ->select("config")
-            ->where('config.client = :client AND config.type IN (:type)')
-            ->orderBy("config.id","ASC")
-            ->setParameters( array(
-                'client' => $client,
-                'type' => array('default','user-added'),
-            ))
-        ;
-
-        $configs = $query->getQuery()->getResult();
-
-        if( count($configs) > 0 ) {
-            $config = $configs[0];
-        }
-
-        return $config;
-    }
-
-    public function findByDomainSimple(string $domain)
-    {
-        //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
-        //$domain = explode('@', $client);
-        //$client = $domain[1];
-        //exit('client='.$client);
-
-        $config = $this->findOneBy(['client' => $domain]);
-
-        //if( !$config ) {
-        //    $config = $this->findAnyOne();
-        //}
-
-        return $config;
-    }
     public function findByDomain( $domain ) {
 
         if( !$domain ) {
@@ -119,6 +50,79 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         return $config;
     }
+
+    public function findByClient( $clientEmail ) {
+        if( !$clientEmail ) {
+            return NULL;
+        }
+
+        //exit('findByClient: $clientEmail='.$clientEmail);
+        $client = NULL;
+        $config = NULL;
+
+        $domainArr = explode('@', $clientEmail);
+        if( count($domainArr) > 1 ) {
+            $client = $domainArr[1];
+        }
+
+        if( !$client ) {
+            return NULL;
+        }
+
+        return $this->findByDomain($client);
+
+//        $query = $this->_em->createQueryBuilder()
+//            ->from(SamlConfig::class, 'config')
+//            ->select("config")
+//            ->where('config.client = :client AND config.type IN (:type)')
+//            ->orderBy("config.id","ASC")
+//            ->setParameters( array(
+//                'client' => $client,
+//                'type' => array('default','user-added'),
+//            ))
+//        ;
+//
+//        $configs = $query->getQuery()->getResult();
+//
+//        if( count($configs) > 0 ) {
+//            $config = $configs[0];
+//        }
+//
+//        return $config;
+    }
+
+//    //$client - email
+//    public function findByClientSimple(string $client)
+//    {
+//        //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
+//        $domain = explode('@', $client);
+//        $client = $domain[1];
+//        //exit('client='.$client);
+//
+//        $config = $this->findOneBy(['client' => $client]);
+//
+//        //if( !$config ) {
+//        //    $config = $this->findAnyOne();
+//        //}
+//
+//        return $config;
+//    }
+//    public function findByDomainSimple(string $domain)
+//    {
+//        //$client = 'oli2002@med.cornell.edu' => $client = 'med.cornell.edu'
+//        //$domain = explode('@', $client);
+//        //$client = $domain[1];
+//        //exit('client='.$client);
+//
+//        $config = $this->findOneBy(['client' => $domain]);
+//
+//        //if( !$config ) {
+//        //    $config = $this->findAnyOne();
+//        //}
+//
+//        return $config;
+//    }
+
 
 
 

@@ -263,13 +263,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //username=[oli2002@med.cornell.edu_@_saml-sso]
 
                 //SAML 2: process acs response
-                $emailArr = explode('@', $email);
-                $domain = $emailArr[1]; //domain=med.cornell.edu
-                $authUtil = $this->container->get('authenticator_utility');
+//                $emailArr = explode('@', $email);
+//                $domain = $emailArr[1]; //domain=med.cornell.edu
 
-                //$logger->notice('authenticate: Before samlAuthenticationByDomain');
-                $authenticated = $authUtil->samlAuthenticationByDomain($domain,$email);
-                //$logger->notice('authenticate: After samlAuthenticationByDomain');
+                $authUtil = $this->container->get('authenticator_utility');
+                //$logger->notice('authenticate: Before samlAuthenticationByEmail');
+                $authenticated = $authUtil->samlAuthenticationByEmail($email);
+                //$logger->notice('authenticate: After samlAuthenticationByEmail');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
@@ -298,7 +298,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         return $user;
                     }));
                 } else {
-                    //$logger->notice('authenticate: SAML authentication failed');
+                    $logger->notice('authenticate: SAML authentication failed');
                     throw new AuthenticationException('SAML authentication failed.');
                 } //if $authenticated
             } //if($username)
@@ -335,7 +335,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function getCredentials(Request $request) : mixed
     {
         //dump($request->request);
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $username = $request->request->get('_username');
         $usernametype = $request->request->get('_usernametype');
         $sitename = $request->request->get('_sitename');
@@ -368,6 +368,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 $sitename = $relayStateParts[1];
                 $lastRoute = $relayStateParts[2];
             } else {
+                //This condition is not used anymore
                 //$relayState: http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
                 if (str_contains($relayState, '/login/')) {
                     //$client = (string) substr($somestring, strrpos("/$somestring", '/'));

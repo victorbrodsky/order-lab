@@ -89,11 +89,26 @@ class AuthUtil {
 //        }
     }
 
-    public function samlAuthenticationByDomain( $domain, $email=null ) {
+    //$email is used for a final check if the email in the SAML response matched with the original, provided email
+    public function samlAuthenticationByEmail( $email ) {
+        if( !$email ) {
+            return NULL;
+        }
+
+        $domain = NULL;
+
+        $emailArr = explode('@', $email);
+
+        if( count($emailArr) > 0 ) {
+            $domain = $emailArr[1]; //domain=med.cornell.edu
+        }
+
         if( !$domain ) {
             return NULL;
         }
 
+        //$authUtil = $this->container->get('authenticator_utility');
+        
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
 
         $config = $samlConfigProviderUtil->getConfig($domain);
