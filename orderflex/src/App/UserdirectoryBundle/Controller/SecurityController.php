@@ -375,7 +375,7 @@ class SecurityController extends OrderAbstractController
             }
         }
 
-        ///// Get last rout /////
+        ///// Get last rout for SAML /////
         //$authenticationSuccess = $this->container->get($sitename.'_authentication_handler');
         //ldap_translationalresearch_firewall
         //$logger = $this->container->get('logger');
@@ -384,7 +384,7 @@ class SecurityController extends OrderAbstractController
         $lastRoute = $request->getSession()->get($indexLastRoute);
         //$logger->notice('1 loginPage: $lastRoute=['.$lastRoute."]");
         //replace http to https
-        $protocol = 'https';
+        $protocol = 'https'; //TODO: looks like we need a scheme parameter in site settings
 //            if( isset($_SERVER['HTTPS']) ) {
 //                $protocol = 'https';
 //            }

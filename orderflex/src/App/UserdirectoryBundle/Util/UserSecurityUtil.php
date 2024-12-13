@@ -446,7 +446,7 @@ class UserSecurityUtil {
 
         //$this->tokenStorage->setToken(null);
         //$this->security->logout();
-        $this->security->logout(false);
+        $this->security->logout(false); //This will trigger onLogout event
 
         //invalidate_session manually
         //$this->security->setToken(null);
@@ -454,7 +454,7 @@ class UserSecurityUtil {
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $this->samlLogout($user,$logintype,$sitename);
+        //$this->samlLogout($user,$logintype,$sitename);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
