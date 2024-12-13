@@ -435,7 +435,8 @@ class UserSecurityUtil {
         //$request->getSession()->invalidate();
 
         //$this->tokenStorage->setToken(null);
-        $this->security->logout(false);
+        $this->security->logout();
+        //$this->security->logout(false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
