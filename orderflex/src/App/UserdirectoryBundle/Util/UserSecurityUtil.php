@@ -392,7 +392,7 @@ class UserSecurityUtil {
         $session = $request->getSession();
         $logintype = $session->get('logintype');
         $logger = $this->container->get('logger');
-        $logger->notice("samlLogout: logintype=".$logintype);
+        $logger->notice("idleLogout: logintype=".$logintype);
         if( $logintype === 'saml-sso' ) {
             $samlLogoutStr = "(with SAML logout)";
         }
