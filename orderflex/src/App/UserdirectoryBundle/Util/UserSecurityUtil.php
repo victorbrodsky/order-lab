@@ -400,6 +400,8 @@ class UserSecurityUtil {
             $samlLogoutStr = "";
             $session = $request->getSession();
             $logintype = $session->get('logintype');
+            $logger = $this->container->get('logger');
+            $logger->notice("samlLogout: logintype=".$logintype);
             if( $logintype === 'saml-sso' ) {
                 $samlLogoutStr = "(with SAML logout)";
             }
@@ -442,9 +444,17 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        //$this->tokenStorage->setToken(null);
+        $this->tokenStorage->setToken(null);
         //$this->security->logout();
-        $this->security->logout(false);
+        //$this->security->logout(false);
+
+        //invalidate_session manually
+        //$this->security->setToken(null);
+        $session->invalidate();
+        //$this->security->logout(false);
+
+        //samlLogout will redirect by $auth->logout(); to $sitename homepage
+        $this->samlLogout($user,$logintype,$sitename);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
