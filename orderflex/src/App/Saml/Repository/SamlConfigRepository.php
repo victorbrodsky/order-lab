@@ -69,26 +69,30 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
             return NULL;
         }
 
-        //return $this->findByDomain($client);
-
-        $query = $this->_em->createQueryBuilder()
-            ->from(SamlConfig::class, 'config')
-            ->select("config")
-            ->where('config.client = :client AND config.type IN (:type)')
-            ->orderBy("config.id","ASC")
-            ->setParameters( array(
-                'client' => $client,
-                'type' => array('default','user-added'),
-            ))
-        ;
-
-        $configs = $query->getQuery()->getResult();
-
-        if( count($configs) > 0 ) {
-            $config = $configs[0];
-        }
+        $config = $this->findByDomain($client);
+        dump($config);
+        exit('111');
 
         return $config;
+
+//        $query = $this->_em->createQueryBuilder()
+//            ->from(SamlConfig::class, 'config')
+//            ->select("config")
+//            ->where('config.client = :client AND config.type IN (:type)')
+//            ->orderBy("config.id","ASC")
+//            ->setParameters( array(
+//                'client' => $client,
+//                'type' => array('default','user-added'),
+//            ))
+//        ;
+//
+//        $configs = $query->getQuery()->getResult();
+//
+//        if( count($configs) > 0 ) {
+//            $config = $configs[0];
+//        }
+//
+//        return $config;
     }
 
 //    //$client - email
