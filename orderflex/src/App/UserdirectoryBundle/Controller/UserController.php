@@ -248,6 +248,10 @@ class UserController extends OrderAbstractController
         //echo "2 locale_get_default=".Locale::getDefault()."<br>";
         //exit('111');
 
+        //$em = $this->getDoctrine()->getManager();
+        //$user = $em->getRepository(User::class)->findOneUserByEmail('oli2002@med.cornell.edu');
+        //exit('user='.$user."; ID=".$user->getId());
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

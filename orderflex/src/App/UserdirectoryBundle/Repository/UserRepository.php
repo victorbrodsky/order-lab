@@ -227,7 +227,8 @@ class UserRepository extends EntityRepository {
             ->leftJoin("user.infos","infos")
             ->where('user.primaryPublicUserId = :primaryPublicUserId')
             ->andWhere("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
-            ->orderBy("user.id","ASC")
+            ->orderBy("user.id","ASC") //Use the last created
+            //->orderBy("user.lastActivity","ASC")
             //->setParameter('userInfoEmail', $email)
             ->setParameters( array(
                 'userInfoEmail' => $email,
@@ -236,7 +237,11 @@ class UserRepository extends EntityRepository {
         ;
 
         $users = $query->getQuery()->getResult();
+        //echo "users=".count($users)."<br>";
 
+        //Check if email address matches two or more user records.
+        // In this case, choose a user with the latest login timestamp, if timestamp is empty, use DB latest user ID
+        //However: users[0] will by the user with lastActivity is NULL, therefore, use user id (the last created user)
         if( count($users) > 0 ) {
             $user = $users[0];
         }
@@ -256,7 +261,8 @@ class UserRepository extends EntityRepository {
             ->select("user")
             ->leftJoin("user.infos","infos")
             ->where("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
-            ->orderBy("user.id","ASC")
+            ->orderBy("user.id","ASC") //Use the last created
+            //->orderBy("user.lastActivity","DESC")
             //->setParameter('userInfoEmail', $email)
             ->setParameters( array(
                 'userInfoEmail' => $email
@@ -264,6 +270,16 @@ class UserRepository extends EntityRepository {
         ;
 
         $users = $query->getQuery()->getResult();
+
+//        echo "users=".count($users)."<br>";
+//        foreach ($users as $user) {
+//            $lastActivity = $user->getLastActivity();
+//            $lastActivityStr = "N/A";
+//            if( $lastActivity ) {
+//                $lastActivityStr = $lastActivity->format('d-m-Y H:i:s');
+//            }
+//            echo "ID=".$user->getId().": user=".$user."; latsActive=".$lastActivityStr."<br>";
+//        }
 
         if( count($users) > 0 ) {
             $user = $users[0];
