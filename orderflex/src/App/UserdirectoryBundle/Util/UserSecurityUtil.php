@@ -434,7 +434,7 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        $this->tokenStorage->setToken(null);
+        //$this->tokenStorage->setToken(null);
         $this->security->logout(false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
