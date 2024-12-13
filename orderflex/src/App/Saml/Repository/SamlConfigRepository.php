@@ -70,8 +70,8 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
         }
 
         $config = $this->findByDomain($client);
-        dump($config);
-        exit('111');
+        //dump($config);
+        //exit('111');
 
         return $config;
 
