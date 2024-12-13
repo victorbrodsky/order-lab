@@ -271,12 +271,21 @@ class SecurityController extends OrderAbstractController
 
         //check if SAML enabled
         $samlenabled = 0;
-        //get enabled configs
-        $config = $em->getRepository(SamlConfig::class)->findAnyEnabledOne();
-        if( $config ) {
+        //get enabled configs. Alternatively, we can check if SAML login type enabled (UsernameType has name 'SAML/SSO').
+        //$config = $em->getRepository(SamlConfig::class)->findAnyEnabledOne();
+        //if( $config ) {
+        //    $samlenabled = 1;
+        //}
+        //Alternatively, check if SAML login type enabled (UsernameType has name 'SAML/SSO')
+        $samlKeytypes = $em->getRepository(UsernameType::class)->findBy(
+            array('type' => array('default','user-added'), 'name' => 'SAML/SSO'),
+            array('orderinlist' => 'ASC')
+        );
+        if( count($samlKeytypes) > 0 ) {
             $samlenabled = 1;
         }
         $formArr['samlenabled'] = $samlenabled;
+        echo "samlenabled=$samlenabled <br>"; //dev
         
         //not live warning
         $environment = $userSecUtil->getSiteSettingParameter('environment');
