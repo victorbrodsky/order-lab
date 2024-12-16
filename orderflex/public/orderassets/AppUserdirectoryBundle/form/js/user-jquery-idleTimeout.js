@@ -369,7 +369,7 @@ function userCheckIfConnected() {
     //window.onbeforeunload = null;
 
     var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
-    urlIdleTimeoutLogout = 'https://view.online/c/wcm/pathology/directory/c/wcm/pathology/directory/idle-log-out';
+    urlIdleTimeoutLogout = 'https://view.online/c/wcm/pathology/directory/idle-log-out';
     console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
     $.ajax({
