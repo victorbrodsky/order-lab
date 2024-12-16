@@ -383,7 +383,7 @@ function userCheckIfConnected() {
         console.log("url error");
         console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
-        var failMsg = "userCheckIfConnected fail. jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", error="+error;
+        var failMsg = "userCheckIfConnected fail. jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", errorThrown="+errorThrown;
         console.log(failMsg);
 
         var warningMessage = "A network connection interruption was detected and " +
