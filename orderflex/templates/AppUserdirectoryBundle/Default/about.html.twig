@@ -53,13 +53,38 @@
 
 {% endblock %}
 
-{#{% block additionaljs %}#}
-    {#<script language="Javascript">#}
-        {#$(document).ready(function () {#}
-            {#var testUrl = Routing.generate('employees_test_url');#}
-            {#console.log('testUrl='+testUrl);#}
-        {#});#}
-    {#</script>#}
-{#{% endblock %}#}
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function () {
+            var testUrl = Routing.generate('employees_test_url');
+            console.log('testUrl='+testUrl);
+
+
+            //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
+            var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
+            console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+
+            urlIdleTimeoutLogout.replace('http', 'https');
+
+            //var idleTimeout = _idleTimeout;
+
+            $.get(urlIdleTimeoutLogout).done(function () {
+                //alert("success");
+                console.log("url ok");
+            }).fail(function () {
+                console.log("url error");
+                console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+
+                var warningMessage = "A network connection interruption was detected and " +
+                        "your account was logged out due to inactivity. To continue, please " +
+                        "make sure you are connected to the network (and to the VPN, if applicable) " +
+                        "and log in again.";
+                alert(warningMessage);
+
+            });
+
+        });
+    </script>
+{% endblock %}
 
 
