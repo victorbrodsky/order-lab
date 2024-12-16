@@ -444,9 +444,10 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
+        $logger->notice("idleLogout: before security->logout");
         //$this->tokenStorage->setToken(null);
         //$this->security->logout();
-        //$this->security->logout(false); //This will trigger onLogout event
+        $this->security->logout(false); //This will trigger onLogout event
 
         //invalidate_session manually
         //$this->security->setToken(null);
@@ -454,7 +455,7 @@ class UserSecurityUtil {
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $this->samlLogout($user,$logintype,$sitename,true);
+        //$this->samlLogout($user,$logintype,$sitename,false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
