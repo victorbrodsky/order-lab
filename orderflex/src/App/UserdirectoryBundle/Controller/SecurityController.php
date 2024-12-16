@@ -521,7 +521,7 @@ class SecurityController extends OrderAbstractController
             'notice',
             "Test message"
         );
-        exit('idlelogoutAction exit');
+        //exit('idlelogoutAction exit');
 
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );

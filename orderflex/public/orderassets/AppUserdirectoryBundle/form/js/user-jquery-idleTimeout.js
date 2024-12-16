@@ -300,7 +300,7 @@ function getAjaxTimeoutMsg() {
     return false;
 }
 
-function userCheckIfConnected() {
+function userCheckIfConnected_ORIG() {
     //console.log("userCheckIfConnected");
 
     //event.stopPropagation();
@@ -360,6 +360,38 @@ function userCheckIfConnected() {
 
     //not connected
     //idleTimeout.redirectUrl = false;
+}
+
+function userCheckIfConnected() {
+
+    //event.stopPropagation();
+    //console.log("window.onbeforeunload = null");
+    window.onbeforeunload = null;
+
+    var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
+    console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+
+    $.ajax({
+        url: urlIdleTimeoutLogout,
+        timeout: 3000,
+        async: false,
+    }).success(function(data) {
+        console.log("userCheckIfConnected: success");
+    }).done(function() {
+        console.log("userCheckIfConnected: url ok");
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log("url error");
+        console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+
+        var failMsg = "userCheckIfConnected fail. jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", error="+error;
+        console.log(failMsg);
+
+        var warningMessage = "A network connection interruption was detected and " +
+            "your account was logged out due to inactivity. To continue, please " +
+            "make sure you are connected to the network (and to the VPN, if applicable) " +
+            "and log in again.";
+        alert(warningMessage);
+    });
 }
 
 destroyWarningDialog = function () {
