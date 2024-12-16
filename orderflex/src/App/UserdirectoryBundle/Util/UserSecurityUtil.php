@@ -444,7 +444,7 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        $this->tokenStorage->setToken(null);
+        //$this->tokenStorage->setToken(null);
         //$this->security->logout();
         //$this->security->logout(false); //This will trigger onLogout event
 
@@ -454,7 +454,7 @@ class UserSecurityUtil {
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $this->samlLogout($user,$logintype,$sitename);
+        $this->samlLogout($user,$logintype,$sitename,true);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
@@ -505,7 +505,7 @@ class UserSecurityUtil {
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
-    public function samlLogout( $user, $logintype=NULL, $sitename=NULL ) {
+    public function samlLogout( $user, $logintype=NULL, $sitename=NULL, $forceLogout=false ) {
         //return false; //testing - disable.
 
         if( !$user ) {
@@ -515,8 +515,8 @@ class UserSecurityUtil {
         //$logger = $this->container->get('logger');
 
         //check $session = $request->getSession();
+        $session = $this->requestStack->getCurrentRequest()->getSession();
         if( !$logintype ) {
-            $session = $this->requestStack->getCurrentRequest()->getSession();
             $logintype = $session->get('logintype');
             //$logger->notice("samlLogout: logintype=".$logintype);
         }
@@ -543,6 +543,17 @@ class UserSecurityUtil {
                     //$logger->notice("samlLogout: Starting SAML logout: try");
                     $auth = new Auth($config['settings']);
                     //if( $auth->isAuthenticated() ) {
+
+                    if( $forceLogout ) {
+                        $this->tokenStorage->setToken(null);
+                        //$this->security->logout();
+                        //$this->security->logout(false); //This will trigger onLogout event
+
+                        //invalidate_session manually
+                        //$this->security->setToken(null);
+                        $session->invalidate();
+                    }
+
                     //$logger->notice("samlLogout: returnUrl={$returnUrl}");
                     $auth->logout($returnUrl);
                     //$logger->notice("samlLogout: Starting SAML logout: after logout");
