@@ -546,13 +546,13 @@ class UserSecurityUtil {
                     //if( $auth->isAuthenticated() ) {
 
                     if( $forceLogout ) {
-                        $this->tokenStorage->setToken(null);
+                        //$this->tokenStorage->setToken(null);
                         //$this->security->logout();
                         //$this->security->logout(false); //This will trigger onLogout event
 
                         //invalidate_session manually
                         //$this->security->setToken(null);
-                        $session->invalidate();
+                        //$session->invalidate();
                     }
 
                     //$logger->notice("samlLogout: returnUrl={$returnUrl}");
