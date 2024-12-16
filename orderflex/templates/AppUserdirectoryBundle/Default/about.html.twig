@@ -57,12 +57,12 @@
     <script language="Javascript">
         $(document).ready(function () {
             var testUrl = Routing.generate('employees_test_url');
-            console.log('testUrl='+testUrl);
+            console.log('About: testUrl='+testUrl);
 
 
             //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
             var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
-            console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+            console.log("About: userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
             urlIdleTimeoutLogout.replace('http', 'https');
 
@@ -70,10 +70,10 @@
 
             $.get(urlIdleTimeoutLogout).done(function () {
                 //alert("success");
-                console.log("url ok");
+                console.log("About: url ok");
             }).fail(function () {
-                console.log("url error");
-                console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+                console.log("About: url error");
+                console.log("About: url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
                 var warningMessage = "A network connection interruption was detected and " +
                         "your account was logged out due to inactivity. To continue, please " +

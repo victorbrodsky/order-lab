@@ -476,8 +476,8 @@ class SecurityController extends OrderAbstractController
      *
      *
      */
-    #[Route(path: '/idle-log-out', name: 'employees_idlelogout', schemes: ['https'], options: ['expose' => true])]
-    #[Route(path: '/idle-log-out/{flag}', name: 'employees_idlelogout-saveorder', schemes: ['https'], options: ['expose' => true])]
+    #[Route(path: '/idle-log-out', name: 'employees_idlelogout', options: ['expose' => true])]
+    #[Route(path: '/idle-log-out/{flag}', name: 'employees_idlelogout-saveorder', options: ['expose' => true])]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('idlelogoutAction');
