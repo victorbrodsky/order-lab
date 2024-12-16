@@ -330,6 +330,7 @@ function userCheckIfConnected() {
         console.log("url ok");
     }).fail(function () {
         console.log("url error");
+        console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
         //console.log("dialogTitle="+$.fn.idleTimeout().dialogTitle);
         //alert("failed.");
 
