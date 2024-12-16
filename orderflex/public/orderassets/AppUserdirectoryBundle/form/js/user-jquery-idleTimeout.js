@@ -321,6 +321,8 @@ function userCheckIfConnected() {
     var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
+    urlIdleTimeoutLogout.replace('http', 'https');
+
     //var idleTimeout = _idleTimeout;
 
     $.get(urlIdleTimeoutLogout).done(function () {
