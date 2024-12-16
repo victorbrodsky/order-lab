@@ -366,7 +366,7 @@ function userCheckIfConnected() {
 
     //event.stopPropagation();
     //console.log("window.onbeforeunload = null");
-    window.onbeforeunload = null;
+    //window.onbeforeunload = null;
 
     var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
