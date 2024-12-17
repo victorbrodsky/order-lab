@@ -455,7 +455,7 @@ class UserSecurityUtil {
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $this->samlLogout($user,$logintype,$sitename,false);
+        //$this->samlLogout($user,$logintype,$sitename,false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
@@ -519,11 +519,11 @@ class UserSecurityUtil {
         $session = $this->requestStack->getCurrentRequest()->getSession();
         if( !$logintype ) {
             $logintype = $session->get('logintype');
-            //$logger->notice("samlLogout: logintype=".$logintype);
+            $logger->notice("samlLogout: logintype=".$logintype);
         }
 
         if( $logintype != 'saml-sso' ) {
-            //$logger->notice("samlLogout: NO SAML logout");
+            $logger->notice("samlLogout: NO SAML logout");
             return false;
         }
         $logger->notice("samlLogout: SAML logout");
