@@ -174,10 +174,10 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    _idleAfter = 25; //sec testing
-    sessionKeepAliveTimer = 3; //false; //testing
-    dialogDisplayLimit = 15; //sec
-    urlIdleTimeoutLogout = false; //testing
+    //_idleAfter = 25; //sec testing
+    //sessionKeepAliveTimer = 3; //false; //testing
+    //dialogDisplayLimit = 15; //sec
+    //urlIdleTimeoutLogout = false; //testing
     /////// EOF TESTING PARAMETERS ///////
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/
@@ -303,8 +303,8 @@ function getAjaxTimeoutMsg() {
 
 //HaProxy scheme (used http instead of https):
 //Error: Blocked loading mixed active content “http://view.online/c/wcm/pathology/directory/login”
-function userCheckIfConnected_ORIG() {
-    //console.log("userCheckIfConnected");
+function userCheckIfConnected() {
+    console.log("userCheckIfConnected");
 
     //event.stopPropagation();
     //console.log("window.onbeforeunload = null");
@@ -324,8 +324,6 @@ function userCheckIfConnected_ORIG() {
     var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
-    urlIdleTimeoutLogout.replace('http', 'https');
-
     //var idleTimeout = _idleTimeout;
 
     $.get(urlIdleTimeoutLogout).done(function () {
@@ -341,7 +339,7 @@ function userCheckIfConnected_ORIG() {
             "your account was logged out due to inactivity. To continue, please " +
             "make sure you are connected to the network (and to the VPN, if applicable) " +
             "and log in again.";
-        alert(warningMessage);
+        //alert(warningMessage); //disable for SAML
 
         //var currentConfig = idleTimeout.currentConfig;
         //$.fn.idleTimeout().redirectUrl = false;
@@ -365,7 +363,7 @@ function userCheckIfConnected_ORIG() {
     //idleTimeout.redirectUrl = false;
 }
 
-function userCheckIfConnected() {
+function userCheckIfConnected_NEW() {
 
     //event.stopPropagation();
     //console.log("window.onbeforeunload = null");
