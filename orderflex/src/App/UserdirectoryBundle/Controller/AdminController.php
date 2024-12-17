@@ -2995,7 +2995,7 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setMedicalLicenseState($state);
 
 
-        //$entity->addOrganizationalGroupDefault($pathDefaultGroup);
+        $entity->addOrganizationalGroupDefault($pathDefaultGroup);
         $pathDefaultGroup->setSiteParameter($entity);
 
         $em->persist($pathDefaultGroup);
