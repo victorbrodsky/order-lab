@@ -445,17 +445,17 @@ class UserSecurityUtil {
         //$request->getSession()->invalidate();
 
         $logger->notice("idleLogout: before security->logout");
-        //$this->tokenStorage->setToken(null);
+        $this->tokenStorage->setToken(null);
         //$this->security->logout();
-        $this->security->logout(false); //This will trigger onLogout event
+        //$this->security->logout(false); //This will trigger onLogout event
 
         //invalidate_session manually
         //$this->security->setToken(null);
-        //$session->invalidate();
+        $session->invalidate();
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        //$this->samlLogout($user,$logintype,$sitename,false);
+        $this->samlLogout($user,$logintype,$sitename,false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
@@ -534,7 +534,7 @@ class UserSecurityUtil {
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $returnUrl = str_replace("http","https",$returnUrl);
+        //$returnUrl = str_replace("http","https",$returnUrl);
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
