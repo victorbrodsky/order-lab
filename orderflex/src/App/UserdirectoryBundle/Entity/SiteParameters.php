@@ -1076,7 +1076,10 @@ class SiteParameters {
     {
         if( $item && !$this->organizationalGroupDefaults->contains($item) ) {
             $this->organizationalGroupDefaults->add($item);
-            //$item->setSiteParameter($this);
+            //This ($item->setSiteParameter($this)) caused A new entity was found through the relationship
+            // 'App\UserdirectoryBundle\Entity\OrganizationalGroupDefault#siteParameter
+            // that was not configured to cascade persist operations for entity: App\UserdirectoryBundle\Entity\SiteParameters@6889
+            $item->setSiteParameter($this);
         }
 
         return $this;
