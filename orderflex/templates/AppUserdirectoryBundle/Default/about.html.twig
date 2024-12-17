@@ -53,38 +53,35 @@
 
 {% endblock %}
 
-{% block additionaljs %}
-    <script language="Javascript">
-        $(document).ready(function () {
-            var testUrl = Routing.generate('employees_test_url');
-            console.log('About: testUrl='+testUrl);
+{#{% block additionaljs %}#}
+    {#<script language="Javascript">#}
+        {#$(document).ready(function () {#}
+            {#var testUrl = Routing.generate('employees_test_url');#}
+            {#console.log('About: testUrl='+testUrl);#}
 
 
-            //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
-            var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
-            console.log("About: userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+            {#//var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");#}
+            {#//var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');#}
+            {#//console.log("About: userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);#}
+            {#//var idleTimeout = _idleTimeout;#}
 
-            urlIdleTimeoutLogout.replace('http', 'https');
+            {#$.get(urlIdleTimeoutLogout).done(function () {#}
+                {#//alert("success");#}
+                {#console.log("About: url ok");#}
+            {#}).fail(function () {#}
+                {#console.log("About: url error");#}
+                {#console.log("About: url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);#}
 
-            //var idleTimeout = _idleTimeout;
+                {#var warningMessage = "A network connection interruption was detected and " +#}
+                        {#"your account was logged out due to inactivity. To continue, please " +#}
+                        {#"make sure you are connected to the network (and to the VPN, if applicable) " +#}
+                        {#"and log in again.";#}
+                {#alert(warningMessage);#}
 
-            $.get(urlIdleTimeoutLogout).done(function () {
-                //alert("success");
-                console.log("About: url ok");
-            }).fail(function () {
-                console.log("About: url error");
-                console.log("About: url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
+            {#});#}
 
-                var warningMessage = "A network connection interruption was detected and " +
-                        "your account was logged out due to inactivity. To continue, please " +
-                        "make sure you are connected to the network (and to the VPN, if applicable) " +
-                        "and log in again.";
-                alert(warningMessage);
-
-            });
-
-        });
-    </script>
-{% endblock %}
+        {#});#}
+    {#</script>#}
+{#{% endblock %}#}
 
 
