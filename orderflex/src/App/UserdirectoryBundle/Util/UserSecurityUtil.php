@@ -445,9 +445,9 @@ class UserSecurityUtil {
         //$request->getSession()->invalidate();
 
         $logger->notice("idleLogout: before security->logout");
-        //$this->tokenStorage->setToken(null);
+        $this->tokenStorage->setToken(null);
         //$this->security->logout();
-        $this->security->logout(false); //This will trigger onLogout event
+        //$this->security->logout(false); //This will trigger onLogout event
 
         //invalidate_session manually
         //$this->security->setToken(null);
