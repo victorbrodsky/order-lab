@@ -2803,7 +2803,7 @@ class AdminController extends OrderAbstractController
         $entity = $entities[0];
 
         if( !$entity ) {
-            exit('SiteParameters not found');
+            exit('generateSiteParameters: SiteParameters not found');
         }
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
@@ -2815,7 +2815,6 @@ class AdminController extends OrderAbstractController
         $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
 
         if( !$autoAssignInstitution ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
@@ -2828,7 +2827,6 @@ class AdminController extends OrderAbstractController
                 'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
                 'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $autoAssignInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
@@ -3000,7 +2998,7 @@ class AdminController extends OrderAbstractController
         $entity->addOrganizationalGroupDefault($pathDefaultGroup);
 
         $em->persist($pathDefaultGroup);
-        $em->flush();
+        $em->flush($pathDefaultGroup);
 
         return 1;
     }

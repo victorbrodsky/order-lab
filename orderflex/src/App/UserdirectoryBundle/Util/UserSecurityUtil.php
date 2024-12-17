@@ -513,7 +513,7 @@ class UserSecurityUtil {
             return false;
         }
 
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
 
         //check $session = $request->getSession();
         $session = $this->requestStack->getCurrentRequest()->getSession();
@@ -526,7 +526,7 @@ class UserSecurityUtil {
             //$logger->notice("samlLogout: NO SAML logout");
             return false;
         }
-        //$logger->notice("samlLogout: SAML logout");
+        $logger->notice("samlLogout: SAML logout");
 
         $returnUrl = $this->container->get('router')->generate(
             $sitename.'_login',
@@ -536,7 +536,7 @@ class UserSecurityUtil {
 
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
-        //$logger->debug("samlLogout: Starting SAML logout: email=".$email);
+        $logger->debug("samlLogout: Starting SAML logout: email=".$email);
         if( $email ) {
             $config = $samlConfigProviderUtil->getConfig($email);
             if( $config) {
@@ -555,9 +555,9 @@ class UserSecurityUtil {
                         //$session->invalidate();
                     }
 
-                    //$logger->notice("samlLogout: returnUrl={$returnUrl}");
+                    $logger->notice("samlLogout: returnUrl={$returnUrl}");
                     $auth->logout($returnUrl);
-                    //$logger->notice("samlLogout: Starting SAML logout: after logout");
+                    $logger->notice("samlLogout: Starting SAML logout: after logout");
                     // The logout method does a redirect, so we won't reach this line
                     //return new Response('Redirecting to IdP for logout...', 302);
                     return true;

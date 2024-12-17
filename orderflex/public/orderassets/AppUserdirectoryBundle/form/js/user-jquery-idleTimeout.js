@@ -230,7 +230,8 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //var idleTimeout
     //_idleTimeout
     var idleTimeout = $(document).idleTimeout({
-        redirectUrl: urlIdleTimeoutLogout, // redirect to this url on logout. Set to "redirectUrl: false" to disable redirect
+        //redirectUrl: urlIdleTimeoutLogout, // redirect to this url on logout. Set to "redirectUrl: false" to disable redirect
+        redirectUrl: false,
 
         // idle settings
         idleTimeLimit: _idleAfter,                 // 'No activity' time limit in seconds. 1200 = 20 Minutes
