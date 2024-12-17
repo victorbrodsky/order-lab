@@ -534,9 +534,11 @@ class UserSecurityUtil {
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $returnUrl = str_replace("http","https",$returnUrl);
+
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
         $email = $user->getSingleEmail();
-        $logger->debug("samlLogout: Starting SAML logout: email=".$email);
+        $logger->notice("samlLogout: Starting SAML logout: email=".$email);
         if( $email ) {
             $config = $samlConfigProviderUtil->getConfig($email);
             if( $config) {
