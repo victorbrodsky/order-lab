@@ -230,16 +230,16 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //var idleTimeout
     //_idleTimeout
     var idleTimeout = $(document).idleTimeout({
-        //redirectUrl: urlIdleTimeoutLogout, // redirect to this url on logout. Set to "redirectUrl: false" to disable redirect
-        redirectUrl: false,
+        redirectUrl: urlIdleTimeoutLogout, // redirect to this url on logout. Set to "redirectUrl: false" to disable redirect
+        //redirectUrl: false,
 
         // idle settings
         idleTimeLimit: _idleAfter,                 // 'No activity' time limit in seconds. 1200 = 20 Minutes
         idleCheckHeartbeat: idleCheckHeartbeat,    // Frequency to check for idle timeouts in seconds
 
         // optional custom callback to perform before logout
-        //customCallback: false,
-        customCallback: userCheckIfConnected,       // set to false for no customCallback
+        customCallback: false,
+        //customCallback: userCheckIfConnected,       // set to false for no customCallback
 
         // customCallback:    function () {    // define optional custom js function
         //     // perform custom action before logout
@@ -375,7 +375,7 @@ function userCheckIfConnected() {
     //urlIdleTimeoutLogout = 'https://view.online/c/wcm/pathology/directory/idle-log-out';
     console.log("userCheckIfConnected urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
 
-    urlIdleTimeoutLogout.replace('http', 'https');
+    //urlIdleTimeoutLogout.replace('http', 'https');
 
     $.ajax({
         url: urlIdleTimeoutLogout,
