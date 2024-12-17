@@ -259,10 +259,13 @@ class SamlController extends OrderAbstractController //AbstractController
     public function logout(Request $request): Response
     {
         //exit('logout');
-        //$this->logger->notice("logoutNew: Start");
+        $this->logger->notice("SamlController logout: Start");
 
         $relayState = $request->getPayload()->get('RelayState');
-        //$this->logger->notice("logoutNew: relayState=".$relayState);
+        $this->logger->notice("SamlController logout: relayState=".$relayState);
+
+        $relayState = str_replace("http","https",$relayState);
+        $this->logger->notice("SamlController logout: relayState=".$relayState);
 
         //return new Response('Redirecting to IdP for logout...', 302);
         return $this->redirect( $relayState );

@@ -558,8 +558,8 @@ class UserSecurityUtil {
                     }
 
                     $logger->notice("samlLogout: returnUrl={$returnUrl}");
-                    //$auth->logout($returnUrl);
-                    $auth->logout(); //testing
+                    $auth->logout($returnUrl);
+                    //$auth->logout(); //testing
                     $logger->notice("samlLogout: Starting SAML logout: after logout");
                     // The logout method does a redirect, so we won't reach this line
                     //return new Response('Redirecting to IdP for logout...', 302);
