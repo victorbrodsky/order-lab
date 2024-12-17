@@ -238,8 +238,8 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         idleCheckHeartbeat: idleCheckHeartbeat,    // Frequency to check for idle timeouts in seconds
 
         // optional custom callback to perform before logout
-        customCallback: false,
-        //customCallback: userCheckIfConnected,       // set to false for no customCallback
+        //customCallback: false,
+        customCallback: userCheckIfConnected,       // set to false for no customCallback
 
         // customCallback:    function () {    // define optional custom js function
         //     // perform custom action before logout
