@@ -396,7 +396,7 @@ function userCheckIfConnected() {
             "your account was logged out due to inactivity. To continue, please " +
             "make sure you are connected to the network (and to the VPN, if applicable) " +
             "and log in again.";
-        alert(warningMessage);
+        //alert(warningMessage); //disable for SAML
     });
 }
 
