@@ -2802,6 +2802,10 @@ class AdminController extends OrderAbstractController
 
         $entity = $entities[0];
 
+        if( !$entity ) {
+            exit('SiteParameters not found');
+        }
+
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
         if( !$nyp ) {
