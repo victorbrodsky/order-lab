@@ -684,6 +684,13 @@ class SecurityController extends OrderAbstractController
         $username = $user->getUsername();
         $usernametype = NULL;
 
+        ///// Testing /////
+        //echo "res=".$res."<br>";
+        $response = new Response();
+        $response->setContent("OK");
+        return $response;
+        ///// EOF Testing /////
+
         //$token = new UsernamePasswordToken($username, $password, $providerKey);
         $token = new CustomUsernamePasswordToken($username, $password, $providerKey, $usernametype);
 
