@@ -2996,7 +2996,7 @@ class AdminController extends OrderAbstractController
 
 
         $entity->addOrganizationalGroupDefault($pathDefaultGroup);
-        $pathDefaultGroup->setSiteParameter($entity);
+        //$pathDefaultGroup->setSiteParameter($entity);
 
         $em->persist($pathDefaultGroup);
         $em->flush($pathDefaultGroup);
