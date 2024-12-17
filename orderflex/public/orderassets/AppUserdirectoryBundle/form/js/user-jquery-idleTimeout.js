@@ -174,10 +174,10 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    _idleAfter = 25; //sec testing
-    sessionKeepAliveTimer = 3; //false; //testing
-    dialogDisplayLimit = 15; //sec
-    urlIdleTimeoutLogout = false; //testing
+    //_idleAfter = 25; //sec testing
+    //sessionKeepAliveTimer = 3; //false; //testing
+    //dialogDisplayLimit = 15; //sec
+    //urlIdleTimeoutLogout = false; //testing
     /////// EOF TESTING PARAMETERS ///////
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/
@@ -300,6 +300,8 @@ function getAjaxTimeoutMsg() {
     return false;
 }
 
+//HaProxy scheme (used http instead of https):
+//Error: Blocked loading mixed active content “http://view.online/c/wcm/pathology/directory/login”
 function userCheckIfConnected_ORIG() {
     //console.log("userCheckIfConnected");
 
