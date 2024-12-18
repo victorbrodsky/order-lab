@@ -507,13 +507,13 @@ class UserSecurityUtil {
             $eventType                                              //$action (Event Type)
         );
 
-        $logger->notice("idleSamlLogout: before security->logout");
+        $logger->notice("idleSamlLogout: before security->logout. logintype=".$logintype);
         //$this->tokenStorage->setToken(null);
         //$this->security->logout();
         $this->security->logout(false); //This will trigger onLogout event
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $logger->notice("idleSamlLogout: before samlLogout");
+        $logger->notice("idleSamlLogout: before samlLogout. logintype=".$logintype);
         $this->samlLogout($user,$logintype,$sitename,false);
 
         $logger->notice("idleSamlLogout: before redirect to login page");
