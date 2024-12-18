@@ -377,25 +377,32 @@ class UserSecurityUtil {
         return false;
     }
 
-
     function idleLogout( $request, $sitename, $flag = null ) {
+        //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
+        $session = $request->getSession();
+        $logintype = $session->get('logintype');
+        $logger = $this->container->get('logger');
+        $logger->notice("idleLogout: logintype=".$logintype);
+        if( $logintype == 'saml-sso' ) {
+            //SAML logout
+            $this->idleSamlLogout($request,$sitename,$logintype);
+        }
 
+        //Regular logout
+        $this->idleRegularLogout($request,$sitename,$flag);
+
+        //Two above logout methods will redirect, therefore, below will not be reached
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+    }
+    function idleRegularLogout( $request, $sitename, $flag = null ) {
+
+        $logger = $this->container->get('logger');
         //$userUtil = new UserUtil();
         //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->security,$this->container);
 
         $res = $this->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
-
-        //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
-        $samlLogoutStr = "";
-        $session = $request->getSession();
-        $logintype = $session->get('logintype');
-        $logger = $this->container->get('logger');
-        $logger->notice("idleLogout: logintype=".$logintype);
-        if( $logintype === 'saml-sso' ) {
-            $samlLogoutStr = "(with SAML logout)";
-        }
 
         if( $maintenance ) {
 
@@ -407,9 +414,9 @@ class UserSecurityUtil {
         } else {
 
             if( $flag && $flag == 'saveorder' ) {
-                $msg = 'You have been logged out '.$samlLogoutStr.' after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
             } else {
-                $msg = 'You have been logged out '.$samlLogoutStr.' after '.($maxIdleTime/60).' minutes of inactivity.';
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
             }
 
         }
@@ -444,23 +451,70 @@ class UserSecurityUtil {
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        $logger->notice("idleLogout: before security->logout");
-        //$this->tokenStorage->setToken(null);
+        $logger->notice("idleRegularLogout: before security->logout");
+
+        $this->tokenStorage->setToken(null);
         //$this->security->logout();
-        $this->security->logout(false); //This will trigger onLogout event
+        //$this->security->logout(false); //This will trigger onLogout event
 
         //invalidate_session manually
         //$this->security->setToken(null);
         //$session->invalidate();
         //$this->security->logout(false);
 
-        //samlLogout will redirect by $auth->logout(); to $sitename homepage
-        $logger->notice("idleLogout: before samlLogout");
-        $this->samlLogout($user,$logintype,$sitename,false);
-
+        $logger->notice("idleRegularLogout: before redirect to login page");
         //return $this->redirect($this->generateUrl($sitename.'_login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
         //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+    }
+    function idleSamlLogout( $request, $sitename, $logintype ) {
+        $logger = $this->container->get('logger');
+        $user = $this->security->getUser();
+
+        $res = $this->getMaxIdleTimeAndMaintenance();
+        $maxIdleTime = $res['maxIdleTime'];
+        $maintenance = $res['maintenance'];
+
+        if( $maintenance ) {
+
+            //$msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$msg = $userSecUtil->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
+            $msg = $this->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
+
+        } else {
+
+            $flag = false;
+            if( $flag && $flag == 'saveorder' ) {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity. You can find the order you have been working on in the list of your orders once you log back in.';
+            } else {
+                $msg = 'You have been logged out after '.($maxIdleTime/60).' minutes of inactivity.';
+            }
+
+        }
+        $user = $this->security->getUser();
+        $eventType = "User Auto Logged Out";
+        $eventStr = "User has been auto logged out with message: ".$msg;
+
+        //EventLog
+        $this->createUserEditEvent(
+            $this->container->getParameter('employees.sitename'),   //$sitename
+            $eventStr,                                              //$event (Event description)
+            $user,                                                  //$user
+            $user,                                                  //$subjectEntities
+            $request,                                               //$request
+            $eventType                                              //$action (Event Type)
+        );
+
+        $logger->notice("idleSamlLogout: before security->logout");
+        $this->tokenStorage->setToken(null);
+
+        //samlLogout will redirect by $auth->logout(); to $sitename homepage
+        $logger->notice("idleSamlLogout: before samlLogout");
+        $this->samlLogout($user,$logintype,$sitename,false);
+
+        $logger->notice("idleSamlLogout: before redirect to login page");
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
     }
 
     function userLogout( $request, $sitename ) {
