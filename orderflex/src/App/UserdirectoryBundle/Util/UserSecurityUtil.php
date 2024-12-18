@@ -455,6 +455,7 @@ class UserSecurityUtil {
         //$this->security->logout(false);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
+        $logger->notice("idleLogout: before samlLogout");
         $this->samlLogout($user,$logintype,$sitename,false);
 
         //return $this->redirect($this->generateUrl($sitename.'_login'));
