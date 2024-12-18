@@ -309,7 +309,7 @@ if( $conn ) {
                 //$public_key = null;
                 //$pass_phrase = null;
 
-                //$connection_channel = 'http'; //testing
+                $connection_channel = 'http'; //testing
                 echo "*** siteparameters.php: site settings connection_channel=[".$connection_channel."] ***\n"; //testing
             }//if $row
 
