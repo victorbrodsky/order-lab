@@ -938,7 +938,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateLocationTypeList");
         $count_locprivacy = $this->generateLocationPrivacy();
         $logger->notice("Finished generateLocationPrivacy");
-        $count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
+        //$count_generateDefaultOrgGroupSiteParameters = $this->generateDefaultOrgGroupSiteParameters();
         $logger->notice("Finished generateDefaultOrgGroupSiteParameters");
 
         $count_terminationTypes = $this->generateTerminationTypes();
@@ -1132,7 +1132,7 @@ class AdminController extends OrderAbstractController
             'generateViewModeList='.$count_generateViewModeList.', '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
-            'generateDefaultOrgGroupSiteParameters='.$count_generateDefaultOrgGroupSiteParameters.', '.
+            //'generateDefaultOrgGroupSiteParameters='.$count_generateDefaultOrgGroupSiteParameters.', '.
             'Institution Types='.$count_institutiontypes.', '.
             'Organizational Group Types='.$count_OrganizationalGroupType.', '.
             'Institutions='.$count_institution.', '.
