@@ -377,6 +377,7 @@ class UserSecurityUtil {
         return false;
     }
 
+    //Forking function
     function idleLogout( $request, $sitename, $flag = null ) {
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
@@ -493,8 +494,8 @@ class UserSecurityUtil {
 
         }
         $user = $this->security->getUser();
-        $eventType = "User Auto Logged Out";
-        $eventStr = "User has been auto logged out with message: ".$msg;
+        $eventType = "User Auto Logged Out with SAML";
+        $eventStr = "User has been auto logged out by SAML with message: ".$msg;
 
         //EventLog
         $this->createUserEditEvent(
@@ -507,7 +508,9 @@ class UserSecurityUtil {
         );
 
         $logger->notice("idleSamlLogout: before security->logout");
-        $this->tokenStorage->setToken(null);
+        //$this->tokenStorage->setToken(null);
+        //$this->security->logout();
+        $this->security->logout(false); //This will trigger onLogout event
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $logger->notice("idleSamlLogout: before samlLogout");
