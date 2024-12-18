@@ -28,12 +28,16 @@ if [ -z "$bashemail" ]
     bashemail=$6
 fi
 
+#bashpath="/usr/local/bin"
+bashpath="/srv"
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
 echo bashdomainname=$bashdomainname
 echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
+echo bashpath=$bashpath
 
 #WHITE='\033[1;37m'
 COLOR='\033[1;36m'
@@ -217,6 +221,66 @@ f_install_postgresql16 () {
 	echo ""
     sleep 1
 }
+f_install_postgresql17 () {
+	#https://computingforgeeks.com/install-postgresql-on-rocky-almalinux-9/
+    ########## INSTALL Postgresql ##########
+    echo -e "${COLOR} Installing Postgresql 17 ... ${NC}"
+    sleep 1
+
+	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	
+	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
+	sudo dnf -qy module disable postgresql
+	
+	echo @### Install postgresql 17 ###	
+	sudo dnf install -y postgresql17-server postgresql17
+
+	#echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#sudo yum install -y oidentd
+	#sudo dnf install -y authd
+	#sudo dnf install -y xinetd
+
+	echo @### Optionally initialize the database postgresql-17 and enable automatic start ###	
+	sudo /usr/pgsql-17/bin/postgresql-17-setup initdb
+	sudo systemctl enable postgresql-17
+	sudo systemctl start postgresql-17
+
+	echo @### Create DB and create user $bashdbuser with password $bashdbpass ###
+	sudo -Hiu postgres createdb scanorder
+	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
+	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
+	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
+	
+	#echo @### Create system DB and create user $bashdbuser with password $bashdbpass ###
+	#sudo -Hiu postgres createdb systemdb
+	#sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE systemdb to $bashdbuser"
+	
+	#Modify pg_hba.conf in /var/lib/pgsql/17/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/17/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/17/data/pg_hba.conf
+	
+	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/17/data/pg_hba.conf
+	
+	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/17/data/pg_hba.conf
+	
+	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/17/data/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/17/data/postgresql.conf
+	
+	echo -e ${COLOR} Set port ${NC}
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/17/data/postgresql.conf
+		
+	sudo systemctl restart postgresql-17
+	
+	echo ""
+    sleep 1
+}
 
 f_install_php82 () {
     ########## INSTALL PHP 8.2 ##########
@@ -386,7 +450,7 @@ f_install_util () {
 	cd /opt
 	sudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
 	sudo tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
-	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs phantomjs --version
+	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs "$bashpath"/phantomjs phantomjs --version
 	
 	#Install pdftotext: https://github.com/spatie/pdf-to-text
 	sudo yum install -y poppler-utils
@@ -425,30 +489,30 @@ f_install_order () {
 
 	echo -e ${COLOR} Clone ORDER and copy config and php.ini files, install composer ${NC}
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
-	cd /usr/local/bin/
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	cd "$bashpath"/
+	git clone https://github.com/victorbrodsky/order-lab.git "$bashpath"/order-lab
 	#git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 	#git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
-	ls /usr/local/bin/order-lab
+	ls "$bashpath"/order-lab
 	
 	#chown -R apache:apache /var/www
-	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
-	sudo chmod a+x /usr/local/bin/order-lab
+	echo -e ${COLOR} sudo chmod a+x "$bashpath"/order-lab ${NC}
+	sudo chmod a+x "$bashpath"/order-lab
 	
 	#echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
 	#sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	#sudo chown -R nobody:nobody /usr/local/bin/order-lab 
 	
-	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
-	sudo chown -R apache:apache /usr/local/bin/order-lab
+	echo -e ${COLOR} sudo chown -R apache:apache "$bashpath"/order-lab ${NC}
+	sudo chown -R apache:apache "$bashpath"/order-lab
 	
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
 	echo -e ${COLOR} Fixing detected dubious ownership in repository ${NC}
-	git config --global --add safe.directory /usr/local/bin/order-lab
+	git config --global --add safe.directory "$bashpath"/order-lab
 	
 	echo ""
     sleep 1
@@ -460,21 +524,21 @@ f_install_prepare () {
     sleep 1
 
 	echo -e ${COLOR} Copy 000-default.conf to /etc/httpd/conf.d ${NC}
-	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
+	cp "$bashpath"/order-lab/packer/000-default.conf /etc/httpd/conf.d
 
 	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ] && [ "$bashsslcertificate" != "installcertbot" ]
 		then
 			echo -e ${COLOR} HTTPS protocol=$bashprotocol, bashsslcertificate=$bashsslcertificate: Copy default-ssl.conf to /etc/httpd/conf.d ${NC}
-			cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
+			cp "$bashpath"/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
 		else
 			echo -e ${COLOR} HTTP protocol=$bashprotocol: Do not copy default-ssl.conf to /etc/httpd/conf.d ${NC}
 	fi
 	
 	echo -e ${COLOR} Copy env ${NC}
-	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
+	cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab/orderflex/
 	
 	echo -e ${COLOR} Copy env.test ${NC}
-	cp /usr/local/bin/order-lab/packer/.env.test /usr/local/bin/order-lab/orderflex/
+	cp "$bashpath"/order-lab/packer/.env.test "$bashpath"/order-lab/orderflex/
 	
 	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
 	#/etc/opt/remi/php72/ or /etc/
@@ -491,10 +555,10 @@ f_install_prepare () {
 	#cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
 	cp /etc/php.ini /etc/php_ORIG.ini
 	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
+	yes | cp "$bashpath"/order-lab/packer/php.ini /etc/
 	
-	echo -e ${COLOR} Copy sample.config to /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
-	cp /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/sample.config /usr/local/bin/order-lab/utils/db-manage/postgres-manage-python/db.config
+	echo -e ${COLOR} Copy sample.config to "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config ${NC}
+	cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
 	
 	#sudo service php-fpm restart
 	#sudo service apache2 restart
@@ -538,7 +602,7 @@ f_install_post() {
 	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
 			echo -e ${COLOR} Install certbot on all OS ${NC}
-			bash /usr/local/bin/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
+			bash "$bashpath"/order-lab/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi	
@@ -550,7 +614,8 @@ f_install_post() {
 f_update_os
 f_install_apache
 #f_install_postgresql15
-f_install_postgresql16
+#f_install_postgresql16
+f_install_postgresql17
 #f_install_php82
 f_install_php83
 f_install_util
@@ -558,7 +623,12 @@ f_install_python3
 f_install_order
 f_install_prepare
 #f_install_post
-		   
+	
+#to install order only:
+#f_install_util
+#f_install_order
+#f_install_prepare
+	
 #Standalone:
 #1) Install git
 #	sudo dnf update -y

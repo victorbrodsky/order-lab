@@ -18,7 +18,7 @@
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 
 #5) Create combined certificate and key order-ssl.com.pem: 
-#cat /usr/local/bin/order-lab/ssl/apache2.crt /usr/local/bin/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
+#cat "$bashpath"/order-lab/ssl/apache2.crt "$bashpath"/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
 
 #6) Start each httpd configs: sudo httpd -f /etc/httpd/conf/httpd1.conf -k restart
 #7) Start HAProxy: sudo systemctl restart haproxy
@@ -70,6 +70,9 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+#bashpath="/usr/local/bin"
+bashpath="/srv"
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
@@ -77,6 +80,7 @@ echo bashdomainname=$bashdomainname
 echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
 echo multitenant=$multitenant
+echo bashpath=$bashpath
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -152,7 +156,7 @@ f_install_haproxy () {
 	
 	echo -e ${COLOR} Copy haproxy from packer ${NC}
 	sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg_orig
-	sudo cp /usr/local/bin/order-lab/packer/haproxy.cfg /etc/haproxy/
+	sudo cp "$bashpath"/order-lab/packer/haproxy.cfg /etc/haproxy/
 
 	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
@@ -185,115 +189,115 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 
 	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
-	if [ -d "/usr/local/bin/order-lab-$1" ]; then
-		echo -e ${COLOR} Directory /usr/local/bin/order-lab-"$1" does exist ${NC}
+	if [ -d ""$bashpath"/order-lab-$1" ]; then
+		echo -e ${COLOR} Directory "$bashpath"/order-lab-"$1" does exist ${NC}
 		return 0
 	fi
 
 	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
-	#cd /usr/local/bin/
-	changedir /usr/local/bin/
+	#cd "$bashpath"/
+	changedir "$bashpath"/
 	echo -e ${COLOR} Current folder: ${NC}
 	pwd
 	
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab-"$1"
+	git clone https://github.com/victorbrodsky/order-lab.git "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Check if instance has been created: "$1" port "$2" url "$3" ${NC}
-	if [ ! -d "/usr/local/bin/order-lab-$1" ]; then
-		echo -e ${COLOR} Error! Instance /usr/local/bin/order-lab-"$1" has not been created ${NC}
+	if [ ! -d ""$bashpath"/order-lab-$1" ]; then
+		echo -e ${COLOR} Error! Instance "$bashpath"/order-lab-"$1" has not been created ${NC}
 		return 0
 	else	
-		echo -e ${COLOR} Instance /usr/local/bin/order-lab-"$1" has been created! ${NC}
+		echo -e ${COLOR} Instance "$bashpath"/order-lab-"$1" has been created! ${NC}
 	fi
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
-	ls /usr/local/bin/order-lab-"$1"
+	ls "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Add ownership in repository ${NC}
-	git config --global --add safe.directory /usr/local/bin/order-lab-"$1"
+	git config --global --add safe.directory "$bashpath"/order-lab-"$1"
 	
 	#chown -R apache:apache /var/www
-	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab-"$1" ${NC}
-	sudo chmod a+x /usr/local/bin/order-lab-"$1"
+	echo -e ${COLOR} sudo chmod a+x "$bashpath"/order-lab-"$1" ${NC}
+	sudo chmod a+x "$bashpath"/order-lab-"$1"
 	
-	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab-"$1" ${NC}
-	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
+	echo -e ${COLOR} sudo chown -R apache:apache "$bashpath"/order-lab-"$1" ${NC}
+	sudo chown -R apache:apache "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Copy env ${NC}
-	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab-"$1"/orderflex/
+	cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab-"$1"/orderflex/
 	
 	echo -e ${COLOR} Copy env.test ${NC}
-	cp /usr/local/bin/order-lab/packer/.env.test /usr/local/bin/order-lab-"$1"/orderflex/
+	cp "$bashpath"/order-lab/packer/.env.test "$bashpath"/order-lab-"$1"/orderflex/
 	
 	#3) For each order instances set APP_SUBDIR
 	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
-	#sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" /usr/local/bin/order-lab-"$1"/orderflex/.env
-	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" /usr/local/bin/order-lab-"$1"/orderflex/.env
+	#sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" "$bashpath"/order-lab-"$1"/orderflex/.env
+	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" "$bashpath"/order-lab-"$1"/orderflex/.env
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
-	sudo cp /usr/local/bin/order-lab/orderflex/config/parameters.yml /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml	
+	sudo cp "$bashpath"/order-lab/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml	
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
-	sed -i -e "s/database_name: scanorder/database_name: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
+	sed -i -e "s/database_name: scanorder/database_name: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 	
 	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
-	sed -i -e "s/tenant_role: null/tenant_role: $1/g" /usr/local/bin/order-lab-"$1"/orderflex/config/parameters.yml
+	sed -i -e "s/tenant_role: null/tenant_role: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 	
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
-	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
-	changedir /usr/local/bin/order-lab-"$1"/orderflex
+	#sudo cd "$bashpath"/order-lab-"$1"/orderflex
+	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before install tenant for order-lab-"$1": ${NC}
 	pwd
 	
 	echo -e ${COLOR} composer validate ${NC}
-	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer validate --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer validate --verbose
 	
 	echo -e ${COLOR} composer diagnose ${NC}
-	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer diagnose --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer diagnose --verbose
 	
-	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --working-dir=/usr/local/bin/order-lab-"$1"/orderflex --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer install --working-dir="$bashpath"/order-lab-"$1"/orderflex --verbose
 	#COMPOSER_ALLOW_SUPERUSER=1 composer install --verbose
 	
-	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer dump-autoload --working-dir=/usr/local/bin/order-lab-"$1"/orderflex
+	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer dump-autoload --working-dir="$bashpath"/order-lab-"$1"/orderflex
 	#COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
 	
 	echo -e ${COLOR} List ORDER folder after composer ${NC}
-	ls /usr/local/bin/order-lab-"$1"/orderflex
+	ls "$bashpath"/order-lab-"$1"/orderflex
 	
 	#echo -e ${COLOR} Change folder to order-lab-"$1" ${NC}
-	#sudo cd /usr/local/bin/order-lab-"$1"/orderflex
+	#sudo cd "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
-	sudo yarn install --frozen-lockfile --cwd /usr/local/bin/order-lab-"$1"/orderflex
+	sudo yarn install --frozen-lockfile --cwd "$bashpath"/order-lab-"$1"/orderflex
 	
 	#echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
-	bash /usr/local/bin/order-lab-"$1"/packer/additional.sh
+	bash "$bashpath"/order-lab-"$1"/packer/additional.sh
 	
-	changedir /usr/local/bin/order-lab-"$1"/orderflex
+	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
 	pwd
 	
 	#run deploy	
 	#echo -e ${COLOR} Run deploy for python for order-lab-"$1" ${NC}
-	#sudo chmod +x /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh
-	#bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	#sudo chmod +x "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh
+	#bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 	
 	echo -e ${COLOR} chown apache for order-lab-"$1" ${NC}
-	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"
-	sudo chown -R apache:apache /usr/local/bin/order-lab-"$1"/.git/
+	sudo chown -R apache:apache "$bashpath"/order-lab-"$1"
+	sudo chown -R apache:apache "$bashpath"/order-lab-"$1"/.git/
 	
 	echo -e ${COLOR} Create and update DB for order-lab-"$1" ${NC}
 	pwd
-	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:database:create
-	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
-	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
-	sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
-	#sudo php /usr/local/bin/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all --no-interaction
+	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:database:create
+	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
+	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
+	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
+	#sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all --no-interaction
 	
 	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
-	bash /usr/local/bin/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
 }
 f_create_order_instances() {
 	#for str in ${tenantsArray[@]}; do
@@ -348,7 +352,7 @@ f_create_single_tenant_htppd() {
 	echo "PidFile /var/run/httpd$2.pid" >> /etc/httpd/conf/"$1"-httpd.conf 
 	
 	echo -e ${COLOR} Append VirtualHost config ${NC}
-	cat /usr/local/bin/order-lab/packer/000-default.conf >> /etc/httpd/conf/"$1"-httpd.conf
+	cat "$bashpath"/order-lab/packer/000-default.conf >> /etc/httpd/conf/"$1"-httpd.conf
 	
 	echo -e ${COLOR} Replace port '80' by "$2" ${NC}
 	sed -i -e "s/:80/:$2/g" /etc/httpd/conf/"$1"-httpd.conf
@@ -356,11 +360,11 @@ f_create_single_tenant_htppd() {
 	echo -e ${COLOR} Replace DocumentRoot 'order-lab' by order-lab-"$1" ${NC}
 	sed -i -e "s/order-lab/order-lab-$1/g" /etc/httpd/conf/"$1"-httpd.conf
 	
-	#Alias /c/demo-institution/demo-department /usr/local/bin/order-lab-2/orderflex/public/
+	#Alias /c/demo-institution/demo-department "$bashpath"/order-lab-2/orderflex/public/
 	if [ -n "$3" ]
 		then
 			echo -e ${COLOR} Replace Alias url 'aliasurl' by "$3" ${NC}
-			#Alias /order /usr/local/bin/order-lab/orderflex/public/
+			#Alias /order "$bashpath"/order-lab/orderflex/public/
 			#sed -i -e "s/aliasurl/$3/g" /etc/httpd/conf/"$1"-httpd.conf
 			sed -i -e "s,aliasurl,$3,g" /etc/httpd/conf/"$1"-httpd.conf
 		else
@@ -370,7 +374,7 @@ f_create_single_tenant_htppd() {
 	#Since you're running multiple instances manually, you'll need to create custom systemd service files to manage them.
 	#Create httpd service
 	echo -e ${COLOR} Create httpd"$1".service for port "$2", url "$3" ${NC}
-	cp /usr/local/bin/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
+	cp "$bashpath"/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
 	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/httpd"$1".service
 	echo -e ${COLOR} Enable httpd"$1".service for port "$2", url "$3" ${NC}
 	sudo systemctl enable httpd"$1"
@@ -380,7 +384,7 @@ f_create_single_tenant_htppd() {
 #5) Create combined certificate and key order-ssl.com.pem
 f_create_combined_certificate() {
 	echo -e ${COLOR} Create combined certificate and key order-ssl.com.pem ${NC}
-	cat /usr/local/bin/order-lab/ssl/apache2.crt /usr/local/bin/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
+	cat "$bashpath"/order-lab/ssl/apache2.crt "$bashpath"/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
 }
 
 f_stop_httpd() {
@@ -540,8 +544,8 @@ fi
 
 #From order-packer-centos7
 #"echo @### Create system DB - TODELETE ###",
-#"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+#"bash "$bashpath"/order-lab/orderflex/deploy_prod.sh",
 #"php bin/console doctrine:database:create --connection=systemdb",
 #"php bin/console doctrine:schema:update --em=systemdb --complete --force",
-#"bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh"
+#"bash "$bashpath"/order-lab/orderflex/deploy_prod.sh"
 

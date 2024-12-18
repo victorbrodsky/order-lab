@@ -36,10 +36,13 @@ fi
 #    userpass=$4
 #fi
 
+#bashpath="/usr/local/bin"
+bashpath="/srv"
 
 echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
+echo bashpath=$bashpath
 #echo userpass=$userpass
 
 echo Script install-cerbot.sh: domainname=$domainname
@@ -127,7 +130,7 @@ if [ "$OSNAME" = "Ubuntu" ];
 fi
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd ${NC}
-cd /usr/local/bin/order-lab/orderflex/
+cd "$bashpath"/order-lab/orderflex/
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd according to OS ${NC}
 #Centos yum, Alma dnf, Ubuntu apt
@@ -222,14 +225,14 @@ if true
         echo "==============================================="
         echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
         cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf_orig
-        cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+        cp "$bashpath"/order-lab/packer/000-default.conf /etc/apache2/sites-enabled/000-default.conf
       else
         echo "==============================================="
         echo "Use on all others OS $OSNAME"
         echo "==============================================="
         echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
         cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
-        cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+        cp "$bashpath"/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
     fi
 
     echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}
