@@ -207,11 +207,11 @@ f_install_haproxy () {
 f_create_single_order_instance () {
 
 	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
-	if [ -d '$bashpath/order-lab-$1' ]; then
-        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] already exist ${NC}
-        #return 0
+	if [ -d "$bashpath/order-lab-$1" ]; then
+        echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] already exist ${NC}
+        return 0
     else
-        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] does not exist ${NC}
+        echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] does not exist ${NC}
     fi
 
 	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
@@ -223,11 +223,11 @@ f_create_single_order_instance () {
 	git clone https://github.com/victorbrodsky/order-lab.git "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Check if instance has been created: "$1" port "$2" url "$3" ${NC}
-	if [ ! -d "$bashpath"/order-lab-"$1" ]; then
-		echo -e ${COLOR} Error! Instance "$bashpath"/order-lab-"$1" has not been created ${NC}
+	if [ ! -d "$bashpath/order-lab-$1" ]; then
+		echo -e ${COLOR} Error! Instance "$bashpath/order-lab-$1" has not been created ${NC}
 		return 0
 	else	
-		echo -e ${COLOR} Instance "$bashpath"/order-lab-"$1" has been created! ${NC}
+		echo -e ${COLOR} Instance "$bashpath/order-lab-$1" has been created! ${NC}
 	fi
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
@@ -267,21 +267,21 @@ f_create_single_order_instance () {
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
 	#sudo cd "$bashpath"/order-lab-"$1"/orderflex
-	changedir "$bashpath"/order-lab-"$1"/orderflex
+	changedir "$bashpath/order-lab-$1"/orderflex
 	echo -e ${COLOR} Current folder before install tenant for order-lab-"$1": ${NC}
 	pwd
 	
 	echo -e ${COLOR} composer validate ${NC}
-	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer validate --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer validate --verbose
 	
 	echo -e ${COLOR} composer diagnose ${NC}
-	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer diagnose --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer diagnose --verbose
 
 	echo -e ${COLOR} composer install to ["$bashpath"/order-lab-"$1"/orderflex] ${NC}
-	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer install --working-dir="$bashpath"/order-lab-"$1"/orderflex --verbose
+	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --working-dir="$bashpath"/order-lab-"$1"/orderflex --verbose
 	#COMPOSER_ALLOW_SUPERUSER=1 composer install --verbose
 	
-	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer dump-autoload --working-dir="$bashpath"/order-lab-"$1"/orderflex
+	COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer dump-autoload --working-dir="$bashpath"/order-lab-"$1"/orderflex
 	#COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
 	
 	echo -e ${COLOR} List ORDER folder after composer ${NC}
