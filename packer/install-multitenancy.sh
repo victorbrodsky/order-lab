@@ -326,11 +326,11 @@ f_create_order_instances() {
 		#f_create_single_order_instance "tenantmanager" "8082" "tenant-manager"
 	#done
 	f_create_single_order_instance homepagemanager 8081
-	f_create_single_order_instance tenantmanager 8082 tenant-manager
-	f_create_single_order_instance tenantappdemo 8083 c/demo-institution/demo-department
-	f_create_single_order_instance tenantapptest 8084 c/test-institution/test-department
-	f_create_single_order_instance tenantapp1 8085 c/wcm/pathology
-	f_create_single_order_instance tenantapp2 8086 c/wcm/psychiatry
+	##f_create_single_order_instance tenantmanager 8082 tenant-manager
+	##f_create_single_order_instance tenantappdemo 8083 c/demo-institution/demo-department
+	##f_create_single_order_instance tenantapptest 8084 c/test-institution/test-department
+	##f_create_single_order_instance tenantapp1 8085 c/wcm/pathology
+	##f_create_single_order_instance tenantapp2 8086 c/wcm/psychiatry
 }
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
