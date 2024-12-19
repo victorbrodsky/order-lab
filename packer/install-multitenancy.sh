@@ -1,4 +1,5 @@
 #!/bin/bash
+#install-multitenancy.sh
 
 #1) Install HAProxy
 
@@ -62,6 +63,11 @@ case $key in
 		shift # past argument
 		shift # past value
     ;;
+    -p|--path)
+    		bashpath="$2"
+    		shift # past argument
+    		shift # past value
+        ;;
     *)    # unknown option
 		POSITIONAL+=("$1") # save it in an array for later
 		shift # past argument
@@ -71,7 +77,11 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 #bashpath="/usr/local/bin"
-bashpath="/srv"
+#bashpath="/srv"
+if [ -z "$bashpath" ]; then
+    bashpath="/usr/local/bin"
+    #bashpath="/srv"
+fi
 
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
@@ -81,6 +91,8 @@ echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
 echo multitenant=$multitenant
 echo bashpath=$bashpath
+
+exit 0  # Testing: Exit the script with a success status (0)
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -273,7 +285,7 @@ f_create_single_order_instance () {
 	
 	#echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
-	bash "$bashpath"/order-lab-"$1"/packer/additional.sh
+	bash "$bashpath"/order-lab-"$1"/packer/additional.sh "$bashpath"
 	
 	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
