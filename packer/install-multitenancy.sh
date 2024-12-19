@@ -208,7 +208,7 @@ f_create_single_order_instance () {
 
 	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
 	if [ -d "$bashpath/order-lab-$1" ]; then
-		echo -e ${COLOR} Target directory ["$bashpath"/order-lab-"$1"] does exist ${NC}
+		echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] does exist ${NC}
 		return 0
 	fi
 
