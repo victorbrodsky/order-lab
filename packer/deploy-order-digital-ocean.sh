@@ -459,14 +459,14 @@ sleep 180
 if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$email" ]
   then
     echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
-    echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /usr/local/bin/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email'
+    echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email'
   else
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
 
 echo -e ${COLOR} Note: here, dropletname is the same as IMAGENAME "$IMAGENAME" ${NC}
 echo -e ${COLOR} You can install certbot later manually by running install-certbot.sh:  ${NC}
-echo -e ${COLOR} doctl compute ssh "$IMAGENAME" --ssh-key-path mysshkey --ssh-command \'bash /usr/local/bin/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com\'  ${NC}
+echo -e ${COLOR} doctl compute ssh "$IMAGENAME" --ssh-key-path mysshkey --ssh-command \'bash /srv/order-lab/packer/install-certbot.sh tincry.com installcertbot myemail@email.com\'  ${NC}
 
 echo -e ${COLOR} You can login to the droplet by running:  ${NC}
 echo -e ${COLOR} doctl compute ssh "$IMAGENAME" --ssh-key-path mysshkey  ${NC}

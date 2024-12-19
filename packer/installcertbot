@@ -3,5 +3,5 @@ Dummy file to copy for file provider:
 {
   "type": "file",
   "source": "bash_sslcertificate",
-  "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+  "destination": "/srv/order-lab/ssl/apache2.crt"
 }

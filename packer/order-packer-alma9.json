@@ -56,34 +56,34 @@
 	{
         "type": "shell",
         "inline": [ 
-           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/orderflex/config/parameters_bash_file] ###"
+           "echo @### Copy parameters file [parameters_bash_file] to [/srv/order-lab/orderflex/config/parameters_bash_file] ###"
          ]    
 	},
 	
 	{
 		"type": "file",
 		"source": "parameters_bash_file",
-		"destination": "/usr/local/bin/order-lab/orderflex/config/parameters_bash_file"         
+		"destination": "/srv/order-lab/orderflex/config/parameters_bash_file"
 	},
 	
 	{
         "type": "shell",
         "inline": [ 
-           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
-		   "sudo mkdir /usr/local/bin/order-lab/ssl"
+           "echo @### Create ssl folder /srv/order-lab/ssl ###",
+		   "sudo mkdir /srv/order-lab/ssl"
          ]    
 	},
 	  
 	  {
           "type": "file",
           "source": "bash_sslcertificate",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+          "destination": "/srv/order-lab/ssl/apache2.crt"
        },
 	   
 	   {
           "type": "file",
           "source": "bash_sslprivatekey",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
+          "destination": "/srv/order-lab/ssl/apache2.key"
        },
 	   
 	   {
@@ -98,7 +98,7 @@
         "type": "shell",
         "inline": [ 		   
 		   "echo @### Composer and deploy using orderflex ###",
-           "cd /usr/local/bin/order-lab/orderflex",					   
+           "cd /srv/order-lab/orderflex",
 		   "COMPOSER_ALLOW_SUPERUSER=1 composer self-update",
 		   "echo @### PostgreSQL Version after composer self-update ###",		
 		   "psql --version",
@@ -123,15 +123,15 @@
 		   "sudo hostnamectl",
 		   
 		   "echo @### Install additional.sh. env for python ###",
-		   "bash /usr/local/bin/order-lab/packer/additional.sh",
+		   "bash /srv/order-lab/packer/additional.sh",
 		   
-	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",		
+	       "sudo chmod +x /srv/order-lab/orderflex/deploy_prod.sh",
 		   
 		   "echo @### Check OS Info before deploy_prod.sh -withdb ###",
 		   "sudo hostnamectl",
-	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
-	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
-           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
+	       "bash /srv/order-lab/orderflex/deploy_prod.sh -withdb",
+	       "sudo chown -R apache:apache /srv/order-lab",
+           "sudo chown -R apache:apache /srv/order-lab/.git/",
 		   "echo @### PostgreSQL Version end of installation ###",
 		   "echo @### Check OS Info end of installation ###",
 		   "sudo hostnamectl",		   
@@ -149,7 +149,7 @@
         "type": "shell",
         "inline": [
 			"echo @### Run script to install sshkey ###",
-			"bash /usr/local/bin/order-lab/packer/install_ssh.sh $bashsshfingerprint"
+			"bash /srv/order-lab/packer/install_ssh.sh $bashsshfingerprint"
          ]
 	   },
 	   
