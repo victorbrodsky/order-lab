@@ -208,18 +208,11 @@ f_create_single_order_instance () {
 
 	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
 	if [ -d '$bashpath/order-lab-$1' ]; then
-        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] does not exist ${NC}
-        return 0
+        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] already exist ${NC}
+        #return 0
     else
-        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] exist! ${NC}
+        echo -e ${COLOR} Target directory ['$bashpath/order-lab-$1'] does not exist ${NC}
     fi
-    #if [ -d "$bashpath"/order-lab-"$1" ]; then
-    #    echo -e ${COLOR} 3 Target directory ["$bashpath/order-lab-$1"] does not exist ${NC}
-    #    #return 0
-    #else
-    #    echo -e ${COLOR} 3 Target directory ["$bashpath/order-lab-$1"] exist! ${NC}
-    #fi
-	return 0 #Testing
 
 	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
 	#cd "$bashpath"/
@@ -230,7 +223,7 @@ f_create_single_order_instance () {
 	git clone https://github.com/victorbrodsky/order-lab.git "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Check if instance has been created: "$1" port "$2" url "$3" ${NC}
-	if [ ! -d "$bashpath/order-lab-$1" ]; then
+	if [ ! -d '$bashpath/order-lab-$1' ]; then
 		echo -e ${COLOR} Error! Instance "$bashpath"/order-lab-"$1" has not been created ${NC}
 		return 0
 	else	
