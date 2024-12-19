@@ -64,10 +64,15 @@ case $key in
 		shift # past value
     ;;
     -p|--path)
-    		bashpath="$2"
-    		shift # past argument
-    		shift # past value
-        ;;
+        bashpath="$2"
+        shift # past argument
+        shift # past value
+    ;;
+    -s|--scheme)
+        bashprotocol="$2"
+        shift # past argument
+        shift # past value
+    ;;
     *)    # unknown option
 		POSITIONAL+=("$1") # save it in an array for later
 		shift # past argument
@@ -92,7 +97,8 @@ echo bashemail=$bashemail
 echo multitenant=$multitenant
 echo bashpath=$bashpath
 
-exit 0  # Testing: Exit the script with a success status (0)
+#Testing: Exit the script with a success status (0)
+exit 0
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
