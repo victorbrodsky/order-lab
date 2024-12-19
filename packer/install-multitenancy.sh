@@ -98,7 +98,7 @@ echo multitenant=$multitenant
 echo bashpath=$bashpath
 
 #Testing: Exit the script with a success status (0)
-exit 0
+#exit 0
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
