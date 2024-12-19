@@ -274,7 +274,8 @@ f_create_single_order_instance () {
 	
 	echo -e ${COLOR} composer diagnose ${NC}
 	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer diagnose --verbose
-	
+
+	echo -e ${COLOR} composer install to ["$bashpath"/order-lab-"$1"/orderflex] ${NC}
 	COMPOSER_ALLOW_SUPERUSER=1 "$bashpath"/composer install --working-dir="$bashpath"/order-lab-"$1"/orderflex --verbose
 	#COMPOSER_ALLOW_SUPERUSER=1 composer install --verbose
 	
