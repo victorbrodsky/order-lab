@@ -223,7 +223,7 @@ f_create_single_order_instance () {
 	git clone https://github.com/victorbrodsky/order-lab.git "$bashpath"/order-lab-"$1"
 	
 	echo -e ${COLOR} Check if instance has been created: "$1" port "$2" url "$3" ${NC}
-	if [ ! -d '$bashpath/order-lab-$1' ]; then
+	if [ ! -d "$bashpath"/order-lab-"$1" ]; then
 		echo -e ${COLOR} Error! Instance "$bashpath"/order-lab-"$1" has not been created ${NC}
 		return 0
 	else	
