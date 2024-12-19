@@ -331,7 +331,7 @@ f_create_order_instances() {
 	f_create_single_order_instance tenantmanager 8082 tenant-manager
 	f_create_single_order_instance tenantappdemo 8083 c/demo-institution/demo-department
 	f_create_single_order_instance tenantapptest 8084 c/test-institution/test-department
-	##f_create_single_order_instance tenantapp1 8085 c/wcm/pathology
+	f_create_single_order_instance tenantapp1 8085 c/wcm/pathology
 	f_create_single_order_instance tenantapp2 8086 c/wcm/psychiatry
 }
 
