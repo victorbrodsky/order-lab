@@ -17,8 +17,9 @@ fi
 
 echo bashpath=$bashpath
 
+#cd /srv/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/
 echo -e ${COLOR} Installing env python to "$bashpath" ${NC}
-cd "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/
+cd "$bashpath"/utils/db-manage/postgres-manage-python/
 python3 -m venv venv
 source venv/bin/activate
 #sudo pip3 install -r requirements.txt
