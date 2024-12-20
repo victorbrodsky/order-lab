@@ -392,7 +392,9 @@ class SecurityController extends OrderAbstractController
 //                $protocol = 'http';
 //            }
 //            echo 'authenticate: protocol='.$protocol."<br>";
-        $lastRoute = str_replace('http',$protocol,$lastRoute);
+        if( $lastRoute ) {
+            $lastRoute = str_replace('http', $protocol, $lastRoute);
+        }
         //echo 'authenticate: lastRoute='.$lastRoute."<br>";
         //$logger->notice('2 loginPage: $lastRoute=['.$lastRoute."]");
         ///// EOF Get last rout /////
