@@ -1105,12 +1105,14 @@ class UserTenantUtil
     }
 
     public function isTenantInitialized( $tenant ) {
+        $logger = $this->container->get('logger');
         $initialized = false;
 
         //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
 
         if( !$conn ) {
+            $logger->notice("isTenantInitialized: connection is null for tenant=".$tenant);
             return $initialized;
         }
 
@@ -1120,6 +1122,7 @@ class UserTenantUtil
         //dump($userRows);
         //exit();
         //$id = $hostedGroupRows[0]['id'];
+        $logger->notice("isTenantInitialized: found rows count=".count($userRows));
         if( count($userRows) > 0 ) {
             $initialized = true;
         }
