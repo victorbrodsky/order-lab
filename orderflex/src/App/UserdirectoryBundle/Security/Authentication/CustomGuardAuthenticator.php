@@ -498,6 +498,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //Default user type is 'local-user'
         if( !$usernamePrefix ) {
             $usernamePrefix = 'local-user';
+            $logger->notice("authenticate Token: before setUser to [".$token->getUsername()."_@_".$usernamePrefix."]");
             $token->setUser($token->getUsername()."_@_".$usernamePrefix);
         }
 
