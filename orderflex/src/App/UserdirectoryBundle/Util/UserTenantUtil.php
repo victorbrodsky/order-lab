@@ -1108,11 +1108,16 @@ class UserTenantUtil
         $logger = $this->container->get('logger');
         $initialized = false;
 
+        if( !$tenant ) {
+            $logger->notice("isTenantInitialized: tenant is null");
+            return $initialized;
+        }
+
         //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
 
         if( !$conn ) {
-            $logger->notice("isTenantInitialized: connection is null for tenant=".$tenant);
+            $logger->notice("isTenantInitialized: connection is null for tenant DB=".$tenant->getDatabaseName());
             return $initialized;
         }
 
