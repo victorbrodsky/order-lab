@@ -790,8 +790,10 @@ class FellAppUtil {
 
     public function isInterviewerExist( $fellapp, $interviewer ) {
         foreach( $fellapp->getInterviews() as $interview ) {
-            if( $interview->getInterviewer()->getId() == $interviewer->getId() ) {
-                return true;
+            if( $interview->getInterviewer() && $interview ) {
+                if( $interview->getInterviewer()->getId() == $interviewer->getId() ) {
+                    return true;
+                }
             }
         }
         return false;
