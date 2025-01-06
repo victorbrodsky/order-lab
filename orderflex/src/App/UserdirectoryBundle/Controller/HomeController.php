@@ -52,16 +52,12 @@ class HomeController extends OrderAbstractController {
         if( $tenantRole == $tenantManagerName ) {
             if( !$primaryTenant ) {
                 return $this->multiTenancyHomePage($request);
-            } else {
-                //primaryTenant
-                //show original primaryTenant (pathology) home page with a list of available sites
-                //however, add a section with all available tenants
-
-                $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
-                $greetingText = $tenantManager->getGreeting();
             }
         }
 
+        //primaryTenant
+        //show original primaryTenant (pathology) home page with a list of available sites
+        //however, add a section with all available tenants
         if( $primaryTenant ) {
             $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
             $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
