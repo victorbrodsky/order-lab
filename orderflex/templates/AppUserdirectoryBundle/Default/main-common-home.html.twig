@@ -159,6 +159,9 @@
 
 
         {% if tenantBaseUrlArr is defined and tenantBaseUrlArr|length > 0 %}
+            <p>
+                {{ greetingText|raw }}
+            </p>
             {% for tenant in tenantBaseUrlArr %}
                 <p>{{ tenant|raw }}</p>
             {% endfor %}

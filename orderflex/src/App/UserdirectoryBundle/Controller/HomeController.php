@@ -45,6 +45,7 @@ class HomeController extends OrderAbstractController {
         //homepagemanager show a different multi-tenant home page
         //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
         $tenantBaseUrlArr = array();
+        $greetingText = '';
         $tenantManagerName = 'homepagemanager';
         $primaryTenant = true;
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
@@ -57,11 +58,14 @@ class HomeController extends OrderAbstractController {
                 //however, add a section with all available tenants
 
                 $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
+                $greetingText = $tenantManager->getGreeting();
             }
         }
 
         if( $primaryTenant ) {
             $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
+            $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+            $greetingText = $tenantManager->getGreeting();
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -97,7 +101,8 @@ class HomeController extends OrderAbstractController {
                 'platformLogo' => $platformLogoPath,
                 'width' => $width,
                 'height' => $height,
-                'tenantBaseUrlArr' => $tenantBaseUrlArr
+                'tenantBaseUrlArr' => $tenantBaseUrlArr,
+                'greetingText' => $greetingText,
             )
         );
     }
