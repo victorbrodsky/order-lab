@@ -159,12 +159,14 @@
 
 
         {% if tenantBaseUrlArr is defined and tenantBaseUrlArr|length > 0 %}
+            <div class="well">
             <p>
                 {{ greetingText|raw }}
             </p>
             {% for tenant in tenantBaseUrlArr %}
                 <p>{{ tenant|raw }}</p>
             {% endfor %}
+            </div>
         {% endif %}
 
         {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
