@@ -50,6 +50,7 @@ class HomeController extends OrderAbstractController {
         
         //get primaryTenant from tenantmanager's DB
         $primaryTenant = true;
+        $primaryTenant = $userTenantUtil->isPrimaryTenant();
         
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
         
