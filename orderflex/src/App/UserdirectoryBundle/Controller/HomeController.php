@@ -47,8 +47,12 @@ class HomeController extends OrderAbstractController {
         $tenantBaseUrlArr = array();
         $greetingText = '';
         $tenantManagerName = 'homepagemanager';
+        
+        //get primaryTenant from tenantmanager's DB
         $primaryTenant = true;
+        
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
+        
         if( $tenantRole == $tenantManagerName ) {
             if( !$primaryTenant ) {
                 return $this->multiTenancyHomePage($request);

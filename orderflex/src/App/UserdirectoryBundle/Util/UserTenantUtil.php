@@ -1264,6 +1264,26 @@ class UserTenantUtil
         return $tenantBaseUrlArr;
     }
 
+    //check if current tenant is marked as a primaryTenant in tenantmanager's DB
+    public function isPrimaryTenant() {
+        $primarytenant = false;
+
+        //get primaryTenant from tenantmanager's DB
+        $tenants = $this->getTenantsFromTenantManager();
+
+        foreach ($tenants as $tenantArr) {
+            dump($tenantArr);
+            exit('111');
+            //$tenant as array
+            if($tenantArr) {
+                $primarytenant = $tenantArr['primarytenant'];
+                $showonhomepage = $tenantArr['showonhomepage'];
+            }
+        }
+
+        return $primarytenant;
+    }
+
     //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok
     public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init
