@@ -1265,7 +1265,7 @@ class UserTenantUtil
     }
 
     //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-    public function isPrimaryTenant($request) {
+    public function isPrimaryTenant( $request, $tenantRole ) {
         $primarytenant = false;
 
         //get primaryTenant from tenantmanager's DB
@@ -1281,6 +1281,10 @@ class UserTenantUtil
             if( $tenantArr ) {
                 $primarytenant = $tenantArr['primarytenant'];
                 $showonhomepage = $tenantArr['showonhomepage'];
+                echo "primarytenant=$primarytenant, showonhomepage=$showonhomepage <br>";
+                if( $tenantRole == $tenantArr['fulltitle'] ) {
+                    return $primarytenant;
+                }
             }
         }
 

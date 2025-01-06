@@ -58,7 +58,7 @@ class HomeController extends OrderAbstractController {
             }
         }
 
-        $primaryTenant1 = $userTenantUtil->isPrimaryTenant($request);
+        $primaryTenant1 = $userTenantUtil->isPrimaryTenant($request,$tenantRole);
         exit('after isPrimaryTenant');
         //primaryTenant
         //show original primaryTenant (pathology) home page with a list of available sites
