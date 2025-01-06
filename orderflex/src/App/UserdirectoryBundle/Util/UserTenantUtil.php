@@ -1183,6 +1183,87 @@ class UserTenantUtil
         return $tenantsRows;
     }
 
+    public function getTenantBaseUrls( $request ) {
+        $tenantManagerName = 'tenantmanager';
+        $tenantBaseUrlArr = array();
+        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        $tenants = $this->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager
+
+//        $tenantManagerName = 'tenantmanager';
+//        $tenantManagerUrl = null;
+//        foreach ($tenants as $tenant) {
+//            if( $tenant['name'] === $tenantManagerName ) {
+//                $tenantManagerUrl = $tenant['urlslug'];
+//                break;
+//            }
+//        }
+
+        foreach ($tenants as $tenantArr) {
+            //$tenant as array
+            if($tenantArr) {
+
+                //create temporary tenant object
+                $tenant = new TenantList();
+                $tenant->setDatabaseHost($tenantArr['databasehost']);
+                $tenant->setDatabaseName($tenantArr['databasename']);
+                $tenant->setDatabaseUser($tenantArr['databaseuser']);
+                $tenant->setDatabasePassword($tenantArr['databasepassword']);
+                $tenant->setUrlslug($tenantArr['urlslug']);
+                $tenant->setEnabled($tenantArr['enabled']);
+                $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
+                $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
+
+                $showOnHomepage = $tenant->getShowOnHomepage();
+                if( $showOnHomepage !== true ) {
+                    continue;
+                }
+
+                $databasename = $tenant->getDatabaseName();
+                $url = $tenant->getUrlslug();
+                $instTitle = $tenant->getInstitutionTitle();
+                //echo $databasename.": url=".$url."<br>";
+                //echo $databasename.": instTitle=".$instTitle."<br>";
+
+                if ($url) {
+                    if ($url == '/') {
+                        $tenantBaseUrl = $baseUrl;
+                    } else {
+                        $tenantBaseUrl = $baseUrl . '/' . $url;
+                    }
+
+                    if( !$instTitle ) {
+                        $instTitle = $tenantBaseUrl;
+                    }
+
+                    //
+                    //$tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
+                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
+
+                    $enabled = $tenant->getEnabled();
+                    if( !$enabled ) {
+                        $tenantBaseUrl = $tenantBaseUrl . " (Disabled)";
+                    }
+
+                    //isTenantInitialized
+                    if( $this->isTenantInitialized($tenant) === false ) {
+                        //$initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
+                        $tenantBaseUrl = $tenantBaseUrl . " ("."not initialized".")";
+                    }
+
+                    $tenantBaseUrlArr[] = $tenantBaseUrl;
+                }
+
+                //destroy temporary $tenant
+                unset($tenant);
+            }
+        }
+        //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
+        //dump($tenants);
+        //exit('multiTenancyHomePage: get Tenants');
+
+        return $tenantBaseUrlArr;
+    }
+
     //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok
     public function getInitUrl( $tenant, $tenantManagerUrl ) {
         //first-time-login-generation-init

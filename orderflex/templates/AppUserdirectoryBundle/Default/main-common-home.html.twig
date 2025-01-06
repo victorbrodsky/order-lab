@@ -158,6 +158,12 @@
         {% endif %}
 
 
+        {% if tenantBaseUrlArr is defined and tenantBaseUrlArr|length > 0 %}
+            {% for tenant in tenantBaseUrlArr %}
+                <p>{{ tenant|raw }}</p>
+            {% endfor %}
+        {% endif %}
+
         {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
 
     </div> <!-- /text-center -->
