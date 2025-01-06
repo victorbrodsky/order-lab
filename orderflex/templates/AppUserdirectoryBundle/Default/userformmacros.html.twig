@@ -1418,6 +1418,10 @@
         {{ formmacros.field(formfield.showOnHomepage) }}
         {{ formmacros.field(formfield.enabled) }}
 
+        {% if formfield.primaryTenant is defined %}
+            {{ formmacros.field(formfield.primaryTenant) }}
+        {% endif %}
+
     </div>
 {% endmacro %}
 

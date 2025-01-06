@@ -1105,7 +1105,7 @@ class UserTenantUtil
     }
 
     public function isTenantInitialized( $tenant ) {
-        return true;
+        //return true; //testing
         $logger = $this->container->get('logger');
         $initialized = false;
 

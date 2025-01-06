@@ -158,6 +158,11 @@ class TenantType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+//        $builder->add('primaryTenant',null,array(
+//            'label' => 'Primary Tenant:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+
         if(0) {
             $builder->add('tenantUrl', EntityType::class, array(
                 'class' => TenantUrlList::class,

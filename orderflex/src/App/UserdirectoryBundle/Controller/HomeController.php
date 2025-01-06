@@ -43,13 +43,20 @@ class HomeController extends OrderAbstractController {
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
         //homepagemanager show a different multi-tenant home page
+        //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
         $tenantManagerName = 'homepagemanager';
-        $tenantRole = $userTenantUtil->getTenantRole();
+        $primaryTenant = true;
+        $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
         if( $tenantRole == $tenantManagerName ) {
-            return $this->multiTenancyHomePage($request);
+            if( !$primaryTenant ) {
+                return $this->multiTenancyHomePage($request);
+            } else {
+                //primaryTenant
+                //show original home page with a list of available sites
+                //however, add a section with all available tenants
+            }
         }
 
-        //$userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
@@ -82,7 +89,8 @@ class HomeController extends OrderAbstractController {
             array(
                 'platformLogo' => $platformLogoPath,
                 'width' => $width,
-                'height' => $height
+                'height' => $height,
+                //'tenants' => $tenants //TODO: fix the home page
             )
         );
     }

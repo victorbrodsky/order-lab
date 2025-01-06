@@ -114,6 +114,12 @@ class TenantList extends ListAbstract
     //Not mapped: indicates if the tenant in DB matches with tenant data from the filesystem on the server
     private $matchSystem;
 
+    //Primary tenant: show homepage differently
+    //#[ORM\Column(type: 'boolean', nullable: true)]
+    //private $primaryTenant;
+
+
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -426,6 +432,22 @@ class TenantList extends ListAbstract
     public function setMatchSystem($matchSystem)
     {
         $this->matchSystem = $matchSystem;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrimaryTenant()
+    {
+        return $this->primaryTenant;
+    }
+
+    /**
+     * @param mixed $primaryTenant
+     */
+    public function setPrimaryTenant($primaryTenant)
+    {
+        $this->primaryTenant = $primaryTenant;
     }
 
 
