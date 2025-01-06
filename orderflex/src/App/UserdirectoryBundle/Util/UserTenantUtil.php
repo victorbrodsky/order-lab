@@ -1265,17 +1265,20 @@ class UserTenantUtil
     }
 
     //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-    public function isPrimaryTenant() {
+    public function isPrimaryTenant($request) {
         $primarytenant = false;
 
         //get primaryTenant from tenantmanager's DB
         $tenants = $this->getTenantsFromTenantManager();
 
+        $currentTenantArr = $this->getCurrentTenantArr($request);
+        dump($currentTenantArr);
+
         foreach ($tenants as $tenantArr) {
-            dump($tenantArr);
-            exit('111');
+            //dump($tenantArr);
+            //exit('111');
             //$tenant as array
-            if($tenantArr) {
+            if( $tenantArr ) {
                 $primarytenant = $tenantArr['primarytenant'];
                 $showonhomepage = $tenantArr['showonhomepage'];
             }

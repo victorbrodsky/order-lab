@@ -50,8 +50,6 @@ class HomeController extends OrderAbstractController {
         
         //get primaryTenant from tenantmanager's DB
         $primaryTenant = true;
-        $primaryTenant1 = $userTenantUtil->isPrimaryTenant();
-        
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
         
         if( $tenantRole == $tenantManagerName ) {
@@ -60,6 +58,8 @@ class HomeController extends OrderAbstractController {
             }
         }
 
+        $primaryTenant1 = $userTenantUtil->isPrimaryTenant($request);
+        exit($primaryTenant1);
         //primaryTenant
         //show original primaryTenant (pathology) home page with a list of available sites
         //however, add a section with all available tenants
