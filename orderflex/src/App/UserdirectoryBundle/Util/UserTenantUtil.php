@@ -1275,7 +1275,7 @@ class UserTenantUtil
         dump($currentTenantArr);
 
         foreach ($tenants as $tenantArr) {
-            //dump($tenantArr);
+            dump($tenantArr);
             //exit('111');
             //$tenant as array
             if( $tenantArr ) {
