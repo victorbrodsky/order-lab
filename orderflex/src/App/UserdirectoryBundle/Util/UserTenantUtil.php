@@ -1280,8 +1280,8 @@ class UserTenantUtil
             //$tenant as array
             if( $tenantArr ) {
                 $primarytenant = $tenantArr['primarytenant'];
-                $showonhomepage = $tenantArr['showonhomepage'];
-                echo "primarytenant=$primarytenant, showonhomepage=$showonhomepage <br>";
+                $fulltitle = $tenantArr['fulltitle'];
+                echo "primarytenant=$primarytenant, fulltitle=$fulltitle <br>";
                 if( $tenantRole == $tenantArr['fulltitle'] ) {
                     return $primarytenant;
                 }
