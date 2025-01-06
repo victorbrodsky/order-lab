@@ -60,6 +60,10 @@ class HomeController extends OrderAbstractController {
             }
         }
 
+        if( $primaryTenant ) {
+            $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
+        }
+
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
