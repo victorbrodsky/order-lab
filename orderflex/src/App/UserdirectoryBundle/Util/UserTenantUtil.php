@@ -1264,45 +1264,45 @@ class UserTenantUtil
         return $tenantBaseUrlArr;
     }
 
-    //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-    public function isPrimaryTenant_1( $request, $tenantRole ) {
-        $primarytenant = false;
-
-        //get primaryTenant from tenantmanager's DB
-        $tenants = $this->getTenantsFromTenantManager();
-
-        $currentTenantArr = $this->getCurrentTenantArr($request);
-        dump($currentTenantArr);
-        //exit('111');
-
-        foreach ($tenants as $tenantArr) {
-            dump($tenantArr);
-            //exit('111');
-            //$tenant as array
-            if( $tenantArr ) {
-                $primarytenant = $tenantArr['primarytenant'];
-                $fulltitle = $tenantArr['fulltitle'];
-                echo "primarytenant=$primarytenant, fulltitle=$fulltitle <br>";
-                if( $tenantRole == $tenantArr['fulltitle'] ) {
-                    return $primarytenant;
-                }
-            }
-        }
-
-        return $primarytenant;
-    }
+//    //check if current tenant is marked as a primaryTenant in tenantmanager's DB
+//    public function isPrimaryTenant_1( $request, $tenantRole ) {
+//        $primarytenant = false;
+//
+//        //get primaryTenant from tenantmanager's DB
+//        $tenants = $this->getTenantsFromTenantManager();
+//
+//        $currentTenantArr = $this->getCurrentTenantArr($request);
+//        dump($currentTenantArr);
+//        //exit('111');
+//
+//        foreach ($tenants as $tenantArr) {
+//            dump($tenantArr);
+//            //exit('111');
+//            //$tenant as array
+//            if( $tenantArr ) {
+//                $primarytenant = $tenantArr['primarytenant'];
+//                $fulltitle = $tenantArr['fulltitle'];
+//                echo "primarytenant=$primarytenant, fulltitle=$fulltitle <br>";
+//                if( $tenantRole == $tenantArr['fulltitle'] ) {
+//                    return $primarytenant;
+//                }
+//            }
+//        }
+//
+//        return $primarytenant;
+//    }
     public function isPrimaryTenant( $request ) {
 
         $currentTenantArr = $this->getCurrentTenantArr($request);
 
-        dump($currentTenantArr);
+        //dump($currentTenantArr);
 
         if( !$currentTenantArr || count($currentTenantArr) == 0 ) {
             return FALSE;
         }
 
         $fulltitle = $currentTenantArr['fulltitle'];
-        echo "fulltitle=$fulltitle <br>";
+        //echo "fulltitle=$fulltitle <br>";
 
         $primarytenant = $currentTenantArr['primarytenant'];
         //exit('111');
