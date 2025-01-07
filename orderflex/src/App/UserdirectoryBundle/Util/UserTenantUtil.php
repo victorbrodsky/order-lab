@@ -1386,6 +1386,10 @@ class UserTenantUtil
             if($tenantArr) {
                 $urlslug = $tenantArr['urlslug'];
                 echo "urlslug=$urlslug <br>"; //c/wcm/pathology
+
+                $primarytenant = $tenantArr['primarytenant'];
+                echo "primarytenant=$primarytenant <br>"; //c/wcm/pathology
+
                 if( $urlslug != '/' ) {
                     if ($urlslug && $currentFullUri && str_contains($currentFullUri, $urlslug)) {
                         return $tenantArr;
