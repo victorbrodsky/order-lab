@@ -1265,7 +1265,7 @@ class UserTenantUtil
     }
 
     //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-    public function isPrimaryTenant( $request, $tenantRole ) {
+    public function isPrimaryTenant_1( $request, $tenantRole ) {
         $primarytenant = false;
 
         //get primaryTenant from tenantmanager's DB
@@ -1288,6 +1288,24 @@ class UserTenantUtil
                 }
             }
         }
+
+        return $primarytenant;
+    }
+    public function isPrimaryTenant( $request ) {
+
+        $currentTenantArr = $this->getCurrentTenantArr($request);
+
+        if( !$currentTenantArr || count($currentTenantArr) == 0 ) {
+            return FALSE;
+        }
+
+        dump($currentTenantArr);
+
+        $fulltitle = $currentTenantArr['fulltitle'];
+        echo "fulltitle=$fulltitle <br>";
+
+        $primarytenant = $currentTenantArr['primarytenant'];
+        //exit('111');
 
         return $primarytenant;
     }
