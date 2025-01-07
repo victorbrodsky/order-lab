@@ -203,7 +203,7 @@
                 <td class="rowlink-skip" colspan="2">{{ phphostname }}; {{ app.request.schemeAndHttpHost }}</td>
             </tr>
             <tr>
-                <td>Connection Channel (http or https; Clearing Cache is required)</td>
+                <td>Routing Connection Channel (http or https; Clearing Cache is required)</td>
                 <td>
                     {% if entity.connectionChannel %}
                         {{ entity.connectionChannel }}
@@ -212,6 +212,17 @@
                     {% endif %}
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Url Connection Channel in case of HaProxy (http or https; Clearing Cache is required)</td>
+                <td>
+                    {% if entity.urlConnectionChannel %}
+                        {{ entity.urlConnectionChannel }}
+                    {% else %}
+                        http
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'urlConnectionChannel'}) }}">Edit</a></td>
             </tr>
             <tr>
                 <td>Instance ID [6 letters]</td>

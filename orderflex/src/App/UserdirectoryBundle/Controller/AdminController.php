@@ -288,6 +288,7 @@ class AdminController extends OrderAbstractController
                 //Get single or generate SettingParameter (Singleton)
                 $entity = $userServiceUtil->getSingleSiteSettingParameter($createIfEmpty=false);
                 $entity->setConnectionChannel("https");
+                $entity->setUrlConnectionChannel("https");
                 //$em->flush($entity);
                 $em->flush();
             }

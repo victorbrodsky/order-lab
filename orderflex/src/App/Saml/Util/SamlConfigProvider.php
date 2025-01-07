@@ -251,7 +251,7 @@ class SamlConfigProvider
         //echo "2 scheme=$scheme <br>"; //http
 
         $scheme = NULL;
-        //get the scheme from url (use url getSpEntityId)
+        //get the scheme from url (use url getSpEntityId from SamlConfig) (or TenantList?)
         $spEntityId = $config->getSpEntityId();
         if( $spEntityId ) {
             $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
@@ -261,7 +261,7 @@ class SamlConfigProvider
             //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
         }
         if( !$scheme ) {
-            $scheme = 'https'; //tenants are behind haproxy, therefore, schema will be http
+            $scheme = 'https'; //tenants are behind haproxy, therefore, $_SERVER's schema will be http
         }
         //echo "3 scheme=$scheme <br>"; //http
 

@@ -537,7 +537,7 @@ class Document {
         return $fullPath;
     }
 
-    //NOT USED: limitation: can not get correct url prefix for multitenancy case 'http://view.online/c/wcm/pathology/'
+    //NOT USED: limitation: can not get correct url prefix for multitenancy case 'http://view.online/c/wcm/pathology/' with HaProxy
     //Use $userServiceUtil->getDocumentAbsoluteUrl($document) instead ($userServiceUtil = $this->container->get('user_service_utility');)
     //Return: http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
     //$urlPrefix is a prefix of the url, for example: 'http://view.online/c/wcm/pathology'

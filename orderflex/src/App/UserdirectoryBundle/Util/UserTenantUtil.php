@@ -1273,6 +1273,7 @@ class UserTenantUtil
 
         $currentTenantArr = $this->getCurrentTenantArr($request);
         dump($currentTenantArr);
+        //exit('111');
 
         foreach ($tenants as $tenantArr) {
             dump($tenantArr);

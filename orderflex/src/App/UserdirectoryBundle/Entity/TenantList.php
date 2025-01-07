@@ -115,8 +115,8 @@ class TenantList extends ListAbstract
     private $matchSystem;
 
     //Primary tenant: show homepage differently
-    //#[ORM\Column(type: 'boolean', nullable: true)]
-    //private $primaryTenant;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $primaryTenant;
 
 
 

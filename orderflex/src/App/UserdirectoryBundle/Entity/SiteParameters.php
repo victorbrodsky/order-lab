@@ -902,10 +902,16 @@ class SiteParameters {
     private $platformLogos;
 
     /**
-     * http or https or null
+     * connection channel used in symfony's routing: http or https or null
      */
     #[ORM\Column(type: 'text', nullable: true)]
     private $connectionChannel;
+
+    /**
+     * Real connection channel used in urls (http or https or null)
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $urlConnectionChannel;
 
     /**
      * Translational Research Project Request Specialty Selection Note
@@ -3931,6 +3937,22 @@ class SiteParameters {
     public function setConnectionChannel($connectionChannel)
     {
         $this->connectionChannel = $connectionChannel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrlConnectionChannel()
+    {
+        return $this->urlConnectionChannel;
+    }
+
+    /**
+     * @param mixed $urlConnectionChannel
+     */
+    public function setUrlConnectionChannel($urlConnectionChannel)
+    {
+        $this->urlConnectionChannel = $urlConnectionChannel;
     }
 
     /**

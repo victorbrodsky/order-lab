@@ -73,7 +73,16 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control textarea')
 //            ));
             $builder->add('connectionChannel',ChoiceType::class,array( //flipped
-                'label'=>'Connection Channel (http or https; Clearing Cache is required):',
+                'label'=>'Routing Connection Channel (http or https; Clearing Cache is required):',
+                'choices' => array("http"=>"http", "https"=>"https"),
+                //'choices_as_values' => true,
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'urlConnectionChannel' ) {
+            $builder->add('urlConnectionChannel',ChoiceType::class,array( //flipped
+                'label'=>'Url Connection Channel,  (required in case of using HaProxy, http or https; Clearing Cache is required):',
                 'choices' => array("http"=>"http", "https"=>"https"),
                 //'choices_as_values' => true,
                 'attr' => array('class'=>'form-control')
