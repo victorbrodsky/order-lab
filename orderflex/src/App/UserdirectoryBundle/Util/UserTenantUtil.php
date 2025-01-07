@@ -1381,6 +1381,11 @@ class UserTenantUtil
         $currentFullUri = $request->getUri();
         echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
+        $currentAll = $request->request->all();
+        dump($currentAll);
+        exit('111');
+        echo "currentAll=$currentAll <br>";
+
         foreach ($tenants as $tenantArr) {
             //$tenant as array
             if($tenantArr) {
