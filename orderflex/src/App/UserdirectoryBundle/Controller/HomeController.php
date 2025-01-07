@@ -49,21 +49,21 @@ class HomeController extends OrderAbstractController {
         $tenantManagerName = 'homepagemanager';
         
         //get primaryTenant from tenantmanager's DB
-        $primaryTenant = true;
+        //$primaryTenant = true;
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
         
         if( $tenantRole == $tenantManagerName ) {
-            if( !$primaryTenant ) {
+            //if( !$primaryTenant ) {
                 return $this->multiTenancyHomePage($request);
-            }
+            //}
         }
 
         $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
-        if( $primaryTenant ) {
-            echo "primaryTenant! <br>";
-        } else {
-            echo "not primaryTenant <br>";
-        }
+//        if( $primaryTenant ) {
+//            echo "primaryTenant! <br>";
+//        } else {
+//            echo "not primaryTenant <br>";
+//        }
         //exit('after isPrimaryTenant='.$primaryTenant);
         //primaryTenant
         //show original primaryTenant (pathology) home page with a list of available sites
