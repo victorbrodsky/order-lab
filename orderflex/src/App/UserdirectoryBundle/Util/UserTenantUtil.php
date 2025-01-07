@@ -1198,9 +1198,16 @@ class UserTenantUtil
 //            }
 //        }
 
+        $currentTenantArr = $this->getCurrentTenantArr($request);
+
         foreach ($tenants as $tenantArr) {
             //$tenant as array
             if($tenantArr) {
+
+                if( $currentTenantArr['urlslug'] == $tenantArr['urlslug'] ) {
+                    //skip the current tenant in the list of available tenants
+                    continue;
+                }
 
                 //create temporary tenant object
                 $tenant = new TenantList();
@@ -1301,7 +1308,7 @@ class UserTenantUtil
             return FALSE;
         }
 
-        $fulltitle = $currentTenantArr['fulltitle'];
+        //$fulltitle = $currentTenantArr['fulltitle'];
         //echo "fulltitle=$fulltitle <br>";
 
         $primarytenant = $currentTenantArr['primarytenant'];
