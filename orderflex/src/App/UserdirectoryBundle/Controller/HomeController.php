@@ -64,7 +64,7 @@ class HomeController extends OrderAbstractController {
         } else {
             echo "not primaryTenant <br>";
         }
-        exit('after isPrimaryTenant='.$primaryTenant);
+        //exit('after isPrimaryTenant='.$primaryTenant);
         //primaryTenant
         //show original primaryTenant (pathology) home page with a list of available sites
         //however, add a section with all available tenants
