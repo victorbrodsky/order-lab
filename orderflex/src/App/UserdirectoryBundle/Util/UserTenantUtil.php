@@ -1381,10 +1381,8 @@ class UserTenantUtil
         $currentFullUri = $request->getUri();
         echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
-        //$currentAll = $request->request->all();
-        //dump($currentAll);
-        //exit('111');
-        //echo "currentAll=$currentAll <br>";
+        $currentFullUriPath = parse_url($currentFullUri,PHP_URL_PATH);
+        echo "currentFullUriPath=$currentFullUriPath <br>";
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
@@ -1395,7 +1393,7 @@ class UserTenantUtil
                 $primarytenant = $tenantArr['primarytenant'];
                 echo "primarytenant=$primarytenant <br>"; //c/wcm/pathology
                 if( $primarytenant ) {
-                    if( $urlslug == '/' ) {
+                    if( $currentFullUriPath == '/' ) {
                         return $tenantArr;
                     }
                 }
