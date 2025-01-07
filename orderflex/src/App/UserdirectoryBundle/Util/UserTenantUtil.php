@@ -1295,11 +1295,11 @@ class UserTenantUtil
 
         $currentTenantArr = $this->getCurrentTenantArr($request);
 
+        dump($currentTenantArr);
+
         if( !$currentTenantArr || count($currentTenantArr) == 0 ) {
             return FALSE;
         }
-
-        dump($currentTenantArr);
 
         $fulltitle = $currentTenantArr['fulltitle'];
         echo "fulltitle=$fulltitle <br>";
