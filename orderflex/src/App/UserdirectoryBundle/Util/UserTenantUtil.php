@@ -1379,7 +1379,7 @@ class UserTenantUtil
         //echo "host=$host <br>"; //view.online
 
         $currentFullUri = $request->getUri();
-        //echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
+        echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
