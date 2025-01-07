@@ -1379,19 +1379,20 @@ class UserTenantUtil
         //echo "host=$host <br>"; //view.online
 
         $currentFullUri = $request->getUri();
-        echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
+        //echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
-        $currentFullUriPath = parse_url($currentFullUri,PHP_URL_PATH);
-        echo "currentFullUriPath=$currentFullUriPath <br>";
+        $currentFullUriPath = parse_url($currentFullUri,PHP_URL_PATH); // '/tenant-manager/' or '/c/wcm/pathology/' or '/'
+        //echo "currentFullUriPath=$currentFullUriPath <br>";
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
             if($tenantArr) {
                 $urlslug = $tenantArr['urlslug'];
-                echo "urlslug=$urlslug <br>"; //c/wcm/pathology
+                //echo "urlslug=$urlslug <br>"; //c/wcm/pathology
 
                 $primarytenant = $tenantArr['primarytenant'];
-                echo "primarytenant=$primarytenant <br>"; //c/wcm/pathology
+                //echo "primarytenant=$primarytenant <br>";
+                //For primarytenant, the $currentFullUriPath will always be '/' on the main home page
                 if( $primarytenant ) {
                     if( $currentFullUriPath == '/' ) {
                         return $tenantArr;
