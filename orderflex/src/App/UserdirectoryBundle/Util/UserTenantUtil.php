@@ -506,7 +506,11 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
-            echo $tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant']."<br>";
+            $tempMsg = "PrimaryTenant Error: ".$tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant'];
+            echo $tempMsg."<br>";
+            $logger->notice(
+                $tempMsg
+            );
             if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
                 echo "Change primaryTenant '/' in HaProxy <br>";
                 //Replace: use_backend homepagemanager_backend if homepagemanager_url
