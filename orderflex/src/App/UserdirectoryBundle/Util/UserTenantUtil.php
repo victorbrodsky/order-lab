@@ -531,6 +531,9 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+                                $logger->notice(
+                                    "Error: ".$res['message']
+                                );
                             } else {
                                 $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
                                     ."[".$lineIdentifier."]"
@@ -556,6 +559,9 @@ class UserTenantUtil
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+                                $logger->notice(
+                                    "Error: ".$res['message']
+                                );
                             } else {
                                 $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
                                     ."[".$lineIdentifier."]"
