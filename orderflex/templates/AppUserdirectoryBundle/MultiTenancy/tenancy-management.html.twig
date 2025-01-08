@@ -44,6 +44,7 @@
                     b) In parameters.yml: specify database_name and tenant_role if required <br>
                     (null is default value for all tenants, 'homepagemanager' or 'tenantmanager') <br>
                     c) Run 'composer install', 'yarn install --frozen-lockfile'<br>
+                    Note: if DB already exists, delete it by: php bin/console doctrine:database:drop --force<br>
                     d) Create DB by running:<br>
                     sudo php bin/console doctrine:database:create<br>
                     sudo php bin/console doctrine:schema:update --complete --force<br>
