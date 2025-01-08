@@ -506,6 +506,7 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
+            echo $tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant']."<br>";
             if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
                 echo "Change primaryTenant '/' in HaProxy <br>";
                 //Replace: use_backend homepagemanager_backend if homepagemanager_url
@@ -515,41 +516,62 @@ class UserTenantUtil
                 //With: #use_backend homepagemanager_backend if homepagemanager_url
                 //Add below: use_backend $tenantId_backend if homepagemanager_url
 
-//                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-//                foreach($frontendTenantsArray as $frontendTenantLine) {
-//                    $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
-//                    $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
-//                    if (str_contains($frontendTenantLine,$lineIdentifier)) {
-//                        $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
-//                        $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
-//                        $logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
-//                        if( $res['status'] == 'error' ) {
-//                            $resultArr['haproxy-error'] = $res['message'];
-//                            $resultTenantArr['haproxy-message']['error'][] = $res['message'];
-//                        } else {
-//                            $enabledStr = "disabled";
-//                            if( $tenant->getEnabled() ) {
-//                                $enabledStr = "enabled";
-//                            }
-//                            $msg = "Tenant $tenantId has been $enabledStr in haproxy config";
-////                            $session->getFlashBag()->add(
-////                                'note',
-////                                "Tenant $tenantId has been $enabledStr in haproxy config"
-////                            );
-//                            $logger->notice(
-//                                $msg
-//                            //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
-//                            );
-//                            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
-//                            $resultTenantArr['haproxy-message']['success'][] = $msg;
-//                            $updateHaproxy = true;
-//                        }
-//                        break;
-//                    }
-//                }
-//
-//                $updateHaproxy = true;
-            }
+                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+                foreach($frontendTenantsArray as $frontendTenantLine) {
+
+                    if( !$tenant->getPrimaryTenant() ) {
+                        $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
+                        $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
+                        if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
+                            //replace tenant homepage with original homepage
+                            $originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
+                            $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+                            $res = $this->replaceAllInFile($httpdConfig, $lineIdentifier, $originalLine);
+                            $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
+                            if ($res['status'] == 'error') {
+                                $resultArr['haproxy-error'] = $res['message'];
+                                $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+                            } else {
+                                $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
+                                    ."[".$lineIdentifier."]"
+                                    ." to [".$originalLine."]";
+                                $logger->notice(
+                                    $msg
+                                );
+                                $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+                                $resultTenantArr['haproxy-message']['success'][] = $msg;
+                                $updateHaproxy = true;
+                            }
+                            break;
+                        }
+                    } else {
+                        $lineIdentifier = "use_backend homepagemanager_backend if homepagemanager_url";
+                        $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
+                        if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
+                            //replace tenant homepage with original homepage
+                            $newLine = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
+                            $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+                            $res = $this->replaceAllInFile($httpdConfig, $lineIdentifier, $newLine);
+                            $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
+                            if ($res['status'] == 'error') {
+                                $resultArr['haproxy-error'] = $res['message'];
+                                $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+                            } else {
+                                $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
+                                    ."[".$lineIdentifier."]"
+                                    ." to [".$newLine."]";
+                                $logger->notice(
+                                    $msg
+                                );
+                                $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+                                $resultTenantArr['haproxy-message']['success'][] = $msg;
+                                $updateHaproxy = true;
+                            }
+                            break;
+                        }
+                    }
+                } //foreach
+            } //if $tenant->getPrimaryTenant()
 
             //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
