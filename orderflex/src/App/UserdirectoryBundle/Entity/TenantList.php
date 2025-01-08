@@ -115,6 +115,10 @@ class TenantList extends ListAbstract
     private $matchSystem;
 
     //Primary tenant: show homepage differently
+    //1) haproxy.cfg file must be modified to use '/' with backend of the particular tenant:
+    // acl homepagemanager_url path_beg -i /
+    // use_backend tenantapp1_backend if homepagemanager_url
+    //2)restart haproxy: sudo systemctl restart haproxy
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $primaryTenant;
 

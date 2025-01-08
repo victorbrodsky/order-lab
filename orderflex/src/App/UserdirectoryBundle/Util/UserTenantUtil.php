@@ -213,8 +213,7 @@ class UserTenantUtil
             return $tenantDataArr;
         }
 
-        $userServiceUtil = $this->container->get('user_service_utility');
-
+        //$userServiceUtil = $this->container->get('user_service_utility');
 //        $haproxyConfig = '/etc/haproxy/haproxy_testing.cfg';
 //
 //        if( $userServiceUtil->isWindows() ) {
@@ -271,6 +270,13 @@ class UserTenantUtil
 //                                $tenantDataArr[$tenantId]['enabled'] = true;
 //                            }
 //                        }
+                    }
+
+                    //if: use_backend tenantapp1_backend if homepagemanager_url
+                    //then: primaryTenant
+                    $tenantDataArr[$tenantId]['primaryTenant'] = false;
+                    if( str_contains($frontendTenantLine, 'use_backend '.$tenantId.'_backend if homepagemanager_url') ) {
+                        $tenantDataArr[$tenantId]['primaryTenant'] = true;
                     }
                 }
             } //foreach $frontendTenantsArray
@@ -387,6 +393,7 @@ class UserTenantUtil
         return $tenantDataArr;
     }
 
+    //Update server data according to DB data (DB -> server)
     //Best option is to have shell script to create and modify config files and to run restart
     public function processDBTenants( $tenantManager ) {
 
@@ -436,6 +443,7 @@ class UserTenantUtil
             $tenantDataArr['existedTenantIds'][] = $tenantId;
             $tenantDataArr = $this->getTenantDataFromHaproxy($tenantDataArr);
 
+            //TODO: update HaProxy config with primaryTenant (assign route '/' to this tenant)
             $httpdConfig = $this->getTenantHttpd($tenantId);
             echo "httpdConfig=[$httpdConfig]<br>";
 
@@ -495,6 +503,51 @@ class UserTenantUtil
                         break;
                     }
                 }
+            }
+
+            if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
+                echo "Change primaryTenant '/' in HaProxy <br>";
+                //Replace: use_backend homepagemanager_backend if homepagemanager_url
+                //With: use_backend tenantapp1_backend if homepagemanager_url
+
+                //Replace: use_backend homepagemanager_backend if homepagemanager_url
+                //With: #use_backend homepagemanager_backend if homepagemanager_url
+                //Add below: use_backend $tenantId_backend if homepagemanager_url
+
+//                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+//                foreach($frontendTenantsArray as $frontendTenantLine) {
+//                    $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
+//                    $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
+//                    if (str_contains($frontendTenantLine,$lineIdentifier)) {
+//                        $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+//                        $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
+//                        $logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
+//                        if( $res['status'] == 'error' ) {
+//                            $resultArr['haproxy-error'] = $res['message'];
+//                            $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+//                        } else {
+//                            $enabledStr = "disabled";
+//                            if( $tenant->getEnabled() ) {
+//                                $enabledStr = "enabled";
+//                            }
+//                            $msg = "Tenant $tenantId has been $enabledStr in haproxy config";
+////                            $session->getFlashBag()->add(
+////                                'note',
+////                                "Tenant $tenantId has been $enabledStr in haproxy config"
+////                            );
+//                            $logger->notice(
+//                                $msg
+//                            //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
+//                            );
+//                            $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
+//                            $resultTenantArr['haproxy-message']['success'][] = $msg;
+//                            $updateHaproxy = true;
+//                        }
+//                        break;
+//                    }
+//                }
+//
+//                $updateHaproxy = true;
             }
 
             //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
@@ -678,8 +731,8 @@ class UserTenantUtil
 
         if( $updateHttpd === false ) {
             if( $resultArr['httpd-error'] == null ) {
-                $msg = "The Apache HTTPD configuration has not been restarted because no differences".
-                    " have been detected between the database and server configurations.";
+                $msg = "The Apache HTTPD configuration has not been restarted, as no differences".
+                    " were detected between the database and server configurations.";
             } else {
                 $msg = "The Apache HTTPD configuration has not been restarted due to an error.";
             }
@@ -694,8 +747,8 @@ class UserTenantUtil
 
         if( $updateHaproxy === false ) {
             if( $resultArr['haproxy-error'] == null ) {
-                $msg = "The HAProxy configuration has not been restarted because no differences".
-                " have been detected between the database and server configurations.";
+                $msg = "The HAProxy configuration has not been restarted, as no differences".
+                    " were detected between the database and server configurations.";
             } else {
                 $msg = "The HAProxy configuration has not been restarted due to an error.";
             }
@@ -742,8 +795,9 @@ class UserTenantUtil
         //don't create if already exists, if folder order-lab-$tenantId exists
         $tenantOrderFolder = $projectRoot."/../../order-lab-$tenantId";
         if( file_exists($tenantOrderFolder)===TRUE ) {
-            $logger->notice("createNewTenant: Do not create new tenant $tenantId, it is already existed");
-            return "Do not create new tenant $tenantId, it is already existed";
+            $tenantCreateMsg = "A new tenant $tenantId has not been created because it already exists.";
+            $logger->notice("createNewTenant: ".$tenantCreateMsg);
+            return $tenantCreateMsg;
         }
 
         $tenant = $this->em->getRepository(TenantList::class)->findOneByName($tenantId);
@@ -787,7 +841,7 @@ class UserTenantUtil
 //        );
 //        $output = $this->runProcess_new($commandArr);
 
-        return "Created new tenant $tenantId ".$output."; HAProxy has been restarted.";
+        return "A new tenant $tenantId has been created. ".$output."; HAProxy has been restarted.";
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
@@ -1271,33 +1325,7 @@ class UserTenantUtil
         return $tenantBaseUrlArr;
     }
 
-//    //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-//    public function isPrimaryTenant_1( $request, $tenantRole ) {
-//        $primarytenant = false;
-//
-//        //get primaryTenant from tenantmanager's DB
-//        $tenants = $this->getTenantsFromTenantManager();
-//
-//        $currentTenantArr = $this->getCurrentTenantArr($request);
-//        dump($currentTenantArr);
-//        //exit('111');
-//
-//        foreach ($tenants as $tenantArr) {
-//            dump($tenantArr);
-//            //exit('111');
-//            //$tenant as array
-//            if( $tenantArr ) {
-//                $primarytenant = $tenantArr['primarytenant'];
-//                $fulltitle = $tenantArr['fulltitle'];
-//                echo "primarytenant=$primarytenant, fulltitle=$fulltitle <br>";
-//                if( $tenantRole == $tenantArr['fulltitle'] ) {
-//                    return $primarytenant;
-//                }
-//            }
-//        }
-//
-//        return $primarytenant;
-//    }
+    //check if current tenant is marked as a primaryTenant in tenantmanager's DB
     public function isPrimaryTenant( $request ) {
 
         $currentTenantArr = $this->getCurrentTenantArr($request);
@@ -1308,11 +1336,7 @@ class UserTenantUtil
             return FALSE;
         }
 
-        //$fulltitle = $currentTenantArr['fulltitle'];
-        //echo "fulltitle=$fulltitle <br>";
-
         $primarytenant = $currentTenantArr['primarytenant'];
-        //exit('111');
 
         return $primarytenant;
     }
