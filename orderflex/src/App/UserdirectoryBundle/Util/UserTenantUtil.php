@@ -303,6 +303,8 @@ class UserTenantUtil
             } //foreach $backendTenantsArray
         } //foreach $tenantDataArr['existedTenantIds']
 
+        $logger->notice("getTenantDataFromHaproxy: before exit, primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
+
         return $tenantDataArr;
     }
     public function getHaproxyConfig() {
