@@ -519,7 +519,7 @@ class UserTenantUtil
             $logger->notice(
                 $tempMsg
             );
-            if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
+            if( $tenant != 'homepagemanager' && $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
                 echo "Change primaryTenant '/' in HaProxy <br>";
                 $originalText = file_get_contents($haproxyConfig);
 
@@ -539,7 +539,7 @@ class UserTenantUtil
                         $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         //&& !str_contains($frontendTenantLine,'#')
-                        if( str_contains($frontendTenantLine,$lineIdentifier) && $lineIdentifier != $homepagemanagerLine ) {
+                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
                             //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
                             $originalLine = ''; //'#'.$originalLine;
