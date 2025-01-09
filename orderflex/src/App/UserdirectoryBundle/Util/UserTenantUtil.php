@@ -303,7 +303,7 @@ class UserTenantUtil
             } //foreach $backendTenantsArray
         } //foreach $tenantDataArr['existedTenantIds']
 
-        $logger->notice("getTenantDataFromHaproxy: before exit, primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
+        $logger->notice("getTenantDataFromHaproxy: before exit, primaryTenant=".$tenantDataArr['tenantapp1']['primaryTenant']);
 
         return $tenantDataArr;
     }
@@ -511,7 +511,7 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
-            $tempMsg = "PrimaryTenant Processing: ".$tenantId.": primaryTenant?: db[".$tenant->getPrimaryTenant()."]?=server[".$tenantDataArr[$tenantId]['primaryTenant']."]";
+            $tempMsg = "PrimaryTenant Processing: [".$tenantId."]: primaryTenant?: db[".$tenant->getPrimaryTenant()."]?=server[".$tenantDataArr[$tenantId]['primaryTenant']."]";
             echo $tempMsg."<br>";
             $logger->notice(
                 $tempMsg
