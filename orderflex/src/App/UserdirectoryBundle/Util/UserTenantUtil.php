@@ -214,7 +214,7 @@ class UserTenantUtil
         }
 
         $logger = $this->container->get('logger');
-        $logger->notice( "getTenantDataFromHaproxy: tenantDataArr=".$tenantDataArr['existedTenantIds'][] );
+        $logger->notice( "getTenantDataFromHaproxy: tenantDataArr=".$tenantDataArr['existedTenantIds'] );
 
         //$userServiceUtil = $this->container->get('user_service_utility');
 //        $haproxyConfig = '/etc/haproxy/haproxy_testing.cfg';
