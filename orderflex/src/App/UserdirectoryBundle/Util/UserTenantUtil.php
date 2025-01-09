@@ -213,8 +213,8 @@ class UserTenantUtil
             return $tenantDataArr;
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice( "getTenantDataFromHaproxy: tenantDataArr=".$tenantDataArr['existedTenantIds'][0] );
+        //$logger = $this->container->get('logger');
+        //$logger->notice( "getTenantDataFromHaproxy: tenantDataArr=".$tenantDataArr['existedTenantIds'][0] );
 
         //$userServiceUtil = $this->container->get('user_service_utility');
 //        $haproxyConfig = '/etc/haproxy/haproxy_testing.cfg';
@@ -283,7 +283,7 @@ class UserTenantUtil
                 //$logger->notice("getTenantDataFromHaproxy: frontendTenantLine=$frontendTenantLine");
                 if( str_contains($frontendTenantLine, 'use_backend '.$tenantId.'_backend if homepagemanager_url') ) {
                     $tenantDataArr[$tenantId]['primaryTenant'] = true;
-                    $logger->notice("getTenantDataFromHaproxy: primaryTenant=[$tenantId], frontendTenantLine=$frontendTenantLine"." => primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
+                    //$logger->notice("getTenantDataFromHaproxy: primaryTenant=[$tenantId], frontendTenantLine=$frontendTenantLine"." => primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
                 }
 
             } //foreach $frontendTenantsArray
@@ -305,7 +305,7 @@ class UserTenantUtil
                     $tenantDataArr[$tenantId]['port'] = $tenantPort;
                 }
             } //foreach $backendTenantsArray
-            $logger->notice("getTenantDataFromHaproxy: tenant=[$tenantId], before exit, primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
+            //$logger->notice("getTenantDataFromHaproxy: tenant=[$tenantId], before exit, primaryTenant=[".$tenantDataArr[$tenantId]['primaryTenant']."]");
         } //foreach $tenantDataArr['existedTenantIds']
 
         return $tenantDataArr;
@@ -537,8 +537,9 @@ class UserTenantUtil
                         $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                         $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
-                            //replace tenant homepage with original homepage
-                            $originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
+                            //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
+                            //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
+                            $originalLine = '';
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($httpdConfig, $lineIdentifier, $originalLine);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
