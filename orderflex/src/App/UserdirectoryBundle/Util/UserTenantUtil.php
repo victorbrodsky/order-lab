@@ -568,7 +568,7 @@ class UserTenantUtil
                         $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
                             //replace tenant homepage with original homepage
-                            $newLine = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
+                            $newLine = '#'.$lineIdentifier.'\n'.'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $newLine);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
