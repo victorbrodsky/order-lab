@@ -776,7 +776,8 @@ class UserTenantUtil
 //            );
             $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; HAProxy service has been restarted.";
             $resultTenantArr['haproxy-message']['success'][] = $msg;
-            $this->restartHaproxy();
+            $resHaproxy = $this->restartHaproxy();
+            $logger->notice('haproxy-message='.$resHaproxy);
         }
 
         if( $updateHttpd === false ) {
