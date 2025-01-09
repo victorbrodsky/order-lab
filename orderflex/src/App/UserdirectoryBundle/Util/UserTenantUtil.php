@@ -538,8 +538,8 @@ class UserTenantUtil
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
-                            //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
-                            $originalLine = '';
+                            $originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
+                            $originalLine = '#'.$originalLine;
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $originalLine);
                             //$res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',true);
