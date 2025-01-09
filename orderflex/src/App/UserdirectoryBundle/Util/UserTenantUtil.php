@@ -565,7 +565,7 @@ class UserTenantUtil
                         }
                     } else {
                         $lineIdentifier = "use_backend homepagemanager_backend if homepagemanager_url";
-                        $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
+                        //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
                             //replace tenant homepage with original homepage
                             $newLine = '#'.$lineIdentifier.'\n'.'use_backend ' . $tenantId . '_backend if homepagemanager_url';
