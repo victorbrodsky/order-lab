@@ -506,7 +506,7 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
-            $tempMsg = "PrimaryTenant Error: ".$tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant'];
+            $tempMsg = "PrimaryTenant Processing: ".$tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant'];
             echo $tempMsg."<br>";
             $logger->notice(
                 $tempMsg
