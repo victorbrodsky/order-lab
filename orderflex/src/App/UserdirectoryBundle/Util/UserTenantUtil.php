@@ -535,10 +535,11 @@ class UserTenantUtil
 
                     if( !$tenant->getPrimaryTenant() ) {
                         // Not PrimaryTenant
+                        $homepagemanagerLine = "use_backend homepagemanager_backend if homepagemanager_url";
                         $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         //&& !str_contains($frontendTenantLine,'#')
-                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
+                        if( str_contains($frontendTenantLine,$lineIdentifier) && $lineIdentifier != $homepagemanagerLine ) {
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
                             //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
                             $originalLine = ''; //'#'.$originalLine;
