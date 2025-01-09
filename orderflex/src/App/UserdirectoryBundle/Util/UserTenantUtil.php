@@ -534,13 +534,30 @@ class UserTenantUtil
                 foreach($frontendTenantsArray as $frontendTenantLine) {
 
                     if( !$tenant->getPrimaryTenant() ) {
+                        // Not PrimaryTenant
                         $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
-                        if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
+                        //&& !str_contains($frontendTenantLine,'#')
+                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
-                            $originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
-                            $originalLine = '#'.$originalLine;
+                            //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
+                            $originalLine = ''; //'#'.$originalLine;
+                            $logger->notice("Tenant [$tenant] is primary => remove [".$lineIdentifier."]");
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+
+                            $homepagemanagerOldStr = '#use_backend homepagemanager_backend if homepagemanager_url';
+                            $homepagemanagerNewStr = 'use_backend homepagemanager_backend if homepagemanager_url';
+                            $res = $this->replaceAllInFile($haproxyConfig, $homepagemanagerOldStr, $homepagemanagerNewStr);
+                            if ($res['status'] == 'error') {
+                                $resultArr['haproxy-error'] = $res['message'];
+                                $resultTenantArr['haproxy-message']['error'][] = $res['message'];
+                            } else {
+                                $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
+                                    ."[".$homepagemanagerOldStr."]"
+                                    ." to [".$homepagemanagerNewStr."]";
+                                $resultTenantArr['haproxy-message']['success'][] = $msg;
+                            }
+
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $originalLine);
                             //$res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',true);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
@@ -564,10 +581,11 @@ class UserTenantUtil
                             break;
                         }
                     } else {
+                        // PrimaryTenant
                         $lineIdentifier = "use_backend homepagemanager_backend if homepagemanager_url";
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
-                        if( str_contains($frontendTenantLine,$lineIdentifier) && !str_contains($frontendTenantLine,'#') ) {
-                            //replace tenant homepage with original homepage
+                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
+                            //replace tenant's homepage with original homepage
                             $newLine = '#'.$lineIdentifier.'\n'.'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $newLine);
