@@ -213,6 +213,8 @@ class UserTenantUtil
             return $tenantDataArr;
         }
 
+        $logger = $this->container->get('logger');
+
         //$userServiceUtil = $this->container->get('user_service_utility');
 //        $haproxyConfig = '/etc/haproxy/haproxy_testing.cfg';
 //
@@ -276,6 +278,7 @@ class UserTenantUtil
                     //then: primaryTenant
                     $tenantDataArr[$tenantId]['primaryTenant'] = false;
                     if( str_contains($frontendTenantLine, 'use_backend '.$tenantId.'_backend if homepagemanager_url') ) {
+                        $logger->notice("getTenantDataFromHaproxy: primaryTenant, frontendTenantLine=$frontendTenantLine");
                         $tenantDataArr[$tenantId]['primaryTenant'] = true;
                     }
                 }
@@ -514,7 +517,7 @@ class UserTenantUtil
             if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
                 echo "Change primaryTenant '/' in HaProxy <br>";
                 $originalText = file_get_contents($haproxyConfig);
-                
+
                 //Replace: use_backend homepagemanager_backend if homepagemanager_url
                 //With: use_backend tenantapp1_backend if homepagemanager_url
 
