@@ -301,9 +301,8 @@ class UserTenantUtil
                     $tenantDataArr[$tenantId]['port'] = $tenantPort;
                 }
             } //foreach $backendTenantsArray
+            $logger->notice("getTenantDataFromHaproxy: before exit, primaryTenant=".$tenantDataArr['tenantapp1']['primaryTenant']);
         } //foreach $tenantDataArr['existedTenantIds']
-
-        $logger->notice("getTenantDataFromHaproxy: before exit, primaryTenant=".$tenantDataArr['tenantapp1']['primaryTenant']);
 
         return $tenantDataArr;
     }
