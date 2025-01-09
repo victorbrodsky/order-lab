@@ -541,7 +541,8 @@ class UserTenantUtil
                             //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
                             $originalLine = '';
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
-                            $res = $this->replaceAllInFile($httpdConfig, $lineIdentifier, $originalLine);
+                            $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $originalLine);
+                            //$res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',true);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
@@ -569,7 +570,7 @@ class UserTenantUtil
                             //replace tenant homepage with original homepage
                             $newLine = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
-                            $res = $this->replaceAllInFile($httpdConfig, $lineIdentifier, $newLine);
+                            $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $newLine);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
