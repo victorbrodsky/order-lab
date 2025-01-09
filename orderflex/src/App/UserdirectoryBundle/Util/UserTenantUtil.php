@@ -506,13 +506,15 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
-            $tempMsg = "PrimaryTenant Processing: ".$tenantId.": primaryTenant: ".$tenant->getPrimaryTenant()."?=".$tenantDataArr[$tenantId]['primaryTenant'];
+            $tempMsg = "PrimaryTenant Processing: ".$tenantId.": primaryTenant?: [".$tenant->getPrimaryTenant()."]?=[".$tenantDataArr[$tenantId]['primaryTenant']."]";
             echo $tempMsg."<br>";
             $logger->notice(
                 $tempMsg
             );
             if( $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
                 echo "Change primaryTenant '/' in HaProxy <br>";
+                $originalText = file_get_contents($haproxyConfig);
+                
                 //Replace: use_backend homepagemanager_backend if homepagemanager_url
                 //With: use_backend tenantapp1_backend if homepagemanager_url
 
@@ -592,8 +594,13 @@ class UserTenantUtil
             $tenantDbPortTrim = trim($tenantDbPort);
             $tenantServerPortTrim = trim($tenantDataArr[$tenantId]['port']);
 
+            $tenantDbPrimaryTenant = $tenant->getPrimaryTenant();
+            $tenantDbPrimaryTenantTrim = trim($tenantDbPrimaryTenant);
+            $tenantServerPrimaryTenantTrim = trim($tenantDataArr[$tenantId]['primaryTenant']);
+
             $logger->notice("compare url: ".$tenantDbUrlTrim."?=".$tenantServerUrlTrim);
             $logger->notice("compare port: ".$tenantDbPortTrim."?=".$tenantServerPortTrim);
+            $logger->notice("compare primaryTenant: ".$tenantDbPrimaryTenantTrim."?=".$tenantServerPrimaryTenantTrim);
 
             if( $tenantDbUrlTrim != $tenantServerUrlTrim || $tenantDbPortTrim != $tenantServerPortTrim ) {
 
