@@ -278,6 +278,7 @@ class UserTenantUtil
                     //if: use_backend tenantapp1_backend if homepagemanager_url
                     //then: primaryTenant
                     $tenantDataArr[$tenantId]['primaryTenant'] = false;
+                    $logger->notice("getTenantDataFromHaproxy: frontendTenantLine=$frontendTenantLine");
                     if( str_contains($frontendTenantLine, 'use_backend '.$tenantId.'_backend if homepagemanager_url') ) {
                         $tenantDataArr[$tenantId]['primaryTenant'] = true;
                         $logger->notice("getTenantDataFromHaproxy: primaryTenant=[$tenantId], frontendTenantLine=$frontendTenantLine"." => primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
