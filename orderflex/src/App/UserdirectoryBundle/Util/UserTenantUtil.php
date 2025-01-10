@@ -587,8 +587,11 @@ class UserTenantUtil
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         if( str_contains($frontendTenantLine,$lineIdentifier) ) {
                             //replace tenant's homepage with original homepage
-                            $newLine = '#'.$lineIdentifier.'\n'.'use_backend ' . $tenantId . '_backend if homepagemanager_url';
-                            $logger->notice("Tenant [$tenant] is primary => remove [".$lineIdentifier."]");
+                            $newLine =
+                                '#'.$lineIdentifier.
+                                PHP_EOL.
+                                'use_backend ' . $tenantId . '_backend if homepagemanager_url';
+                            $logger->notice("Tenant [$tenant] is primary => remove homepagemanager [".$lineIdentifier."]");
                             $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $newLine);
                             $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
