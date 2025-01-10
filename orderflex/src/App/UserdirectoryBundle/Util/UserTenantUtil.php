@@ -472,21 +472,21 @@ class UserTenantUtil
                 continue;
             }
 
-            echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
+            //echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
             $logger->notice("compare url: "."enable: [".$tenant->getEnabled()."]?=[".$tenantDataArr[$tenantId]['enabled']."]");
             if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
-                echo "Change enable <br>";
+                //echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
                 //Disable or enabled according to DB value $tenant->getEnabled():
                 //comment out line frontend->'use_backend tenantappdemo_backend if tenantappdemo_url'
                 $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
                 foreach($frontendTenantsArray as $frontendTenantLine) {
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
-                    $logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
+                    //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                     if (str_contains($frontendTenantLine,$lineIdentifier)) {
-                        $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+                        //$logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                         $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
-                        $logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
+                        //$logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
                         if( $res['status'] == 'error' ) {
                             $resultArr['haproxy-error'] = $res['message'];
                             $resultTenantArr['haproxy-message']['error'][] = $res['message'];
@@ -514,13 +514,13 @@ class UserTenantUtil
             }
 
             //Overwrite homepage '/' by one of the tenant
-            $tempMsg = "PrimaryTenant Processing: [".$tenantId."]: primaryTenant?: db[".$tenant->getPrimaryTenant()."]?=server[".$tenantDataArr[$tenantId]['primaryTenant']."]";
-            echo $tempMsg."<br>";
-            $logger->notice(
-                $tempMsg
-            );
+//            $tempMsg = "PrimaryTenant Processing: [".$tenantId."]: primaryTenant?: db[".$tenant->getPrimaryTenant()."]?=server[".$tenantDataArr[$tenantId]['primaryTenant']."]";
+//            echo $tempMsg."<br>";
+//            $logger->notice(
+//                $tempMsg
+//            );
             if( $tenant != 'homepagemanager' && $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
-                echo "Change primaryTenant '/' in HaProxy <br>";
+                //echo "Change primaryTenant '/' in HaProxy <br>";
                 $originalText = file_get_contents($haproxyConfig);
 
                 //Replace: use_backend homepagemanager_backend if homepagemanager_url
@@ -543,8 +543,8 @@ class UserTenantUtil
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
                             //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
                             $originalLine = ''; //'#'.$originalLine;
-                            $logger->notice("Tenant [$tenant] is not primary => remove [".$lineIdentifier."]");
-                            $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+                            //$logger->notice("Tenant [$tenant] is not primary => remove [".$lineIdentifier."]");
+                            //$logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
 
                             $homepagemanagerOldStr = '#use_backend homepagemanager_backend if homepagemanager_url';
                             $homepagemanagerNewStr = 'use_backend homepagemanager_backend if homepagemanager_url';
@@ -561,7 +561,7 @@ class UserTenantUtil
 
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $originalLine);
                             //$res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',true);
-                            $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
+                            //$logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
@@ -591,10 +591,10 @@ class UserTenantUtil
                                 '#'.$lineIdentifier.
                                 PHP_EOL.
                                 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
-                            $logger->notice("Tenant [$tenant] is primary => remove homepagemanager [".$lineIdentifier."]");
-                            $logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
+                            //$logger->notice("Tenant [$tenant] is primary => remove homepagemanager [".$lineIdentifier."]");
+                            //$logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
                             $res = $this->replaceAllInFile($haproxyConfig, $lineIdentifier, $newLine);
-                            $logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
+                            //$logger->notice("replaceAllInFile: status=[".$res['status']."]; message=".$res['message']);
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
@@ -1259,7 +1259,7 @@ class UserTenantUtil
         //dump($userRows);
         //exit();
         //$id = $hostedGroupRows[0]['id'];
-        $logger->notice("isTenantInitialized: found rows count=".count($userRows));
+        $logger->notice("isTenantInitialized: $tenant, found rows count=".count($userRows));
         if( count($userRows) > 0 ) {
             $initialized = true;
         }

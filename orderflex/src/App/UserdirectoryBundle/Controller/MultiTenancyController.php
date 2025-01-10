@@ -259,11 +259,11 @@ class MultiTenancyController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice("syncTenantsUpdateServerConfigAction: tenantRole=$tenantRole");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("syncTenantsUpdateServerConfigAction: tenantRole=$tenantRole");
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
-        $logger->notice("syncTenantsUpdateServerConfigAction: tenants count=" . count($tenantManager->getTenants()));
+        //$logger->notice("syncTenantsUpdateServerConfigAction: tenants count=" . count($tenantManager->getTenants()));
 
         set_time_limit(1800); //1800 seconds => 30 mins
 
