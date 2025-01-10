@@ -1066,7 +1066,7 @@ class UserTenantUtil
         $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
         $haproxyRestartScript = realpath($haproxyRestartScript);
 
-        $haproxyRestartScript = '/usr/bin/systemctl restart haproxy';
+        //$haproxyRestartScript = '/usr/bin/systemctl restart haproxy';
 
         //run: order-lab/utils/executables/haproxy-restart.sh
         //$commandArr = array(
