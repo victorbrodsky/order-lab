@@ -24,8 +24,8 @@ security:
             logout:
                 path:   scan_logout
                 target: scan_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: scan_access_request_new_plain #/scan/access-requests/new/create  #/scan/scan-order/no-permission
             remember_me:
@@ -66,8 +66,8 @@ security:
               logout:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
-                  invalidate_session: true
-              lazy:  false
+                  #invalidate_session: false
+              lazy: true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
               #access_denied_url: /directory/access-requests/new/create
@@ -90,7 +90,7 @@ security:
             logout:
                 path:   fellapp_logout
                 target: fellapp_login
-                invalidate_session: true
+                #invalidate_session: false
             #anonymous:  true
             lazy: true
             provider: users
@@ -115,8 +115,8 @@ security:
             logout:
                 path:   resapp_logout
                 target: resapp_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: resapp_access_request_new_plain #/residency-applications/access-requests/new/create
             remember_me:
@@ -138,8 +138,8 @@ security:
             logout:
                 path:   deidentifier_logout
                 target: deidentifier_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: deidentifier_access_request_new_plain #/deidentifier/access-requests/new/create
             remember_me:
@@ -162,8 +162,8 @@ security:
             logout:
                 path:   vacreq_logout
                 target: vacreq_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: vacreq_access_request_new_plain #/time-away-request/access-requests/new/create
             remember_me:
@@ -186,8 +186,8 @@ security:
             logout:
                 path:   calllog_logout
                 target: calllog_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: calllog_access_request_new_plain #/call-log-book/access-requests/new/create
             remember_me:
@@ -210,8 +210,8 @@ security:
             logout:
                 path:   crn_logout
                 target: crn_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: crn_access_request_new_plain #/critical-result-notifications/access-requests/new/create
             remember_me:
@@ -233,8 +233,8 @@ security:
             logout:
                 path:   translationalresearch_logout
                 target: translationalresearch_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: translationalresearch_access_request_new_plain #/translational-research/access-requests/new/create
             remember_me:
@@ -257,8 +257,8 @@ security:
             logout:
                 path:   dashboard_logout
                 target: dashboard_login
-                invalidate_session: true
-            lazy:  false
+                #invalidate_session: false
+            lazy: true
             provider: users
             access_denied_url: dashboard_access_request_new_plain #/dashboards/access-requests/new/create
             remember_me:
@@ -273,7 +273,7 @@ security:
             #logout_on_user_change: true
             context: scan_auth
             provider: users
-            lazy:  false
+            lazy: true
             #provider: users
 #            remember_me:
 #                secret:      "%secret%"
