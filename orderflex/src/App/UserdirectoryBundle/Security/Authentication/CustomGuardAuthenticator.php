@@ -318,11 +318,15 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         } //if $route == 'saml_acs_default'
 
         $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
+
+        $userBadge = $this->getUserBadge($credentials);
+
         //Testing
         return new Passport(
-            new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
-                return $this->userRepository->findOneBy(['username' => $userIdentifier]);
-            }),
+            $userBadge,
+//            new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
+//                return $this->userRepository->findOneBy(['username' => $userIdentifier]);
+//            }),
             new CustomCredentials(
             // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
@@ -367,6 +371,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
     }
 
+    public function getUserBadge($credentials) ?UserInterface
+    {
+        $userBadge = new UserBadge($credentials['username']);
+        return $userBadge;
+    }
 
     /**
      * Called on every request. Return whatever credentials you want to
