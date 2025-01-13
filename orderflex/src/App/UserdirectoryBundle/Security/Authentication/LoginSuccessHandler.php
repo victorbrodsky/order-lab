@@ -46,6 +46,7 @@ use Symfony\Component\Routing\Router;
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
     protected $container;
+    protected $logger;
     //protected $secTokenStorage;
     //protected $secAuth;
     protected $security;
@@ -66,6 +67,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //$this->secTokenStorage = $container->get('security.token_storage');
         $this->security = $security;
         $this->em = $em;
+        $this->logger = $this->container->get('logger');
 
         $this->siteName = $container->getParameter('employees.sitename');
         $this->siteNameStr = 'Employee Directory';
@@ -91,9 +93,12 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $user && $user instanceof UserInterface ) {
             $username = $user->getUserIdentifier(); //getUsername();
+            $this->logger->notice("onAuthenticationSuccess: 1 username=$username");
         } else {
             $username = $user."";
+            $this->logger->notice("onAuthenticationSuccess: 2 username=$username");
         }
+        $this->logger->notice("onAuthenticationSuccess: username=$username");
         //$username = $user."";
         //exit('$username='.$username);
 

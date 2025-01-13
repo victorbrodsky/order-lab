@@ -100,7 +100,7 @@ class MaintenanceListener {
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
 
-        $this->logger->notice("MaintenanceListener: onKernelRequest: uri=[$uri]");
+        //$this->logger->notice("MaintenanceListener: onKernelRequest: uri=[$uri]");
 
         //$routeName = $request->get('_route');
         //$referer = $request->headers->get('referer');
@@ -111,21 +111,21 @@ class MaintenanceListener {
         //$this->switchDb($event);
         //$userSecUtil->switchDb();
 
-        //Testing
-        $user = $this->security->getUser();
-        if( $user ) {
-            //if (strpos((string)$event->getRequest()->get('_route'), 'login') !== false && $event->getRequest()->isMethod('POST')) {
-                if( $user instanceof UserInterface ) {
-                    $this->logger->notice("onKernelRequest: user=".$user);
-                } else {
-                    $this->logger->notice("onKernelRequest: Not UserInterface, user=".$user);
-                    $url = $this->container->get('router')->generate('employees_login');
-                    $response = new RedirectResponse($url);
-                    $event->setResponse($response);
-                    return;
-                }
-            //}
-        }
+//        //Testing
+//        $user = $this->security->getUser();
+//        if( $user ) {
+//            //if (strpos((string)$event->getRequest()->get('_route'), 'login') !== false && $event->getRequest()->isMethod('POST')) {
+//                if( $user instanceof UserInterface ) {
+//                    $this->logger->notice("onKernelRequest: user=".$user);
+//                } else {
+//                    $this->logger->notice("onKernelRequest: Not UserInterface, user=".$user);
+//                    $url = $this->container->get('router')->generate('employees_login');
+//                    $response = new RedirectResponse($url);
+//                    $event->setResponse($response);
+//                    return;
+//                }
+//            //}
+//        }
 
         ////// Multitenancy with shared document root (NOT USED) //////
         if(0) {
