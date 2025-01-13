@@ -95,7 +95,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $username = $user."";
         }
         //$username = $user."";
-        //exit('$username='.$username);
+        exit('$username='.$username);
 
         $options = array();
         //$em = $this->em;
