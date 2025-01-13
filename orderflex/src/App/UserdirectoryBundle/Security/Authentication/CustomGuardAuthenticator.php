@@ -587,6 +587,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     }
 
     public function getUsernamePasswordToken($user,$providerKey) {
+
+        if( !$user ) {
+            return NULL;
+        }
+
         //exit('getUsernamePasswordToken '.$user);
         return new UsernamePasswordToken(
             $user,
