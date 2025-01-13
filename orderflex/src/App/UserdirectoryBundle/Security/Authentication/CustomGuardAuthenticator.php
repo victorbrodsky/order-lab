@@ -323,7 +323,23 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
                 return $this->userRepository->findOneBy(['username' => $userIdentifier]);
             }),
-            $credentials
+            new CustomCredentials(
+            // If this function returns anything else than `true`, the credentials are marked as invalid.
+                function( $credentials ) {
+                    $user = $this->getAuthUser($credentials);
+                    if( $user ) {
+                        //if user exists here then it's already authenticated
+                        //return true; //this enough
+
+                        //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
+                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
+                        return $user->getUserIdentifier() === $credentials['username'];
+                    }
+                    return false;
+                },
+                // The custom credentials
+                $credentials
+            )
         );
         //EOF Testing
 
