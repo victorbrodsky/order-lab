@@ -114,16 +114,17 @@ class MaintenanceListener {
         //Testing
         $user = $this->security->getUser();
         if( $user ) {
-            if (strpos((string)$event->getRequest()->get('_route'), 'login') !== false && $event->getRequest()->isMethod('POST')) {
+            //if (strpos((string)$event->getRequest()->get('_route'), 'login') !== false && $event->getRequest()->isMethod('POST')) {
                 if( $user instanceof UserInterface ) {
-                    //ok
+                    $this->logger->notice("onKernelRequest: user=".$user);
                 } else {
+                    $this->logger->notice("onKernelRequest: Not UserInterface, user=".$user);
                     $url = $this->container->get('router')->generate('employees_login');
                     $response = new RedirectResponse($url);
                     $event->setResponse($response);
                     return;
                 }
-            }
+            //}
         }
 
         ////// Multitenancy with shared document root (NOT USED) //////
