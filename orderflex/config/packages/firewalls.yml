@@ -75,7 +75,8 @@ security:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
               #    path:     /(%multilocales%)(%locdel%)directory
-                  path: ^.*/directory
+                  path: /directory
+                  samesite: 'strict'
 
         ldap_fellapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
