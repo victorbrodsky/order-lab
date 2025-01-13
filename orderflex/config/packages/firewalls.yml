@@ -75,7 +75,7 @@ security:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
               #    path:     /(%multilocales%)(%locdel%)directory
-#                  #path:     /directory
+                  path: ^.*/directory
 
         ldap_fellapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
@@ -123,7 +123,7 @@ security:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
                 #path:     /(%multilocales%)(%locdel%)residency-applications
-                #path:     /residency-applications
+                #path: ^.*/residency-applications
 
         ldap_deidentifier_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)deidentifier
@@ -146,7 +146,7 @@ security:
                 secret:      '%secret%'
                 lifetime: 28800 # 8 hours in seconds
                 #path:     /(%multilocales%)(%locdel%)deidentifier
-                #path:     /deidentifier
+                path: ^.*/deidentifier
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
