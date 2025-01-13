@@ -35,6 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 class MaintenanceListener {
@@ -92,9 +93,9 @@ class MaintenanceListener {
         $session = $request->getSession();
 
         //testing
-        $logintype = $session->get('logintype');
+        //$logintype = $session->get('logintype');
         //$logger = $this->container->get('logger');
-        $this->logger->notice("onKernelRequest: logintype=".$logintype);
+        //$this->logger->notice("onKernelRequest: logintype=".$logintype);
 
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
@@ -109,6 +110,21 @@ class MaintenanceListener {
         //set db
         //$this->switchDb($event);
         //$userSecUtil->switchDb();
+
+        //Testing
+        $user = $this->security->getUser();
+        if( $user ) {
+            if (strpos((string)$event->getRequest()->get('_route'), 'login') !== false && $event->getRequest()->isMethod('POST')) {
+                if( $user instanceof UserInterface ) {
+                    //ok
+                } else {
+                    $url = $this->container->get('router')->generate('employees_login');
+                    $response = new RedirectResponse($url);
+                    $event->setResponse($response);
+                    return;
+                }
+            }
+        }
 
         ////// Multitenancy with shared document root (NOT USED) //////
         if(0) {
