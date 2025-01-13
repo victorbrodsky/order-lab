@@ -588,7 +588,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         throw new AuthenticationException('Invalid username or password');
     }
 
-    public function getUsernamePasswordToken($user,$providerKey) {
+    public function getUsernamePasswordToken(UserInterface $user,$providerKey) {
 
         if( !$user ) {
             throw new AuthenticationException('User is not defined. Invalid username or password');
