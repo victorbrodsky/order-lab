@@ -156,16 +156,17 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$logger->notice("supports: Not. User exists");
         //    return false;
         //}
-
         $user = $this->security->getUser();
         if( $user ) {
             if( $user instanceof UserInterface ) {
-                $logger->notice("supports: No. User exists and UserInterface");
+                $logger->notice("supports: Not. User exists and UserInterface: user=$user");
                 return false;
             } else {
+                $logger->notice("supports: Yes. User exists but not UserInterface: user=$user");
                 return true;
             }
 
+            $logger->notice("supports: Not. User exists: user=$user");
             return false;
         }
 
