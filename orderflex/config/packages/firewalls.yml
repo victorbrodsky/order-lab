@@ -51,7 +51,7 @@ security:
               form_login:
                   login_path: employees_login #/%tenantprefix%directory/login
                   check_path: employees_login_check #employees_login_check #/%tenantprefix%directory/login
-                  enable_csrf: true
+                  #enable_csrf: true
               #TODO: check_path does not redirect to my custom controller?
               #form_login:
               #    login_path: employees_login
@@ -75,8 +75,8 @@ security:
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-                  path: ^.*/directory
-                  samesite: 'strict'
+                  #path: ^.*/directory
+                  #samesite: 'strict'
 
         ldap_fellapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
