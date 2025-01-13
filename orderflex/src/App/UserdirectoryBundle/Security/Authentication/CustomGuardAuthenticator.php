@@ -106,13 +106,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request) : bool
     {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         //GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
-        $logger->notice("supports: route=".$route);
+        //$logger->notice("supports: route=".$route);
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('exit support');
 
@@ -155,6 +155,16 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //echo 'User authenticated='.$this->security->getUser()."<br>";
             //$logger->notice("supports: Not. User exists");
             return false;
+        }
+
+        $user = $this->security->getUser();
+        if( $user ) {
+            return false;
+        }
+        if( $user instanceof UserInterface ) {
+            return false;
+        } else {
+            return true;
         }
 
         //$logger->notice("supports: Not. EOF");
