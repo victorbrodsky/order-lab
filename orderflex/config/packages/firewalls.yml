@@ -67,7 +67,6 @@ security:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
                   #invalidate_session: false
-                  invalidate_session: true
               lazy: true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
@@ -300,22 +299,22 @@ security:
 #            lazy: true
 #            provider: saml_provider
 
-#        saml_firewall:
-#            pattern: ^.*/saml
-#            context: scan_auth
-#            lazy: true
-#            provider: saml_provider
-#            #custom_authenticator: App\Saml\Security\SamlAuthenticator
-#            custom_authenticators:
-#                authenticator: custom_guard_authenticator
-#            #custom_authenticators:
-#            #   authenticator: App\Saml\Security\SamlAuthenticator
-##            form_login:
-##                login_path: employees_login
-##                check_path: employees_login_check
-#            logout:
-#                path:   logout
-#                #target: login
-##            access_denied_url: employees_access_request_new_plain
+        saml_firewall:
+            pattern: ^.*/saml
+            context: scan_auth
+            lazy: true
+            provider: saml_provider
+            #custom_authenticator: App\Saml\Security\SamlAuthenticator
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
+            #custom_authenticators:
+            #   authenticator: App\Saml\Security\SamlAuthenticator
+#            form_login:
+#                login_path: employees_login
+#                check_path: employees_login_check
+            logout:
+                path:   logout
+                #target: login
+#            access_denied_url: employees_access_request_new_plain
 
         ### EOF SAML testing ###

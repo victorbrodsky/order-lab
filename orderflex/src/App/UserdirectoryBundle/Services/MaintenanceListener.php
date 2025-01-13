@@ -92,14 +92,14 @@ class MaintenanceListener {
         $session = $request->getSession();
 
         //testing
-        //$logintype = $session->get('logintype');
+        $logintype = $session->get('logintype');
         //$logger = $this->container->get('logger');
-        //$logger->notice("onKernelRequest: logintype=".$logintype);
+        $this->logger->notice("onKernelRequest: logintype=".$logintype);
 
         $uri = $request->getUri();
         //echo "uri=".$uri."<br>";
 
-        //$this->logger->notice("MaintenanceListener: onKernelRequest: uri=[$uri]");
+        $this->logger->notice("MaintenanceListener: onKernelRequest: uri=[$uri]");
 
         //$routeName = $request->get('_route');
         //$referer = $request->headers->get('referer');
