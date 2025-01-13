@@ -591,7 +591,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function getUsernamePasswordToken(UserInterface $user,$providerKey) {
 
         if( !$user ) {
-            exit('User is not defined. Invalid username or password');
+            //exit('User is not defined. Invalid username or password');
             throw new AuthenticationException('User is not defined. Invalid username or password');
             //return NULL;
         }
@@ -599,7 +599,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         if( $user instanceof UserInterface ) {
             //ok
         } else {
-            exit('User is not UserInterface. Invalid username or password');
+            //exit('User is not UserInterface. Invalid username or password');
             throw new AuthenticationException('User is not UserInterface. Invalid username or password');
         }
 
