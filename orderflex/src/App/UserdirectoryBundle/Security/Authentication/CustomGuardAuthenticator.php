@@ -106,13 +106,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request) : bool
     {
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
 
         //GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
         $route = $request->attributes->get('_route');
-        //$logger->notice("supports: route=".$route);
+        $logger->notice("supports: route=".$route);
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
         //exit('exit support');
 
@@ -433,6 +433,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
+        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
+
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username
             $password,
@@ -593,7 +595,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //return NULL;
         }
 
-        //exit('getUsernamePasswordToken '.$user);
+        //exit('get UsernamePasswordToken '.$user);
         return new UsernamePasswordToken(
             $user,
             //NULL,   //$user->getPassword(),
