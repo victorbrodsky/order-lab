@@ -71,13 +71,7 @@ class UserManager { //implements UserManagerInterface {
      */
     public function findUserByUsername($username)
     {
-        $user = $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
-        if( $user ) {
-            return $user;
-        } else {
-            exit('findUserByUsername: User not found: $username='.$username);
-        }
-        //return $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
+        return $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
     }
 
     /**

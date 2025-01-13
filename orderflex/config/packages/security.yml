@@ -206,7 +206,8 @@ security:
             entity:
                 # the class of the entity that represents users
                 class: 'App\UserdirectoryBundle\Entity\User'
-                property: 'username'
+                #property: 'username'
+                property: 'primarypublicuserid'
 
         ### SAML testing ###
         saml_provider:
