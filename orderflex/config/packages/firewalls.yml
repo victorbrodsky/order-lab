@@ -67,15 +67,15 @@ security:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
                   #invalidate_session: false
-              lazy: true
+              #lazy: true
+              lazy: false
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
               #access_denied_url: /directory/access-requests/new/create
               remember_me:
                   secret:      "%secret%"
                   lifetime: 28800 # 8 hours in seconds
-              #    path:     /(%multilocales%)(%locdel%)directory
-                  path: /directory
+                  path: ^.*/directory
                   samesite: 'strict'
 
         ldap_fellapp_firewall:
