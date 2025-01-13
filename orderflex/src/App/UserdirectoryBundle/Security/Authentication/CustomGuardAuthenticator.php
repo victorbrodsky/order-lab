@@ -317,7 +317,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             } //if($username)
         } //if $route == 'saml_acs_default'
 
-        $logger->notice('authenticate: before new Passport');
+        $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
         //Testing
         return new Passport(
             new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
