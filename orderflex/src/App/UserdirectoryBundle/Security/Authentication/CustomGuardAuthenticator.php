@@ -319,14 +319,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
 
-        $userBadge = $this->getUserBadge($credentials);
+        //$userBadge = $this->getUserBadge($credentials);
 
         //Testing
         return new Passport(
-            $userBadge,
-//            new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
-//                return $this->userRepository->findOneBy(['username' => $userIdentifier]);
-//            }),
+            //$userBadge,
+            new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
+                return $this->em->getRepository(User::class)->findOneBy(['username' => $userIdentifier]);
+            }),
             new CustomCredentials(
             // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
@@ -371,11 +371,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
     }
 
-    public function getUserBadge($credentials)
-    {
-        $userBadge = new UserBadge($credentials['username']);
-        return $userBadge;
-    }
+//    public function getUserBadge($credentials)
+//    {
+//        $userBadge = new UserBadge($credentials['username']);
+//        return $userBadge;
+//    }
 
     /**
      * Called on every request. Return whatever credentials you want to
