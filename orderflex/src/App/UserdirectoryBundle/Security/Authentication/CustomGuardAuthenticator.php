@@ -324,7 +324,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //Testing
         return new Passport(
             //$userBadge,
-            new UserBadge($credentials['username'], function (string $userIdentifier): ?UserInterface {
+            new UserBadge($credentials['username'], function (string $userIdentifier): UserInterface {
                 return $this->em->getRepository(User::class)->findOneBy(['username' => $userIdentifier]);
             }),
             new CustomCredentials(
