@@ -43,7 +43,8 @@ security:
               #pattern: ^/(%multilocales%)(%locdel%)directory
               pattern: ^.*/directory #^.*/directory will support empty default prefix (/directory) and multi-tenancy (/system/directory)
               #pattern: ^/(system|default)/directory
-              context: scan_auth_"%tenant_role%"
+              #context: scan_auth_"%tenant_role%"
+              context: "%tenant_role%"
               switch_user: true
               custom_authenticators:
                   authenticator: custom_guard_authenticator
