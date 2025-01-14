@@ -154,10 +154,10 @@ class UserController extends OrderAbstractController
         //$res = $userServiceUtil->getCronJobFullNameLinux("cron:swift");
         //echo "getCronJobFullNameLinux=$res<br>";
 
-        $session = $request->getSession();
+        //$session = $request->getSession();
         //echo "context:".$session->get('_security_scan_auth');
-        dump($session->get('_security_scan_auth'));
-        exit('111');
+        //dump($session->get('_security_scan_auth'));
+        //exit('111');
 
         //$encoder = $this->container->get('security.password_encoder');
         //$userServiceUtil = $this->container->get('user_service_utility');
