@@ -14,7 +14,7 @@ security:
             #pattern: ^/scan
             pattern: ^.*/scan
             #context: scan_auth
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                   authenticator: custom_guard_authenticator
@@ -45,7 +45,8 @@ security:
               pattern: ^.*/directory #^.*/directory will support empty default prefix (/directory) and multi-tenancy (/system/directory)
               #pattern: ^/(system|default)/directory
               #context: scan_auth
-              context: scan_auth_{{tenant_role}}
+              #context: "scan_auth_{%tenant_role%}"
+              context: "%firewall_context_name%"
               #stateless: true
               switch_user: true
               custom_authenticators:
@@ -83,7 +84,7 @@ security:
         ldap_fellapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)fellowship-applications
             pattern: ^.*/fellowship-applications
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -108,7 +109,7 @@ security:
         ldap_resapp_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)residency-applications
             pattern: ^.*/residency-applications
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -131,7 +132,7 @@ security:
         ldap_deidentifier_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)deidentifier
             pattern: ^.*/deidentifier
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -155,7 +156,7 @@ security:
         ldap_vacreq_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)time-away-request
             pattern: ^.*/time-away-request
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -179,7 +180,7 @@ security:
         ldap_calllog_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)call-log-book
             pattern: ^.*/call-log-book
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -203,7 +204,7 @@ security:
         ldap_crn_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)critical-result-notifications
             pattern: ^.*/critical-result-notifications
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -226,7 +227,7 @@ security:
         ldap_translationalresearch_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)translational-research
             pattern: ^.*/translational-research
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -250,7 +251,7 @@ security:
         ldap_dashboard_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)dashboards
             pattern: ^.*/dashboards
-            context: scan_auth
+            context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
@@ -274,7 +275,7 @@ security:
             #pattern: ^/(%multilocales%)(%locdel%)api
             pattern: ^.*/api
             #logout_on_user_change: true
-            context: scan_auth
+            context: "%firewall_context_name%"
             provider: users
             lazy: true
             #provider: users
@@ -304,7 +305,7 @@ security:
 
         saml_firewall:
             pattern: ^.*/saml
-            context: scan_auth
+            context: "%firewall_context_name%"
             lazy: true
             provider: saml_provider
             #custom_authenticator: App\Saml\Security\SamlAuthenticator

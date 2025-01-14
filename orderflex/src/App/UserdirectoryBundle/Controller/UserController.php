@@ -254,6 +254,12 @@ class UserController extends OrderAbstractController
         //$user = $em->getRepository(User::class)->findOneUserByEmail('oli2002@med.cornell.edu');
         //exit('user='.$user."; ID=".$user->getId());
 
+        //$context = $this->container->get('security.authentication.ldap_employees_firewall.context');
+        //$context=$this->container->get("security.authentication.switchuser_listener.ldap_employees_firewall");
+        //dump($context);
+        //exit('111');
+        //'ldap_employees_firewall'
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

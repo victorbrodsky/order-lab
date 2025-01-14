@@ -117,6 +117,12 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null"); //disable for testing
 
+if( $container->hasParameter('tenant_role') && $container->getParameter('tenant_role') ) {
+    $container->setParameter('firewall_context_name', "scan_auth_".$container->getParameter('tenant_role'));
+} else {
+    $container->setParameter('firewall_context_name', "scan_auth");
+}
+
 
 if( $conn ) {
     echo "*** siteparameters.php: Connection to DB established. DB name=[".$conn->getDatabase()."] ***\n";
