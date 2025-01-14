@@ -156,19 +156,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             //$logger->notice("supports: Not. User exists");
             return false;
         }
-//        $user = $this->security->getUser();
-//        if( $user ) {
-//            if( $user instanceof UserInterface ) {
-//                $logger->notice("supports: Not. User exists and UserInterface: user=$user");
-//                return false;
-//            } else {
-//                $logger->notice("supports: Yes. User exists but not UserInterface: user=$user");
-//                return true;
-//            }
-//
-//            $logger->notice("supports: Not. User exists: user=$user");
-//            return false;
-//        }
 
         //$logger->notice("supports: Not. EOF");
         return false;
@@ -280,9 +267,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //                $domain = $emailArr[1]; //domain=med.cornell.edu
 
                 $authUtil = $this->container->get('authenticator_utility');
-                $logger->notice('authenticate: Before samlAuthenticationByEmail');
+                //$logger->notice('authenticate: Before samlAuthenticationByEmail');
                 $authenticated = $authUtil->samlAuthenticationByEmail($email);
-                $logger->notice('authenticate: After samlAuthenticationByEmail');
+                //$logger->notice('authenticate: After samlAuthenticationByEmail');
                 if( $authenticated ) {
                     $email = str_replace('_@_saml-sso','',$username);
                     $user = $this->em->getRepository(User::class)->findOneUserByUserInfoUseridEmail($email);
@@ -317,36 +304,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             } //if($username)
         } //if $route == 'saml_acs_default'
 
-        $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
-
-        //$userBadge = $this->getUserBadge($credentials);
-
-        //Testing
-//        return new Passport(
-//            //$userBadge,
-//            new UserBadge($credentials['username'], function (string $userIdentifier): UserInterface {
-//                return $this->em->getRepository(User::class)->findOneBy(['username' => $userIdentifier]);
-//            }),
-//            new CustomCredentials(
-//            // If this function returns anything else than `true`, the credentials are marked as invalid.
-//                function( $credentials ) {
-//                    $user = $this->getAuthUser($credentials);
-//                    if( $user ) {
-//                        //if user exists here then it's already authenticated
-//                        //return true; //this enough
-//
-//                        //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
-//                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
-//                        return $user->getUserIdentifier() === $credentials['username'];
-//                    }
-//                    return false;
-//                },
-//                // The custom credentials
-//                $credentials
-//            )
-//        );
-        //EOF Testing
-
+        //$logger->notice('authenticate: before new Passport, username='.$credentials['username']);
 
         return new Passport(
             new UserBadge($credentials['username']),
@@ -370,12 +328,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         );
 
     }
-
-//    public function getUserBadge($credentials)
-//    {
-//        $userBadge = new UserBadge($credentials['username']);
-//        return $userBadge;
-//    }
 
     /**
      * Called on every request. Return whatever credentials you want to
@@ -460,7 +412,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function getAuthUser($credentials) : mixed
     {
         $logger = $this->container->get('logger');
-        $logger->notice("getAuthUser: Start");
+        //$logger->notice("getAuthUser: Start");
 
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -482,7 +434,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
-        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
+        //$logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username

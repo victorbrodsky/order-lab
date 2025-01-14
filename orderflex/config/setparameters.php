@@ -117,6 +117,7 @@ $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null"); //disable for testing
 
+//Set firewall_context_name to 'scan_auth' or scan_auth_tenantrole if tenant_role exists
 if( $container->hasParameter('tenant_role') && $container->getParameter('tenant_role') ) {
     $container->setParameter('firewall_context_name', "scan_auth_".$container->getParameter('tenant_role'));
 } else {
