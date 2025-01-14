@@ -69,7 +69,7 @@ class UserManager { //implements UserManagerInterface {
     /**
      * {@inheritdoc}
      */
-    public function findUserByUsername($username) : ?UserInterface
+    public function findUserByUsername($username)
     {
         return $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
     }
