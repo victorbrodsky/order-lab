@@ -371,7 +371,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
     }
 
-    public function getUserBadge($credentials) : ?UserInterface
+    public function getUserBadge($credentials)
     {
         $userBadge = new UserBadge($credentials['username']);
         return $userBadge;
