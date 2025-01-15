@@ -19,13 +19,14 @@ fi
 
 if [ -z "$type" ]
   then
-    type="full"
+    type='full'
 fi
 
 bashpath="/usr/bin"
 
 echo -e ${COLOR} homedir="$homedir" ${NC}
 echo -e ${COLOR} bashpath="$bashpath" ${NC}
+echo -e ${COLOR} type="$type" ${NC}
 
 f_sync() {
 
