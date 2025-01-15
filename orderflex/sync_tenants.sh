@@ -47,12 +47,13 @@ f_sync() {
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
 
+    echo -e ${COLOR} check type="$type" ${NC}
     if [ -n "type" ] && [ "type" == "dbstatus" ]
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
             php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
-        #else
-            #echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
+        else
+            echo -e ${COLOR} type is empty ${NC}
     fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
@@ -69,10 +70,10 @@ f_sync() {
 }
 
 
-f_sync homepagemanager
+#f_sync homepagemanager
 f_sync tenantmanager
-f_sync tenantappdemo
-f_sync tenantapptest
-f_sync tenantapp1
-f_sync tenantapp2
+#f_sync tenantappdemo
+#f_sync tenantapptest
+#f_sync tenantapp1
+#f_sync tenantapp2
 
