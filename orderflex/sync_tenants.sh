@@ -84,15 +84,22 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/packer/additional.sh "$homedir"/order-lab-"$1"
     fi
 
+    if [ -n "$type" ] && [ "$type" == "dbconfig" ]
+        then
+            echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
+            cp "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+            sed -i -e "s/dbname/$1/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+            sed -i -e "s/dbusername/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+            sed -i -e "s/dbuserpassword/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    fi
+
+
     #echo -e ${COLOR} cd to "$1"${NC}
     #cd "$homedir"/order-lab-$1/orderflex
-
 	#echo -e ${COLOR} git pull for "$1" ${NC}
 	#git pull
-
 	#echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
 	#bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
-
 	#echo -e ${COLOR} check migration status for "$1" ${NC}
     #php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
 }
