@@ -13,13 +13,13 @@ type=$2
 
 if [ -z "$homedir" ]
   then
-    homedir='/srv'
-    homedir='/usr/local/bin'
+    homedir="/srv"
+    homedir="/usr/local/bin"
 fi
 
 if [ -z "$type" ]
   then
-    type='full'
+    type="full"
 fi
 
 bashpath="/usr/bin"
@@ -30,7 +30,7 @@ echo -e ${COLOR} type="$type" ${NC}
 
 f_sync() {
 
-    if [ -n "type" ] && [ "type" == "full" ]
+    if [ -n "$type" ] && [ "$type" == "full" ]
     	then
     		echo -e ${COLOR} cd to "$1"${NC}
                 cd "$homedir"/order-lab-$1/orderflex
@@ -48,7 +48,7 @@ f_sync() {
     fi
 
     echo -e ${COLOR} check type="$type" ${NC}
-    if [ -n "type" ] && [ "type" == "dbstatus" ]
+    if [ -n "$type" ] && [ "$type" == "dbstatus" ]
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
             php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
