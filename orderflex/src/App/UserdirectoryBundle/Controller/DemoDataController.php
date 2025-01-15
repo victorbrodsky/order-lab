@@ -35,10 +35,9 @@ class DemoDataController extends OrderAbstractController
     public function resetDemoDataAction(Request $request)
     {
 
-        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (!$this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
-
 
         //Flash
         $this->addFlash(
@@ -46,7 +45,78 @@ class DemoDataController extends OrderAbstractController
             "Demo Data"
         );
 
-        return $this->redirectToRoute('employees_home');
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $this->addFlash(
+                'pnotify-error',
+                //'notice',
+                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+            );
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        }
+
+        if( $networkDrivePath ) {
+
+            //create backup
+            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
+            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            //exit($res);
+
+            $resStatus = $res['status'];
+            $resStr = $res['message'];
+
+            if( $resStatus == 'OK' ) {
+                $resStr = "Backup successfully created in folder $networkDrivePath";
+                $this->addFlash(
+                    'notice',
+                    $resStr
+                );
+
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
+
+                $env = 'demo';
+                $backupFileName = '';
+                $output = $this->restoreDBWrapper($backupFileName,$env);
+                if( $output['status'] == 'OK' ) {
+                    $this->addFlash(
+                        'notice',
+                        "Demo DB restored: ".$output['message']
+                    );
+                } else {
+                    $this->addFlash(
+                        'notice',
+                        "Error Demo DB: ".$output['message']
+                    );
+                }
+
+            } else {
+                $this->addFlash(
+                    'pnotify-error',
+                    $resStr
+                );
+            }
+
+        } else {
+            $this->addFlash(
+                'pnotify-error',
+                "Error backup"
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+
+
+        //return $this->redirectToRoute('employees_home');
     }
     
 
