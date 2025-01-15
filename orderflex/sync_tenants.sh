@@ -81,7 +81,7 @@ f_sync() {
     if [ -n "$type" ] && [ "$type" == "python" ]
         then
             echo -e ${COLOR} install python env for "$1" ${NC}
-            bash "$homedir"/order-lab-"$1"/packer/additional.sh "$homedir"
+            bash "$homedir"/order-lab-"$1"/packer/additional.sh "$homedir"/order-lab-"$1"
     fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
