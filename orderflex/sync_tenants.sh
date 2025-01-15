@@ -30,6 +30,8 @@ echo -e ${COLOR} type="$type" ${NC}
 
 f_sync() {
 
+    echo -e ${COLOR} check type="$type" ${NC}
+
     if [ -n "$type" ] && [ "$type" == "full" ]
     	then
     		echo -e ${COLOR} cd to "$1"${NC}
@@ -47,7 +49,6 @@ f_sync() {
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
 
-    echo -e ${COLOR} check type="$type" ${NC}
     if [ -n "$type" ] && [ "$type" == "dbstatus" ]
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
@@ -56,7 +57,14 @@ f_sync() {
         #    echo -e ${COLOR} type is empty ${NC}
     fi
 
-    echo -e ${COLOR} check type="$type" ${NC}
+    if [ -n "$type" ] && [ "$type" == "dbmigrate" ]
+            then
+                echo -e ${COLOR} check migration status for "$1" ${NC}
+                yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
+            #else
+            #    echo -e ${COLOR} type is empty ${NC}
+        fi
+
     if [ -n "$type" ] && [ "$type" == "composer" ]
         then
             echo -e ${COLOR} composer install to ["$homedir"/order-lab-"$1"/orderflex] ${NC}
