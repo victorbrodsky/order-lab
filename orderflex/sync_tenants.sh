@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 #/srv/order-lab-homepagemanager/orderflex
 
 homedir=$1
-#type: 'full'; doctrine migration status 'dbstatus'; 'composer' to run 'composer install'
+#type: 'full'; doctrine migration status 'dbstatus'; 'composer' to run 'composer install'; 'python' to install python's env
 type=$2
 
 if [ -z "$homedir" ]
@@ -46,8 +46,8 @@ f_sync() {
             	echo -e ${COLOR} check migration status for "$1" ${NC}
                 php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
 
-                echo -e ${COLOR} install python env for "$1" ${NC}
-                bash "$homedir"/order-lab-"$1"/packer/additional.sh
+                #echo -e ${COLOR} install python env for "$1" ${NC}
+                #bash "$homedir"/order-lab-"$1"/packer/additional.sh
     	#else
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
@@ -76,6 +76,12 @@ f_sync() {
             COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --working-dir="$homedir"/order-lab-"$1"/orderflex --verbose
         #else
         #    echo -e ${COLOR} type is empty ${NC}
+    fi
+
+    if [ -n "$type" ] && [ "$type" == "python" ]
+        then
+            echo -e ${COLOR} install python env for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/packer/additional.sh "$homedir"
     fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
