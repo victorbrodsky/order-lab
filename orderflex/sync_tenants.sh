@@ -45,10 +45,14 @@ f_sync() {
 
             	echo -e ${COLOR} check migration status for "$1" ${NC}
                 php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+
+                echo -e ${COLOR} install python env for "$1" ${NC}
+                bash "$homedir"/order-lab-"$1"/packer/additional.sh
     	#else
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
 
+    ### DB migration ###
     if [ -n "$type" ] && [ "$type" == "dbstatus" ]
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
@@ -58,12 +62,13 @@ f_sync() {
     fi
 
     if [ -n "$type" ] && [ "$type" == "dbmigrate" ]
-            then
-                echo -e ${COLOR} check migration status for "$1" ${NC}
-                yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
-            #else
-            #    echo -e ${COLOR} type is empty ${NC}
-        fi
+        then
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
+        #else
+        #    echo -e ${COLOR} type is empty ${NC}
+    fi
+    ### EOF DB migration ###
 
     if [ -n "$type" ] && [ "$type" == "composer" ]
         then
@@ -87,10 +92,10 @@ f_sync() {
 }
 
 
-f_sync homepagemanager
+#f_sync homepagemanager
 f_sync tenantmanager
-f_sync tenantappdemo
-f_sync tenantapptest
-f_sync tenantapp1
-f_sync tenantapp2
+#f_sync tenantappdemo
+#f_sync tenantapptest
+#f_sync tenantapp1
+#f_sync tenantapp2
 
