@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 #/srv/order-lab-homepagemanager/orderflex
 
 homedir=$1
-#type: 'full' or doctrine migration status 'dbstatus'
+#type: 'full'; doctrine migration status 'dbstatus'; 'composer' to run 'composer install'
 type=$2
 
 if [ -z "$homedir" ]
@@ -52,6 +52,15 @@ f_sync() {
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
             php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+        else
+            echo -e ${COLOR} type is empty ${NC}
+    fi
+
+    echo -e ${COLOR} check type="$type" ${NC}
+    if [ -n "$type" ] && [ "$type" == "composer" ]
+        then
+            echo -e ${COLOR} composer install to ["$homedir"/order-lab-"$1"/orderflex] ${NC}
+            COMPOSER_ALLOW_SUPERUSER=1 /usr/local/bin/composer install --working-dir="$homedir"/order-lab-"$1"/orderflex --verbose
         else
             echo -e ${COLOR} type is empty ${NC}
     fi
