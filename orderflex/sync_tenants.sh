@@ -22,7 +22,7 @@ echo -e ${COLOR} bashpath="$bashpath" ${NC}
 
 f_sync() {
     echo -e ${COLOR} cd to "$1"${NC}
-    cd "$homedir"/order-lab-$1
+    cd "$homedir"/order-lab-$1/orderflex
 
 	echo -e ${COLOR} git pull for "$1" ${NC}
 	git pull
