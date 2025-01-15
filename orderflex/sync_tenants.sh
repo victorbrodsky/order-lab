@@ -42,7 +42,7 @@ f_sync() {
 
             	echo -e ${COLOR} check migration status for "$1" ${NC}
                 php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
-    	else
+    	#else
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
 
@@ -50,9 +50,9 @@ f_sync() {
         then
             echo -e ${COLOR} check migration status for "$1" ${NC}
             php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
-        else
+        #else
             #echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
-        fi
+    fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
     #cd "$homedir"/order-lab-$1/orderflex
