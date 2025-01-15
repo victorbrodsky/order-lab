@@ -8,11 +8,18 @@ NC='\033[0m' # No Color
 #/srv/order-lab-homepagemanager/orderflex
 
 homedir=$1
+#type: 'full' or doctrine migration status 'dbstatus'
+type=$2
 
 if [ -z "$homedir" ]
   then
     homedir='/srv'
     homedir='/usr/local/bin'
+fi
+
+if [ -z "$type" ]
+  then
+    type="full"
 fi
 
 bashpath="/usr/bin"
@@ -21,17 +28,43 @@ echo -e ${COLOR} homedir="$homedir" ${NC}
 echo -e ${COLOR} bashpath="$bashpath" ${NC}
 
 f_sync() {
-    echo -e ${COLOR} cd to "$1"${NC}
-    cd "$homedir"/order-lab-$1/orderflex
 
-	echo -e ${COLOR} git pull for "$1" ${NC}
-	git pull
+    if [ -n "type" ] && [ "type" == "full" ]
+    	then
+    		echo -e ${COLOR} cd to "$1"${NC}
+                cd "$homedir"/order-lab-$1/orderflex
 
-	echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
-	bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+            	echo -e ${COLOR} git pull for "$1" ${NC}
+            	git pull
 
-	echo -e ${COLOR} check migration status for "$1" ${NC}
-    php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+            	echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            	bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+
+            	echo -e ${COLOR} check migration status for "$1" ${NC}
+                php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+    	else
+    		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
+    fi
+
+    if [ -n "type" ] && [ "type" == "dbstatus" ]
+        then
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+        else
+            #echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
+        fi
+
+    #echo -e ${COLOR} cd to "$1"${NC}
+    #cd "$homedir"/order-lab-$1/orderflex
+
+	#echo -e ${COLOR} git pull for "$1" ${NC}
+	#git pull
+
+	#echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+	#bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+
+	#echo -e ${COLOR} check migration status for "$1" ${NC}
+    #php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
 }
 
 
