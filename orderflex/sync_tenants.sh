@@ -28,10 +28,10 @@ f_sync() {
 	git pull
 
 	echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
-	bash "$bashpath"/order-lab-"$1"/orderflex/deploy.sh
+	bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
 
 	echo -e ${COLOR} check migration status for "$1" ${NC}
-    php bin/console doctrine:migrations:status
+    php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
 }
 
 
