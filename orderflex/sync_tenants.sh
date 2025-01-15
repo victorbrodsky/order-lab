@@ -12,10 +12,10 @@ homedir=$1
 if [ -z "$homedir" ]
   then
     homedir='/srv'
+    homedir='/usr/local/bin'
 fi
 
 bashpath="/usr/bin"
-
 
 echo -e ${COLOR} homedir="$homedir" ${NC}
 echo -e ${COLOR} bashpath="$bashpath" ${NC}
@@ -29,13 +29,16 @@ f_sync() {
 
 	echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
 	bash "$bashpath"/order-lab-"$1"/orderflex/deploy.sh
+
+	echo -e ${COLOR} check migration status for "$1" ${NC}
+    php bin/console doctrine:migrations:status
 }
 
 
-f_sync homepagemanager
+#f_sync homepagemanager
 f_sync tenantmanager
-f_sync tenantappdemo
-f_sync tenantapptest
-f_sync tenantapp1
-f_sync tenantapp2
+#f_sync tenantappdemo
+#f_sync tenantapptest
+#f_sync tenantapp1
+#f_sync tenantapp2
 
