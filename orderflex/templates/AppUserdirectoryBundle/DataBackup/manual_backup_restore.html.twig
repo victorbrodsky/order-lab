@@ -679,6 +679,9 @@
             var typeStr = type.toUpperCase();
 
             var result = confirm("Warning!!! Are you sure you want to load/restore backup "+typeStr+"? This action will overwrite all existing data!");
+            if( type == "demodb" ) {
+                result = confirm("Warning!!! Are you sure you want to reset demo environment? This action will overwrite all existing data!");
+            }
             if (result) {
                 //Logic to delete the item
             } else {
