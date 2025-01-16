@@ -32,6 +32,7 @@ class DemoDataController extends OrderAbstractController
 {
 
     #[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
+    #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
     public function resetDemoDataAction(Request $request)
     {
 

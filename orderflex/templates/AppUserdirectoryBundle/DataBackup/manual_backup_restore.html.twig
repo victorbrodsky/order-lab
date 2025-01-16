@@ -298,6 +298,75 @@
         </div> {#panel-body#}
     </div> {#panel#}
 
+
+    {#Reset Demo Environment#}
+    <div class="panel panel-default">
+        <div class="panel-heading">Reset Demo Environment</div>
+        <div class="panel-body">
+            <div class="row">
+                {#<div class="col-lg-1"></div>#}
+                <div class="col-lg-12" align="left">
+                    <p>
+                    <div class="input-group">
+                        <input
+                                type="password"
+                                id="backup-user-token"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="Enter your login password"
+                                style="min-width: 100%"
+                                required
+                                readonly onfocus="this.removeAttribute('readonly');"
+                        >
+                        <span class="input-group-btn" style="padding-left: 3px;">
+                            <button
+                                    id="btn-restore-backup"
+                                    class="btn btn-danger"
+                                    type="button"
+                                    {#{{ disabledFalg }}#}
+                                    onclick="userVerifyRestoreBackup(this,'db')"
+                            >Reset Demo Environment</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    </p>
+                </div>
+                {#<div class="col-lg-1"></div>#}
+            </div>
+
+            {#<div class="row">#}
+            {#<div class="col-lg-4"></div>#}
+            {#<div class="col-lg-4" align="left">#}
+            {#<p>#}
+            {#<div class="input-group">#}
+            {#<input#}
+            {#type="password"#}
+            {#id="backup-user-token"#}
+            {#class="form-control"#}
+            {#autocomplete="off"#}
+            {#placeholder="Enter password"#}
+            {#style="min-width: 100%"#}
+            {#required#}
+            {#readonly onfocus="this.removeAttribute('readonly');"#}
+            {#>#}
+            {#<span class="input-group-btn">#}
+            {#<button#}
+            {#id="btn-restore-uploadfiles-backup"#}
+            {#class="btn btn-danger"#}
+            {#type="button"#}
+            {#{{ disabledFalg }}#}
+            {#onclick="userVerifyRestoreUploadfilesBackup(this)"#}
+            {#>Restore Upload Files Backup</button>#}
+            {#</span>#}
+            {#</div><!-- /input-group -->#}
+            {#</p>#}
+            {#</div>#}
+            {#<div class="col-lg-4"></div>#}
+            {#</div>#}
+
+        </div> {#panel-body#}
+    </div> {#panel#}
+
+
     <br>
 
     <div id="backup-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
@@ -633,7 +702,7 @@
             }, 1000);
         }
 
-        function userVerifyRestoreBackupAction(btn,lbtn,type) {
+        function userVerifyRestoreBackupAction( btn, lbtn, type ) {
             //disable btn does not work here, therefore use userVerifyRestoreBackup with setTimeout
             //console.log("Disable btn");
             //var lbtn = '';
@@ -713,6 +782,8 @@
                 url = Routing.generate('employees_restore_backup_ajax');
             } else if( type == 'files' ) {
                 url = Routing.generate('employees_restore_backup_files_ajax');
+            } else if( type == 'demodb' ) {
+                url = Routing.generate('employees_reset_demo_data_ajax');
             } else {
                 $('#backup-msg-danger-box').html('Invalid restore type='+type);
                 $('#backup-msg-danger-box').show();
