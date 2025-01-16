@@ -23,7 +23,13 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
 
 
     //UserInterface $user,
-    public function __construct(string $username, $credentials, $usernametype, string $firewallName, array $roles = [])
+    public function __construct(
+        string $username,
+        $credentials,
+        $usernametype,
+        string $firewallName,
+        array $roles = []
+    )
     {
         $this->credentials = $credentials ?? null;
         $this->username = $username ?? null;
@@ -32,7 +38,7 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
         //parent::__construct($user,$firewallName,$roles);
         parent::__construct($roles);
 
-        if ('' === $firewallName) {
+        if( '' === $firewallName ) {
             throw new \InvalidArgumentException('$firewallName must not be empty.');
         }
 

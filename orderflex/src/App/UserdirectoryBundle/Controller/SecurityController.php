@@ -688,13 +688,18 @@ class SecurityController extends OrderAbstractController
 
         ///// Testing /////
         //echo "res=".$res."<br>";
-        $response = new Response();
-        $response->setContent("OK");
-        return $response;
+        //$response = new Response();
+        //$response->setContent("OK");
+        //return $response;
         ///// EOF Testing /////
 
         //$token = new UsernamePasswordToken($username, $password, $providerKey);
-        $token = new CustomUsernamePasswordToken($username, $password, $providerKey, $usernametype);
+        $token = new CustomUsernamePasswordToken(
+            $username,
+            $password,
+            $usernametype,
+            $providerKey
+        );
 
         //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->container->get('authenticator_utility');

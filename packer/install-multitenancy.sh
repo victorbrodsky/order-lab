@@ -292,10 +292,16 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Install yarn frozen-lockfile for order-lab-"$1" ${NC}
 	sudo yarn install --frozen-lockfile --cwd "$bashpath"/order-lab-"$1"/orderflex
 	
-	#echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
+	echo -e ${COLOR} Install additional.sh. env for python for order-lab-"$1" ${NC}
 	#TODO: can not change directory inside script
 	bash "$bashpath"/order-lab-"$1"/packer/additional.sh "$bashpath"
-	
+
+	echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
+    cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+
 	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
 	pwd

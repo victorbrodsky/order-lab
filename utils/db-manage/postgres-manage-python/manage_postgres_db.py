@@ -18,6 +18,9 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 # AWS_ACCESS_KEY_ID  in ~/.aws/credentials
 # AWS_SECRET_ACCESS_KEY in ~/.aws/credentials
 
+#db.config:
+#cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+#Edit utils/db-manage/postgres-manage-python/db.config
 
 def upload_to_s3(file_full_path, dest_file, manager_config):
     """
