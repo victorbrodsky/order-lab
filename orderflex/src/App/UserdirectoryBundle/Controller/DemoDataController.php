@@ -134,7 +134,7 @@ class DemoDataController extends OrderAbstractController
         // makes a real request to an external site
         $browser = new HttpBrowser(HttpClient::create());
         //$crawler = $browser->request('GET', '/directory/user/new');
-        $crawler = $browser->request('GET', '/directory/login');
+        $crawler = $browser->request('GET', 'https://view.online/c/demo-institution/demo-department/directory/login');
 
         $content = $this->client->getResponse()->getContent();
         exit("content=$content");
