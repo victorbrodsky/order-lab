@@ -138,12 +138,12 @@ class DemoDataController extends OrderAbstractController
 
         //$content = $this->client->getResponse()->getContent();
         dump($crawler);
-        //exit("content");
+        exit("content");
 
         // select the form and fill in some values
         $form = $crawler->selectButton('Log In')->form();
-        $form['display-username'] = 'oli2002l';
-        $form['password'] = 'pass';
+        $form['_display-username'] = 'oli2002l';
+        $form['_password'] = 'pass';
 
         // submits the given form
         $crawler = $browser->submit($form);
