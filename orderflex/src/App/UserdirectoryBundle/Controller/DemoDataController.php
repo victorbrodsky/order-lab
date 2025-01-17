@@ -136,8 +136,8 @@ class DemoDataController extends OrderAbstractController
         //$crawler = $browser->request('GET', '/directory/user/new');
         $crawler = $browser->request('GET', 'https://view.online/c/demo-institution/demo-department/directory/login');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         // select the form and fill in some values
         $form = $crawler->selectButton('Log In')->form();
