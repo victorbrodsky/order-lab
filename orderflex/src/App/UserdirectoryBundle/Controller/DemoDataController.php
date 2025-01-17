@@ -27,11 +27,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
+
 
 class DemoDataController extends OrderAbstractController
 {
 
-    #[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
+    //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
     public function resetDemoDataAction(Request $request)
     {
@@ -85,20 +88,26 @@ class DemoDataController extends OrderAbstractController
                 $sitename = $this->getParameter('employees.sitename');
                 $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
 
-                $env = 'demo';
-                $backupFileName = '';
-                $output = $this->restoreDBWrapper($backupFileName,$env);
-                if( $output['status'] == 'OK' ) {
-                    $this->addFlash(
-                        'notice',
-                        "Demo DB restored: ".$output['message']
-                    );
-                } else {
-                    $this->addFlash(
-                        'notice',
-                        "Error Demo DB: ".$output['message']
-                    );
-                }
+                ///// Run demo db generation /////
+
+
+
+                ///// EOF Run demo db generation /////
+
+//                $env = 'demo';
+//                $backupFileName = '';
+//                $output = $this->restoreDBWrapper($backupFileName,$env);
+//                if( $output['status'] == 'OK' ) {
+//                    $this->addFlash(
+//                        'notice',
+//                        "Demo DB restored: ".$output['message']
+//                    );
+//                } else {
+//                    $this->addFlash(
+//                        'notice',
+//                        "Error Demo DB: ".$output['message']
+//                    );
+//                }
 
             } else {
                 $this->addFlash(
@@ -119,8 +128,28 @@ class DemoDataController extends OrderAbstractController
 
         //return $this->redirectToRoute('employees_home');
     }
-    
 
+    #[Route(path: '/demo-data-test/', name: 'employees_demo_data_test', methods: ['GET'])]
+    public function testAction( Request $request ) {
+        // makes a real request to an external site
+        $browser = new HttpBrowser(HttpClient::create());
+        //$crawler = $browser->request('GET', '/directory/user/new');
+        $crawler = $browser->request('GET', '/directory/login');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
+
+        // select the form and fill in some values
+        $form = $crawler->selectButton('Log In')->form();
+        $form['display-username'] = 'oli2002l';
+        $form['password'] = 'pass';
+
+        // submits the given form
+        $crawler = $browser->submit($form);
+
+        dump($crawler);
+        exit('111');
+    }
 
 
 }

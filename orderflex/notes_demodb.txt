@@ -1,0 +1,10 @@
+
+https://medium.com/@soufiyane.aitmoulay/setting-up-a-testing-database-in-symfony-54c5ff5a85dd
+
+https://stackoverflow.com/questions/71565750/how-to-test-form-submission-with-wrong-values-using-symfony-crawler-component-an
+
+https://symfony.com/doc/current/components/dom_crawler.html
+
+https://stackoverflow.com/questions/11395702/autofilling-and-submitting-forms-programmatically
+
+
