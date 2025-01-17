@@ -28,9 +28,9 @@ class DemoDbTest extends WebTestBase
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
-        $form = $crawler->selectButton('Add Employee')->form();
+        $form = $crawler->selectButton('btnSubmit')->form();
 
-        $form['oleg_userdirectorybundle_user[keytype]']->select(1);
+        $form['oleg_userdirectorybundle_user[keytype]']->select(3);
 
         $form['oleg_userdirectorybundle_user[primaryPublicUserId]']->setValue('johndoe1');
 
