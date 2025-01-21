@@ -205,13 +205,39 @@ class DemoDataController extends OrderAbstractController
 
 
         $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
-        $client->request('GET', $url);
+        $crawler = $client->request('GET', $url);
         //$crawler = $client->waitForVisibility('#display-username');
         //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
-        //$client->clickLink('Log In');
+
+        //$client->waitForEnabled('[type="submit"]');
+        //$crawler = $client->waitForVisibility('#login-form');
+        $send_button = $crawler->selectButton('submit');
+
+//        $client->clickLink('submit');
+//        $form = $send_button->form(array(
+//            'PrCompany[email]' => 'test@example.ua',
+//            'PrCompany[first_name]' => 'Anton',
+//            'PrCompany[last_name]' => 'Tverdiuh',
+//            'PrCompany[timezone]' => 'Europe/Amsterdam'
+//        ));
+        //$crawler = $client->submit($form);
+
+        //$crawler = $client->waitForVisibility('#pnotify-notice');
+        //echo $crawler->filter('#pnotify-notice')->text();
+
+        $form = $crawler->selectButton('Log In')->form();
+        $form['_display-username'] = 'symfonyfan';
+        $form['_password'] = 'anypass';
+
+        $crawler = $client->submit($form);
+
         $client->takeScreenshot('view-online.png');
 
         exit('eof panther');
+    }
+
+    public function createUsers() {
+        $this->createUser('John', 'Doe');
     }
 
 }
