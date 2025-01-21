@@ -222,12 +222,13 @@ class DemoDataController extends OrderAbstractController
 //        ));
         //$crawler = $client->submit($form);
 
-        //$crawler = $client->waitForVisibility('#pnotify-notice');
+        $crawler = $client->waitForVisibility('_usernametype');
         //echo $crawler->filter('#pnotify-notice')->text();
 
         $form = $crawler->selectButton('Log In')->form();
-        $form['_display-username'] = 'symfonyfan';
-        $form['_password'] = 'anypass';
+        $form['_usernametype'] = 'local-user'; //4; //'Local User'; 'local-user'
+        $form['_display-username'] = 'administrator';
+        $form['_password'] = 'demo';
 
         $crawler = $client->submit($form);
 
@@ -237,7 +238,27 @@ class DemoDataController extends OrderAbstractController
     }
 
     public function createUsers() {
-        $this->createUser('John', 'Doe');
+        $this->createUser('johndoe','John','Doe','John Doe','pass',array('EmployeeDirectory Observer'));
+    }
+
+    public function createUser($userid,$name,$family,$displayName,$pass,$roles) {
+        $client = Client::createChromeClient(
+            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
+                '--remote-debugging-port=9222',
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--headless'
+            ]
+        );
+        $url = 'https://view.online/c/demo-institution/demo-department/directory/user/new';
+        $crawler = $client->request('GET', $url);
+        $form = $crawler->selectButton('Add Employee')->form();
+
+        $form['oleg_userdirectorybundle_user[primaryPublicUserId]'] = $userid;
+        $form['oleg_userdirectorybundle_user[keytype]'] = 'Local User';
+        $form['oleg_userdirectorybundle_user[password][first]'] = $pass;
+        $form['oleg_userdirectorybundle_user[password][second]'] = $pass;
+        $form['oleg_userdirectorybundle_user[infos][0][displayName]'] = $displayName;
     }
 
 }
