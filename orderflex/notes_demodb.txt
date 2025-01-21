@@ -7,4 +7,13 @@ https://symfony.com/doc/current/components/dom_crawler.html
 
 https://stackoverflow.com/questions/11395702/autofilling-and-submitting-forms-programmatically
 
+https://symfony.com/doc/current/components/browser_kit.html
+
+https://stackoverflow.com/questions/44651597/how-to-create-default-sample-data-for-dev-env-in-symfony
+https://github.com/theofidry/AliceBundle
+https://github.com/symfony/panther
+
+The Panther component allows to drive a real web browser with PHP to create end-to-end tests.
+https://symfony.com/doc/current/testing/end_to_end.html
+
 
