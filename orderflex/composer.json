@@ -61,12 +61,14 @@
         "twilio/sdk": "^6.4"
     },
     "require-dev": {
+        "dbrekelmans/bdi": "^1.4",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "*",
         "symfony/browser-kit": "^6.1",
         "symfony/css-selector": "^6.1",
         "symfony/debug-bundle": "^6.1",
         "symfony/maker-bundle": "^1.0",
+        "symfony/panther": "^2.1",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/stopwatch": "^6.1",
         "symfony/web-profiler-bundle": "^6.1"

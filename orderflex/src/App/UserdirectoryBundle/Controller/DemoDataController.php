@@ -25,6 +25,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -172,5 +173,45 @@ class DemoDataController extends OrderAbstractController
         exit('111');
     }
 
+    #[Route(path: '/demo-data-panther/', name: 'employees_demo_data_panther', methods: ['GET'])]
+    public function testPantherAction( Request $request, TokenStorageInterface $tokenStorage ) {
+        //$client = Client::createChromeClient();
+        // alternatively, create a Firefox client
+        //$client = Client::createFirefoxClient();
+
+        $client = Client::createChromeClient(
+            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
+                '--remote-debugging-port=9222',
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--headless'
+            ]
+        );
+
+        if(0) {
+            $url = 'https://api-platform.com';
+            $client->request('GET', $url);
+            $client->clickLink('Getting started');
+            // wait for an element to be present in the DOM, even if hidden
+            //$crawler = $client->waitFor('#bootstrapping-the-core-library');
+            // you can also wait for an element to be visible
+            $crawler = $client->waitForVisibility('#bootstrapping-the-core-library');
+
+            // get the text of an element thanks to the query selector syntax
+            echo $crawler->filter('div:has(> #bootstrapping-the-core-library)')->text();
+            // take a screenshot of the current page
+            $client->takeScreenshot('screen.png');
+        }
+
+
+        $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+        $client->request('GET', $url);
+        //$crawler = $client->waitForVisibility('#display-username');
+        //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
+        //$client->clickLink('Log In');
+        $client->takeScreenshot('view-online.png');
+
+        exit('eof panther');
+    }
 
 }
