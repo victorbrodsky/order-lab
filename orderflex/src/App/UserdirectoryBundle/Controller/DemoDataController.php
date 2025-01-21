@@ -29,6 +29,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 class DemoDataController extends OrderAbstractController
@@ -130,7 +132,24 @@ class DemoDataController extends OrderAbstractController
     }
 
     #[Route(path: '/demo-data-test/', name: 'employees_demo_data_test', methods: ['GET'])]
-    public function testAction( Request $request ) {
+    public function testAction( Request $request, TokenStorageInterface $tokenStorage ) {
+
+        //authenticate systemuser
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $firewall = 'ldap_fellapp_firewall';
+        $systemUser = $userSecUtil->findSystemUser();
+        if( $systemUser ) {
+            //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+            $token = new UsernamePasswordToken($systemUser, $firewall, $systemUser->getRoles());
+            //$this->container->get('security.token_storage')->setToken($token);
+            $tokenStorage->setToken($token);
+        }
+        $logger->notice("testAction: Logged in as systemUser=".$systemUser);
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) { //ROLE_USER
+            $logger->notice("testAction: systemUser is ROLE_PLATFORM_DEPUTY_ADMIN");
+        }
+
         // makes a real request to an external site
         $browser = new HttpBrowser(HttpClient::create());
         //$crawler = $browser->request('GET', '/directory/user/new');
