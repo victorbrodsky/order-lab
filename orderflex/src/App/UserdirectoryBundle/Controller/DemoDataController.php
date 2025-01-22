@@ -222,15 +222,22 @@ class DemoDataController extends OrderAbstractController
 //        ));
         //$crawler = $client->submit($form);
 
-        $crawler = $client->waitForVisibility('_usernametype');
+        $client->waitForVisibility('#s2id_usernametypeid_show',30,10000);
+        $client->waitForVisibility('#usernametypeid_show',30,10000);
+        //$crawler = $client->waitForVisibility('_usernametype');
         //echo $crawler->filter('#pnotify-notice')->text();
 
         $form = $crawler->selectButton('Log In')->form();
-        $form['_usernametype'] = 'local-user'; //4; //'Local User'; 'local-user'
+
+        //$form['#usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
+        //$form['#s2id_usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
+        $myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
+        $myInput->click();
+
         $form['_display-username'] = 'administrator';
         $form['_password'] = 'demo';
 
-        $crawler = $client->submit($form);
+        $client->submit($form);
 
         $client->takeScreenshot('view-online.png');
 
