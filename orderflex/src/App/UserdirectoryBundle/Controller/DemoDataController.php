@@ -179,14 +179,16 @@ class DemoDataController extends OrderAbstractController
         // alternatively, create a Firefox client
         //$client = Client::createFirefoxClient();
 
-        $client = Client::createChromeClient(
-            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
-                '--remote-debugging-port=9222',
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-                '--headless'
-            ]
-        );
+        if(0) {
+            $client = Client::createChromeClient(
+                $this->container->get('kernel')->getProjectDir() . '/drivers/chromedriver', [
+                    '--remote-debugging-port=9222',
+                    '--no-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--headless'
+                ]
+            );
+        }
 
         if(0) {
             $url = 'https://api-platform.com';
@@ -204,14 +206,15 @@ class DemoDataController extends OrderAbstractController
         }
 
 
-        $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
-        $crawler = $client->request('GET', $url);
-        //$crawler = $client->waitForVisibility('#display-username');
-        //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
+        if(0) {
+            $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+            $crawler = $client->request('GET', $url);
+            //$crawler = $client->waitForVisibility('#display-username');
+            //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
 
-        //$client->waitForEnabled('[type="submit"]');
-        //$crawler = $client->waitForVisibility('#login-form');
-        $send_button = $crawler->selectButton('submit');
+            //$client->waitForEnabled('[type="submit"]');
+            //$crawler = $client->waitForVisibility('#login-form');
+            $send_button = $crawler->selectButton('submit');
 
 //        $client->clickLink('submit');
 //        $form = $send_button->form(array(
@@ -220,35 +223,41 @@ class DemoDataController extends OrderAbstractController
 //            'PrCompany[last_name]' => 'Tverdiuh',
 //            'PrCompany[timezone]' => 'Europe/Amsterdam'
 //        ));
-        //$crawler = $client->submit($form);
+            //$crawler = $client->submit($form);
 
-        $client->waitForVisibility('#s2id_usernametypeid_show',30,10000);
-        $client->waitForVisibility('#usernametypeid_show',30,10000);
-        //$crawler = $client->waitForVisibility('_usernametype');
-        //echo $crawler->filter('#pnotify-notice')->text();
+            $client->waitForVisibility('#s2id_usernametypeid_show', 30, 10000);
+            $client->waitFor('#usernametypeid_show', 30, 10000);
+            //$crawler = $client->waitForVisibility('_usernametype');
+            //echo $crawler->filter('#pnotify-notice')->text();
 
-        $form = $crawler->selectButton('Log In')->form();
+            $form = $crawler->selectButton('Log In')->form();
 
-        //$form['#usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
-        //$form['#s2id_usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
-        $myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
-        $myInput->click();
+            //$form['#usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
+            //$form['#s2id_usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
+            //https://stackoverflow.com/questions/64695968/symfony-crawler-select-option-in-select-list-without-form
+            //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
+            $myInput = $crawler->filter('#s2id_usernametypeid_show');
+            //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+            //$form['#usernametypeid_show'] = 'local-user';
+            //$client->waitForVisibility('#select2-chosen-1');
+            //$myInput->click();
 
-        $form['_display-username'] = 'administrator';
-        $form['_password'] = 'demo';
+            $form['_display-username'] = 'administrator';
+            $form['_password'] = 'demo';
 
-        $client->submit($form);
+            $client->submit($form);
+        }
 
-        $client->takeScreenshot('view-online.png');
+        $client = $this->loginAction();
+        $client->takeScreenshot('test_login.png');
+
+        //$client = $this->createUsers($client);
+        //$client->takeScreenshot('test_createuser.png');
 
         exit('eof panther');
     }
 
-    public function createUsers() {
-        $this->createUser('johndoe','John','Doe','John Doe','pass',array('EmployeeDirectory Observer'));
-    }
-
-    public function createUser($userid,$name,$family,$displayName,$pass,$roles) {
+    public function getClient() {
         $client = Client::createChromeClient(
             $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
                 '--remote-debugging-port=9222',
@@ -257,15 +266,78 @@ class DemoDataController extends OrderAbstractController
                 '--headless'
             ]
         );
+        return $client;
+    }
+
+    public function loginAction() {
+        $client = $this->getClient();
+
+        $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+        $crawler = $client->request('GET', $url);
+
+        $form = $crawler->selectButton('Log In')->form();
+
+        //Select an option in select2 combobox:
+        //Element is not currently visible and may not be manipulated
+        //Webscrapper: how select2
+        //https://symfony.com/doc/current/components/dom_crawler.html
+        $crawler = $client->waitForVisibility('#s2id_usernametypeid_show');
+        //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
+        //$myInput = $crawler->filter('#s2id_usernametypeid_show');
+        //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+        //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
+        $form['form[_usernametype]']->select('local-user');
+        //$form['registration[birthday][year]']->select(1984);
+//        'select2-result-label-17'
+
+        //$form['#usernametypeid_show'] = 'local-user';
+        //$client->waitForVisibility('#select2-chosen-1');
+        //$myInput->click(); //error: Element is not currently visible and may not be manipulated
+
+        $form['_display-username'] = 'administrator';
+        $form['_password'] = 'demo';
+
+        //$client->submit($form);
+
+        return $client;
+    }
+
+    public function createUsers($client) {
+
+        $client = $this->createUser($client,'johndoe1','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        $client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+
+        return $client;
+    }
+
+    public function createUser($client,$userid,$firstName,$lastName,$displayName,$pass,$email,$roles) {
+
         $url = 'https://view.online/c/demo-institution/demo-department/directory/user/new';
         $crawler = $client->request('GET', $url);
         $form = $crawler->selectButton('Add Employee')->form();
 
         $form['oleg_userdirectorybundle_user[primaryPublicUserId]'] = $userid;
-        $form['oleg_userdirectorybundle_user[keytype]'] = 'Local User';
-        $form['oleg_userdirectorybundle_user[password][first]'] = $pass;
-        $form['oleg_userdirectorybundle_user[password][second]'] = $pass;
+        //$form['oleg_userdirectorybundle_user[keytype]'] = 'Local User';
+        //$form['oleg_userdirectorybundle_user[password][first]'] = $pass;
+        //$form['oleg_userdirectorybundle_user[password][second]'] = $pass;
         $form['oleg_userdirectorybundle_user[infos][0][displayName]'] = $displayName;
+        $form['oleg_userdirectorybundle_user[infos][0][firstName]'] = $firstName;
+        $form['oleg_userdirectorybundle_user[infos][0][lastName]'] = $lastName;
+        $form['oleg_userdirectorybundle_user[infos][0][email]'] = $email;
+
+        //Add roles 's2id_oleg_userdirectorybundle_user_roles'
+        foreach($roles as $role) {
+            //$myInput = $crawler->filter('#s2id_oleg_userdirectorybundle_user_roles');
+            $myInput = $crawler->filterXPath(".//select[@id='s2id_oleg_userdirectorybundle_user_rolesobs']//option[@value='".$role."']");
+            $myInput->click();
+        }
+
+//        $form = $crawler->selectButton('Confirmar Exclusão')->form();
+//        $form[($formName . '[ciente]')]->tick();
+
+        $client->submit($form);
+
+        return $client;
     }
 
 }
