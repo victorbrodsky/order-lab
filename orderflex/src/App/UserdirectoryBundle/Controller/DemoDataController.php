@@ -282,17 +282,34 @@ class DemoDataController extends OrderAbstractController
         //Webscrapper: how select2
         //https://symfony.com/doc/current/components/dom_crawler.html
         $crawler = $client->waitForVisibility('#s2id_usernametypeid_show');
+        //$client->waitFor('_usernametype');
+
         //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
         //$myInput = $crawler->filter('#s2id_usernametypeid_show');
         //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
         //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
-        $form['form[_usernametype]']->select('local-user');
+        //$form['_usernametype']->setValues(array('local-user'));
         //$form['registration[birthday][year]']->select(1984);
 //        'select2-result-label-17'
+        //$client->waitFor('_usernametype');
+
+        //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+        $myInput = $crawler->filterXPath(".//div[@id='s2id_usernametypeid_show']");
+        $myInput->click();
+        //$myInput = $crawler->filterXPath(".//div[@id='s2id_usernametypeid_show']");
+        $myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+
+        //This is where I executed JS script to click on a button
+        //$client->executeScript("$('#s2id_usernametypeid_show').select2('val','local-user')");
+
+        //wait for new element on new page to appear
+        //$client->waitForVisibility('select2-dropdown-open');
+        //$client->waitForVisibility('Local User');
+
 
         //$form['#usernametypeid_show'] = 'local-user';
         //$client->waitForVisibility('#select2-chosen-1');
-        //$myInput->click(); //error: Element is not currently visible and may not be manipulated
+        $myInput->click(); //error: Element is not currently visible and may not be manipulated
 
         $form['_display-username'] = 'administrator';
         $form['_password'] = 'demo';
