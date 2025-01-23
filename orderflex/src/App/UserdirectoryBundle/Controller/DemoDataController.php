@@ -321,8 +321,10 @@ class DemoDataController extends OrderAbstractController
 
     public function createUsers($client) {
 
-        $client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER','ROLE_FELLAPP_OBSERVER'));
-        //$client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        //array('ROLE_USERDIRECTORY_OBSERVER','ROLE_FELLAPP_OBSERVER')
+        $client = $this->createUser($client,'johndoe','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        $client = $this->createUser($client,'aeinstein','Albert','Einstein','Albert Einstein','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        $client = $this->createUser($client,'rrutherford','Ernest','Rutherford','Ernest Rutherford','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
 
         return $client;
     }
@@ -352,17 +354,19 @@ class DemoDataController extends OrderAbstractController
         foreach($roles as $role) {
             //$myInput = $crawler->filter('#s2id_oleg_userdirectorybundle_user_roles');
             //$myInput = $crawler->filterXPath(".//select[@id='s2id_oleg_userdirectorybundle_user_rolesobs']//option[@value='".$role."']");
-            $client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$role."')");
+            //$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$role."')");
             //$myInput->click();
-            $roleStr = $roleStr . ', "' . $role . "'";
+            $roleStr = $roleStr . ", '" . $role . "'";
         }
         //$('#my_select2').select2('val', ["value1", "value2", "value3"]);
-        //$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$roleStr."')");
+        $client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val',[".$roleStr."])");
 
 //        $form = $crawler->selectButton('Confirmar Exclusão')->form();
 //        $form[($formName . '[ciente]')]->tick();
 
-        //$client->submit($form);
+        $client->submit($form);
+
+        $client->takeScreenshot('test_createuser-'.$userid.'.png');
 
         return $client;
     }
