@@ -251,8 +251,8 @@ class DemoDataController extends OrderAbstractController
         $client = $this->loginAction();
         $client->takeScreenshot('test_login.png');
 
-        //$client = $this->createUsers($client);
-        //$client->takeScreenshot('test_createuser.png');
+        $client = $this->createUsers($client);
+        $client->takeScreenshot('test_createuser.png');
 
         exit('eof panther');
     }
@@ -294,13 +294,13 @@ class DemoDataController extends OrderAbstractController
         //$client->waitFor('_usernametype');
 
         //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
-        $myInput = $crawler->filterXPath(".//div[@id='s2id_usernametypeid_show']");
-        $myInput->click();
+        //$myInput = $crawler->filterXPath(".//div[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+        //$myInput->click();
         //$myInput = $crawler->filterXPath(".//div[@id='s2id_usernametypeid_show']");
-        $myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
+        //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
 
-        //This is where I executed JS script to click on a button
-        //$client->executeScript("$('#s2id_usernametypeid_show').select2('val','local-user')");
+        //Working: executed JS script to click on a select2 and choose select2 element
+        $client->executeScript("$('#s2id_usernametypeid_show').select2('val','local-user')");
 
         //wait for new element on new page to appear
         //$client->waitForVisibility('select2-dropdown-open');
@@ -309,20 +309,20 @@ class DemoDataController extends OrderAbstractController
 
         //$form['#usernametypeid_show'] = 'local-user';
         //$client->waitForVisibility('#select2-chosen-1');
-        $myInput->click(); //error: Element is not currently visible and may not be manipulated
+        //$myInput->click(); //error: Element is not currently visible and may not be manipulated
 
         $form['_display-username'] = 'administrator';
         $form['_password'] = 'demo';
 
-        //$client->submit($form);
+        $client->submit($form);
 
         return $client;
     }
 
     public function createUsers($client) {
 
-        $client = $this->createUser($client,'johndoe1','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
-        $client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        $client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER','ROLE_FELLAPP_OBSERVER'));
+        //$client = $this->createUser($client,'johndoe2','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
 
         return $client;
     }
@@ -332,6 +332,8 @@ class DemoDataController extends OrderAbstractController
         $url = 'https://view.online/c/demo-institution/demo-department/directory/user/new';
         $crawler = $client->request('GET', $url);
         $form = $crawler->selectButton('Add Employee')->form();
+
+        $client->executeScript("$('#s2id_oleg_userdirectorybundle_user_keytype').select2('val','4')");
 
         $form['oleg_userdirectorybundle_user[primaryPublicUserId]'] = $userid;
         //$form['oleg_userdirectorybundle_user[keytype]'] = 'Local User';
@@ -343,16 +345,24 @@ class DemoDataController extends OrderAbstractController
         $form['oleg_userdirectorybundle_user[infos][0][email]'] = $email;
 
         //Add roles 's2id_oleg_userdirectorybundle_user_roles'
+        //$('body').scrollTo('#target');
+        //$("selector").get(0).scrollIntoView();
+        $client->executeScript("document.getElementById('s2id_oleg_userdirectorybundle_user_roles').scrollIntoView();");
+        $roleStr = '';
         foreach($roles as $role) {
             //$myInput = $crawler->filter('#s2id_oleg_userdirectorybundle_user_roles');
-            $myInput = $crawler->filterXPath(".//select[@id='s2id_oleg_userdirectorybundle_user_rolesobs']//option[@value='".$role."']");
-            $myInput->click();
+            //$myInput = $crawler->filterXPath(".//select[@id='s2id_oleg_userdirectorybundle_user_rolesobs']//option[@value='".$role."']");
+            $client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$role."')");
+            //$myInput->click();
+            $roleStr = $roleStr . ', "' . $role . "'";
         }
+        //$('#my_select2').select2('val', ["value1", "value2", "value3"]);
+        //$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$roleStr."')");
 
 //        $form = $crawler->selectButton('Confirmar Exclusão')->form();
 //        $form[($formName . '[ciente]')]->tick();
 
-        $client->submit($form);
+        //$client->submit($form);
 
         return $client;
     }
