@@ -251,8 +251,10 @@ class DemoDataController extends OrderAbstractController
         $client = $this->loginAction();
         $client->takeScreenshot('test_login.png');
 
-        $client = $this->createUsers($client);
-        $client->takeScreenshot('test_createuser.png');
+        //$client = $this->createUsers($client);
+        //$client->takeScreenshot('test_createuser.png');
+
+        $client = $this->newTrpProjects($client);
 
         exit('eof panther');
     }
@@ -367,6 +369,54 @@ class DemoDataController extends OrderAbstractController
         $client->submit($form);
 
         $client->takeScreenshot('test_createuser-'.$userid.'.png');
+
+        return $client;
+    }
+
+    public function newTrpProjects( $client ) {
+        $this->newTrpProject($client,'johndoe','https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type');
+    }
+
+    public function newTrpProject( $client, $userid, $newProjectUrl ) {
+        //$newProjectUrl = 'https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type';
+        $crawler = $client->request('GET', $newProjectUrl);
+
+        $link = $crawler->selectLink('AP/CP Project Request')->link();
+        $client->click($link);
+
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','.".$userid."')");
+
+        $crawler = $client->refreshCrawler();
+        $form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
+
+        //find user str by $userid
+        $subjectUser = null;
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository(User::class)->findBy(array('primaryPublicUserId'=>$userid));
+        if( count($users) > 1 ) {
+            throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
+        }
+        if( count($users) == 1 ) {
+            $subjectUser = $users[0];
+        }
+        //exit('user='.$subjectUser);
+        echo "subjectUser=$subjectUser, ID=".$subjectUser->getId()." <br>";
+
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
+
+        //$form['#oleg_translationalresearchbundle_project[principalInvestigators][]'] = '15';
+
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$subjectUser->getId()."')");
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','12')");
+
+        //$crawler = $client->refreshCrawler();
+        //$form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
+        //$client->waitForVisibility('#s2id_oleg_translationalresearchbundle_project_principalInvestigators');
+        //$form['#s2id_oleg_translationalresearchbundle_project_principalInvestigators'] = $userid;
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->text($userid);
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('".$userid."')");
+
+        $client->takeScreenshot('test_newTrpProject-'.'1'.'.png');
 
         return $client;
     }
