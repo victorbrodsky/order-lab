@@ -37,6 +37,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class DemoDataController extends OrderAbstractController
 {
 
+    private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
+
     //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
     public function resetDemoDataAction(Request $request)
@@ -154,7 +156,7 @@ class DemoDataController extends OrderAbstractController
         // makes a real request to an external site
         $browser = new HttpBrowser(HttpClient::create());
         //$crawler = $browser->request('GET', '/directory/user/new');
-        $crawler = $browser->request('GET', 'https://view.online/c/demo-institution/demo-department/directory/login');
+        $crawler = $browser->request('GET', $this->baseUrl.'/directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //dump($crawler);
@@ -207,7 +209,7 @@ class DemoDataController extends OrderAbstractController
 
 
         if(0) {
-            $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+            $url = $this->baseUrl.'/directory/login';
             $crawler = $client->request('GET', $url);
             //$crawler = $client->waitForVisibility('#display-username');
             //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
@@ -274,7 +276,7 @@ class DemoDataController extends OrderAbstractController
     public function loginAction() {
         $client = $this->getClient();
 
-        $url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+        $url = $this->baseUrl.'/directory/login';
         $crawler = $client->request('GET', $url);
 
         $form = $crawler->selectButton('Log In')->form();
@@ -333,7 +335,7 @@ class DemoDataController extends OrderAbstractController
 
     public function createUser($client,$userid,$firstName,$lastName,$displayName,$pass,$email,$roles) {
 
-        $url = 'https://view.online/c/demo-institution/demo-department/directory/user/new';
+        $url = $this->baseUrl.'/directory/user/new';
         $crawler = $client->request('GET', $url);
         $form = $crawler->selectButton('Add Employee')->form();
 
@@ -374,7 +376,7 @@ class DemoDataController extends OrderAbstractController
     }
 
     public function newTrpProjects( $client ) {
-        $this->newTrpProject($client,'johndoe','https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type');
+        $this->newTrpProject($client,'johndoe',$this->baseUrl.'/translational-research/project/select-new-project-type');
     }
 
     public function newTrpProject( $client, $userid, $newProjectUrl ) {
@@ -402,7 +404,18 @@ class DemoDataController extends OrderAbstractController
         //exit('user='.$subjectUser);
         echo "subjectUser=$subjectUser, ID=".$subjectUser->getId()." <br>";
 
-        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
+        $crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
+
+//        $options = $client->executeScript("
+//        $('#individualsfront').on('open',function(){
+//            $.each(results, function(key,value){
+//            console.log('text:'+value.text);
+//        });
+//        })
+//        ");
+//        dump($options);
+
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->sendKeys('John Doe - johndoe2 (Local User)');
 
         //$form['#oleg_translationalresearchbundle_project[principalInvestigators][]'] = '15';
 
