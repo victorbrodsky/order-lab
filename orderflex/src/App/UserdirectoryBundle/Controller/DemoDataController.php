@@ -37,7 +37,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class DemoDataController extends OrderAbstractController
 {
 
-    private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
+    //private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
+    private $baseUrl = 'http://localhost';
 
     //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
@@ -256,7 +257,7 @@ class DemoDataController extends OrderAbstractController
         //$client = $this->createUsers($client);
         //$client->takeScreenshot('test_createuser.png');
 
-        $client = $this->newTrpProjects($client);
+        //$client = $this->newTrpProjects($client);
 
         exit('eof panther');
     }
@@ -267,9 +268,11 @@ class DemoDataController extends OrderAbstractController
                 '--remote-debugging-port=9222',
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
-                '--headless'
+                '--headless',
+                '--port=8080'
             ]
         );
+        //$client = self::createPantherClient();
         return $client;
     }
 
@@ -277,6 +280,9 @@ class DemoDataController extends OrderAbstractController
         $client = $this->getClient();
 
         $url = $this->baseUrl.'/directory/login';
+        $url = 'http://127.0.0.1:8000/directory/directory/login';
+
+        $crawler = $client->refreshCrawler();
         $crawler = $client->request('GET', $url);
 
         $form = $crawler->selectButton('Log In')->form();

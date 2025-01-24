@@ -14,6 +14,7 @@ imports:
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/DemoDbBundle/Resources/config/services.yml" }
     - { resource: "../src/App/UtilBundles/FOSCommentBundle/Resources/config/services.yml" }
     - { resource: "../src/App/Saml/Resources/config/services.yml" }
 
@@ -278,6 +279,10 @@ services:
     App\TranslationalResearchBundle\Command\ProjectSyncCronCommand:
         tags:
             - { name: 'console.command', command: 'cron:project-sync' }
+
+    App\DemoDbBundle\Command\DemoDbCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:demo-db-reset' }
     ################## EOF Commands ##################
 
     logger:
