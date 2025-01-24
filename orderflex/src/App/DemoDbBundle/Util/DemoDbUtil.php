@@ -32,8 +32,8 @@ class DemoDbUtil {
 
     protected $em;
     protected $container;
-    //private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
-    private $baseUrl = 'http://127.0.0.1';
+    private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
+    //private $baseUrl = 'http://127.0.0.1';
 
     public function __construct(
         EntityManagerInterface $em,
@@ -44,27 +44,64 @@ class DemoDbUtil {
         $this->container = $container;
     }
 
+    //RuntimeException: The port 9515 is already in use
+    //https://jelledev.com/how-to-run-multiple-symfony-panther-clients-in-parallel/
 
     public function getClient() {
+
+        //$availablePort = $this->getAvailablePort();
+        //$availablePort = null;
+        //echo "availablePort = $availablePort <br>";
+
         $client = Client::createChromeClient(
-            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
+            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',
+            [
                 '--remote-debugging-port=9222',
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
                 '--headless'
             ]
+//            [
+//                'port' => $availablePort
+//            ]
         );
+
         //$client = self::createPantherClient();
         return $client;
     }
 
+    public function getAvailablePort(): int
+    {
+        $port = '8080';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            //$localSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+            //socket_bind($localSocket, "0.0.0.0", $port);
+            //socket_listen($localSocket);
+        } else {
+            // When providing '0' as port, the OS picks a random available port
+            $socket = socket_create_listen(0);
+            socket_getsockname($socket, $address, $port);
+            socket_close($socket);
+        }
+
+        return $port;
+    }
+
+
     public function loginAction() {
         $client = $this->getClient();
 
-        $url = $this->baseUrl.'/directory/login';
-        $url = 'http://127.0.0.1:8000/directory/directory/login';
+        $client->close();
+        $client->quit();
 
-        $crawler = $client->refreshCrawler();
+        $client = $this->getClient();
+
+        $url = $this->baseUrl.'/directory/login';
+        //$url = 'https://view.online/c/demo-institution/demo-department/directory/login';
+        //$url = 'http://127.0.0.1/directory/directory/login';
+        //$url = '/directory/login';
+
+        //$crawler = $client->refreshCrawler();
         $crawler = $client->request('GET', $url);
 
         $form = $crawler->selectButton('Log In')->form();

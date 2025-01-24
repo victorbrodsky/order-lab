@@ -37,8 +37,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class DemoDataController extends OrderAbstractController
 {
 
-    //private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
-    private $baseUrl = 'http://localhost';
+    private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
+    //private $baseUrl = 'http://localhost';
 
     //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
@@ -251,7 +251,9 @@ class DemoDataController extends OrderAbstractController
             $client->submit($form);
         }
 
-        $client = $this->loginAction();
+        $demoDbUtil = $this->container->get('demodb_utility');
+
+        $client = $demoDbUtil->loginAction();
         $client->takeScreenshot('test_login.png');
 
         //$client = $this->createUsers($client);
@@ -263,24 +265,49 @@ class DemoDataController extends OrderAbstractController
     }
 
     public function getClient() {
+        $demoDbUtil = $this->container->get('demodb_utility');
+        $availablePort = $demoDbUtil->getAvailablePort();
+        echo "availablePort = $availablePort <br>";
+
         $client = Client::createChromeClient(
-            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',[
+            $this->container->get('kernel')->getProjectDir().'/drivers/chromedriver',
+            [
                 '--remote-debugging-port=9222',
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
                 '--headless',
-                '--port=8080'
+            ],
+            [
+                'port' => $availablePort
             ]
         );
         //$client = self::createPantherClient();
         return $client;
     }
 
+//    public function getAvailablePort(): int
+//    {
+//        $port = '8000';
+//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+//            //$localSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+//            //socket_bind($localSocket, "0.0.0.0", $port);
+//            //socket_listen($localSocket);
+//        } else {
+//            // When providing '0' as port, the OS picks a random available port
+//            $socket = socket_create_listen(0);
+//            socket_getsockname($socket, $address, $port);
+//            socket_close($socket);
+//        }
+//
+//        return $port;
+//    }
+
     public function loginAction() {
         $client = $this->getClient();
 
         $url = $this->baseUrl.'/directory/login';
-        $url = 'http://127.0.0.1:8000/directory/directory/login';
+        $url = 'http://127.0.0.1/directory/directory/login';
+        //$url = '/directory/login';
 
         $crawler = $client->refreshCrawler();
         $crawler = $client->request('GET', $url);

@@ -12,6 +12,7 @@ use App\CallLogBundle\Util\CallLogUtil;
 use App\CallLogBundle\Util\CallLogUtilForm;
 use App\CrnBundle\Util\CrnUtil;
 use App\CrnBundle\Util\CrnUtilForm;
+use App\DemoDbBundle\Util\DemoDbUtil;
 use App\FellAppBundle\Util\FellAppImportPopulateUtil;
 use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
@@ -151,6 +152,8 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
         $subscribedServices['dashboard_init'] = '?'.\App\DashboardBundle\Util\DashboardInit::class;
+
+        $subscribedServices['demodb_utility'] = '?'.DemoDbUtil::class;
 
         $subscribedServices['saml_config_provider_util'] = '?'.SamlConfigProvider::class;
 

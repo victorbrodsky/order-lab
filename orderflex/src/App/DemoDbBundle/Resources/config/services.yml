@@ -8,5 +8,5 @@ services:
                                 # The best practice is to be explicit about your dependencies anyway.
 
     demodb_utility:
-        class:     App\DemoDbBundle\Util\DemoDbUtil
+        class:  App\DemoDbBundle\Util\DemoDbUtil
 
