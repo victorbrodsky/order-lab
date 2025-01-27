@@ -148,6 +148,169 @@ class DemoDbUtil {
         return $client;
     }
 
+    public function getUsers() {
+        $users = array();
+        $users[] = array(
+            'userid' => 'johndoe',
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'displayName' => 'John Doe',
+            'email' => 'cinava@yahoo.com',
+            'password' => 'pass',
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+        );
+        $users[] = array(
+            'userid' => 'aeinstein',
+            'firstName' => 'Albert',
+            'lastName' => 'Einstein',
+            'displayName' => 'Albert Einstein',
+            'email' => 'cinava@yahoo.com',
+            'password' => 'pass',
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+        );
+        $users[] = array(
+            'userid' => 'rrutherford',
+            'firstName' => 'Ernest',
+            'lastName' => 'Rutherford',
+            'displayName' => 'Ernest Rutherford',
+            'email' => 'cinava@yahoo.com',
+            'password' => 'pass',
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+        );
+
+        return $users;
+    }
+
+    public function createUsers($client) {
+
+        //array('ROLE_USERDIRECTORY_OBSERVER','ROLE_FELLAPP_OBSERVER')
+        //$client = $this->createUser($client,'johndoe','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        //$client = $this->createUser($client,'aeinstein','Albert','Einstein','Albert Einstein','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+        //$client = $this->createUser($client,'rrutherford','Ernest','Rutherford','Ernest Rutherford','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
+
+        foreach( $this->getUsers() as $userArr ) {
+            $client = $this->createUser(
+                $client,
+                $userArr['userid'],
+                $userArr['firstName'],
+                $userArr['lastName'],
+                $userArr['displayName'],
+                $userArr['password'],
+                $userArr['email'],
+                $userArr['roles']
+            );
+        }
+
+
+        return $client;
+    }
+    public function createUser($client,$userid,$firstName,$lastName,$displayName,$pass,$email,$roles) {
+
+        $url = $this->baseUrl.'/directory/user/new';
+        $crawler = $client->request('GET', $url);
+        $form = $crawler->selectButton('Add Employee')->form();
+
+        $client->executeScript("$('#s2id_oleg_userdirectorybundle_user_keytype').select2('val','4')");
+
+        $form['oleg_userdirectorybundle_user[primaryPublicUserId]'] = $userid;
+        //$form['oleg_userdirectorybundle_user[keytype]'] = 'Local User';
+        //$form['oleg_userdirectorybundle_user[password][first]'] = $pass;
+        //$form['oleg_userdirectorybundle_user[password][second]'] = $pass;
+        $form['oleg_userdirectorybundle_user[infos][0][displayName]'] = $displayName;
+        $form['oleg_userdirectorybundle_user[infos][0][firstName]'] = $firstName;
+        $form['oleg_userdirectorybundle_user[infos][0][lastName]'] = $lastName;
+        $form['oleg_userdirectorybundle_user[infos][0][email]'] = $email;
+
+        //Add roles 's2id_oleg_userdirectorybundle_user_roles'
+        //$('body').scrollTo('#target');
+        //$("selector").get(0).scrollIntoView();
+        $client->executeScript("document.getElementById('s2id_oleg_userdirectorybundle_user_roles').scrollIntoView();");
+        $roleStr = '';
+        foreach($roles as $role) {
+            //$myInput = $crawler->filter('#s2id_oleg_userdirectorybundle_user_roles');
+            //$myInput = $crawler->filterXPath(".//select[@id='s2id_oleg_userdirectorybundle_user_rolesobs']//option[@value='".$role."']");
+            //$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val','".$role."')");
+            //$myInput->click();
+            $roleStr = $roleStr . ", '" . $role . "'";
+        }
+        //$('#my_select2').select2('val', ["value1", "value2", "value3"]);
+        $client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val',[".$roleStr."])");
+
+//        $form = $crawler->selectButton('Confirmar Exclusão')->form();
+//        $form[($formName . '[ciente]')]->tick();
+
+        $client->submit($form);
+
+        $client->takeScreenshot('test_createuser-'.$userid.'.png');
+
+        return $client;
+    }
+
+    public function newTrpProjects( $client ) {
+        $users = $this->getUsers();
+        $this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+    }
+    public function newTrpProject( $client, $users, $newProjectUrl ) {
+        //$newProjectUrl = 'https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type';
+        $crawler = $client->request('GET', $newProjectUrl);
+
+        $link = $crawler->selectLink('AP/CP Project Request')->link();
+        $client->click($link);
+
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','.".$userid."')");
+
+        $crawler = $client->refreshCrawler();
+        $form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
+
+        //get userStr for select2 field: 'Ernest Rutherford - rrutherford (Local User)'
+        $piArr = $users[0];
+        $userStr = $piArr['displayName'] . ' - ' . $piArr['userid'] . ' (Local User)';
+        echo "userStr=$userStr <br>";
+
+//        //find user str by $userid
+//        $subjectUser = null;
+//        $users = $this->em->getRepository(User::class)->findBy(array('primaryPublicUserId'=>$userid));
+//        if( count($users) > 1 ) {
+//            throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
+//        }
+//        if( count($users) == 1 ) {
+//            $subjectUser = $users[0];
+//        }
+//        //exit('user='.$subjectUser);
+//        echo "subjectUser=$subjectUser, ID=".$subjectUser->getId()." <br>";
+
+        $crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
+
+//        $options = $client->executeScript("
+//        $('#individualsfront').on('open',function(){
+//            $.each(results, function(key,value){
+//            console.log('text:'+value.text);
+//        });
+//        })
+//        ");
+//        dump($options);
+
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->sendKeys('John Doe - johndoe2 (Local User)');
+
+        //$form['#oleg_translationalresearchbundle_project[principalInvestigators][]'] = '15';
+
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$userStr."')");
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','Ernest Rutherford - rrutherford (Local User)')");
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','John Doe - johndoe1 (Local User)')");
+
+        //$crawler = $client->refreshCrawler();
+        //$form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
+        //$client->waitForVisibility('#s2id_oleg_translationalresearchbundle_project_principalInvestigators');
+        //$form['#s2id_oleg_translationalresearchbundle_project_principalInvestigators'] = $userid;
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->text($userid);
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('".$userid."')");
+
+        $client->takeScreenshot('test_newTrpProject-'.'1'.'.png');
+
+        return $client;
+    }
+
+
 }
 
 
