@@ -256,10 +256,12 @@ class DemoDataController extends OrderAbstractController
         $client = $demoDbUtil->loginAction();
         $client->takeScreenshot('test_login.png');
 
-        //$client = $demoDbUtil->createUsers($client);
+        //$users = $demoDbUtil->createUsers($client);
         //$client->takeScreenshot('test_createuser.png');
 
-        $client = $demoDbUtil->newTrpProjects($client);
+        $users = $demoDbUtil->getUsers();
+
+        $demoDbUtil->newTrpProjects($client,$users);
 
         exit('eof panther');
     }

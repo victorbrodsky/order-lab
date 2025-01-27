@@ -157,7 +157,8 @@ class DemoDbUtil {
             'displayName' => 'John Doe',
             'email' => 'cinava@yahoo.com',
             'password' => 'pass',
-            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER'),
+            'userId' => 12
         );
         $users[] = array(
             'userid' => 'aeinstein',
@@ -166,7 +167,8 @@ class DemoDbUtil {
             'displayName' => 'Albert Einstein',
             'email' => 'cinava@yahoo.com',
             'password' => 'pass',
-            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER'),
+            'userId' => 15
         );
         $users[] = array(
             'userid' => 'rrutherford',
@@ -175,7 +177,8 @@ class DemoDbUtil {
             'displayName' => 'Ernest Rutherford',
             'email' => 'cinava@yahoo.com',
             'password' => 'pass',
-            'roles' => array('ROLE_USERDIRECTORY_OBSERVER')
+            'roles' => array('ROLE_USERDIRECTORY_OBSERVER'),
+            'userId' => 16
         );
 
         return $users;
@@ -188,8 +191,9 @@ class DemoDbUtil {
         //$client = $this->createUser($client,'aeinstein','Albert','Einstein','Albert Einstein','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
         //$client = $this->createUser($client,'rrutherford','Ernest','Rutherford','Ernest Rutherford','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
 
+        //$userIds = array();
         foreach( $this->getUsers() as $userArr ) {
-            $client = $this->createUser(
+            $userId = $this->createUser(
                 $client,
                 $userArr['userid'],
                 $userArr['firstName'],
@@ -199,10 +203,12 @@ class DemoDbUtil {
                 $userArr['email'],
                 $userArr['roles']
             );
+            $userArr['userId'] = $userId;
+            //$userIds[] = $userId;
         }
 
 
-        return $client;
+        return $userArr;
     }
     public function createUser($client,$userid,$firstName,$lastName,$displayName,$pass,$email,$roles) {
 
@@ -241,21 +247,35 @@ class DemoDbUtil {
 
         $client->submit($form);
 
+//        $uri = $client->getCurrentURL(); //$client->getResponse()->headers->get('location');
+//        echo "uri=$uri <br>";
+//        //get id from url 'https://view.online/c/demo-institution/demo-department/directory/user/14'
+//        $uriArr = explode('/',$uri);
+//        $userId = end($uriArr);
+        $userId = $this->getCurrentUrlId($client);
+
         $client->takeScreenshot('test_createuser-'.$userid.'.png');
+        $client->takeScreenshot('test_createuser-id-'.$userId.'.png');
 
-        return $client;
+        return $userId;
     }
 
-    public function newTrpProjects( $client ) {
-        $users = $this->getUsers();
+    public function newTrpProjects( $client, $users ) {
+        //$users = $this->getUsers();
         $this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        foreach( $this->getTrpProjects() as $trpProjectArr ) {
+            $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        }
     }
-    public function newTrpProject( $client, $users, $newProjectUrl ) {
+    public function newTrpProject( $client, $trpProjects, $users, $newProjectUrl ) {
         //$newProjectUrl = 'https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type';
         $crawler = $client->request('GET', $newProjectUrl);
 
         $link = $crawler->selectLink('AP/CP Project Request')->link();
         $client->click($link);
+
+        //$uri = $client->getCurrentURL(); //$client->getResponse()->headers->get('location');
+        //echo "uri=$uri <br>";
 
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','.".$userid."')");
 
@@ -263,9 +283,10 @@ class DemoDbUtil {
         $form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
 
         //get userStr for select2 field: 'Ernest Rutherford - rrutherford (Local User)'
+        //Set PI
         $piArr = $users[0];
-        $userStr = $piArr['displayName'] . ' - ' . $piArr['userid'] . ' (Local User)';
-        echo "userStr=$userStr <br>";
+        //$userStr = $piArr['displayName'] . ' - ' . $piArr['userid'] . ' (Local User)';
+        //echo "userStr=$userStr <br>";
 
 //        //find user str by $userid
 //        $subjectUser = null;
@@ -294,9 +315,9 @@ class DemoDbUtil {
 
         //$form['#oleg_translationalresearchbundle_project[principalInvestigators][]'] = '15';
 
-        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$userStr."')");
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$piArr['userId']."')");
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','Ernest Rutherford - rrutherford (Local User)')");
-        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','John Doe - johndoe1 (Local User)')");
+        //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','John Doe - johndoe1 (Local User)')");
 
         //$crawler = $client->refreshCrawler();
         //$form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
@@ -305,12 +326,71 @@ class DemoDbUtil {
         //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->text($userid);
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('".$userid."')");
 
+        //Set billingContact 's2id_oleg_translationalresearchbundle_project_billingContact'
+        $billingContactArr = $users[1];
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$billingContactArr['userId']."')");
+
+        //Set oleg_translationalresearchbundle_project_title
+        $projectTitle = $trpProjects['title'];
+        $form['oleg_translationalresearchbundle_project[title]'] = $trpProjects['title'];;
+
+        //Set description
+        $form['oleg_translationalresearchbundle_project[description]'] = $trpProjects['description'];
+
+        //Set funded
+        $form['oleg_translationalresearchbundle_project[funded]'] = $trpProjects['funded'];
+
+        //Set budget
+        $form['oleg_translationalresearchbundle_project[totalCost]'] = $trpProjects['budget'];
+
         $client->takeScreenshot('test_newTrpProject-'.'1'.'.png');
 
         return $client;
     }
 
+    public function getCurrentUrlId($client) {
+        $uri = $client->getCurrentURL(); //$client->getResponse()->headers->get('location');
+        echo "uri=$uri <br>";
 
+        //get id from url 'https://view.online/c/demo-institution/demo-department/directory/user/14'
+        $uriArr = explode('/',$uri);
+        $id = end($uriArr);
+
+        return $id;
+    }
+
+    public function getTrpProjects() {
+        $projects = array();
+        $projects[] = array(
+            'title' => 'Inflammatory infiltrates in Post-transplant lymphoproliferative disorders (PTLDs)',
+            'description' => 'Post-transplant lymphoproliferative disorders (PTLDs) are Epstein Barr virus (EBV) 
+                associated B cell lymphoid proliferations.  The patients who develop these lesions have 
+                an unpredictable clinical course and outcome with some patients having lesions that regress 
+                following a reduction in immunosuppression and others who despite aggressive theraputic 
+                intervention have progressive disease leading to their demise.',
+            'budget' => '5000',
+            'funded' => 1
+        );
+        $projects[] = array(
+            'title' => 'Characterization of circulating tumor cells in arterial vs. venous blood of patients with Non Small Cell Lung Cancer',
+            'description' => 'This is a phase I study to determine whether the incidence and 
+                quantity of circulating tumor cells is higher in peripheral arterial compared 
+                to venous blood and of the primary tumor. A total of 50 evaluable subjects 
+                will be enrolled from 4 cancer centers with early resectable NSCLC and subjects 
+                with unresectable or metastatic disease will be enrolled.',
+            'budget' => '10000',
+            'funded' => 1
+        );
+        $projects[] = array(
+            'title' => 'Our goal is to assess types of stroma response in fibrogenic myeloid neoplasms, 
+                particularly mastocytosis and CIMF. Altered stroma microenvironment is a common 
+                feature of many tumors.  There is increasing evidence that these stromal changes, 
+                including increased proteases and cytokines, may promote tumor progression.',
+            'budget' => '3000',
+            'funded' => 1
+        );
+        return $projects;
+    }
 }
 
 
