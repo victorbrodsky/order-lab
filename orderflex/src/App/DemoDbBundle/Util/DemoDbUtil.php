@@ -263,9 +263,13 @@ class DemoDbUtil {
     public function newTrpProjects( $client, $users ) {
         //$users = $this->getUsers();
         //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        $projectIds = array();
         foreach( $this->getTrpProjects() as $trpProjectArr ) {
-            $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+            $projectId = $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+            $projectIds[] = $projectId;
+            break; //testing
         }
+        return $projectIds;
     }
     public function newTrpProject( $client, $trpProjectArr, $users, $newProjectUrl ) {
         //$newProjectUrl = 'https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type';
@@ -280,7 +284,10 @@ class DemoDbUtil {
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','.".$userid."')");
 
         $crawler = $client->refreshCrawler();
+        //$client->waitForVisibility('#oleg_translationalresearchbundle_project_submitIrbReview');
         $form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
+        //$form = $crawler->filter('Submit for Review')->form();
+        //$form = $crawler->selectButton('Submit for Review')->form();
 
         //get userStr for select2 field: 'Ernest Rutherford - rrutherford (Local User)'
         //Set PI
@@ -300,7 +307,7 @@ class DemoDbUtil {
 //        //exit('user='.$subjectUser);
 //        echo "subjectUser=$subjectUser, ID=".$subjectUser->getId()." <br>";
 
-        $crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
+        //$crawler->filter('#s2id_oleg_translationalresearchbundle_project_principalInvestigators')->click();
 
 //        $options = $client->executeScript("
 //        $('#individualsfront').on('open',function(){
@@ -357,10 +364,23 @@ class DemoDbUtil {
 
         //Set budget
         $form['oleg_translationalresearchbundle_project[totalCost]'] = $trpProjectArr['budget'];
+        $client->takeScreenshot('test_newTrpProject-'.'totalCost'.'.png');
 
-        $client->takeScreenshot('test_newTrpProject-'.'1'.'.png');
+        //Set required radio boxes: 'oleg_translationalresearchbundle_project[involveHumanTissue]'
+        $form['oleg_translationalresearchbundle_project[involveHumanTissue]']->select('No');
+        $client->takeScreenshot('test_newTrpProject-'.'involveHumanTissue'.'.png');
+        $form['oleg_translationalresearchbundle_project[requireTissueProcessing]']->select('No');
+        $client->takeScreenshot('test_newTrpProject-'.'requireTissueProcessing'.'.png');
+        $form['oleg_translationalresearchbundle_project[requireArchivalProcessing]']->select('No');
+        $client->takeScreenshot('test_newTrpProject-'.'requireArchivalProcessing'.'.png');
 
-        return $client;
+        $client->submit($form);
+        $client->takeScreenshot('test_newTrpProject-'.'submit'.'.png');
+
+        $projectId = $this->getCurrentUrlId($client);
+        echo "projectId=$projectId <br>";
+
+        return $projectId;
     }
 
     public function newTrpRequests( $client, $users ) {

@@ -261,7 +261,7 @@ class DemoDataController extends OrderAbstractController
 
         $users = $demoDbUtil->getUsers();
 
-        $demoDbUtil->newTrpProjects($client,$users);
+        $projectIds = $demoDbUtil->newTrpProjects($client,$users);
 
         exit('eof panther');
     }
