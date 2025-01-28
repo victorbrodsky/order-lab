@@ -262,12 +262,12 @@ class DemoDbUtil {
 
     public function newTrpProjects( $client, $users ) {
         //$users = $this->getUsers();
-        $this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
         foreach( $this->getTrpProjects() as $trpProjectArr ) {
             $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
         }
     }
-    public function newTrpProject( $client, $trpProjects, $users, $newProjectUrl ) {
+    public function newTrpProject( $client, $trpProjectArr, $users, $newProjectUrl ) {
         //$newProjectUrl = 'https://view.online/c/demo-institution/demo-department/translational-research/project/select-new-project-type';
         $crawler = $client->request('GET', $newProjectUrl);
 
@@ -319,6 +319,8 @@ class DemoDbUtil {
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','Ernest Rutherford - rrutherford (Local User)')");
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','John Doe - johndoe1 (Local User)')");
 
+        $client->takeScreenshot('test_newTrpProject-setPi'.'.png');
+
         //$crawler = $client->refreshCrawler();
         //$form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
         //$client->waitForVisibility('#s2id_oleg_translationalresearchbundle_project_principalInvestigators');
@@ -328,24 +330,54 @@ class DemoDbUtil {
 
         //Set billingContact 's2id_oleg_translationalresearchbundle_project_billingContact'
         $billingContactArr = $users[1];
-        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$billingContactArr['userId']."')");
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_billingContact').select2('val','".$billingContactArr['userId']."')");
+        $client->takeScreenshot('test_newTrpProject-setBilling'.'.png');
 
         //Set oleg_translationalresearchbundle_project_title
-        $projectTitle = $trpProjects['title'];
-        $form['oleg_translationalresearchbundle_project[title]'] = $trpProjects['title'];;
+        $projectTitle = $trpProjectArr['title'];
+        $form['oleg_translationalresearchbundle_project[title]'] = $trpProjectArr['title'];
+        $client->takeScreenshot('test_newTrpProject-setTitle'.'.png');
 
         //Set description
-        $form['oleg_translationalresearchbundle_project[description]'] = $trpProjects['description'];
+        $form['oleg_translationalresearchbundle_project[description]'] = $trpProjectArr['description'];
+        $client->takeScreenshot('test_newTrpProject-setDescr'.'.png');
 
         //Set funded
-        $form['oleg_translationalresearchbundle_project[funded]'] = $trpProjects['funded'];
+        //$form['oleg_translationalresearchbundle_project[funded]'] = $trpProjectArr['funded'];
+        if(0) {
+            $client->waitForVisibility('oleg_translationalresearchbundle_project[funded]');
+            if ($trpProjectArr['funded']) {
+                //$form['#oleg_translationalresearchbundle_project_funded_0'] = 1;
+                $form['oleg_translationalresearchbundle_project[funded]']->select('0');
+            } else {
+                //$form['#oleg_translationalresearchbundle_project_funded_1'] = 1;
+                $form['oleg_translationalresearchbundle_project[funded]']->select('1');
+            }
+        }
 
         //Set budget
-        $form['oleg_translationalresearchbundle_project[totalCost]'] = $trpProjects['budget'];
+        $form['oleg_translationalresearchbundle_project[totalCost]'] = $trpProjectArr['budget'];
 
         $client->takeScreenshot('test_newTrpProject-'.'1'.'.png');
 
         return $client;
+    }
+
+    public function newTrpRequests( $client, $users ) {
+        $trpRequests = array();
+        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        foreach( $this->getTrpRequests() as $trpProjectArr ) {
+            $this->newTrpRequest($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        }
+
+        return $trpRequests;
+    }
+    public function newTrpRequest( $client, $users ) {
+        //$users = $this->getUsers();
+        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        foreach( $this->getTrpProjects() as $trpProjectArr ) {
+            $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        }
     }
 
     public function getCurrentUrlId($client) {
@@ -382,7 +414,57 @@ class DemoDbUtil {
             'funded' => 1
         );
         $projects[] = array(
-            'title' => 'Our goal is to assess types of stroma response in fibrogenic myeloid neoplasms, 
+            'title' => 'Assess types of stroma response in fibrogenic myeloid neoplasms',
+            'description' => 'Our goal is to assess types of stroma response in fibrogenic myeloid neoplasms, 
+                particularly mastocytosis and CIMF. Altered stroma microenvironment is a common 
+                feature of many tumors.  There is increasing evidence that these stromal changes, 
+                including increased proteases and cytokines, may promote tumor progression.',
+            'budget' => '3000',
+            'funded' => 1
+        );
+        return $projects;
+    }
+
+    public function approveTrpProjects($client) {
+        $url = $this->baseUrl.'translational-research/projects/';
+        $crawler = $client->request('GET', $url);
+
+        //Click link: /translational-research/approve-project/3564
+        $link = $crawler->selectLink('AP/CP Project Request')->link();
+        $client->click($link);
+    }
+    public function approveTrpProject( $client, $projectId ) {
+        //Click link: /translational-research/approve-project/3564
+        $url = $this->baseUrl.'translational-research/approve-project/'.$projectId;
+        $crawler = $client->request('GET', $url);
+    }
+
+
+    public function getTrpRequests() {
+        $projects = array();
+        $projects[] = array(
+            'title' => 'Inflammatory infiltrates in Post-transplant lymphoproliferative disorders (PTLDs)',
+            'description' => 'Post-transplant lymphoproliferative disorders (PTLDs) are Epstein Barr virus (EBV) 
+                associated B cell lymphoid proliferations.  The patients who develop these lesions have 
+                an unpredictable clinical course and outcome with some patients having lesions that regress 
+                following a reduction in immunosuppression and others who despite aggressive theraputic 
+                intervention have progressive disease leading to their demise.',
+            'budget' => '5000',
+            'funded' => 1
+        );
+        $projects[] = array(
+            'title' => 'Characterization of circulating tumor cells in arterial vs. venous blood of patients with Non Small Cell Lung Cancer',
+            'description' => 'This is a phase I study to determine whether the incidence and 
+                quantity of circulating tumor cells is higher in peripheral arterial compared 
+                to venous blood and of the primary tumor. A total of 50 evaluable subjects 
+                will be enrolled from 4 cancer centers with early resectable NSCLC and subjects 
+                with unresectable or metastatic disease will be enrolled.',
+            'budget' => '10000',
+            'funded' => 1
+        );
+        $projects[] = array(
+            'title' => 'Assess types of stroma response in fibrogenic myeloid neoplasms',
+            'description' => 'Our goal is to assess types of stroma response in fibrogenic myeloid neoplasms, 
                 particularly mastocytosis and CIMF. Altered stroma microenvironment is a common 
                 feature of many tumors.  There is increasing evidence that these stromal changes, 
                 including increased proteases and cytokines, may promote tumor progression.',
