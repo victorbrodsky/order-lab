@@ -340,8 +340,10 @@ class DemoDbUtil {
         $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_billingContact').select2('val','".$billingContactArr['userId']."')");
         $client->takeScreenshot('test_newTrpProject-setBilling'.'.png');
 
+        //Set IRB to Exempt 'oleg_translationalresearchbundle_project_exemptIrbApproval'
+        $client->executeScript("$('#oleg_translationalresearchbundle_project_exemptIrbApproval').select2('val','2')");
+
         //Set oleg_translationalresearchbundle_project_title
-        $projectTitle = $trpProjectArr['title'];
         $form['oleg_translationalresearchbundle_project[title]'] = $trpProjectArr['title'];
         $client->takeScreenshot('test_newTrpProject-setTitle'.'.png');
 
@@ -373,6 +375,8 @@ class DemoDbUtil {
         $client->takeScreenshot('test_newTrpProject-'.'requireTissueProcessing'.'.png');
         $form['oleg_translationalresearchbundle_project[requireArchivalProcessing]']->select('No');
         $client->takeScreenshot('test_newTrpProject-'.'requireArchivalProcessing'.'.png');
+
+        $client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
 
         $client->submit($form);
         $client->takeScreenshot('test_newTrpProject-'.'submit'.'.png');
