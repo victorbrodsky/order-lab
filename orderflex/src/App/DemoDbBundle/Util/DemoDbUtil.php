@@ -387,21 +387,42 @@ class DemoDbUtil {
         return $projectId;
     }
 
-    public function newTrpRequests( $client, $users ) {
-        $trpRequests = array();
-        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
-        foreach( $this->getTrpRequests() as $trpProjectArr ) {
-            $this->newTrpRequest($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+    public function newTrpRequests( $client, $projectIds ) {
+        $requestIds = array();
+        foreach($projectIds as $projectId) {
+            $productId = 0;
+            foreach ($this->getTrpRequests() as $trpRequestArr) {
+                $requestIds[] = $this->newTrpRequest($client, $projectId, $trpRequestArr, $productId);
+                $productId++;
+            }
         }
 
-        return $trpRequests;
+        return $requestIds;
     }
-    public function newTrpRequest( $client, $users ) {
-        //$users = $this->getUsers();
-        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
-        foreach( $this->getTrpProjects() as $trpProjectArr ) {
-            $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
-        }
+    public function newTrpRequest( $client, $projectId, $trpRequestArr, $productId ) {
+        //https://view.online/c/demo-institution/demo-department/translational-research/project/1/work-request/new/
+        $url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
+        $crawler = $client->request('GET', $url);
+        $client->takeScreenshot('test_newRequest-'.$projectId.'.png');
+
+        //$form = $crawler->filter('Complete Submission')->form();
+        $client->waitForVisibility('#oleg_translationalresearchbundle_request_saveAsComplete');
+        $form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
+
+        //oleg_translationalresearchbundle_request_products_0_category
+        $client->waitForVisibility('#s2id_oleg_translationalresearchbundle_request_products_0_category');
+        $client->waitForVisibility('oleg_translationalresearchbundle_request[products]['.$productId.'][category]');
+        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][category]']->select($trpRequestArr['serviceId']);
+
+        //oleg_translationalresearchbundle_request[products][0][requested]
+        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]']->select($trpRequestArr['quantity']);
+
+        //oleg_translationalresearchbundle_request[products][0][comment]
+        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]']->select($trpRequestArr['comment']);
+
+        $form['oleg_translationalresearchbundle_request_businessPurposes']->select(1);
+
+        $client->takeScreenshot('test_product-'.$productId.'.png');
     }
 
     public function getCurrentUrlId($client) {
@@ -449,53 +470,44 @@ class DemoDbUtil {
         return $projects;
     }
 
-    public function approveTrpProjects($client) {
-        $url = $this->baseUrl.'translational-research/projects/';
-        $crawler = $client->request('GET', $url);
+    public function approveTrpProjects($client,$projectIds) {
+        //$url = $this->baseUrl.'translational-research/projects/';
+        //$crawler = $client->request('GET', $url);
 
-        //Click link: /translational-research/approve-project/3564
-        $link = $crawler->selectLink('AP/CP Project Request')->link();
-        $client->click($link);
+        foreach($projectIds as $projectId) {
+            //Click link: /translational-research/approve-project/3564
+            $this->approveTrpProject($client,$projectId);
+        }
     }
     public function approveTrpProject( $client, $projectId ) {
         //Click link: /translational-research/approve-project/3564
-        $url = $this->baseUrl.'translational-research/approve-project/'.$projectId;
-        $crawler = $client->request('GET', $url);
+        $url = $this->baseUrl.'/translational-research/approve-project/'.$projectId;
+        $client->request('GET', $url);
+        $client->takeScreenshot('test_approveTrpProject-'.$projectId.'.png');
     }
 
 
     public function getTrpRequests() {
-        $projects = array();
-        $projects[] = array(
-            'title' => 'Inflammatory infiltrates in Post-transplant lymphoproliferative disorders (PTLDs)',
-            'description' => 'Post-transplant lymphoproliferative disorders (PTLDs) are Epstein Barr virus (EBV) 
-                associated B cell lymphoid proliferations.  The patients who develop these lesions have 
-                an unpredictable clinical course and outcome with some patients having lesions that regress 
-                following a reduction in immunosuppression and others who despite aggressive theraputic 
-                intervention have progressive disease leading to their demise.',
-            'budget' => '5000',
-            'funded' => 1
+        $requests = array();
+        $requests[] = array(
+            'serviceId' => '1',
+            'quantity' => '3',
+            'comment' => 'Request for RNA extraction. For each case below, annotated H&E slide is provided.',
         );
-        $projects[] = array(
-            'title' => 'Characterization of circulating tumor cells in arterial vs. venous blood of patients with Non Small Cell Lung Cancer',
-            'description' => 'This is a phase I study to determine whether the incidence and 
-                quantity of circulating tumor cells is higher in peripheral arterial compared 
-                to venous blood and of the primary tumor. A total of 50 evaluable subjects 
-                will be enrolled from 4 cancer centers with early resectable NSCLC and subjects 
-                with unresectable or metastatic disease will be enrolled.',
-            'budget' => '10000',
-            'funded' => 1
+        $requests[] = array(
+            'serviceId' => '2',
+            'quantity' => '4',
+            'comment' => 'Test included in this Panel are: 
+                Albumin, Alkaline Phosphatase, Total Bilirubin, Carbon Dioxide (CO2), Aspartate',
         );
-        $projects[] = array(
-            'title' => 'Assess types of stroma response in fibrogenic myeloid neoplasms',
-            'description' => 'Our goal is to assess types of stroma response in fibrogenic myeloid neoplasms, 
-                particularly mastocytosis and CIMF. Altered stroma microenvironment is a common 
-                feature of many tumors.  There is increasing evidence that these stromal changes, 
-                including increased proteases and cytokines, may promote tumor progression.',
-            'budget' => '3000',
-            'funded' => 1
+        $requests[] = array(
+            'serviceId' => '3',
+            'quantity' => '5',
+            'comment' => 'For case S12-257 A9, already in TRP: 
+                1. Please cut 3 additional unstained slides 5-micron. 
+                2. Please label each slide with Research ID only',
         );
-        return $projects;
+        return $requests;
     }
 }
 
