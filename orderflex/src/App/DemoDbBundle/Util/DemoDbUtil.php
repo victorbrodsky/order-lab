@@ -392,17 +392,30 @@ class DemoDbUtil {
         foreach($projectIds as $projectId) {
             $productId = 0;
             foreach ($this->getTrpRequests() as $trpRequestArr) {
-                $requestIds[] = $this->newTrpRequest($client, $projectId, $trpRequestArr, $productId);
+
+                $url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
+                $crawler = $client->request('GET', $url);
+
+                $requestIds[] = $this->newTrpRequest($client, $crawler, $projectId, $trpRequestArr, $productId);
                 $productId++;
+                //add new product section by clicking 'Add Product or Service'
+                //$link = $crawler->selectLink('Add Product or Service')->link();
+                //$button = $crawler->selectButton('Add Product or Service')->link();
+                //'transres-add-product-btn'
+                //$client->executeScript("document.querySelector('#js-scroll-down').click()");
+                //$client->executeScript("document.querySelector('.transres-add-product-btn').click()");
+                $client->executeScript("$('.transres-add-product-btn').click()");
+                $client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+                //$client->click($button);
             }
         }
 
         return $requestIds;
     }
-    public function newTrpRequest( $client, $projectId, $trpRequestArr, $productId ) {
+    public function newTrpRequest( $client, $crawler, $projectId, $trpRequestArr, $productId ) {
         //https://view.online/c/demo-institution/demo-department/translational-research/project/1/work-request/new/
-        $url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
-        $crawler = $client->request('GET', $url);
+        //$url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
+        //$crawler = $client->request('GET', $url);
         $client->takeScreenshot('test_newRequest-'.$projectId.'.png');
 
         //$form = $crawler->filter('Complete Submission')->form();
@@ -410,17 +423,29 @@ class DemoDbUtil {
         $form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
 
         //oleg_translationalresearchbundle_request_products_0_category
-        $client->waitForVisibility('#s2id_oleg_translationalresearchbundle_request_products_0_category');
-        $client->waitForVisibility('oleg_translationalresearchbundle_request[products]['.$productId.'][category]');
-        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][category]']->select($trpRequestArr['serviceId']);
+        //$client->waitForVisibility('#s2id_oleg_translationalresearchbundle_request_products_'.$productId.'_category');
+        //$client->waitForVisibility('oleg_translationalresearchbundle_request[products]['.$productId.'][category]');
+        echo "category name = [oleg_translationalresearchbundle_request[products][".$productId."][category]] <br>";
+        //exit('111');
+        //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][category]']->select($trpRequestArr['serviceId']);
+        //$client->executeScript("$('#oleg_translationalresearchbundle_request[products]['".$productId."'][category]').select2('val','2'))");
+        $client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_category').select2('val','1')");
+        //'#oleg_translationalresearchbundle_request_products_0_category'
+        //s2id_oleg_translationalresearchbundle_request_products_0_category
+        echo "category name = [oleg_translationalresearchbundle_request[products][".$productId."][category]] <br>";
 
         //oleg_translationalresearchbundle_request[products][0][requested]
-        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]']->select($trpRequestArr['quantity']);
+        //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]']->select($trpRequestArr['quantity']);
+        //$client->executeScript("$('oleg_translationalresearchbundle_request_products_".$productId."_requested').select2('val','1')");
+        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]'] = $trpRequestArr['quantity'];
 
         //oleg_translationalresearchbundle_request[products][0][comment]
-        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]']->select($trpRequestArr['comment']);
+        //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]']->select($trpRequestArr['comment']);
+        //$client->executeScript("$('oleg_translationalresearchbundle_request[products]['.$productId.'][comment]').select2('val','1')");
+        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]'] = $trpRequestArr['comment'];
 
-        $form['oleg_translationalresearchbundle_request_businessPurposes']->select(1);
+        //$form['oleg_translationalresearchbundle_request_businessPurposes']->select(1);
+        //$client->executeScript("$('oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
 
         $client->takeScreenshot('test_product-'.$productId.'.png');
     }
