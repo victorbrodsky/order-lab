@@ -406,6 +406,10 @@ class DemoDbUtil {
                 //$client->executeScript("document.querySelector('.transres-add-product-btn').click()");
                 $client->executeScript("$('.transres-add-product-btn').click()");
                 $client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+
+                //$client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
+                $client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
+                $client->takeScreenshot('test_product-'.$productId.'.png');
                 //$client->click($button);
             }
         }
@@ -435,6 +439,8 @@ class DemoDbUtil {
         echo "category name = [oleg_translationalresearchbundle_request[products][".$productId."][category]] <br>";
 
         //oleg_translationalresearchbundle_request[products][0][requested]
+        //oleg_translationalresearchbundle_request_products_1_requested
+        //$client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
         //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]']->select($trpRequestArr['quantity']);
         //$client->executeScript("$('oleg_translationalresearchbundle_request_products_".$productId."_requested').select2('val','1')");
         $form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]'] = $trpRequestArr['quantity'];
