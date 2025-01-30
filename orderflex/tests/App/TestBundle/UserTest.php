@@ -41,6 +41,7 @@ class UserTest extends WebTestBase
         $this->logIn();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/');
 
+        echo "url=".'/'.$this->tenantprefix.'directory/'."<br>";
         //$this->client->followRedirects();
 
         $content = $this->client->getResponse()->getContent();
