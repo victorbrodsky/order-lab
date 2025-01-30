@@ -177,8 +177,8 @@ class WebTestBase extends WebTestCase
 
         $firewall_context_name = 'scan_auth';
         if( $this->testContainer->hasParameter('tenant_role') && $this->testContainer->getParameter('tenant_role') ) {
-            $firewall_context_name = "scan_auth_".$this->testContainer->hasParameter('tenant_role')->getParameter('tenant_role');
-        } 
+            $firewall_context_name = "scan_auth_".$this->testContainer->getParameter('tenant_role');
+        }
 
         $firewallContext = $firewall_context_name; //'scan_auth';
 
