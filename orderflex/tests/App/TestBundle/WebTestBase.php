@@ -54,6 +54,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //To specify http channel run it as: HTTP=1 ./vendor/bin/phpunit -d memory_limit=-1 --stop-on-failure (dev)
 //To specify https channel (default) run it as: ./vendor/bin/phpunit (test,live)
+//use '--filter testmethodname' to run only one single test
 
 class WebTestBase extends WebTestCase
 {
@@ -174,7 +175,12 @@ class WebTestBase extends WebTestCase
     public function logIn() {
         $systemUser = $this->getUser();
 
-        $firewallContext = 'scan_auth';
+        $firewall_context_name = 'scan_auth';
+        if( $this->testContainer->hasParameter('tenant_role') && $this->testContainer->getParameter('tenant_role') ) {
+            $firewall_context_name = "scan_auth_".$this->testContainer->hasParameter('tenant_role')->getParameter('tenant_role');
+        } 
+
+        $firewallContext = $firewall_context_name; //'scan_auth';
 
         // simulate $testUser being logged in
         $this->client->loginUser($systemUser,$firewallContext);
