@@ -56,8 +56,8 @@ class UserTest extends WebTestBase
         unset($_GET['sort']);
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/event-log/');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
 
         $this->assertGreaterThan(
             0,
