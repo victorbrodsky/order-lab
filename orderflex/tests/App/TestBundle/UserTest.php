@@ -15,13 +15,13 @@ class UserTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        //echo "[User,PHP=".$phpVersion."]";
+        echo "[User,PHP=".$phpVersion."]";
 
         $userServiceUtil = $this->testContainer->get('user_service_utility');
-        //echo "[DB=".$userServiceUtil->getDbVersion()."]";
+        echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
         //$this->client->followRedirects();
-        //echo 'login url='.'/'.$this->tenantprefix.'directory/login'.'<br>';
+        echo 'login url='.'/'.$this->tenantprefix.'directory/login'.'<br>';
         
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/login');
 
@@ -35,6 +35,8 @@ class UserTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Employee Directory")')->count()
         );
+
+        echo 'EOF testLoginPageAction<br>';
     }
 
     public function testHomeAction() {
