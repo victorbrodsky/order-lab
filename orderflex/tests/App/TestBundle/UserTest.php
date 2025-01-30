@@ -46,9 +46,14 @@ class UserTest extends WebTestBase
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
+        //$this->assertGreaterThan(
+        //    0,
+        //    $crawler->filter('html:contains("Welcome to the Employee Directory!")')->count()
+        //);
+
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Welcome to the Employee Directory!")')->count()
+            $crawler->filter('html:contains("My Team")')->count()
         );
     }
 
