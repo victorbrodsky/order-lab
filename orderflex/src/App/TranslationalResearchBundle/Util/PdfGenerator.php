@@ -892,6 +892,7 @@ class PdfGenerator
         echo "wkhtmltopdfpath=[$wkhtmltopdfpath] <br>";
         $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
         echo "wkhtmltopdfpathClean=[$wkhtmltopdfpathClean] <br>";
+        $logger->notice("generateProjectPdf: wkhtmltopdfpathClean=".$wkhtmltopdfpathClean.", wkhtmltopdfpath=".$wkhtmltopdfpath);
         if (file_exists($wkhtmltopdfpathClean)) {
             //echo "The file $wkhtmltopdfpath exists <br>";
         } else {
