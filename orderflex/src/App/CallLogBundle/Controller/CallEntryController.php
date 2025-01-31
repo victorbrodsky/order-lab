@@ -997,13 +997,27 @@ class CallEntryController extends OrderAbstractController
 //                $queryParameters['messageId'] = $messageId;
             }
 
-            if( $messageId && $versionId ) {
-                $dql->andWhere("message.oid = :messageOid AND message.version = :versionId");
-                $queryParameters['messageOid'] = $messageId;
-                $queryParameters['versionId'] = $versionId;
-            } elseif( $messageId ) {
-                $dql->andWhere("message.oid = :messageOid");
-                $queryParameters['messageOid'] = $messageId;
+            //oid and version - must be integer
+            if ( filter_var($messageId, FILTER_VALIDATE_INT) !== false ) {
+                //$messageId is integer
+                //exit('1 $messageId='.$messageId.', $versionId='.$versionId);
+                if( $messageId && $versionId && filter_var($versionId, FILTER_VALIDATE_INT) !== false ) {
+                    //if ( filter_var($versionId, FILTER_VALIDATE_INT) !== false ) {
+                        //exit('2 $messageId='.$messageId.', $versionId='.$versionId);
+                        //$versionId is integer
+                        $dql->andWhere("message.oid = :messageOid AND message.version = :versionId");
+                        $queryParameters['messageOid'] = $messageId;
+                        $queryParameters['versionId'] = $versionId;
+//                    } else {
+//                        //exit('3 $messageId='.$messageId.', $versionId='.$versionId);
+//                        //$versionId is not integer
+//                        $dql->andWhere("message.oid = :messageOid");
+//                        $queryParameters['messageOid'] = $messageId;
+//                    }
+                } elseif ($messageId) {
+                    $dql->andWhere("message.oid = :messageOid");
+                    $queryParameters['messageOid'] = $messageId;
+                }
             }
             $advancedFilter++;
         }
