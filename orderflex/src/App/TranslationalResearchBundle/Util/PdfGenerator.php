@@ -889,7 +889,9 @@ class PdfGenerator
 
         //Make sure $wkhtmltopdfpath correctly set in the site setting
         $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        echo "wkhtmltopdfpath=[$wkhtmltopdfpath] <br>";
         $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
+        echo "wkhtmltopdfpathClean=[$wkhtmltopdfpathClean] <br>";
         if (file_exists($wkhtmltopdfpathClean)) {
             //echo "The file $wkhtmltopdfpath exists <br>";
         } else {
@@ -898,7 +900,7 @@ class PdfGenerator
             $logger->notice("generateProjectPdf: Error - ignore PDF generation, wkhtmltopdfpath path does not exists");
             return null;
         }
-        //exit("wkhtmltopdfpath=[$wkhtmltopdfpath]");
+        exit("wkhtmltopdfpath=[$wkhtmltopdfpath]");
 
         if( file_exists($applicationOutputFilePath) ) {
             //return;
