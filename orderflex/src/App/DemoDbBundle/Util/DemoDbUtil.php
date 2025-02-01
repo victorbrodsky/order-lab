@@ -405,8 +405,8 @@ class DemoDbUtil {
                 //$client->executeScript("document.querySelector('#js-scroll-down').click()");
                 //$client->executeScript("document.querySelector('.transres-add-product-btn').click()");
                 $client->executeScript("$('.transres-add-product-btn').click()");
-                //$client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
-                $client->waitForVisibility('s2id_oleg_translationalresearchbundle_request_products_2_category');
+                $client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+                //$client->waitForVisibility('s2id_oleg_translationalresearchbundle_request_products_2_category');
 
                 //$client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
                 $client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
