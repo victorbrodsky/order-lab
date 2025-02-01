@@ -405,7 +405,8 @@ class DemoDbUtil {
                 //$client->executeScript("document.querySelector('#js-scroll-down').click()");
                 //$client->executeScript("document.querySelector('.transres-add-product-btn').click()");
                 $client->executeScript("$('.transres-add-product-btn').click()");
-                $client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+                //$client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+                $client->waitForVisibility('s2id_oleg_translationalresearchbundle_request_products_2_category');
 
                 //$client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
                 $client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
@@ -424,7 +425,7 @@ class DemoDbUtil {
 
         //$form = $crawler->filter('Complete Submission')->form();
         $client->waitForVisibility('#oleg_translationalresearchbundle_request_saveAsComplete');
-        $form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
+        //$form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
 
         //oleg_translationalresearchbundle_request_products_0_category
         //$client->waitForVisibility('#s2id_oleg_translationalresearchbundle_request_products_'.$productId.'_category');
@@ -433,7 +434,7 @@ class DemoDbUtil {
         //exit('111');
         //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][category]']->select($trpRequestArr['serviceId']);
         //$client->executeScript("$('#oleg_translationalresearchbundle_request[products]['".$productId."'][category]').select2('val','2'))");
-        $client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_category').select2('val','1')");
+        $client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_category').select2('val','".$trpRequestArr['serviceId']."')");
         //'#oleg_translationalresearchbundle_request_products_0_category'
         //s2id_oleg_translationalresearchbundle_request_products_0_category
         echo "category name = [oleg_translationalresearchbundle_request[products][".$productId."][category]] <br>";
@@ -443,17 +444,28 @@ class DemoDbUtil {
         //$client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
         //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]']->select($trpRequestArr['quantity']);
         //$client->executeScript("$('oleg_translationalresearchbundle_request_products_".$productId."_requested').select2('val','1')");
-        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]'] = $trpRequestArr['quantity'];
+        echo "requested = [".'oleg_translationalresearchbundle_request[products]['.$productId.'][requested]'."] <br>";
+        //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][requested]'] = $trpRequestArr['quantity'];
+        $client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_requested').val('".$trpRequestArr['quantity']."')");
 
         //oleg_translationalresearchbundle_request[products][0][comment]
         //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]']->select($trpRequestArr['comment']);
         //$client->executeScript("$('oleg_translationalresearchbundle_request[products]['.$productId.'][comment]').select2('val','1')");
-        $form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]'] = $trpRequestArr['comment'];
+        //$form['oleg_translationalresearchbundle_request[products]['.$productId.'][comment]'] = $trpRequestArr['comment'];
+        //$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_comment').val('".$trpRequestArr['comment']."')");
+        $client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_comment').val('".$trpRequestArr['comment']."')");
 
         //$form['oleg_translationalresearchbundle_request_businessPurposes']->select(1);
         //$client->executeScript("$('oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
 
         $client->takeScreenshot('test_product-'.$productId.'.png');
+
+        //Check #confirmationSubmit
+        $client->executeScript("$('#confirmationSubmit').prop('checked', true)");
+        $client->takeScreenshot('test_product-confirmationSubmit-'.$productId.'.png');
+
+        //Click 'Complete Submission'
+        //$client->executeScript("$('#oleg_translationalresearchbundle_request_saveAsComplete').click()");
     }
 
     public function getCurrentUrlId($client) {
@@ -528,15 +540,15 @@ class DemoDbUtil {
         $requests[] = array(
             'serviceId' => '2',
             'quantity' => '4',
-            'comment' => 'Test included in this Panel are: 
-                Albumin, Alkaline Phosphatase, Total Bilirubin, Carbon Dioxide (CO2), Aspartate',
+            'comment' => 'Test included in this Panel are:\n\r'.
+                'Albumin, Alkaline Phosphatase, Total Bilirubin, Carbon Dioxide (CO2), Aspartate',
         );
         $requests[] = array(
             'serviceId' => '3',
             'quantity' => '5',
-            'comment' => 'For case S12-257 A9, already in TRP: 
-                1. Please cut 3 additional unstained slides 5-micron. 
-                2. Please label each slide with Research ID only',
+            'comment' => 'For case S12-257 A9, already in TRP:\n\r'.
+                '1. Please cut 3 additional unstained slides 5-micron.'.
+                '2. Please label each slide with Research ID only',
         );
         return $requests;
     }
