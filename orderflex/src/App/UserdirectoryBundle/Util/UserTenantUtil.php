@@ -1321,7 +1321,7 @@ class UserTenantUtil
         //get scheme: $request->getScheme() will give http if using HaProxy.
         //Thereofre, use urlConnectionChannel from SiteSettings
         $userSecUtil = $this->container->get('user_security_utility');
-        $scheme = $userSecUtil->getSiteSettingParameter('SiteSettings');
+        $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
         if( !$scheme ) {
             $scheme = $request->getScheme();
         }
