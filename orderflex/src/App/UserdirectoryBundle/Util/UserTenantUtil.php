@@ -1319,16 +1319,9 @@ class UserTenantUtil
         $tenantBaseUrlArr = array();
         
         //get scheme: $request->getScheme() will give http if using HaProxy.
-        //Thereofre, use urlConnectionChannel from SiteSettings
-        $userSecUtil = $this->container->get('user_security_utility');
-        $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
-        //echo '1 $scheme='.$scheme.'<br>';
-        if( !$scheme ) {
-            $scheme = $request->getScheme();
-        }
-        //echo '2 $scheme='.$scheme.'<br>';
-        $urlTest = $request->getSchemeAndHttpHost();
-        echo '$urlTest='.$urlTest.'<br>';
+        //Therefore, use urlConnectionChannel from SiteSettings
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
 
         $baseUrl = $scheme . '://' . $request->getHttpHost();
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager

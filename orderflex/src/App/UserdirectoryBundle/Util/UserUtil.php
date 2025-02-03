@@ -77,11 +77,69 @@ class UserUtil {
         $this->session = $session;
     }
 
+    //Should not be used; replaced by getRealScheme
     public function getScheme() {
-        if( $this->requestStack && $this->requestStack->getCurrentRequest() && $this->requestStack->getCurrentRequest()->getScheme() ) {
-            return $this->requestStack->getCurrentRequest()->getScheme();
+        return $this->getRealScheme();
+//        if( $this->requestStack && $this->requestStack->getCurrentRequest() && $this->requestStack->getCurrentRequest()->getScheme() ) {
+//            return $this->requestStack->getCurrentRequest()->getScheme();
+//        }
+//        return NULL;
+    }
+    //get scheme: $request->getScheme() will give http if using HaProxy.
+    //Therefore, use urlConnectionChannel from SiteSettings
+    public function getRealScheme( $request=NULL ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
+        //echo '1 $scheme='.$scheme.'<br>';
+        if( !$scheme ) {
+            if( !$request ) {
+                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
+                    $request = $this->requestStack->getCurrentRequest();
+                }
+            }
+            if( $request && $request->getScheme() ) {
+                $scheme = $request->getScheme();
+            }
+        }
+        if( !$scheme ) {
+            $scheme = 'http';
+        }
+        return $scheme;
+    }
+    public function getRealSchemeAndHttpHost( $request=NULL ) {
+        //should give https://view-test.med.cornell.edu
+        $baseUrl = NULL;
+        $scheme = $this->getRealScheme($request);
+        if( $scheme ) {
+            $baseUrl = $scheme . '://' . $request->getHttpHost();
+        }
+        if( !$baseUrl ) {
+            if( !$request ) {
+                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
+                    $request = $this->requestStack->getCurrentRequest();
+                }
+            }
+            $baseUrl = $request->getSchemeAndHttpHost();
+        }
+        return $baseUrl;
+    }
+    public function getRequest() {
+        if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
+            return $this->requestStack->getCurrentRequest();
         }
         return NULL;
+    }
+    public function testSchemeAndHost( $request=NULL ) {
+        if( !$request ) {
+            $request = $this->getRequest();
+        }
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
+        echo 'scheme='.$scheme.'<br>';
+        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
+        echo 'urlTest='.$urlTest.'<br>';
+        $realUrlTest = $userUtil->getRealSchemeAndHttpHost($request); //with HaProxy should give: https://view-test.med.cornell.edu
+        echo 'realUrlTest='.$realUrlTest.'<br>';
     }
 
     public function getUser() {

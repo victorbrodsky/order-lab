@@ -260,6 +260,15 @@ class UserController extends OrderAbstractController
         //exit('111');
         //'ldap_employees_firewall'
 
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
+        //echo '2 $scheme='.$scheme.'<br>';
+        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
+        echo '$urlTest='.$urlTest.'<br>';
+        $urlTest2 = $userUtil->getRealSchemeAndHttpHost($request); //with HaProxy should give: https://view-test.med.cornell.edu
+        echo '$urlTest2='.$urlTest2.'<br>';
+        $userUtil->testSchemeAndHost();
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
