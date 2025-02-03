@@ -1322,9 +1322,11 @@ class UserTenantUtil
         //Thereofre, use urlConnectionChannel from SiteSettings
         $userSecUtil = $this->container->get('user_security_utility');
         $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
+        //echo '1 $scheme='.$scheme.'<br>';
         if( !$scheme ) {
             $scheme = $request->getScheme();
         }
+        //echo '2 $scheme='.$scheme.'<br>';
 
         $baseUrl = $scheme . '://' . $request->getHttpHost();
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager
