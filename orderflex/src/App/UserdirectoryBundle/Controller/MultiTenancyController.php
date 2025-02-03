@@ -377,7 +377,8 @@ class MultiTenancyController extends OrderAbstractController
         //$commandArr = array($testCmd,$testFilePath);
 
         $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getScheme();
+        //$scheme = $userUtil->getScheme();
+        $scheme = $userUtil->getRealScheme();
         $envArr = array();
         //exit("scheme=$scheme");
         if( $scheme ) {

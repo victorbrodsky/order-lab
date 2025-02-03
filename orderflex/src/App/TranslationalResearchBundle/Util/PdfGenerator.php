@@ -607,7 +607,12 @@ class PdfGenerator
         if( $request ) {
             $replaceContext = true;
             //$replaceContext = false;
-            $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+            
+            //$schemeAndHttpHost = $request->getSchemeAndHttpHost();
+            //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
+            $userUtil = $this->container->get('user_utility');
+            $schemeAndHttpHost = $userUtil->getRealSchemeAndHttpHost($request);
+
             //exit("schemeAndHttpHost=$schemeAndHttpHost");
             if ($replaceContext && strpos((string)$schemeAndHttpHost, "localhost") === false && strpos((string)$schemeAndHttpHost, "127.0.0.1") === false) {
                 //exit('use localhost');

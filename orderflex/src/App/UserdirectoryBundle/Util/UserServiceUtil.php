@@ -1669,6 +1669,11 @@ Pathology and Laboratory Medicine",
         $connection_channel = $this->container->getParameter('connection_channel');
         $res = $res . "<br>" . "Connection channel: " . $connection_channel;
 
+        //Real connection_channel if behind HaProxy
+        $userUtil = $this->container->get('user_utility');
+        $realScheme = $userUtil->getRealScheme();
+        $res = $res . "<br>" . "Real connection channel if using HaProxy: " . $realScheme;
+
         return $res;
     }
 

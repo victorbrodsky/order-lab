@@ -201,7 +201,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getScheme();
+        //$scheme = $userUtil->getScheme();
+        $scheme = $userUtil->getRealScheme();
         //exit("scheme=$scheme");
         if( $scheme ) {
             if( strtolower($scheme) == 'http' ) {
@@ -338,7 +339,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getScheme();
+        //$scheme = $userUtil->getScheme();
+        $scheme = $userUtil->getRealScheme();
         //exit("scheme=$scheme");
         if( $scheme ) {
             if( strtolower($scheme) == 'http' ) {

@@ -599,7 +599,12 @@ class SecurityController extends OrderAbstractController
         $user->setLastActivity(new \DateTime());
         //reconstruct url -order-index_dev.php-directory- to http://127.0.0.1/order/index_dev.php/directory/
         $url = str_replace("_","/",$url);
-        $url = $request->getSchemeAndHttpHost().$url;
+
+        //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
+        $userUtil = $this->container->get('user_utility');
+        $schemeAndHttpHost = $userUtil->getRealSchemeAndHttpHost($request);
+
+        $url = $schemeAndHttpHost.$url;
         //echo "url=".$url."<br>";
 
         // get current url from request

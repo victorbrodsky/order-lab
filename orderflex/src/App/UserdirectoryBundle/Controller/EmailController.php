@@ -119,7 +119,10 @@ class EmailController extends OrderAbstractController
             //exit("emails=".$emails."; cc=".$ccs);
 
             //{{ app.request.schemeAndHttpHost }}
-            $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+            //$schemeAndHttpHost = $request->getSchemeAndHttpHost();
+            //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
+            $userUtil = $this->container->get('user_utility');
+            $schemeAndHttpHost = $userUtil->getRealSchemeAndHttpHost($request);
 
             //ORDER Platform Test Message 01/01/18 12:34:57
             $today = new \DateTime();

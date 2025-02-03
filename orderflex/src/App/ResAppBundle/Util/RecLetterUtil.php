@@ -79,7 +79,10 @@ class RecLetterUtil {
             $request = $this->container->get('request_stack')->getCurrentRequest();
         }
         if( $request ) {
-            $url = $request->getSchemeAndHttpHost();
+            //$url = $request->getSchemeAndHttpHost();
+            //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
+            $userUtil = $this->container->get('user_utility');
+            $url = $userUtil->getRealSchemeAndHttpHost($request);
         }
         if( !$url ) {
             $url = $userSecUtil->getSiteSettingParameter('environment');

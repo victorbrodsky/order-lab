@@ -153,7 +153,10 @@ class ExceptionListener {
         ;
 
         if( $request ) {
-            $domain = $request->getSchemeAndHttpHost();
+            //$domain = $request->getSchemeAndHttpHost();
+            //Replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
+            $userUtil = $this->container->get('user_utility');
+            $domain = $userUtil->getRealSchemeAndHttpHost($request);
         } else {
             $domain = "Unknown Server";
         }

@@ -262,12 +262,17 @@ class UserController extends OrderAbstractController
 
         $userUtil = $this->container->get('user_utility');
         $scheme = $userUtil->getRealScheme($request);
-        //echo '2 $scheme='.$scheme.'<br>';
+        echo 'real scheme='.$scheme.'<br>';
         $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
         echo '$urlTest='.$urlTest.'<br>';
         $urlTest2 = $userUtil->getRealSchemeAndHttpHost($request); //with HaProxy should give: https://view-test.med.cornell.edu
-        echo '$urlTest2='.$urlTest2.'<br>';
+        echo 'real $urlTest2='.$urlTest2.'<br>';
         $userUtil->testSchemeAndHost();
+
+        $router = $this->container->get('router');
+        $context = $router->getContext();
+        $contextScheme = $context->getScheme();
+        echo '$contextScheme='.$contextScheme.'<br>';
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
