@@ -1317,7 +1317,16 @@ class UserTenantUtil
     public function getTenantBaseUrls( $request ) {
         $tenantManagerName = 'tenantmanager';
         $tenantBaseUrlArr = array();
-        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+        
+        //get scheme: $request->getScheme() will give http if using HaProxy.
+        //Thereofre, use urlConnectionChannel from SiteSettings
+        $userSecUtil = $this->container->get('user_security_utility');
+        $scheme = $userSecUtil->getSiteSettingParameter('SiteSettings');
+        if( !$scheme ) {
+            $scheme = $request->getScheme();
+        }
+
+        $baseUrl = $scheme . '://' . $request->getHttpHost();
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager
 
 //        $tenantManagerName = 'tenantmanager';
