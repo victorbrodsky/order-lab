@@ -142,7 +142,12 @@ class MultiTenancyController extends OrderAbstractController
         //check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
-        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+
+        //replace $request->getScheme() with getRealScheme($request)
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
+
+        $baseUrl = $scheme . '://' . $request->getHttpHost();
         foreach ($tenantManager->getTenants() as $tenant) {
             if($tenant) {
                 $url = $tenant->getUrlSlug();
@@ -1018,7 +1023,12 @@ class MultiTenancyController extends OrderAbstractController
         //check if tenant initialized, if not replace the url with
         // directory/admin/first-time-login-generation-init
         $tenantBaseUrlArr = array();
-        $baseUrl = $request->getScheme() . '://' . $request->getHttpHost();
+
+        //replace $request->getScheme() with getRealScheme($request)
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
+
+        $baseUrl = $scheme . '://' . $request->getHttpHost();
         foreach ($tenantManager->getTenants() as $tenant) {
             if($tenant) {
                 $url = $tenant->getUrlSlug();

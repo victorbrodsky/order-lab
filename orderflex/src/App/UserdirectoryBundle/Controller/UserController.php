@@ -2939,7 +2939,10 @@ class UserController extends OrderAbstractController
         if( $getUniquename && $uploadDirectory ) {
             //$subdomain = "/order";
             $subdomain = "";
-            $scheme = $request->getScheme();
+            //$scheme = $request->getScheme();
+            //replace $request->getScheme() with getRealScheme($request)
+            $userUtil = $this->container->get('user_utility');
+            $scheme = $userUtil->getRealScheme($request);
             //$getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
             $getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . $subdomain . "/" . $uploadDirectory.'/'.$getUniquename;
         }

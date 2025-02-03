@@ -221,8 +221,12 @@ class PdfGenerator
 
             //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
             $originalHost = $context->getHost();
-            $originalScheme = $context->getScheme();
+            //$originalScheme = $context->getScheme();
             $originalBaseUrl = $context->getBaseUrl();
+
+            //replace $context->getScheme() with getRealScheme($request)
+            $userUtil = $this->container->get('user_utility');
+            $originalScheme = $userUtil->getRealScheme($request);
 
             $context->setHost('localhost');
             //$context->setHost('collage.med.cornell.edu');
@@ -619,8 +623,12 @@ class PdfGenerator
                 $context = $router->getContext();
 
                 $originalHost = $context->getHost();
-                $originalScheme = $context->getScheme();
+                //$originalScheme = $context->getScheme();
                 $originalBaseUrl = $context->getBaseUrl();
+
+                //replace $context->getScheme() with getRealScheme($request)
+                $userUtil = $this->container->get('user_utility');
+                $originalScheme = $userUtil->getRealScheme($request);
 
                 //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
                 $context->setHost('localhost');
@@ -940,8 +948,12 @@ class PdfGenerator
 
             //http://192.168.37.128/order/app_dev.php/translational-research/...
             $originalHost = $context->getHost();
-            $originalScheme = $context->getScheme();
+            //$originalScheme = $context->getScheme();
             $originalBaseUrl = $context->getBaseUrl();
+
+            //replace $context->getScheme() with getRealScheme($request)
+            $userUtil = $this->container->get('user_utility');
+            $originalScheme = $userUtil->getRealScheme($request);
 
             $context->setHost('localhost');
             //$context->setHost('collage.med.cornell.edu');
