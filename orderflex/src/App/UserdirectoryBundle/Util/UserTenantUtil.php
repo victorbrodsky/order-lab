@@ -1327,6 +1327,8 @@ class UserTenantUtil
             $scheme = $request->getScheme();
         }
         //echo '2 $scheme='.$scheme.'<br>';
+        $urlTest = $request->getSchemeAndHttpHost();
+        echo '$urlTest='.$urlTest.'<br>';
 
         $baseUrl = $scheme . '://' . $request->getHttpHost();
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName); //TODO: make sure tenant is coming from tenant manager
