@@ -106,15 +106,15 @@ class UserUtil {
         }
 
         ////// testing //////
-        $scheme = 'https';
+        //$scheme = 'https';
         //$this->testSchemeAndHost();
-        $tenant = $this->container->getParameter('tenant_role');
-        echo 'tenant='.$tenant.'<br>';
-        if( !$request ) {
-            $request = $this->getRequest();
-        }
-        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
-        echo 'urlTest='.$urlTest.'<br>';
+//        $tenant = $this->container->getParameter('tenant_role');
+//        echo 'tenant='.$tenant.'<br>';
+//        if( !$request ) {
+//            $request = $this->getRequest();
+//        }
+//        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
+//        echo 'urlTest='.$urlTest.'<br>';
         //exit('$scheme='.$scheme);
         ////// eof testing //////
 
