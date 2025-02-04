@@ -106,7 +106,7 @@ class UserUtil {
         }
 
         //testing
-        $scheme = 'https';
+        //$scheme = 'https';
         //exit('$scheme='.$scheme);
 
         return $scheme;
