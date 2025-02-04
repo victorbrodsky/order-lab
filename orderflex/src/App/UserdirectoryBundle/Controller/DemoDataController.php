@@ -254,10 +254,10 @@ class DemoDataController extends OrderAbstractController
         $demoDbUtil = $this->container->get('demodb_utility');
 
         $client = $demoDbUtil->loginAction();
-        $client->takeScreenshot('test_login.png');
+        $client->takeScreenshot('demoDb/test_login.png');
 
         //$users = $demoDbUtil->createUsers($client);
-        //$client->takeScreenshot('test_createuser.png');
+        //$client->takeScreenshot('demoDb/test_createuser.png');
 
         //$users = $demoDbUtil->getUsers(); //testing
 

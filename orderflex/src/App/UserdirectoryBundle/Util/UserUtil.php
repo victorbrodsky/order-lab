@@ -104,6 +104,7 @@ class UserUtil {
         if( !$scheme ) {
             $scheme = 'http';
         }
+        exit('$scheme='.$scheme);
         return $scheme;
     }
     public function getRealSchemeAndHttpHost( $request=NULL ) {

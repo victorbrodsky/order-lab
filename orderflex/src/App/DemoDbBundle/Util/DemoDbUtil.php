@@ -254,8 +254,8 @@ class DemoDbUtil {
 //        $userId = end($uriArr);
         $userId = $this->getCurrentUrlId($client);
 
-        $client->takeScreenshot('test_createuser-'.$userid.'.png');
-        $client->takeScreenshot('test_createuser-id-'.$userId.'.png');
+        $client->takeScreenshot('demoDb/test_createuser-'.$userid.'.png');
+        $client->takeScreenshot('demoDb/test_createuser-id-'.$userId.'.png');
 
         return $userId;
     }
@@ -326,7 +326,7 @@ class DemoDbUtil {
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','Ernest Rutherford - rrutherford (Local User)')");
         //$client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','John Doe - johndoe1 (Local User)')");
 
-        $client->takeScreenshot('test_newTrpProject-setPi'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-setPi'.'.png');
 
         //$crawler = $client->refreshCrawler();
         //$form = $crawler->filter('#oleg_translationalresearchbundle_project_submitIrbReview')->form();
@@ -338,18 +338,18 @@ class DemoDbUtil {
         //Set billingContact 's2id_oleg_translationalresearchbundle_project_billingContact'
         $billingContactArr = $users[1];
         $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_billingContact').select2('val','".$billingContactArr['userId']."')");
-        $client->takeScreenshot('test_newTrpProject-setBilling'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-setBilling'.'.png');
 
         //Set IRB to Exempt 'oleg_translationalresearchbundle_project_exemptIrbApproval'
         $client->executeScript("$('#oleg_translationalresearchbundle_project_exemptIrbApproval').select2('val','2')");
 
         //Set oleg_translationalresearchbundle_project_title
         $form['oleg_translationalresearchbundle_project[title]'] = $trpProjectArr['title'];
-        $client->takeScreenshot('test_newTrpProject-setTitle'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-setTitle'.'.png');
 
         //Set description
         $form['oleg_translationalresearchbundle_project[description]'] = $trpProjectArr['description'];
-        $client->takeScreenshot('test_newTrpProject-setDescr'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-setDescr'.'.png');
 
         //Set funded
         //$form['oleg_translationalresearchbundle_project[funded]'] = $trpProjectArr['funded'];
@@ -366,20 +366,20 @@ class DemoDbUtil {
 
         //Set budget
         $form['oleg_translationalresearchbundle_project[totalCost]'] = $trpProjectArr['budget'];
-        $client->takeScreenshot('test_newTrpProject-'.'totalCost'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-'.'totalCost'.'.png');
 
         //Set required radio boxes: 'oleg_translationalresearchbundle_project[involveHumanTissue]'
         $form['oleg_translationalresearchbundle_project[involveHumanTissue]']->select('No');
-        $client->takeScreenshot('test_newTrpProject-'.'involveHumanTissue'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-'.'involveHumanTissue'.'.png');
         $form['oleg_translationalresearchbundle_project[requireTissueProcessing]']->select('No');
-        $client->takeScreenshot('test_newTrpProject-'.'requireTissueProcessing'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-'.'requireTissueProcessing'.'.png');
         $form['oleg_translationalresearchbundle_project[requireArchivalProcessing]']->select('No');
-        $client->takeScreenshot('test_newTrpProject-'.'requireArchivalProcessing'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-'.'requireArchivalProcessing'.'.png');
 
         $client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
 
         $client->submit($form);
-        $client->takeScreenshot('test_newTrpProject-'.'submit'.'.png');
+        $client->takeScreenshot('demoDb/test_newTrpProject-'.'submit'.'.png');
 
         $projectId = $this->getCurrentUrlId($client);
         echo "projectId=$projectId <br>";
@@ -410,7 +410,7 @@ class DemoDbUtil {
 
                 //$client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
                 $client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
-                $client->takeScreenshot('test_product-'.$productId.'.png');
+                $client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
                 //$client->click($button);
             }
         }
@@ -421,7 +421,7 @@ class DemoDbUtil {
         //https://view.online/c/demo-institution/demo-department/translational-research/project/1/work-request/new/
         //$url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
         //$crawler = $client->request('GET', $url);
-        $client->takeScreenshot('test_newRequest-'.$projectId.'.png');
+        $client->takeScreenshot('demoDb/test_newRequest-'.$projectId.'.png');
 
         //$form = $crawler->filter('Complete Submission')->form();
         $client->waitForVisibility('#oleg_translationalresearchbundle_request_saveAsComplete');
@@ -458,11 +458,11 @@ class DemoDbUtil {
         //$form['oleg_translationalresearchbundle_request_businessPurposes']->select(1);
         //$client->executeScript("$('oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
 
-        $client->takeScreenshot('test_product-'.$productId.'.png');
+        $client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
 
         //Check #confirmationSubmit
         $client->executeScript("$('#confirmationSubmit').prop('checked', true)");
-        $client->takeScreenshot('test_product-confirmationSubmit-'.$productId.'.png');
+        $client->takeScreenshot('demoDb/test_product-confirmationSubmit-'.$productId.'.png');
 
         //Click 'Complete Submission'
         //$client->executeScript("$('#oleg_translationalresearchbundle_request_saveAsComplete').click()");
@@ -526,7 +526,7 @@ class DemoDbUtil {
         //Click link: /translational-research/approve-project/3564
         $url = $this->baseUrl.'/translational-research/approve-project/'.$projectId;
         $client->request('GET', $url);
-        $client->takeScreenshot('test_approveTrpProject-'.$projectId.'.png');
+        $client->takeScreenshot('demoDb/test_approveTrpProject-'.$projectId.'.png');
     }
 
 
