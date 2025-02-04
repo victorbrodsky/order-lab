@@ -109,8 +109,8 @@ f_sync() {
 
 f_sync homepagemanager
 f_sync tenantmanager
-f_sync tenantappdemo
-f_sync tenantapptest
+#f_sync tenantappdemo
+#f_sync tenantapptest
 f_sync tenantapp1
-f_sync tenantapp2
+#f_sync tenantapp2
 
