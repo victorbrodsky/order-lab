@@ -250,20 +250,24 @@ class SamlConfigProvider
 //        }
         //echo "2 scheme=$scheme <br>"; //http
 
-        $scheme = NULL;
-        //get the scheme from url (use url getSpEntityId from SamlConfig) (or TenantList?)
-        $spEntityId = $config->getSpEntityId();
-        if( $spEntityId ) {
-            $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
-            //$this->logger->notice('getSPEntityId: $scheme='.$scheme);
-            //$request = $this->requestStack->getCurrentRequest();
-            //$uri = $request->getUri();
-            //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
-        }
-        if( !$scheme ) {
-            $scheme = 'https'; //tenants are behind haproxy, therefore, $_SERVER's schema will be http
-        }
+        //////// Get scheme ///////////
+//        $scheme = NULL;
+//        //get the scheme from url (use url getSpEntityId from SamlConfig) (or TenantList?)
+//        $spEntityId = $config->getSpEntityId();
+//        if( $spEntityId ) {
+//            $scheme = parse_url($spEntityId, PHP_URL_SCHEME);
+//            //$this->logger->notice('getSPEntityId: $scheme='.$scheme);
+//            //$request = $this->requestStack->getCurrentRequest();
+//            //$uri = $request->getUri();
+//            //$this->logger->notice('getSPEntityId: $uri='.$uri); //$uri=http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
+//        }
+//        if( !$scheme ) {
+//            $scheme = 'https'; //tenants are behind haproxy, therefore, $_SERVER's schema will be http
+//        }
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getRealScheme($request);
         //echo "3 scheme=$scheme <br>"; //http
+        //////// EOF Get scheme ///////////
 
         $host = $this->requestStack->getCurrentRequest()->getHost();
         //echo "1 host=$host <br>"; //view.online
