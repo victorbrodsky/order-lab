@@ -107,7 +107,12 @@ class UserUtil {
 
         //testing
         //$scheme = 'https';
-        $this->testSchemeAndHost();
+        //$this->testSchemeAndHost();
+        if( !$request ) {
+            $request = $this->getRequest();
+        }
+        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
+        echo 'urlTest='.$urlTest.'<br>';
         exit('$scheme='.$scheme);
 
         return $scheme;
