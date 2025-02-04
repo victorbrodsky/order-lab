@@ -108,6 +108,8 @@ class UserUtil {
         //testing
         //$scheme = 'https';
         //$this->testSchemeAndHost();
+        $tenant = $this->container->getParameter('tenant_role');
+        echo 'tenant='.$tenant.'<br>';
         if( !$request ) {
             $request = $this->getRequest();
         }
