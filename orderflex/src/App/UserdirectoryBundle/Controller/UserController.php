@@ -260,19 +260,19 @@ class UserController extends OrderAbstractController
         //exit('111');
         //'ldap_employees_firewall'
 
-        $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getRealScheme($request);
-        echo 'real scheme='.$scheme.'<br>';
-        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
-        echo '$urlTest='.$urlTest.'<br>';
-        $urlTest2 = $userUtil->getRealSchemeAndHttpHost($request); //with HaProxy should give: https://view-test.med.cornell.edu
-        echo 'real $urlTest2='.$urlTest2.'<br>';
-        $userUtil->testSchemeAndHost();
-
-        $router = $this->container->get('router');
-        $context = $router->getContext();
-        $contextScheme = $context->getScheme();
-        echo '$contextScheme='.$contextScheme.'<br>';
+//        $userUtil = $this->container->get('user_utility');
+//        $scheme = $userUtil->getRealScheme($request);
+//        echo 'real scheme='.$scheme.'<br>';
+//        $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
+//        echo '$urlTest='.$urlTest.'<br>';
+//        $urlTest2 = $userUtil->getRealSchemeAndHttpHost($request); //with HaProxy should give: https://view-test.med.cornell.edu
+//        echo 'real $urlTest2='.$urlTest2.'<br>';
+//        $userUtil->testSchemeAndHost();
+//
+//        $router = $this->container->get('router');
+//        $context = $router->getContext();
+//        $contextScheme = $context->getScheme();
+//        echo '$contextScheme='.$contextScheme.'<br>';
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
