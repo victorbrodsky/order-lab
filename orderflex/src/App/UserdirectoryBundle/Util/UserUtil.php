@@ -90,7 +90,7 @@ class UserUtil {
     public function getRealScheme( $request=NULL ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
-        //echo '1 $scheme='.$scheme.'<br>';
+        echo 'settings urlConnectionChannel $scheme='.$scheme.'<br>';
         if( !$scheme ) {
             if( !$request ) {
                 if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
@@ -107,7 +107,8 @@ class UserUtil {
 
         //testing
         //$scheme = 'https';
-        //exit('$scheme='.$scheme);
+        $this->testSchemeAndHost();
+        exit('$scheme='.$scheme);
 
         return $scheme;
     }
