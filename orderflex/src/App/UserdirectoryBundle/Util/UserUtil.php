@@ -105,8 +105,8 @@ class UserUtil {
             $scheme = 'http';
         }
 
-        //testing
-        //$scheme = 'https';
+        ////// testing //////
+        $scheme = 'https';
         //$this->testSchemeAndHost();
         $tenant = $this->container->getParameter('tenant_role');
         echo 'tenant='.$tenant.'<br>';
@@ -116,6 +116,7 @@ class UserUtil {
         $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
         echo 'urlTest='.$urlTest.'<br>';
         exit('$scheme='.$scheme);
+        ////// eof testing //////
 
         return $scheme;
     }
