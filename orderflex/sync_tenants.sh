@@ -54,6 +54,15 @@ f_sync() {
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
     fi
 
+    if [ -n "$type" ] && [ "$type" == "sync" ]
+        	then
+        		echo -e ${COLOR} cd to "$1"${NC}
+                    cd "$homedir"/order-lab-$1/orderflex
+
+                	echo -e ${COLOR} git pull for "$1" ${NC}
+                	git pull
+        fi
+
     ### DB migration ###
     if [ -n "$type" ] && [ "$type" == "dbstatus" ]
         then
