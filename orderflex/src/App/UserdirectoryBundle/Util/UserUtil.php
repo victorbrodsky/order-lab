@@ -115,7 +115,7 @@ class UserUtil {
         }
         $urlTest = $request->getSchemeAndHttpHost(); //with HaProxy give: http://view-test.med.cornell.edu
         echo 'urlTest='.$urlTest.'<br>';
-        exit('$scheme='.$scheme);
+        //exit('$scheme='.$scheme);
         ////// eof testing //////
 
         return $scheme;
