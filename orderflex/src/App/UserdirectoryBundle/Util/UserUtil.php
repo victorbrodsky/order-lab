@@ -105,6 +105,7 @@ class UserUtil {
             $scheme = 'http';
         }
 
+        //testing
         $scheme = 'https';
         //exit('$scheme='.$scheme);
 
