@@ -387,30 +387,30 @@ class DemoDbUtil {
         return $projectId;
     }
 
-    public function newTrpRequests( $client, $projectIds ) {
+    public function newTrpWorkRequests( $client, $projectIds ) {
         $requestIds = array();
         foreach($projectIds as $projectId) {
             $productId = 0;
-            foreach ($this->getTrpRequests() as $trpRequestArr) {
+            foreach ($this->getTrpWorkRequests() as $trpRequestArr) {
 
                 $url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
                 $crawler = $client->request('GET', $url);
 
                 $requestIds[] = $this->newTrpRequest($client, $crawler, $projectId, $trpRequestArr, $productId);
-                $productId++;
+                //$productId++;
                 //add new product section by clicking 'Add Product or Service'
                 //$link = $crawler->selectLink('Add Product or Service')->link();
                 //$button = $crawler->selectButton('Add Product or Service')->link();
                 //'transres-add-product-btn'
                 //$client->executeScript("document.querySelector('#js-scroll-down').click()");
                 //$client->executeScript("document.querySelector('.transres-add-product-btn').click()");
-                $client->executeScript("$('.transres-add-product-btn').click()");
-                $client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
+                //$client->executeScript("$('.transres-add-product-btn').click()");
+                //$client->waitForVisibility('#oleg_translationalresearchbundle_request_products_'.$productId.'_requested');
                 //$client->waitForVisibility('s2id_oleg_translationalresearchbundle_request_products_2_category');
 
                 //$client->executeScript("document.getElementById('oleg_translationalresearchbundle_project_submitIrbReview').scrollIntoView();");
-                $client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
-                $client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
+                //$client->executeScript('$(".transres-add-product-btn")[0].scrollIntoView(false);');
+                //$client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
                 //$client->click($button);
             }
         }
@@ -530,7 +530,7 @@ class DemoDbUtil {
     }
 
 
-    public function getTrpRequests() {
+    public function getTrpWorkRequests() {
         $requests = array();
         $requests[] = array(
             'serviceId' => '1',

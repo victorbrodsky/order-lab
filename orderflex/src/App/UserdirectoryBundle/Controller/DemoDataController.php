@@ -259,14 +259,14 @@ class DemoDataController extends OrderAbstractController
         //$users = $demoDbUtil->createUsers($client);
         //$client->takeScreenshot('demoDb/test_createuser.png');
 
-        //$users = $demoDbUtil->getUsers(); //testing
+        $users = $demoDbUtil->getUsers(); //testing
 
         $projectIds = array(1);
         //$projectIds = $demoDbUtil->newTrpProjects($client,$users);
 
         $demoDbUtil->approveTrpProjects($client,$projectIds);
 
-        $requestIds = $demoDbUtil->newTrpRequests($client,$projectIds);
+        $requestIds = $demoDbUtil->newTrpWorkRequests($client,$projectIds);
 
         exit('eof panther');
     }
