@@ -73,12 +73,12 @@ script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></scr
       
       //Training period for which applying
       var now = new Date();
-      $("#trainingPeriodStart").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));    
-      //$("#trainingPeriodStart").datepicker().attr('readonly','readonly');        
-      $("#trainingPeriodStart").datepicker("remove");
-      
-      $("#trainingPeriodEnd").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));  
-      $("#trainingPeriodEnd").datepicker("remove");
+        $("#trainingPeriodStart").datepicker().datepicker("setDate", new Date(now.getFullYear()+2,6,1));
+        //$("#trainingPeriodStart").datepicker().attr('readonly','readonly');
+        $("#trainingPeriodStart").datepicker("remove");
+
+        $("#trainingPeriodEnd").datepicker().datepicker("setDate", new Date(now.getFullYear()+3,5,30 ));
+        $("#trainingPeriodEnd").datepicker("remove");
        
       //set the default value of the "Country" field to "United States"
       $('.container').find('input[id*="Country"]').each(function() {
