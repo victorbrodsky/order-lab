@@ -397,7 +397,7 @@ class DemoDbUtil {
                 $crawler = $client->request('GET', $url);
 
                 $requestIds[] = $this->newTrpRequest($client, $crawler, $projectId, $trpRequestArr, $productId);
-                //$productId++;
+                //$productId++; 
                 //add new product section by clicking 'Add Product or Service'
                 //$link = $crawler->selectLink('Add Product or Service')->link();
                 //$button = $crawler->selectButton('Add Product or Service')->link();
