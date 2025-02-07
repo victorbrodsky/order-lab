@@ -284,7 +284,11 @@ class ApproverController extends OrderAbstractController
                 //$panelClass = "panel-success";
                 $panelClass = "panel-info";
             }
-            $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
+            //add 'accrues 2 day/month'
+            //$accrueStr = 'accrues 2 day/month';
+            $accDays = $approvalGroupType->getVacationAccruedDaysPerMonthStr();
+            $accrueStr = 'accrues '.$accDays.' day/month';
+            $approvalGroupTypeStr = " (".$approvalGroupType->getName().', '.$accrueStr.")";
         }
 
         $settings = $vacreqUtil->getSettingsByInstitution($institutionId);

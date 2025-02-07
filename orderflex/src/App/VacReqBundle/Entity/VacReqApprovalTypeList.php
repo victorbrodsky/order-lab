@@ -177,6 +177,16 @@ class VacReqApprovalTypeList extends ListAbstract {
         $this->vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonth;
     }
 
+    public function getVacationAccruedDaysPerMonthStr()
+    {
+        $vacationAccruedDaysPerMonth = $this->vacationAccruedDaysPerMonth;
+        if( $vacationAccruedDaysPerMonth ) {
+            //$accDays = round($accDays);
+            $vacationAccruedDaysPerMonth = number_format((float)$vacationAccruedDaysPerMonth, 2, '.', '');
+        }
+        return $vacationAccruedDaysPerMonth;
+    }
+
     /**
      * @return mixed
      */
