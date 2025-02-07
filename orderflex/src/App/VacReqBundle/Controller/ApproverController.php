@@ -94,8 +94,14 @@ class ApproverController extends OrderAbstractController
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $groupParams['statusArr'] = array('default','user-added');
+        $groupParams['sortBy'] = 'list.name';
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "organizationalInstitutions=".count($organizationalInstitutions)."<br>";
+
+        //Since we can have multiple similar names (Anatomic Pathology Full-time, Anatomic Pathology Part-time),
+        // we want to display it next to each other - therefore, sort by institution name
+        //dump($organizationalInstitutions);
+        //exit('111');
 
         //get carryover approver groups
         $carryOverRequestGroups = array();
@@ -105,7 +111,6 @@ class ApproverController extends OrderAbstractController
             $carryOverRequestGroups = $vacreqUtil->getGroupsByPermission($user,$carryOverGroupParams);
         }
         //echo "carryOverRequestGroups=".count($carryOverRequestGroups)."<br>";
-
 
         return array(
             'organizationalInstitutions' => $organizationalInstitutions,

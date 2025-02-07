@@ -3612,6 +3612,10 @@ class VacReqUtil
         $asUser = ( array_key_exists('asUser', $params) ? $params['asUser'] : false);
         $statusArr = ( array_key_exists('statusArr', $params) ? $params['statusArr'] : array());
 
+        $sortBy = null;
+        $sortBy = ( array_key_exists('sortBy', $params) ? $params['sortBy'] : null);
+        //$sortBy='list.name';
+        
         //$asUser = true;
 //        echo "asUser=$asUser <br>";
 //        if($asUser) {
@@ -3634,32 +3638,29 @@ class VacReqUtil
 
             if( !$user ) {
                 if( !$asUser ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    //echo "roles try 0<br>";
                     $roles = $this->em->getRepository(User::class)->
-                        findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+                        findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null, $sortBy);
                 }
             }
 
             if( count($roles)==0 && $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
                 if( !$asUser ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                     $roles = $this->em->getRepository(User::class)->
-                    findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+                    findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null, $sortBy);
                 }
             }
             if( count($roles)==0 && ($this->security->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 if( !$asUser ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                     $roles = $this->em->getRepository(User::class)->
                     findUserChildRolesBySitePermissionObjectAction($user, 'vacreq', $objectStr, $actionStr);
                 }
             }
             if( count($roles)==0 ) {
                 //echo "roles try 3<br>";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                 $roles = $this->em->getRepository(User::class)->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
@@ -3670,7 +3671,6 @@ class VacReqUtil
                 //get all changestatus-carryover roles: changestatus-carryover and create
                 $childObjectStr = $objectStr;
                 $childActionStr = "create";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                 $roles = $this->em->getRepository(User::class)->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 //echo "1 role count=".count($roles)."<br>"; //testing this role count is 1 for wcmc pathology
@@ -3678,7 +3678,6 @@ class VacReqUtil
                 if( count($roles)==0 ) {
                     //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY<br>";
                     $childActionStr = "view-away-calendar";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                     $roles = $this->em->getRepository(User::class)->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 }

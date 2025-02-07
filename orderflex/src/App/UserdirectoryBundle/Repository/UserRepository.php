@@ -452,7 +452,7 @@ class UserRepository extends EntityRepository {
     }
 
     //get all roles with corresponding permissions: object-action
-    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null) {
+    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null, $sortBy='list.id') {
 
         //check if user's roles have permission
         //$query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
@@ -474,14 +474,12 @@ class UserRepository extends EntityRepository {
 
         if( $institutionId ) {
             $query->leftJoin("list.institution","institution");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $institution = $this->_em->getRepository(Institution::class)->find($institutionId);
             //echo "institution=".$institution->getNodeNameWithRoot()."<br>";
             //get inst criterion string tree with collaboration
             //$instStr = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
             //        getCriterionStrForCollaborationsByNode($institution,"institution",array("Intersection"),false,false);
             //get simple inst criterion string tree (without collaboration)
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $instStr = $this->_em->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
             //echo "instStr=".$instStr."<br>";
             $query->andWhere($instStr);
@@ -501,7 +499,11 @@ class UserRepository extends EntityRepository {
 
         //print_r($parameters);
 
-        $query->orderBy("list.id","ASC");
+        if( !$sortBy ) {
+            $sortBy = "list.id";
+        }
+        //$query->orderBy("list.id","ASC");
+        $query->orderBy($sortBy,"ASC");
         $query->setParameters( $parameters);
 
         //echo "sql=".$query."<br>";
