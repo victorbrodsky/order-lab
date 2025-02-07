@@ -1889,12 +1889,17 @@ class ApproverController extends OrderAbstractController
 //            $approvalGroupTypeStr = " (" . $approvalGroupTypeStr . ")";
 //        }
         //$totalAllocatedDays = NULL;
-        $panelClass = "panel-info";
+        //$panelClass = "panel-info";
+        $panelClass = "panel-success";
         $approvalGroupTypeStr = ""; //"None";
         $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($group);
         if( $approvalGroupType ) {
-            if( $approvalGroupType->getName() != "Faculty" ) {
-                $panelClass = "panel-success";
+            //if( $approvalGroupType->getName() != "Faculty" ) {
+            //    $panelClass = "panel-success";
+            //}
+            if( str_contains($approvalGroupType->getName(), 'Faculty') ) {
+                //$panelClass = "panel-success";
+                $panelClass = "panel-info";
             }
             $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
             //$totalAllocatedDays = $vacreqUtil->getTotalAccruedDaysByGroup($approvalGroupType);
