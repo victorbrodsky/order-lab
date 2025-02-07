@@ -3612,7 +3612,7 @@ class VacReqUtil
         $asUser = ( array_key_exists('asUser', $params) ? $params['asUser'] : false);
         $statusArr = ( array_key_exists('statusArr', $params) ? $params['statusArr'] : array());
 
-        $sortBy = null;
+        //$sortBy = null;
         $sortBy = ( array_key_exists('sortBy', $params) ? $params['sortBy'] : null);
         //$sortBy='list.name';
         
@@ -3640,7 +3640,7 @@ class VacReqUtil
                 if( !$asUser ) {
                     //echo "roles try 0<br>";
                     $roles = $this->em->getRepository(User::class)->
-                        findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null, $sortBy);
+                    findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null, $sortBy);
                 }
             }
 

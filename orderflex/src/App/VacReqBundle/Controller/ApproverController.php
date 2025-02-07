@@ -94,12 +94,16 @@ class ApproverController extends OrderAbstractController
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
         $groupParams['statusArr'] = array('default','user-added');
-        $groupParams['sortBy'] = 'list.name';
+
+        //$groupParams['sortBy'] = 'list.name';
+        $groupParams['sortBy'] = array('institution','name','ASC');
+
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         //echo "organizationalInstitutions=".count($organizationalInstitutions)."<br>";
 
         //Since we can have multiple similar names (Anatomic Pathology Full-time, Anatomic Pathology Part-time),
-        // we want to display it next to each other - therefore, sort by institution name
+        // we want to display it next to each other - therefore, sort by institution name.
+        //Note: we can not sort properly by Role
         //dump($organizationalInstitutions);
         //exit('111');
 

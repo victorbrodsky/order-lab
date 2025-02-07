@@ -452,7 +452,7 @@ class UserRepository extends EntityRepository {
     }
 
     //get all roles with corresponding permissions: object-action
-    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null, $sortBy='list.id') {
+    public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null, $sortBy=null) {
 
         //check if user's roles have permission
         //$query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
@@ -463,6 +463,7 @@ class UserRepository extends EntityRepository {
         $query->leftJoin("permissions.permission","permission");
         $query->leftJoin("permission.permissionObjectList","permissionObjectList");
         $query->leftJoin("permission.permissionActionList","permissionActionList");
+        $query->leftJoin("list.institution","institution");
 
         $query->where("permissionActionList.name = :permissionActionStr OR permissionActionList.abbreviation = :permissionActionStr");
         $query->andWhere("permissionObjectList.name = :permissionObjectStr OR permissionObjectList.abbreviation = :permissionObjectStr");
@@ -473,7 +474,7 @@ class UserRepository extends EntityRepository {
         );
 
         if( $institutionId ) {
-            $query->leftJoin("list.institution","institution");
+            //$query->leftJoin("list.institution","institution");
             $institution = $this->_em->getRepository(Institution::class)->find($institutionId);
             //echo "institution=".$institution->getNodeNameWithRoot()."<br>";
             //get inst criterion string tree with collaboration
@@ -499,11 +500,17 @@ class UserRepository extends EntityRepository {
 
         //print_r($parameters);
 
-        if( !$sortBy ) {
+        if( $sortBy === null ) {
             $sortBy = "list.id";
+            //$query->orderBy("list.id","ASC");
+            $query->orderBy($sortBy,"ASC");
+        } else {
+            $entity = $sortBy[0];
+            $field = $sortBy[1];
+            $direction = $sortBy[2];
+            $query->orderBy($entity.'.'.$field,$direction);
         }
-        //$query->orderBy("list.id","ASC");
-        $query->orderBy($sortBy,"ASC");
+
         $query->setParameters( $parameters);
 
         //echo "sql=".$query."<br>";
