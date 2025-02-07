@@ -460,12 +460,23 @@ class DemoDbUtil {
 
         $client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
 
+        //businessPurposes
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_request_businessPurposes').val('1')");
+        $client->executeScript('$("#s2id_oleg_translationalresearchbundle_request_businessPurposes")[0].scrollIntoView(false);');
+
         //Check #confirmationSubmit
         $client->executeScript("$('#confirmationSubmit').prop('checked', true)");
+        $client->executeScript('$("#confirmationSubmit")[0].scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_product-confirmationSubmit-'.$productId.'.png');
 
         //Click 'Complete Submission'
         //$client->executeScript("$('#oleg_translationalresearchbundle_request_saveAsComplete').click()");
+        //oleg_translationalresearchbundle_request_saveAsComplete
+        $form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
+        $client->submit($form);
+        $client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete")[0].scrollIntoView(false);');
+        $client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete")[0].scrollIntoView();');
+        $client->takeScreenshot('demoDb/test_request-saveAsComplete-'.$productId.'.png');
     }
 
     public function getCurrentUrlId($client) {
