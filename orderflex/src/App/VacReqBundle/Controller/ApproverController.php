@@ -287,7 +287,11 @@ class ApproverController extends OrderAbstractController
             //add 'accrues 2 day/month'
             //$accrueStr = 'accrues 2 day/month';
             $accDays = $approvalGroupType->getVacationAccruedDaysPerMonthStr();
-            $accrueStr = 'accrues '.$accDays.' day/month';
+            $accrueUntiStr = 'day/month';
+            if( $accDays > 1 ) {
+                $accrueUntiStr = 'days/month';
+            }
+            $accrueStr = 'accrues '.$accDays.' '.$accrueUntiStr;
             $approvalGroupTypeStr = " (".$approvalGroupType->getName().', '.$accrueStr.")";
         }
 

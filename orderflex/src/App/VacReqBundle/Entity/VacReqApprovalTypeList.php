@@ -181,8 +181,12 @@ class VacReqApprovalTypeList extends ListAbstract {
     {
         $vacationAccruedDaysPerMonth = $this->vacationAccruedDaysPerMonth;
         if( $vacationAccruedDaysPerMonth ) {
-            //$accDays = round($accDays);
-            $vacationAccruedDaysPerMonth = number_format((float)$vacationAccruedDaysPerMonth, 2, '.', '');
+            $vacationAccruedDaysPerMonthRound = round($vacationAccruedDaysPerMonth);
+            if( $vacationAccruedDaysPerMonth - $vacationAccruedDaysPerMonthRound != 0 ) {
+                $vacationAccruedDaysPerMonth = number_format((float)$vacationAccruedDaysPerMonth, 2, '.', '');
+            } else {
+                $vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonthRound;
+            }
         }
         return $vacationAccruedDaysPerMonth;
     }
