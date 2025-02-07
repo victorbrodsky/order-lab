@@ -501,9 +501,9 @@ class UserRepository extends EntityRepository {
         //print_r($parameters);
 
         if( $sortBy === null ) {
-            $sortBy = "list.id";
-            //$query->orderBy("list.id","ASC");
-            $query->orderBy($sortBy,"ASC");
+            $query->orderBy("list.id","ASC");
+            //$sortBy = "list.id";
+            //$query->orderBy($sortBy,"ASC");
         } else {
             $entity = $sortBy[0];
             $field = $sortBy[1];
