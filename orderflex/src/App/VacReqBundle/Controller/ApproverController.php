@@ -263,12 +263,17 @@ class ApproverController extends OrderAbstractController
         }
         //echo "proxySubmitters=".count($proxySubmitters)."<br>";
 
-        $panelClass = "panel-info";
+        //$panelClass = "panel-info";
+        $panelClass = "panel-success";
         $approvalGroupTypeStr = ""; //"None";
         $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($organizationalGroupInstitution);
         if( $approvalGroupType ) {
-            if( $approvalGroupType->getName() != "Faculty" ) {
-                $panelClass = "panel-success";
+//            if( $approvalGroupType->getName() != "Faculty" ) {
+//                $panelClass = "panel-success";
+//            }
+            if( str_contains($approvalGroupType->getName(), 'Faculty') ) {
+                //$panelClass = "panel-success";
+                $panelClass = "panel-info";
             }
             $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
         }
