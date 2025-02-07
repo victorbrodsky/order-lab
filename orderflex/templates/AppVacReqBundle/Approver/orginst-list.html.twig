@@ -31,12 +31,12 @@
 
             {% if vacreq_util.hasRoleNameAndGroup(['ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'],organizationalGroupId) %}
                 <div class="row">
-                    <div class="col-xs-6" align="right">
+                    <div class="col-xs-10" align="right">
                         <a data-toggle="collapse" href="#vacreq-organizational-group-{{ organizationalGroupId }}">
                             {{ organizationalGroupName }}{{ orgNamePostfix }} (root: {{ rootInstitution }}) {{ approvalGroupType }}
                         </a>
                     </div>
-                    <div class="col-xs-6" align="left">
+                    <div class="col-xs-2" align="left">
                         <a class="btn-sm btn-info" href="{{ path(vacreq_sitename~'_orginst_management', { 'institutionId': organizationalGroupId }) }}">
                             Manage
                         </a>
