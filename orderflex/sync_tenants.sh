@@ -16,7 +16,7 @@ type=$2
 if [ -z "$homedir" ]
   then
     homedir="/srv"
-    homedir="/usr/local/bin"
+    #homedir="/usr/local/bin"
 fi
 
 if [ -z "$type" ]

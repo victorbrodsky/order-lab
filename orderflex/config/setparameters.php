@@ -84,7 +84,6 @@ $connection_channel = $container->getParameter('connection_channel');
 if( !$connection_channel ) {
     $connection_channel = 'http';
 }
-//$connection_channel = 'https';
 echo "*** siteparameters.php: Initial connection_channel=[".$connection_channel."] ***\n"; //testing
 
 $employeesuploadpath = "directory/documents";
