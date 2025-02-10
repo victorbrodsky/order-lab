@@ -612,20 +612,17 @@ class ApproverController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $subjectUser = $em->getRepository(User::class)->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($instid);
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
         //get role by roletype
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $role = $em->getRepository(Roles::class)->find( $roleId );
         if( $role ) {
 //            echo "subjectUser=".$subjectUser."<br>";
@@ -636,22 +633,25 @@ class ApproverController extends OrderAbstractController
 //            echo "<br>";
 
             //remove role from user
-            $subjectUser->removeRole($role->getName());
-
+            $removedStatus = $subjectUser->removeRole($role->getName());
+            if( $removedStatus === true ) {
 //            foreach( $subjectUser->getRoles() as $userRole ) {
 //                echo "1 userRole=".$userRole."<br>";
 //            }
-            //exit('1');
+                //exit('1');
 
-            $em->persist($subjectUser);
-            $em->flush();
+                $em->persist($subjectUser);
+                $em->flush();
 
-            //Event Log
-            $eventType = "Business/Vacation Group Updated";
-            $event = $organizationalGroupInstitution.": User ".$subjectUser." has been removed as ".$role->getAlias();
-            $userSecUtil = $this->container->get('user_security_utility');
-            //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
+                //Event Log
+                $eventType = "Business/Vacation Group Updated";
+                $event = $organizationalGroupInstitution . ": User " . $subjectUser . " has been removed as " . $role->getAlias();
+                $userSecUtil = $this->container->get('user_security_utility');
+                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $subjectUser, $request, $eventType);
+            } else {
+                $event = $organizationalGroupInstitution . ": Failed to remove role from user ".$subjectUser." - ".$role->getAlias();
+            }
 
             //Flash
             $this->addFlash(

@@ -409,14 +409,16 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function removeRole($role): self
+    public function removeRole($role): bool
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
+            return true;
         }
 
-        return $this;
+        //return $this;
+        return false;
     }
 
     /**
