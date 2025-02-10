@@ -57,11 +57,12 @@
                             {#<textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>#}
                         {#</div>#}
                     {#{% endspaceless %}#}
-                    {% apply spaceless %}
+                    {#Since twig/twig 3.12: Twig Filter "spaceless" is deprecated#}
+                    {#{% apply spaceless %}#}
                         <div class='textarea_widget'>
                             <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
                         </div>
-                    {% endapply %}
+                    {#{% endapply %}#}
                 {% endblock textarea_widget %}
                 </td>
                               

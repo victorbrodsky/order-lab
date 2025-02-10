@@ -26,7 +26,8 @@
             {#{% endfor %}#}
         {#</div>#}
     {#{% endspaceless %}#}
-    {% apply spaceless %}
+    {#Since twig/twig 3.12: Twig Filter "spaceless" is deprecated#}
+    {#{% apply spaceless %}#}
         <div {{ block('widget_container_attributes') }}>
             {% for child in form %}
                 <div class='radio_newline' align='left'>
@@ -35,6 +36,6 @@
                 </div>
             {% endfor %}
         </div>
-    {% endapply %}
+    {#{% endapply %}#}
 {% endblock choice_widget_expanded %}
 

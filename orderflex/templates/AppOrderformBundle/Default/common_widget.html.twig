@@ -38,7 +38,8 @@
             {#</p>#}
         {#</div>#}
     {#{% endspaceless %}#}
-    {% apply spaceless %}
+    {#Since twig/twig 3.12: Twig Filter "spaceless" is deprecated#}
+    {#{% apply spaceless %}#}
         <div>
             <p>
             <div class='row'>
@@ -52,7 +53,7 @@
             </div>
             </p>
         </div>
-    {% endapply %}
+    {#{% endapply %}#}
 {% endblock form_row %}
 
 

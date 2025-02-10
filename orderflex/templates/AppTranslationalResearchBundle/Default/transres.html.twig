@@ -3034,7 +3034,8 @@ Show this accordion by default in an open + visible state.
         {#{% endif %}#}
     {#{% endspaceless %}#}
 
-    {% apply spaceless %}
+    {#Since twig/twig 3.12: Twig Filter "spaceless" is deprecated#}
+    {#{% apply spaceless %}#}
         {% if value is defined and value != null %}
             {% if value >= 0 %}
                 ${{value|number_format(2, '.', ',')}}
@@ -3042,13 +3043,14 @@ Show this accordion by default in an open + visible state.
                 -${{value|abs|number_format(2, '.', ',')}}
             {% endif %}
         {% endif %}
-    {% endapply %}
+    {#{% endapply %}#}
 {% endmacro %}
 
 {#  9800.33 =>  $9,800.33 #}
 {# -9800.33 => prefix$9,800.33 #}
 {% macro dollarAbsValue( value, prefix ) %}
-    {% apply spaceless %}
+    {#Since twig/twig 3.12: Twig Filter "spaceless" is deprecated#}
+    {#{% apply spaceless %}#}
         {% if value is defined and value != null %}
             {% if value >= 0 %}
                 ${{value|number_format(2, '.', ',')}}
@@ -3056,7 +3058,7 @@ Show this accordion by default in an open + visible state.
                 {{ prefix }}${{value|abs|number_format(2, '.', ',')}}
             {% endif %}
         {% endif %}
-    {% endapply %}
+    {#{% endapply %}#}
 {% endmacro %}
 
 
