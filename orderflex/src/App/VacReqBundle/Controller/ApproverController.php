@@ -249,15 +249,24 @@ class ApproverController extends OrderAbstractController
         }
         //echo "approvers=".count($approvers)."<br>";
 
-        //find role submitters by institution
+        //find the role of the submitters role by institution
         $submitters = array();
         $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
-        //echo "roleSubmitter=".$roleSubmitter."<br>";
+        //testing
+        foreach($roleSubmitters as $thisSubmitter) {
+            echo '1: '.$thisSubmitter."<br>";
+        }
+        echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
+            //use the role to find users
             $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "submitters=".count($submitters)."<br>";
+        //testing
+        foreach($submitters as $thisSubmitter) {
+            echo '2: '.$thisSubmitter."<br>";
+        }
 
         //find role proxy submitters by institution
         $roleProxySubmitter = NULL;
