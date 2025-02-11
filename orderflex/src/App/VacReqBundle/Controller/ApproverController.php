@@ -237,6 +237,7 @@ class ApproverController extends OrderAbstractController
 
         //$onlyWorking = true;
         $onlyWorking = false;
+        $exactRole = false;
 
         //find role approvers by institution
         $approvers = array();
@@ -259,8 +260,8 @@ class ApproverController extends OrderAbstractController
         }
         echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            //use the role to find users
-            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
+            //use the role (i.e. 'ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGY', 'ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGYPART-TIME') to find users
+            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking,$exactRole);
         }
         //echo "submitters=".count($submitters)."<br>";
         //testing

@@ -301,7 +301,7 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false ) {
+    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false, $exactRole=false ) {
 
         //$user = null;
         //exit("findUserByRole");
@@ -311,10 +311,26 @@ class UserRepository extends EntityRepository {
             ->from(User::class, 'user')
             ->select("user")
             ->leftJoin("user.infos","infos")
-            ->where("user.roles LIKE :role")
+            //->where("user.roles LIKE :role")
             ->orderBy($orderBy,"ASC")
-            //->setParameter('role', '%"' . $role . '"%'); //%" is not correct, but it was working before?
-            ->setParameter('role', '%' . $role . '%');
+            ////->setParameter('role', '%"' . $role . '"%'); //%" is not correct, but it was working before?
+            //->setParameter('role', '%' . $role . '%')
+        ;
+
+        //echo 'role='.$role.'<br>';
+        if( $exactRole ) {
+            //find role in array
+            $parameters['role'] = $role;
+            $query->where("user.roles = :role");
+            //$query->setParameters('role', $role );
+            $query->setParameters($parameters);
+        } else {
+            //$parameters['role'] = '%' . $role . '%';
+            $parameters['role'] = '%"' . $role . '"%';
+            $query->where("user.roles LIKE :role");
+            //$query->setParameters('role', '%' . $role . '%');
+            $query->setParameters($parameters);
+        }
 
         if( $onlyWorking ) {
             $curdate = date("Y-m-d", time());
