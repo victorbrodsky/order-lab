@@ -12,6 +12,7 @@ namespace App\UserdirectoryBundle\Services;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -73,7 +74,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onLogout(LogoutEvent $event): void
+    public function onLogout(LogoutEvent $event, TokenStorageInterface $tokenStorage): void
     {
         $logger = $this->container->get('logger');
         $logger->notice("onLogout");
@@ -119,7 +120,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //invalidate_session manually
         //$this->security->setToken(null);
         $session->invalidate(); //auto loggout flashbag message not display
-        $this->security->logout(false);
+        $tokenStorage->setToken(null);
+        //$this->security->logout(false); //this will cause onLogout loop
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $userSecUtil->samlLogout($user,$logintype,$sitename);
