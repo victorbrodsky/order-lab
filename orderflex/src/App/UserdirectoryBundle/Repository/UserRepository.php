@@ -301,7 +301,7 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false, $exactRole=false ) {
+    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false ) {
 
         //$user = null;
         //exit("findUserByRole");
@@ -313,24 +313,9 @@ class UserRepository extends EntityRepository {
             ->leftJoin("user.infos","infos")
             ->where("user.roles LIKE :role")
             ->orderBy($orderBy,"ASC")
-            ->setParameter('role', '%"' . $role . '"%'); //%" will select exact match "ROLE_NAME"
-            //->setParameter('role', '%' . $role . '%')
+            ->setParameter('role', '%"' . $role . '"%'); //'%"' will select exact match "ROLE_NAME"
+            //->setParameter('role', '%' . $role . '%') //'%' will search a partial match ('Cytopathology part-time' and 'Cytopathology')
         ;
-
-//        //echo 'role='.$role.'<br>';
-//        if( $exactRole ) {
-//            //find role in array
-//            $parameters['role'] = $role;
-//            $query->where("user.roles = :role");
-//            //$query->setParameters('role', $role );
-//            $query->setParameters($parameters);
-//        } else {
-//            //$parameters['role'] = '%' . $role . '%';
-//            $parameters['role'] = '%"' . $role . '"%';
-//            $query->where("user.roles LIKE :role");
-//            //$query->setParameters('role', '%' . $role . '%');
-//            $query->setParameters($parameters);
-//        }
 
         if( $onlyWorking ) {
             $curdate = date("Y-m-d", time());

@@ -237,7 +237,6 @@ class ApproverController extends OrderAbstractController
 
         //$onlyWorking = true;
         $onlyWorking = false;
-        $exactRole = false;
 
         //find role approvers by institution
         $approvers = array();
@@ -245,7 +244,6 @@ class ApproverController extends OrderAbstractController
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
@@ -254,20 +252,23 @@ class ApproverController extends OrderAbstractController
         $submitters = array();
         $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
+
         //testing
-        foreach($roleSubmitters as $thisSubmitter) {
-            echo '1: '.$thisSubmitter."<br>";
-        }
-        echo "roleSubmitter=".$roleSubmitter."<br>";
+//        foreach($roleSubmitters as $thisSubmitter) {
+//            echo '1: '.$thisSubmitter."<br>";
+//        }
+
+//        echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
             //use the role (i.e. 'ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGY', 'ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGYPART-TIME') to find users
-            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking,$exactRole);
+            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "submitters=".count($submitters)."<br>";
+
         //testing
-        foreach($submitters as $thisSubmitter) {
-            echo '2: '.$thisSubmitter."<br>";
-        }
+//        foreach($submitters as $thisSubmitter) {
+//            echo '2: '.$thisSubmitter."<br>";
+//        }
 
         //find role proxy submitters by institution
         $roleProxySubmitter = NULL;
