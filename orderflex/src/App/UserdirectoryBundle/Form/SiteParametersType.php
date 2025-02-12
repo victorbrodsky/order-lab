@@ -489,6 +489,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'globalNoteLogin' )
+            $builder->add('globalNoteLogin',null,array(
+                'label'=>'Global note for all login page:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //uploads
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'employeesuploadpath' )
             $builder->add('employeesuploadpath',null,array(

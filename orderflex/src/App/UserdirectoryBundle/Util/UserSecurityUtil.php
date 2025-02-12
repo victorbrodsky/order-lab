@@ -1929,7 +1929,14 @@ class UserSecurityUtil {
             }
 
         } else {
-            $res = $param->$getSettingMethod();
+            //$res = $param->$getSettingMethod();
+            $res = NULL;
+            if( method_exists($param, $getSettingMethod) ) {
+                $res = $param->$getSettingMethod();
+            } else {
+                throw new \Exception("Global site setting parameter does not exist: ".$parameter);
+                //return null;
+            }
         }
         
         $this->em->detach($param);

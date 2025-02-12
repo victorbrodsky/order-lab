@@ -332,6 +332,7 @@ class SecurityController extends OrderAbstractController
             return null;
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -407,12 +408,17 @@ class SecurityController extends OrderAbstractController
             $noteOnLoginPage = $siteObject->getNoteOnLoginPage();
         }
 
+        //TODO: Global note from site settings on all login page
+        $globalNoteOnAllLoginPage = $fromEmail = $userSecUtil->getSiteSettingParameter('globalNoteLogin');
+        //$globalNoteOnAllLoginPage = 'Test message';
+
         $formArr = array(
                             'last_username' => $lastUsername,   // last username entered by the user
                             'error'         => $error,
                             'sitename'     => $sitename,
                             'logo'  => $logoPath,
                             'messageToUsers' => $noteOnLoginPage,
+                            'globalNoteOnAllLoginPage' => $globalNoteOnAllLoginPage,
                             'lastRoute' => $lastRoute,
                             'logoHeight' => 80,
                             'logoWidth' => 300

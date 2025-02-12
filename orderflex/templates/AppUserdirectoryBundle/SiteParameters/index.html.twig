@@ -300,6 +300,12 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td>Global note for all login page</td>
+                <td>{{ entity.globalNoteLogin }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'globalNoteLogin'}) }}">Edit</a></td>
+            </tr>
+
             {#<tr>#}
                 {#<td class="rowlink-skip" colspan="3" align="center">#}
                     {#<h3>Health Monitors:</h3>#}

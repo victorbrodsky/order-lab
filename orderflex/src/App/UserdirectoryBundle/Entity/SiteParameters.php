@@ -291,6 +291,10 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $maintenanceloginmsg;
 
+    //Global note from site settings on all login page
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $globalNoteLogin;
+
     //uploads path
     #[ORM\Column(type: 'string', nullable: true)]
     private $scanuploadpath;
@@ -1955,6 +1959,22 @@ class SiteParameters {
     {
         $msg = str_replace("[[datetime]]", $this->getUntilDate(), $this->getMaintenancelogoutmsg());
         return $msg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGlobalNoteLogin()
+    {
+        return $this->globalNoteLogin;
+    }
+
+    /**
+     * @param mixed $globalNoteLogin
+     */
+    public function setGlobalNoteLogin($globalNoteLogin)
+    {
+        $this->globalNoteLogin = $globalNoteLogin;
     }
 
     /**

@@ -40,6 +40,12 @@
         </h5>
     {% endif %}
 
+    {% if globalNoteOnAllLoginPage is defined and globalNoteOnAllLoginPage %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ globalNoteOnAllLoginPage|raw }}
+        </h5>
+    {% endif %}
+
 <br>
 
 {% for flashMessage in app.flashes('notice') %}
