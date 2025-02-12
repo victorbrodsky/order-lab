@@ -119,10 +119,10 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
         //invalidate_session manually
         //$this->security->setToken(null);
-        //$session->invalidate(); //auto loggout flashbag message not display
+        $session->invalidate(); //auto loggout flashbag message not display
         //$tokenStorage->setToken(null);
         //$this->security->logout(false); //this will cause onLogout loop
-        $userSecUtil->userLogout(null,$sitename);
+        $userSecUtil->userLogout($sitename);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $userSecUtil->samlLogout($user,$logintype,$sitename);

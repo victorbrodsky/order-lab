@@ -259,7 +259,7 @@ class SamlController extends OrderAbstractController //AbstractController
     public function logout(Request $request): Response
     {
         //exit('logout');
-        $this->logger->notice("SamlController logout: Start");
+        //$this->logger->notice("SamlController logout: Start");
 
         $relayState = $request->getPayload()->get('RelayState');
         $this->logger->notice("SamlController logout: 1relayState=".$relayState);
