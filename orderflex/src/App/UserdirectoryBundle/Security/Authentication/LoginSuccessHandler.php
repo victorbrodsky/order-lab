@@ -157,11 +157,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //Login/Logout type for SAML logout
         $usernametype = $token->getAttribute('usernametype');
+        $this->logger->notice("onAuthenticationSuccess: usernametype=$usernametype");
         $session->set('logintype',$usernametype);
         $usernametypeStr = '';
         if( $usernametype ) {
             $usernametypeStr = ' with '.$usernametype;
         }
+        $this->logger->notice("onAuthenticationSuccess: session's usernametype=".$session->get('usernametype'));
         ///////////////// EOF set session variables /////////////////
 
         if( $this->security->isGranted($this->roleBanned) ) {
