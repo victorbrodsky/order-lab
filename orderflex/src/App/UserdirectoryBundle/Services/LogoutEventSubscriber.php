@@ -74,7 +74,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onLogout(LogoutEvent $event, TokenStorageInterface $tokenStorage): void
+    public function onLogout(LogoutEvent $event): void
     {
         $logger = $this->container->get('logger');
         $logger->notice("onLogout");
@@ -120,8 +120,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //invalidate_session manually
         //$this->security->setToken(null);
         $session->invalidate(); //auto loggout flashbag message not display
-        $tokenStorage->setToken(null);
+        //$tokenStorage->setToken(null);
         //$this->security->logout(false); //this will cause onLogout loop
+        $userSecUtil->userLogout(null,$sitename);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
         $userSecUtil->samlLogout($user,$logintype,$sitename);
