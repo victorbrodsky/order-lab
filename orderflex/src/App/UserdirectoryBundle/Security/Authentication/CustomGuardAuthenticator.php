@@ -461,7 +461,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
         //Set usernametype for SAML authentication and logout to determine is SAML logout required
-        $this->logger->notice("CustomGuardAuthentication: onAuthenticationSuccess: this usernametype=".$this->usernametype);
+        $this->container->get('logger')->notice("CustomGuardAuthentication: onAuthenticationSuccess: this usernametype=".$this->usernametype);
         $token->setAttributes(array('usernametype' => $this->usernametype));
         return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }
