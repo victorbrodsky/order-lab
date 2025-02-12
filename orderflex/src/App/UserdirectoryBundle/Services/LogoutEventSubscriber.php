@@ -117,7 +117,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         //invalidate_session manually
-        //$this->security->setToken(null);
+        $this->security->setToken(null);
 //        $session->invalidate(); //auto loggout flashbag message not display
         //$this->security->logout(false);
 
