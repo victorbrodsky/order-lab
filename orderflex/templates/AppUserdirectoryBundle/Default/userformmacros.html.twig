@@ -333,9 +333,11 @@
         {% endif %}
 
         {#Fields for vacreq calculation#}
-        {{ formmacros.field(formfield.effort) }}
-        {{ formmacros.field(formfield.ignore) }}
-        {{ formmacros.field(formfield.approvalGroupType) }}
+        <div class="well">
+            {{ formmacros.field(formfield.effort) }}
+            {{ formmacros.field(formfield.ignore) }}
+            {{ formmacros.field(formfield.approvalGroupType) }}
+        </div>
 
         {% if formfield.attachmentContainer is defined %}
 

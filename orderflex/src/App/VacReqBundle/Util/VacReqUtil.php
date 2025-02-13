@@ -4682,6 +4682,7 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
 
+    //TODO: use multiple employee periods to get effort %
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {

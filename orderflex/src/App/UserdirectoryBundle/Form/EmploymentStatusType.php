@@ -30,8 +30,9 @@ use App\VacReqBundle\Entity\VacReqApprovalTypeList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\PercentType;
+//use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -159,7 +160,7 @@ class EmploymentStatusType extends AbstractType
         /////// Fields for vacreq calculation ///////
         //PercentType::class
         //"data-inputmask" => "'mask': '[o]', 'repeat': 10, 'greedy' : false"
-        $builder->add( 'effort', null, array(
+        $builder->add( 'effort', TextType::class, array(
             'label'=>'Effort in %:',
             'disabled' => $readonly,
             'required'=>false,
@@ -177,9 +178,9 @@ class EmploymentStatusType extends AbstractType
             'class' => VacReqApprovalTypeList::class,
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
-            'required' => true,
+            'required' => false,
             'multiple' => false,
-            'mapped' => false,
+            //'mapped' => false,
             //'data' => $this->params['approvalGroupType'],
             'attr' => array('class' => 'combobox', 'placeholder' => 'Time Away Approval Group Type'),
             'query_builder' => function(EntityRepository $er) {

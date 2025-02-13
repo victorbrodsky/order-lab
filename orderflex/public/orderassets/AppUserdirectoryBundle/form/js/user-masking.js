@@ -34,7 +34,7 @@ function getAgeDefaultMask() {
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
-    //console.log("user-masking.js: field Input Mask");
+    console.log("user-masking.js: field Input Mask");
 
     Inputmask.extendDefinitions({
         'f': {  //masksymbol
@@ -108,7 +108,7 @@ function fieldInputMask( holder ) {
     $('.digit-mask-seven').inputmask("mask", {
         "mask": "9", "repeat": 7, "greedy": false
     });
-    
+
 
     // $('.positive-digit-mask').inputmask("mask", {
     //     "mask": "f", "repeat": 50, "greedy": false
