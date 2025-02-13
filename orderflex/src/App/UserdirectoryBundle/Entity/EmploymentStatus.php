@@ -61,6 +61,23 @@ class EmploymentStatus extends BaseUserAttributes
     #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
+    /////// Fields for vacreq calculation ///////
+    //effort in %
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $effort;
+
+    //ignore this employment period in vacreq days calculation
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $ignore;
+
+    //Time Away Approval Group Type (VacReqApprovalTypeList)
+    #[ORM\ManyToOne(targetEntity: 'App\VacReqBundle\Entity\VacReqApprovalTypeList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
+    private $approvalGroupType;
+    /////// EOF Fields for vacreq calculation ///////
+
+
+    
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -229,6 +246,54 @@ class EmploymentStatus extends BaseUserAttributes
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEffort()
+    {
+        return $this->effort;
+    }
+
+    /**
+     * @param mixed $effort
+     */
+    public function setEffort($effort)
+    {
+        $this->effort = $effort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIgnore()
+    {
+        return $this->ignore;
+    }
+
+    /**
+     * @param mixed $ignore
+     */
+    public function setIgnore($ignore)
+    {
+        $this->ignore = $ignore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovalGroupType()
+    {
+        return $this->approvalGroupType;
+    }
+
+    /**
+     * @param mixed $approvalGroupType
+     */
+    public function setApprovalGroupType($approvalGroupType)
+    {
+        $this->approvalGroupType = $approvalGroupType;
     }
 
 

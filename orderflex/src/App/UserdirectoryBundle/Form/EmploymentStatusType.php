@@ -26,9 +26,11 @@ use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced na
 
 
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use App\VacReqBundle\Entity\VacReqApprovalTypeList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -154,6 +156,43 @@ class EmploymentStatusType extends AbstractType
             'label' => false
         ));
 
+        /////// Fields for vacreq calculation ///////
+        //PercentType::class
+        //"data-inputmask" => "'mask': '[o]', 'repeat': 10, 'greedy' : false"
+        $builder->add( 'effort', null, array(
+            'label'=>'Effort in %:',
+            'disabled' => $readonly,
+            'required'=>false,
+            'attr' => array('class' => 'form-control digit-mask')
+        ));
+
+        $builder->add( 'ignore', null, array(
+            'label'=>'Ignore this employment period in vacation days calculation:',
+            'disabled' => $readonly,
+            'required'=>false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('approvalGroupType', EntityType::class, array(
+            'class' => VacReqApprovalTypeList::class,
+            'label' => "Time Away Approval Group Type:",
+            'choice_label' => 'name',
+            'required' => true,
+            'multiple' => false,
+            'mapped' => false,
+            //'data' => $this->params['approvalGroupType'],
+            'attr' => array('class' => 'combobox', 'placeholder' => 'Time Away Approval Group Type'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
+        /////// EOF Fields for vacreq calculation ///////
 
         ///////////////////////// tree node /////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -189,6 +228,8 @@ class EmploymentStatusType extends AbstractType
             ));
         });
         ///////////////////////// EOF tree node /////////////////////////
+
+
 
     }
 

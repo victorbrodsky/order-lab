@@ -332,6 +332,10 @@
             {{ formmacros.field_notempty(formfield.terminationReason,cycle) }}
         {% endif %}
 
+        {#Fields for vacreq calculation#}
+        {{ formmacros.field(formfield.effort) }}
+        {{ formmacros.field(formfield.ignore) }}
+        {{ formmacros.field(formfield.approvalGroupType) }}
 
         {% if formfield.attachmentContainer is defined %}
 
