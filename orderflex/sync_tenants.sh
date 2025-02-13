@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 #/srv/order-lab-homepagemanager/orderflex
 
 homedir=$1
-#type: 'full'; sync source code, run deploy.sh, show doctrine migration status 'dbstatus'.
+#type: 'basic'; sync source code, run deploy.sh, show doctrine migration status 'dbstatus'.
 type=$2
 
 if [ -z "$homedir" ]
@@ -21,7 +21,7 @@ fi
 
 if [ -z "$type" ]
   then
-    type="full"
+    type="basic"
 fi
 
 bashpath="/usr/bin"
@@ -34,7 +34,7 @@ f_sync() {
 
     echo -e ${COLOR} check type="$type" ${NC}
 
-    if [ -n "$type" ] && [ "$type" == "full" ]
+    if [ -n "$type" ] && [ "$type" == "basic" ]
     	then
     		echo -e ${COLOR} cd to "$1"${NC}
                 cd "$homedir"/order-lab-$1/orderflex
@@ -52,6 +52,27 @@ f_sync() {
                 #bash "$homedir"/order-lab-"$1"/packer/additional.sh
     	#else
     		#echo -e ${COLOR} Do not use multitenancy multitenant="$multitenant" ${NC}
+    fi
+
+    if [ -n "$type" ] && [ "$type" == "full" ]
+        then
+            echo -e ${COLOR} cd to "$1"${NC}
+            cd "$homedir"/order-lab-$1/orderflex
+
+            echo -e ${COLOR} git pull for "$1" ${NC}
+            git pull
+
+            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
+
+            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
     if [ -n "$type" ] && [ "$type" == "sync" ]
