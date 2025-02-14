@@ -19,6 +19,7 @@ namespace App\VacReqBundle\Util;
 
 
 
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\VacReqBundle\Entity\VacReqSettings; //process.py script: replaced namespace by ::class: added use line for classname=VacReqSettings
 
 
@@ -4686,6 +4687,11 @@ class VacReqUtil
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
+
+        if( $user ) {
+            return $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
+        }
+
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
 
@@ -4722,6 +4728,58 @@ class VacReqUtil
 
         return $totalAccruedDays;
     }
+
+    //$yearRange=2024-2025
+    //$approvalGroupType='Faculty', 'Fellows', 'Residents' ...
+    public function getTotalAccruedDaysUsingEmplPeriods( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
+        // Split the yearRange period by Empl Periods.
+        // For each emplPeriod get number of accrued months and effort in %
+        // Effort % (in fraction, i.e. 0.6) multiple by number of accrued month  and save in accruedDays
+        // Sum all accruedDays in totalAccruedDays
+        // return totalAccruedDays
+
+        $totalAccruedDays = 0;
+
+        echo "yearRange=$yearRange <br>";
+
+        // Split the yearRange period by Empl Periods.
+        // Get EmploymentStatus sorted by startdate in $yearRange
+        //$employmentStatuses = $user->getEmploymentStatus();
+
+        $dates = $this->getCurrentAcademicYearStartEndDates();
+        $startAcademicYearDateStr = $dates['startDate'];
+        $endAcademicYearDateStr = $dates['endDate'];
+
+        $parameters = array();
+        $repository = $this->em->getRepository(EmploymentStatus::class);
+        $dql =  $repository->createQueryBuilder("emplstatus");
+        $dql->leftJoin("emplstatus.user", "user");
+
+        $dql->where("emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        $parameters['startDate'] = $startAcademicYearDateStr;
+        $parameters['endDate'] = $endAcademicYearDateStr;
+
+        if( $user ) {
+            $dql->andWhere("user.id = :userid");
+            $parameters['userid'] = $user->getId();
+        }
+
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $emplPeriods = $query->getResult();
+
+        echo "emplPeriods=".count($emplPeriods)."<br>";
+
+        foreach($emplPeriods as $emplPeriod) {
+
+        }
+
+        return $totalAccruedDays;
+    }
+
+
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
     //Calculate number of month for user according to the start/end dates
