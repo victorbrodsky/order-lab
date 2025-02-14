@@ -4701,12 +4701,15 @@ class VacReqUtil
         }
         //echo "user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
 
+        //Use EmploymentStartEnd to get number of month
         $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange);
         //$totalAccruedMonths = 12; //Old version without user's start/end dates
 
         //echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
         //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
         $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+
+        //TODO: Use Employment period to get effort %
 
         $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
         if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
