@@ -313,6 +313,12 @@ class EmploymentStatus extends BaseUserAttributes
         }
     }
 
+    public function getVacReqData() {
+        return "ID=".$this->getId().
+        ", effort=".$this->getEffort().
+        ", groupType=".$this->getApprovalGroupType().
+        ", ignore=".$this->getIgnore();
+    }
 
     public function __toString() {
 

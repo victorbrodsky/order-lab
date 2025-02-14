@@ -4750,14 +4750,28 @@ class VacReqUtil
         $startAcademicYearDateStr = $dates['startDate'];
         $endAcademicYearDateStr = $dates['endDate'];
 
+        echo "startAcademicYearDateStr=$startAcademicYearDateStr <br>";
+        echo "endAcademicYearDateStr=$endAcademicYearDateStr <br>";
+
         $parameters = array();
         $repository = $this->em->getRepository(EmploymentStatus::class);
         $dql =  $repository->createQueryBuilder("emplstatus");
         $dql->leftJoin("emplstatus.user", "user");
+        $dql->leftJoin("emplstatus.approvalGroupType", "approvalGroupType");
 
-        $dql->where("emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        $dql->where("(emplstatus.ignore IS NULL OR emplstatus.ignore = FALSE)");
+        $dql->orWhere("emplstatus.effort IS NOT NULL");
+        $dql->orWhere("approvalGroupType IS NOT NULL");
+        //$dql->andWhere("emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        //$dql->andWhere("emplstatus.terminationDate BETWEEN :startDate AND :endDate");
+        // --startyear-- hireDate --endyear--
+        //$dql->andWhere("emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        $dql->andWhere("(emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate > :startDate)");
+        // IF terminationDate IS NOT NULL AND terminationDate < --endyear--
+        //$dql->andWhere("emplstatus.terminationDate IS NOT NULL AND emplstatus.terminationDate BETWEEN :startDate AND :endDate");
+
         $parameters['startDate'] = $startAcademicYearDateStr;
-        $parameters['endDate'] = $endAcademicYearDateStr;
+        //$parameters['endDate'] = $endAcademicYearDateStr;
 
         if( $user ) {
             $dql->andWhere("user.id = :userid");
@@ -4773,7 +4787,7 @@ class VacReqUtil
         echo "emplPeriods=".count($emplPeriods)."<br>";
 
         foreach($emplPeriods as $emplPeriod) {
-
+            echo $emplPeriod->getVacReqData()."<br>";
         }
 
         return $totalAccruedDays;
