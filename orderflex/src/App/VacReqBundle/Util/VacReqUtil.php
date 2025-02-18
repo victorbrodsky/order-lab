@@ -4688,9 +4688,9 @@ class VacReqUtil
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
 
-        if( $user ) {
-            return $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
-        }
+//        if( $user ) {
+//            return $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
+//        }
 
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
@@ -4725,6 +4725,11 @@ class VacReqUtil
 
         $totalAccruedDays = round($totalAccruedDays);
         //echo "### totalAccruedDays=".$totalAccruedDays."<br>";
+
+        //Exception for Dr.R while working on EmplPeriods calculation, manual adjustment
+        //if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
+            //$totalAccruedDays = $totalAccruedDays - 8;
+        //}
 
         return $totalAccruedDays;
     }
@@ -4833,7 +4838,7 @@ class VacReqUtil
 
         $emplPeriods = $query->getResult();
 
-        echo "Overlapped EmplPeriods=".count($emplPeriods)."<br>";
+        //echo "Overlapped EmplPeriods=".count($emplPeriods)."<br>";
 
         if( count($emplPeriods) > 1 ) {
             $overlappedData = array();
@@ -4842,12 +4847,12 @@ class VacReqUtil
             }
             return
                 "Warning: ".count($emplPeriods).
-                " employment periods are overlapped: <br>".
+                " employment periods are overlapped for academic year starting on $startAcademicYearDateStr: <br>".
                 implode('<br>',$overlappedData)
                 ;
         }
 
-        return false;
+        return null;
     }
 
     //Calculate number of month for user according to the start/end dates
@@ -5493,9 +5498,10 @@ class VacReqUtil
             $approvalGroupTypeName = "Faculty";
         }
 
-        $overlapped = false;
+        $overlapped = null;
         if( $user ) {
             $overlapped = $this->ifUserHasOverlappedEmplPeriods($user);
+            //echo "overlapped=$overlapped <br>";
         }
 
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}

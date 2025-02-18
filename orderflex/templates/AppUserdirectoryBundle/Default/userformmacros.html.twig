@@ -311,6 +311,11 @@
             {% endif %}
         {% endif %}
 
+        {% if formfield and formfield.vars.value and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+            {#ID={{ formfield.vars.value.id }}#}
+            {{ formmacros.simplefield( "ID:", formfield.vars.value.id, "", "disabled" ) }}
+        {% endif %}
+
         {% if formfield.hireDate is defined %}
             {{ formmacros.fieldDateLabel(formfield.hireDate,'allow-future-date') }}
         {% endif %}

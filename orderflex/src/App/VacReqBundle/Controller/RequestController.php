@@ -408,6 +408,7 @@ class RequestController extends OrderAbstractController
         $remainingDaysString = $messages['remainingDaysString'];
         $totalAccruedDays = $messages['totalAccruedDays'];
         $remainingDays = $messages['remainingDays'];
+        $overlapped = $messages['overlapped'];
 
         //Notes are getting from VacReqApprovalTypeList (currently 'fellow' and 'faculty' approval group types)
         $noteForVacationDays = NULL;
@@ -480,7 +481,8 @@ class RequestController extends OrderAbstractController
             'remainingDaysString' => $remainingDaysString, //getHeaderInfoMessages
             //Second header - only carry over
             'newCarryOverRequestStr' => $newCarryOverRequestStr, //function
-            'internationalTravelRegistry' => $internationalTravelRegistry
+            'internationalTravelRegistry' => $internationalTravelRegistry,
+            'overlapped' => $overlapped
 
         );
     }
