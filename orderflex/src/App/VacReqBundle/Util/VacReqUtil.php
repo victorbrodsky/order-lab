@@ -4728,7 +4728,10 @@ class VacReqUtil
 
         //Exception for Dr.R while working on EmplPeriods calculation, manual adjustment
         if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
-            $totalAccruedDays = $totalAccruedDays - 8;
+            //echo '$yearRange='.$yearRange.'<br>';
+            if( $yearRange == '2024-2025' ) {
+                $totalAccruedDays = $totalAccruedDays - 8;
+            }
         }
 
         return $totalAccruedDays;
