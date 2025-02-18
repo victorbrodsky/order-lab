@@ -4727,9 +4727,9 @@ class VacReqUtil
         //echo "### totalAccruedDays=".$totalAccruedDays."<br>";
 
         //Exception for Dr.R while working on EmplPeriods calculation, manual adjustment
-        //if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
-            //$totalAccruedDays = $totalAccruedDays - 8;
-        //}
+        if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
+            $totalAccruedDays = $totalAccruedDays - 8;
+        }
 
         return $totalAccruedDays;
     }
