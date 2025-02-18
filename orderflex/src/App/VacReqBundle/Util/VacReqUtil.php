@@ -4740,15 +4740,18 @@ class VacReqUtil
 
         $totalAccruedDays = 0;
 
-        echo "yearRange=$yearRange <br>";
+        echo "yearRange=$yearRange, user=$user <br>";
 
         // Split the yearRange period by Empl Periods.
         // Get EmploymentStatus sorted by startdate in $yearRange
         //$employmentStatuses = $user->getEmploymentStatus();
 
         $dates = $this->getCurrentAcademicYearStartEndDates();
-        $startAcademicYearDateStr = $dates['startDate'];
-        $endAcademicYearDateStr = $dates['endDate'];
+        $startAcademicYearDateStr = $dates['startDate']; //Y-m-d
+        $endAcademicYearDateStr = $dates['endDate']; //Y-m-d
+
+        //$startAcademicYearDateStr = $startAcademicYearDateStr." 00:00:00";
+        //$endAcademicYearDateStr = $endAcademicYearDateStr." 23:59:59";
 
         echo "startAcademicYearDateStr=$startAcademicYearDateStr <br>";
         echo "endAcademicYearDateStr=$endAcademicYearDateStr <br>";
@@ -4766,7 +4769,7 @@ class VacReqUtil
         //$dql->andWhere("emplstatus.terminationDate BETWEEN :startDate AND :endDate");
         // --startyear-- hireDate --endyear--
         //$dql->andWhere("emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate BETWEEN :startDate AND :endDate");
-        $dql->andWhere("(emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate > :startDate)");
+        $dql->andWhere("(emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate >= :startDate)");
         // IF terminationDate IS NOT NULL AND terminationDate < --endyear--
         //$dql->andWhere("emplstatus.terminationDate IS NOT NULL AND emplstatus.terminationDate BETWEEN :startDate AND :endDate");
 
@@ -4793,6 +4796,59 @@ class VacReqUtil
         return $totalAccruedDays;
     }
 
+    public function ifUserHasOverlappedEmplPeriods( $user, $yearRange=NULL ) {
+
+        $dates = $this->getCurrentAcademicYearStartEndDates();
+        $startAcademicYearDateStr = $dates['startDate']; //Y-m-d
+        $endAcademicYearDateStr = $dates['endDate']; //Y-m-d
+
+        $parameters = array();
+        $repository = $this->em->getRepository(EmploymentStatus::class);
+        $dql =  $repository->createQueryBuilder("emplstatus");
+        $dql->leftJoin("emplstatus.user", "user");
+
+        $dql->where("(emplstatus.ignore IS NULL OR emplstatus.ignore = FALSE)");
+
+        //$dql->andWhere("emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        //$dql->andWhere("emplstatus.terminationDate BETWEEN :startDate AND :endDate");
+        // --startyear-- hireDate --endyear--
+        //$dql->andWhere("emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate BETWEEN :startDate AND :endDate");
+        $dql->andWhere("(emplstatus.hireDate IS NOT NULL AND emplstatus.hireDate >= :startDate)");
+        // IF terminationDate IS NOT NULL AND terminationDate < --endyear--
+        //$dql->andWhere("emplstatus.terminationDate IS NOT NULL AND emplstatus.terminationDate BETWEEN :startDate AND :endDate");
+
+        $parameters['startDate'] = $startAcademicYearDateStr;
+        //$parameters['endDate'] = $endAcademicYearDateStr;
+
+        if( $user ) {
+            $dql->andWhere("user.id = :userid");
+            $parameters['userid'] = $user->getId();
+        } else {
+
+        }
+
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $emplPeriods = $query->getResult();
+
+        echo "Overlapped EmplPeriods=".count($emplPeriods)."<br>";
+
+        if( count($emplPeriods) > 1 ) {
+            $overlappedData = array();
+            foreach($emplPeriods as $emplPeriod) {
+                $overlappedData[] = $emplPeriod->getVacReqData();
+            }
+            return
+                "Warning: ".count($emplPeriods).
+                " employment periods are overlapped: <br>".
+                implode('<br>',$overlappedData)
+                ;
+        }
+
+        return false;
+    }
 
     //Calculate number of month for user according to the start/end dates
     //$yearRange=2024-2025
@@ -5437,6 +5493,11 @@ class VacReqUtil
             $approvalGroupTypeName = "Faculty";
         }
 
+        $overlapped = false;
+        if( $user ) {
+            $overlapped = $this->ifUserHasOverlappedEmplPeriods($user);
+        }
+
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
         //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
         //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
@@ -5602,6 +5663,7 @@ class VacReqUtil
         //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
         $messages['remainingDaysString'] = $remainingDaysString;
         $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
+        $messages['overlapped'] = $overlapped;
 
         return $messages;
     }

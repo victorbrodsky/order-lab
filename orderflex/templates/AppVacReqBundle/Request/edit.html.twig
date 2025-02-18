@@ -93,6 +93,16 @@
         {% endif %}
     {% endif %}
 
+    {% if overlapped is defined and overlapped %}
+        <div class="alert alert-danger">
+            <p id="vacreq-overlapped-str">
+                {% if overlapped %}
+                    {{ overlapped|raw }}
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+
     {% if noteForVacationDays is defined and noteForVacationDays %}
         <div class="alert alert-success">
             <p id="vacreq-noteForVacationDays-str">

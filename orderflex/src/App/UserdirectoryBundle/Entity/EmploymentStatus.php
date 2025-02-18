@@ -314,10 +314,21 @@ class EmploymentStatus extends BaseUserAttributes
     }
 
     public function getVacReqData() {
+        $hireDate = $this->getHireDate();
+        if( $hireDate ) {
+            $hireDate = $hireDate->format('Y-m-d');
+        }
+        $terminationDate = $this->getTerminationDate();
+        if( $terminationDate ) {
+            $terminationDate = $terminationDate->format('Y-m-d');
+        }
         return "ID=".$this->getId().
-        ", effort=".$this->getEffort().
-        ", groupType=".$this->getApprovalGroupType().
-        ", ignore=".$this->getIgnore();
+            ", effort=".$this->getEffort().
+            ", groupType=".$this->getApprovalGroupType().
+            ", ignore=".$this->getIgnore().
+            ", hire date=".$hireDate.
+            ", termination date=".$terminationDate
+            ;
     }
 
     public function __toString() {

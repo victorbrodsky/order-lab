@@ -492,6 +492,7 @@
 
                         <div class="user-employmentStatus-holder">
                             {% for employmentStatus in form.employmentStatus %}
+                                employmentStatus.id={{ employmentStatus.vars.value.id }}
                                 {{ userform.employmentStatuses(employmentStatus,cycle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
                             {% if cycle != 'show_user' and entity.id != app.user.getId() %}
