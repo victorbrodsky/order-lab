@@ -144,6 +144,14 @@ class DefaultController extends OrderAbstractController
 //        $academicYearEndDateStr = $vacreqUtil->getEdgeAcademicYearDate($currentYear, 'End');
 //        echo "4 academicYearStartDateStr=".$academicYearStartDateStr.", academicYearEndDateStr=".$academicYearEndDateStr."<br>";
 
+        $em = $this->getDoctrine()->getManager();
+        $approvalGroupType = NULL;
+        $user = $em->getRepository(User::class)->find(321);
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $messages = $vacreqUtil->getHeaderInfoMessages($user, $approvalGroupType);
+        dump($messages);
+        exit('TESTING: remainingDays='.$messages['remainingDays'].'; totalAccruedDays='.$messages['totalAccruedDays']);
+
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
 
