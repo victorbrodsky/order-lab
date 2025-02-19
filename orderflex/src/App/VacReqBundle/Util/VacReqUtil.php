@@ -4764,6 +4764,7 @@ class VacReqUtil
             $yearRange = $this->getCurrentAcademicYearRange();
         }
 
+        echo "<br>=================<br>";
         echo "yearRange=$yearRange, user=$user <br>";
 
         // Split the yearRange period by Empl Periods.
@@ -4844,13 +4845,15 @@ class VacReqUtil
 
             //getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE )
             $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange,$emplPeriod->getHireDate(),$emplPeriod->getTerminationDate(),$testing=FALSE );
-            $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
 
-            //reduce by efficiency
-            $effort = $emplPeriod->getEffort();
-            if( $effort !== NULL ) {
-                $totalAccruedDays = $totalAccruedDays * $effort;
-            }
+//            $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+//            //reduce by effort
+//            $effort = $emplPeriod->getEffort();
+//            if( $effort !== NULL ) {
+//                $totalAccruedDays = $totalAccruedDays * $effort;
+//            }
+
+            $totalAccruedDays = $this->adjustByEmplPeriodParam($user,$emplPeriod,$totalAccruedMonths,$vacationAccruedDaysPerMonth);
 
             //return $totalAccruedDays;
         }
@@ -4858,12 +4861,14 @@ class VacReqUtil
         //Case 3
         //Process Empl Periods
         if( count($emplPeriods) > 1 ) {
+            $totalAccruedDays = 0;
             $count = 0;
             foreach ($emplPeriods as $emplPeriod) {
                 echo "Multiple emplPeriod: " . $emplPeriod->getVacReqData() . "<br>";
 
                 if( !$emplPeriod->getHireDate()  ) {
                     $count++;
+                    echo "Skip ".$emplPeriod->getId()."<br>";
                     continue;
                 }
 
@@ -4892,13 +4897,22 @@ class VacReqUtil
                 echo "hireDate=".$hireDate->format('d-m-Y').", termDate=".$terminationDateStr."<br>";
                 //getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE )
                 $totalAccruedMonths = $this->getTotalAccruedMonths($user,$yearRange,$hireDate,$terminationDate,$testing=FALSE );
-                $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+                echo "totalAccruedMonths=$totalAccruedMonths <br>";
 
-                //reduce by efficiency
-                $effort = $emplPeriod->getEffort();
-                if( $effort !== NULL ) {
-                    $totalAccruedDays = $totalAccruedDays * $effort;
-                }
+
+//                $thisTotalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+//                echo "thisTotalAccruedDays*accruedDays=$thisTotalAccruedDays <br>";
+//                //reduce by effort
+//                $effort = $emplPeriod->getEffort();
+//                if( $effort !== NULL ) {
+//                    $effort = $effort/100;
+//                    $thisTotalAccruedDays = $thisTotalAccruedDays * $effort;
+//                }
+//                echo $count.": with effort $effort, thisTotalAccruedDays=$thisTotalAccruedDays <br>";
+
+                $thisTotalAccruedDays = $this->adjustByEmplPeriodParam($user,$emplPeriod,$totalAccruedMonths,$vacationAccruedDaysPerMonth);
+
+                $totalAccruedDays = $totalAccruedDays + $thisTotalAccruedDays;
 
                 $count++;
             }
@@ -4913,8 +4927,37 @@ class VacReqUtil
         $totalAccruedDays = round($totalAccruedDays);
 
         echo "getTotalAccruedDaysUsingEmplPeriods: totalAccruedDays=$totalAccruedDays <br>";
+        echo "================= <br>";
 
         return $totalAccruedDays;
+    }
+
+    //adjust accrued days by ignore, effort, approvalGroupType
+    public function adjustByEmplPeriodParam( $user, $emplPeriod, $accruedMonths, $vacationAccruedDaysPerMonth ) {
+        $accruedDays = 0;
+
+        $approvalGroupType = $emplPeriod->getApprovalGroupType();
+        if( $approvalGroupType ) {
+            $thisVacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth", $user, $approvalGroupType);
+            if( $thisVacationAccruedDaysPerMonth ) {
+                $vacationAccruedDaysPerMonth = $thisVacationAccruedDaysPerMonth;
+            }
+        }
+        echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>";
+
+        $accruedDays = $accruedMonths * $vacationAccruedDaysPerMonth;
+        echo "accruedDays*accruedDaysPerMonth=$accruedDays <br>";
+
+        //reduce by effort
+        $effort = $emplPeriod->getEffort();
+        if( $effort !== NULL ) {
+            $effort = $effort/100;
+            $accruedDays = $accruedDays * $effort;
+        }
+
+        echo "adjustByEmplPeriodParam: effort=[$effort],  accruedDays=$accruedDays <br>";
+
+        return $accruedDays;
     }
 
     public function ifUserHasOverlappedEmplPeriods( $user, $yearRange=NULL ) {
@@ -5039,6 +5082,7 @@ class VacReqUtil
         $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
         $academicYearEndDate = \DateTime::createFromFormat('Y-m-d', $academicYearEndDateStr);
 
+        //$testing = true; //testing
 
         //S - start employment date
         //E - end employment date
@@ -5196,9 +5240,9 @@ class VacReqUtil
             $totalAccruedMonths = 12;
         }
 
-        //echo 'yearRangeStr='.$yearRangeStr.", totalAccruedMonths=".$totalAccruedMonths.
-        //", monthCount=".$monthCount.
-        //": totalAccruedMonths=".$totalAccruedMonths.", monthCount=".$monthCount."<br>";
+        if($testing) {
+            echo 'yearRangeStr=' . $yearRangeStr . ", totalAccruedMonths=" . $totalAccruedMonths . "<br>";
+        }
 
         //$this->academicYearStartDateStr = '';
         //$this->academicYearEndDateStr = '';
