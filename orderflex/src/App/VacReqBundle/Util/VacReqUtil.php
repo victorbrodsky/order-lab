@@ -4690,11 +4690,11 @@ class VacReqUtil
         if( $user ) {
             $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
             if( $totalAccruedDays !== NULL ) {
-                echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
+                //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
                 return $totalAccruedDays;
             }
         }
-        echo "Using default calculations <br>";
+        //echo "Using default calculations <br>";
 
         return $this->getDefaultTotalAccruedDays($user, $yearRange, $approvalGroupType);
 
@@ -4795,6 +4795,9 @@ class VacReqUtil
         // Sum all accruedDays in totalAccruedDays
         // return totalAccruedDays
 
+        $testing = false;
+        //$testing = true;
+
         $totalAccruedDays = NULL;
 
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
@@ -4808,8 +4811,10 @@ class VacReqUtil
             $yearRange = $this->getCurrentAcademicYearRange();
         }
 
-        echo "<br>=================<br>";
-        echo "yearRange=$yearRange, user=$user <br>";
+        if( $testing ) {
+            echo "<br>=================<br>";
+            echo "yearRange=$yearRange, user=$user <br>";
+        }
 
         // Split the yearRange period by Empl Periods.
         // Get EmploymentStatus sorted by startdate in $yearRange
@@ -4822,8 +4827,10 @@ class VacReqUtil
         //$startAcademicYearDateStr = $startAcademicYearDateStr." 00:00:00";
         //$endAcademicYearDateStr = $endAcademicYearDateStr." 23:59:59";
 
-        echo "startAcademicYearDateStr=$startAcademicYearDateStr <br>";
-        echo "endAcademicYearDateStr=$endAcademicYearDateStr <br>";
+        if( $testing ) {
+            echo "startAcademicYearDateStr=$startAcademicYearDateStr <br>";
+            echo "endAcademicYearDateStr=$endAcademicYearDateStr <br>";
+        }
 
         $parameters = array();
         $repository = $this->em->getRepository(EmploymentStatus::class);
@@ -4871,7 +4878,9 @@ class VacReqUtil
 
         $emplPeriods = $query->getResult();
 
-        echo "emplPeriods=".count($emplPeriods)."<br>";
+        if( $testing ) {
+            echo "emplPeriods=" . count($emplPeriods) . "<br>";
+        }
 
         //Case 1
         if( count($emplPeriods) == 0 ) {
@@ -4894,13 +4903,18 @@ class VacReqUtil
         //Process Multiple Empl Periods
         if( count($emplPeriods) > 0 ) {
             $totalAccruedDays = 0;
+            $addedFlag = false;
             $count = 0;
             foreach ($emplPeriods as $emplPeriod) {
-                echo "Multiple emplPeriod: " . $emplPeriod->getVacReqData() . "<br>";
+                if( $testing ) {
+                    echo "Multiple emplPeriod: " . $emplPeriod->getVacReqData() . "<br>";
+                }
 
                 if( !$emplPeriod->getHireDate()  ) {
                     $count++;
-                    echo "Skip ".$emplPeriod->getId()."<br>";
+                    if( $testing ) {
+                        echo "Skip " . $emplPeriod->getId() . "<br>";
+                    }
                     continue;
                 }
 
@@ -4926,11 +4940,14 @@ class VacReqUtil
                 if( $terminationDate ) {
                     $terminationDateStr = $terminationDate->format('Y-m-d');
                 }
-                echo "hireDate=".$hireDate->format('d-m-Y').", termDate=".$terminationDateStr."<br>";
+                if( $testing ) {
+                    echo "hireDate=" . $hireDate->format('d-m-Y') . ", termDate=" . $terminationDateStr . "<br>";
+                }
                 //getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE )
                 $totalAccruedMonths = $this->getTotalAccruedMonths($yearRange,$hireDate,$terminationDate);
-                echo "totalAccruedMonths=$totalAccruedMonths <br>";
-
+                if( $testing ) {
+                    echo "totalAccruedMonths=$totalAccruedMonths <br>";
+                }
 
 //                $thisTotalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
 //                echo "thisTotalAccruedDays*accruedDays=$thisTotalAccruedDays <br>";
@@ -4946,9 +4963,13 @@ class VacReqUtil
 
                 $totalAccruedDays = $totalAccruedDays + $thisTotalAccruedDays;
 
+                $addedFlag = true;
                 $count++;
+            }//foreach
+            if( $addedFlag === false ) {
+                return NULL;
             }
-        }
+        }//if
 
         $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
         if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
@@ -4958,8 +4979,10 @@ class VacReqUtil
 
         $totalAccruedDays = round($totalAccruedDays);
 
-        echo "getTotalAccruedDaysUsingEmplPeriods: totalAccruedDays=$totalAccruedDays <br>";
-        echo "================= <br>";
+        if( $testing ) {
+            echo "getTotalAccruedDaysUsingEmplPeriods: totalAccruedDays=$totalAccruedDays <br>";
+            echo "================= <br>";
+        }
 
         return $totalAccruedDays;
     }
@@ -4970,7 +4993,7 @@ class VacReqUtil
 
         if( $emplPeriod->getIgnore() === TRUE || $emplPeriod === NULL ) {
             $accruedDays = $accruedMonths * $vacationAccruedDaysPerMonth;
-            echo "Ignore EmplPeriod: accruedDays=$accruedDays <br>";
+            //echo "Ignore EmplPeriod: accruedDays=$accruedDays <br>";
             return $accruedDays;
         }
 
@@ -4981,10 +5004,10 @@ class VacReqUtil
                 $vacationAccruedDaysPerMonth = $thisVacationAccruedDaysPerMonth;
             }
         }
-        echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>";
+        //echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>";
 
         $accruedDays = $accruedMonths * $vacationAccruedDaysPerMonth;
-        echo "accruedDays*accruedDaysPerMonth=$accruedDays <br>";
+        //echo "accruedDays*accruedDaysPerMonth=$accruedDays <br>";
 
         //reduce by effort
         $effort = $emplPeriod->getEffort();
@@ -4993,7 +5016,7 @@ class VacReqUtil
             $accruedDays = $accruedDays * $effort;
         }
 
-        echo "calculateAdjustedByEmplPeriodParam: effort=[$effort],  accruedDays=$accruedDays <br>";
+        //echo "calculateAdjustedByEmplPeriodParam: effort=[$effort],  accruedDays=$accruedDays <br>";
 
         return $accruedDays;
     }
@@ -5563,15 +5586,78 @@ class VacReqUtil
 
         if( $expectedResult ) {
             if( $expectedResult == (int) $totalAccruedDays ) {
-                //echo "Pass <br>";
+                echo "Pass <br>";
                 return 1;
             } else {
-                //echo "Fail <br>";
+                echo "Fail!!! <br>";
                 return 0;
             }
         }
         return 0;
     } //EOF getTestTotalAccruedMonths
+
+    public function testDefaultVsNewDaysCalculation( $request ) {
+        //get vacreq users
+        $user = $this->security->getUser();
+
+        //find groups for logged in user
+        //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
+        $groups = $this->getGroupsByPermission($user,$groupParams);
+
+        //$testData = array();
+        $testDataStr = "";
+
+        foreach($groups as $group) {
+
+            $submitters = $this->getUsersByGroupId($group->getId(), "ROLE_VACREQ_SUBMITTER");
+            echo "submitters=" . count($submitters) . "<br>";
+
+            //use getHeaderInfoMessages or $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
+            foreach ($submitters as $submitter) {
+
+                echo "submitter=$submitter <br>";
+
+                $approvalGroupType = $this->getSingleApprovalGroupType($submitter);
+                $totalAccruedDays = $this->getTotalAccruedDays($submitter, NULL, $approvalGroupType); //current year
+
+                $defaultTotalAccruedDays = $this->getDefaultTotalAccruedDays($submitter, NULL, $approvalGroupType);
+//                $testData[] = array(
+//                    'submitter' => $submitter->getId().": ".$submitter,
+//                    'defaultTotalAccruedDays' => $defaultTotalAccruedDays,
+//                    'totalAccruedDays' => $totalAccruedDays
+//                );
+
+                $errorStr = '';
+                if( $totalAccruedDays != $defaultTotalAccruedDays ) {
+                    echo "!!! Error: " . $submitter .  " has different accrued days: defaultTotalAccruedDays=[$defaultTotalAccruedDays], totalAccruedDays=[$totalAccruedDays]"."<br><br>";
+                    $errorStr = "Error!: ";
+                }
+
+                $testDataStr = $testDataStr . "<br>".
+                    //"submitter=" .
+                    $errorStr.
+                    $submitter->getId().": ".$submitter.
+                    ", defaultDays=".$defaultTotalAccruedDays.
+                    ", newDays=".$totalAccruedDays
+                ;
+            }
+        }
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $eventType = 'Search';
+        $event = $testDataStr;
+        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,null,$request,$eventType);
+
+        dump($testDataStr);
+        exit('EOF testDefaultVsNewDaysCalculation');
+    }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
         $vacationAccruedDaysPerMonth = $approvalGroupType->getVacationAccruedDaysPerMonth();
