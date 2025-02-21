@@ -545,13 +545,13 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		#f_test
 		if true; then
 			echo -e ${COLOR} True ${NC}
-			#f_install_haproxy
+			f_install_haproxy
 			f_create_order_instances
-			#f_create_tenant_htppd
-			#f_create_combined_certificate
-			#f_start_haproxy
-			#f_stop_httpd
-			#f_start_all_httpd
+			f_create_tenant_htppd
+			f_create_combined_certificate
+			f_start_haproxy
+			f_stop_httpd
+			f_start_all_httpd
 			##f_restart_phpfpm
 		else
 			echo -e ${COLOR} False ${NC}
