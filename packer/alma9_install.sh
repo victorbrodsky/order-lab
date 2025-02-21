@@ -611,7 +611,7 @@ f_install_post() {
 	sleep 1
 }
 
-if false; then
+if true; then
 f_update_os
 f_install_apache
 f_install_postgresql17
@@ -623,7 +623,7 @@ f_install_prepare
 ##f_install_post
 fi
 
-if true; then	
+if false; then
 #to install order only:
 f_install_util
 f_install_order
