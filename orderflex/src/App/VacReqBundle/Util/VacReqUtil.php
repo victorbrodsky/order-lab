@@ -4811,9 +4811,9 @@ class VacReqUtil
         // return totalAccruedDays
 
         $testing = false;
-        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
-            $testing = true;
-        }
+//        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
+//            $testing = true;
+//        }
 
         $totalAccruedDays = NULL;
 
