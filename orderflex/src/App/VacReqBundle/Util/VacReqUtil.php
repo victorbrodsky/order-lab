@@ -4687,13 +4687,13 @@ class VacReqUtil
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
 
-//        if( $user ) {
-//            $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
-//            if( $totalAccruedDays !== NULL ) {
-//                //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
-//                return $totalAccruedDays;
-//            }
-//        }
+        if( $user ) {
+            $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
+            if( $totalAccruedDays !== NULL ) {
+                //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
+                return $totalAccruedDays;
+            }
+        }
 //        //echo "Using default calculations <br>";
 
         return $this->getDefaultTotalAccruedDays($user, $yearRange, $approvalGroupType);
@@ -5640,7 +5640,7 @@ class VacReqUtil
 
                 $approvalGroupType = $this->getSingleApprovalGroupType($submitter);
 
-                $totalAccruedDays = $this->getNewTotalAccruedDays($submitter, NULL, $approvalGroupType); //current year
+                $totalAccruedDays = $this->getTotalAccruedDays($submitter, NULL, $approvalGroupType); //current year
 
                 $defaultTotalAccruedDays = $this->getDefaultTotalAccruedDays($submitter, NULL, $approvalGroupType);
 //                $testData[] = array(
