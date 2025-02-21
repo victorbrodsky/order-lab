@@ -4687,9 +4687,67 @@ class VacReqUtil
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
 
-        if( $user ) {
+//        if( $user ) {
+//            $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
+//            if( $totalAccruedDays !== NULL ) {
+//                //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
+//                return $totalAccruedDays;
+//            }
+//        }
+//        //echo "Using default calculations <br>";
+
+        return $this->getDefaultTotalAccruedDays($user, $yearRange, $approvalGroupType);
+
+
+//        //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+//        $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
+//
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            $vacationAccruedDaysPerMonth = 2;
+//            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+//        //echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>"; //fellows 1.666
+//
+//        //TODO: fix summary: http://127.0.0.1/time-away-request/summary/?filter%5Busers%5D%5B%5D=762&filter%5Btypes%5D%5B%5D=1&filter%5Btypes%5D%5B%5D=2&filter%5Bsubmit%5D=
+//        if( !$yearRange ) {
+//            $yearRange = $this->getCurrentAcademicYearRange();
+//        }
+//        //echo "user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
+//
+//        //Use EmploymentStartEnd to get number of month
+//        $totalAccruedMonths = $this->getTotalAccruedMonths($yearRange);
+//        //$totalAccruedMonths = 12; //Old version without user's start/end dates
+//
+//        //echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
+//        //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+//        $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
+//
+//        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
+//        if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
+//            $totalAccruedDays = $maxVacationDays;
+//        }
+//        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
+//
+//        $totalAccruedDays = round($totalAccruedDays);
+//        //echo "### totalAccruedDays=".$totalAccruedDays."<br>";
+//
+//        //Exception for Dr.R while working on EmplPeriods calculation, manual adjustment
+////        if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
+////            //echo '$yearRange='.$yearRange.'<br>';
+////            if( $yearRange == '2024-2025' ) {
+////                $totalAccruedDays = $totalAccruedDays - 8;
+////            }
+////        }
+//
+//        return $totalAccruedDays;
+    }
+
+    public function getNewTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL )
+    {
+
+        if ($user) {
             $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
-            if( $totalAccruedDays !== NULL ) {
+            if ($totalAccruedDays !== NULL) {
                 //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
                 return $totalAccruedDays;
             }
@@ -4697,49 +4755,6 @@ class VacReqUtil
         //echo "Using default calculations <br>";
 
         return $this->getDefaultTotalAccruedDays($user, $yearRange, $approvalGroupType);
-
-
-        //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
-        $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
-
-        if( !$vacationAccruedDaysPerMonth ) {
-            $vacationAccruedDaysPerMonth = 2;
-            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-        }
-        //echo "vacationAccruedDaysPerMonth=$vacationAccruedDaysPerMonth <br>"; //fellows 1.666
-
-        //TODO: fix summary: http://127.0.0.1/time-away-request/summary/?filter%5Busers%5D%5B%5D=762&filter%5Btypes%5D%5B%5D=1&filter%5Btypes%5D%5B%5D=2&filter%5Bsubmit%5D=
-        if( !$yearRange ) {
-            $yearRange = $this->getCurrentAcademicYearRange();
-        }
-        //echo "user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
-
-        //Use EmploymentStartEnd to get number of month
-        $totalAccruedMonths = $this->getTotalAccruedMonths($yearRange);
-        //$totalAccruedMonths = 12; //Old version without user's start/end dates
-
-        //echo "totalAccruedMonths=".$totalAccruedMonths."<br>";
-        //$totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
-        $totalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
-
-        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
-        if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
-            $totalAccruedDays = $maxVacationDays;
-        }
-        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
-
-        $totalAccruedDays = round($totalAccruedDays);
-        //echo "### totalAccruedDays=".$totalAccruedDays."<br>";
-
-        //Exception for Dr.R while working on EmplPeriods calculation, manual adjustment
-//        if( $user && $user->getPrimaryPublicUserId() == 'jar9135' ) {
-//            //echo '$yearRange='.$yearRange.'<br>';
-//            if( $yearRange == '2024-2025' ) {
-//                $totalAccruedDays = $totalAccruedDays - 8;
-//            }
-//        }
-
-        return $totalAccruedDays;
     }
 
     public function getDefaultTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
@@ -5624,7 +5639,8 @@ class VacReqUtil
                 echo "submitter=$submitter <br>";
 
                 $approvalGroupType = $this->getSingleApprovalGroupType($submitter);
-                $totalAccruedDays = $this->getTotalAccruedDays($submitter, NULL, $approvalGroupType); //current year
+
+                $totalAccruedDays = $this->getNewTotalAccruedDays($submitter, NULL, $approvalGroupType); //current year
 
                 $defaultTotalAccruedDays = $this->getDefaultTotalAccruedDays($submitter, NULL, $approvalGroupType);
 //                $testData[] = array(
