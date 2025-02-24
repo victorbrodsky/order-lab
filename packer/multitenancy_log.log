@@ -1,0 +1,69 @@
+bashdbuser=symphony
+bashdbpass=symphony
+bashprotocol=
+bashdomainname=
+bashsslcertificate=
+bashemail=
+multitenant=haproxy
+bashpath=/srv
+[1;36m Use multitenancy multitenant=haproxy [0m
+[1;36m True [0m
+[1;36m Install haproxy [0m
+[1;36m Copy haproxy from packer [0m
+[1;36m Use default http bind *:80 and disable bind *:443 in haproxy.cfg [0m
+[1;36m disable http-request redirect scheme https unless { ssl_fc } in haproxy.cfg [0m
+[1;36m Adding new line to haproxy to prevent Missing LF on last line [0m
+[1;36m Install netstat [0m
+[1;36m Check if instance exists: homepagemanager port 8081 url  [0m
+[1;36m Target directory [/srv/order-lab-homepagemanager] does not exist [0m
+[1;36m Create instance: homepagemanager port 8081 url  [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: homepagemanager port 8081 url  [0m
+[1;36m Error! Instance /srv/order-lab-homepagemanager has not been created [0m
+[1;36m Check if instance exists: tenantmanager port 8082 url tenant-manager [0m
+[1;36m Target directory [/srv/order-lab-tenantmanager] does not exist [0m
+[1;36m Create instance: tenantmanager port 8082 url tenant-manager [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: tenantmanager port 8082 url tenant-manager [0m
+[1;36m Error! Instance /srv/order-lab-tenantmanager has not been created [0m
+[1;36m Check if instance exists: tenantappdemo port 8083 url c/demo-institution/demo-department [0m
+[1;36m Target directory [/srv/order-lab-tenantappdemo] does not exist [0m
+[1;36m Create instance: tenantappdemo port 8083 url c/demo-institution/demo-department [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: tenantappdemo port 8083 url c/demo-institution/demo-department [0m
+[1;36m Error! Instance /srv/order-lab-tenantappdemo has not been created [0m
+[1;36m Check if instance exists: tenantapptest port 8084 url c/test-institution/test-department [0m
+[1;36m Target directory [/srv/order-lab-tenantapptest] does not exist [0m
+[1;36m Create instance: tenantapptest port 8084 url c/test-institution/test-department [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: tenantapptest port 8084 url c/test-institution/test-department [0m
+[1;36m Error! Instance /srv/order-lab-tenantapptest has not been created [0m
+[1;36m Check if instance exists: tenantapp1 port 8085 url c/wcm/pathology [0m
+[1;36m Target directory [/srv/order-lab-tenantapp1] does not exist [0m
+[1;36m Create instance: tenantapp1 port 8085 url c/wcm/pathology [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: tenantapp1 port 8085 url c/wcm/pathology [0m
+[1;36m Error! Instance /srv/order-lab-tenantapp1 has not been created [0m
+[1;36m Check if instance exists: tenantapp2 port 8086 url c/wcm/psychiatry [0m
+[1;36m Target directory [/srv/order-lab-tenantapp2] does not exist [0m
+[1;36m Create instance: tenantapp2 port 8086 url c/wcm/psychiatry [0m
+[1;36m Current folder: [0m
+/c/Users/cinav/Documents/WCMC/ORDER/order-lab/packer
+[1;36m Check if instance has been created: tenantapp2 port 8086 url c/wcm/psychiatry [0m
+[1;36m Error! Instance /srv/order-lab-tenantapp2 has not been created [0m
+[1;36m f_create_tenant_htppd [0m
+[1;36m Check if httpd exists: homepagemanager port 8081 url  [0m
+[1;36m Create homepagemanager-httpd.conf [0m
+[1;36m Replace Listen 80 by Listen 8081 [0m
+[1;36m Append PidFile /var/run/httpd$2.pid [0m
+[1;36m Append VirtualHost config [0m
+[1;36m Replace port 80 by 8081 [0m
+[1;36m Replace DocumentRoot order-lab by order-lab-homepagemanager [0m
+[1;36m Alias url not provided  [0m
+[1;36m Create httpdhomepagemanager.service for port 8081, url  [0m
+[1;36m Enable httpdhomepagemanager.service for port 8081, url  [0m

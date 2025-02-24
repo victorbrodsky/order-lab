@@ -73,6 +73,31 @@ case $key in
         shift # past argument
         shift # past value
     ;;
+    -u|--username)
+        bashdbuser="$2"
+        shift # past argument
+        shift # past value
+    ;;
+    -t|--password)
+        bashdbpass="$2"
+        shift # past argument
+        shift # past value
+    ;;
+    -d|--domain)
+        bashdomainname="$2"
+        shift # past argument
+        shift # past value
+    ;;
+    -e|--email)
+        bashemail="$2"
+        shift # past argument
+        shift # past value
+    ;;
+    -l|--sertificate)
+        bashsslcertificate="$2"
+        shift # past argument
+        shift # past value
+    ;;
     *)    # unknown option
 		POSITIONAL+=("$1") # save it in an array for later
 		shift # past argument
@@ -86,6 +111,23 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [ -z "$bashpath" ]; then
     bashpath="/usr/local/bin"
     #bashpath="/srv"
+fi
+
+if [ ! -z "$bashemail" ] && [ "$bashemail" = "none" ]
+  then
+    bashemail=""
+fi
+if [ ! -z "$bashsslcertificate" ] && [ "$bashsslcertificate" = "none" ]
+  then
+    bashsslcertificate=""
+fi
+if [ ! -z "$bashdomainname" ] && [ "$bashdomainname" = "none" ]
+  then
+    bashdomainname=""
+fi
+if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "none" ]
+  then
+    bashprotocol=""
 fi
 
 echo bashdbuser=$bashdbuser
