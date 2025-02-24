@@ -1769,9 +1769,9 @@ https://akashicseer.com/web-development/using-doctrine-commands-in-the-console-w
 Migration: symfony doctrine migration trying to drop not existed constraint
 
 restore using data only => valid schema
-php app/console doctrine:database:drop --force
-php app/console doctrine:database:create
-php app/console doctrine:query:sql "$(< 1Sep2023_data_plain.sql)" => Aborted (core dumped)
+php bin/console doctrine:database:drop --force
+php bin/console doctrine:database:create
+php bin/console doctrine:query:sql "$(< 1Sep2023_data_plain.sql)" => Aborted (core dumped)
 
 Restored database backup_live-20230824-124415-ScanOrder.dump.gz
 Switching restored database with active one : scanorder1_restore > scanorder1 Database restored and active.
