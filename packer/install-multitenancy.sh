@@ -586,7 +586,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
 		#f_test
 		if true; then
-			echo -e ${COLOR} True ${NC}
+			echo -e ${COLOR} multitenancy True ${NC}
 			f_install_haproxy
 			f_create_order_instances
 			f_create_tenant_htppd
