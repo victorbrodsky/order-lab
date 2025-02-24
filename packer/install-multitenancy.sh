@@ -298,7 +298,8 @@ f_create_single_order_instance () {
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
-	sudo cp "$bashpath"/order-lab/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml	
+	#sudo cp "$bashpath"/order-lab/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
+	sudo cp "$bashpath"/order-lab/packer/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
 	sed -i -e "s/database_name: scanorder/database_name: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
