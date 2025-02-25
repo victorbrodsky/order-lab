@@ -1,0 +1,42 @@
+Secure Copy Protocol (SCP):
+https://medium.com/@rayansami007/secure-file-transfers-to-remote-server-with-php-ssh2-extension-usage-and-installation-516824440221
+
+Hash and cURL:
+https://stackoverflow.com/questions/58709888/php-curl-how-to-safely-send-data-to-another-server-using-curl
+https://stackoverflow.com/questions/17823900/how-to-send-and-receive-json-data-between-two-servers-via-php
+https://stackoverflow.com/questions/53285645/how-to-use-curl-over-ssh-and-get-the-file-as-well-as-the-return-value
+https://blog.magepsycho.com/sending-json-data-remote-server/
+
+SCP and SFTP both are secured based on SSH
+
+Use SFTP - control of the remote file system
+
+Steps:
+1) On the master server, when antibody is updated, add the antibody's ID to the table 'TransferData':
+Entity Info - $entityId, $className. $entityId - antibody ID
+InterfaceTransferList ID
+Status - transfer status (use TransferStatusList)
+Create Date
+Update Date
+Creator
+
+2) Cron job get TransferData and generate the JSON file transfer-data.json with antibodies data to transfer
+
+3) This file transfer-data.json is transferred to the remote server
+
+4) Remote server process this transfer-data.json and create/update/delete antibodies
+
+5) After processing on the remote server, the remote server create the list
+of the successfully processed antibodies IDs (via the same TransferData or as a JSON file)
+
+6) The master server will get the list of successfully processed antibodies IDs
+from remote server and update the status of the records in the TransferData table.
+
+TODO:
+1) Add secret key to the site settings
+2) Add some variable on the server to indicate that this server is a master and will transfer data to other server
+3) Add Original ID (oid) to match the unique transferable entity between source and destination servers? (done - sourceId)
+
+TODO:
+test baseurl if no port provided (done)
+update view servers with DB and composer (done)

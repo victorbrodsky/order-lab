@@ -1923,7 +1923,7 @@ class TransResUtil
         $reviewer = $defaultReviewer->getReviewer();
         if( $reviewer ) {
             $reviewer->addRole($reviewerRole);
-            $this->addTesterRole($reviewer);
+            //$this->addTesterRole($reviewer);
         }
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewer && $originalReviewer != $reviewer ) {
@@ -1933,7 +1933,7 @@ class TransResUtil
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
         if( $reviewerDelegate ) {
             $reviewerDelegate->addRole($reviewerRole);
-            $this->addTesterRole($reviewerDelegate);
+            //$this->addTesterRole($reviewerDelegate);
         }
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {

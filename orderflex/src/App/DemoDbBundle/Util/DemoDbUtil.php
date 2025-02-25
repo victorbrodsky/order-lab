@@ -25,6 +25,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Panther\Client;
 
 
+//Called from controller DemoDataController (/demo-data-panther/) and DemoDbCommand
+
 /**
  * @author oli2002
  */
@@ -88,7 +90,7 @@ class DemoDbUtil {
     }
 
 
-    public function loginAction() {
+    public function loginAction( $password=null ) {
         $client = $this->getClient();
 
         $client->close();
@@ -140,8 +142,12 @@ class DemoDbUtil {
         //$client->waitForVisibility('#select2-chosen-1');
         //$myInput->click(); //error: Element is not currently visible and may not be manipulated
 
+        if( !$password ) {
+            $password = 'demo';
+        }
+
         $form['_display-username'] = 'administrator';
-        $form['_password'] = 'demo';
+        $form['_password'] = $password;
 
         $client->submit($form);
 
@@ -266,7 +272,9 @@ class DemoDbUtil {
         $projectIds = array();
         foreach( $this->getTrpProjects() as $trpProjectArr ) {
             $projectId = $this->newTrpProject($client,$trpProjectArr,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
-            $projectIds[] = $projectId;
+            if( $projectId ) {
+                $projectIds[] = $projectId;
+            }
             break; //testing
         }
         return $projectIds;
@@ -294,6 +302,7 @@ class DemoDbUtil {
         $piArr = $users[0];
         //$userStr = $piArr['displayName'] . ' - ' . $piArr['userid'] . ' (Local User)';
         //echo "userStr=$userStr <br>";
+        echo "PI userId=".$piArr['userId']."<br>";
 
 //        //find user str by $userid
 //        $subjectUser = null;
@@ -337,6 +346,7 @@ class DemoDbUtil {
 
         //Set billingContact 's2id_oleg_translationalresearchbundle_project_billingContact'
         $billingContactArr = $users[1];
+        echo "Billing Contact userId=".$billingContactArr['userId']."<br>";
         $client->executeScript("$('#s2id_oleg_translationalresearchbundle_project_billingContact').select2('val','".$billingContactArr['userId']."')");
         $client->takeScreenshot('demoDb/test_newTrpProject-setBilling'.'.png');
 
@@ -461,7 +471,9 @@ class DemoDbUtil {
         $client->takeScreenshot('demoDb/test_product-'.$productId.'.png');
 
         //businessPurposes
-        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_request_businessPurposes').val('1')");
+        //$client->executeScript("$('#oleg_translationalresearchbundle_request_businessPurposes').val('1')");
+        //$client->executeScript("$('oleg_translationalresearchbundle_request[businessPurposes][]').val('1')");
+        $client->executeScript("$('#s2id_oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
         $client->executeScript('$("#s2id_oleg_translationalresearchbundle_request_businessPurposes")[0].scrollIntoView(false);');
 
         //Check #confirmationSubmit
@@ -474,9 +486,38 @@ class DemoDbUtil {
         //oleg_translationalresearchbundle_request_saveAsComplete
         $form = $crawler->filter('#oleg_translationalresearchbundle_request_saveAsComplete')->form();
         $client->submit($form);
-        $client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete")[0].scrollIntoView(false);');
-        $client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete")[0].scrollIntoView();');
+        //$client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete")[0].scrollIntoView(false);');
+        //$client->executeScript('$("#oleg_translationalresearchbundle_request_saveAsComplete").scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_request-saveAsComplete-'.$productId.'.png');
+    }
+
+    public function newTrpInvoices( $client, $requestIds ) {
+        foreach($requestIds as $requestId) {
+            // '/translational-research/invoice/new/5'
+            $url = $this->baseUrl.'/translational-research/invoice/new/'.$requestId;
+            $crawler = $client->request('GET', $url);
+
+            $requestIds[] = $this->newInvoice($client, $crawler, $requestId);
+        }
+
+        return $requestIds;
+    }
+    public function newInvoice( $client, $crawler, $requestId ) {
+        //https://view.online/c/demo-institution/demo-department/translational-research/project/1/work-request/new/
+        //$url = $this->baseUrl.'/translational-research/project/'.$projectId.'/work-request/new/';
+        //$crawler = $client->request('GET', $url);
+        $client->takeScreenshot('demoDb/test_invoice-'.$requestId.'.png');
+
+        //$form = $crawler->filter('Complete Submission')->form();
+        //$client->waitForVisibility('#oleg_translationalresearchbundle_invoice_saveAndGeneratePdf');
+        $form = $crawler->filter('#oleg_translationalresearchbundle_invoice_saveAndGeneratePdf')->form();
+        //$form = $crawler->selectButton('Save and Generate PDF Invoice')->form();
+        //$form = $crawler->selectButton('#oleg_translationalresearchbundle_invoice_saveAndGeneratePdf')->form();
+
+        $client->submit($form);
+
+        //$client->executeScript('$("#oleg_translationalresearchbundle_invoice_saveAndGeneratePdf").scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_invoice-save-'.$requestId.'.png');
     }
 
     public function getCurrentUrlId($client) {
@@ -486,6 +527,10 @@ class DemoDbUtil {
         //get id from url 'https://view.online/c/demo-institution/demo-department/directory/user/14'
         $uriArr = explode('/',$uri);
         $id = end($uriArr);
+
+//        if( !is_int($id) ) {
+//            return NULL;
+//        }
 
         return $id;
     }
@@ -529,6 +574,7 @@ class DemoDbUtil {
         //$crawler = $client->request('GET', $url);
 
         foreach($projectIds as $projectId) {
+            echo "projectId=$projectId <br>";
             //Click link: /translational-research/approve-project/3564
             $this->approveTrpProject($client,$projectId);
         }

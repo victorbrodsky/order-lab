@@ -1,0 +1,613 @@
+Apache:
+
+<VirtualHost localhost:80>
+	ServerName localhost
+
+	DocumentRoot C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/
+	<Directory C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/>
+		Options +FollowSymLinks -Includes
+		AllowOverride All
+		Require all granted
+    </Directory>
+    Alias  "/c/test/institution-test-department" "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab-2/orderflex/public/"
+
+	#
+	# Configuration for default url '/' at the end of the VirtualHost
+	#
+	DocumentRoot C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/
+	<Directory C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/>
+		Options +FollowSymLinks -Includes
+		AllowOverride All
+		Require all granted
+    </Directory>
+    Alias  "/c/wcm/pathology" "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/"
+
+</VirtualHost>
+
+
+https://serverfault.com/questions/306439/apache-wildcard-documentroot
+<VirtualHost *:80>
+    ServerName placeholdername
+    ServerAlias *.example.com
+    VirtualDocumentRoot /var/www/%1
+</VirtualHost>
+
+Alternatives:
+Nginx
+HAProxy
+
+Load balancing and HA for multiple applications with Apache, HAProxy and keepalived
+https://backreference.org/2012/04/25/load-balancing-and-ha-for-multiple-applications-with-apache-haproxy-and-keepalived/index.html
+
+Run Apache, Nginx & HAProxy on Same Server (Debian, Ubuntu, CentOS)
+https://www.linuxbabe.com/linux-server/run-apache-nginx-haproxy-on-same-server-debian-ubuntu-centos
+
+How to configure multiple instance of Apache on the same server in CentOS 6.7
+https://www.linuxhelp.com/how-to-configure-multiple-instance-of-apache-on-the-same-server-in-centos-6-7
+
+////// Configure port 8095 /////////
+cp -p /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd2.conf
+cp -pr /etc/httpd/conf.d/ /etc/httpd/conf.d1/
+vim /etc/httpd/conf/httpd1.conf:
+Listen 8095
+PidFile run/httpd.pid1
+Include conf.d1/*.conf
+
+vim /etc/httpd/conf.d1/000-default.conf:
+<VirtualHost *:8095>...
+
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -L
+iptables -F
+service iptables save
+
+netstat -ln | grep 8095
+
+sudo firewall-cmd --permanent --add-port=8081/tcp
+sudo firewall-cmd --permanent --add-port=8082/tcp
+sudo firewall-cmd --reload
+Disable firewall (https://linuxize.com/post/how-to-stop-and-disable-firewalld-on-centos-7):
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo systemctl mask --now firewalld
+
+/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k restart
+
+Why port 80 is accesibble but port 8083 is not?
+Why custom port is not accesible by tcp?
+Test: netcat -z -v localhost 8095
+
+Firewall:
+sudo systemctl status firewalld
+firewall-cmd --zone=public --add-port=8095/tcp --permanent
+firewall-cmd –-reload
+firewall-cmd --zone=public --list-ports
+
+//https://monovm.com/blog/changing-the-apache-port-in-centos/
+
+netstat -na | grep :8095
+iptables -A INPUT -p tcp --dport 8095 -j ACCEPT
+telnet localhost 8095
+nmap localhost -p 8095
+
+Don't use vpn, it will block custom ports!
+
+Seacrh listening ports: grep -ri listen /etc/httpd
+Check status: sudo systemctl status httpd.service -l --no-pager
+
+Use Email:
+Question 6:
+
+#### Example HAProxy Configuration
+```apache
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+frontend http_front
+    bind *:80
+    acl url_app1 path_beg /clients/organization01/department01
+    acl url_app2 path_beg /clients/organization02/department01
+    use_backend app1_backend if url_app1
+    use_backend app2_backend if url_app2
+
+backend app1_backend
+    server app1 127.0.0.1:8081 check
+
+backend app2_backend
+    server app2 127.0.0.1:8082 check
+```
+
+This configuration does the following:
+- Defines global settings and defaults.
+- Sets up a frontend that listens on port 80.
+- Uses ACLs (Access Control Lists) to identify traffic based on the URL path.
+- Forwards requests to different backends based on the ACLs.
+- Each backend corresponds to a different Apache instance running on a specific port.
+
+### 4. Restart and Enable HAProxy
+After configuring HAProxy, restart the service and enable it to start on boot:
+```bash
+sudo systemctl restart haproxy
+sudo systemctl enable haproxy
+```
+haproxy -f /etc/haproxy/haproxy.cfg -c
+why the following haproxy configuration gives an error on restart haproxy: frontend http_front
+    bind *:80
+    acl url_app1 path_beg /clients/organization01/department01
+    use_backend app1_backend if url_app1
+
+backend app1_backend
+    server app5 142.93.68.152:8082 check
+ChatGPT
+
+The HAProxy configuration you provided seems generally correct, but there are a few common reasons why you might be encountering an error when restarting HAProxy with this configuration:
+    Syntax Errors: Ensure that the configuration syntax is correct. Even small mistakes like missing a space or a newline can cause issues. HAProxy is very particular about its configuration file format.
+    Port Availability: Ensure that port 80 (the port you're binding to in the frontend http_front) is not already in use by another process on the machine. This is a common issue when working with web servers and proxies.
+
+    Server Availability: Check if the server defined in the backend app1_backend section (142.93.68.152:8082) is reachable and that the service is running on port 8082.
+
+    Configuration File Location: Make sure you are editing the correct HAProxy configuration file and that HAProxy is reading from the correct file when restarting.
+
+    Permissions: Ensure that the user running HAProxy has the necessary permissions to bind to port 80 and access the configuration file.
+
+    HAProxy Version: Make sure that your HAProxy version supports the syntax you are using. Some directives or features might not be available in older versions.
+
+    Error Messages: Look at the error messages you receive when you try to restart HAProxy. They often provide valuable insights into what's going wrong.
+
+To troubleshoot this further, you can check the HAProxy logs (often found in /var/log/haproxy.log or by running haproxy -f /etc/haproxy/haproxy.cfg -c to check the configuration for errors. The output from these logs or commands should give you more specific information about the error you are encountering.
+
+
+Troubleshoot:
+https://www.digitalocean.com/community/tutorials/haproxy-network-error-cannot-bind-socket
+sudo systemctl status haproxy.service -l --no-pager
+
+//How To Configure HAProxy Logging with Rsyslog on CentOS 8
+https://www.digitalocean.com/community/tutorials/how-to-configure-haproxy-logging-with-rsyslog-on-centos-8-quickstart
+
+How To Troubleshoot Common HAProxy Errors
+https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-haproxy-errors
+
+https://www.haproxy.com/blog/path-based-routing-with-haproxy
+
+sudo systemctl start httpd.service
+sudo systemctl restart haproxy
+httpd -f /etc/httpd/conf/httpd1.conf -k restart
+sudo systemctl restart httpd1
+
+sudo tail -n 30 /var/log/haproxy.log
+
+Upgrade HAProxy
+###########################
+https://idolsgate.com/blog/how-to-install-the-latest-version-of-haproxy-on-centos-7/
+https://discourse.haproxy.org/t/upgrading-haproxy1-5-to-1-7/1493
+
+cd /usr/src/
+wget http://www.haproxy.org/download/2.0/src/${LATEST_HAPROXY}.tar.gz
+tar xzvf ${LATEST_HAPROXY}.tar.gz
+
+yum install gcc-c++ openssl-devel pcre-static pcre-devel systemd-devel -y
+
+cd /usr/src/${LATEST_HAPROXY}
+make TARGET=linux-glibc USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1 USE_SYSTEMD=1
+mkdir /etc/haproxy
+make install
+
+sudo cp -f /usr/local/sbin/haproxy /usr/sbin # Overwrite version 1.5 with new 1.7
+sudo service haproxy restart
+sudo chkconfig haproxy on
+
+
+###########################
+
+Question: How to configure Haproxy in the example above to keep the original url but to forward to specific port to root url?
+For example, http://159.203.95.150/url1 will be forwarded to http://159.203.95.150:8095
+showing url as original but url1 will be considered only as a prefix.
+
+To configure HAProxy to forward traffic from `http://159.203.95.150/url1` to `http://159.203.95.150:8095`,
+while treating `/url1` only as a prefix (and not forwarding the `/url1` part to the backend server),
+you'll need to use HAProxy's URL rewriting capabilities. This involves modifying the path in the HTTP request before forwarding it to the backend.
+
+Here's how you can adjust the HAProxy configuration:
+
+1. **Edit HAProxy Configuration:**
+
+   Open the HAProxy configuration file (`/etc/haproxy/haproxy.cfg`) and modify it to include URL rewriting rules:
+
+    ```haproxy
+    global
+        log /dev/log local0
+        log /dev/log local1 notice
+        chroot /var/lib/haproxy
+        user haproxy
+        group haproxy
+        daemon
+
+    defaults
+        log global
+        mode http
+        option httplog
+        option dontlognull
+        timeout connect 5000ms
+        timeout client 50000ms
+        timeout server 50000ms
+
+    frontend http_front
+        bind *:80
+        acl url_path1 path_beg -i /url1
+        use_backend backend_port8095 if url_path1
+
+    backend backend_port8095
+        http-request set-path %[path,regsub(^/url1/,/)]
+        server server1 127.0.0.1:8095
+    ```
+
+   In this configuration:
+   - The frontend listens on port 80 and defines an ACL to match the path beginning with `/url1`.
+   - When a request matches `/url1`, it is forwarded to the `backend_port8095`.
+   - In the backend, the `http-request set-path` line rewrites the path, removing `/url1` from the beginning of the path.
+   This is done using a regular expression.
+
+2. **Restart HAProxy:**
+
+   After modifying the configuration file, restart HAProxy to apply the changes:
+
+    ```bash
+    sudo systemctl restart haproxy
+    ```
+
+3. **Testing:**
+
+   When you now access `http://159.203.95.150/url1`, HAProxy will forward the request to `http://159.203.95.150:8095`
+   but without the `/url1` prefix. The original URL (`http://159.203.95.150/url1`) will still be shown in the browser,
+   as HAProxy only rewrites the internal path of the request.
+
+### Important Notes
+
+- Ensure that your backend server on port 8095 is configured to handle requests correctly after the path rewrite.
+- HAProxy's `http-request set-path` directive is powerful and allows for complex path manipulations using regular expressions.
+- Always backup configuration files before making changes and validate the configuration syntax.
+- Be aware of the security implications of rewriting URLs and ensure that it's consistent with your application's requirements.
+
+########### Working configuration ###########
+HAProxy backend redirect requests to the tenant port, i.e. 8095, keeping url intact with the tenant url.
+Tenant's httpd config file has the same port for the virual host VirtualHost *:8095. Alias map the tenant's url to the tenant's document root.
+### /etc/haproxy/haproxy.conf ###
+global
+   log /dev/log local0
+   log /dev/log local1 notice
+   chroot /var/lib/haproxy
+   user haproxy
+   group haproxy
+   daemon
+
+defaults
+   mode http
+   log global
+   option httplog
+   option dontlognull
+   timeout connect 50000
+   timeout client  50000
+   timeout server  50000
+
+frontend http_front
+    bind *:80
+    acl url_app1 path_beg -i /wcm
+    use_backend app1_backend if url_app1
+
+backend app1_backend
+    server server1 159.203.95.150:8095 maxconn 32
+### EOF /etc/haproxy/haproxy.conf ###
+
+### /etc/httpd/conf/httpd1.conf ###
+Listen 8095
+PidFile /var/run/httpd1.pid
+IncludeOptional conf.d/*.conf
+#IncludeOptional conf/confd1.conf
+### EOF /etc/httpd/conf/httpd1.conf ###
+
+### /etc/httpd/conf.d1/000-default.conf ###
+# Alternatevely we can use the same global conf.d/*.conf and place the VirtualHost configuration at the end of the httpd1.conf
+# In this case we can remove the line IncludeOptional conf.d/*.conf
+<VirtualHost *:8095>
+    ServerName localhost
+    DocumentRoot /usr/local/bin/order-lab-2/orderflex/public/
+    <Directory /usr/local/bin/order-lab-2/orderflex/public/>
+                Options +FollowSymLinks -Includes
+                AllowOverride All
+                Require all granted
+    </Directory>
+    Alias /wcm /usr/local/bin/order-lab-2/orderflex/public/
+    SetEnv APP_ENV prod
+    SetEnv APP_DEBUG 0
+    ErrorLog /var/log/error.log
+    CustomLog /var/log/access.log combined
+</VirtualHost>
+ServerName 127.0.0.1
+
+<IfModule ssl_module>
+	<VirtualHost _default_:443>
+		ServerName localhost
+		DocumentRoot /usr/local/bin/order-lab/orderflex/public/
+		SSLEngine on
+		SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+		SSLCertificateFile /usr/local/bin/order-lab/ssl/apache2.crt
+		SSLCertificateKeyFile /usr/local/bin/order-lab/ssl/apache2.key
+		<Directory /usr/local/bin/order-lab-2/orderflex/public/>
+			Options +FollowSymLinks -Includes
+			AllowOverride All
+			Require all granted
+		</Directory>
+		Alias /wcm /usr/local/bin/order-lab-2/orderflex/public/
+		SetEnv APP_ENV prod
+		SetEnv APP_DEBUG 0
+	</VirtualHost>
+</IfModule>
+
+### EOF /etc/httpd/conf.d1/000-default.conf ###
+
+########### EOF Working configuration ###########
+
+Error with webpack: asset's url does not have tenant's prefix 'c/wcm/pathology'
+Correct: http://159.203.95.150:8095/build/userdates-css.e520d018.css?1709659473
+Correct: http://159.203.95.150/c/wcm/pathology/build/userdates-css.e520d018.css?1709659473
+Incorrect: http://159.203.95.150/build/userdates-css.e520d018.css?1709659473
+Fix: add tenant's url prefix to the .setPublicPath('/build') in webpack.config.js: .setPublicPath('/c/wcm/pathology/build')
+https://symfony.com/doc/current/frontend/encore/faq.html
+.setPublicPath('/myAppSubdir/build')
+We can get myAppSubdir from env to have it as a dynamic
+
+
+sudo systemctl start httpd.service
+sudo systemctl restart haproxy
+httpd -f /etc/httpd/conf/httpd1.conf -k restart
+sudo systemctl restart httpd1
+
+/////////////// HAProxy config ///////////////
+frontend http_front
+    #bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/example.com.pem
+    mode http
+
+    #8081 - homepage_manager_backend. Default home page with empty '/' declare at the end
+
+    #8082 - tenant_manager_backend
+    acl tenant_manager_url path_beg -i /tenant-manager
+    use_backend tenant_manager_backend if tenant_manager_url
+
+    #8083 - tenant_app_demo_backend
+    acl tenant_app_demo_url path_beg -i /c/demo-institution/demo-department
+    use_backend tenant_app_demo_backend if tenant_app_demo_url
+
+    #8084 - tenant_app_test_backend
+    acl tenant_app_test_url path_beg -i /c/test-institution/test-department
+    use_backend tenant_app_test_backend if tenant_app_test_url
+
+    #8085 - tenant_app1_backend
+    acl tenant_app1_url path_beg -i /c/wcm/pathology
+    use_backend tenant_app1_backend if tenant_app1_url
+
+    #8086 - tenant_app2_backend
+    acl tenant_app2_url path_beg -i /c/wcm/psychiatry
+    use_backend tenant_app2_backend if tenant_app2_url
+
+    #8081 - homepage_manager_backend. Default home page with empty '/' declare at the end
+    acl homepage_manager_url path_beg -i /
+    use_backend homepage_manager_backend if homepage_manager_url
+
+
+backend homepage_manager_backend
+    server homepage_manager_server 159.203.95.150:8081 check
+
+backend tenant_manager_backend
+    server tenant_manager_server 159.203.95.150:8082 check
+
+backend tenant_app_demo_backend
+    server tenant_app_demo_server 159.203.95.150:8083 check
+
+backend tenant_app_test_backend
+    server tenant_app_test_server 159.203.95.150:8084 check
+
+backend tenant_app1_backend
+    server tenant_app1_server 159.203.95.150:8085 check
+
+backend tenant_app2_backend
+    server tenant_app2_server 159.203.95.150:8086 check
+
+/////////////// EOF HAProxy config ///////////////
+
+Problem: after Gracefully shutting down droplet...
+httpd.service is running, httpd custom not running, haproxy is not running (because httpd.service is running)
+sudo systemctl status httpd.service
+sudo systemctl stop httpd.service
+
+sudo httpd -f /etc/httpd/conf/tenantmanager-httpd.conf -k start
+sudo httpd -f /etc/httpd/conf/tenantmanager-httpd.conf -k stop
+sudo netstat -na | grep :8082
+
+vim /etc/haproxy/haproxy.cfg
+sudo systemctl restart haproxy
+sudo systemctl status haproxy
+
+
+### 5. Configure Apache to Start on Boot
+Since you're running multiple instances manually, you'll need to create custom systemd service files to manage them.
+Create a new service file `/etc/systemd/system/httpd1.service`:
+[Unit]
+Description=The Apache HTTP Server First Instance
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k start
+ExecReload=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k graceful
+ExecStop=/usr/sbin/httpd -f /etc/httpd/conf/httpd1.conf -k stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+Create another service file `/etc/systemd/system/httpd2.service` for the second instance (change the `httpd1.conf` to `httpd2.conf`).
+Reload the systemd daemon:
+sudo systemctl daemon-reload
+
+sudo systemctl enable httpd1
+sudo systemctl start httpd1
+
+
+//Error on alma8
+[Fri Mar 15 19:44:22.040449 2024] [proxy:error] [pid 3556:tid 140394318767872] (2)No such file or directory: AH02454: FCGI: attempt to connect to Unix domain socket /run/php-fpm/www.sock (*) failed
+[Fri Mar 15 19:44:22.040491 2024] [proxy_fcgi:error] [pid 3556:tid 140394318767872] [client 142.117.240.36:58511] AH01079: failed to make connection to backend: httpd-UDS
+sudo service php-fpm start
+sudo service php-fpm status
+
+cat /etc/os-release
+
+Verify if script is executable by apache:
+1) switch to apache user:
+su -s /bin/bash apache
+2) run as apache:
+sudo /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+3) verify haproxy, httpd status
+/usr/bin/systemctl status haproxy
+/usr/bin/systemctl status htppdtenantmanager
+systemctl status httpdtenantapp1
+/usr/bin/systemctl status php-fpm
+or
+journalctl -xeu haproxy
+4) TODO: run in background as cron
+
+Update httpd:
+0) sudo visudo: apache       ALL=(ALL)       NOPASSWD: ALL
+1) Change persmission
+chown -R apache /etc/httpd/conf/*.conf
+chmod 744 /etc/httpd/conf/*.conf
+chown -R apache /etc/haproxy/haproxy.cfg
+chmod 744 /etc/haproxy/haproxy.cfg
+2) Failed to restart httpdtenantapptest.service: Interactive authentication required
+
+
+https://serverfault.com/questions/1070602/centos-apache-all-root-nopasswd-path-to-shell-sh-is-not-working
+use * for commands (https://unix.stackexchange.com/questions/178069/how-do-i-use-command-arguments-with-cmnd-alias-in-sudoers)
+Permission:
+sudo visudo
+apache ALL=(ALL) NOPASSWD: /bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh*
+id root
+ps aux | egrep '(apache|httpd)'
+/bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
+
+Aadjust your sudo configuration to be more restrictive:
+User_Alias WWW=apache
+Cmnd_Alias WEBCMDS=/bin/bash /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
+WWW ALL=NOPASSWD: WEBCMDS
+
+Add apache to wheel:
+usermod -aG wheel apache
+Switch to apache: su - apache
+sudo ls -la /root
+
+Check sudo:
+sudo -u <user> command (sudo -u apache ls -la /root)
+sudo -g <group> command
+sudo -u <user> -g <group> command
+
+List all groups: getent group
+List user's group: groups apache
+
+//In order to update server config:
+1) change sudoer config: 'sudo visudo' => 'apache       ALL=(ALL)       NOPASSWD: ALL'
+2) Change permission for apache and haproxy.cfg config files:
+chown -R apache /etc/httpd/conf/*.conf
+chmod 744 /etc/httpd/conf/*.conf
+
+
+
+php-fpm.service: A process of this unit has been killed by the OOM k>
+Jun 21 17:50:08 packer-1717709078 systemd[1]: php-fpm.service: Failed with result 'oom-kill'.
+Jun 21 17:50:08 packer-1717709078 systemd[1]: php-fpm.service: Consumed 24min 23.107s CPU time.
+
+Certbot:
+[root@packer-1719928993 ~]# sudo certbot certonly --standalone
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Please enter the domain name(s) you would like on your certificate (comma and/or
+space separated) (Enter 'c' to cancel): view.online
+Requesting a certificate for view.online
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
+This certificate expires on 2024-09-30.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Renew certbot certificate with standalone option:
+1) stop web server: sudo systemctl stop haproxy.service
+2) run: sudo certbot certonly --standalone
+3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
+3a) cd /etc/letsencrypt/live/view.online/
+3b) cat cert.pem privkey.pem > cert_key.pem
+4) start haproxy: sudo systemctl start haproxy.service
+
+sudo certbot certonly --webroot
+domain: view.online
+webroot: /usr/local/bin/order-lab/orderflex/public
+
+Log php-fpm: /var/log/httpd and /var/log/php-fpm
+The “oom-kill” error in PHP-FPM occurs when the system’s Out-Of-Memory (OOM) killer terminates the PHP-FPM process due to excessive memory usage. Here are some steps to help you fix this issue:
+
+Adjust PHP-FPM Configuration:
+Reduce pm.max_children: This setting controls the maximum number of child processes. Lowering it can help reduce memory usage.
+Set pm.max_requests: This limits the number of requests each child process can handle before being restarted. A lower value can help mitigate memory leaks.
+Tune pm.start_servers, pm.min_spare_servers, and pm.max_spare_servers: These settings control the number of child processes created on startup and the minimum/maximum number of idle processes.
+Optimize PHP Scripts:
+Check for memory leaks in your PHP code. Use tools like Xdebug or Blackfire to profile and optimize your scripts.
+Adjust System Settings:
+Modify Kernel Parameters: Add the following lines to /etc/sysctl.conf to adjust memory overcommit settings:
+vm.overcommit_memory = 2
+vm.overcommit_ratio = 80
+Then, apply the changes with:
+sudo sysctl -p
+
+Monitor and Restart PHP-FPM:
+Create a script to monitor PHP-FPM memory usage and restart the service if it exceeds a certain threshold.
+Increase System Memory:
+If possible, add more RAM to your server to handle higher memory demands.
+These steps should help you manage and reduce the occurrence of OOM kills with PHP-FPM
+
+https://serverfault.com/questions/939436/understand-correctly-pm-max-children-tuning
+25 July 2024 set:
+pm.max_requests=500
+pm.max_children = 32
+pm = ondemand
+pm.process_idle_timeout = 3s
+systemctl status php-fpm
+
+To initilize tenant: https://view.online/tenant-manager/directory/settings/tenant-manager/configure/
+
+Below is the manual procedure to add/manage a tenant (i.e. tenant1, using port 8087)
+    described in /packer/install-multitenancy.sh with HAProxy:<br>
+<b>1) Create a new order instance /order-lab-tenenat1/ and run git clone to /order-lab-tenenat1 </b><br>
+a) Add APP_SUBDIR=tenenat1 to /order-lab-tenenat1/orderflex/.env <br>
+b) In parameters.yml: specify database_name and tenant_role if required <br>
+(null is default value for all tenants, 'homepagemanager' or 'tenantmanager') <br>
+c) Run 'composer install', 'yarn install --frozen-lockfile'<br>
+Note: if DB already exists, delete it by: php bin/console doctrine:database:drop --force<br>
+d) Create DB by running:<br>
+sudo php bin/console doctrine:database:create<br>
+sudo php bin/console doctrine:schema:update --complete --force<br>
+sudo php bin/console doctrine:migration:status<br>
+sudo php bin/console doctrine:migration:sync-metadata-storage <br>
+e) Run 'bash deploy_prod.sh -withdb'<br>

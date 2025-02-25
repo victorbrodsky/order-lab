@@ -1,0 +1,119 @@
+New installation procedure:
+sudo yum install -y git
+cd /srv
+git clone https://github.com/victorbrodsky/order-lab.git
+cd order-lab/packer/
+
+Change 'bashpath' parameter in the script (i.e. "/srv")
+# bash alma9_install.sh symfony symfony
+
+# bash /usr/local/bin/order-lab/packer/additional.sh /srv/order-lab-tenantapp1
+
+install nodejs
+sudo yum install -y yarn
+#Error: warning: Signature not supported. Hash algorithm SHA1 not available.
+#Solution:
+#update-crypto-policies --set LEGACY
+#sudo yum install -y yarn
+
+Check apache:
+systemctl status httpd.service
+
+Certificate not found:
+/etc/httpd/conf.d
+Remove all ssl .conf for now (rename to ssl.conf_ORIG)
+
+run:
+# php bin/console doctrine:migrations:status
+# php bin/console doctrine:migration:sync-metadata-storage
+# php bin/console doctrine:migrations:version --add --all
+
+run:
+# deploy_prod.sh -withdb
+
+http://157.139.226.212/directory/admin/first-time-login-generation-init/
+http://157.139.226.212/tenant-manager/directory/admin/first-time-login-generation-init/
+http://157.139.226.212/c/demo-institution/directory/admin/demo-department/first-time-login-generation-init/
+http://157.139.226.212/c/wcm/psychiatry/directory/admin/first-time-login-generation-init/
+
+Rsync:
+rsync -avz /opt/order-lab/orderflex/var/backups/backupdb-live-WCMEXT-20241217-220006-tenantapp1.dump.gz oli2002@157.139.226.212:/home/oli2002/uploads
+rsync -avz /srv/order-lab/orderflex/var/backups/backupfiles-live_WCMINT_2024-12-17-21-48-45.tar.gz oli2002@157.139.226.212:/home/oli2002/backupfiles-live_WCMINT_2024-12-17-21-48-45.tar.gz
+Live server: 157.139.226.135
+tar -xvzf community_images.tar.gz -C some_custom_folder_name
+
+replace 'md5' with 'trust' in /var/lib/pgsql/16/data/pg_hba.conf
+psql -U postgres
+list dbs: \l
+list users: \du
+ALTER USER postgres PASSWORD 'postgres';
+passwd postgres
+pgAdmin access: sudo systemctl stop firewalld
+Check folder size: du -sh Uploaded
+sudo service php-fpm restart
+
+HaProxy:
+bash install-multitenancy.sh -u symphony -t symphony -m haproxy -p /srv -s none -d none -e none -l none | tee multitenancy_log.log
+
+Might need:
+restore using data only => valid schema
+php bin/console doctrine:database:drop --force
+php bin/console doctrine:database:create
+
+SELinux is preventing /usr/sbin/haproxy from name_connect access
+setsebool -P haproxy_connect_any=1
+Or: sudo setenforce 0
+
+Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+sudo systemctl restart postgresql-17
+
+Firewall to access pgAdmin:
+firewall-cmd --permanent --zone public --add-port 80/tcp
+firewall-cmd --permanent --zone public --add-port 443/tcp
+firewall-cmd --reload
+
+Verify:
+sudo systemctl status httpd.service
+sudo systemctl status haproxy
+sudo systemctl status php-fpm
+sudo systemctl status httpdhomepagemanager
+sudo systemctl status httpdtenantmanager
+sudo systemctl status httpdtenantapp1
+sudo systemctl status httpdtenantapp2
+sudo systemctl status httpdtenantappdemo
+
+Steps to make sure:
+sudo systemctl stop httpd.service
+
+https://www.geeksforgeeks.org/how-to-dump-and-restore-postgresql-database/
+Create DB from live
+pgAdmin:
+To Backup a database using pgAdmin4 (To get a data dump using a pgAdmin4):
+
+    Open pgAdmin 4 and connect to your server.
+    Select the database you wish to back up from the left sidebar.
+    Right-click on the database and choose Backup.
+    Specify the file path and name for the backup file in the Filename field.
+    Choose the format you want (e.g., Custom, Tar, Plain, Directory) from the format dropdown.
+    Click Backup
+
+The Custom and Tar formats save the backup in binary SQL, which is more suitable for restores involving more complex data types and faster restoration
+
+Restore:
+pgAdmin:
+"Create" > "Database..." > Save
+Right-click on the 'recoverdb' database you just created and select "Restore."
+In the dialog box that appears, navigate to the location of your backup file ('northwind_backup.sql') and select it.
+Click "Restore" to initiate the restoration process.
+
+After DB restore check (reference function restoreDBWrapper):
+env
+connectionChannel (set http for HaProxy)
+urlConnectionChannel (set https for HaProxy if using ssl certificate)
+networkDrivePath
+monitorScript
+mailerdeliveryaddresses
+
+Optional:
+to test the functionality set mailerDeliveryAddresses to oli2002
+to avoid stealing fellapp, turn off imports

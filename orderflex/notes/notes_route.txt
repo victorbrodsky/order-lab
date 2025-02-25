@@ -1,0 +1,114 @@
+#Create a new branch
+#Maybe use Custom Routing, Listnere, or look at Dynamic Router, ChainRouter (Symfony Content Management Framework (CMF))
+#Maybe use Listener to switch DBs and URLs
+#Reorganise the yml config files to adopt to /c/ entry point for all bundles.
+
+Goal:
+1) Separate DBs (preferable)
+view.online/c/wcm/pathology - use DB_wcm
+view.online/c/hss/pathology - use DB_hss
+
+2) Single DB: wcm and hss use the sam DB but all entities/tables will have a new Hosted User Group ID
+Disadvantage: lots of changes to update CRUD logic, difficult separation of the records between wcm and hss
+
+
+Multi-Tenant Application: https://medium.com/@sudheer.sandu/multi-tenant-application-68c11cc68929
+Separate databases: This is the best option for clients who want safety above everything else and are willing to pay (for example, banks).
+
+Dynamic Routing Prefix:
+https://stackoverflow.com/questions/11397806/symfony2-dynamic-routing-prefix
+https://stackoverflow.com/questions/48411074/symfony-4-dynamic-route-with-array
+https://symfony.com/bundles/CMFRoutingBundle/current/routing-component/dynamic.html
+
+Temp, might to delete: App\UserdirectoryBundle\Controller\RouterController App\UserdirectoryBundle\Services\Router
+
+global alias:
+/directory/test-url
+/c/wcm/pathology/directory/test-url
+/c/lmh/pathology/directory/test-url
+On login save tenantid to the session and switch DB
+
+https://www.mugo.ca/Blog/A-primer-on-Symfony-routes-and-how-to-use-match-conditions
+All routes are going to one entry controller: /c/wcm/pathology/directory/...
+Will redirect to one entry point controller:
+#[Route(path: '/{path}', name: 'router', requirements: ['path' => '.+'])]
+public function router( Request $request, Router $router, $path ) {
+    make sure user logged in for this tenant /c/wcm/pathology/directory/login
+    switch DB for this tenant
+    redirect to /c/wcm/pathology/directory/...
+}
+
+Try set tenantprefix dynamically:
+Set prefix dynamically: https://stackoverflow.com/questions/19406628/dynamic-route-prefix-in-symfony2
+https://symfony.com/doc/current/session.html#locale-sticky-session
+
+Custom twig function {{ path('p1') }} => {{ user_path('p1') }} : https://symfony.com/doc/current/templates.html#templates-twig-extension
+
+https://symfony.com/doc/6.4/routing/custom_route_loader.html
+Try App/Routing: ExtraLoader and ExtraController
+
+requirements restriction:
+https://symfony.com/doc/4.1/routing/slash_in_parameter.html
+
+Problem: Routing.generate fos_js_routing and problems with "_locale"
+https://stackoverflow.com/questions/25842418/symfony-fos-js-routing-and-problems-with-locale/35223108#35223108
+
+DB switch:
+https://blog.dixo.net/2015/02/dynamic-configuration-of-doctrine-and-other-services-in-symfony/
+
+### WORKING ###
+symfony decorator doctrine.dbal.connection_factory
+https://stackoverflow.com/questions/15108732/symfony2-dynamic-db-connection-early-override-of-doctrine-service
+
+System DB
+php bin/console doctrine:database:create --connection=systemdb
+php bin/console doctrine:schema:update --em=systemdb --complete --force
+php bin/console doctrine:migration:status --em=systemdb
+php bin/console doctrine:migration:migrate --em=systemdb
+php bin/console doctrine:migration:sync-metadata-storage --em=systemdb
+php bin/console doctrine:migration:version --em=systemdb --add --all
+
+TODO:
+move interface "Server Instance:" -> "Server Network Accessibility and Role:" from default DB to system DB
+move interface "Multi-Tenancy Management" from default DB to system DB
+in setparameters.php use user_authservernetworklist from system DB
+create home page for system DB to manage multi-tenancy
+
+Run: /directory/admin/first-time-login-generation-init/
+
+Error:
+http://142.93.68.152/system/directory/admin/update-system-cache-assets/
+[2024-02-16T18:47:53.801029+00:00] request.CRITICAL: Uncaught PHP Exception Error:
+"Found unconstructed IntlDateFormatter" at DateType.php line 137
+{"exception":"[object] (Error(code: 0): Found unconstructed IntlDateFormatter at
+/usr/local/bin/order-lab/orderflex/vendor/symfony/form/Extension/Core/Type/DateType.php:137)"} []
+intl.default_locale = en_US
+by default intl.default_locale is set to:
+echo "1 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
+\Symfony\Component\Intl\Locale::setDefault('en');
+echo "2 locale_get_default=".\Symfony\Component\Intl\Locale::getDefault()."<br>";
+Result:
+1 locale_get_default=en_US_POSIX
+2 locale_get_default=en
+Result about page:
+1 locale_get_default=c/wcm/pathology
+2 locale_get_default=en
+
+
+The concept of locale is defined by RFC 4646 language tags, which follow a hyphenated format (e.g., en-US, fr-CA, fr-FR).
+However, it’s essential to recognize that various PHP modules may handle locales differently.
+In the context of Symfony, which comprises 181 distinct bundles, their behavior evolves over time.
+Consequently, what works today may not necessarily work tomorrow.
+Therefore, using a locale format other than the standard hyphenated form could result in unpredictable outcomes.
+
+Dynamically Configured Mass Virtual Hosting
+https://httpd.apache.org/docs/2.4/vhosts/mass.html
+
+Mapping URLs to Filesystem Locations
+https://httpd.apache.org/docs/2.4/urlmapping.html
+https://serverfault.com/questions/839111/handling-multiple-symfony-sites-depending-on-the-url-path
+
+
+https://stackoverflow.com/questions/68036107/symfony-5-3-behind-apache2-proxy-has-unexpected-behavior-incorrect-url-in-brows
+
+

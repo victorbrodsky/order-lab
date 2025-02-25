@@ -1,0 +1,1894 @@
+https://symfony.com/doc/3.4/setup/flex.html
+https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
+
+Branches: https://nvie.com/posts/a-successful-git-branching-model/
+### Migrating to 3.4, adapt the source code: ###
+1)Rename namespaces and DB's entityNameSpace to App
+2) Replace entitynamespace Oleg to App in Document.php, FosComment.php, GeneralEntity.php, Logger.php and all lists (enough to execute SQL1 and SQL2))
+UPDATE public.user_logger SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_foscomment SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_generalentity SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE public.user_document SET entitynamespace = REPLACE(entitynamespace,'Oleg','App');
+UPDATE * SET entitynamespace = REPLACE(entitynamespace,'Oleg','App') WHERE entitynamespace IS NOT NULL AND entitynamespace LIKE '%Oleg%';
+#Update all tables with column='entitynamespace'
+#Get all tables with entitynamespace: SELECT * FROM   INFORMATION_SCHEMA.columns WHERE  COLUMN_NAME = 'entitynamespace';
+############## SQL1) Update all tables with column='entitynamespace' ################
+DO
+$do$
+DECLARE
+    rec record;
+BEGIN
+    FOR rec IN
+        SELECT table_schema, table_name, column_name
+        FROM information_schema.columns
+        WHERE column_name = 'entitynamespace'
+    LOOP
+        EXECUTE FORMAT(
+          $$
+            UPDATE %I.%I SET entitynamespace = replace(entitynamespace,'Oleg','App') WHERE entitynamespace IS NOT NULL;
+          $$,
+          rec.table_schema, rec.table_name
+        );
+    END LOOP;
+END;
+$do$;
+LANGUAGE plpgsql; --optional
+############# SQL2) Update all tables with column='receivedvalueentitynamespace' #################
+DO
+$do$
+DECLARE
+    rec record;
+BEGIN
+    FOR rec IN
+        SELECT table_schema, table_name, column_name
+        FROM information_schema.columns
+        WHERE column_name = 'receivedvalueentitynamespace'
+    LOOP
+        EXECUTE FORMAT(
+          $$
+            UPDATE %I.%I SET receivedvalueentitynamespace = replace(receivedvalueentitynamespace,'Oleg','App') WHERE receivedvalueentitynamespace IS NOT NULL;
+          $$,
+          rec.table_schema, rec.table_name
+        );
+    END LOOP;
+END;
+$do$;
+##############################
+
+symfony server:start
+symfony server:start -d //start server in the background
+symfony server:stop
+
+### Migrating to 3.4 Flex: ###
+#use branch v3.4.flex: git push -u origin v3.4.flex
+1) create new Symfony skeleton
+2) Merge yaml config
+3) Move original templates from app/Resources/views/ to templates/
+4) Merge app_*.php
+### Migrating to 4: ###
+1) Remove Assetic:
+{% stylesheets
+   'bundles/oleguserdirectory/bootstrap/css/*'
+   'bundles/oleguserdirectory/form/css/form.css'
+%}
+   <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+{% endstylesheets %}
+Replace stylesheets by
+<link href="{{ asset('bootstrap/css/*') }}" rel="stylesheet" />
+<link href="{{ asset('form/css/form.css') }}" rel="stylesheet" />
+2) {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
+
+
+Use 64-bit from xampp:
+/c/xampp/php/php /c/php/Composer/composer.phar update
+
+To add later:
+Under "auto-scripts":
+"cache:clear": "symfony-cmd", "assets:install %PUBLIC_DIR%": "symfony-cmd",
+
+To require later:
+
+"yzalis/crontab": "^1.0",
+
+Doctrine installed by Flex: composer require doctrine/mongodb-odm-bundle
+"doctrine/doctrine-migrations-bundle": "^1.3",
+"doctrine/doctrine-bundle": "^1.1",
+"doctrine/orm": "^2.7",
+"doctrine/doctrine-cache-bundle" : "^1.3",
+"doctrine/doctrine-fixtures-bundle" : "^2.2",
+"stof/doctrine-extensions-bundle": "~1.1@dev",
+
+"phpoffice/phpexcel": "v1.8.0",
+"phpoffice/phpspreadsheet": "1.2.1", (security check)
+
+Recipe no, reinstall these packages:
+"friendsofsymfony/user-bundle": "v2.0.1",
+composer require friendsofsymfony/user-bundle "~2.0"
+
+"friendsofsymfony/jsrouting-bundle": "^2.5",
+"sensio/framework-extra-bundle": "^3.0",
+
+"symfony/phpunit-bridge": "^5.0"
+"symfony/browser-kit": "^3.4",
+        "symfony/css-selector": "^3.4"
+
+
+TODO:
+1) Make old symfony source code to original working state (composer.json, Kernel and vendor)
+2) Move the original source code from src/{App,...}Bundle/ to src/ and update the namespaces of every PHP file to be App\... (advanced IDEs can do this automatically).
+3) Copy App to src
+
+### Symfony 3.4 Standard Edition: ###
+composer.phar require symfony/symfony "^3.4" doctrine/doctrine-bundle "^1.1" symfony/monolog-bundle symfony/swiftmailer-bundle "^2.6"
+symfony/assetic-bundle
+sensio/framework-extra-bundle "^4.0"
+knplabs/knp-paginator-bundle "^4.1"
+paragonie/random_compat "^2"
+friendsofsymfony/user-bundle "~2.0" "v2.0.1" (requires paragonie/random_compat "^2" "v2.0.18")
+oneup/uploader-bundle
+friendsofsymfony/jsrouting-bundle
+stof/doctrine-extensions-bundle
+knplabs/knp-snappy-bundle
+doctrine/doctrine-migrations-bundle
+bmatzner/fontawesome-bundle
+google/apiclient
+yzalis/crontab "1.0.x-dev"
+box/spout
+sinergi/browser-detector
+doctrine/orm
+require-dev sensio/generator-bundle "^3.1" (#sensio/distribution-bundle)
+twig/extensions
+phpoffice/phpspreadsheet
+phpoffice/phpexcel
+
+doctrine/common
+
+creof/doctrine2-spatial "~1" ?
+doctrine/lexer (^1.2)
+
+#doctrine-fixtures-bundle (for testing )
+
+"google/apiclient": "1.0.*@beta", - original
+"google/apiclient": "^2.4",s - new
+
+Symfony 6: remove "paragonie/random_compat": "^2" from require and replace
+
+[2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError:
+"Type error: preg_split() expects parameter 2 to be string, object given" at
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\Scanorders2\vendor\doctrine\lexer\lib\Doctrine\Common\Lexer\AbstractLexer.php line 255
+{"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalThrowableError(code: 0): Type error: preg_split() expects parameter 2 to be string, object given
+php.CRITICAL: preg_split() expects parameter 2 to be string, float given doctrine/lexer#31
+Problem with version of 1.1.0 doctrine/lexer #204
+creof/doctrine2-spatial => creof/geo-parser => doctrine/lexer
+Fix: convert input to string (AbstractLexer.php adding line $input = $input."";)
+$input = $input."";
+$matches = preg_split($this->regex, $input, -1, $flags);
+######### Solution: ##############
+1) Copy AbstractLexer to src/App/Doctrine\Common\Lexer\AbstractLexer
+2) replace $matches = preg_split($this->regex, $input, -1, $flags); to $matches = preg_split($this->regex, (string)$input, -1, $flags);
+3) make sure namespace is the original: "namespace Doctrine\Common\Lexer;"
+4) Modify composer (we have only one file in Doctrine\\Common\\Lexer\\):
+"autoload": {
+        "psr-4": {
+            "App\\": "src/App/",
+            //"Doctrine\\Common\\Lexer\\": "src/App/UserdirectoryBundle/Services/"
+            "Doctrine\\Common\\Lexer\\": "src/App/Doctrine/Common/Lexer/"
+        },
+		"classmap": [
+            "src/Kernel.php"
+        ]
+    },
+5) composer.phar dump-autoload
+###################################
+
+composer update --ignore-platform-reqs
+composer install --ignore-platform-reqs
+
+UPDATE scan_patientlastname SET field = array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+array_to_string(ARRAY(SELECT chr((65 + round(random() * 25)) :: integer) FROM generate_series(1,12)), '');
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 100 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET field = CAST (field AS INTEGER) + 1000 WHERE field ~ '^[0-9]*$';
+UPDATE scan_patientmrn SET original = field;
+
+composer.phar dump-autoload --optimize
+
+"oneup/uploader-bundle": "^2.1",
+"post-install-cmd": [
+            "@auto-scripts"
+        ],
+
+Reorganize Symfony:
+https://symfonycasts.com/screencast/symfony-bundle/extracting-bundle
+https://stackoverflow.com/questions/47594542/symfony-4-how-to-organize-folder-structure-namely-your-business-logic
+https://symfonycasts.com/blog/AppBundle
+https://laraveldaily.com/moving-controllers-to-sub-folders-in-a-correct-way/
+
+Commented out include_once '..\DatabaseRoutines.php';
+Changed SimpleHydrator and Changed StainHydrator
+//TODO:  GoogleSheetManagement: Cannot autowire service "App\FellAppBundle\Util\CustomDefaultServiceRequest": argument "$accessToken" of method "__construct()" is type-hinted "string", you should configure its value explicitly.
+$serviceRequest = new DefaultServiceRequest($accessToken,"OAuth");
+https://symfonycasts.com/screencast/symfony-fundamentals/create-service
+https://stackoverflow.com/questions/54825231/symfony-4-argument-has-no-type-hint-you-should-configure-its-value-explicitly
+https://symfony.com/doc/3.4/service_container.html#services-manually-wire-args - manually wiring non-object arguments
+TODO: Test GoogleSheetManagement->getSheetByFileId($fileId);
+
+use Box\Spout\Writer\Style\Border;
+php bin/console debug:autowiring
+https://github.com/symfony/symfony/issues/23174
+https://symfony.com/blog/new-in-symfony-3-3-psr-4-based-service-discovery
+php bin/console debug:router
+php bin/console assets:install --symlink public
+bin/console debug:router --show-controllers | grep "system_init"
+
+
+"symfony/assetic-bundle": "^2.8",
+"symfony/console": "3.4.*",
+"symfony/dotenv": "3.4.*",
+"symfony/expression-language": "^3.4",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "3.4.*",
+"symfony/monolog-bundle": "^3.5",
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/workflow": "3.4.*",
+"symfony/yaml": "3.4.*",
+
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/console": "^4.3",
+"symfony/expression-language": "^4.3",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "^4.3",
+"symfony/monolog-bundle": "^3.5",
+"symfony/workflow": "^4.3",
+"symfony/yaml": "^4.3",
+
+"symfony/swiftmailer-bundle": "^2.6",
+"symfony/console": "^4.3",
+"symfony/flex": "^1.3.1",
+"symfony/framework-bundle": "^4.3",
+"symfony/monolog-bundle": "^3.5",
+"symfony/yaml": "^4.3",
+
+Bundles non-compatible with Symfony 4:
+"adesigns/calendar-bundle": "^1.1", (use composer require tattali/calendar-bundle)
+"sensio/distribution-bundle": "^5.0",
+"sensio/generator-bundle": "^3.1",
+"security-checker security:check": "script"
+
+Logger problem:
+https://github.com/symfony/symfony/issues/28296
+
+Try this to upgrade Symfony 3 to 4 (3->4->flex):
+https://codereviewvideos.com/course/upgrade-symfony-3-to-symfony-4/video/fixing-third-party-bundle-deprecations
+https://symfonycasts.com/screencast/symfony4-upgrade/sf34-deprecations
+
+Blank page:
+add ThreadStackSize 8388608 (https://www.drupal.org/forum/support/installing-drupal/2012-09-06/the-connection-was-reset-on-localhost)
+<IfModule mpm_winnt_module>
+	ThreadStackSize 8388608
+    ThreadsPerChild        150
+    MaxConnectionsPerChild   0
+</IfModule>
+
+stylesheets:
+https://symfony.com/blog/encore-0-21-0-webpack-4-support-copy-files-support-webpackencorebundle
+philetaylor/assetic-bundle - The AsseticBundle provides integration of the Assetic library into the Symfony 4 framework.
+php bin/console about
+
+
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 /opt/order-lab/orderflex/src/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP2173-REQ15079-Ivanov-01-15-2020.pdf "A4"
+
+Add tag locally: git tag -a -m "symfony v 4.4.2 and php 7.4.1 without calendar bundle" sf4.4-php7.4
+Push tag to remote: git push origin sf4.4-php7.4
+
+I) Rename master to sf3.4-php5.6 and create a new master from sf4-php7
+(https://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch):
+1) git branch -m master master-old  # rename master on local (master-old is sf3.4-php5.6)
+2) git push origin :master          # delete master on remote (git push -f origin :master)
+3) git push origin master-old       # create master-old on remote
+4) git checkout -b master seotweaks # create a new local master on top of seotweaks
+5) git push origin master           # create master on remote
+
+II) Error: failed to push some refs to ... (https://matthew-brett.github.io/pydagogue/gh_delete_master.html):
+1) First you delete master in your local clone. To do this we first make a new branch called placeholder or similar, and delete master from there:
+git branch placeholder
+git checkout placeholder
+2) push up the placeholder branch:
+git checkout placeholder # if not on placeholder already
+git push origin placeholder
+3) Then set placeholder to be the github default branch.
+Go to the main github page for your forked repository, and click on the “Admin” button.
+There’s a “Default branch” dropdown list near the top of the screen.
+From there, select placeholder.
+On the interface I’m looking at, a green tick appears above the dropdown list. Now you can do (from the command line):
+4) Delete master
+git push origin :master
+5) Continue on I(3)
+
+Rename master-new to master on local and remote:
+0) Create master-new (sf5). When ready to switch master-new to master:
+1a) In master: git branch -m master master-old                  # rename master-old on local (master-old to master)
+1b) In master-new: git branch -m master-new master              # rename master on local (master-new to master)
+2) Set default branch on github to master-new in admin panel
+3) git push origin :master                                      # delete master on remote (git push -f origin :master)
+4) git push -f origin master                                    # push local branch master (master-new) to remote master
+5) git push origin --delete sf5                                 # delete duplicate branch sf5
+
+After renaming remote branch, git pull to local:
+git fetch --all
+git reset --hard origin/{{your branch name}}
+
+Clone specific branch:
+git clone --single-branch --branch <branchname> <remote-repo-url>
+git clone --single-branch --branch <tag_name> <remote-repo-url>
+git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
+
+Generate DigitalOcean:
+Symfony 4.4 with PHP 7.4:
+1) Create a new folder Test1
+2) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer
+4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+Symfony 3.4 with PHP 5.6:
+1) Create a new folder Test1
+2) git clone --single-branch --branch sf3.4-php5.6-windows https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer
+4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+//how to: https://www.digitalocean.com/community/tutorials/how-to-push-an-existing-project-to-github
+remove version tracking: rm -rf .git
+show: git remote -v
+remove remote url: git remote rm originme
+add new remote: git remote add origin git@github.com:sammy/my-new-project.git
+git push originme
+or: git push -u -f originme main
+
+###### git branching ######
+List all branches local and remote: git branch -a
+Create a new branch: git branch crazy-experiment
+git switch crazy-experiment
+--- make changes in crazy-experiment branch ---
+git add .
+git commit -m "make changes in crazy-experiment"
+git push origin crazy-experiment
+--- finished working with branch crazy-experiment ---
+git switch master
+git merge crazy-experiment
+git push origin master
+--- delete branch crazy-experiment ---
+Delete local branch:        git branch -d crazy-experiment
+Delete a remote branch:     git push origin --delete crazy-experiment
+###### EOF git branching ######
+
+Redirect:
+#.htaccess: Redirect only http://collage.med.cornell.edu/order/* to http://157.139.226.86/order/* keeping all url parameters
+###Options +FollowSymLinks
+###RewriteEngine on
+RewriteRule (.*) http://157.139.226.86/order/$1 [R=301,L]
+RewriteRule (.*) http://view-test.med.cornell.edu/order/$1 [R=301,L]
+
+#Redirect only /order/ requests. Admin can still access the system by using /orderadmin/
+#Add to httpd.conf: Alias /orderadmin "E:\Program Files (x86)\Aperio/Spectrum/htdocs/order/scanorder/Scanorders2/web"
+RewriteCond %{REQUEST_URI} /order/
+RewriteRule (.*) https://view-test.med.cornell.edu/$1 [R=301,L]
+
+
+view.med.cornell.edu/order/
+
+PHP error:
+/etc/httpd/conf/ error_log
+
+[core:notice] [pid 12732] AH00052: child pid 14572 exit signal Segmentation fault (11)
+https://stackoverflow.com/questions/7745578/notice-child-pid-xxxx-exit-signal-segmentation-fault-11-in-apache-error-lo
+output_buffering = 8192
+output_buffering = Off
+Solution (?): downgrade PHP from 7.4.3 to 7.4.2 on view-test
+
+Switch to Apache user: su -s /bin/bash apache
+(Permission denied: Solution: prepend HOME=/tmp => HOME=/tmp /usr/bin/soffice)
+
+Sasl ldap: http://research.imb.uq.edu.au/~l.rathbone/ldap/gssapi.shtml
+
+
+Errors "No route found":
+It just looks like a generic scan. They're looking for older exploitable versions of PhpMyAdmin, IIS, Joomla, etc.
+It looks like you are being scanned with a web vulnerability scanner
+https://157.139.226.124/wls-wsat: Oracle WebLogic
+https://157.139.226.124/_vti_bin: SharePoint Web services
+https://157.139.226.124/struts2-rest-showcase: Tomcat Manager
+https://157.139.226.124/CFIDE: ColdFusion server
+https://157.139.226.124/cgi-bin/awstats.pl: server report
+https://157.139.226.124/struts2-showcase: Apache
+https://157.139.226.124/~bin/true
+https://157.139.226.124/bb
+https://157.139.226.124/phpmyadmin
+https://157.139.226.124/conf/ssl/apache/integrity.key
+https://157.139.226.124/lcds
+https://157.139.226.124/lcds-samples
+https://157.139.226.124/blazeds: server-based Java remoting and web messaging
+https://157.139.226.124/messagebroker
+https://157.139.226.124/flex2gateway: ColdFusion
+https://iamahost/common/index.jsf
+https://157.139.226.124/AdvWorks
+https://157.139.226.124/ASPSamp
+https://157.139.226.124/scripts/tools/newdsn.exe
+https://157.139.226.124/blogs/xmlsrv/xmlrpc.php
+https://157.139.226.124/xmlsrv/xmlrpc.php
+https://157.139.226.124/server-status
+https://157.139.226.124/Rapid7
+http://157.139.226.124/spiffymcgee.cfm
+https://157.139.226.124/administrator/manifests/files/joomla.xml
+https://157.139.226.124/joomla/administrator/manifests/files/joomla.xml
+https://157.139.226.124/jira/secure/Dashboard.jspa
+https://157.139.226.124/login.jsp
+http://157.139.226.124/owa/auth/logon.aspx
+https://157.139.226.124/servlet/
+http://157.139.226.124/wordpress/readme.html
+http://157.139.226.124/mediawiki/index.php?title=Main_Page
+
+
+"friendsofsymfony/user-bundle": "^2.1",
+oneup/uploader-bundle
+friendsofsymfony/user-bundle
+
+
+"symfony/apache-pack": "^1.0",
+"symfony/asset": "4.4.*",
+"symfony/console": "^4.4",
+"symfony/dotenv": "^4.4",
+"symfony/expression-language": "^4.4",
+"symfony/flex": "^1.6",
+"symfony/form": "4.4.*",
+"symfony/framework-bundle": "^4.4",
+"symfony/http-client": "4.4.*",
+"symfony/intl": "4.4.*",
+"symfony/mailer": "4.4.*",
+"symfony/monolog-bundle": "^3.5",
+"symfony/orm-pack": "*",
+"symfony/process": "4.4.*",
+"symfony/security-bundle": "4.4.*",
+"symfony/serializer-pack": "*",
+"symfony/swiftmailer-bundle": "^3.4",
+"symfony/translation": "4.4.*",
+"symfony/twig-pack": "*",
+"symfony/validator": "4.4.*",
+"symfony/web-link": "4.4.*",
+"symfony/webpack-encore-bundle": "^1.7",
+"symfony/workflow": "^4.4",
+"symfony/yaml": "^4.4",
+
+"extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.4.*"
+        }
+    }
+
+
+Calling Doctrine\ORM\EntityManager::flush() with any arguments to flush specific entities is deprecated and will not be supported in Doctrine ORM 3.0.
+
+Cron (/var/spool/cron/ and /etc/crontab):
+Show for specific user:     crontab -u apache -l
+Edit crontab file, or create one if it doesn’t already exist:
+crontab -u apache -e
+Remove for specific user:   crontab -u apache -r
+Problem: ^M at the end of each line?
+
+//Server hanging on login
+? https://www.howtoforge.com/community/threads/apache-hangs-without-traffic.52980/
+Timeout 150
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 8
+<IfModule prefork.c>
+    StartServers          30
+    MinSpareServers       10
+    MaxSpareServers      20
+    ServerLimit		100
+    MaxClients          100
+    MaxRequestsPerChild   8000
+</IfModule>
+Check apache log: /var/log/httpd
+
+
+Fellapp:
+[2020-04-27 19:00:14] snappy.ERROR: An error happened while generating "/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf".
+{"command":"/usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510'
+'/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'",
+"status":127,"stdout":"/usr/bin/xvfb-run: line 181: wkhtmltopdf: command not found\n","stderr":""} []
+
+/usr/bin/xvfb-run /usr/local/bin/wkhtmltopdf
+/usr/bin/xvfb-run -a /usr/local/bin/wkhtmltopdf
+
+[2020-04-27 19:00:14] console.ERROR: Error thrown while running command "cron:importfellapp --env=prod".
+Message: "The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'
+was not created (command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf')."
+{"exception":"[object] (RuntimeException(code: 0): The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'
+was not created (command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf').
+at /srv/order-lab/orderflex/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php:351)","command":"cron:importfellapp --env=prod","message":
+"The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf' was not created
+(command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf')."} []
+
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"  "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\application_ID2.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb97515ddb2b.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb975294317c.pdf" cat output "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\AP-Residency-Application-2022-ID2-Doe-John-generated-on-05-11-2020-at-04-13-48-pm_UTC.pdf" dont_ask
+
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\application_ID2.pdf"
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb97515ddb2b.pdf"
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb975294317c.pdf"
+cat output
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\AP-Residency-Application-2022-ID2-Doe-John-generated-on-05-11-2020-at-04-13-48-pm_UTC.pdf"
+dont_ask
+
+"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"  "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\application_ID2.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb97515ddb2b.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb975294317c.pdf" cat output "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\AP-Residency-Application-2022-ID2-Doe-John-generated-on-05-11-2020-at-04-34-14-pm_UTC.pdf" dont_ask
+
+/etc/opt/remi/php74/php.ini
+count files: ls | wc -l
+ls -l --block-size=M
+systemctl restart httpd.service
+Get octal permission: stat -c "%a %n" *
+Get free space: df -Ph . | tail -1 | awk '{print $4}'
+Get the size of directory: sudo du -sh /var
+Get the disk usage of the first-level subdirectories: sudo du -shc /var/*
+Get system usage: htop, top, glances
+7 processes BESClient take 0.8% memory each and 2% CPU usage in total
+
+alias command:
+vim ~/.bashrc
+alias lsl="ls -lrt"
+source ~/.bashrc
+
+Mount:
+findmnt
+https://www.linuxfordevices.com/tutorials/centos/mount-cifs-share
+sudo mount -t cifs -o username=shareusername,password=sharepassword //server/share /mnt/pathology/view-backup
+sudo umount /var
+
+vi:
+    Press the ESC key for normal mode.
+    Press i Key for insert mode.
+    Press :q! keys to exit from the editor without saving a file.
+    Press :wq! Keys to save the updated file and exit from the editor.
+    Press :w test.txt to save the file as test.txt
+
+
+Please note this tissue form must be reviewed and signed by the IRB Pathology Compliance Officer prior to uploading. For signature, please submit this completed form along with the associated  IRB protocol summary or exemption letter to submit2pathology@med.cornell.edu
+
+SMS:
+https://symfony.com/doc/current/notifier.html
+https://www.twilio.com/code-exchange/sms-notifications
+
+Error for exportId (integer):
+http://127.0.0.1/order/index_dev.php/translational-research/projects/?
+filter[projectSpecialty][0]=1
+&filter[projectSpecialty][1]=2
+&filter[projectSpecialty][2]=4
+&filter[searchId]=&
+filter[state][0]=All-except-Drafts-and-Canceled
+&filter[startDate]=&filter[endDate]=&filter[searchIrbNumber]=&
+filter[searchTitle]=&filter[submitter]=&filter[fundingNumber]=&
+filter[fundingType]=&filter[searchProjectType]=&
+filter[exportId]=14541
+&filter[humanTissue]=&filter[exemptIrbApproval]=&filter[fromExpectedCompletionDate]=&
+filter[toExpectedCompletionDate]=&filter[briefDescription]=&
+filter[fromImplicitExpDate]=&filter[toImplicitExpDate]=
+
+Residency:
+https://path-cal.med.cornell.edu/PathResApp/index.jsp
+
+C:\Users\ch3\Documents\MyDocs\WCMC\MyPC\Java\Procedure.txt
+C:\Users\ch3\Documents\MyDocs\WCMC\Residency
+
+PRA_APPLICANT_INFO - application
+PRA_APPLICANT_CV_INFO - document
+PRA_APPLICANT_UPDATE_CV_INFO - document 2
+PRA_ENROLLMENT_INFO - enrollment
+PRA_EVALUATION_FORM_INFO - evaluation
+PRA_FACULTY_RESIDENT_INFO - evaluator
+
+Bing: https://store.ihcworld.com/cart.php
+
+cn=Users,ou=NYP Users,DC=a,DC=wcmc-ad,DC=net
+
+a.wcmc-ad.net 157.139.225.61
+cn=Users,dc=a,dc=wcmc-ad,dc=net
+ou=NYP Users,dc=a,dc=wcmc-ad,dc=net (ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net)
+ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+
+ou=NYP Users,ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+
+Working ldap settings: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+
+CN=Users,DC=a,DC=wcmc-ad,DC=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net;ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+Some folks at NYP also have WCM roles which would give them AD accounts. 
+It sounds like they need a new role sponsored by someone at WCM. Anyone designated as an administrator of the department/division you wish for them to have a role under can submit a new identity request using our affiliate role system.
+You can see the administrators on the tab of the same name on the department/division page in our web directory. Example page: https://directory.weill.cornell.edu/departments/1851100000
+nyptestuser1
+
+(|(OU=<someOU1>)(OU=<someOU2>))
+(|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
+(|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
+
+<meta http-equiv = "refresh" content = "5; url = https://view.med.cornell.edu/residency-applications" />
+You will be redirected to a new Residency site. Please contact Oleg Ivanov oli2002@med.cornell.edu for more details.
+You will be automatically redirected to a new Residency site <a href="https://view.med.cornell.edu/residency-applications">https://view.med.cornell.edu/residency-applications</a>.
+
+<script type="text/javascript">
+    function countdown() {
+        var i = document.getElementById('counter');
+        if (parseInt(i.innerHTML)<=0) {
+            location.href = 'login.php';
+        }
+        if (parseInt(i.innerHTML)!=0) {
+            i.innerHTML = parseInt(i.innerHTML)-1;
+        }
+    }
+    setInterval(function(){ countdown(); },1000);
+</script>
+
+
+
+
+The new eSlide Manager/SQL 2017 server, below:
+Host: wPATH-ESMP01.med.cornell.edu
+IP: 10.63.37.33
+
+DigitalOcean packer:
+1) create new folder "Test"
+2) git clone https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer/
+4) bash deploy-order-digital-ocean.sh --token xxx --os centos --protocol https
+
+
+Anchors JSON working example (multiple startAnchor are supported only with checkIfStartAnchorPresent=true):
+[
+{"field":"Applicant ID:","startAnchor":"Applicant ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":10,"length":11,"maxLength":11},
+
+{"field":"AAMC ID:","startAnchor":"AAMC ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":8,"length":9,"maxLength":9},
+
+{"field":"Email:","startAnchor":"Email:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Name:","startAnchor":"Name:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Birth Date:","startAnchor":"Birth Date:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"USMLE ID:","startAnchor":"USMLE ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"NBOME ID:","startAnchor":"NBOME ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"NRMP ID:","startAnchor":"NRMP ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Gender:","startAnchor":"Gender:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Participating as a Couple in NRMP:","startAnchor":"Participating as a Couple in NRMP:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Present Mailing Address:","startAnchor":"Present Mailing Address:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Preferred Phone #:","startAnchor":"Preferred Phone #:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
+
+{"field":"Alpha Omega Alpha","startAnchor":"Alpha Omega Alpha (Member of AOA)","checkIfStartAnchorPresent":"true"},
+
+{"field":"Post-Sophomore Fellowship","startAnchor":["pathology rotation","pathology clerkship","pathology elective"],"checkIfStartAnchorPresent":"true"}
+]
+
+
+Composer update:
+Argument 1 passed to App\OrderformBundle\Form\CustomType\ScanCustomSelectorType::__construct() must be an instance of
+Doctrine\Common\Persistence\ObjectManager, instance of Doctrine\ORM\EntityManager given
+
+https://github.com/doctrine/orm/issues/8242:
+To anyone getting stuck with this,
+Just use "doctrine/common":"^2.13" till package is upgraded along with whole eco-system and gets full compatibility.
+It installed orm version 2.7.3 which is stable release at the moment of writing. took me a quite while to figure out why packages aren't in sync even in LTS / stable channel.
+
+Reinstall stof/doctrine-extensions-bundle with Symfony4 support
+composer remove antishov/doctrine-extensions-bundle
+composer require stof/doctrine-extensions-bundle
+
+Solution:
+Replaced Doctrine\Common\Persistence\ObjectManager by Doctrine\ORM\EntityManagerInterface in __construct(EntityManagerInterface $em ...)
+
+git push origin master
+git push originme master
+git push bitbucket master
+
+Aperio:
+The procedure is complicated and requires manually editing the Aperio settings or the source code and it requires admin permission to modify the files.
+One way is to edit E:\Program Files (x86)\Aperio\DataServer\Authentication\Core.DataServer.LDAPIntf.dll file:
+    Change DistinguishedName to: DistinguishedName="CN=cwid,CN=Users,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+    In the right lower corner of the desktop: Stop/Start DataServer process in the Aperio eSlide Manager icon.
+    Change DistinguishedName back to: DistinguishedName="ou=NYP Users,ou=External,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+    Stop/Start Aperio "Data Server"
+    Add user by cwid
+Repeat 1-2 for other users to be added.
+Second way (not recommended) is temporary replace the EditUser.php to the similar custom file which I wrote for this purpose.
+In my opinion, Aperio does not use the optimized add new user interface which is trying to show all users from the active directory in the "LDAP user name" field. The branch "CN=Users" has 29764 users and I think it is choking the system and it gives an error "DataServer: returned malformed XML". Currently DistinguishedName is set to "ou=NYP Users,ou=External" and it's working with this branch because it has only with 2247 users. However, it shows only the users in this branch.
+If it would be possible to re-configure DistinguishedName  to search both branches, then the best way to solve this issue is to replace the EditUser.php and associated files with the custom files and do not show the list of all users in the active directory branches.
+Last step assign permission: User Groups -> Faculty -> add user -> Save
+
+Professor of Pathology and Laboratory Medicine
+Pathology and Laboratory Medicine
+Weill Cornell Medical College
+
+Attending Pathologist
+New York Presbyterian Hospital
+
+Yarn:
+yarn add jquery
+yarn add spin
+yarn add react-bootstrap bootstrap
+
+React:
+Install yarn: https://classic.yarnpkg.com/lang/en/docs/install/#centos-stable:
+1) curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+2) curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+3) sudo yum install -y yarn
+4) yarn --version
+DigitalOcean Ubuntu: apt install -y cmdtest
+
+https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
+New files (node.js dependencies, Node Package Manager (NPM)): yarn.lock, package.json
+On dev, to generate package-lock.js: npm install --force
+On live server: yarn install --frozen-lockfile
+On dev: yarn encore dev --watch
+On deploy, create a production build: yarn encore production
+
+apache how to check if Log4js installed:
+https://serverfault.com/questions/1086065/how-do-i-check-if-log4j-is-installed-on-my-server
+Check command: wget https://raw.githubusercontent.com/rubo77/log4j_checker_beta/main/log4j_checker_beta.sh -q -O - | bash
+Windows: dir C:\*log4j*.jar /s
+echo "checking for log4j vulnerability...";
+OUTPUT="$(locate log4j|grep -v log4js)"
+if [ "$OUTPUT" ]; then
+  echo "[WARNING] maybe vulnerable, those files contain the name:";
+  echo "$OUTPUT"
+fi;
+OUTPUT="$(dpkg -l|grep log4j|grep -v log4js)"
+if [ "$OUTPUT" ]; then
+  echo "[WARNING] maybe vulnerable, dpkg installed packages:"
+  echo "$OUTPUT"
+fi;
+if [ "$(command -v java)" ]; then
+  echo "java is installed, so note that Java applications often bundle their libraries inside jar/war/ear files, so there still could be log4j in such applications.";
+fi;
+echo "If you see no output above this line, you are safe. Otherwise check the listed files and packages.";
+
+Generating CSR for SSL certificate:
+https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https
+openssl genrsa -out view-test.key 2048
+openssl req -new -sha256 -key view-test.key -out view-test.csr
+
+Place key and cert to /etc/httpd/ssl/ as stated in /etc/httpd/conf.ssl/httpd-ssl.conf:
+SSLCertificateFile      /etc/httpd/ssl/view-test_med_cornell_edu_cert.cer
+SSLCertificateKeyFile   /etc/httpd/ssl/view-test.key
+
+Removed from composer.json:
+"post-install-cmd": [
+            "@auto-scripts"
+        ],
+
+Digital Ocean:
+symfony GET runtime.d94b3b43.js 404 Not Found
+https://github.com/symfony/webpack-encore/issues/941
+
+Composer 2.2.0:
+"config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "third-party/required-plugin": true,
+            "my-organization/*": true,
+            "unnecessary/plugin": false
+        }
+    }
+FROM:
+"doctrine/annotations": "^1.0",
+"doctrine/doctrine-bundle": "^2.5",
+"doctrine/doctrine-migrations-bundle": "^2.1",
+"doctrine/orm": "^2.11",
+
+"require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^4.4",
+        "symfony/css-selector": "^4.4",
+        "symfony/debug-bundle": "^4.4",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/stopwatch": "^4.4",
+        "symfony/web-profiler-bundle": "^4.4"
+    },
+
+TO:
+"doctrine/doctrine-migrations-bundle": "^2.1",
+"doctrine/doctrine-bundle": "^2.5",
+
+"doctrine/doctrine-bundle": "^2.3",
+"doctrine/orm": "^2.9",
+
+Working:
+"doctrine/doctrine-bundle": "2.3.2",
+"doctrine/orm": "2.8.4",
+
+Updated phpunit: php ./vendor/bin/phpunit
+
+Working: "twig/twig": "^2.12|^3.0",
+twig/extensions abandoned => problem:
+1) App\UserdirectoryBundle\Services\TwigDateRequestListener: $this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
+2) |time_diff
+"twig/extra-bundle": "^3.3": {% spaceless %} => |spaceless
+
+
+
+$ composer.phar update
+Loading composer repositories with package information
+Restricting packages listed in "symfony/symfony" to "4.4.*"
+Updating dependencies
+Nothing to modify in lock file
+Installing dependencies from lock file (including require-dev)
+Nothing to install, update or remove
+Package bmatzner/fontawesome-bundle is abandoned, you should avoid using it. No replacement was suggested.
+Package phpoffice/phpexcel is abandoned, you should avoid using it. Use phpoffice/phpspreadsheet instead.
+Package swiftmailer/swiftmailer is abandoned, you should avoid using it. Use symfony/mailer instead.
+Package symfony/inflector is abandoned, you should avoid using it. Use EnglishInflector from the String component instead.
+Package twig/extensions is abandoned, you should avoid using it. No replacement was suggested.
+Generating optimized autoload files
+Class PHPExcel_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\bestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Exponential_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\exponentialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Linear_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\linearBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Logarithmic_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\logarithmicBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Polynomial_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\polynomialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Power_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\powerBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class Oneup\UploaderBundle\Tests\Uploader\Chunk\TemplateHelperTest located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/oneup/uploader-bundle\Tests\Templating\TemplateHelperTest.php does not comply with psr-4 autoloading standard. Skipping.
+119 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+
+bmatzner/fontawesome-bundle
+phpoffice/phpexcel
+swiftmailer/swiftmailer is part of symfony 4.4
+symfony/inflector is part of symfony 4.4
+twig/extensions is abandoned in favor of Twig Core Extra extensions
+
+PHP Warning:  ini_set(): Headers already sent. You cannot change
+the session module's ini settings at this time in
+/usr/local/bin/order-lab/orderflex/vendor/symfony/http-foundation/Session/Storage/Handler/NativeFileSessionHandler.php
+on line 52
+
+"twig/extra-bundle": "^3.3",
+"twig/extensions": "^1.5",
+
+Upgrading twig/twig (v2.14.10 => v3.3.7):
+As of Twig 2.7, use the spaceless filter instead.
+
+Now composer issues:
+Package bmatzner/fontawesome-bundle is abandoned, you should avoid using it. No replacement was suggested.
+Package phpoffice/phpexcel is abandoned, you should avoid using it. Use phpoffice/phpspreadsheet instead.
+Package swiftmailer/swiftmailer is abandoned, you should avoid using it. Use symfony/mailer instead.
+Package symfony/inflector is abandoned, you should avoid using it. Use EnglishInflector from the String component instead.
+Generating optimized autoload files
+Class PHPExcel_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/bestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Exponential_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/exponentialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Linear_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/linearBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Logarithmic_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/logarithmicBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Polynomial_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/polynomialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Power_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/powerBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+
+
+Regex PhpStorm:
+Search any two words "for"+"if": (?=.*% for )(?=.* if )
+Search "one" or "two" or "three": \b(?:one|two|three)\b
+
+Update php:
+"php": "^7.1.3", => "php": ">=8.0.0",
+"phpoffice/phpspreadsheet": "^1.10", => "phpoffice/phpspreadsheet": "^1.22",
+"friendsofsymfony/comment-bundle": "^3", => "friendsofsymfony/comment-bundle": "^4.0.x-dev",
+"google/apiclient": "1.0.*@beta", => "google/apiclient": "^1.1",
+{
+    "require": {
+        "google/apiclient": "^2.12.1"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Drive",
+            "YouTube"
+        ]
+    }
+}
+
+Error calling GET https://www.googleapis.com/drive/v3/files?q=%270B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M%27
++in+parents+and+trashed%3Dfalse+and+title%3D%27config.json%27: (400) Invalid Value
+
+abandoned : https://packagist.org/packages/phpoffice/phpexcel
+The project has not be maintained for years and must not be used anymore. All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+
+Compile Error: Array and string offset access syntax with curly braces is no longer supported
+in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\phpoffice\phpexcel\Classes\PHPExcel\Shared\String.php (line 529)
+
+\PhpOffice\
+remove "phpoffice/phpexcel": "^1.8",
+
+#Upgrade with all dependencies: composer require stof/doctrine-extensions-bundle -W
+"doctrine/doctrine-bundle": "2.3.2",
+"doctrine/doctrine-migrations-bundle": "^2.1",
+"doctrine/orm": "2.8.4", (only 2.9.6 is working, otherwise: Doctrine\ORM\Query::getDQL(): Return value must be of type ?string, Doctrine\ORM\QueryBuilder returned)
+"stof/doctrine-extensions-bundle": "^1.5", => "stof/doctrine-extensions-bundle": "^1.7",
+gedmo/doctrine-extensions: "^2.3.4 || ^3.0.0" => ?
+
+$ composer.phar update
+Loading composer repositories with package information
+Restricting packages listed in "symfony/symfony" to "4.4.*"
+Updating dependencies
+Lock file operations: 0 installs, 3 updates, 0 removals
+  - Upgrading doctrine/cache (1.12.1 => 2.1.1)
+  - Upgrading doctrine/orm (2.8.4 => 2.11.2)
+  - Upgrading gedmo/doctrine-extensions (v3.2.0 => v3.5.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 3 updates, 0 removals
+  - Downloading doctrine/orm (2.11.2)
+  - Upgrading doctrine/cache (1.12.1 => 2.1.1): Extracting archive
+  - Upgrading doctrine/orm (2.8.4 => 2.11.2): Extracting archive
+  - Upgrading gedmo/doctrine-extensions (v3.2.0 => v3.5.0): Extracting archive
+
+"doctrine/doctrine-migrations-bundle": "^2.1", => "doctrine/doctrine-migrations-bundle": "^3.2",
+$ composer.phar require doctrine/doctrine-migrations-bundle -W
+Using version ^3.2 for doctrine/doctrine-migrations-bundle
+./composer.json has been updated
+Running composer update doctrine/doctrine-migrations-bundle --with-all-dependencies
+Loading composer repositories with package information
+Restricting packages listed in "symfony/symfony" to "4.4.*"
+Updating dependencies
+Lock file operations: 0 installs, 2 updates, 0 removals
+  - Upgrading doctrine/doctrine-migrations-bundle (2.2.3 => 3.2.2)
+  - Upgrading doctrine/migrations (2.3.5 => 3.4.1)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 2 updates, 0 removals
+  - Downloading doctrine/migrations (3.4.1)
+  - Downloading doctrine/doctrine-migrations-bundle (3.2.2)
+  - Upgrading doctrine/migrations (2.3.5 => 3.4.1): Extracting archive
+  - Upgrading doctrine/doctrine-migrations-bundle (2.2.3 => 3.2.2): Extracting archive
+
+#"knplabs/knp-paginator-bundle": "^5.1", => "knplabs/knp-paginator-bundle": "^5.8",
+Deprecated: Return type of Doctrine\ORM\Tools\Pagination\Paginator::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Tools\Pagination\Paginator.php on line 137
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::current() should either be compatible with Iterator::current(): mixed, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 70
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::next() should either be compatible with Iterator::next(): void, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 86
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::key() should either be compatible with Iterator::key(): mixed, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 78
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::valid() should either be compatible with Iterator::valid(): bool, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 96
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::rewind() should either be compatible with Iterator::rewind(): void, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 62
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::offsetExists($offset) should either be compatible with ArrayAccess::offsetExists(mixed $offset): bool, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 104
+Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::offsetGet($offset) should either be compatible with ArrayAccess::offsetGet(mixed $offset): mixed, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\doctrine\orm\lib\Doctrine\ORM\Query\TreeWalkerChainIterator.php on line 112
+
+Test server 157.139.226.86:
+cd /opt/order-lab/orderflex/
+
+git pull
+bash deploy.sh
+php vendor/bin/phpunit
+
+Live server:
+cd /srv/order-lab/orderflex/
+git pull origin master
+bash deploy.sh
+php vendor/bin/phpunit
+
+DigitalOcean:
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\DigitalOcean: notes.txt
+digitalocean: warning: /var/cache/yum/x86_64/7/updates/packages/bind-export-libs-9.11.4-26.P2.el7_9.9.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/pgdg12/packages/postgresql12-libs-12.10-1PGDG.rhel7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 442df0f8: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/remi-safe/packages/php81-8.1-1.el7.remi.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 00f97f56: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/epel/packages/libmcrypt-2.5.8-13.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID 352c64e5: NOKEY
+digitalocean: Warning: RPMDB altered outside of yum.
+digitalocean: HTTP request sent, awaiting response... 302 Found
+digitalocean: warning: /var/cache/yum/x86_64/7/yarn/packages/yarn-1.22.18-1.noarch.rpm: Header V4 RSA/SHA512 Signature, key ID 6963f07f: NOKEY
+digitalocean: Public key for yarn-1.22.18-1.noarch.rpm is not installed
+digitalocean: warning: /var/cache/yum/x86_64/7/nodesource/packages/nodejs-12.22.11-1nodesource.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 34fa74dd: NOKEY
+digitalocean: Public key for nodejs-12.22.11-1nodesource.x86_64.rpm is not installed
+
+digitalocean: @### Composer and deploy using orderflex###
+==> digitalocean: /tmp/script_6161.sh: line 4: composer: command not found
+==> digitalocean: Provisioning step had errors: Running the cleanup provisioner, if present...
+==> digitalocean: Destroying droplet...
+==> digitalocean: Deleting temporary ssh key...
+Build 'digitalocean' errored: Script exited with non-zero exit status: 127.Allowed exit codes are: [0]
+
+==> Some builds didn't complete successfully and had errors:
+--> digitalocean: Script exited with non-zero exit status: 127.Allowed exit codes are: [0]
+
+==> Builds finished but no artifacts were created.
+
+
+digitalocean: warning: /var/cache/yum/x86_64/7/yarn/packages/yarn-1.22.18-1.noarch.rpm: Header V4 RSA/SHA512 Signature, key ID 6963f07f: NOKEY
+digitalocean: Public key for yarn-1.22.18-1.noarch.rpm is not installed
+digitalocean: Public key for nodejs-12.22.11-1nodesource.x86_64.rpm is not installed
+digitalocean: warning: /var/cache/yum/x86_64/7/nodesource/packages/nodejs-12.22.11-1nodesource.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 34fa74dd: NOKEY
+
+/build/dashboard.9606849c.js
+/build/dashboard.6dc3c12b.js
+node ./node_modules/.bin/encore dev
+
+http://view-test.med.cornell.edu/build/runtime.d94b3b43.js
+Error:  http://143.198.26.67/build/runtime.d94b3b43.js
+OK:     http://143.198.26.67/order/build/runtime.d94b3b43.js
+
+Update PATH for PHP 8.1:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+Symfony 4.4 to 5.4
+Not supported by Symfony 5:
+friendsofsymfony/comment-bundle - alternative ezsystems/comment-bundle  (symfony ^5.0?)
+
+Abandoned:
+bmatzner/fontawesome-bundle
+//swiftmailer/swiftmailer         => symfony/mailer
+symfony/swiftmailer-bundle      => symfony/mailer
+symfony/inflector               => The author suggests using the EnglishInflector from the String component package instead.
+
+Removed:
+"bmatzner/fontawesome-bundle": "^4.7",
+"symfony/swiftmailer-bundle": "^3.5",
+
+"friendsofsymfony/comment-bundle": "^4.0.x-dev", => "cinava/comment-bundle": "dev-master"
+
+git push https://<GITHUB_ACCESS_TOKEN>@github.com/<GITHUB_USERNAME>/<REPOSITORY_NAME>.git
+
+git push https://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@github.com/cinava/FOSCommentBundle.git
+
+
+http://127.0.0.1/order/index_dev.php/dashboards/?filter%5BstartDate%5D=04/08/2021&filter%5BendDate%5D=04/08/2022&filter%5B
+projectSpecialty%5D%5B%5D=0&title=Favorite%20charts&filter%5BchartType%5D%5B1%5D=pi-by-affiliation&filter%5BchartType%5D%5B2%5D=projects-per-pi&filter%5BchartType%5D%5B3%5D=reminder-emails-per-month&filter%5BchartType%5D%5B4%5D=successful-logins-site&filter%5BchartType%5D%5B5%5D=total-amount-paid-unpaid-invoices-per-month&filter%5BchartType%5D%5B6%5D=total-amount-paid-unpaid-invoices-per-year&filter%5BchartType%5D%5B7%5D=fellapp-number-applicant-by-year&filter%5BchartType%5D%5B8%5D=fellapp-average-usmle-scores-by-year&filter%5BchartType%5D%5B9%5D=chart-view-stat
+
+"sensio/framework-extra-bundle": "^5.5", => "sensio/framework-extra-bundle": "^6.2",
+"friendsofsymfony/jsrouting-bundle": "^2.5", => "friendsofsymfony/jsrouting-bundle": "^2.8",
+
+git: 'credential-cache' is not a git command:
+git config --global --unset credential.helper
+
+To save credentials:
+git config --global credential.helper cache
+
+git config --global credential.helper store
+
+Fork:
+"cinava/comment-bundle": "dev-master",
+"repositories":
+    [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cinava/FOSCommentBundle.git"
+        }
+    ]
+
+"intracto/comment-bundle": "^4",
+"ezsystems/comment-bundle": "^3.2",
+
+
+"friendsofsymfony/comment-bundle": "^4.0.x-dev", => "cinava/comment-bundle": "dev-master",
+
+"symfony/webpack-encore-bundle": "^1.7", => "symfony/webpack-encore-bundle": "^1.14",
+
+Check fellapp rec letters for felapp ID 1678:
+2c325726ff3bfc552d20f13df3b2cb9b7562c112
+
+git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Controller/DefaultController.php
+git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Util/FellAppImportPopulateUtil.php
+git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Util/GoogleSheetManagementModified.php
+git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Util/RecLetterUtil.php
+
+Live:
+git fetch
+git checkout origin/master -- path/to/file
+
+git fetch origin master
+git checkout 111b382b7cf7f2b568c23d5c3e5b5441ef844dbc src/App/FellAppBundle/Controller/DefaultController.php
+
+@babel/plugin-proposal-class-properties has unmet peer dependency @babel/core
+"resolutions": {
+        "babel-core": "7.0.0-bridge.0"
+    }
+yarn add  babel-core@^7.0.0
+yarn add @symfony/webpack-encore --dev
+Reinstall vendors:
+rm -rf vendor/*
+composer install
+Yarn webpack:
+rm -rf node_modules
+sudo yarn install --frozen-lockfile
+
+
+select2 v4
+http://127.0.0.1/order/index_dev.php/directory/tree-util/common/composition-tree/?thisid=undefined&id=null&bundlename=UserdirectoryBundle&classname=Institution&opt=combobox&userid=4689&type=default,user-added&orderformtype=undefined&cycle=new
+var thisid = comboboxEl.val();
+
+Check postgresql version (current 12.10) => 14.3
+psql --version
+
+Change PATH:
+In /etc/profile.d add any .sh file, for example, rh_php81.sh:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/opt/remi/php81/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export MANPATH=/opt/remi/php81/root/usr/share/man:${MANPATH}
+
+Remove old php path:
+Search for content: grep --exclude-dir={.cache,.symfony,scanorder*} -rnw './' -e 'php74'
+grep --exclude-dir={.cache,.symfony,scanorder*} -rnw './' -e '/opt/remi/php74/root'
+remove rh-php74.sh in /etc/profile.d
+
+###!!! DO NOT: sudo yum -y update => it will result to the default php 7 and postgresql 9
+If updated and to restore php8:
+#Disable loading the old PHP 7.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/php74-php.conf /etc/httpd/conf.d/php74-php.off
+mv /etc/httpd/conf.modules.d/15-php74-php.conf /etc/httpd/conf.modules.d/15-php74-php.off
+
+//List available repositories on the system:
+sudo yum repolist -y
+#check subscription-manager:
+sudo subscription-manager identity
+sudo subscription-manager status
+sudo subscription-manager list --consumed
+sudo subscription-manager list
+#add subscription-manager (requires username and password)
+subscription-manager register --auto-attach
+
+########## Postgresql upgrade Rhel ##########
+0a) Shutdown apache server
+systemctl stop httpd.service
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+sudo systemctl stop postgresql-12
+
+0b) Create DB backup:
+pg_dump -U symfony ScanOrder > scanorder_26may2022.sql
+pg_dump --file scanorder_26may2022.sql --username "symfony" --no-password --verbose --format=c --blobs "ScanOrder"
+
+1. As root: Install the PostgreSQL 14 Packages
+sudo yum install postgresql14-server.x86_64  postgresql14.x86_64  postgresql14-contrib.x86_64
+sudo yum install postgresql14 postgresql14-server postgresql14-contrib
+sudo yum install postgresql14-contrib
+//On Live: https://computingforgeeks.com/how-to-install-postgresql-14-centos-rhel-7/
+//add PostgreSQL repository to our CentOS 7 / RHEL 7:
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+yum reinstall https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-7-x86_64/postgresql14-contrib-14.3-1PGDG.rhel7.x86_64.rpm
+
+2. Initialize PostgreSQL 14 database
+/usr/pgsql-14/bin/postgresql-14-setup initdb
+
+Add to /var/lib/pgsql/14/data/pg_hba.conf: host    all             all        157.139.46.96/32             md5
+Live: host    all             all        157.139.226.124/32             md5
+Add to /var/lib/pgsql/14/data/pg_hba.conf (for pgAdmin): host    all             all             0.0.0.0/0            md5
+Change in /var/lib/pgsql/14/data/postgresql.conf: #port = 5432
+Change in /var/lib/pgsql/14/data/postgresql.conf: listen_addresses='*'
+
+3. Start PostgreSQL 12 database (required for pre-upgrade check) sudo su -, su - postgres
+ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ start
+
+4. Run pre-upgrade check:
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres --check
+
+If error: //Error: PGSQL.5432 failed: fe_sendauth: no password supplied Failure
+          vi /var/lib/pgsql/12/data/pg_hba.conf (temporary change all to trust for pg_hba.conf in 12 and 14)
+          #NO NEED: add: host    all             all             localhost            trust
+          restart: /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ restart
+
+5. Shutdown original PostgreSQL 12
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+
+6. Run the actual upgrade
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres
+
+7a. in /var/lib/pgsql/12/data/pg_hba.conf change back trust to md5
+
+7. Start PostgreSQL 14 cluster
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ start
+
+8. Upgrade the extension (optional)
+There are no extenstions.
+get extension list: 1) psql 2) \dx
+plpgsql | 1.0     | pg_catalog | PL/pgSQL procedural language
+exit;
+
+9. Update optimiser statistics
+/usr/pgsql-14/bin/vacuumdb -U postgres --all --analyze-in-stages
+
+10. Clean up PostgreSQL 12
+#Get postgres library: rpm -qa|grep postgres
+yum remove postgresql12-server-12.11-1PGDG.rhel7.x86_64 postgresql12-libs-12.11-1PGDG.rhel7.x86_64 postgresql12-12.11-1PGDG.rhel7.x86_64
+yum remove postgresql12-server-12.10-1PGDG.rhel7.x86_64 postgresql12-libs-12.10-1PGDG.rhel7.x86_64 postgresql12-12.10-1PGDG.rhel7.x86_64
+# rm -rf '/var/lib/pgsql/12/data'
+
+Running this script will delete the old cluster's data files:
+./delete_old_cluster.sh
+
+########## EOF Postgresql upgrade Rhel ##########
+
+postgreSQL 14 package is not available
+cat /etc/redhat-release => Red Hat Enterprise Linux Server release 7.9 (Maipo)
+
+Upgrade Symfony: https://fossies.org/linux/symfony/UPGRADE-5.4.md
+
+systemctl stop httpd.service
+systemctl start httpd.service
+systemctl restart httpd.service
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ stop
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ start
+sudo systemctl stop postgresql-14
+sudo systemctl status postgresql-14
+sudo systemctl restart postgresql-14
+
+Configure /var/lib/pgsql/14/data/pg_hba.conf for pgAdmin: host all all all md5
+
+Postgresql log:
+/var/lib/pgsql/14/data
+Apache log:
+/etc/httpd/logs
+
+http://127.0.0.1/order/index_dev.php/translational-research/project/new
+http://127.0.0.1/order/index_dev.php/translational-research/project/select-new-project-type
+
+"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe" --lowquality --cookie "PHPSESSID" --javascript-delay 9000 --load-error-handling "ignore" --load-media-error-handling "ignore" "http://localhost/fellowship-applications/download/1582" "application_ID1582.pdf"
+
+wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --lowquality --cookie \"PHPSESSID\" \"\"
+--javascript-delay \"9000\" --load-error-handling \"ignore\" --load-media-error-handling \"ignore\"
+\"http://localhost/fellowship-applications/download/1583\"
+\"C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\public\\Uploaded\\fellapp/Reports/temp_1583/application_ID1583.pdf\"
+
+Util = $this->get('
+Util = $this->container->get('
+
+Symfony 6:
+"doctrine/doctrine-bundle": "2.3.2",
+"doctrine/doctrine-migrations-bundle": "^3.2",
+"doctrine/orm": "2.9.6",
+"stof/doctrine-extensions-bundle": "^1.7",
+
+Working:
+"doctrine/doctrine-bundle": "2.5.*",
+"doctrine/orm": "2.9.6",
+
+Method "Symfony\Component\Config\Definition\ConfigurationInterface::getConfigTreeBuilder()" might add "TreeBuilder"
+as a native return type declaration in the future. Do the same in implementation
+"Oneup\UploaderBundle\DependencyInjection\Configuration" now to avoid errors or add an
+explicit @return annotation to suppress this message.
+Solution: add return type: TreeBuilder in Oneup\UploaderBundle\DependencyInjection\Configuration::getConfigTreeBuilder()
+
+User Deprecated: Since symfony/framework-bundle 5.3: Accessing the "state_machine.transres_project"
+service directly from the container is deprecated, use dependency injection instead.
+
+https://symfony.com/doc/current/setup/upgrade_major.html
+https://github.com/symfony/symfony/blob/6.2/UPGRADE-6.0.md
+
+Symfony\Bridge\Twig\Extension\twig_is_selected_choice(): Argument #2 ($selectedValue)
+must be of type array|string, null given, called in
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\var\cache\dev\twig\89\89648522daac99c3a0c6e7ef41c80227.php
+on line 532
+Solution: 'filter[projectSpecialty][]' => 0 is not correct
+
+TODO: remove? Doctrine\Common\Lexer\AbstractLexer
+
+https://stackoverflow.com/questions/25671785/git-fatal-unable-to-auto-detect-email-address
+composer recipes:update symfony/framework-bundle
+fatal: unable to auto-detect email address  (got 'ch3@Admin.(none)')
+git config --global user.email "oli2002@med.cornell.edu"
+git config --global user.name "Oleg Ivanov"
+git config --local user.email "oli2002@med.cornell.edu"
+git config --local user.name "Oleg Ivanov"
+
+TODO:
+Optional recommendations to improve your setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * a PHP accelerator should be installed
+   > Install and/or enable a PHP accelerator (highly recommended).
+
+ * realpath_cache_size should be at least 5M in php.ini
+   > Setting "realpath_cache_size" to e.g. "5242880" or "5M" in
+   > php.ini* may improve performance on Windows significantly in some
+   > cases.
+
+ * "post_max_size" should be greater than "upload_max_filesize".
+   > Set "post_max_size" to be greater than "upload_max_filesize".
+
+
+TODO:
+https://symfonycasts.com/screencast/symfony5-upgrade/console-recipe
+composer.phar recipes:install symfony/framework-bundle --force -v
+composer.phar recipes:install symfony/console --force -v
+composer.phar recipes:install phpunit/phpunit --force -v
+
+1) run in dev
+2) use secret: '%env(APP_SECRET)%'
+3) use symfony 6 Kernel, bundles.php
+4) phpunit is asking for bootstrap.php
+
+
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   bin/console
+        modified:   bin/phpunit
+        modified:   composer.json
+        modified:   composer.lock
+        modified:   config/packages/framework.yaml
+        modified:   config/packages/routing.yaml
+        modified:   config/packages/security.yml
+        modified:   config/packages/twig.yaml
+        modified:   config/packages/validator.yaml
+        modified:   config/services.yaml
+        modified:   src/App/UserdirectoryBundle/Resources/config/services.yml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        bin/phpunit_ORIG
+        config/packages/debug.yaml
+        config/packages/monolog.yaml
+        config/packages/web_profiler.yaml
+        config/preload.php
+        config/routes/framework.yaml
+        config/routes/web_profiler.yaml
+
+
+1) Why env is shown as 'prod'? on about page? => environment is not loaded from .env?
+2) Why Debug is false on about page?
+3) When default empty Kernel.php:
+Cannot autowire service "authenticator_utility": argument "$passwordHasher" of method
+"App\UserdirectoryBundle\Security\Authentication\AuthUtil::__construct()"
+references interface "Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface"
+but no such service exists. Did you create a class that implements this interface?
+
+Default Kernel.php is not loading framework.yaml
+https://github.com/symfony/symfony/issues/45100
+Fixed in 6.1.2?
+
+Error:
+https://view.med.cornell.edu/translational-research/approve-project/3705
+TransResUtil.php(3212) -> EmailUtil.php(277) ->
+Expected response code "250/251/252" but got code "501", with message "501 5.1.3 Invalid address"
+email contained ','
+
+TODO: Error: Input value "filter" contains a non-scalar value
+The root cause for this is Symfony's InputBag, in that they changed their get()
+method to only allow scalar values to be returned - thus not arrays!
+call-log-book/event-log/event-log-per-user-per-event-type/?
+filter[eventType][0]=82&filter[objectType][0]=10&filter[user][0]=8863
+=> $filter = $request->query->get('filter'); replaced by just $filter = $request->get('filter');
+https://symfony.com/doc/current/components/http_foundation.html
+TODO: replace all $request->query->get() by $request->get() or by $filter = $request->query->all('filter');?
+From https://bytemeta.vip/repo/aedart/athenaeum/issues/69: Use $request->get() or $request->query->all($parameter) to obtain value instead.
+
+TODO: if fellapp generation failed (cannot read by PhpSpreadsheet) => in FellAppImportPopulateUtil:populateSpreadsheet:$forceCreateCopy = true
+
+Upgrade python on RHEL: https://tecadmin.net/install-python-3-7-on-centos/
+cd /usr/src
+wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tgz
+tar xzf Python-3.10.6.tgz
+cd Python-3.10.6
+./configure --enable-optimizations
+make altinstall
+rm /usr/src/Python-3.10.6.tgz
+python3.10 -V
+export PYTHONPATH=/usr/local/bin/python3.10.6
+export PATH="/usr/local/bin:$PATH"
+create a soft link as python under “/usr/local/sbin” for python 3.10:
+ln -sf /usr/local/bin/python3.10 /usr/local/sbin/python
+or: ln -sf /usr/local/bin/python3.10 /bin/python
+
+Monitor:
+https://gist.github.com/adeekshith/fef4ff9949b88ce102bd
+https://medium.com/swlh/tutorial-creating-a-webpage-monitor-using-python-and-running-it-on-a-raspberry-pi-df763c142dac
+
+sudo yum reinstall python3-pip
+yum install python3-pip
+sudo pip3 install requests
+
+Error: /bin/yum: /usr/bin/python: bad interpreter
+sudo update-alternatives --remove-all python
+sudo ln -sf /usr/bin/python2.7 /usr/bin/python
+sudo ln -sf /usr/local/bin/python3.10 /usr/bin/python3
+
+postgresql log:
+/var/lib/pgsql/14/data/log
+System log:
+/var/log/httpd
+6:00am - OK
+6:32am - postgresql is down
+
+postgresql-Sat.log
+2022-08-20 06:32:11.908 EDT [24595] LOG:  received fast shutdown request
+2022-08-20 06:32:11.915 EDT [24595] LOG:  aborting any active transactions
+2022-08-20 06:32:11.926 EDT [24595] LOG:  background worker "logical replication launcher" (PID 24604) exited with exit code 1
+2022-08-20 06:32:11.932 EDT [24599] LOG:  shutting down
+2022-08-20 06:32:12.016 EDT [24595] LOG:  database system is shut down
+
+error_log:
+[Sat Aug 20 06:32:11.960797 2022] [mpm_prefork:notice] [pid 24622] AH00170: caught SIGWINCH, shutting down gracefully
+[Sat Aug 20 06:32:46.747976 2022] [suexec:notice] [pid 1382] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Sat Aug 20 06:32:46.848130 2022] [lbmethod_heartbeat:notice] [pid 1382] AH02282: No slotmem from mod_heartmonitor
+[Sat Aug 20 06:32:47.129400 2022] [mpm_prefork:notice] [pid 1382] AH00163: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips PHP/8.1.6 configured -- resuming normal operations
+[Sat Aug 20 06:32:47.129438 2022] [core:notice] [pid 1382] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+
+yum.log:
+Aug 20 06:31:07 Updated: xorg-x11-server-common-1.20.4-18.el7_9.x86_64
+Aug 20 06:31:08 Updated: xorg-x11-server-Xvfb-1.20.4-18.el7_9.x86_64
+
+/var/log/messages:
+Aug 20 06:31:07 xits-po-order-prd1 yum[17364]: Updated: xorg-x11-server-common-1.20.4-18.el7_9.x86_64
+Aug 20 06:31:08 xits-po-order-prd1 yum[17364]: Updated: xorg-x11-server-Xvfb-1.20.4-18.el7_9.x86_64
+Aug 20 06:31:11 xits-po-order-prd1 systemd[1]: Started Delayed Shutdown Service.
+Aug 20 06:31:11 xits-po-order-prd1 systemd-shutdownd[17371]: Shutting down at Sat 2022-08-20 06:32:11 EDT (reboot)...
+Aug 20 06:31:11 xits-po-order-prd1 systemd-shutdownd[17371]: Creating /run/nologin, blocking further logins...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping LVM2 PV scan on device 8:32...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping LVM2 PV scan on device 8:3...
+Aug 20 06:32:11 xits-po-order-prd1 chronyd[938]: chronyd exiting
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping LVM2 PV scan on device 8:2...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped target rpc_pipefs.target.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped target Timers.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping PostgreSQL 14 database server...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped Dump dmesg to /var/log/dmesg.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping LVM2 PV scan on device 8:16...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped Daily Cleanup of Temporary Directories.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Removed slice system-selinux\x2dpolicy\x2dmigrate\x2dlocal\x2dchanges.slice.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped target Multi-User System.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping Login Service...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping The PHP FastCGI Process Manager...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping Sendmail Mail Transport Client...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopped dnf makecache --timer.
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping privileged operations for unprivileged applications...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping Dynamic System Tuning Daemon...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping NTP client/server...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping The Apache HTTP Server...
+Aug 20 06:32:11 xits-po-order-prd1 systemd[1]: Stopping irqbalance daemon...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping OpenSSH server daemon...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping Enable periodic update of entitlement certificates....
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping Authorization Manager...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Resets System Activity Logs.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping System Logging Service...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped target Login Prompts.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping Getty on tty1...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Closed LVM2 poll daemon socket.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping Command Scheduler...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping SYSV: Starts and stops the BigFix Client daemon...
+Aug 20 06:32:12 xits-po-order-prd1 rsyslogd[1398]: [origin software="rsyslogd" swVersion="8.2204.1" x-pid="1398" x-info="https://www.rsyslog.com"] exiting on signal 15.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Unmounting RPC Pipe File System...
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped irqbalance daemon.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Authorization Manager.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped NTP client/server.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Login Service.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Command Scheduler.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped OpenSSH server daemon.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped privileged operations for unprivileged applications.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Enable periodic update of entitlement certificates..
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped System Logging Service.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Getty on tty1.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped Sendmail Mail Transport Client.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopped PostgreSQL 14 database server.
+Aug 20 06:32:12 xits-po-order-prd1 systemd[1]: Stopping Sendmail Mail Transport Agent...
+
+....
+
+Aug 20 06:32:46 xits-po-order-prd1 nrpe[1396]: Starting up daemon
+Aug 20 06:32:46 xits-po-order-prd1 nrpe[1396]: Server listening on 0.0.0.0 port 5666.
+Aug 20 06:32:46 xits-po-order-prd1 nrpe[1396]: Server listening on :: port 5666.
+Aug 20 06:32:46 xits-po-order-prd1 nrpe[1396]: Listening for connections on port 5666
+Aug 20 06:32:46 xits-po-order-prd1 nrpe[1396]: Allowing connections from: 140.251.3.116,157.139.225.173
+Aug 20 06:32:46 xits-po-order-prd1 systemd[1]: Started Sendmail Mail Transport Agent.
+Aug 20 06:32:46 xits-po-order-prd1 systemd[1]: Starting Sendmail Mail Transport Client...
+Aug 20 06:32:46 xits-po-order-prd1 kernel: serviceable_lsm: initialized shared cpp
+Aug 20 06:32:46 xits-po-order-prd1 kernel: serviceable_lsm: initializing proc userspace access ...
+Aug 20 06:32:46 xits-po-order-prd1 kernel: cskal_proc_create 0 mem ...
+Aug 20 06:32:46 xits-po-order-prd1 kernel: serviceable_lsm: initialized proc userspace access
+Aug 20 06:32:46 xits-po-order-prd1 kernel: serviceable_lsm: initialization complete
+Aug 20 06:32:46 xits-po-order-prd1 kernel: ServiceableModuleInit_Deferred: 0
+Aug 20 06:32:46 xits-po-order-prd1 kernel: pinned_lsm[841]: load_serviceable_symbols...
+Aug 20 06:32:46 xits-po-order-prd1 systemd[1]: Failed to parse PID from file /run/sm-client.pid: Invalid argument
+Aug 20 06:32:46 xits-po-order-prd1 systemd[1]: Started Sendmail Mail Transport Client.
+Aug 20 06:32:46 xits-po-order-prd1 systemd[1]: Started The PHP FastCGI Process Manager.
+Aug 20 06:32:47 xits-po-order-prd1 besclient[1429]: Starting BigFix: BESClient: [  OK  ]
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Started SYSV: Starts and stops the BigFix Client daemon.
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Started The Apache HTTP Server.
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Started Dynamic System Tuning Daemon.
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Reached target Multi-User System.
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Starting Update UTMP about System Runlevel Changes...
+Aug 20 06:32:47 xits-po-order-prd1 systemd[1]: Started Update UTMP about System Runlevel Changes.
+
+Status:
+postgresql-14.service - PostgreSQL 14 database server
+   Loaded: loaded (/usr/lib/systemd/system/postgresql-14.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+     Docs: https://www.postgresql.org/docs/14/static/
+
+
+
+https://talk.plesk.com/threads/unexpected-server-shutdown.351403/
+
+python3 '/opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/webmonitor.py'
+-l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -l 'http://view-test.med.cornell.edu'
+-h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r oli2002@med.cornell.edu
+-c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service'
+-U 'http://view-test.med.cornell.edu'
+-e TestServer
+>> /srv/order-lab/orderflex/src/var/log/webmonitor.log
+
+sudo systemctl stop postgresql-14
+sudo systemctl stop httpd.service
+
+run systemctl without root privileges
+sudo visudo
+visudo
+//https://unix.stackexchange.com/questions/192706/how-could-we-allow-non-root-users-to-control-a-systemd-service
+www-data ALL= NOPASSWD: /usr/bin/systemctl restart httpd.service
+www-data ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
+apache ALL= NOPASSWD: /usr/bin/systemctl restart httpd.service
+apache ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
+oli2002 ALL= NOPASSWD: /usr/bin/systemctl restart httpd.service
+oli2002 ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
+
+add to sudoer
+Defaults:apache !requiretty
+
+After delete /var/log/messages, run systemctl restart rsyslog
+
+Get user id: sudo cat /etc/passwd
+
+postgres user:
+sudo mount -t cifs -o username='***',password='***',uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //networkdrive/../db-backup /mnt/pathology/view-backup/db-backup
+apache user:
+sudo mount -t cifs -o username='***',password='***',uid=48,forceuid,gid=48,forcegid,file_mode=0664,dir_mode=0775 //networkdrive/.../upload-backup /mnt/pathology/view-backup/upload-backup
+
+
+http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?Reference-Letter-ID=5f93be4eb3298513847304ce32f12ec26131a9ec&Identification=wcmpath&Applicant-First-Name=AppName&Applicant-Last-Name=AppFamilyName&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2024&Fellowship-End-Date=06/30/2025&Reference-First-Name=John&Reference-Last-Name=Doe&Reference-Degree=MD&Reference-Title=Staff%20Breast%20Pathologist%20and%20Associate%20Director%20of%20Pathology&Reference-Institution=MyInst&Reference-Phone=123-4456&Reference-EMail=cinava@yahoo.com&Reference-Street1=111%20Wisconsin%20Avenue&Reference-Street2=Department%20of%20Pathology&Reference-City=Bethesda&Reference-State=Maryland&Reference-Zip=12345&Reference-Country=United%20States
+
+Updated composer 6 February 2023:
+symfony to 6.2.6
+"oneup/uploader-bundle": "^3.1", => "oneup/uploader-bundle": "^4.0",
+
+
+"doctrine/doctrine-bundle": "2.5.*",
+"doctrine/doctrine-migrations-bundle": "^3.2",
+"doctrine/orm": "2.9.6" (the same as "2.9.*")
+        =>
+"doctrine/doctrine-bundle": "^2.5",
+"doctrine/orm": "^2.9",
+
+// identify any URL that contains the string selector=size but does NOT contain details.cfm
+^(?!.*details\.cfm).*selector=size.*$
+^(?=.*selector=size)(?:(?!details\.cfm).)+$
+
+// identify contains the string User:class but does NOT contain 'use App\UserdirectoryBundle\Entity\User;'
+^(?!.*Entity\\User;).*User::class.*$
+^(?=.*User::class)(?:(?!Entity\\User;).)+$
+
+pick up the string having the word "best" and not the word "mew"
+^(?=.*best)(?:(?!mew).)*$
+
+^(?=.*User::class)(?:(?!User).)*$
+
+For: ->getRepository('AppOrderformBundle:AccessionListHierarchy')->
+python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "')->" > res.log
+
+$repository = $em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "');" > res.log
+
+For: 'class' => 'AppOrderformBundle:AccessionType',
+python process.py -d ../../orderflex/src/App/TestBundle -s "'class' => '" -e "'," > res.log
+
+
+Test: crn search on home page with filter "Entry Text":
+http://127.0.0.1/order/index_dev.php/critical-result-notifications/?filter%5BsortBy%5D=sort-by-creation-date&filter%5BstartDate%5D=&filter%5BendDate%5D=&filter%5BmessageCategory%5D=&filter%5Bmrntype%5D=&filter%5Bsearch%5D=&filter%5BaccessionType%5D=&filter%5BaccessionNumber%5D=&filter%5BinitialCommunication%5D=&filter%5Bauthor%5D=&filter%5BreferringProvider%5D=&filter%5BreferringProviderSpecialty%5D=&filter%5BencounterLocation%5D=&filter%5Binstitution%5D=&filter%5BmessageStatus%5D=All+except+deleted&filter%5BpatientListTitle%5D=&filter%5Battending%5D=&filter%5BentryBodySearch%5D=sss&filter%5Btask%5D=&filter%5BtaskType%5D=&filter%5BtaskUpdatedBy%5D=&filter%5BtaskAddedBy%5D=&filter%5BpatientPhone%5D=&filter%5BpatientEmail%5D=&filter%5BattachmentType%5D=
+$fromEntity = "AppUserdirectoryBundle:ObjectTypeText";
+            $entryBodySearchStr =
+                //"SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+                "SELECT s FROM user_objecttypetext s WHERE " .
+                "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND " .
+                "( (LOWER(s.value) LIKE LOWER(:entryBodySearch)) OR (LOWER(s.secondaryValue) LIKE LOWER(:entryBodySearch))  )" .
+                ")";
+
+
+
+Check: mapper['bundleName']
+Check: 'data_class' => 'App\OrderformBundle\Entity\EncounterDate'
+
+$query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+$query = $dql->getQuery(); //$query = $em->createQuery($dql);
+
+https://developer.hashicorp.com/packer/plugins/builders/digitalocean
+Packer: > v1.7.0
+Packer 1.9.1:
+Error: Failed to initialize build "digitalocean"
+error initializing builder 'digitalocean': Unknown builder digitalocean
+
+1) Install new packer 1.9.1: scoop install packer
+Packer 1.9.1: /c/Users/ch3/scoop/shims/packer
+
+2) Convert json to order-packer-alma9.json.pkr.hcl:
+packer hcl2_upgrade order-packer-alma9.json
+
+3) Install digitalocean plugin: packer init order-packer-alma9.json.pkr.hcl
+
+4) run json as usual
+
+Upgrade to PHP 8.2:
+Error: php81-syspaths conflicts with php-cli-8.2.8-1.el7.remi.x86_64
+Error: php81-syspaths conflicts with php-common-8.2.8-1.el7.remi.x86_64
+https://computingforgeeks.com/how-to-install-php-8-2-on-centos-rhel-7/?expand_article=1
+https://blog.remirepo.net/post/2023/07/06/PHP-version-8.1.21-and-8.2.8
+sudo yum-config-manager --enable remi-php82
+
+Upgrade PHP 8.2 (https://computingforgeeks.com/how-to-install-php-8-2-on-centos-rhel-7/?expand_article=1)
+#1) Prepare PHP 8.2
+#sudo yum update -y
+#sudo reboot
+sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo yum-config-manager --enable remi-php82
+#2) Remove old PHP
+#sudo yum -y install php
+sudo yum-config-manager --disable remi-php74
+sudo yum-config-manager --disable remi-php81
+#sudo yum remove -y php81*
+#sudo yum update
+#3) Install new PHP 8.2
+sudo yum -y install php82
+sudo yum -y install php82-php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+sudo yum -y install php82-php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+yum install php81-syspaths
+#4) Update php path
+export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+#5) Enable Apache php 8.2
+cp /opt/remi/php82/enable /etc/profile.d/rh-php82.sh
+source /opt/remi/php82/enable
+yum --enablerepo=remi install php82-php
+systemctl restart httpd.service
+#php -v
+#Done PHP 8.2
+
+yum list installed | grep php
+yum remove -y php74*
+sudo reboot
+
+dnf module reset php
+dnf module enable php:remi-8.2
+dnf update php\*
+
+Upgrade Rhel 7 to 8:
+In-place upgrade
+Clean install
+
+https://getrector.com/blog/how-to-upgrade-annotations-to-attributes
+"php": "^7.4 || ^8.1", => "php": "^8.0"
+
+Composer: timeout
+php composer.php install --prefer-dist --no-dev
+composer config --global process-timeout 2000
+
+Composer: When working with _public_ GitHub repositories only
+Get token: https://github.com/settings/tokens/new?scopes=&description=Composer+on+Admin+2023-08-03+1928
+composer.phar config --global --auth github-oauth.github.com mytoken
+C:\Users\ch3\AppData\Roaming\Composer\auth.json
+
+Rector:
+How to convert symfony gedmo annotation to PHP 8 Attributes
+https://stackoverflow.com/questions/75215518/how-to-convert-symfony-gedmo-annotation-to-php-8-attributes
+
+Attribute for Template:
+https://symfony.com/doc/current/templates.html#rendering-templates
+The #[Template()] attribute was introduced in Symfony 6.2.
+use Symfony\Bridge\Twig\Attribute\Template;
+#[Template('product/index.html.twig')]
+public function index(): array
+{ return [...] }
+
+
+revert to version before major upgrades: 'git checkout 58d83c63b4fddacd09939843925e63d66c1446fe'
+
+### Fix for: ###
+https://github.com/doctrine/orm/issues/10877
+https://github.com/doctrine/orm/issues/10869
+1) Callog create new: An exception occurred while executing a query: SQLSTATE[08P01]:
+<<Unknown error>>: 7 ERROR: bind message supplies 0 parameters, but prepared statement "" requires 5
+
+2) Fellowship show: An exception has been thrown during the rendering of a template
+("While adding an entity of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList with an ID hash of "1833"
+to the identity map,
+another object of class Proxies\__CG__\App\UserdirectoryBundle\Entity\JobTitleList was already present for the same ID.
+This exception is a safeguard against an internal inconsistency - IDs should uniquely map to
+entity object instances
+Education.html #224
+Otherwise, it might be an ORM-internal inconsistency, please report it. ").
+Twig\Error\ RuntimeError
+Show exception properties
+in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\templates\AppFellAppBundle\Form\Education.html.twig (line 216)
+
+                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
+                            {% if training.jobTitle is defined %}
+                                {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
+                            {% else %}
+                                {% if training.vars.value.jobTitle %}
+                                    {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
+
+
+"doctrine/orm": "^2.9", (uses 2.16.0) => "doctrine/orm": "2.15.3" or "2.15.5",
+### EOF ###
+
+"doctrine/orm": "2.15.5", => "doctrine/orm": "^3": Failed, must update other bundles
+
+
+//https://github.com/backup-manager/symfony
+//https://www.postgresql.org/message-id/43B43971.6060407@ydreams.com
+
+External monitor cron job: cron:externalurlmonitor cron job status:
+*/15 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
+
+/////////// All cron jobs ///////////
+Set permission for pg_backup.sh and alert_dba:
+-rwxr--r-- 1 postgres postgres 1M Sep  6  2022 pg_backup.sh
+chmod 744 pg_backup.sh
+chmod 744 alert_dba
+chmod 755 folders bin and logs
+chown postgres filename
+chgrp postgres filename
+
+Edit crontab file, or create one if it doesn’t already exist:
+crontab -u apache -e
+crontab -u postgres -e
+
+sudo crontab -u postgres -l
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+crontab -u apache -l
+*/15 * * * * python3 '/srv/order-lab/webmonitor/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service' -U 'http://view.med.cornell.edu' -e LiveServer >> /srv/order-lab/orderflex/var/log/webmonitor.log
+0 */1 * * *  python3 /srv/order-lab/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab/orderflex/var/log/db-mount-HOURLY.log
+0 */4 * * *  python3 /srv/order-lab/backup/filesbackup.py -s /srv/order-lab/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-HOURLY -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab/orderflex/var/log/uploads-live-HOURLY.log
+*/15 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:externalurlmonitor --env=prod
+00 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:importfellapp --env=prod
+0 */6 * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:verifyimport --env=prod
+00 06 * * Mon /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:invoice-reminder-emails --env=prod
+00 05 * * Mon /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:expiration-reminder-emails --env=prod
+*/30 * * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:status --env=prod
+0 */6 * * * /opt/remi/php82/root/usr/bin/php /srv/order-lab/orderflex/bin/console cron:useradstatus --env=prod
+/////////// EOF All cron jobs ///////////
+
+#pg_hba.conf -> enable postgres user login:
+local   all             all                                     ident
+#Login to server
+$ sudo -u postgres psql
+
+php bin/console list doctrine
+--dump-sql
+--dry-run
+php bin/console doctrine:schema:update --dump-sql
+php bin/console doctrine:schema:update --force
+https://akashicseer.com/web-development/using-doctrine-commands-in-the-console-with-symfony-framework/
+Migration: symfony doctrine migration trying to drop not existed constraint
+
+restore using data only => valid schema
+php bin/console doctrine:database:drop --force
+php bin/console doctrine:database:create
+php bin/console doctrine:query:sql "$(< 1Sep2023_data_plain.sql)" => Aborted (core dumped)
+
+Restored database backup_live-20230824-124415-ScanOrder.dump.gz
+Switching restored database with active one : scanorder1_restore > scanorder1 Database restored and active.
+The next step would be to make sure the public 'Uploaded' folder corresponds to the restored DB.
+Also it might be required to run the deploy_prod.sh script.
+
+[2023-09-08T15:17:19.173986+00:00] app.NOTICE: Original exception message=An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
+This probably means the server terminated abnormally 	before or while processing the request. [] []
+[2023-09-08T15:17:19.176775+00:00] app.NOTICE: hostname=view-testmedcornelledu [] []
+[2023-09-08T15:17:19.176828+00:00] app.NOTICE: Original exception message=An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 no connection to the server [] []
+
+[2023-09-18T20:33:11.821128+00:00] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\DriverException:
+"An exception occurred while executing a query: SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command server closed the connection unexpectedly
+This probably means the server terminated abnormally 	before or while processing the request." at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/API/PostgreSQL/ExceptionConverter.php line 87
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\DriverException(code: 7): An exception occurred while executing a query:
+SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/API/PostgreSQL/ExceptionConverter.php:87)\n
+[previous exception] [object] (Doctrine\\DBAL\\Driver\\PDO\\Exception(code: 7): SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/PDO/Exception.php:28)\n
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 7 FATAL:
+terminating connection due to administrator command\nserver closed the connection unexpectedly\n\t
+This probably means the server terminated abnormally\n\tbefore or while processing the request. at
+/usr/local/bin/order-lab/orderflex/vendor/doctrine/dbal/src/Driver/PDO/Statement.php:121)"} []
+
+
+Certbot
+2023-10-18 15:29:01,068:DEBUG:urllib3.connectionpool:http://localhost:None "GET /v2/connections?snap=certbot&interface=content HTTP/1.1" 200 97
+2023-10-18 15:29:01,266:DEBUG:certbot._internal.main:certbot version: 2.7.1
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Location of certbot entry point: /snap/certbot/3390/bin/certbot
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Arguments: ['--dry-run', '--preconfigured-renewal']
+2023-10-18 15:29:01,267:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#apache,PluginEntryPoint#manual,PluginEntryPoint#nginx,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
+2023-10-18 15:29:01,287:DEBUG:certbot._internal.log:Root logging level set at 30
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: No simulated renewals were attempted.
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.display.obj:Notifying user: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2023-10-18 15:29:01,289:DEBUG:certbot._internal.renewal:no renewal failures
+
+[root@packer-1697647546 ~]# sudo certbot -n -v --apache --agree-tos --email oli2002@med.cornell.edu --domains view.online
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator apache, Installer apache
+Requesting a certificate for view.online
+Performing the following challenges:
+http-01 challenge for view.online
+Waiting for verification...
+Challenge failed for domain view.online
+http-01 challenge for view.online
+
+Certbot failed to authenticate some domains (authenticator: apache). The Certificate Authority reported these problems:
+  Domain: view.online
+  Type:   dns
+  Detail: no valid A records found for view.online; no valid AAAA records found for view.online
+
+Hint: The Certificate Authority failed to verify the temporary Apache configuration changes made by Certbot. Ensure that the listed domains point to this Apache server and that it is accessible from the internet.
+
+Cleaning up challenges
+Some challenges have failed.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+[root@packer-1697647546 ~]#
+
+TODO: Try to --record-name www and then remove prefix www from sudo certbot -n -v --apache
+
+Error creating new order :: too many certificates (5) already issued for this exact set of domains in the last 168 hours:
+view.online, retry after 2023-10-26T22:26:55Z: see https://letsencrypt.org/docs/duplicate-certificate-limit/
+
+https://www.linuxbabe.com/security/letsencrypt-webroot-tls-certificate
+sudo certbot certonly --webroot --agree-tos --email cinava@yahoo.com -d tincry.com -w /usr/local/bin/order-lab/orderflex/public/
+
+Error:
+Account registered.
+Requesting a certificate for tincry.com
+Certbot failed to authenticate some domains (authenticator: webroot). The Certificate Authority reported these problems:
+  Domain: tincry.com
+  Type:   dns
+  Detail: no valid A records found for tincry.com; no valid AAAA records found for tincry.com
+Hint: The Certificate Authority failed to download the temporary challenge files created by Certbot.
+Ensure that the listed domains serve their content from the provided --webroot-path/-w and that files created there
+can be downloaded from the internet.
+Some challenges have failed.
+Ask for help or search for solutions at https://community.letsencrypt.org.
+See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+
+Success:
+certbot certonly --webroot --agree-tos --email cinava@yahoo.com -d tincry.com -w /usr/local/bin/order-lab/orderflex/public/
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for tincry.com
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/tincry.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/tincry.com/privkey.pem
+This certificate expires on 2024-01-23.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Upgrade GIT on Centos: https://stackoverflow.com/questions/21820715/how-to-install-latest-version-of-git-on-centos-8-x-7-x-6-x
+yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm
+yum install git
+git --version
+
+
+Centos access postgres:
+local all all trust
+host  all   all  127.0.0.1/32  trust
+\list
+DROP DATABASE dbname;
+
+

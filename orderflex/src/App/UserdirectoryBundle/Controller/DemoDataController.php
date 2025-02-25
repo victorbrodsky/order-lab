@@ -176,8 +176,8 @@ class DemoDataController extends OrderAbstractController
         exit('111');
     }
 
-    #[Route(path: '/demo-data-panther/', name: 'employees_demo_data_panther', methods: ['GET'])]
-    public function testPantherAction( Request $request, TokenStorageInterface $tokenStorage ) {
+    #[Route(path: '/demo-data-panther/{password}', name: 'employees_demo_data_panther', methods: ['GET'])]
+    public function testPantherAction( Request $request, TokenStorageInterface $tokenStorage, $password=null ) {
         //$client = Client::createChromeClient();
         // alternatively, create a Firefox client
         //$client = Client::createFirefoxClient();
@@ -253,7 +253,7 @@ class DemoDataController extends OrderAbstractController
 
         $demoDbUtil = $this->container->get('demodb_utility');
 
-        $client = $demoDbUtil->loginAction();
+        $client = $demoDbUtil->loginAction($password);
         $client->takeScreenshot('demoDb/test_login.png');
 
         //$users = $demoDbUtil->createUsers($client);
@@ -262,11 +262,21 @@ class DemoDataController extends OrderAbstractController
         $users = $demoDbUtil->getUsers(); //testing
 
         $projectIds = array(1);
-        //$projectIds = $demoDbUtil->newTrpProjects($client,$users);
+        if( 0 ) {
+            $projectIds = $demoDbUtil->newTrpProjects($client, $users);
+            if (count($projectIds) == 0) {
+                exit('Error generating new TRP project');
+            }
+        }
 
         $demoDbUtil->approveTrpProjects($client,$projectIds);
 
-        $requestIds = $demoDbUtil->newTrpWorkRequests($client,$projectIds);
+        $requestIds = array(18);
+        if(0) {
+            $requestIds = $demoDbUtil->newTrpWorkRequests($client, $projectIds);
+        }
+        
+        $invoiceIds = $demoDbUtil->newTrpInvoices($client,$requestIds);
 
         exit('eof panther');
     }
