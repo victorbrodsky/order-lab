@@ -616,7 +616,7 @@ class DemoDbUtil {
         //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
         $fellappIds = array();
         foreach( $this->getFellApps() as $fellAppArr ) {
-            $fellappId = $this->newFellApp($client,$fellAppArr,$users,$this->baseUrl.'/translational-research/fellowship-applications/new/');
+            $fellappId = $this->newFellApp($client,$fellAppArr,$users,$this->baseUrl.'/fellowship-applications/new/');
             if( $fellappId ) {
                 $fellappIds[] = $fellappId;
             }
@@ -624,12 +624,36 @@ class DemoDbUtil {
         }
         return $fellappIds;
     }
-    public function newFellApp( $client, $fellAppArr, $users, $newUrl ) {
+    public function newFellApp( $client, $fellAppArr, $users, $url ) {
+        echo "newFellApp: url=$url <br>";
+        $crawler = $client->request('GET', $url);
+
+        $client->waitForVisibility('#expandAll');
+
+        //expand all
+        $client->executeScript("$('#expandAll').click()");
+
+        $client->waitForVisibility('#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName');
         $client->takeScreenshot('demoDb/test_newfellapp-'.$fellAppArr['type'].'.png');
-        //$form = $crawler->filter('Complete Submission')->form();
-        $client->waitForVisibility('btnSubmit');
+
+        //$form = $crawler->filter('Add Applicant')->form();
+        $form = $crawler->selectButton('Add Applicant')->form();
 
         $client->executeScript("$('#s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty').select2('val','1')");
+
+        $date = new \DateTime();
+        $year = $date->format('Y');
+        $startYear = (int)$year + 1;
+        $startDate = '07/01/'.$startYear;
+        $endYear = (int)$year + 2;
+        $endDate = '07/01/'.$endYear;
+        echo "startDate=$startDate, endDate=$endDate <br>";
+        $form['oleg_fellappbundle_fellowshipapplication[startDate]'] = $startDate;
+        $form['oleg_fellappbundle_fellowshipapplication[startDate]'] = $endDate;
+        $client->executeScript("document.getElementById('oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName').click()");
+        $client->executeScript('$("#oleg_fellappbundle_fellowshipapplication_startDate")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_newfellapp-dates-'.$fellAppArr['type'].'.png');
+        exit('fellapp exit');
 
         //oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
         $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][firstName]'] = $fellAppArr['firstName'];
@@ -643,6 +667,10 @@ class DemoDbUtil {
         $form['oleg_fellappbundle_fellowshipapplication[signatureDate]'] = $dateStr;
 
         $client->takeScreenshot('demoDb/test_newfellapp-before-submit-'.$fellAppArr['type'].'.png');
+
+        $client->submit($form);
+
+        $client->takeScreenshot('demoDb/test_newfellapp-save-'.$fellAppArr['type'].'.png');
     }
     public function getFellApps() {
         $users = array();
@@ -673,6 +701,82 @@ class DemoDbUtil {
     }
 
 
+    public function newCallLogs( $client, $users ) {
+        $callLogIds = array();
+        foreach( $this->getCallLogs() as $callLogArr ) {
+            $callLogId = $this->newCallLog($client,$callLogArr,$users,$this->baseUrl.'/call-log-book/entry/new');
+            if( $callLogId ) {
+                $callLogIds[] = $callLogId;
+            }
+            //break; //testing
+        }
+        return $callLogIds;
+    }
+    public function newCallLog( $client, $callLogArr, $users, $url ) {
+        echo "newFellApp: url=$url <br>";
+        $crawler = $client->request('GET', $url);
+
+        $client->waitForVisibility('#expandAll');
+
+        //expand all
+        $client->executeScript("$('#expandAll').click()");
+
+        $client->waitForVisibility('#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName');
+        $client->takeScreenshot('demoDb/test_newfellapp-'.$callLogArr['mrntype'].'.png');
+
+        //$form = $crawler->filter('Add Applicant')->form();
+        $form = $crawler->selectButton('Add Applicant')->form();
+
+        $client->executeScript("$('#s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty').select2('val','1')");
+
+        //oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][firstName]'] = $callLogArr['firstName'];
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][lastName]'] = $callLogArr['lastName'];
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][email]'] = $callLogArr['email'];
+
+        $date = new \DateTime();
+        $dateStr = $date->format('m/d/Y');
+        $form['oleg_fellappbundle_fellowshipapplication[signatureDate]'] = $dateStr;
+
+        $client->takeScreenshot('demoDb/test_newfellapp-before-submit-'.$fellAppArr['type'].'.png');
+
+        $client->submit($form);
+
+        $client->takeScreenshot('demoDb/test_newfellapp-save-'.$fellAppArr['type'].'.png');
+    }
+    public function getCallLogs() {
+        $users = array();
+        $users[] = array(
+            'mrntype' => '1',
+            'firstName' => 'Andre ',
+            'lastName' => 'Castro',
+            'dob' => '02/20/1985',
+            'history' => 'Splenectomized patient with beta thalassemia major on Luspatercept, 
+            transfused every 3 weeks with 1-2 units red cells to maintain pre-transfusion 
+            hemoglobin of 9.5-10.5 g/dL. Patient blood type is O+. 
+            Unexpected antibodies: anti-I, non-spec, 
+            PAN, anti-V and warm autoantibody. Special needs,: E neg, K neg, HbS-'
+        );
+        $users[] = array(
+            'mrntype' => '1',
+            'firstName' => 'Callum',
+            'lastName' => 'Cruz',
+            'dob' => '07/25/1965',
+            'history' => 'This patient with a past medical history of myelodysplastic syndrome 
+            with excess blasts transformed to acute myeloblastic leukemia (diagnosed in 2021) 
+            with relapse in Dec 2022, anemia, coronary artery disease status 
+            post circumflex angioplasty in 2016, and hypertension'
+        );
+        $users[] = array(
+            'mrntype' => '1',
+            'firstName' => 'Hugo',
+            'lastName' => 'Ortiz',
+            'dob' => '11/25/1955',
+            'history' => 'Paged by BB, work up complete. No abnormal findings. Ok to release further products. SafeTrace updated.'
+        );
+
+        return $users;
+    }
 }
 
 

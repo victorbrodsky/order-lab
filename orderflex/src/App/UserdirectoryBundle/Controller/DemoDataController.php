@@ -218,7 +218,9 @@ class DemoDataController extends OrderAbstractController
 
         
         ///////////// Fellowship App /////////////////
-        $fellappIds = $demoDbUtil->newFellApps($client,$users);
+        if( 1 ) {
+            $fellappIds = $demoDbUtil->newFellApps($client, $users);
+        }
         ///////////// EOF Fellowship App /////////////////
 
 
