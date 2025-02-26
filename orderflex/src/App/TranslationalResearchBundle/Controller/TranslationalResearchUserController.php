@@ -136,11 +136,12 @@ class TranslationalResearchUserController extends UserController
 
         //$user->addRole("ROLE_TRANSRES_REQUESTER");
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment != 'live' ) {
-            $user->addRole('ROLE_TESTER');
-        }
+        //Why to add tester role?
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $environment != 'live' ) {
+//            $user->addRole('ROLE_TESTER');
+//        }
 
         $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
 

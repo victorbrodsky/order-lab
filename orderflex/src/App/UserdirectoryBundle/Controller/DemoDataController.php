@@ -182,75 +182,6 @@ class DemoDataController extends OrderAbstractController
         // alternatively, create a Firefox client
         //$client = Client::createFirefoxClient();
 
-        if(0) {
-            $client = Client::createChromeClient(
-                $this->container->get('kernel')->getProjectDir() . '/drivers/chromedriver', [
-                    '--remote-debugging-port=9222',
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--headless'
-                ]
-            );
-        }
-
-        if(0) {
-            $url = 'https://api-platform.com';
-            $client->request('GET', $url);
-            $client->clickLink('Getting started');
-            // wait for an element to be present in the DOM, even if hidden
-            //$crawler = $client->waitFor('#bootstrapping-the-core-library');
-            // you can also wait for an element to be visible
-            $crawler = $client->waitForVisibility('#bootstrapping-the-core-library');
-
-            // get the text of an element thanks to the query selector syntax
-            echo $crawler->filter('div:has(> #bootstrapping-the-core-library)')->text();
-            // take a screenshot of the current page
-            $client->takeScreenshot('screen.png');
-        }
-
-
-        if(0) {
-            $url = $this->baseUrl.'/directory/login';
-            $crawler = $client->request('GET', $url);
-            //$crawler = $client->waitForVisibility('#display-username');
-            //echo $crawler->filter('div:has(> #s2id_usernametypeid_show)')->text();
-
-            //$client->waitForEnabled('[type="submit"]');
-            //$crawler = $client->waitForVisibility('#login-form');
-            $send_button = $crawler->selectButton('submit');
-
-//        $client->clickLink('submit');
-//        $form = $send_button->form(array(
-//            'PrCompany[email]' => 'test@example.ua',
-//            'PrCompany[first_name]' => 'Anton',
-//            'PrCompany[last_name]' => 'Tverdiuh',
-//            'PrCompany[timezone]' => 'Europe/Amsterdam'
-//        ));
-            //$crawler = $client->submit($form);
-
-            $client->waitForVisibility('#s2id_usernametypeid_show', 30, 10000);
-            $client->waitFor('#usernametypeid_show', 30, 10000);
-            //$crawler = $client->waitForVisibility('_usernametype');
-            //echo $crawler->filter('#pnotify-notice')->text();
-
-            $form = $crawler->selectButton('Log In')->form();
-
-            //$form['#usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
-            //$form['#s2id_usernametypeid_show'] = 'local-user'; //4; //'Local User'; 'local-user'
-            //https://stackoverflow.com/questions/64695968/symfony-crawler-select-option-in-select-list-without-form
-            //$myInput = $crawler->filterXPath(".//select[@id='usernametypeid_show']//option[@value='local-user']");
-            $myInput = $crawler->filter('#s2id_usernametypeid_show');
-            //$myInput = $crawler->filterXPath(".//select[@id='s2id_usernametypeid_show']//option[@value='local-user']");
-            //$form['#usernametypeid_show'] = 'local-user';
-            //$client->waitForVisibility('#select2-chosen-1');
-            //$myInput->click();
-
-            $form['_display-username'] = 'administrator';
-            $form['_password'] = 'demo';
-
-            $client->submit($form);
-        }
-
         $demoDbUtil = $this->container->get('demodb_utility');
 
         $client = $demoDbUtil->loginAction($password);
@@ -261,22 +192,36 @@ class DemoDataController extends OrderAbstractController
 
         $users = $demoDbUtil->getUsers(); //testing
 
-        $projectIds = array(1);
-        if( 0 ) {
-            $projectIds = $demoDbUtil->newTrpProjects($client, $users);
-            if (count($projectIds) == 0) {
-                exit('Error generating new TRP project');
-            }
-        }
-
-        $demoDbUtil->approveTrpProjects($client,$projectIds);
-
-        $requestIds = array(18);
+        ///////////// TRP /////////////////
         if(0) {
-            $requestIds = $demoDbUtil->newTrpWorkRequests($client, $projectIds);
+            $projectIds = array(1);
+            if (1) {
+                $projectIds = $demoDbUtil->newTrpProjects($client, $users);
+                if (count($projectIds) == 0) {
+                    exit('Error generating new TRP project');
+                }
+            }
+
+            if (1) {
+                $demoDbUtil->approveTrpProjects($client, $projectIds);
+            }
+
+            $requestIds = array(18);
+            if (1) {
+                $requestIds = $demoDbUtil->newTrpWorkRequests($client, $projectIds);
+            }
+
+            $invoiceIds = $demoDbUtil->newTrpInvoices($client, $requestIds);
         }
+        ///////////// EOF TRP /////////////////
+
+
         
-        $invoiceIds = $demoDbUtil->newTrpInvoices($client,$requestIds);
+        ///////////// Fellowship App /////////////////
+        $fellappIds = $demoDbUtil->newFellApps($client,$users);
+        ///////////// EOF Fellowship App /////////////////
+
+
 
         exit('eof panther');
     }

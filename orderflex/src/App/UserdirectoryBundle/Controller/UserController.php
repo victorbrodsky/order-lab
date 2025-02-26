@@ -2586,11 +2586,11 @@ class UserController extends OrderAbstractController
     }
     public function processOtherUserParam($user,$otherUserParam) {
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment != 'live' ) {
-            $user->addRole('ROLE_TESTER');
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $environment != 'live' ) {
+//            $user->addRole('ROLE_TESTER');
+//        }
 
         $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
         

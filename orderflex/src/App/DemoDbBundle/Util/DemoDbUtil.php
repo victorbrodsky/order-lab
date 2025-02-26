@@ -93,10 +93,9 @@ class DemoDbUtil {
     public function loginAction( $password=null ) {
         $client = $this->getClient();
 
-        $client->close();
-        $client->quit();
-
-        $client = $this->getClient();
+//        $client->close();
+//        $client->quit();
+//        $client = $this->getClient();
 
         $url = $this->baseUrl.'/directory/login';
         //$url = 'https://view.online/c/demo-institution/demo-department/directory/login';
@@ -143,7 +142,8 @@ class DemoDbUtil {
         //$myInput->click(); //error: Element is not currently visible and may not be manipulated
 
         if( !$password ) {
-            $password = 'demo';
+            //$password = 'demo';
+            $password = '1234567890_demo';
         }
 
         $form['_display-username'] = 'administrator';
@@ -275,7 +275,7 @@ class DemoDbUtil {
             if( $projectId ) {
                 $projectIds[] = $projectId;
             }
-            break; //testing
+            //break; //testing
         }
         return $projectIds;
     }
@@ -609,6 +609,70 @@ class DemoDbUtil {
         );
         return $requests;
     }
+
+
+    public function newFellApps( $client, $users ) {
+        //$users = $this->getUsers();
+        //$this->newTrpProject($client,$users,$this->baseUrl.'/translational-research/project/select-new-project-type');
+        $fellappIds = array();
+        foreach( $this->getFellApps() as $fellAppArr ) {
+            $fellappId = $this->newFellApp($client,$fellAppArr,$users,$this->baseUrl.'/translational-research/fellowship-applications/new/');
+            if( $fellappId ) {
+                $fellappIds[] = $fellappId;
+            }
+            //break; //testing
+        }
+        return $fellappIds;
+    }
+    public function newFellApp( $client, $fellAppArr, $users, $newUrl ) {
+        $client->takeScreenshot('demoDb/test_newfellapp-'.$fellAppArr['type'].'.png');
+        //$form = $crawler->filter('Complete Submission')->form();
+        $client->waitForVisibility('btnSubmit');
+
+        $client->executeScript("$('#s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty').select2('val','1')");
+
+        //oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][firstName]'] = $fellAppArr['firstName'];
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][lastName]'] = $fellAppArr['lastName'];
+        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][email]'] = $fellAppArr['email'];
+
+        $form['oleg_fellappbundle_fellowshipapplication[signatureName]'] = $fellAppArr['displayName'];
+
+        $date = new \DateTime();
+        $dateStr = $date->format('m/d/Y');
+        $form['oleg_fellappbundle_fellowshipapplication[signatureDate]'] = $dateStr;
+
+        $client->takeScreenshot('demoDb/test_newfellapp-before-submit-'.$fellAppArr['type'].'.png');
+    }
+    public function getFellApps() {
+        $users = array();
+        $users[] = array(
+            'type' => '1', //'Clinical Informatics',
+            'firstName' => 'Joe',
+            'lastName' => 'Simpson',
+            'displayName' => 'Joe Simpson',
+            'email' => 'cinava@yahoo.com',
+
+        );
+        $users[] = array(
+            'type' => '1', //'Clinical Informatics',
+            'firstName' => 'Soleil',
+            'lastName' => 'Teresia',
+            'displayName' => 'Soleil Teresia',
+            'email' => 'cinava@yahoo.com',
+        );
+        $users[] = array(
+            'type' => '1', //'Clinical Informatics',
+            'firstName' => 'Haides',
+            'lastName' => 'Neon',
+            'displayName' => 'Haides Neon',
+            'email' => 'cinava@yahoo.com',
+        );
+
+        return $users;
+    }
+
+
 }
 
 

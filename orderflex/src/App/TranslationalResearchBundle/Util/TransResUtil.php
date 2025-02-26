@@ -6940,17 +6940,18 @@ class TransResUtil
 //            $specialtyStr = null;
 //        }
 
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment != 'live' ) {
-            if(
-                false == $this->security->isGranted('ROLE_TESTER') ||
-                false == $user->hasRole('ROLE_TESTER')
-            ) {
-                $user->addRole('ROLE_TESTER');
-                $flushUser = true;
-                $roleAddedArr[] = 'ROLE_TESTER';
-            }
-        }
+        //Why to add tester role?
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $environment != 'live' ) {
+//            if(
+//                false == $this->security->isGranted('ROLE_TESTER') ||
+//                false == $user->hasRole('ROLE_TESTER')
+//            ) {
+//                $user->addRole('ROLE_TESTER');
+//                $flushUser = true;
+//                $roleAddedArr[] = 'ROLE_TESTER';
+//            }
+//        }
 
         if( $flushUser ) {
             //exit('flush user');
