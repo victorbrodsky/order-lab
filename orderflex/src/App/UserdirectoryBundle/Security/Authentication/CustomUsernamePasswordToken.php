@@ -93,7 +93,7 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     // Argument #1 ($user) must be of type Symfony\Component\Security\Core\User\UserInterface, null given
     // called in /usr/local/bin/order-lab-tenantappdemo/orderflex/vendor/symfony/security-http/Firewall/ContextListener.php
     // on line 209" at AbstractToken.php line 59
-    public function setUser(?UserInterface $user): void
+    public function setUser(UserInterface $user=null): void
     {
         if( $user ) {
             $this->user = $user;
