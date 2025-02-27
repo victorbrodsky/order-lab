@@ -88,5 +88,14 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
         $this->usernametype = $usernametype;
     }
 
+    //overwrite to avoid error :
+    //Original exception message=Symfony\Component\Security\Core\Authentication\Token\AbstractToken::setUser():
+    // Argument #1 ($user) must be of type Symfony\Component\Security\Core\User\UserInterface, null given
+    public function setUser(?UserInterface $user): void
+    {
+        if( $user ) {
+            $this->user = $user;
+        }
+    }
 
 }

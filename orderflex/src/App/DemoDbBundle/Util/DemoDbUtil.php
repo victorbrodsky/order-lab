@@ -650,7 +650,7 @@ class DemoDbUtil {
         echo "startDate=$startDate, endDate=$endDate <br>";
         $form['oleg_fellappbundle_fellowshipapplication[startDate]'] = $startDate;
         $form['oleg_fellappbundle_fellowshipapplication[startDate]'] = $endDate;
-        $client->executeScript("document.getElementById('oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName').click()");
+        $client->executeScript('$("#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName").click()');
         $client->executeScript('$("#oleg_fellappbundle_fellowshipapplication_startDate")[0].scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_newfellapp-dates-'.$fellAppArr['type'].'.png');
         exit('fellapp exit');
@@ -713,36 +713,25 @@ class DemoDbUtil {
         return $callLogIds;
     }
     public function newCallLog( $client, $callLogArr, $users, $url ) {
-        echo "newFellApp: url=$url <br>";
+        echo "newCallLog: url=$url <br>";
         $crawler = $client->request('GET', $url);
 
-        $client->waitForVisibility('#expandAll');
 
-        //expand all
-        $client->executeScript("$('#expandAll').click()");
-
-        $client->waitForVisibility('#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName');
-        $client->takeScreenshot('demoDb/test_newfellapp-'.$callLogArr['mrntype'].'.png');
+        $client->waitForVisibility('oleg_calllogformbundle_messagetype[patient][0][dob][0][field]');
+        $client->takeScreenshot('demoDb/test_newcalllog-'.$callLogArr['lastName'].'.png');
 
         //$form = $crawler->filter('Add Applicant')->form();
-        $form = $crawler->selectButton('Add Applicant')->form();
+        $form = $crawler->selectButton('Find Patient')->form();
 
-        $client->executeScript("$('#s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty').select2('val','1')");
+        $form['oleg_calllogformbundle_messagetype[patient][0][dob][0][field]'] = $callLogArr['dob'];
+        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patfirstname][0][field]'] = $callLogArr['firstName'];
+        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patlastname][0][field]'] = $callLogArr['lastName'];
 
-        //oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
-        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][firstName]'] = $callLogArr['firstName'];
-        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][lastName]'] = $callLogArr['lastName'];
-        $form['oleg_fellappbundle_fellowshipapplication[user][infos][0][email]'] = $callLogArr['email'];
-
-        $date = new \DateTime();
-        $dateStr = $date->format('m/d/Y');
-        $form['oleg_fellappbundle_fellowshipapplication[signatureDate]'] = $dateStr;
-
-        $client->takeScreenshot('demoDb/test_newfellapp-before-submit-'.$fellAppArr['type'].'.png');
+        $client->takeScreenshot('demoDb/test_newcalllog-find-'.$callLogArr['lastName'].'.png');
 
         $client->submit($form);
 
-        $client->takeScreenshot('demoDb/test_newfellapp-save-'.$fellAppArr['type'].'.png');
+        $client->takeScreenshot('demoDb/test_newcalllog-afterfind-'.$callLogArr['lastName'].'.png');
     }
     public function getCallLogs() {
         $users = array();
@@ -777,6 +766,83 @@ class DemoDbUtil {
 
         return $users;
     }
+
+
+    public function newVacReqs( $client, $users ) {
+        //1) create group
+        $url = $this->baseUrl.'/time-away-request/manage-group/29';
+        $crawler = $client->request('GET', $url);
+
+        $client->waitForVisibility('#s2id_oleg_vacreqbundle_user_participants_users');
+        $form = $crawler->selectButton('Add Approver(s)')->form();
+        //$approver = $users[]
+//        $form = $crawler->selectButton('Add Approver(s)')->form([
+//            'oleg_vacreqbundle_user_participants[users][]' => '2',
+//        ]);
+        $client->executeScript(
+            "$('#vacreq-organizational-group-approver').find('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"
+        );
+        //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
+        $client->submit($form);
+        $client->takeScreenshot('demoDb/test_vacreq-group.png');
+
+        $submitter = $users[0];
+        $form = $crawler->selectButton('Add Submitter(s)')->form();
+        $client->executeScript(
+            "$('#vacreq-organizational-group-submitter').find('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','".$submitter['userId']."')"
+        );
+        //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
+        $client->submit($form);
+        $client->takeScreenshot('demoDb/test_vacreq-group.png');
+        exit('newVacReqs');
+
+        $client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"); //administrator
+
+        $vacreqIds = array();
+        foreach( $this->getVacreqs() as $vacreqArr ) {
+            $callLogId = $this->newVacReq($client,$vacreqArr,$users,$this->baseUrl.'/time-away-request/');
+            if( $callLogId ) {
+                $vacreqIds[] = $callLogId;
+            }
+            //break; //testing
+        }
+        return $vacreqIds;
+    }
+    public function newVacReq( $client, $vacreqArr, $users, $url ) {
+        echo "newVacReq: url=$url <br>";
+        $crawler = $client->request('GET', $url);
+
+        $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_user');
+        $client->takeScreenshot('demoDb/test_vacreq-'.$vacreqArr['cwid'].'.png');
+
+        //$form = $crawler->filter('Add Applicant')->form();
+        $form = $crawler->selectButton('Submit')->form();
+
+        $form['oleg_calllogformbundle_messagetype[patient][0][dob][0][field]'] = $callLogArr['dob'];
+        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patfirstname][0][field]'] = $callLogArr['firstName'];
+        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patlastname][0][field]'] = $callLogArr['lastName'];
+
+        $client->takeScreenshot('demoDb/test_newcalllog-find-'.$callLogArr['lastName'].'.png');
+
+        $client->submit($form);
+
+        $client->takeScreenshot('demoDb/test_newcalllog-afterfind-'.$callLogArr['lastName'].'.png');
+    }
+    public function getVacreqs() {
+        $users = array();
+        $users[] = array(
+            'cwid' => 'aeinstein'
+        );
+        $users[] = array(
+            'cwid' => 'rrutherford'
+        );
+        $users[] = array(
+            'cwid' => 'johndoe'
+        );
+
+        return $users;
+    }
+
 }
 
 

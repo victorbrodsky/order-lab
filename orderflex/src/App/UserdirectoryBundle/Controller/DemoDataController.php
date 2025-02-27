@@ -218,11 +218,16 @@ class DemoDataController extends OrderAbstractController
 
         
         ///////////// Fellowship App /////////////////
-        if( 1 ) {
+        if( 0 ) {
             $fellappIds = $demoDbUtil->newFellApps($client, $users);
         }
         ///////////// EOF Fellowship App /////////////////
 
+        ///////////// VacReq /////////////////
+        if( 1 ) {
+            $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
+        }
+        ///////////// EOF VacReq /////////////////
 
 
         exit('eof panther');
