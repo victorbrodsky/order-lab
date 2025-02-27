@@ -93,9 +93,9 @@ class DemoDbUtil {
     public function loginAction( $password=null ) {
         $client = $this->getClient();
 
-//        $client->close();
-//        $client->quit();
-//        $client = $this->getClient();
+        $client->close();
+        $client->quit();
+        $client = $this->getClient();
 
         $url = $this->baseUrl.'/directory/login';
         //$url = 'https://view.online/c/demo-institution/demo-department/directory/login';
