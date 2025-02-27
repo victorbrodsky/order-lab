@@ -785,6 +785,7 @@ class DemoDbUtil {
         //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
         $client->submit($form);
         $client->takeScreenshot('demoDb/test_vacreq-group.png');
+        exit('newVacReqs: approver');
 
         $submitter = $users[0];
         $form = $crawler->selectButton('Add Submitter(s)')->form();
@@ -794,7 +795,7 @@ class DemoDbUtil {
         //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
         $client->submit($form);
         $client->takeScreenshot('demoDb/test_vacreq-group.png');
-        exit('newVacReqs');
+        exit('newVacReqs: submitter');
 
         $client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"); //administrator
 
