@@ -98,7 +98,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'environment' )
         $builder->add('environment',ChoiceType::class,array( //flipped
             'label'=>'Environment:',
-            'choices' => array('live'=>'live', 'test'=>'test', 'dev'=>'dev'),
+            'choices' => array('live'=>'live', 'test'=>'test', 'dev'=>'dev', 'demo'=>'demo'),
             //'choices_as_values' => true,
             'attr' => array('class'=>'form-control')
         ));
