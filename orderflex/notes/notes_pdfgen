@@ -1,1 +1,4 @@
 /usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'http://localhost/fellowship-applications/download/1' '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/fellapp/Reports/temp_1/application_ID1.pdf'
+
+/usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'https://view.online/c/test-institution/test-department/fellowship-applications/download/1' '/usr/local/bin/order-lab-tenantapptest/orderflex/public/Uploaded/fellapp/Reports/temp_1/application_ID1.pdf'
+
