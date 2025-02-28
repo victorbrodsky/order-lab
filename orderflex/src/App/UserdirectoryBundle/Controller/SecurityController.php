@@ -294,11 +294,11 @@ class SecurityController extends OrderAbstractController
         $formArr['inputStyle'] = "";
         if( $environment != 'live' ) {
             if( $environment == 'demo' ) {
-                $request->getSession()->getFlashBag()->add(
-                    'pnotify-error',
-                    "This is a Demo environment."
-                );
-                $formArr['inputStyle'] = "background-color:#ADD8E6;";
+//                $request->getSession()->getFlashBag()->add(
+//                    'pnotify-error',
+//                    "This is a Demo environment."
+//                );
+//                $formArr['inputStyle'] = "background-color:#ADD8E6;";
             } else {
                 $request->getSession()->getFlashBag()->add(
                     'pnotify-error',
