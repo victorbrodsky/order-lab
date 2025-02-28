@@ -839,7 +839,7 @@ class ReportGenerator {
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
         }
-        $connectionChannel = 'https'; //testing
+        //$connectionChannel = 'https'; //testing
 
         //generate application URL
         $router = $this->container->get('router');
@@ -849,7 +849,7 @@ class ReportGenerator {
         //However, it works with the real IP (i.e. 157.139.226.86)
         //Therefore, the problem is to generate report on the localhost by the cron or internally without web
         $replaceContext = true;
-        //$replaceContext = false;
+        $replaceContext = false;
         if( $replaceContext ) {
             $context = $this->container->get('router')->getContext();
 
