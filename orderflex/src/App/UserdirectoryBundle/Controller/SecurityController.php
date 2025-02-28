@@ -299,12 +299,13 @@ class SecurityController extends OrderAbstractController
                     "This is a Demo environment."
                 );
                 $formArr['inputStyle'] = "background-color:#ADD8E6;";
+            } else {
+                $request->getSession()->getFlashBag()->add(
+                    'pnotify-error',
+                    "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
+                );
+                $formArr['inputStyle'] = "background-color:#FF5050;";
             }
-            $request->getSession()->getFlashBag()->add(
-                'pnotify-error',
-                "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
-            );
-            $formArr['inputStyle'] = "background-color:#FF5050;";
         }
 
 //        $request->getSession()->getFlashBag()->add(
