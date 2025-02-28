@@ -48,19 +48,35 @@
         </p>
     {% endif %}
     {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
-        <p>
-        <div class="alert alert-danger text-center">
-            THIS IS A TEST SERVER. USE ONLY FOR TESTING.&nbsp;
-            {% set liveSiteRootUrl = user_security_utility.getSiteSettingParameter('liveSiteRootUrl') %}
-            {% if liveSiteRootUrl %}
-                LIVE SITE IS <a href="{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}">HERE</a>.
-            {% else %}
-                {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                    ADD LINK TO THE LIVE SITE <a href="{{ path('employees_siteparameters') }}">HERE</a> OR SET THE "ENVIRONMENT" TO "live".
+        {% if user_security_utility.getSiteSettingParameter('environment') == 'demo' %}
+            <p>
+            <div class="alert alert-info text-center">
+                This is a Demo environment.&nbsp;
+                {#{% set liveSiteRootUrl = user_security_utility.getSiteSettingParameter('liveSiteRootUrl') %}#}
+                {#{% if liveSiteRootUrl %}#}
+                    {#LIVE SITE IS <a href="{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}">HERE</a>.#}
+                {#{% else %}#}
+                    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                        {#ADD LINK TO THE LIVE SITE <a href="{{ path('employees_siteparameters') }}">HERE</a> OR SET THE "ENVIRONMENT" TO "live".#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
+            </div>
+            </p>
+        {% else %}
+            <p>
+            <div class="alert alert-danger text-center">
+                THIS IS A TEST SERVER. USE ONLY FOR TESTING.&nbsp;
+                {% set liveSiteRootUrl = user_security_utility.getSiteSettingParameter('liveSiteRootUrl') %}
+                {% if liveSiteRootUrl %}
+                    LIVE SITE IS <a href="{{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}">HERE</a>.
+                {% else %}
+                    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                        ADD LINK TO THE LIVE SITE <a href="{{ path('employees_siteparameters') }}">HERE</a> OR SET THE "ENVIRONMENT" TO "live".
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </div>
-        </p>
+            </div>
+            </p>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
