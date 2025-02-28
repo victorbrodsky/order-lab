@@ -298,7 +298,7 @@ class SecurityController extends OrderAbstractController
                     'pnotify',
                     "This is a Demo environment."
                 );
-                $formArr['inputStyle'] = "background-color:#ADD8E6;";
+                $formArr['inputStyle'] = "background-color:#FFFFFF;";
             } else {
                 $request->getSession()->getFlashBag()->add(
                     'pnotify-error',
