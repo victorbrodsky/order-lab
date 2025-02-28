@@ -318,7 +318,7 @@ class RequestIndexController extends OrderAbstractController
                         ' ' . $warningOnclick .
                         '>' .
                         '<input type="hidden" name="ids" value="' . implode("-", $matchingIds) . '">' .
-                        '<input class="btn" style="background-color: #ADD8E6;" type="submit" value="Download request list" ' .
+                        '<input class="btn" style="background-color: #D3D3D3;" type="submit" value="Download request list" ' .
                         //$warningOnclick.
                         '>' .
                         '</form>';
@@ -361,7 +361,7 @@ class RequestIndexController extends OrderAbstractController
                     '>' .
                     '<input type="hidden" name="year" value="' . $currentYearRangeStr . '">' .
                     '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
-                    '<input class="btn" style="background-color: #ADD8E6;" type="submit" value="Download summary for ' .
+                    '<input class="btn" style="background-color: #D3D3D3;" type="submit" value="Download summary for ' .
                     $currentYearRangeStr . '" ' .
                     //$warningOnclick.
                     '>' .
@@ -380,7 +380,7 @@ class RequestIndexController extends OrderAbstractController
                     '>' .
                     '<input type="hidden" name="year" value="' . $previousYearRangeStr . '">' .
                     '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
-                    '<input class="btn" style="background-color: #ADD8E6;" type="submit" value="Download summary for ' .
+                    '<input class="btn" style="background-color: #D3D3D3;" type="submit" value="Download summary for ' .
                     $previousYearRangeStr . '" ' .
                     //$warningOnclick.
                     '>' .
