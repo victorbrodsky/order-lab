@@ -767,37 +767,56 @@ class DemoDbUtil {
         return $users;
     }
 
-
+    //TODO: test it, away person is not set
     public function newVacReqs( $client, $users ) {
-        //1) create group
-        $url = $this->baseUrl.'/time-away-request/manage-group/29';
-        $crawler = $client->request('GET', $url);
+        if(0) {
+            $vacreqUsers = $this->getVacreqs();
+            //1) create group
+            $submitter = $vacreqUsers[3];
+            $url = $this->baseUrl . '/time-away-request/manage-group/'.$submitter['groupId'];
+            $crawler = $client->request('GET', $url);
 
-        $client->waitForVisibility('#s2id_oleg_vacreqbundle_user_participants_users');
-        $form = $crawler->selectButton('Add Approver(s)')->form();
-        //$approver = $users[]
+            $client->waitForVisibility('#s2id_oleg_vacreqbundle_user_participants_users');
+            $form = $crawler->selectButton('Add Approver(s)')->form();
+            //$approver = $users[]
 //        $form = $crawler->selectButton('Add Approver(s)')->form([
 //            'oleg_vacreqbundle_user_participants[users][]' => '2',
 //        ]);
-        $client->executeScript(
-            "$('#vacreq-organizational-group-approver').find('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"
-        );
-        //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
-        $client->submit($form);
-        $client->takeScreenshot('demoDb/test_vacreq-group.png');
-        exit('newVacReqs: approver');
+            $client->executeScript(
+                "$('#vacreq-organizational-group-approver').find('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"
+            );
+            //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
+            $client->submit($form);
+            $client->takeScreenshot('demoDb/test_vacreq-group_approver.png');
+            //exit('newVacReqs: approver');
 
-        $submitter = $users[0];
-        $form = $crawler->selectButton('Add Submitter(s)')->form();
-        $client->executeScript(
-            "$('#vacreq-organizational-group-submitter').find('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','".$submitter['userId']."')"
-        );
-        //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
-        $client->submit($form);
-        $client->takeScreenshot('demoDb/test_vacreq-group.png');
-        exit('newVacReqs: submitter');
-
-        $client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"); //administrator
+            $client->close();
+            $client->quit();
+            $client = $this->loginAction();
+            $crawler = $client->request('GET', $url);
+            $submitter = $vacreqUsers[0];
+            $form = $crawler->selectButton('Add Submitter(s)')->form();
+            $client->executeScript(
+                "$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','" . $submitter['userId'] . "')"
+            //"$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','12')"
+            );
+            $submitter = $vacreqUsers[1];
+            $client->executeScript(
+                "$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','" . $submitter['userId'] . "')"
+            //"$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','12')"
+            );
+            $submitter = $vacreqUsers[2];
+            $client->executeScript(
+                "$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','" . $submitter['userId'] . "')"
+            //"$('#vacreq-organizational-group-submitter').find('#oleg_vacreqbundle_user_participants_users').select2('val','12')"
+            );
+            //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')");
+            $client->submit($form);
+            $client->executeScript('$("#vacreq-organizational-group-submitter")[0].scrollIntoView(false);');
+            $client->takeScreenshot('demoDb/test_vacreq-group-submitter.png');
+            //exit('newVacReqs: submitter');
+        }
+        //$client->executeScript("$('#s2id_oleg_vacreqbundle_user_participants_users').select2('val','2')"); //administrator
 
         $vacreqIds = array();
         foreach( $this->getVacreqs() as $vacreqArr ) {
@@ -805,40 +824,93 @@ class DemoDbUtil {
             if( $callLogId ) {
                 $vacreqIds[] = $callLogId;
             }
-            //break; //testing
+            break; //testing
         }
         return $vacreqIds;
     }
     public function newVacReq( $client, $vacreqArr, $users, $url ) {
         echo "newVacReq: url=$url <br>";
+        $client->close();
+        $client->quit();
+        $client = $this->loginAction();
         $crawler = $client->request('GET', $url);
 
-        $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_user');
-        $client->takeScreenshot('demoDb/test_vacreq-'.$vacreqArr['cwid'].'.png');
+        $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_institution');
+        $client->takeScreenshot('demoDb/test_vacreq-1-'.$vacreqArr['cwid'].'.png');
 
         //$form = $crawler->filter('Add Applicant')->form();
-        $form = $crawler->selectButton('Submit')->form();
+        //$form = $crawler->selectButton('Submit')->form();
 
-        $form['oleg_calllogformbundle_messagetype[patient][0][dob][0][field]'] = $callLogArr['dob'];
-        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patfirstname][0][field]'] = $callLogArr['firstName'];
-        $form['oleg_calllogformbundle_messagetype[patient][0][encounter][0][patlastname][0][field]'] = $callLogArr['lastName'];
+        $client->executeScript(
+            "$('#oleg_vacreqbundle_request_institution').select2('val','".$vacreqArr['groupId']."')"
+        );
 
-        $client->takeScreenshot('demoDb/test_newcalllog-find-'.$callLogArr['lastName'].'.png');
+        sleep(1);
 
-        $client->submit($form);
+        $client->executeScript(
+            "$('#s2id_oleg_vacreqbundle_request_user').select2('val','".$vacreqArr['userId']."')"
+        );
+        $client->takeScreenshot('demoDb/test_vacreq-2-personaway-'.$vacreqArr['cwid'].'.png');
+        //exit('newVacReqs: submitter');
 
-        $client->takeScreenshot('demoDb/test_newcalllog-afterfind-'.$callLogArr['lastName'].'.png');
+        //$form = $crawler->filter('#btnCreateVacReq')->form();
+
+        $todayDate = new \DateTime();
+        $startDateStr = $todayDate->format('m/d/Y');
+        $todayDate->modify('+3 day');
+        $endDateStr = $todayDate->format('m/d/Y');
+        echo "startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
+        //$(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 2, 6, 1));
+        //$form['#oleg_vacreqbundle_request_requestVacation_startDate'] = $startDateStr;
+        //$form['#oleg_vacreqbundle_request_requestVacation_endDate'] = $endDateStr;
+
+        $startDateStr = 'new Date()';
+        $endDateStr = 'new Date()';
+        $client->executeScript(
+            "$('#oleg_vacreqbundle_request_requestVacation_startDate').datepicker().datepicker('setDate'," . $startDateStr . ")"
+        );
+        $client->executeScript(
+            "$('#oleg_vacreqbundle_request_requestVacation_endDate').datepicker().datepicker('setDate','" . $endDateStr . "')"
+        );
+
+        $client->executeScript('$("#oleg_vacreqbundle_request_requestVacation_numberOfDays")[0].scrollIntoView(false);');
+        $client->executeScript('$("#oleg_vacreqbundle_request_requestVacation_startDate")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_vacreq-3-afterdate-'.$vacreqArr['cwid'].'.png');
+
+        $client->executeScript(
+            "$('#s2id_oleg_vacreqbundle_request_user').select2('val','12')"
+        );
+
+        //$client->submit($form);
+        $client->executeScript('$("#btnCreateVacReq").click()');
+
+        $client->executeScript('$("#oleg_vacreqbundle_request_user")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_vacreq-4-personaway-aftersubmit-'.$vacreqArr['cwid'].'.png');
+
+        $client->executeScript('$("#btnCreateVacReq")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_vacreq-4-aftersubmit-'.$vacreqArr['cwid'].'.png');
     }
     public function getVacreqs() {
         $users = array();
         $users[] = array(
+            'groupId' => 29,
+            'userId' => 15,
             'cwid' => 'aeinstein'
         );
         $users[] = array(
+            'groupId' => 29,
+            'userId' => 16,
             'cwid' => 'rrutherford'
         );
         $users[] = array(
+            'groupId' => 29,
+            'userId' => 12,
             'cwid' => 'johndoe'
+        );
+        $users[] = array(
+            'groupId' => 29,
+            'userId' => 2,
+            'cwid' => 'administrator'
         );
 
         return $users;
