@@ -583,7 +583,7 @@ class ReportGenerator {
         $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
         $this->generateApplicationPdf($id,$applicationFilePath);
         $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
-        exit('generateFellAppReport: test eof');
+        //exit('generateFellAppReport: testing eof'); //testing
 
         //Application in PDF order
         //1)Itinerary file in the "Itinerary/Interview Schedule" section (required to be able to send invitation email)
