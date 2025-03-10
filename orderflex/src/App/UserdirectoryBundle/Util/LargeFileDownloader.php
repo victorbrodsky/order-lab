@@ -254,7 +254,21 @@ class LargeFileDownloader {
 
         //echo "before get content filenameClean=$filenameClean<br>";
         //exit('000');
-        $response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
+        //TODO: check for possible error: Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
+        //$response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
+        $response = NULL;
+        try
+        {
+            $response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
+        }
+        catch (\Exception $ignored)
+        {
+            // do nothing... php will ignore and continue
+            // but maybe use "ignored" as name to silence IDE warnings.
+            $logger = $this->container->get('logger');
+            $logger->error("Error in file_get_contents:".$ignored);
+        }
+
         //exit('111');
         return $response;
     }

@@ -2459,8 +2459,21 @@ Pathology and Laboratory Medicine",
             return null;
         }
 
+        //TODO: check for possible error: Failed to open stream: No such file or directory at
         /* read the source image */
-        $source_image = imagecreatefromjpeg($src);
+        //$source_image = imagecreatefromjpeg($src);
+        $source_image = NULL;
+        try
+        {
+            $source_image = imagecreatefromjpeg($src);
+        }
+        catch (\Exception $ignored)
+        {
+            // do nothing... php will ignore and continue
+            // but maybe use "ignored" as name to silence IDE warnings.
+            $logger = $this->container->get('logger');
+            $logger->error("Error in imagecreatefromjpeg:".$ignored);
+        }
 
         if( !$source_image ) {
             return null;
