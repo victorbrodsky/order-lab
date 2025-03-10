@@ -909,8 +909,8 @@ class ReportGenerator {
         $pageUrl = str_replace("http://localhost/","http://localhost/",$pageUrl);
         ////
         $logger->notice("generateApplicationPdf: pageUrl=[".$pageUrl."]");
-        echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
-        exit();
+        //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
+        //exit();
 
         //save session        
         //$session = $this->container->get('session');
