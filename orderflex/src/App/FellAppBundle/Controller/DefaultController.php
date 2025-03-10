@@ -306,6 +306,11 @@ class DefaultController extends OrderAbstractController
 
         //fellapp_download
         $applicationId = 1507;
+        $connectionChannel = 'https';
+        $context = $this->container->get('router')->getContext();
+        $context->setHost('localhost');
+        $context->setScheme($connectionChannel);
+
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
             'fellapp_download',

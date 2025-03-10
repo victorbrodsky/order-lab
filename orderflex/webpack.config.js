@@ -3,6 +3,7 @@ var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file. (NODE_ENV)
+//Run yarn install --frozen-lockfile after updating yarn libraries
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.APP_ENV || 'dev');
 }
@@ -18,6 +19,7 @@ var publicPathSubDir = '';
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 // console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR);
 
+//Set in parameters.yml: tenant_base=c/wcm/pathology
 const path = require('path');
 const fs = require('fs');
 const YAML = require('js-yaml');
