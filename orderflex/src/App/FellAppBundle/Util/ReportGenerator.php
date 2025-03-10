@@ -1176,21 +1176,27 @@ class ReportGenerator {
         //$logger->notice("Checking PDF=".$filePath);
 
         ////////// checking header "%PDF-" ///////////////
-        $fp = fopen($filePath, 'r');
-        // move to the 0th byte
-        fseek($fp, 0);
-        $data = fread($fp, 5);   // read 5 bytes from byte 0
-        //echo "Header=".$data."<br>";
-        //$logger->notice("Header=".$data);
-        //if(strcmp($data,"%PDF-")==0) {
-        if( strpos((string)$data, '%PDF-') !== false ) {
-            //echo "The PDF File is not Corrupted.<br>";
-        } else {
-            //echo "The PDF File is  Corrupted.<br>";
-            $logger->error("Header is not valid: [".$data . "] for ".$filePath);
-            $corrupted++;
+        //TODO: check for possible: fseek(): Argument #1 ($stream) must be of type resource, false given
+        try {
+            $fp = fopen($filePath, 'r');
+            // move to the 0th byte
+            fseek($fp, 0);
+            $data = fread($fp, 5);   // read 5 bytes from byte 0
+            //echo "Header=".$data."<br>";
+            //$logger->notice("Header=".$data);
+            //if(strcmp($data,"%PDF-")==0) {
+            if (strpos((string)$data, '%PDF-') !== false) {
+                //echo "The PDF File is not Corrupted.<br>";
+            } else {
+                //echo "The PDF File is  Corrupted.<br>";
+                $logger->error("Header is not valid: [" . $data . "] for " . $filePath);
+                $corrupted++;
+            }
+            fclose($fp);
         }
-        fclose($fp);
+        catch( \Exception $ignored ) {
+            $logger->error("Error in checking header: ".$ignored);
+        }
         ////////// EOF checking header "%PDF-" ///////////////
 
         ///////////// checking footer "%%EOF" ///////////////

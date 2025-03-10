@@ -265,8 +265,8 @@ class LargeFileDownloader {
         {
             // do nothing... php will ignore and continue
             // but maybe use "ignored" as name to silence IDE warnings.
-            $logger = $this->container->get('logger');
-            $logger->error("Error in file_get_contents:".$ignored);
+            //$logger = $this->container->get('logger');
+            //$logger->error("Error in file_get_contents: ".$ignored);
         }
 
         //exit('111');

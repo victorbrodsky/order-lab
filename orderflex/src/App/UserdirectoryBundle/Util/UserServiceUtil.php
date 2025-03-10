@@ -2472,7 +2472,7 @@ Pathology and Laboratory Medicine",
             // do nothing... php will ignore and continue
             // but maybe use "ignored" as name to silence IDE warnings.
             $logger = $this->container->get('logger');
-            $logger->error("Error in imagecreatefromjpeg:".$ignored);
+            $logger->error("Error in imagecreatefromjpeg: ".$ignored);
         }
 
         if( !$source_image ) {
