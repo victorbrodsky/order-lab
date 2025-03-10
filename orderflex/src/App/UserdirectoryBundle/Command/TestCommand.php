@@ -62,7 +62,7 @@ class TestCommand extends Command
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
-        $fellappApplicationId = 1;
+        $fellappApplicationId = 1507; //1;
 
         //$reportsUploadPathFellApp = "Reports";
         //$uploadpath = $this->container->getParameter('fellapp.uploadpath');
