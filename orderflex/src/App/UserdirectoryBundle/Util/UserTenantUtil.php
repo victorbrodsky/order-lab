@@ -48,15 +48,12 @@ class UserTenantUtil
         return $this->container->getParameter('tenant_role');
     }
 
-    //return 'c/wcm/pathology', .env -> APP_SUBDIR=c/wcm/pathology
+    //return 'c/wcm/pathology', parameters.yml - tenant_base=c/wcm/pathology (used to be .env -> APP_SUBDIR=c/wcm/pathology)
     public function getTenantUrlBase() {
-        $dotenv = new Dotenv();
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $dotenv->load($projectRoot.'/.env');
-        //$baseUrl = $dotenv->getParameter('APP_SUBDIR');
-        $baseUrl = getenv('APP_SUBDIR');
-        $baseUrl = $_ENV['APP_SUBDIR'];
-        return $baseUrl;
+        if( !$this->container->hasParameter('tenant_base') ) {
+            return null;
+        }
+        return $this->container->getParameter('tenant_base');
     }
 
 

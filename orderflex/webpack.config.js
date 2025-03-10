@@ -2,34 +2,36 @@
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
-// It's useful when you use tools that rely on webpack.config.js file.
+// It's useful when you use tools that rely on webpack.config.js file. (NODE_ENV)
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.APP_ENV || 'dev');
 }
 
-var dotenv = require('dotenv');
-dotenv.config({path: '.env'});
-console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR); //process.env.APP_SUBDIR=/c/wcm/pathology
 var publicPathSubDir = '';
-if( process.env.APP_SUBDIR ) {
-    publicPathSubDir = process.env.APP_SUBDIR + '/';
-}
-console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/wcm/pathology
+//var dotenv = require('dotenv');
+//dotenv.config({path: '.env'});
+// console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR); //process.env.APP_SUBDIR=/c/wcm/pathology
+// if( process.env.APP_SUBDIR ) {
+//     publicPathSubDir = process.env.APP_SUBDIR + '/';
+// }
+// console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/wcm/pathology
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
+// console.log('process.env.APP_SUBDIR='+process.env.APP_SUBDIR);
 
 const path = require('path');
 const fs = require('fs');
 const YAML = require('js-yaml');
-//var fileContents = __dirname;
-//console.log('fileContents='+fileContents);
 const parameterPath = path.resolve(__dirname, 'config', 'parameters.yml');
-console.log('parameterPath='+parameterPath);
+//console.log('parameterPath='+parameterPath);
 const fileContents = fs.readFileSync(parameterPath, 'utf8');
 const params = YAML.load(fileContents);
-console.log('params:',params);
-console.log('params.tenantprefix='+params.parameters.tenantprefix);
-publicPathSubDir2 = JSON.stringify(params.parameters.tenantprefix);
-console.log('publicPathSubDir2='+publicPathSubDir2);
+//console.log('params:',params);
+if( params.parameters.tenant_base ) {
+    //console.log('params.tenant_base=' + params.parameters.tenant_base);
+    publicPathSubDir = params.parameters.tenant_base; //JSON.stringify(params.parameters.tenant_base);
+    publicPathSubDir = publicPathSubDir + '/';
+}
+console.log('publicPathSubDir='+publicPathSubDir);
 
 
 Encore

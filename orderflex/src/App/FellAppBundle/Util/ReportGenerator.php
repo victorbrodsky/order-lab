@@ -903,6 +903,11 @@ class ReportGenerator {
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
+        ////
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $userTenantUtil->getTenantUrlBase();
+        $pageUrl = str_replace("http://localhost/","http://localhost/",$pageUrl);
+        ////
         $logger->notice("generateApplicationPdf: pageUrl=[".$pageUrl."]");
         echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
         exit();

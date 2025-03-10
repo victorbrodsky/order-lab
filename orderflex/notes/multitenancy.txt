@@ -600,7 +600,8 @@ To initilize tenant: https://view.online/tenant-manager/directory/settings/tenan
 Below is the manual procedure to add/manage a tenant (i.e. tenant1, using port 8087)
     described in /packer/install-multitenancy.sh with HAProxy:<br>
 <b>1) Create a new order instance /order-lab-tenenat1/ and run git clone to /order-lab-tenenat1 </b><br>
-a) Add APP_SUBDIR=c/wcm/pathology to /order-lab-tenenat1/orderflex/.env <br>
+//a) Add APP_SUBDIR=c/wcm/pathology to /order-lab-tenenat1/orderflex/.env <br>
+a) Add tenant_base=c/wcm/pathology to /order-lab-tenenat1/orderflex/config/parameters.yml <br>
 b) In parameters.yml: specify database_name and tenant_role if required <br>
 (null is default value for all tenants, 'homepagemanager' or 'tenantmanager') <br>
 c) Run 'composer install', 'yarn install --frozen-lockfile'<br>
