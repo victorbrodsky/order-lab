@@ -36,3 +36,4 @@ parameters:
         - oli2002@med.cornell.edu
     connection_channel: http
     tenant_role: null
+    tenant_base: null

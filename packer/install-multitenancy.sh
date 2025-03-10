@@ -13,8 +13,10 @@
 #port 8087 is always the second real tenant #2,
 #port 8088-would be the third tenant, etc so you could script the creation of tenants
 
-#3) For each order instances set APP_SUBDIR for setPublicPath(process.env.APP_SUBDIR+'/build') in webpack.config.json
+#3 (NOT USED): For each order instances set APP_SUBDIR for setPublicPath(process.env.APP_SUBDIR+'/build') in webpack.config.json
 #https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
+
+#3) For each order instances set tenant_base as setPublicPath('/'+publicPathSubDir+'build') in webpack.config.jsontenant_base
 
 #4) Create /etc/httpd/conf/tenant-httpd.conf for each order instances above
 
@@ -291,10 +293,14 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Copy env.test ${NC}
 	cp "$bashpath"/order-lab/packer/.env.test "$bashpath"/order-lab-"$1"/orderflex/
 	
-	#3) For each order instances set APP_SUBDIR
-	echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
-	#sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" "$bashpath"/order-lab-"$1"/orderflex/.env
-	sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" "$bashpath"/order-lab-"$1"/orderflex/.env
+	##3 NOT USED) For each order instances set APP_SUBDIR
+	#echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
+	##sed -i -e "s/APP_SUBDIR=/APP_SUBDIR=$3/g" "$bashpath"/order-lab-"$1"/orderflex/.env
+	#sed -i -e "s,APP_SUBDIR=,APP_SUBDIR=$3,g" "$bashpath"/order-lab-"$1"/orderflex/.env
+
+	#3) For each order instances set tenant_base
+    echo -e ${COLOR} Set parameter tenant_base: replace "tenant_base=" to "tenant_base=$3" ${NC}
+    sed -i -e "s,tenant_base=,tenant_base=$3,g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
