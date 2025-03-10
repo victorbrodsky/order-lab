@@ -69,12 +69,13 @@ class TestCommand extends Command
         //fellapp_download
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
-            'fellapp_show', //'fellapp_download',
+            'fellapp_download',
             array(
                 'id' => $fellappApplicationId
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $logger->notice("execute: Simple test: pageurl=[".$pageUrl."]");
         echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
         exit();
         ////////////////
