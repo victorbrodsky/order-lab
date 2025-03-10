@@ -849,7 +849,7 @@ class ReportGenerator {
         //However, it works with the real IP (i.e. 157.139.226.86)
         //Therefore, the problem is to generate report on the localhost by the cron or internally without web
         $replaceContext = true;
-        $replaceContext = false;
+        //$replaceContext = false;
         if( $replaceContext ) {
             $context = $this->container->get('router')->getContext();
 
@@ -892,6 +892,10 @@ class ReportGenerator {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
 
         //fellapp_download
+        //with HaProxy it gives incorrect url http://localhost/fellowship-applications/download/1507
+        // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
+        // or http://157.139.226.135/c/wcm/pathology/fellowship-applications/download/1507
+        //Fix: create a wrapper service that calls Symfonys UrlGenerator and then replaces your base path (backend/myapp/web/app.php/)
         $pageUrl = $router->generate(
             'fellapp_download',
             array(

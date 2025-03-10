@@ -315,6 +315,11 @@ class DefaultController extends OrderAbstractController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         echo "pageurl=". $pageUrl . "<br>";
+
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+        echo "tenantUrlBase=". $tenantUrlBase . "<br>";
+
         exit();
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

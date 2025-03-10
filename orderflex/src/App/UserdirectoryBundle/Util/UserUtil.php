@@ -93,9 +93,10 @@ class UserUtil {
         //echo 'settings urlConnectionChannel $scheme='.$scheme.'<br>';
         if( !$scheme ) {
             if( !$request ) {
-                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
-                    $request = $this->requestStack->getCurrentRequest();
-                }
+//                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
+//                    $request = $this->requestStack->getCurrentRequest();
+//                }
+                $request = $this->getRequest();
             }
             if( $request && $request->getScheme() ) {
                 $scheme = $request->getScheme();
@@ -123,16 +124,24 @@ class UserUtil {
     public function getRealSchemeAndHttpHost( $request=NULL ) {
         //should give https://view-test.med.cornell.edu
         $baseUrl = NULL;
+
+        if( !$request ) {
+            $request = $this->getRequest();
+        }
+        if( !$request ) {
+            return $baseUrl;
+        }
+
         $scheme = $this->getRealScheme($request);
         if( $scheme ) {
             $baseUrl = $scheme . '://' . $request->getHttpHost();
         }
         if( !$baseUrl ) {
-            if( !$request ) {
-                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
-                    $request = $this->requestStack->getCurrentRequest();
-                }
-            }
+//            if( !$request ) {
+//                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
+//                    $request = $this->requestStack->getCurrentRequest();
+//                }
+//            }
             $baseUrl = $request->getSchemeAndHttpHost();
         }
         return $baseUrl;

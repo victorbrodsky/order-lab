@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -45,6 +46,17 @@ class UserTenantUtil
             return null;
         }
         return $this->container->getParameter('tenant_role');
+    }
+
+    //return 'c/wcm/pathology', .env -> APP_SUBDIR=c/wcm/pathology
+    public function getTenantUrlBase() {
+        $dotenv = new Dotenv();
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $dotenv->load($projectRoot.'/.env');
+        //$baseUrl = $dotenv->getParameter('APP_SUBDIR');
+        $baseUrl = getenv('APP_SUBDIR');
+        $baseUrl = $_ENV['APP_SUBDIR'];
+        return $baseUrl;
     }
 
 

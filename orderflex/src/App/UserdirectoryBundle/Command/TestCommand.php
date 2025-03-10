@@ -65,7 +65,7 @@ class TestCommand extends Command
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $fellappApplicationId = 1507; //1;
 
-        ////////////////
+        //////// TESTING ////////
         //fellapp_download
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
@@ -77,8 +77,13 @@ class TestCommand extends Command
         );
         $logger->notice("execute: Simple test: pageurl=[".$pageUrl."]");
         echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
+
+        //$userUtil = $this->container->get('user_utility');
+        //$host = $userUtil->getRealSchemeAndHttpHost();
+        //echo "execute: Simple test: host=[". $host . "]<br>";
+
         exit();
-        ////////////////
+        /////// EOF TESTING /////////
 
 
         //$reportsUploadPathFellApp = "Reports";

@@ -17,6 +17,11 @@ if( process.env.APP_SUBDIR ) {
 console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/wcm/pathology
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
+var YAML = require('js-yaml');
+const params = YAML.load(fileContents);
+publicPathSubDir2 = JSON.stringify(params.tenant_role)
+console.log('publicPathSubDir2='+publicPathSubDir2);
+
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
