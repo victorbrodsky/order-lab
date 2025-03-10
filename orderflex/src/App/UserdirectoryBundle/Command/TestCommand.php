@@ -75,7 +75,7 @@ class TestCommand extends Command
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        echo "pageurl=". $pageUrl . "<br>";
+        echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
         exit();
         ////////////////
 
