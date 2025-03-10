@@ -65,31 +65,30 @@ class TestCommand extends Command
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $fellappApplicationId = 1507; //1;
 
-        //////// TESTING ////////
-        //fellapp_download
-        $router = $this->container->get('router');
-        $pageUrl = $router->generate(
-            'fellapp_download',
-            array(
-                'id' => $fellappApplicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        //// replace tenant base in $pageUrl //////
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
-        //// EOF replace tenant base in $pageUrl //////
-        $logger->notice("execute: Simple test: pageurl=[".$pageUrl."]");
-        echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
-
-        //$userUtil = $this->container->get('user_utility');
-        //$host = $userUtil->getRealSchemeAndHttpHost();
-        //echo "execute: Simple test: host=[". $host . "]<br>";
-
-        exit();
-        /////// EOF TESTING /////////
-
+//        //////// TESTING ////////
+//        //fellapp_download
+//        $router = $this->container->get('router');
+//        $pageUrl = $router->generate(
+//            'fellapp_download',
+//            array(
+//                'id' => $fellappApplicationId
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        //// replace tenant base in $pageUrl //////
+//        $userTenantUtil = $this->container->get('user_tenant_utility');
+//        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+//        $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
+//        //// EOF replace tenant base in $pageUrl //////
+//        $logger->notice("execute: Simple test: pageurl=[".$pageUrl."]");
+//        echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
+//
+//        //$userUtil = $this->container->get('user_utility');
+//        //$host = $userUtil->getRealSchemeAndHttpHost();
+//        //echo "execute: Simple test: host=[". $host . "]<br>";
+//
+//        exit();
+//        /////// EOF TESTING /////////
 
         //$reportsUploadPathFellApp = "Reports";
         //$uploadpath = $this->container->getParameter('fellapp.uploadpath');

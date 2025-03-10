@@ -904,6 +904,7 @@ class ReportGenerator {
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
 
+        //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
         //// replace tenant base in $pageUrl //////
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
