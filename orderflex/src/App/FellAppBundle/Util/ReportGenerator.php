@@ -905,8 +905,8 @@ class ReportGenerator {
         ); //this does not work from console: 'order' is missing
         ////
         $userTenantUtil = $this->container->get('user_tenant_utility');
-        $userTenantUtil->getTenantUrlBase();
-        $pageUrl = str_replace("http://localhost/","http://localhost/",$pageUrl);
+        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+        $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
         ////
         $logger->notice("generateApplicationPdf: pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
