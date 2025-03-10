@@ -24,7 +24,7 @@ const YAML = require('js-yaml');
 const fileContents = path.resolve(__dirname, 'config', 'parameters.yml');
 console.log('fileContents='+fileContents);
 const params = YAML.load(fileContents);
-publicPathSubDir2 = JSON.stringify(params.tenant_role);
+publicPathSubDir2 = JSON.stringify(params.tenant_role || process.env.APP_SUBDIR);
 console.log('publicPathSubDir2='+publicPathSubDir2);
 
 Encore
