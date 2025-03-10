@@ -31,6 +31,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class TestCommand extends Command
@@ -63,6 +64,21 @@ class TestCommand extends Command
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $fellappApplicationId = 1507; //1;
+
+        ////////////////
+        //fellapp_download
+        $router = $this->container->get('router');
+        $pageUrl = $router->generate(
+            'fellapp_download',
+            array(
+                'id' => $fellappApplicationId
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        echo "pageurl=". $pageUrl . "<br>";
+        exit();
+        ////////////////
+
 
         //$reportsUploadPathFellApp = "Reports";
         //$uploadpath = $this->container->getParameter('fellapp.uploadpath');
