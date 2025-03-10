@@ -4,7 +4,7 @@ var Encore = require('@symfony/webpack-encore');
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+    Encore.configureRuntimeEnvironment(process.env.APP_ENV || 'dev');
 }
 
 var dotenv = require('dotenv');
@@ -18,14 +18,19 @@ console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/w
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
 const path = require('path');
+const fs = require('fs');
 const YAML = require('js-yaml');
 //var fileContents = __dirname;
 //console.log('fileContents='+fileContents);
-const fileContents = path.resolve(__dirname, 'config', 'parameters.yml');
-console.log('fileContents='+fileContents);
+const parameterPath = path.resolve(__dirname, 'config', 'parameters.yml');
+console.log('parameterPath='+parameterPath);
+const fileContents = fs.readFileSync(parameterPath, 'utf8');
 const params = YAML.load(fileContents);
-publicPathSubDir2 = JSON.stringify(params.tenant_role || process.env.APP_SUBDIR);
+console.log('params:',params);
+console.log('params.tenantprefix='+params.parameters.tenantprefix);
+publicPathSubDir2 = JSON.stringify(params.parameters.tenantprefix);
 console.log('publicPathSubDir2='+publicPathSubDir2);
+
 
 Encore
     // directory where compiled assets will be stored
