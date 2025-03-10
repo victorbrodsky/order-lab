@@ -29,6 +29,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends OrderAbstractController
 {
@@ -302,6 +303,19 @@ class DefaultController extends OrderAbstractController
         //$wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         //echo "$wcmc=$wcmc <br>";
         //exit('111');
+
+        //fellapp_download
+        $applicationId = 1507;
+        $router = $this->container->get('router');
+        $pageUrl = $router->generate(
+            'fellapp_download',
+            array(
+                'id' => $applicationId
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        echo "pageurl=". $pageUrl . "<br>";
+        exit();
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

@@ -16,7 +16,7 @@
 Live RHEL9 server:
 /usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'http://157.139.226.135/c/wcm/pathology/fellowship-applications/download/1507' '/srv/order-lab-tenantappdemo/orderflex/testfellapp.pdf'
 
-
+http://157.139.226.135/c/wcm/pathology/fellowship-applications/download/1507
 
 
 

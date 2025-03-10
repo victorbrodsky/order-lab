@@ -900,8 +900,8 @@ class ReportGenerator {
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         $logger->notice("pageUrl=[".$pageUrl."]");
-        //echo "pageurl=". $pageUrl . "<br>";
-        //exit();
+        echo "pageurl=". $pageUrl . "<br>";
+        exit();
 
         //save session        
         //$session = $this->container->get('session');
