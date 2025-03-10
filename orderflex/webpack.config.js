@@ -17,9 +17,14 @@ if( process.env.APP_SUBDIR ) {
 console.log('publicPathSubDir='+publicPathSubDir); //process.env.APP_SUBDIR=/c/wcm/pathology
 //console.log('process.env.APP_PREFIX_URL='+process.env.APP_PREFIX_URL);
 
-var YAML = require('js-yaml');
+const path = require('path');
+const YAML = require('js-yaml');
+//var fileContents = __dirname;
+//console.log('fileContents='+fileContents);
+const fileContents = path.resolve(__dirname, 'config', 'parameters.yml');
+console.log('fileContents='+fileContents);
 const params = YAML.load(fileContents);
-publicPathSubDir2 = JSON.stringify(params.tenant_role)
+publicPathSubDir2 = JSON.stringify(params.tenant_role);
 console.log('publicPathSubDir2='+publicPathSubDir2);
 
 Encore
