@@ -75,6 +75,11 @@ class TestCommand extends Command
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        //// replace tenant base in $pageUrl //////
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+        $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
+        //// EOF replace tenant base in $pageUrl //////
         $logger->notice("execute: Simple test: pageurl=[".$pageUrl."]");
         echo "execute: Simple test: pageurl=". $pageUrl . "<br>";
 
