@@ -69,7 +69,7 @@ class TestCommand extends Command
         //fellapp_download
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
-            'fellapp_download',
+            'fellapp_show', //'fellapp_download',
             array(
                 'id' => $fellappApplicationId
             ),
