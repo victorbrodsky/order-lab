@@ -162,6 +162,7 @@
             {#PORT={{app.request.port}}#}
             {#TODO: test if no port#}
             {% set baseurl = app.request.host~app.request.getBaseURL() %}
+            baseurl={{ baseurl }}<br>
             {% if app.request.port %}
                 {% set baseurl = app.request.host~':'~app.request.port~app.request.getBaseURL() %}
             {% endif %}

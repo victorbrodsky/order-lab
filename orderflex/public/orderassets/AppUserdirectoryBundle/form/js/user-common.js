@@ -609,7 +609,7 @@ function getCommonBaseUrl(link,sitename) {
 
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
-    console.log('urlBase='+urlBase);
+    console.log('urlBase='+urlBase); //view-test.med.cornell.edu:80/c/wcm/pathology
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
         //if( _tenantprefix ) {
         //    urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
