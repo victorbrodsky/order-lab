@@ -162,10 +162,10 @@
             {#PORT={{app.request.port}}#}
             {#TODO: test if no port#}
             {% set baseurl = app.request.host~app.request.getBaseURL() %}
-            {% if app.request.port %}
-                {% set baseurl = app.request.host~':'~app.request.port~app.request.getBaseURL() %}
-            {% endif %}
-            baseurl={{ baseurl }}<br>
+            {#{% if app.request.port %}#}
+                {#{% set baseurl = app.request.host~':'~app.request.port~app.request.getBaseURL() %}#}
+            {#{% endif %}#}
+            {#baseurl={{ baseurl }}<br>#}
             {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
             <input type="hidden" id="baseurl" value="{{baseurl}}" />
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
