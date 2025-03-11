@@ -1550,6 +1550,8 @@ class UserTenantUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
+        $logger->notice("routerGenerateWrapper: routName=[".$routName."], applicationId=[$applicationId]");
+
         $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
         if( !$connectionChannel ) {
             $connectionChannel = 'http';
