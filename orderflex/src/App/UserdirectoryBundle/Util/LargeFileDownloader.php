@@ -257,8 +257,7 @@ class LargeFileDownloader {
         //TODO: check for possible error: Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
         //$response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
         $response = NULL;
-        try
-        {
+        try {
             $response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
         }
         catch (\Exception $ignored)

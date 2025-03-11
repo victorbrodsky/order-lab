@@ -18,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class UserTenantUtil
@@ -55,7 +56,6 @@ class UserTenantUtil
         }
         return $this->container->getParameter('tenant_base');
     }
-
 
     public function getSingleTenantManager( $createIfEmpty=false ) {
         $logger = $this->container->get('logger');
@@ -1541,4 +1541,63 @@ class UserTenantUtil
 //        $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
     }
 
+    //Wrapper for $router->generate when run with command and HaProxy, the route does not have base url
+    //For example it generates http://localhost/fellowship-applications/download/1507
+    // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
+    //Used in generateApplicationPdf
+    public function routerGenerateWrapper( $routName, $applicationId, $replaceContext=true ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+        //$connectionChannel = 'https'; //testing
+
+        $context = $this->container->get('router')->getContext();
+
+        //$replaceContext = true;
+        //$replaceContext = false;
+        if( $replaceContext ) {
+            //$context = $this->container->get('router')->getContext();
+            //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
+            $context->setHost('localhost');
+            $context->setScheme($connectionChannel);
+
+            //$context->setHost('localhost');
+            //$context->setScheme('http');
+            //$context->setBaseUrl('/scanorder/Scanorders2/web');
+        }
+
+        $router = $this->container->get('router');
+        $pageUrl = $router->generate(
+            $routName,
+            array(
+                'id' => $applicationId
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+        $logger->notice("1 routerGenerateWrapper: pageUrl=[".$pageUrl."]");
+
+        //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
+        //// replace tenant base in $pageUrl //////
+        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+        if( str_contains($pageUrl, $tenantUrlBase) === false ) {
+            //$pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
+            $context->setBaseUrl($tenantUrlBase);
+
+            $pageUrl = $router->generate(
+                $routName,
+                array(
+                    'id' => $applicationId
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+        $logger->notice("2 routerGenerateWrapper: pageUrl=[".$pageUrl."]");
+
+        return $pageUrl;
+    }
 }

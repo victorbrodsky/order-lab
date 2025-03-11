@@ -835,36 +835,37 @@ class ReportGenerator {
 
         ini_set('max_execution_time', 300); //300 sec
 
-        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        if( !$connectionChannel ) {
-            $connectionChannel = 'http';
-        }
-        //$connectionChannel = 'https'; //testing
+        if(0) {
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            if (!$connectionChannel) {
+                $connectionChannel = 'http';
+            }
+            //$connectionChannel = 'https'; //testing
 
-        //generate application URL
-        $router = $this->container->get('router');
+            //generate application URL
+            $router = $this->container->get('router');
 
-        //http://localhost/order/... - localhost trigger error on rhel7:
-        //Error: Failed to load http://localhost/order/fellowship-applications/download/1, with network status code 1 and http status code 0 - Connection refused
-        //However, it works with the real IP (i.e. 157.139.226.86)
-        //Therefore, the problem is to generate report on the localhost by the cron or internally without web
-        $replaceContext = true;
-        //$replaceContext = false;
-        if( $replaceContext ) {
-            $context = $this->container->get('router')->getContext();
+            //http://localhost/order/... - localhost trigger error on rhel7:
+            //Error: Failed to load http://localhost/order/fellowship-applications/download/1, with network status code 1 and http status code 0 - Connection refused
+            //However, it works with the real IP (i.e. 157.139.226.86)
+            //Therefore, the problem is to generate report on the localhost by the cron or internally without web
+            $replaceContext = true;
+            //$replaceContext = false;
+            if ($replaceContext) {
+                $context = $this->container->get('router')->getContext();
 
-            //$rootDir = $this->container->get('kernel')->getRootDir();
-            //echo "rootDir=".$rootDir."<br>";
-            //echo "getcwd=".getcwd()."<br>";
+                //$rootDir = $this->container->get('kernel')->getRootDir();
+                //echo "rootDir=".$rootDir."<br>";
+                //echo "getcwd=".getcwd()."<br>";
 
-            //$env = $this->container->get('kernel')->getEnvironment();
-            //echo "env=".$env."<br>";
-            //$logger->notice("env=".$env."<br>");
+                //$env = $this->container->get('kernel')->getEnvironment();
+                //echo "env=".$env."<br>";
+                //$logger->notice("env=".$env."<br>");
 
-            //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
-            $context->setHost('localhost');
-            $context->setScheme($connectionChannel);
-            //$context->setBaseUrl('/order');
+                //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
+                $context->setHost('localhost');
+                $context->setScheme($connectionChannel);
+                //$context->setBaseUrl('/order');
 
 //        if( $env == 'dev' ) {
 //            //$context->setHost('localhost');
@@ -875,41 +876,44 @@ class ReportGenerator {
 //            $context->setBaseUrl('/order');
 //        }
 
-            //$context->setHost('localhost');
-            //$context->setScheme('http');
-            //$context->setBaseUrl('/scanorder/Scanorders2/web');
+                //$context->setHost('localhost');
+                //$context->setScheme('http');
+                //$context->setBaseUrl('/scanorder/Scanorders2/web');
+            }
+            //$transresUtil = $this->container->get('transres_util');
+            //$router = $transresUtil->getRequestContextRouter();
+
+            //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
+            //echo "url=". $url . "<br>";
+            //$pageUrl = "http://localhost/order".$url;
+            //http://localhost/scanorder/Scanorders2/web/fellowship-applications/
+            //http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/?filter[startDate]=2017#
+
+            //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
+            //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
+
+            //fellapp_download
+            //with HaProxy it gives incorrect url http://localhost/fellowship-applications/download/1507
+            // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
+            // or http://157.139.226.135/c/wcm/pathology/fellowship-applications/download/1507
+            //Fix: create a wrapper service that calls Symfonys UrlGenerator and then replaces your base path (backend/myapp/web/app.php/)
+            $pageUrl = $router->generate(
+                'fellapp_download',
+                array(
+                    'id' => $applicationId
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ); //this does not work from console: 'order' is missing
+
+            //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
+            //// replace tenant base in $pageUrl //////
+            $userTenantUtil = $this->container->get('user_tenant_utility');
+            $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+            $pageUrl = str_replace("http://localhost/", "http://localhost/" . $tenantUrlBase . "/", $pageUrl);
+            //// EOF replace tenant base in $pageUrl //////
         }
-        //$transresUtil = $this->container->get('transres_util');
-        //$router = $transresUtil->getRequestContextRouter();
-        
-        //$url = $router->generate('fellapp_download',array('id' => $applicationId),true); //fellowship-applications/show/43
-        //echo "url=". $url . "<br>";
-        //$pageUrl = "http://localhost/order".$url;
-        //http://localhost/scanorder/Scanorders2/web/fellowship-applications/
-        //http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/?filter[startDate]=2017#
-        
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/fellowship-applications/download/".$applicationId;
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
 
-        //fellapp_download
-        //with HaProxy it gives incorrect url http://localhost/fellowship-applications/download/1507
-        // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
-        // or http://157.139.226.135/c/wcm/pathology/fellowship-applications/download/1507
-        //Fix: create a wrapper service that calls Symfonys UrlGenerator and then replaces your base path (backend/myapp/web/app.php/)
-        $pageUrl = $router->generate(
-            'fellapp_download',
-            array(
-                'id' => $applicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        ); //this does not work from console: 'order' is missing
-
-        //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
-        //// replace tenant base in $pageUrl //////
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
-        //// EOF replace tenant base in $pageUrl //////
+        $pageUrl = $userTenantUtil->routerGenerateWrapper( 'fellapp_download', $applicationId, $replaceContext=true );
 
         $logger->notice("generateApplicationPdf: pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
