@@ -99,6 +99,9 @@ To Backup a database using pgAdmin4 (To get a data dump using a pgAdmin4):
 
 The Custom and Tar formats save the backup in binary SQL, which is more suitable for restores involving more complex data types and faster restoration
 
+Create archive for Upload folder:
+tar -czvf backupfiles-live-11March2025.tar.gz Upload
+
 Restore:
 pgAdmin:
 "Create" > "Database..." > Save
