@@ -591,7 +591,7 @@ function getCommonBaseUrl(link,sitename) {
     if( urlArr.length > 0 ) {
         scheme = urlArr[0];
     }
-    //console.log('scheme='+scheme);
+    console.log('scheme='+scheme);
 
     //get tenantprefix from container
     //_tenantprefix = ''; //testing
