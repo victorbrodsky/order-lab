@@ -609,6 +609,7 @@ function getCommonBaseUrl(link,sitename) {
 
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
+    console.log('urlBase='+urlBase);
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
         //if( _tenantprefix ) {
         //    urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
