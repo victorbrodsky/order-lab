@@ -590,6 +590,9 @@ function getCommonBaseUrl(link,sitename) {
     var base_url = window.location.origin;
     console.log('window.location.origin='+base_url);
 
+    var host = window.location.host;
+    console.log('window.location.host='+host);
+
     var urlArr = url.split("/");
     if( urlArr.length > 0 ) {
         scheme = urlArr[0];
