@@ -36,9 +36,10 @@ http://157.139.226.212/tenant-manager/directory/admin/first-time-login-generatio
 http://157.139.226.212/c/demo-institution/directory/admin/demo-department/first-time-login-generation-init/
 http://157.139.226.212/c/wcm/psychiatry/directory/admin/first-time-login-generation-init/
 
-Rsync:
+Rsync (run on live server -> sending to new server):
 rsync -avz /opt/order-lab/orderflex/var/backups/backupdb-live-WCMEXT-20241217-220006-tenantapp1.dump.gz oli2002@157.139.226.212:/home/oli2002/uploads
 rsync -avz /srv/order-lab/orderflex/var/backups/backupfiles-live_WCMINT_2024-12-17-21-48-45.tar.gz oli2002@157.139.226.212:/home/oli2002/backupfiles-live_WCMINT_2024-12-17-21-48-45.tar.gz
+rsync -avz /srv/order-lab/orderflex/var/backups/backupfiles-live-11March2025.tar.gz oli2002@157.139.226.135:/home/oli2002/backupfiles-live-11March2025.tar.gz
 Live server: 157.139.226.135
 tar -xvzf community_images.tar.gz -C some_custom_folder_name
 
