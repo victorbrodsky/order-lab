@@ -921,6 +921,12 @@ class ReportGenerator {
 
         $logger->notice("ResApp before knp_snappy generate: PHPSESSID=[".$PHPSESSID."]");
 
+        //Error: Failed to load https://localhost:80/c/wcm/pathology/directory/util/common/specificindividuals?cycle=download&sitename=residency-applications, with network status code 6 and http status code 0
+        //Warning: Javascript alert: Internal system error. Please reload the page by clicking \"OK\" button.
+        //\nPlease e-mail us at system admin email if the problem persists.
+        //\nError message: TypeError: 'undefined' is not a function\n URL: undefined\n Line Number: 0\nWarning: Javascript alert: Internal system error.
+        //php bin/console resapp:generatereportrun
+
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,

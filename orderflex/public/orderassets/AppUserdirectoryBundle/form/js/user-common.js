@@ -286,9 +286,11 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
             //     cycle: cycle,
             //     sitename: sitenameStr
             // });
+            console.log('getComboboxGeneric: employees urlprefix='+urlprefix);
         }
     } else if( sitename == "scan" ) {
         url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+        console.log('getComboboxGeneric: scan urlprefix='+urlprefix+', sitenameStr='+sitenameStr+', sitename='+sitename);
     } else {
         console.log('Invalid sitename='+url);
     }
@@ -560,7 +562,7 @@ function initConvertEnterToTab() {
 
 //TODO: replace by Routing.generate('my-route-name');
 function getCommonBaseUrl(link,sitename) {
-    //console.log('getCommonBaseUrl: sitename='+sitename);
+    console.log('getCommonBaseUrl: sitename='+sitename);
 
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
@@ -613,6 +615,7 @@ function getCommonBaseUrl(link,sitename) {
     //url might be in the form of:
     //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
 
+    //http://127.0.0.1:80/directory/util/common/specificindividuals?cycle=show&sitename=residency-applications
     console.log("urlBase="+urlBase);
     //alert("urlBase="+urlBase);
     return urlBase;

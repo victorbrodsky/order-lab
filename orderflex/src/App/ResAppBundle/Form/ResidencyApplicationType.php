@@ -597,7 +597,9 @@ class ResidencyApplicationType extends AbstractType
             // manger list created in step 6C above and ALLOWING NEW VALUES.
             //Replaced by UserWrapper list
             $builder->add('specificIndividuals', CustomSelectorType::class, array(
-                'label' => 'If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
+                'label' => 'If you would like to meet specific individuals,'.
+                ' please indicate their names here (otherwise leave blank).'.
+                ' We will do our best to accommodate your request:',
                 'required' => false,
                 'attr' => array('class' => 'combobox ajax-combobox-specificindividuals', 'type' => 'hidden'),
                 'classtype' => 'specificindividuals'

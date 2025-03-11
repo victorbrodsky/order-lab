@@ -304,28 +304,28 @@ class DefaultController extends OrderAbstractController
         //echo "$wcmc=$wcmc <br>";
         //exit('111');
 
-        //fellapp_download
-        $applicationId = 1507;
-        $connectionChannel = 'https';
-        $context = $this->container->get('router')->getContext();
-        $context->setHost('localhost');
-        $context->setScheme($connectionChannel);
-
-        $router = $this->container->get('router');
-        $pageUrl = $router->generate(
-            'fellapp_download',
-            array(
-                'id' => $applicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        echo "pageurl=". $pageUrl . "<br>";
-
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        echo "tenantUrlBase=". $tenantUrlBase . "<br>";
-
-        exit();
+//        //fellapp_download
+//        $applicationId = 1507;
+//        $connectionChannel = 'https';
+//        $context = $this->container->get('router')->getContext();
+//        $context->setHost('localhost');
+//        $context->setScheme($connectionChannel);
+//
+//        $router = $this->container->get('router');
+//        $pageUrl = $router->generate(
+//            'fellapp_download',
+//            array(
+//                'id' => $applicationId
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        echo "pageurl=". $pageUrl . "<br>";
+//
+//        $userTenantUtil = $this->container->get('user_tenant_utility');
+//        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+//        echo "tenantUrlBase=". $tenantUrlBase . "<br>";
+//
+//        exit();
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
