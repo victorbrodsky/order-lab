@@ -1586,8 +1586,11 @@ class UserTenantUtil
         //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
         //// replace tenant base in $pageUrl //////
         $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
+        $logger->notice("routerGenerateWrapper: tenantUrlBase=[".$tenantUrlBase."]");
         if( str_contains($pageUrl, $tenantUrlBase) === false ) {
-            //$pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
+            $pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
+            $logger->notice("1a routerGenerateWrapper: pageUrl=[".$pageUrl."]");
+
             $context->setBaseUrl($tenantUrlBase);
 
             $pageUrl = $router->generate(
