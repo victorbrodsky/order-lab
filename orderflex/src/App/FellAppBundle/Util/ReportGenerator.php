@@ -827,6 +827,7 @@ class ReportGenerator {
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
             $logger->notice("generate ApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -907,7 +908,6 @@ class ReportGenerator {
 
             //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
             //// replace tenant base in $pageUrl //////
-            $userTenantUtil = $this->container->get('user_tenant_utility');
             $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
             $pageUrl = str_replace("http://localhost/", "http://localhost/" . $tenantUrlBase . "/", $pageUrl);
             //// EOF replace tenant base in $pageUrl //////
@@ -915,7 +915,7 @@ class ReportGenerator {
 
         $pageUrl = $userTenantUtil->routerGenerateWrapper( 'fellapp_download', $applicationId, $replaceContext=true );
 
-        $logger->notice("generateApplicationPdf: pageUrl=[".$pageUrl."]");
+        $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
         //exit();
 

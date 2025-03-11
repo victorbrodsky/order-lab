@@ -806,6 +806,7 @@ class ReportGenerator {
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
             $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -814,35 +815,36 @@ class ReportGenerator {
 
         ini_set('max_execution_time', 300); //300 sec
 
-        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        if( !$connectionChannel ) {
-            $connectionChannel = 'http';
-        }
+        if(0) {
+            $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+            if (!$connectionChannel) {
+                $connectionChannel = 'http';
+            }
 
-        //generate application URL
-        $router = $this->container->get('router');
+            //generate application URL
+            $router = $this->container->get('router');
 
-        //http://localhost/order/... - localhost trigger error on rhel7:
-        //Error: Failed to load http://localhost/order/residency-applications/download/1, with network status code 1 and http status code 0 - Connection refused
-        //However, it works with the real IP (i.e. 157.139.226.86)
-        //Therefore, the problem is to generate report on the localhost by the cron or internally without web
-        $replaceContext = true;
-        //$replaceContext = false;
-        if( $replaceContext ) {
-            $context = $this->container->get('router')->getContext();
+            //http://localhost/order/... - localhost trigger error on rhel7:
+            //Error: Failed to load http://localhost/order/residency-applications/download/1, with network status code 1 and http status code 0 - Connection refused
+            //However, it works with the real IP (i.e. 157.139.226.86)
+            //Therefore, the problem is to generate report on the localhost by the cron or internally without web
+            $replaceContext = true;
+            //$replaceContext = false;
+            if ($replaceContext) {
+                $context = $this->container->get('router')->getContext();
 
-            //$rootDir = $this->container->get('kernel')->getRootDir();
-            //echo "rootDir=".$rootDir."<br>";
-            //echo "getcwd=".getcwd()."<br>";
+                //$rootDir = $this->container->get('kernel')->getRootDir();
+                //echo "rootDir=".$rootDir."<br>";
+                //echo "getcwd=".getcwd()."<br>";
 
-            //$env = $this->container->get('kernel')->getEnvironment();
-            //echo "env=".$env."<br>";
-            //$logger->notice("env=".$env."<br>");
+                //$env = $this->container->get('kernel')->getEnvironment();
+                //echo "env=".$env."<br>";
+                //$logger->notice("env=".$env."<br>");
 
-            //http://192.168.37.128/order/app_dev.php/residency-applications/download-pdf/49
-            $context->setHost('localhost');
-            $context->setScheme($connectionChannel);
-            //$context->setBaseUrl('/order');
+                //http://192.168.37.128/order/app_dev.php/residency-applications/download-pdf/49
+                $context->setHost('localhost');
+                $context->setScheme($connectionChannel);
+                //$context->setBaseUrl('/order');
 
 //        if( $env == 'dev' ) {
 //            //$context->setHost('localhost');
@@ -853,33 +855,37 @@ class ReportGenerator {
 //            $context->setBaseUrl('/order');
 //        }
 
-            //$context->setHost('localhost');
-            //$context->setScheme('http');
-            //$context->setBaseUrl('/scanorder/Scanorders2/web');
-        }
-        //$transresUtil = $this->container->get('transres_util');
-        //$router = $transresUtil->getRequestContextRouter();
-        
-        //$url = $router->generate('resapp_download',array('id' => $applicationId),true); //residency-applications/show/43
-        //echo "url=". $url . "<br>";
-        //$pageUrl = "http://localhost/order".$url;
-        //http://localhost/scanorder/Scanorders2/web/residency-applications/
-        //http://localhost/scanorder/Scanorders2/web/app_dev.php/residency-applications/?filter[startDate]=2017#
-        
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/residency-applications/download/".$applicationId;
-        //$pageUrl = "http://localhost/scanorder/Scanorders2/web/residency-applications/download/".$applicationId;
+                //$context->setHost('localhost');
+                //$context->setScheme('http');
+                //$context->setBaseUrl('/scanorder/Scanorders2/web');
+            }
+            //$transresUtil = $this->container->get('transres_util');
+            //$router = $transresUtil->getRequestContextRouter();
 
-        //resapp_download
-        $pageUrl = $router->generate(
-            'resapp_download',
-            array(
-                'id' => $applicationId
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        ); //this does not work from console: 'order' is missing
-        $logger->notice("pageUrl=[".$pageUrl."]");
-        //echo "pageurl=". $pageUrl . "<br>";
-        //exit();
+            //$url = $router->generate('resapp_download',array('id' => $applicationId),true); //residency-applications/show/43
+            //echo "url=". $url . "<br>";
+            //$pageUrl = "http://localhost/order".$url;
+            //http://localhost/scanorder/Scanorders2/web/residency-applications/
+            //http://localhost/scanorder/Scanorders2/web/app_dev.php/residency-applications/?filter[startDate]=2017#
+
+            //$pageUrl = "http://localhost/scanorder/Scanorders2/web/app_dev.php/residency-applications/download/".$applicationId;
+            //$pageUrl = "http://localhost/scanorder/Scanorders2/web/residency-applications/download/".$applicationId;
+
+            //resapp_download
+            $pageUrl = $router->generate(
+                'resapp_download',
+                array(
+                    'id' => $applicationId
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ); //this does not work from console: 'order' is missing
+
+            //echo "pageurl=". $pageUrl . "<br>";
+            //exit();
+        }
+        
+        $pageUrl = $userTenantUtil->routerGenerateWrapper( 'resapp_download', $applicationId, $replaceContext=true );
+        $logger->notice("resapp_download pageUrl=[".$pageUrl."]");
 
         //save session        
         //$session = $this->container->get('session');
