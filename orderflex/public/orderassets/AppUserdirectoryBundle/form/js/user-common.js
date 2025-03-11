@@ -585,19 +585,18 @@ function getCommonBaseUrl(link,sitename) {
 
     var scheme = "http:";
     var url = window.location.href;
-    console.log('window.location.href url='+url);
+    console.log('getCommonBaseUrl: window.location.href url='+url);
 
-    var base_url = window.location.origin;
-    console.log('window.location.origin='+base_url);
-
-    var host = window.location.host;
-    console.log('window.location.host='+host);
+    // var base_url = window.location.origin;
+    // console.log('window.location.origin='+base_url); //window.location.origin=https://view-test.med.cornell.edu
+    // var host = window.location.host;
+    // console.log('window.location.host='+host); //window.location.host=view-test.med.cornell.edu
 
     var urlArr = url.split("/");
     if( urlArr.length > 0 ) {
         scheme = urlArr[0];
     }
-    console.log('scheme='+scheme);
+    //console.log('scheme='+scheme);
 
     //get tenantprefix from container
     //_tenantprefix = ''; //testing
@@ -609,7 +608,7 @@ function getCommonBaseUrl(link,sitename) {
 
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
-    console.log('urlBase='+urlBase); //view-test.med.cornell.edu:80/c/wcm/pathology
+    //console.log('urlBase='+urlBase); //view-test.med.cornell.edu:80/c/wcm/pathology
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
         //if( _tenantprefix ) {
         //    urlBase = scheme + "//" + urlBase + "/" + _tenantprefix + "/" + prefix + "/" + link;
@@ -623,7 +622,7 @@ function getCommonBaseUrl(link,sitename) {
     //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
 
     //http://127.0.0.1:80/directory/util/common/specificindividuals?cycle=show&sitename=residency-applications
-    console.log("urlBase="+urlBase);
+    console.log("getCommonBaseUrl: urlBase="+urlBase);
     //alert("urlBase="+urlBase);
     return urlBase;
 }
