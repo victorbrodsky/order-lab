@@ -809,7 +809,7 @@ class ReportGenerator {
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
-            $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
+            $logger->notice("ResApp generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
 
@@ -885,7 +885,7 @@ class ReportGenerator {
         }
         
         $pageUrl = $userTenantUtil->routerGenerateWrapper( 'resapp_download', $applicationId, $replaceContext=true );
-        $logger->notice("resapp_download pageUrl=[".$pageUrl."]");
+        $logger->notice("ResApp resapp_download pageUrl=[".$pageUrl."]");
 
         //save session        
         //$session = $this->container->get('session');
@@ -919,7 +919,7 @@ class ReportGenerator {
             }
         }
 
-        $logger->notice("before knp_snappy generate: PHPSESSID=[".$PHPSESSID."]");
+        $logger->notice("ResApp before knp_snappy generate: PHPSESSID=[".$PHPSESSID."]");
 
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
@@ -933,7 +933,7 @@ class ReportGenerator {
             //array('cookie' => array($session->getName() => $session->getId()))
         );
 
-        $logger->notice("after knp_snappy generate=".$applicationOutputFilePath);
+        $logger->notice("ResApp after knp_snappy generate=".$applicationOutputFilePath);
 
         //testing
         //$pdfPath = "resapp_download";
@@ -942,7 +942,7 @@ class ReportGenerator {
 
         //echo "generated ok! <br>";
 
-        return "PDF generated=[".$applicationOutputFilePath."]";
+        return "ResApp PDF generated=[".$applicationOutputFilePath."]";
     }
     
     public function getSnappyPdf() {
