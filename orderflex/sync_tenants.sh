@@ -72,14 +72,23 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
-    if [ -n "$type" ] && [ "$type" == "sync" ]
-        	then
-        		echo -e ${COLOR} cd to "$1"${NC}
-                    cd "$homedir"/order-lab-$1/orderflex
+    if [ -n "$type" ] && [ "$type" == "yarn" ]
+        then
+            echo -e ${COLOR} cd to "$1"${NC}
+            cd "$homedir"/order-lab-$1/orderflex
 
-                	echo -e ${COLOR} git pull for "$1" ${NC}
-                	git pull
-        fi
+            echo -e ${COLOR} yarn install --frozen-lockfile for "$1" ${NC}
+            yarn install --frozen-lockfile
+    fi
+
+    if [ -n "$type" ] && [ "$type" == "sync" ]
+        then
+            echo -e ${COLOR} cd to "$1"${NC}
+            cd "$homedir"/order-lab-$1/orderflex
+
+            echo -e ${COLOR} git pull for "$1" ${NC}
+            git pull
+    fi
 
     ### DB migration ###
     if [ -n "$type" ] && [ "$type" == "dbstatus" ]
