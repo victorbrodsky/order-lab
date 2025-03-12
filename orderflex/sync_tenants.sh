@@ -70,6 +70,9 @@ f_sync() {
 
             echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+
+            echo -e ${COLOR} yarn install --frozen-lockfile for "$1" ${NC}
+            yarn install --frozen-lockfile
     fi
 
     if [ -n "$type" ] && [ "$type" == "yarn" ]
