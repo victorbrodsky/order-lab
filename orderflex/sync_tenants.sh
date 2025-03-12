@@ -68,11 +68,11 @@ f_sync() {
             echo -e ${COLOR} check migration status for "$1" ${NC}
             yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
 
-            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
-            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
-
             echo -e ${COLOR} yarn install --frozen-lockfile for "$1" ${NC}
             yarn install --frozen-lockfile
+
+            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
     if [ -n "$type" ] && [ "$type" == "yarn" ]
