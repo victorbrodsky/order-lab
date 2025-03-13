@@ -1672,7 +1672,7 @@ Pathology and Laboratory Medicine",
         }
 
         //connection_channel
-        $res = $res . "if using HaProxy, internal connection channel should be 'http', external connection channel should be 'https'";
+        $res = $res . "<br>Note: If using HaProxy, internal connection channel should be 'http', external connection channel should be 'https'";
         $connection_channel = $this->container->getParameter('connection_channel');
         $res = $res . "<br>" . "Internal connection channel: " . $connection_channel;
 
