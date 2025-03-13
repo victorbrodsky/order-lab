@@ -57,14 +57,16 @@ class InitialConfigurationType extends AbstractType
         ));
 
         $builder->add('connectionChannel',ChoiceType::class,array( //flipped
-            'label'=>'Routing Connection Channel (http or https; Clearing Cache is required):',
+            'label'=>'Internal Connection Channel (http or https; Clearing Cache is required):',
             'choices' => array("http"=>"http", "https"=>"https"),
             //'choices_as_values' => true,
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('urlConnectionChannel',ChoiceType::class,array( //flipped
-            'label'=>'Url Connection Channel (http or https; Clearing Cache is required):',
+            'label'=>'External Connection Channel'.
+                " (if using HaProxy, internal connection channel should be 'http' and external connection channel should be 'https'".
+                '; http or https; Clearing Cache is required):',
             'choices' => array("http"=>"http", "https"=>"https"),
             //'choices_as_values' => true,
             'attr' => array('class'=>'form-control')

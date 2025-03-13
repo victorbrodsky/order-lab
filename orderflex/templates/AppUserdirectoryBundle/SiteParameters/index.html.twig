@@ -203,7 +203,7 @@
                 <td class="rowlink-skip" colspan="2">{{ phphostname }}; {{ app.request.schemeAndHttpHost }}</td>
             </tr>
             <tr>
-                <td>Routing Connection Channel (http or https; Clearing Cache is required)</td>
+                <td>Internal Connection Channel (http or https; Clearing Cache is required)</td>
                 <td>
                     {% if entity.connectionChannel %}
                         {{ entity.connectionChannel }}
@@ -214,7 +214,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Url Connection Channel in case of HaProxy (http or https; Clearing Cache is required)</td>
+                <td>External Connection Channel (if using HaProxy, internal connection channel should be 'http' and external connection channel should be 'https'; Clearing Cache is required)</td>
                 <td>
                     {% if entity.urlConnectionChannel %}
                         {{ entity.urlConnectionChannel }}
