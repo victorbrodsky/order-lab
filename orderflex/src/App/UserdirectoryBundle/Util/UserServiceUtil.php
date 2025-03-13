@@ -1665,14 +1665,21 @@ Pathology and Laboratory Medicine",
         }
         $res = $res . "<br>" . "IP: " . $ip;
 
+        //tenant base url
+        if( $this->container->hasParameter('tenant_base') ) {
+            $tenant_base = $this->container->getParameter('tenant_base');
+            $res = $res . "<br>" . "Tenant base url: " . $tenant_base;
+        }
+
         //connection_channel
+        $res = $res . "if using HaProxy, internal connection channel should be 'http', external connection channel should be 'https'";
         $connection_channel = $this->container->getParameter('connection_channel');
-        $res = $res . "<br>" . "Connection channel: " . $connection_channel;
+        $res = $res . "<br>" . "Internal connection channel: " . $connection_channel;
 
         //Real connection_channel if behind HaProxy
         $userUtil = $this->container->get('user_utility');
         $realScheme = $userUtil->getRealScheme();
-        $res = $res . "<br>" . "Real connection channel if using HaProxy: " . $realScheme;
+        $res = $res . "<br>" . "External connection channel if using HaProxy: " . $realScheme;
 
         return $res;
     }

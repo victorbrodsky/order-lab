@@ -902,7 +902,7 @@ class PdfGenerator
 
         //Make sure $wkhtmltopdfpath correctly set in the site setting
         $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
-        $logger->notice("generateProjectPdf: wkhtmltopdfpath=".$wkhtmltopdfpath);
+        //$logger->notice("generateProjectPdf: wkhtmltopdfpath=".$wkhtmltopdfpath);
         //echo "wkhtmltopdfpath=[$wkhtmltopdfpath] <br>";
         $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
         //echo "wkhtmltopdfpathClean=[$wkhtmltopdfpathClean] <br>";

@@ -121,3 +121,12 @@ mailerdeliveryaddresses
 Optional:
 to test the functionality set mailerDeliveryAddresses to oli2002
 to avoid stealing fellapp, turn off imports
+
+Make certificate for HaProxy:
+cat cert.pem privkey.pem > cert_key.pem
+
+Create config for manual backup
+
+Make sure to have a key: /srv/order-lab/orderflex/src/App/FellAppBundle/Util/quickstart-FellowshipAuth.json
+
+Make sure to have a key file for mount external backup drive
