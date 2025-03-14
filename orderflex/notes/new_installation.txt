@@ -129,6 +129,7 @@ Create config for manual backup
 
 Make sure to have a key: /srv/order-lab/orderflex/src/App/FellAppBundle/Util/quickstart-FellowshipAuth.json
 
+Install cifs-utils: dnf install cifs-utils
 Make sure to have a key file for mount external backup drive
 credentials=/mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt

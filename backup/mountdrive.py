@@ -19,7 +19,7 @@ import pwd
 # a) Defaults:apache !requiretty
 # b) apache ALL= NOPASSWD: /sbin/mount.cifs
 #Optional: Modify visudo to give apache permission to run mount command:
-#Add pache as root: usermod -aG wheel apache
+#Add apache as root: usermod -aG wheel apache
 
 #Note: if password contains special characters, using username=...,password=... in /sbin/mount.cifs might failed in crontab.
 #It's better to use option credentials= in /sbin/mount.cifs
@@ -94,7 +94,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, credentials):
     #runCommand('/usr/bin/printenv')
 
     #Option 1) Use /sbin/mount.cifs
-    if 0:
+    if 1:
         #Option 1) Use mount -t cifs
         #command = "sudo /usr/bin/mount -t cifs -o"
         #command = command + " -t cifs --verbose -o"
@@ -117,7 +117,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, credentials):
         command = command + " " + networkfolder + " " + localfolder
 
     #Option 2) Use mount -t cifs
-    if 1:
+    if 0:
         #Option 1) Use mount -t cifs
         command = "sudo /usr/bin/mount -t cifs"
         #command = command + " -t cifs --verbose -o"
