@@ -127,14 +127,20 @@ cat cert.pem privkey.pem > cert_key.pem
 
 Create config for manual backup
 
+////////// Mount backup drive /////////////////
 Make sure to have a key: /srv/order-lab/orderflex/src/App/FellAppBundle/Util/quickstart-FellowshipAuth.json
+
+#Check and mount network shared drive
+#Note: modify permission for apache user
+#1) sudo visudo:
+# a) Defaults:apache !requiretty
+# b) apache ALL= NOPASSWD: /sbin/mount.cifs
+#Optional: Modify visudo to give apache permission to run mount command:
+#Add apache as root: usermod -aG wheel apache
 
 Install cifs-utils: dnf install cifs-utils
 Make sure to have a key file for mount external backup drive
 credentials=/mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt
-
-sudo /sbin/mount.cifs -ocredentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
-sudo mount -t cifs -ocredentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
-
-sudo /usr/bin/mount -t cifs credentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
+python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt
+////////// EOF Mount backup drive /////////////////

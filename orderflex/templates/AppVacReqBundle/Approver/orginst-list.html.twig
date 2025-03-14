@@ -144,6 +144,7 @@
                     </thead>
                     <tbody id="table-body-submitter">
                         {% for submitter in submitters %}
+                            {#TODO: add multiple employment sections#}
                             {% set startEndDates = submitter.getEmploymentStartEndDates(false) %}
                             {% set startDate = null %}
                             {% set endDate = null %}
