@@ -93,24 +93,51 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, credentials):
     #runCommand('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin')
     #runCommand('/usr/bin/printenv')
 
-    #command = "sudo /usr/bin/mount -t cifs -o"
-    #command = command + " -t cifs --verbose -o"
+    #Option 1) Use /sbin/mount.cifs
+    if 0:
+        #Option 1) Use mount -t cifs
+        #command = "sudo /usr/bin/mount -t cifs -o"
+        #command = command + " -t cifs --verbose -o"
 
-    command = "sudo /sbin/mount.cifs"
-    #command = command + " --verbose"
-    command = command + " -o"
+        #Option 2) Use /sbin/mount.cifs
+        command = "sudo /sbin/mount.cifs"
+        #command = command + " --verbose"
+        command = command + " -o"
 
-    #command = command + " username='"+username+"',domain=CUMC,password='"+password+"'"
-    #command = command + "credentials=/mnt/pathology/view-backup/credentials.txt"
+        #command = command + " username='"+username+"',domain=CUMC,password='"+password+"'"
+        #command = command + "credentials=/mnt/pathology/view-backup/credentials.txt"
 
-    command = command + "credentials="+credentials
-    command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
-    command = command + ",forcegid,file_mode=0664,dir_mode=0775"
+        command = command + "credentials="+credentials
+        command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
+        command = command + ",forcegid,file_mode=0664,dir_mode=0775"
 
-    #command = command + ",vers=2.1"
-    #command = command + ",sec=ntlmssp"
+        #command = command + ",vers=2.1"
+        #command = command + ",sec=ntlmssp"
 
-    command = command + " " + networkfolder + " " + localfolder
+        command = command + " " + networkfolder + " " + localfolder
+
+    #Option 2) Use mount -t cifs
+    if 1:
+        #Option 1) Use mount -t cifs
+        command = "sudo /usr/bin/mount -t cifs"
+        #command = command + " -t cifs --verbose -o"
+
+        #Option 2) Use /sbin/mount.cifs
+        #command = "sudo /sbin/mount.cifs"
+        #command = command + " --verbose"
+        #command = command + " -o"
+
+        #command = command + " username='"+username+"',domain=CUMC,password='"+password+"'"
+        #command = command + " credentials=/mnt/pathology/view-backup/credentials.txt"
+
+        command = command + " credentials="+credentials
+        command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
+        command = command + ",forcegid,file_mode=0664,dir_mode=0775"
+
+        #command = command + ",vers=2.1"
+        #command = command + ",sec=ntlmssp"
+
+        command = command + " " + networkfolder + " " + localfolder
 
     print("command="+command)
 
