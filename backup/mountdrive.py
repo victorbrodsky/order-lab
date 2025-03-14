@@ -130,7 +130,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, credentials):
         #command = command + " username='"+username+"',domain=CUMC,password='"+password+"'"
         #command = command + " credentials=/mnt/pathology/view-backup/credentials.txt"
 
-        command = command + " credentials="+credentials
+        command = command + " -o credentials="+credentials
         command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
         command = command + ",forcegid,file_mode=0664,dir_mode=0775"
 

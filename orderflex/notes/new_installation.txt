@@ -131,6 +131,9 @@ Make sure to have a key: /srv/order-lab/orderflex/src/App/FellAppBundle/Util/qui
 
 Make sure to have a key file for mount external backup drive
 credentials=/mnt/pathology/view-backup/credentials.txt
+python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt
+
 sudo /sbin/mount.cifs -ocredentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
 sudo mount -t cifs -ocredentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
 
+sudo /usr/bin/mount -t cifs credentials=/mnt/pathology/view-backup/credentials.txt,uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup /mnt/pathology/view-backup/db-backup
