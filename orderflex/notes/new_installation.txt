@@ -103,6 +103,7 @@ rsync -avz /srv/order-lab/orderflex/var/backups/backupfiles-live_WCMINT_2024-12-
 rsync -avz /srv/order-lab/orderflex/var/backups/backupfiles-live-11March2025.tar.gz oli2002@157.139.226.135:/home/oli2002/backupfiles-live-11March2025.tar.gz
 Live server: 157.139.226.135
 tar -xzf community_images.tar.gz -C some_custom_folder_name
+Compare folder sizes: du -sh Uploaded
 
 pgAdmin:
 "Create" > "Database..." > Save
@@ -144,3 +145,9 @@ credentials=/mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt
 ////////// EOF Mount backup drive /////////////////
+
+Setup postgres backup:
+add to crontab: crontab -u postgres -e
+0 0-2,4-23 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
