@@ -653,13 +653,12 @@ class PdfGenerator
         //echo "pageUrl=$pageUrl <br>";
         $logger->notice("Phantomjs pageUrl1=[".$pageUrl."]");
 
-        $pageUrl = $userTenantUtil->routerGenerateWrapper(
-            $pdfPath,
-            $pdfPathParametersArr,
-            $replaceContext=true
-        );
-
-        $logger->notice("Phantomjs pageUrl2=[".$pageUrl."]");
+//        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+//            $pdfPath,
+//            $pdfPathParametersArr,
+//            $replaceContext=true
+//        );
+        //$logger->notice("Phantomjs pageUrl2=[".$pageUrl."]");
 
         //set back to original context
         if( $context ) {
