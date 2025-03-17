@@ -610,8 +610,8 @@ class PdfGenerator
         $context = null;
 
         if( $request ) {
-            //$replaceContext = true;
-            $replaceContext = false;
+            $replaceContext = true;
+            //$replaceContext = false;
             
             //$schemeAndHttpHost = $request->getSchemeAndHttpHost();
             //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
