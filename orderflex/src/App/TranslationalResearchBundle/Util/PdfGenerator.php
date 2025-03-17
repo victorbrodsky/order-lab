@@ -726,11 +726,10 @@ class PdfGenerator
         //--debug=yes
         $parameters = "--disk-cache=true";
         //if( $connectionChannel == 'https' ) {
-            $parameters = $parameters . " --ignore-ssl-errors=true";
+        //    $parameters = $parameters . " --ignore-ssl-errors=true";
         //}
-
-        //OPENSSL_CONF=/etc/pki/tls/openssl.cnf phantomjs
-        //$phantomjs = OPENSSL_CONF=/etc/ssl /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs
+        //Always add --ignore-ssl-errors=true
+        $parameters = $parameters . " --ignore-ssl-errors=true";
 
         $cmd = $phantomjs . ' ' . $parameters . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
