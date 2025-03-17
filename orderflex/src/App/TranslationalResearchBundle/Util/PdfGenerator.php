@@ -646,19 +646,19 @@ class PdfGenerator
 //            ),
 //            UrlGeneratorInterface::ABSOLUTE_URL
 //        ); //this does not work from console: 'order' is missing
-        $pageUrl = $router->generate($pdfPath,
-            $pdfPathParametersArr,
-            UrlGeneratorInterface::ABSOLUTE_URL
-        ); //this does not work from console: 'order' is missing
-        //echo "pageUrl=$pageUrl <br>";
-        $logger->notice("Phantomjs pageUrl1=[".$pageUrl."]");
-
-//        $pageUrl = $userTenantUtil->routerGenerateWrapper(
-//            $pdfPath,
+//        $pageUrl = $router->generate($pdfPath,
 //            $pdfPathParametersArr,
-//            $replaceContext=true
-//        );
-        //$logger->notice("Phantomjs pageUrl2=[".$pageUrl."]");
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        ); //this does not work from console: 'order' is missing
+//        //echo "pageUrl=$pageUrl <br>";
+//        $logger->notice("Phantomjs pageUrl=[".$pageUrl."]");
+
+        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+            $pdfPath,
+            $pdfPathParametersArr,
+            $replaceContext=true
+        );
+        $logger->notice("Phantomjs pageUrl=[".$pageUrl."]");
 
         //set back to original context
         if( $context ) {
@@ -719,7 +719,9 @@ class PdfGenerator
         //Work: OPENSSL_CONF=/etc/ssl/ /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --debug=yes --ignore-ssl-errors=true
         //https://view-test.med.cornell.edu/c/wcm/pathology/translational-research/work-request/download-packing-slip-pdf/28240
         //and it works with 'http': http://view-test.med.cornell.edu/c/wcm/pathology/translational-research/work-request/download-packing-slip-pdf/28240
-        //Required: OPENSSL_CONF=/etc/ssl/ and --ignore-ssl-errors=true
+        //Required important changes: OPENSSL_CONF=/etc/ssl/ and --ignore-ssl-errors=true
+        //Add OPENSSL_CONF=/etc/ssl/ to the phantomjs path in site settings (phantomjsLinux):
+        //OPENSSL_CONF=/etc/ssl/ /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs
 
         //--debug=yes
         $parameters = "--disk-cache=true";
