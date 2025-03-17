@@ -583,6 +583,7 @@ class PdfGenerator
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $logger->notice("Trying to generate PDF by Phantomjs in ".$applicationOutputFilePath);
         if( file_exists($applicationOutputFilePath) ) {
@@ -650,6 +651,15 @@ class PdfGenerator
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         //echo "pageUrl=$pageUrl <br>";
+        $logger->notice("Phantomjs pageUrl1=[".$pageUrl."]");
+
+        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+            $pdfPath,
+            $pdfPathParametersArr,
+            $replaceContext=true
+        );
+
+        $logger->notice("Phantomjs pageUrl2=[".$pageUrl."]");
 
         //set back to original context
         if( $context ) {

@@ -144,6 +144,11 @@ Make sure to have a key file for mount external backup drive
 credentials=/mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt
+
+Set permission to 755 for upload-backup and db-backup
+-rw-r--r-- 1 apache   apache   1M Nov 15  2022 credentials.txt
+drwxrwxr-x 2 apache   apache   0M Nov 16  2022 upload-backup
+drwxrwxr-x 2 postgres postgres 0M Oct  3 07:00 db-backup
 ////////// EOF Mount backup drive /////////////////
 
 Setup postgres backup:
@@ -151,3 +156,5 @@ add to crontab: crontab -u postgres -e
 0 0-2,4-23 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
+
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /srv/order-lab-tenantapp1/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js http://localhost/translational-research/work-request/download-packing-slip-pdf/28534 /srv/order-lab-tenantapp1/orderflex/public/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP3479-REQ28534-Pires-03-17-2025.pdf "A4"
