@@ -1553,7 +1553,7 @@ class UserTenantUtil
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
         if (is_array($paramArr) && count($paramArr) > 0) {
-            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "], applicationId=[" . implode(', ', $paramArr) . "]");
+            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "], paramArr=[" . implode(', ', $paramArr) . "]");
         } else {
             $logger->notice("routerGenerateWrapper: routName=[" . $routName . "]");
         }

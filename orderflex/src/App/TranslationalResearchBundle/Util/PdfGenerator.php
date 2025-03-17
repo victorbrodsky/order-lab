@@ -429,8 +429,8 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        //$useKnpSnappy = true;
-        $useKnpSnappy = false;
+        $useKnpSnappy = true;
+        //$useKnpSnappy = false;
         if( $useKnpSnappy ) {
             $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath,$request);
             //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
@@ -718,6 +718,9 @@ class PdfGenerator
         if( $connectionChannel == 'https' ) {
             $parameters = $parameters . " --ignore-ssl-errors=true";
         }
+
+        //OPENSSL_CONF=/etc/pki/tls/openssl.cnf phantomjs
+        //$phantomjs = OPENSSL_CONF=/etc/ssl /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs
 
         $cmd = $phantomjs . ' ' . $parameters . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
