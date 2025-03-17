@@ -713,11 +713,19 @@ class PdfGenerator
             $applicationOutputFilePath = '"' . $applicationOutputFilePath . '"';
         }
 
+        //https://github.com/ariya/phantomjs/issues/15449
+        //Auto configuration failed
+        //140082449381184:error:0E079065:configuration file routines:DEF_LOAD_BIO:missing equal sign:conf_def.c:362:line 75
+        //Work: OPENSSL_CONF=/etc/ssl/ /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --debug=yes --ignore-ssl-errors=true
+        //https://view-test.med.cornell.edu/c/wcm/pathology/translational-research/work-request/download-packing-slip-pdf/28240
+        //and it works with 'http': http://view-test.med.cornell.edu/c/wcm/pathology/translational-research/work-request/download-packing-slip-pdf/28240
+        //Required: OPENSSL_CONF=/etc/ssl/ and --ignore-ssl-errors=true
+
         //--debug=yes
         $parameters = "--disk-cache=true";
-        if( $connectionChannel == 'https' ) {
+        //if( $connectionChannel == 'https' ) {
             $parameters = $parameters . " --ignore-ssl-errors=true";
-        }
+        //}
 
         //OPENSSL_CONF=/etc/pki/tls/openssl.cnf phantomjs
         //$phantomjs = OPENSSL_CONF=/etc/ssl /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs
