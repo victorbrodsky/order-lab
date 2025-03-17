@@ -156,5 +156,3 @@ add to crontab: crontab -u postgres -e
 0 0-2,4-23 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
-
-/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /srv/order-lab-tenantapp1/orderflex/src/App/UserdirectoryBundle/Util/rasterize.js http://localhost/translational-research/work-request/download-packing-slip-pdf/28534 /srv/order-lab-tenantapp1/orderflex/public/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP3479-REQ28534-Pires-03-17-2025.pdf "A4"
