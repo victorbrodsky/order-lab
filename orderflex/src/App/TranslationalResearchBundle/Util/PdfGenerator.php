@@ -429,8 +429,8 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $useKnpSnappy = true;
-        //$useKnpSnappy = false;
+        //$useKnpSnappy = true;
+        $useKnpSnappy = false;
         if( $useKnpSnappy ) {
             $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath,$request);
             //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
@@ -610,8 +610,8 @@ class PdfGenerator
         $context = null;
 
         if( $request ) {
-            $replaceContext = true;
-            //$replaceContext = false;
+            //$replaceContext = true;
+            $replaceContext = false;
             
             //$schemeAndHttpHost = $request->getSchemeAndHttpHost();
             //replace $request->getSchemeAndHttpHost() with getRealSchemeAndHttpHost($request)
@@ -714,6 +714,7 @@ class PdfGenerator
             $applicationOutputFilePath = '"' . $applicationOutputFilePath . '"';
         }
 
+        //--debug=yes
         $parameters = "--disk-cache=true";
         if( $connectionChannel == 'https' ) {
             $parameters = $parameters . " --ignore-ssl-errors=true";
