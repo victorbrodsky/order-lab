@@ -884,7 +884,15 @@ class ReportGenerator {
             //exit();
         }
         
-        $pageUrl = $userTenantUtil->routerGenerateWrapper( 'resapp_download', $applicationId, $replaceContext=true );
+        //$pageUrl = $userTenantUtil->routerGenerateWrapper( 'resapp_download', $applicationId, $replaceContext=true );
+
+        $paramArr = array('id'=>$applicationId);
+        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+            'resapp_download',
+            $paramArr,
+            $replaceContext=true
+        );
+
         $logger->notice("ResApp resapp_download pageUrl=[".$pageUrl."]");
 
         //save session        

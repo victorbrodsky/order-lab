@@ -1544,13 +1544,19 @@ class UserTenantUtil
     //Wrapper for $router->generate when run with command and HaProxy, the route does not have base url
     //For example it generates http://localhost/fellowship-applications/download/1507
     // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
+    //$paramArr - array of parameters (i.e. array('id'=>123))
     //Used in generateApplicationPdf
-    public function routerGenerateWrapper( $routName, $applicationId, $replaceContext=true ) {
+    public function routerGenerateWrapper( $routName, $paramArr, $replaceContext=true )
+    {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
-        $logger->notice("routerGenerateWrapper: routName=[".$routName."], applicationId=[$applicationId]");
+        if (is_array($paramArr) && count($paramArr) > 0) {
+            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "], applicationId=[" . implode(', ', $paramArr) . "]");
+        } else {
+            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "]");
+        }
 
         $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
         if( !$connectionChannel ) {
@@ -1576,9 +1582,10 @@ class UserTenantUtil
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
             $routName,
-            array(
-                'id' => $applicationId
-            ),
+            //array(
+            //    'id' => $applicationId
+            //),
+            $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         $logger->notice("1 routerGenerateWrapper: pageUrl=[".$pageUrl."]");
@@ -1595,9 +1602,10 @@ class UserTenantUtil
 
             $pageUrl = $router->generate(
                 $routName,
-                array(
-                    'id' => $applicationId
-                ),
+                $paramArr,
+//                array(
+//                    'id' => $applicationId
+//                ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
         }

@@ -913,7 +913,18 @@ class ReportGenerator {
             //// EOF replace tenant base in $pageUrl //////
         }
 
-        $pageUrl = $userTenantUtil->routerGenerateWrapper( 'fellapp_download', $applicationId, $replaceContext=true );
+//        $pageUrl = $userTenantUtil->routerGenerateWrapper( 
+//            'fellapp_download', 
+//            $applicationId, 
+//            $replaceContext=true 
+//        );
+
+        $paramArr = array('id'=>$applicationId);
+        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+            'fellapp_download',
+            $paramArr,
+            $replaceContext=true
+        );
 
         $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
