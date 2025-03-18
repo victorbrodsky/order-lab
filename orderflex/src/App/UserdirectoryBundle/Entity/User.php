@@ -2716,6 +2716,45 @@ class User extends UserBase {
         return $latestEmploymentStatus;
     }
 
+    public function getAllEmploymentStartEndDates( $asString=true, $format='m/d/Y' ) {
+        $employmentStatuses = array();
+        foreach($this->getEmploymentStatus() as $employmentStatus) {
+            if( $employmentStatus ) {
+                if( $employmentStatus->getIgnore() !== TRUE ) {
+                    $resArr = array();
+                    $startDate = NULL;
+                    $endDate = NULL;
+                    if ($employmentStatus->getHireDate()) {
+                        $startDate = $employmentStatus->getHireDate();
+                        if ($startDate && $asString) {
+                            $startDate = $startDate->format($format);
+                        }
+                    }
+                    if ($employmentStatus->getTerminationDate()) {
+                        $endDate = $employmentStatus->getTerminationDate();
+                        if ($endDate && $asString) {
+                            $endDate = $endDate->format($format);
+                        }
+                    }
+
+                    $groupName = NULL;
+                    $group = $employmentStatus->getapprovalGroupType();
+                    if( $group ) {
+                        $groupName = $group->getName();
+                    }
+                    //echo "startDate=".$startDate."<br>";
+                    $resArr['startDate'] = $startDate;
+                    $resArr['endDate'] = $endDate;
+                    $resArr['ignore'] = $employmentStatus->getIgnore();
+                    $resArr['effort'] = $employmentStatus->getEffort();
+                    $resArr['group'] = $groupName;
+                    $employmentStatuses[] = $resArr;
+                }
+            }
+        }
+        return $employmentStatuses;
+    }
+
     public function getDegreesTitles() {
         $degrees = array();
         $titles = array();
@@ -2744,7 +2783,6 @@ class User extends UserBase {
                 'title' => $titlesStr,
             );
     }
-
 
     /////////////////////// NOT USED!!! Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions

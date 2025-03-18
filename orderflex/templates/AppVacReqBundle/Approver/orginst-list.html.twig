@@ -145,64 +145,153 @@
                     <tbody id="table-body-submitter">
                         {% for submitter in submitters %}
                             {#TODO: add multiple employment sections#}
-                            {% set startEndDates = submitter.getEmploymentStartEndDates(false) %}
-                            {% set startDate = null %}
-                            {% set endDate = null %}
-                            {% if startEndDates and startEndDates|length == 2 %}
-                                {% set startDate = startEndDates['startDate'] %}
-                                {% if startDate %}
-                                    {% set startDate = startDate|date("m/d/Y",false) %}
+                            {% if 0 %}
+                                {% set startEndDates = submitter.getEmploymentStartEndDates(false) %}
+                                {% set startDate = null %}
+                                {% set endDate = null %}
+                                {% if startEndDates and startEndDates|length == 2 %}
+                                    {% set startDate = startEndDates['startDate'] %}
+                                    {% if startDate %}
+                                        {% set startDate = startDate|date("m/d/Y",false) %}
+                                    {% endif %}
+                                    {% set endDate = startEndDates['endDate'] %}
+                                    {% if endDate %}
+                                        {% set endDate = endDate|date("m/d/Y",false) %}
+                                    {% endif %}
                                 {% endif %}
-                                {% set endDate = startEndDates['endDate'] %}
-                                {% if endDate %}
-                                    {% set endDate = endDate|date("m/d/Y",false) %}
-                                {% endif %}
+                                {#startDate={{ startDate }}, endDate={{ endDate }}<br>#}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                        >{{ submitter.getUserNameStr(true) }}</a>
+                                    </td>
+                                    <td>
+                                        {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
+                                        {#Latest Employment Start Date#}
+                                        {#startDate={{ startDate }}#}
+                                        <div class="input-group input-group-reg date allow-future-date">
+                                            <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}"
+                                                   placeholder="Latest Employment Start Date" type="text"
+                                                   value="{{ startDate }}"
+                                            >
+                                            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
+                                        {#Latest Employment End Date#}
+                                        {#endDate={{ endDate }}#}
+                                        <div class="input-group input-group-reg date allow-future-date">
+                                            <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}"
+                                                   placeholder="Latest Employment End Date" type="text"
+                                                   value="{{ endDate }}"
+                                            >
+                                            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default save-dates-btn"
+                                                type="button"
+                                                disabled
+                                                onclick="vacreqUpdateUserStartEndDate({{ submitter.id }},this)"
+                                        >Save</button>
+                                    </td>
+                                    <td>
+                                        {#Download Audit Summary#}
+                                        <a class="btn btn-default"
+                                           title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
+                                            href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
+                                            { 'userId': submitter.id }) }}">Download</a>
+                                    </td>
+                                </tr>
                             {% endif %}
-                            {#startDate={{ startDate }}, endDate={{ endDate }}<br>#}
-                            <tr>
-                                <td>
-                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
-                                    >{{ submitter.getUserNameStr(true) }}</a>
-                                </td>
-                                <td>
-                                    {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
-                                    {#Latest Employment Start Date#}
-                                    {#startDate={{ startDate }}#}
-                                    <div class="input-group input-group-reg date allow-future-date">
-                                        <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}"
-                                               placeholder="Latest Employment Start Date" type="text"
-                                               value="{{ startDate }}"
-                                        >
-                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
-                                    {#Latest Employment End Date#}
-                                    {#endDate={{ endDate }}#}
-                                    <div class="input-group input-group-reg date allow-future-date">
-                                        <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}"
-                                               placeholder="Latest Employment End Date" type="text"
-                                               value="{{ endDate }}"
-                                        >
-                                        <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button class="btn btn-default save-dates-btn"
-                                            type="button"
-                                            disabled
-                                            onclick="vacreqUpdateUserStartEndDate({{ submitter.id }},this)"
-                                    >Save</button>
-                                </td>
-                                <td>
-                                    {#Download Audit Summary#}
-                                    <a class="btn btn-default"
-                                       title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
-                                        href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
-                                        { 'userId': submitter.id }) }}">Download</a>
-                                </td>
-                            </tr>
+
+                            {#Mutliple employments dates#}
+                            {% if 1 %}
+                                {% set employmentStartEndDates = submitter.getAllEmploymentStartEndDates(false) %}
+                                {% for startEndDates in employmentStartEndDates %}
+                                    {% set startDate = null %}
+                                    {% set endDate = null %}
+                                    {% if startEndDates and startEndDates|length == 2 %}
+                                        {% set startDate = startEndDates['startDate'] %}
+                                        {% if startDate %}
+                                            {% set startDate = startDate|date("m/d/Y",false) %}
+                                        {% endif %}
+                                        {% set endDate = startEndDates['endDate'] %}
+                                        {% if endDate %}
+                                            {% set endDate = endDate|date("m/d/Y",false) %}
+                                        {% endif %}
+                                    {% endif %}
+                                    {#startDate={{ startDate }}, endDate={{ endDate }}<br>#}
+                                    <tr>
+                                        <td>
+                                            {% set eploymentInfo = '' %}
+                                            {% if startEndDates['effort'] or startEndDates['group'] %}
+                                                {% if startEndDates['effort'] %}
+                                                    {% set eploymentInfo = eploymentInfo ~ 'effort ' ~ startEndDates['effort'] %}
+                                                {% endif %}
+                                                {% if startEndDates['group'] %}
+                                                    {% set eploymentInfo = eploymentInfo ~ ', group ' ~ startEndDates['group'] %}
+                                                {% endif %}
+                                                {% set eploymentInfo = ' (' ~ eploymentInfo ~ ')' %}
+                                            {% endif %}
+                                            <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                            >{{ submitter.getUserNameStr(true) ~ eploymentInfo }}</a>
+
+                                            {#{% if startEndDates['effort'] or startEndDates['group'] %}#}
+                                                {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                                {#>{{ submitter.getUserNameStr(true) }}#}
+                                                {#(#}
+                                                    {#ignore: {{ startEndDates['ignore'] }},#}
+                                                    {#effort: {{ startEndDates['effort'] }}%,#}
+                                                    {#group: {{ startEndDates['group'] }}#}
+                                                {#)</a>#}
+                                            {#{% else %}#}
+                                                {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                                {#>{{ submitter.getUserNameStr(true) }}</a>#}
+                                            {#{% endif %}#}
+                                        </td>
+                                        <td>
+                                            {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
+                                            {#Latest Employment Start Date#}
+                                            {#startDate={{ startDate }}#}
+                                            <div class="input-group input-group-reg date allow-future-date">
+                                                <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}"
+                                                       placeholder="Latest Employment Start Date" type="text"
+                                                       value="{{ startDate }}"
+                                                >
+                                                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
+                                            {#Latest Employment End Date#}
+                                            {#endDate={{ endDate }}#}
+                                            <div class="input-group input-group-reg date allow-future-date">
+                                                <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}"
+                                                       placeholder="Latest Employment End Date" type="text"
+                                                       value="{{ endDate }}"
+                                                >
+                                                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-default save-dates-btn"
+                                                    type="button"
+                                                    disabled
+                                                    onclick="vacreqUpdateUserStartEndDate({{ submitter.id }},this)"
+                                            >Save</button>
+                                        </td>
+                                        <td>
+                                            {#Download Audit Summary#}
+                                            <a class="btn btn-default"
+                                               title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
+                                               href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
+                                               { 'userId': submitter.id }) }}">Download</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

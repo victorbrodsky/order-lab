@@ -1129,5 +1129,4 @@ class UserUtil {
         return $duser;
     }
     
-
 }
