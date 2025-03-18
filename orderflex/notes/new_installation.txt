@@ -144,15 +144,28 @@ Make sure to have a key file for mount external backup drive
 credentials=/mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt
 python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt
+Check mount folders: findmnt
 
 Set permission to 755 for upload-backup and db-backup
 -rw-r--r-- 1 apache   apache   1M Nov 15  2022 credentials.txt
 drwxrwxr-x 2 apache   apache   0M Nov 16  2022 upload-backup
 drwxrwxr-x 2 postgres postgres 0M Oct  3 07:00 db-backup
+Make sure permissions are correct:
+chmod 755 upload-backup
+chmod 755 db-backup
+chown -R apache upload-backup
+chown -R postgres db-backup
+chgrp apache upload-backup
+chgrp postgres db-backup
+
+#1) sudo visudo:
+# a) Defaults:apache !requiretty
+# b) apache ALL= NOPASSWD: /sbin/mount.cifs
 ////////// EOF Mount backup drive /////////////////
 
 Setup postgres backup:
 add to crontab: crontab -u postgres -e
 0 0-2,4-23 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
 
