@@ -168,6 +168,10 @@ add to crontab: crontab -u postgres -e
 0 0-2,4-23 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /srv/order-lab-tenantapp1/backup/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" mydbname mydbusername > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
+Original:
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup/db-backup/" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
 Check all crons for all users:
 tail -n 1000 /var/spool/cron/*
 or

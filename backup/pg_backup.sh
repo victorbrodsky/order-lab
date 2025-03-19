@@ -19,6 +19,7 @@ backup_type=$2  #HOURLY or DAILY
 DB_NAME=$3
 DB_USERNAME=$4
 #PGDATA=$5 #/usr/pgsql-14/bin
+PGDATA=/usr/pgsql-14/bin 
 DATETIME=`date +%Y%m%d%H%M%S`
 PROG=`basename $0`
 HOSTNAME=`uname -n`
