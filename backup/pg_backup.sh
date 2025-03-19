@@ -35,7 +35,8 @@ if [ ! -f ${PGDATA}/postmaster.pid ]; then
    exit
 else
    printf "Starting backup....\n" > $LOG
-   BACKUP_LABEL=${DATETIME}_`pg_ctl status -D ${PGDATA} | grep PID | awk -F":" '{print $3}' | awk -F")" '{print $1}' | sed 's/ //g'`
+   #BACKUP_LABEL=${DATETIME}_`pg_ctl status -D ${PGDATA} | grep PID | awk -F":" '{print $3}' | awk -F")" '{print $1}' | sed 's/ //g'`
+   BACKUP_LABEL="test"
    BACKUP_FNAME=postgres_${backup_type}_${BACKUP_LABEL}.tar.gz
    printf "Execute this SELECT pg_start_backup('${BACKUP_LABEL}') with this filename ${BACKUP_FNAME} to here ${backup}\n" >> $LOG
    psql -d ${DB_NAME} -U ${DB_USERNAME} -c "SELECT pg_start_backup('${BACKUP_LABEL}')" 2>&1 | tee -a >> $LOG
