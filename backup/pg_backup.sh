@@ -4,6 +4,7 @@ script_name=$0
 script_full_path=$(dirname "$0")
 echo "script_name: $script_name"
 echo "full path: $script_full_path"
+echo "LOG_DIR: $LOG_DIR"
 
 send_alert()
 {
