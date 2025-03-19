@@ -308,6 +308,13 @@
 
     </div>
 
+    <div class="well">
+        <p>
+            All cronjobs for all users
+            {{ user_service_utility.listAllCronJobsAllUsersLinux()|raw }}
+        </p>
+    </div>
+
 {% endblock %}
 
 {% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}

@@ -3784,6 +3784,18 @@ Pathology and Laboratory Medicine",
         return false;
     }
     
+    public function listAllCronJobsAllUsersLinux() {
+        $command = 'tail -n 1000 /var/spool/cron/*';
+        $process = Process::fromShellCommandline($command);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $info = $process->getOutput();
+        return $info;
+    }
+    
     //$commandName - 'cron:statustest'
     public function getCronJobFullNameLinux( $commandName, $asBoolean=true ) {
         $existingJobs = array();
