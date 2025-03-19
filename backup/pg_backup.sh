@@ -7,7 +7,7 @@ echo "full path: $script_full_path"
 
 send_alert()
 {
-   alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
+   $script_full_path/alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
 }
 
 #DB_NAME - DB name, DB_USERNAME - DB username
@@ -28,7 +28,7 @@ PORT=`netstat -a | grep PGSQL | awk -F"." '{print $NF}' | uniq`
 
 if [ ! -f ${PGDATA}/postmaster.pid ]; then
    printf "pgdata='${PGDATA}'"	
-   alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
+   $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
    exit
 else
    printf "Starting backup....\n" > $LOG
