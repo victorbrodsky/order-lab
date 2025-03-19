@@ -5,10 +5,10 @@ script_full_path=$(dirname "$0")
 echo "script_name: $script_name"
 echo "full path: $script_full_path"
 
-send_alert()
-{
-   /usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
-}
+#send_alert()
+#{
+#   /usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
+#}
 
 #DB_NAME - DB name, DB_USERNAME - DB username
 
@@ -61,6 +61,8 @@ fi
 
 find $backup -type f -mtime +5 -name 'postgres_HOURLY_*.tar.gz' -exec rm {} \; 2>&1 | tee -a >> $LOG
 find $backup -type f -mtime +14 -name 'postgres_DAILY_*.tar.gz' -exec rm {} \; 2>&1 | tee -a >> $LOG
-find /var/lib/pgsql/dba/logs -type f -mtime +15 -name '*.log' -exec rm {} \;
+#find /var/lib/pgsql/dba/logs -type f -mtime +15 -name '*.log' -exec rm {} \;
+find /var/lib/pgsql/17/data/logs -type f -mtime +15 -name '*.log' -exec rm {} \;
+/var/lib/pgsql/17/data/
 
 #alert_dba -FSUCCEED -S"PostgreSQL base backup succeeded" -B"$LOG" -P"$PROG" -AY -GY -C"$HOSTNAME"
