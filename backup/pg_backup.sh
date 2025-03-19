@@ -29,7 +29,8 @@ PORT=`netstat -a | grep PGSQL | awk -F"." '{print $NF}' | uniq`
 
 if [ ! -f ${PGDATA}/postmaster.pid ]; then
    printf "pgdata='${PGDATA}'\n"
-   /usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
+   #/usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
+   /usr/bin/bash alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
    exit
 else
    printf "Starting backup....\n" > $LOG
