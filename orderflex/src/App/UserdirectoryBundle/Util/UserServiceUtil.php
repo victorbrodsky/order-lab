@@ -3783,11 +3783,12 @@ Pathology and Laboratory Medicine",
 
         return false;
     }
-    
+
+    //Need permission to run it as apache user
     public function listAllCronJobsAllUsersLinux() {
         $command = 'tail -n 1000 /var/spool/cron/*';
         $process = Process::fromShellCommandline($command);
-        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->setTimeout(120); //sec; 120 sec => 2 min
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

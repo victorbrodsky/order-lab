@@ -308,12 +308,13 @@
 
     </div>
 
-    <div class="well">
-        <p>
-            All cronjobs for all users
-            {{ user_service_utility.listAllCronJobsAllUsersLinux()|raw }}
-        </p>
-    </div>
+    {#Need permission to run it as apache user#}
+    {#<div class="well">#}
+        {#<p>#}
+            {#All cronjobs for all users#}
+            {#{{ user_service_utility.listAllCronJobsAllUsersLinux()|raw }}#}
+        {#</p>#}
+    {#</div>#}
 
 {% endblock %}
 
