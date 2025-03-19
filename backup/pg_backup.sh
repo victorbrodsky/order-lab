@@ -1,5 +1,10 @@
 . $HOME/.bash_profile
 
+script_name=$0
+script_full_path=$(dirname "$0")
+echo "script_name: $script_name"
+echo "full path: $script_full_path"
+
 send_alert()
 {
    alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
