@@ -28,7 +28,7 @@ PORT=`netstat -a | grep PGSQL | awk -F"." '{print $NF}' | uniq`
 
 if [ ! -f ${PGDATA}/postmaster.pid ]; then
    printf "pgdata='${PGDATA}'"	
-   /usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
+#   /usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
    exit
 else
    printf "Starting backup....\n" > $LOG
@@ -38,7 +38,7 @@ else
    psql -d ${DB_NAME} -U ${DB_USERNAME} -c "SELECT pg_start_backup('${BACKUP_LABEL}')" 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
       printf "Start backup command pg_start_backup failed\n" >> $LOG
-      send_alert
+      #send_alert
       exit
    fi
    printf "Execute this: tar -zcvf $backup/${BACKUP_FNAME} ${PGDATA}\n" >> $LOG
@@ -47,14 +47,14 @@ else
    tar -zcvf $backup/${BACKUP_FNAME} data 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
       printf "tar command: tar -zcvf $backup/${BACKUP_FNAME} ${PGDATA} failed\n" >> $LOG
-      send_alert
+      #send_alert
       exit
    fi
    printf "Execute this: SELECT pg_stop_backup()\n" >> $LOG
    psql -d ${DB_USERNAME} -U ${DB_USERNAME} -c "SELECT pg_stop_backup()" 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
       printf "stop command pg_stop_backup failed\n" >> $LOG
-      send_alert
+      #send_alert
       exit
    fi
 fi
