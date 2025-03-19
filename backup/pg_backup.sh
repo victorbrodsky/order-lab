@@ -19,7 +19,7 @@ backup_type=$2  #HOURLY or DAILY
 DB_NAME=$3
 DB_USERNAME=$4
 #PGDATA=$5 #/usr/pgsql-14/bin
-PGDATA=/usr/pgsql-17/bin
+PGDATA=/var/lib/pgsql/17/data
 DATETIME=`date +%Y%m%d%H%M%S`
 PROG=`basename $0`
 HOSTNAME=`uname -n`
@@ -31,7 +31,7 @@ if [ ! -f ${PGDATA}/postmaster.pid ]; then
    printf "pgdata='${PGDATA}'\n"
    #/usr/bin/bash $script_full_path/alert_dba -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
    #/usr/bin/bash /srv/order-lab-tenantapp1/backup/alert_dba.sh -FALERT -S"PostgreSQL database is down" -B"PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
-   printf "PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME"
+   printf "PostgreSQL database is down in this machine $HOSTNAME" -P"$PROG" -AY -GN -C"$HOSTNAME \n"
    exit
 else
    printf "Starting backup....\n" > $LOG
