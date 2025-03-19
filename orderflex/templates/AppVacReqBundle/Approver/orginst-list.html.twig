@@ -209,15 +209,15 @@
                             {#Mutliple employments dates#}
                             {% if 1 %}
                                 {% set employmentStartEndDates = submitter.getAllEmploymentStartEndDates(false) %}
-                                {% for startEndDates in employmentStartEndDates %}
+                                {% for employmentData in employmentStartEndDates %}
                                     {% set startDate = null %}
                                     {% set endDate = null %}
-                                    {% if startEndDates and startEndDates|length == 2 %}
-                                        {% set startDate = startEndDates['startDate'] %}
+                                    {% if employmentData and employmentData|length == 2 %}
+                                        {% set startDate = employmentData['startDate'] %}
                                         {% if startDate %}
                                             {% set startDate = startDate|date("m/d/Y",false) %}
                                         {% endif %}
-                                        {% set endDate = startEndDates['endDate'] %}
+                                        {% set endDate = employmentData['endDate'] %}
                                         {% if endDate %}
                                             {% set endDate = endDate|date("m/d/Y",false) %}
                                         {% endif %}
@@ -226,12 +226,12 @@
                                     <tr>
                                         <td>
                                             {% set eploymentInfo = '' %}
-                                            {% if startEndDates['effort'] or startEndDates['group'] %}
-                                                {% if startEndDates['effort'] %}
-                                                    {% set eploymentInfo = eploymentInfo ~ 'effort ' ~ startEndDates['effort'] %}
+                                            {% if employmentData['effort'] or employmentData['group'] %}
+                                                {% if employmentData['effort'] %}
+                                                    {% set eploymentInfo = eploymentInfo ~ 'effort-' ~ employmentData['effort'] ~ '%' %}
                                                 {% endif %}
-                                                {% if startEndDates['group'] %}
-                                                    {% set eploymentInfo = eploymentInfo ~ ', group ' ~ startEndDates['group'] %}
+                                                {% if employmentData['group'] %}
+                                                    {% set eploymentInfo = eploymentInfo ~ ", group-'" ~ employmentData['group'] ~ "'" %}
                                                 {% endif %}
                                                 {% set eploymentInfo = ' (' ~ eploymentInfo ~ ')' %}
                                             {% endif %}
