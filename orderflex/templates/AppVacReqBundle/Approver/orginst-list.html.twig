@@ -92,6 +92,21 @@
             </div>
             {% endif %}
 
+            {#Submitter -> multiple employments#}
+            {#<table style="width:100%">#}
+                {#<tr>#}
+                    {#<th>Submitter</th>#}
+                    {#<td>Jill</td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<th rowspan="2">Phone</th>#}
+                    {#<td>555-1234</td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td>555-8745</td>#}
+                {#</tr>#}
+            {#</table>#}
+
             {% if 0 %}
                 {#User start/end date as row#}
                 <div class="well" align="justify">
@@ -209,6 +224,40 @@
                             {#Mutliple employments dates#}
                             {% if 1 %}
                                 {% set employmentStartEndDates = submitter.getAllEmploymentStartEndDates(false) %}
+                                {% set rowspan = 1 %}
+                                {% if employmentStartEndDates|length > 1 %}
+                                    {% set rowspan = employmentStartEndDates|length %}
+                                {% endif %}
+                                rowspan={{ rowspan }}<br>
+                                <tr>
+                                <td rowspan="{{ rowspan }}">
+                                    {% set eploymentInfo = '' %}
+                                    {#{% if employmentData['effort'] or employmentData['group'] %}#}
+                                        {#{% if employmentData['effort'] %}#}
+                                            {#{% set eploymentInfo = eploymentInfo ~ 'effort-' ~ employmentData['effort'] ~ '%' %}#}
+                                        {#{% endif %}#}
+                                        {#{% if employmentData['group'] %}#}
+                                            {#{% set eploymentInfo = eploymentInfo ~ ", group-'" ~ employmentData['group'] ~ "'" %}#}
+                                        {#{% endif %}#}
+                                        {#{% set eploymentInfo = ' (' ~ eploymentInfo ~ ')' %}#}
+                                    {#{% endif %}#}
+                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                    >{{ submitter.getUserNameStr(true) ~ eploymentInfo }}</a>
+
+                                    {#{% if startEndDates['effort'] or startEndDates['group'] %}#}
+                                    {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                    {#>{{ submitter.getUserNameStr(true) }}#}
+                                    {#(#}
+                                    {#ignore: {{ startEndDates['ignore'] }},#}
+                                    {#effort: {{ startEndDates['effort'] }}%,#}
+                                    {#group: {{ startEndDates['group'] }}#}
+                                    {#)</a>#}
+                                    {#{% else %}#}
+                                    {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                    {#>{{ submitter.getUserNameStr(true) }}</a>#}
+                                    {#{% endif %}#}
+                                </td>
+
                                 {% for employmentData in employmentStartEndDates %}
                                     {% set startDate = null %}
                                     {% set endDate = null %}
@@ -224,20 +273,20 @@
                                         {% endif %}
                                     {% endif %}
                                     {#EmplStatus ID={{ employmentData['id'] }}, startDate={{ startDate }}, endDate={{ endDate }}<br>#}
-                                    <tr>
-                                        <td>
-                                            {% set eploymentInfo = '' %}
-                                            {% if employmentData['effort'] or employmentData['group'] %}
-                                                {% if employmentData['effort'] %}
-                                                    {% set eploymentInfo = eploymentInfo ~ 'effort-' ~ employmentData['effort'] ~ '%' %}
-                                                {% endif %}
-                                                {% if employmentData['group'] %}
-                                                    {% set eploymentInfo = eploymentInfo ~ ", group-'" ~ employmentData['group'] ~ "'" %}
-                                                {% endif %}
-                                                {% set eploymentInfo = ' (' ~ eploymentInfo ~ ')' %}
-                                            {% endif %}
-                                            <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
-                                            >{{ submitter.getUserNameStr(true) ~ eploymentInfo }}</a>
+                                    {#<tr>#}
+                                        {#<td rowspan="{{ rowspan }}">#}
+                                            {#{% set eploymentInfo = '' %}#}
+                                            {#{% if employmentData['effort'] or employmentData['group'] %}#}
+                                                {#{% if employmentData['effort'] %}#}
+                                                    {#{% set eploymentInfo = eploymentInfo ~ 'effort-' ~ employmentData['effort'] ~ '%' %}#}
+                                                {#{% endif %}#}
+                                                {#{% if employmentData['group'] %}#}
+                                                    {#{% set eploymentInfo = eploymentInfo ~ ", group-'" ~ employmentData['group'] ~ "'" %}#}
+                                                {#{% endif %}#}
+                                                {#{% set eploymentInfo = ' (' ~ eploymentInfo ~ ')' %}#}
+                                            {#{% endif %}#}
+                                            {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                            {#>{{ submitter.getUserNameStr(true) ~ eploymentInfo }}</a>#}
 
                                             {#{% if startEndDates['effort'] or startEndDates['group'] %}#}
                                                 {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
@@ -251,8 +300,8 @@
                                                 {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
                                                 {#>{{ submitter.getUserNameStr(true) }}</a>#}
                                             {#{% endif %}#}
-                                        </td>
-                                        <td>
+                                        {#</td>#}
+                                        <td rowspan="1">
                                             {#oleg_userdirectorybundle_user[employmentStatus][0][hireDate]#}
                                             {#Latest Employment Start Date#}
                                             {#startDate={{ startDate }}#}
@@ -264,7 +313,7 @@
                                                 <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td rowspan="1">
                                             {#oleg_userdirectorybundle_user[employmentStatus][0][terminationDate]#}
                                             {#Latest Employment End Date#}
                                             {#endDate={{ endDate }}#}
@@ -276,22 +325,23 @@
                                                 <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td rowspan="1">
                                             <button class="btn btn-default save-dates-btn"
                                                     type="button"
                                                     disabled
                                                     onclick="vacreqUpdateUserStartEndDate({{ submitter.id }}, {{ employmentData['id'] }}, this)"
                                             >Save</button>
                                         </td>
-                                        <td>
+                                        <td rowspan="1">
                                             {#Download Audit Summary#}
                                             <a class="btn btn-default"
                                                title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
                                                href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
                                                { 'userId': submitter.id }) }}">Download</a>
                                         </td>
-                                    </tr>
+                                    {#</tr>#}
                                 {% endfor %}
+                                </tr>
                             {% endif %}
                         {% endfor %}
                     </tbody>
