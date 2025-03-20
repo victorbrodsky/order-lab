@@ -558,12 +558,14 @@ class UserDatesController extends OrderAbstractController
 //        $startDate = json_decode($request->get('startDate'));
 //        $endDate = json_decode($request->get('endDate'));
         $userId = $request->get('userId');
+        $emplstatusId = $request->get('emplstatusId');
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
         echo "userId=$userId, startDate=$startDate, endDate=$endDate <br>";
         //exit('111');
 
         $userData = array(
+            'emplstatusId' => $emplstatusId,
             'userId' => $userId,
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -616,8 +618,129 @@ class UserDatesController extends OrderAbstractController
         return $response;
     }
 
-    //Process Dates: set start/end employment dates
     public function processData($inputData,$request,$withLocking=false,$testing=false,$noteStr='with bulk updates') {
+        $em = $this->getDoctrine()->getManager();
+        $currentUser = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //dump($inputData);
+        //echo "data len=".count($inputData)."<br>";
+
+        $processedUserIdArr = array();
+        $eventArr = array();
+
+        foreach($inputData as $data) {
+            //dump($data);
+            $emplstatusId = $data['emplstatusId'];
+            $userId = $data['userId'];
+            $startDateStr = $data['startDate'];
+            $endDateStr = $data['endDate'];
+            //echo "emplstatusId=$emplstatusId, userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
+            //exit("111");
+
+            $employmentStatus = $em->getRepository(EmploymentStatus::class)->find($emplstatusId);
+
+            if( !$employmentStatus ) {
+                $eventArr[] = "Ignore logical error: EmploymentStatus not found by ID=$emplstatusId";
+                continue;
+            }
+
+            $event = null;
+            $changeArr = array();
+
+            $user = $employmentStatus->getUser();
+            if( !$user ) {
+                $eventArr[] = "Ignore logical error: EmploymentStatus does not have associated user";
+                continue;
+            }
+
+            $origianlEnableStatus = $user->isEnabled();
+
+            //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
+            $originalStartDate = $employmentStatus->getHireDate();
+            if( $originalStartDate ) {
+                $originalStartDate = $originalStartDate->format('m/d/Y');
+            } else {
+                $originalStartDate = "None";
+            }
+            $originalEndDate = $employmentStatus->getTerminationDate();
+            if( $originalEndDate ) {
+                $originalEndDate = $originalEndDate->format('m/d/Y');
+            } else {
+                $originalEndDate = "None";
+            }
+
+            //if( $startDateStr ) {
+            if( $originalStartDate != $startDateStr ) {
+                if( $startDateStr ) {
+                    $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr . " 00:00");
+                    $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate, $user);
+                    //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+                } else {
+                    $startDate = null;
+                    $startDateStr = "None";
+                }
+                $employmentStatus->setHireDate($startDate);
+                if( $originalStartDate != $startDateStr ) {
+                    $changeArr[] = "Start date changed from $originalStartDate to $startDateStr for EmploymentStatus ID=$emplstatusId";
+                }
+            }
+            //}
+            //if( $endDateStr ) {
+            if( $originalEndDate != $endDateStr ) {
+                if( $endDateStr ) {
+                    $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr . " 00:00");
+                    $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate, $user);
+                    //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+                } else {
+                    $endDate = null;
+                    $endDateStr = "None";
+                }
+                $employmentStatus->setTerminationDate($endDate);
+                if( $originalEndDate != $endDateStr ) {
+                    $changeArr[] = "End date changed from $originalEndDate to $endDateStr for EmploymentStatus ID=$emplstatusId";
+                }
+            }
+            //}
+
+            //lock user account
+            if( $withLocking ) {
+                if ($origianlEnableStatus !== false) {
+                    $user->setEnabled(false);
+                    $changeArr[] = "User $user is locked by $currentUser";
+                }
+            }
+
+            if (count($changeArr) > 0) {
+                //$user->addEmploymentStatus($employmentStatus);
+
+                if( !$testing ) {
+                    $em->flush();
+                }
+
+                $event = "User profile of " . $user . " has been changed by " . $currentUser . " $noteStr:" . "<br>";
+                $changeStr = implode("; ", $changeArr);
+
+                $event = $event . $changeStr;
+
+                //Event Log
+                if( !$testing ) {
+                    $userSecUtil->createUserEditEvent($sitename, $event, $currentUser, $user, $request, 'User record updated');
+                }
+            } else {
+                $event = "User profile of " . $user . " has not been changed by " . $currentUser . " $noteStr";
+            }
+
+            $eventArr[] = $event . "<br>";
+        }
+
+        return $eventArr;
+    }
+
+    //Process Dates: set start/end employment dates
+    public function processData_ORIG($inputData,$request,$withLocking=false,$testing=false,$noteStr='with bulk updates') {
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
         $sitename = $this->getParameter('employees.sitename');
@@ -633,6 +756,7 @@ class UserDatesController extends OrderAbstractController
 
         foreach($inputData as $data) {
             //dump($data);
+            $emplstatusId = $data['emplstatusId'];
             $userId = $data['userId'];
             $startDateStr = $data['startDate'];
             $endDateStr = $data['endDate'];

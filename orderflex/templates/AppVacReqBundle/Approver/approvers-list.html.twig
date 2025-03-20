@@ -137,7 +137,7 @@
             vacreqDisableBtn(saveBtn);
         }
 
-        function vacreqUpdateUserStartEndDate(userId,saveBtn) {
+        function vacreqUpdateUserStartEndDate( userId, emplstatusId, saveBtn ) {
             console.log('Save btn clicked');
             //var lbtn = Ladda.create(saveBtn);
             //lbtn.start();
@@ -149,7 +149,7 @@
             var tr = $(saveBtn).closest('tr');
             var startDate = tr.find('.user-start-date').val();
             var endDate = tr.find('.user-end-date').val();
-            console.log('userId='+userId+', startDate='+startDate+', endDate='+endDate);
+            console.log('userId='+userId+', emplstatusId='+emplstatusId+', startDate='+startDate+', endDate='+endDate);
 
             var url = Routing.generate('employees_update_users_date_vacreq');
             $.ajax({
@@ -159,7 +159,7 @@
                 //dataType: 'json',
                 async: asyncflag,
                 //data: {modifiedData: modifiedDataArr},
-                data: {'userId': userId, 'startDate': startDate, 'endDate': endDate}
+                data: {'userId': userId, 'emplstatusId': emplstatusId, 'startDate': startDate, 'endDate': endDate}
             }).success(function(response) {
                 console.log(response);
                 //disable button and set to default

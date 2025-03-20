@@ -2743,6 +2743,7 @@ class User extends UserBase {
                         $groupName = $group->getName();
                     }
                     //echo "startDate=".$startDate."<br>";
+                    $resArr['id'] = $employmentStatus->getId();
                     $resArr['startDate'] = $startDate;
                     $resArr['endDate'] = $endDate;
                     $resArr['ignore'] = $employmentStatus->getIgnore();
