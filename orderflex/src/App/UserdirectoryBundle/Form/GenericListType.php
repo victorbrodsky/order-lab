@@ -470,7 +470,7 @@ class GenericListType extends AbstractType
         //url
         if( method_exists($this->params['entity'],'getUrl') ) {
             $builder->add('url',null,array(
-                'label' => 'Url (only ending url: http://127.0.0.1/order/dashboards/chart/1 => chart):',
+                'label' => 'Url (only ending url: http://127.0.0.1/dashboards/chart/1 => chart):',
                 'attr' => array('class' => 'form-control')
             ));
         }

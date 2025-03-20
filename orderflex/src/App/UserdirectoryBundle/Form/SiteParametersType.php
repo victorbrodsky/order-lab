@@ -1532,7 +1532,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'liveSiteRootUrl' )
             $builder->add('liveSiteRootUrl',null,array(
-                'label'=>'Live Site Root URL (http://c.med.cornell.edu/order/):',
+                'label'=>'Live Site Root URL (http://c.med.cornell.edu/):',
                 'attr' => array('class'=>'form-control')
             ));
 

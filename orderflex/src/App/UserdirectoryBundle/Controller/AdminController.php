@@ -9248,7 +9248,7 @@ class AdminController extends OrderAbstractController
 
             $res = "Congratulations! You have successfully installed the system.".
                 " Please select 'Local User' from the menu below and enter the user name 'administrator' and the password '1234567890' to log in.".
-                " Then visit [/order/directory/settings/] and run the initialization scripts 1 through 7".
+                " Then visit [/directory/settings/] and run the initialization scripts 1 through 7".
                 " in the listed order (skipping 4a and 4b) in the Miscellaneous section.".
                 " After that, change the administrator password!";
 

@@ -93,19 +93,38 @@
             {% endif %}
 
             {#Submitter -> multiple employments#}
-            {#<table style="width:100%">#}
-                {#<tr>#}
-                    {#<th>Submitter</th>#}
-                    {#<td>Jill</td>#}
-                {#</tr>#}
-                {#<tr>#}
-                    {#<th rowspan="2">Phone</th>#}
-                    {#<td>555-1234</td>#}
-                {#</tr>#}
-                {#<tr>#}
-                    {#<td>555-8745</td>#}
-                {#</tr>#}
-            {#</table>#}
+            <table class="table table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Submitter</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Save</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2">Jill</td>
+                        <td>123</td>
+                        <td>456</td>
+                        <td>Button</td>
+
+
+                    </tr>
+                    <tr>
+                        <td>Bob</td>
+                        <td>123</td>
+                        <td>456</td>
+                        <td>Button</td>
+                    </tr>
+                    <tr>
+                        <td >Bob</td>
+                        <td>123</td>
+                        <td>456</td>
+                        <td>Button</td>
+                    </tr>
+                </tbody>
+            </table>
 
             {% if 0 %}
                 {#User start/end date as row#}
