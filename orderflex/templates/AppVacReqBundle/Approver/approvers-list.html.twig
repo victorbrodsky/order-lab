@@ -118,12 +118,12 @@
             //$(saveBtn).addClass("disabled");
         }
 
-        function vacreqSyncUsersInOtherGroups( userId, startDate, endDate ) {
+        function vacreqSyncUsersInOtherGroups( userId, emplstatusId, startDate, endDate ) {
             //class=vacreq_end_date_userId
-            $('.vacreq_start_date_'+userId).each(function() {
+            $('.vacreq_start_date_'+userId+'_'+emplstatusId).each(function() {
                 vacreqSetEmploymentDate($(this),startDate);
             });
-            $('.vacreq_end_date_'+userId).each(function() {
+            $('.vacreq_end_date_'+userId+'_'+emplstatusId).each(function() {
                 vacreqSetEmploymentDate($(this),endDate);
             });
         }
@@ -165,7 +165,7 @@
                 //disable button and set to default
                 vacreqDisableBtn(saveBtn);
                 //sync in other groups
-                vacreqSyncUsersInOtherGroups(userId,startDate,endDate);
+                vacreqSyncUsersInOtherGroups(userId,emplstatusId,startDate,endDate);
             }).done(function() {
                 console.log("done");
                 //lbtn.stop();

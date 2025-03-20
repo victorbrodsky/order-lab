@@ -2720,12 +2720,15 @@ class User extends UserBase {
         $employmentStatuses = array();
         foreach($this->getEmploymentStatus() as $employmentStatus) {
             if( $employmentStatus ) {
-                if( $employmentStatus->getIgnore() !== TRUE ) {
+//                echo "employmentStatus=".$employmentStatus->getId()." <br>";
+                //if( $employmentStatus->getIgnore() === False ) {
                     $resArr = array();
                     $startDate = NULL;
                     $endDate = NULL;
                     if ($employmentStatus->getHireDate()) {
                         $startDate = $employmentStatus->getHireDate();
+//                        if($startDate)
+//                            echo "employmentStatus startDate=".$startDate->format($format)." <br>";
                         if ($startDate && $asString) {
                             $startDate = $startDate->format($format);
                         }
@@ -2743,6 +2746,7 @@ class User extends UserBase {
                         $groupName = $group->getName();
                     }
                     //echo "startDate=".$startDate."<br>";
+                    //$resArr['userId'] = $employmentStatus->getUser()->getId();
                     $resArr['id'] = $employmentStatus->getId();
                     $resArr['startDate'] = $startDate;
                     $resArr['endDate'] = $endDate;
@@ -2750,7 +2754,7 @@ class User extends UserBase {
                     $resArr['effort'] = $employmentStatus->getEffort();
                     $resArr['group'] = $groupName;
                     $employmentStatuses[] = $resArr;
-                }
+                //}
             }
         }
         return $employmentStatuses;

@@ -212,17 +212,18 @@
                                 {% for employmentData in employmentStartEndDates %}
                                     {% set startDate = null %}
                                     {% set endDate = null %}
-                                    {% if employmentData and employmentData|length == 2 %}
+                                    {% if employmentData %}
                                         {% set startDate = employmentData['startDate'] %}
                                         {% if startDate %}
                                             {% set startDate = startDate|date("m/d/Y",false) %}
+                                            {#Set startDate={{ startDate }}<br>#}
                                         {% endif %}
                                         {% set endDate = employmentData['endDate'] %}
                                         {% if endDate %}
                                             {% set endDate = endDate|date("m/d/Y",false) %}
                                         {% endif %}
                                     {% endif %}
-                                    {#startDate={{ startDate }}, endDate={{ endDate }}<br>#}
+                                    {#EmplStatus ID={{ employmentData['id'] }}, startDate={{ startDate }}, endDate={{ endDate }}<br>#}
                                     <tr>
                                         <td>
                                             {% set eploymentInfo = '' %}
@@ -256,7 +257,7 @@
                                             {#Latest Employment Start Date#}
                                             {#startDate={{ startDate }}#}
                                             <div class="input-group input-group-reg date allow-future-date">
-                                                <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}"
+                                                <input class="datepicker form-control submit-on-enter-field user-start-date vacreq_start_date_{{ submitter.id }}_{{ employmentData['id'] }}"
                                                        placeholder="Latest Employment Start Date" type="text"
                                                        value="{{ startDate }}"
                                                 >
@@ -268,7 +269,7 @@
                                             {#Latest Employment End Date#}
                                             {#endDate={{ endDate }}#}
                                             <div class="input-group input-group-reg date allow-future-date">
-                                                <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}"
+                                                <input class="datepicker form-control submit-on-enter-field user-end-date vacreq_end_date_{{ submitter.id }}_{{ employmentData['id'] }}"
                                                        placeholder="Latest Employment End Date" type="text"
                                                        value="{{ endDate }}"
                                                 >
