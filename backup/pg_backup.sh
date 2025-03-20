@@ -1,5 +1,9 @@
 . $HOME/.bash_profile
 
+#This script will not work on Postgresl 17, because pg_start_backup is replaced by pg_backup_start
+#Use /bin/php /usr/local/bin/order-lab-tenantapp1/orderflex/bin/console cron:db-backup-command --env=prod
+#db-backup-command will create DB and Upload files backups in networkDrivePath
+
 script_name=$0
 script_full_path=$(dirname "$0")
 echo "script_name: $script_name"
@@ -39,6 +43,7 @@ else
    BACKUP_LABEL=${DATETIME}_`pg_ctl status -D ${PGDATA} | grep PID | awk -F":" '{print $3}' | awk -F")" '{print $1}' | sed 's/ //g'`
    #BACKUP_LABEL="test"
    BACKUP_FNAME=postgres_${backup_type}_${BACKUP_LABEL}.tar.gz
+   #pg_start_backup is replaced by pg_backup_start
    printf "Execute this SELECT pg_start_backup('${BACKUP_LABEL}') with this filename ${BACKUP_FNAME} to here ${backup}\n" >> $LOG
    psql -d ${DB_NAME} -U ${DB_USERNAME} -c "SELECT pg_start_backup('${BACKUP_LABEL}')" 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
