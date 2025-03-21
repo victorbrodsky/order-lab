@@ -3493,12 +3493,16 @@ Pathology and Laboratory Medicine",
     }
 
     //create-backup-upload: result file: 'backupfiles-...'
-    public function createBackupUpload() {
+    public function createBackupUpload( $backupPath=null ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
-        if( !$networkDrivePath ) {
+
+        if( !$backupPath ) {
+            $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        }
+
+        //echo "backupPath=".$backupPath."<br>";
+        if( !$backupPath ) {
 //            //exit("No networkDrivePath is defined");
 //            $this->addFlash(
 //                'pnotify-error',
@@ -3506,19 +3510,19 @@ Pathology and Laboratory Medicine",
 //                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
 //            );
 //            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
-            return "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings";
+            return "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings";
         }
 
         $res = NULL;
 
-        if( $networkDrivePath ) {
+        if( $backupPath ) {
 
             set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
             //set_time_limit(900); //900 sec => 15 min
 
             //create backup tar -zcvf archive.tar.gz directory/
-            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
-            //exit($networkDrivePath);
+            $backupPath = realpath($backupPath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+            //exit($backupPath);
 
             $environment = $userSecUtil->getSiteSettingParameter('environment');
             if (!$environment) {
@@ -3533,7 +3537,7 @@ Pathology and Laboratory Medicine",
 
             $date = date('Y-m-d-H-i-s');
             $archiveFile = "backupfiles-" . $environment . "_" . $instanceId . "_" . $date . ".tar.gz";
-            $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
+            $archiveFile = $backupPath . DIRECTORY_SEPARATOR . $archiveFile;
             //echo "archiveFile=".$archiveFile."<br>";
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
@@ -3582,7 +3586,7 @@ Pathology and Laboratory Medicine",
             //echo "networkDrivePath=".$networkDrivePath."<br>";
         }
         if( !$networkDrivePath ) {
-            return "removeOldBackupFiles: Cannot proceed: networkDrivePath is not specified";
+            return "removeOldBackupFiles: Cannot proceed: backup path and/or networkDrivePath is not specified";
         }
 
         //get files from $networkDrivePath

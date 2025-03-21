@@ -533,10 +533,10 @@ class SecurityController extends OrderAbstractController
             $sitename = $this->getParameter('dashboard.sitename');
         }
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            "Test message"
-        );
+//        $request->getSession()->getFlashBag()->add(
+//            'notice',
+//            "Test message"
+//        );
         //exit('idlelogoutAction exit');
 
         $userSecUtil = $this->container->get('user_security_utility');

@@ -25,6 +25,7 @@
 namespace App\UserdirectoryBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,11 +48,13 @@ class DbBackupCommand extends Command {
     {
         $this
             ->setName('cron:db-backup-command')
-            ->setDescription('Backup DB');
+            ->setDescription('Backup DB')
+            ->addArgument('backuppath', InputArgument::REQUIRED, 'Backup location')
+        ;
     }
 
     //Cron job to back up DB and Uploaded files.
-    // /bin/php bin/console cron:db-backup-command --env=prod
+    // /bin/php bin/console cron:db-backup-command --env=prod /
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $resStr = "N/A";
@@ -59,23 +62,26 @@ class DbBackupCommand extends Command {
         $logger = $this->container->get('logger');
         //$logger->notice("cron:db-backup-command. before.");
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        $backupPath = $input->getArgument('backuppath');
+        if( !$backupPath) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        }
 
-        if( $networkDrivePath ) {
+        if( $backupPath ) {
             $userServiceUtil = $this->container->get('user_service_utility');
 
             //$logger->notice("cron:db-backup-command. start.");
 
             $resStr = NULL;
-            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
+            $res = $userServiceUtil->dbManagePython($backupPath, 'backup');
             $resStr = implode(', ', $res);
 
-            $res = $userServiceUtil->createBackupUpload();
+            $res = $userServiceUtil->createBackupUpload($backupPath);
             $resStr = $resStr . "; " . $res;
 
             //Remove previously created backups: keep only number of backup files (keepnumber)
-            $res = $userServiceUtil->removeOldBackupFiles();
+            $res = $userServiceUtil->removeOldBackupFiles($backupPath);
             $resStr = $resStr . "; " . $res;
 
             //$logger->notice("cron:db-backup-command. after. resStr=".$resStr);
