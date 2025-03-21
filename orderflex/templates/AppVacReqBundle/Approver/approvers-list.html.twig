@@ -131,7 +131,14 @@
                 vacreqSetEmploymentDate($(this),endDate);
             });
             $('.vacreq_effort_'+userId+'_'+emplstatusId).each(function() {
-                vacreqSetEmploymentDate($(this),effort);
+                if( effort == 0 ) {
+                    effort = '';
+                }
+                $(this).val(effort);
+                //disable save button
+                var tr = $(this).closest('tr');
+                var saveBtn = tr.find('.save-dates-btn').get(0);
+                vacreqDisableBtn(saveBtn);
             });
         }
         function vacreqSetEmploymentDate( inputEl, date ) {

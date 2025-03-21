@@ -352,8 +352,10 @@
                                             </div>
                                         </td>
                                         <td>
+                                            {#allow only positive integers: oninput="validity.valid||(value='');"#}
                                             <input class="form-control submit-on-enter-field user-effort vacreq_effort_{{ submitter.id }}_{{ employmentData['id'] }}"
-                                                   placeholder="Effort" type="text"
+                                                   placeholder="Effort" type="number" min="1"
+                                                   oninput="validity.valid||(value='');"
                                                    value="{{ employmentData['effort'] }}"
                                             >
                                         </td>

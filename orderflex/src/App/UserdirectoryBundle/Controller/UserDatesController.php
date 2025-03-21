@@ -561,7 +561,8 @@ class UserDatesController extends OrderAbstractController
         $emplstatusId = $request->get('emplstatusId');
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-        echo "userId=$userId, startDate=$startDate, endDate=$endDate <br>";
+        $effort = $request->get('effort');
+        echo "userId=$userId, startDate=$startDate, endDate=$endDate, effort=$effort <br>";
         //exit('111');
 
         $userData = array(
@@ -569,6 +570,7 @@ class UserDatesController extends OrderAbstractController
             'userId' => $userId,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'effort' => $effort
         );
         $modifiedData = array($userData);
 
@@ -637,6 +639,7 @@ class UserDatesController extends OrderAbstractController
             $userId = $data['userId'];
             $startDateStr = $data['startDate'];
             $endDateStr = $data['endDate'];
+            $effort = $data['effort'];
             //echo "emplstatusId=$emplstatusId, userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
             //exit("111");
 
@@ -671,6 +674,7 @@ class UserDatesController extends OrderAbstractController
             } else {
                 $originalEndDate = "None";
             }
+            $originalEffort = $employmentStatus->getEffort();
 
             //if( $startDateStr ) {
             if( $originalStartDate != $startDateStr ) {
@@ -704,6 +708,13 @@ class UserDatesController extends OrderAbstractController
                 }
             }
             //}
+            if( $originalEffort != $effort ) {
+                if( $effort == '' || $effort == 0 ) {
+                    $effort = NULL;
+                }
+                $employmentStatus->setEffort($effort);
+                $changeArr[] = "Effort changed from $originalEffort to $effort for EmploymentStatus ID=$emplstatusId";
+            }
 
             //lock user account
             if( $withLocking ) {
