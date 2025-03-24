@@ -3326,7 +3326,7 @@ Pathology and Laboratory Medicine",
 
     //Used by DataBackupManagemenetController.php
     //create-backup: result file: 'backupdb-...'
-    //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
+    //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
 
 //        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
@@ -3457,9 +3457,11 @@ Pathology and Laboratory Medicine",
 
             //TODO: check error
             // /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/venv/bin/python /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/manage_postgres_db.py --configfile /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/db.config --verbose true --path /usr/local/bin/order-lab-tenantapp1/orderflex/var/backups/ --source-db tenantapp1 --user symfony --password symfony --action backup --prefix live
+            //Maybe provide server name: gethostname() -> xits-po-order-prd2
 
-            $command = $command . " --action backup --prefix ".$environment."-".$instanceId;
+            $command = $command . " --action backup --prefix ".$environment."-".$instanceId."-".gethostname();
         } elseif( $action == 'restore' ) {
+            exit('DB restore is disabled');
             //restore
             if( $backupFileName ) {
                 $command = $command . " --action restore --date $backupFileName";
@@ -3492,6 +3494,8 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    //Use tar command directly 'tar -zcf ...'.
+    //Alternatively, backup/filesbackup.py can be used
     //create-backup-upload: result file: 'backupfiles-...'
     public function createBackupUpload( $backupPath=null ) {
         $logger = $this->container->get('logger');
@@ -3534,6 +3538,8 @@ Pathology and Laboratory Medicine",
             if( !$instanceId ) {
                 $instanceId = "unknowinstanceId";
             }
+
+            $instanceId = $instanceId . "_" . gethostname();
 
             $date = date('Y-m-d-H-i-s');
             $archiveFile = "backupfiles-" . $environment . "_" . $instanceId . "_" . $date . ".tar.gz";

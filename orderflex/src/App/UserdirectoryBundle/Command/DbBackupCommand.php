@@ -74,11 +74,16 @@ class DbBackupCommand extends Command {
             //$logger->notice("cron:db-backup-command. start.");
 
             $resStr = NULL;
+            //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
             $res = $userServiceUtil->dbManagePython($backupPath, 'backup');
             $resStr = implode(', ', $res);
 
-            $res = $userServiceUtil->createBackupUpload($backupPath);
-            $resStr = $resStr . "; " . $res;
+            if(0) {
+                //Create backup of 'Uploaded' folder using command directly 'tar -zcf ...'
+                //Alternatively, backup/filesbackup.py can be used
+                $res = $userServiceUtil->createBackupUpload($backupPath);
+                $resStr = $resStr . "; " . $res;
+            }
 
             //Remove previously created backups: keep only number of backup files (keepnumber)
             $res = $userServiceUtil->removeOldBackupFiles($backupPath);
