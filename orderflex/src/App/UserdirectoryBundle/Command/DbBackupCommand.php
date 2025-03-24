@@ -49,18 +49,18 @@ class DbBackupCommand extends Command {
         $this
             ->setName('cron:db-backup-command')
             ->setDescription('Backup DB')
-            ->addArgument('backuppath', InputArgument::REQUIRED, 'Backup location')
+            ->addArgument('backuppath', InputArgument::REQUIRED, 'Backup location with ending / (i.e. /mnt/pathology/view-backup/db-backup/)')
         ;
     }
 
     //Cron job to back up DB and Uploaded files.
-    // /bin/php bin/console cron:db-backup-command --env=prod /
+    // /bin/php bin/console cron:db-backup-command --env=prod /mnt/pathology/view-backup/db-backup/
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $resStr = "N/A";
 
         $logger = $this->container->get('logger');
-        //$logger->notice("cron:db-backup-command. before.");
+        $logger->notice("cron:db-backup-command. before.");
 
         $backupPath = $input->getArgument('backuppath');
         if( !$backupPath) {
@@ -71,7 +71,7 @@ class DbBackupCommand extends Command {
         if( $backupPath ) {
             $userServiceUtil = $this->container->get('user_service_utility');
 
-            //$logger->notice("cron:db-backup-command. start.");
+            $logger->notice("cron:db-backup-command. start.");
 
             $resStr = NULL;
             //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py

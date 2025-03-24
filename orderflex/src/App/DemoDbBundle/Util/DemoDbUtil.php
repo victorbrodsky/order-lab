@@ -769,7 +769,7 @@ class DemoDbUtil {
 
     //TODO: test it, away person is not set
     public function newVacReqs( $client, $users ) {
-        if(0) {
+        if(1) {
             $vacreqUsers = $this->getVacreqs();
             //1) create group
             $submitter = $vacreqUsers[3];
@@ -841,6 +841,7 @@ class DemoDbUtil {
         //$form = $crawler->filter('Add Applicant')->form();
         //$form = $crawler->selectButton('Submit')->form();
 
+        echo "newVacReq: groupId=".$vacreqArr['groupId']."<br>";
         $client->executeScript(
             "$('#oleg_vacreqbundle_request_institution').select2('val','".$vacreqArr['groupId']."')"
         );
