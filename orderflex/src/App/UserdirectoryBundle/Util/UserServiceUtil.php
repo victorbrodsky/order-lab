@@ -3483,7 +3483,7 @@ Pathology and Laboratory Medicine",
             return $res;
         }
 
-        $logger->notice("command=[".$command."]");
+        $logger->notice("dbManagePython: command=[".$command."]");
         $res = $this->runProcess($command);
         //echo "python res=".$res."<br>";
         //exit('111');
