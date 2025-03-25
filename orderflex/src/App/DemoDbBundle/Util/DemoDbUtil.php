@@ -838,8 +838,10 @@ class DemoDbUtil {
         $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_institution');
         //$client->takeScreenshot('demoDb/test_vacreq-1-'.$vacreqArr['cwid'].'.png');
 
+        //id="vacreq-request-form" name="oleg_vacreqbundle_request"
         //$form = $crawler->filter('Add Applicant')->form();
-        //$form = $crawler->selectButton('Submit')->form();
+        $form = $crawler->filter('#vacreq-request-form')->form();
+        //$form = $crawler->selectButton('vacreq-request-form-class')->form();
 
         echo "newVacReq: groupId=".$vacreqArr['groupId']."<br>";
         $client->executeScript(
@@ -868,8 +870,12 @@ class DemoDbUtil {
 //            "$('#s2id_oleg_vacreqbundle_request_user').select2('val','".$vacreqArr['userId']."')"
 //        );
 
-        $form = $crawler->selectButton('Submit')->form();
+        $client->waitForVisibility("#vacreq-request-form");
+        //$form = $crawler->selectButton('Submit')->form();
         //$form = $crawler->filter('#btnCreateVacReq')->form();
+        //$form = $crawler->filter('#vacreq-request-form')->form();
+        // or by button id (#my-super-button) if the button doesn't have a label
+        //$form = $crawler->selectButton('btnCreateVacReq')->form();
         //$form['oleg_vacreqbundle_request[birthday][year]']->select(1984);
         //oleg_vacreqbundle_request[user]
         $form['oleg_vacreqbundle_request[user]']->select(12);
