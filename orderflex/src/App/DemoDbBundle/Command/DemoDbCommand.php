@@ -62,6 +62,9 @@ class DemoDbCommand extends Command {
         $client = $demoDbUtil->loginAction();
         $client->takeScreenshot('test_login.png');
 
+        $users = $demoDbUtil->getUsers(); //testing
+        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
+
         $output->writeln($resStr);
 
         return Command::SUCCESS;

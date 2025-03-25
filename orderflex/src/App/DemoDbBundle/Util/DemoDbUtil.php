@@ -838,15 +838,17 @@ class DemoDbUtil {
         $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_institution');
         //$client->takeScreenshot('demoDb/test_vacreq-1-'.$vacreqArr['cwid'].'.png');
 
-        $client->waitForVisibility('#vacreq-request-form');
+        //$client->waitForVisibility('#vacreq-request-form');
         //id="vacreq-request-form" name="oleg_vacreqbundle_request"
         //$form = $crawler->filter('Add Applicant')->form();
-        $form = $crawler->filter('#vacreq-request-form')->form();
+        //$form = $crawler->filter('oleg_vacreqbundle_request')->form();
+        //$form = $crawler->filter('#vacreq-request-form')->form();
+        //$form = $crawler->filter('.vacreq-request-form-class')->form();
         //$form = $crawler->selectButton('vacreq-request-form-class')->form();
 
         echo "newVacReq: groupId=".$vacreqArr['groupId']."<br>";
         $client->executeScript(
-            "$('#oleg_vacreqbundle_request_institution').select2('val','".$vacreqArr['groupId']."')"
+            "$('#oleg_vacreqbundle_request_institution').select2('val','".$vacreqArr['groupId']."');"
         );
         $client->takeScreenshot('demoDb/test_vacreq-1-institution-'.$vacreqArr['cwid'].'.png');
 
@@ -871,7 +873,7 @@ class DemoDbUtil {
 //            "$('#s2id_oleg_vacreqbundle_request_user').select2('val','".$vacreqArr['userId']."')"
 //        );
 
-        $client->waitForVisibility("#vacreq-request-form");
+        //$client->waitForVisibility("#vacreq-request-form");
         //$form = $crawler->selectButton('Submit')->form();
         //$form = $crawler->filter('#btnCreateVacReq')->form();
         //$form = $crawler->filter('#vacreq-request-form')->form();
@@ -879,7 +881,12 @@ class DemoDbUtil {
         //$form = $crawler->selectButton('btnCreateVacReq')->form();
         //$form['oleg_vacreqbundle_request[birthday][year]']->select(1984);
         //oleg_vacreqbundle_request[user]
-        $form['oleg_vacreqbundle_request[user]']->select(12);
+        //$client->waitForVisibility("oleg_vacreqbundle_request[user]");
+        //$form['oleg_vacreqbundle_request[user]']->select(12);
+        //$form['#oleg_vacreqbundle_request_user']->select(12);
+        $client->executeScript(
+            "$('#s2id_oleg_vacreqbundle_request_user').select2('val',12);"
+        );
 
         $client->executeScript('$("#s2id_oleg_vacreqbundle_request_user")[0].scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_vacreq-2-personaway-'.$vacreqArr['cwid'].'.png');
@@ -896,12 +903,26 @@ class DemoDbUtil {
 
         $startDateStr = 'new Date()';
         $endDateStr = 'new Date()';
-        $client->executeScript(
-            "$('#oleg_vacreqbundle_request_requestVacation_startDate').datepicker().datepicker('setDate'," . $startDateStr . ")"
-        );
-        $client->executeScript(
-            "$('#oleg_vacreqbundle_request_requestVacation_endDate').datepicker().datepicker('setDate','" . $endDateStr . "')"
-        );
+        //$client->executeScript(
+        //    "$('#oleg_vacreqbundle_request_requestVacation_startDate').datepicker().datepicker('setDate'," . $startDateStr . ")"
+        //);
+
+        $client->executeScript('$("#s2id_oleg_vacreqbundle_request_user")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_vacreq-2-111-personaway-'.$vacreqArr['cwid'].'.png');
+
+        //$client->executeScript(
+        //    "$('#oleg_vacreqbundle_request_requestVacation_endDate').datepicker().datepicker('setDate','" . $endDateStr . "')"
+        //);
+
+//        $client->executeScript(
+//            "$('#oleg_vacreqbundle_request_institution').select2('val','".$vacreqArr['groupId']."')"
+//        );
+//        $client->executeScript(
+//            "$('#s2id_oleg_vacreqbundle_request_user').select2('val',12)"
+//        );
+
+        $client->executeScript('$("#s2id_oleg_vacreqbundle_request_user")[0].scrollIntoView(false);');
+        $client->takeScreenshot('demoDb/test_vacreq-2-222-personaway-'.$vacreqArr['cwid'].'.png');
 
         $client->executeScript('$("#oleg_vacreqbundle_request_requestVacation_numberOfDays")[0].scrollIntoView(false);');
         $client->executeScript('$("#oleg_vacreqbundle_request_requestVacation_startDate")[0].scrollIntoView(false);');
@@ -930,13 +951,26 @@ class DemoDbUtil {
         $client->takeScreenshot('demoDb/test_vacreq-beforesubmit-dates-'.$vacreqArr['cwid'].'.png');
 
         //$client->submit($form);
-        $client->executeScript('$("#btnCreateVacReq").click()');
+        $client->executeScript('$("#btnCreateVacReq").click();');
 
         $client->executeScript('$("#oleg_vacreqbundle_request_user")[0].scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_vacreq-4-personaway-aftersubmit-'.$vacreqArr['cwid'].'.png');
 
         $client->executeScript('$("#btnCreateVacReq")[0].scrollIntoView(false);');
         $client->takeScreenshot('demoDb/test_vacreq-4-aftersubmit-'.$vacreqArr['cwid'].'.png');
+
+        $client->executeScript(
+            "$('#s2id_oleg_vacreqbundle_request_user').select2('val',12);"
+        );
+        $client->executeScript(
+            "$('#oleg_vacreqbundle_request_requestVacation_startDate').datepicker().datepicker('setDate'," . $startDateStr . ")"
+        );
+        $client->executeScript(
+            "$('#oleg_vacreqbundle_request_requestVacation_endDate').datepicker().datepicker('setDate','" . $endDateStr . "')"
+        );
+
+        $client->executeScript('$("#btnCreateVacReq").click();');
+        $client->takeScreenshot('demoDb/test_vacreq-4-aftersubmit2-'.$vacreqArr['cwid'].'.png');
     }
     public function getVacreqs() {
         $users = array();

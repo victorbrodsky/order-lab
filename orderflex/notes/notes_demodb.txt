@@ -17,3 +17,6 @@ The Panther component allows to drive a real web browser with PHP to create end-
 https://symfony.com/doc/current/testing/end_to_end.html
 
 
+Selenium with Python
+https://www.zenrows.com/blog/selenium-python-web-scraping#getting-started
+pip install selenium
