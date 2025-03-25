@@ -838,6 +838,7 @@ class DemoDbUtil {
         $client->waitForVisibility('#s2id_oleg_vacreqbundle_request_institution');
         //$client->takeScreenshot('demoDb/test_vacreq-1-'.$vacreqArr['cwid'].'.png');
 
+        $client->waitForVisibility('#vacreq-request-form');
         //id="vacreq-request-form" name="oleg_vacreqbundle_request"
         //$form = $crawler->filter('Add Applicant')->form();
         $form = $crawler->filter('#vacreq-request-form')->form();
