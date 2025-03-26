@@ -20,3 +20,4 @@ https://symfony.com/doc/current/testing/end_to_end.html
 Selenium with Python
 https://www.zenrows.com/blog/selenium-python-web-scraping#getting-started
 pip install selenium
+https://www.browserstack.com/guide/python-selenium-to-run-web-automation-test

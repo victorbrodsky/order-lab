@@ -1,6 +1,9 @@
 # import the required library
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.select import Select
 
 #set PYTHONIOENCODING=utf-8
 #export PYTHONIOENCODING=utf-8
@@ -32,11 +35,25 @@ password = driver.find_element(By.ID, "password")
 username.send_keys("administrator")
 password.send_keys("1234567890_demo")
 
-usertype = driver.find_element(By.ID, "usernametypeid_show")
-usertype.send_keys("local-user")
+# Locate the Select2 combobox and click to activate it
+combobox = driver.find_element(By.ID, "s2id_usernametypeid_show")
+combobox.click()
 
-usertype = driver.find_element(By.ID, "s2id_usernametypeid_show")
-usertype.send_keys("Local User")
+# Locate the search input within the Select2 dropdown
+search_box = driver.find_element(By.CLASS_NAME, "select2-input")
+
+# Type the desired option and press Enter
+search_box.send_keys("Local User")
+search_box.send_keys(Keys.ENTER)
+
+# Optional: Wait a few seconds to observe the selection
+time.sleep(3)
+
+button = driver.find_element(By.CLASS_NAME, "btn-primary")
+
+button.click()
+
+time.sleep(3)
 
 # release the resources allocated by Selenium and shut down the browser
 driver.quit()
