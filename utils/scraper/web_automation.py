@@ -5,6 +5,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import time
+
 class WebAutomation:
     def __init__(self):
         """Initialize the class and set up the WebDriver."""
@@ -13,7 +15,7 @@ class WebAutomation:
     def initialize_driver(self):
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
-        options.add_experimental_option("detach", True)
+        #options.add_experimental_option("detach", True)
         self.driver = webdriver.Chrome(options=options)
         return self.driver
 
@@ -24,21 +26,40 @@ class WebAutomation:
         password = self.driver.find_element(By.ID, "password")
         username.send_keys(username_text)
         password.send_keys(password_text)
+        
+        self.select_option("s2id_usernametypeid_show", None, "select2-input", "Local User")
+        time.sleep(1)
+        self.click_button("btn-primary")
 
-    def select_option(self, element_id, select_classname, option_text):
-        """Selects an option from the Select2 combobox."""
+    def select_option(self, element_id, select_id, select_classname, option_text):
+        #print("ID=",select_id,", CLASS=", select_classname)
+        #"""Selects an option from the Select2 combobox."""
         combobox = self.driver.find_element(By.ID, element_id)
         actions = ActionChains(self.driver)
         actions.move_to_element(combobox).click().perform()
+        
+        time.sleep(1)
 
-        search_box = self.driver.find_element(By.CLASS_NAME, select_classname)
+        if select_id != None:
+            search_box = self.driver.find_element(By.ID, select_id)
+            print("search by ID=",select_id)
+        if select_classname != None:
+            search_box = self.driver.find_element(By.CLASS_NAME, select_classname)
+            print("search by CLASS_NAME=",select_classname)
+            
+        time.sleep(1)
         search_box.send_keys(option_text)
+        time.sleep(1)
         search_box.send_keys(Keys.ENTER)
+        #time.sleep(3)
 
     def click_button(self, class_name):
         """Clicks a button with the specified class name."""
         button = self.driver.find_element(By.CLASS_NAME, class_name)
         button.click()
+
+    def set_driver(self,driver):
+        self.driver = driver
 
     def quit_driver(self):
         """Quits the WebDriver."""

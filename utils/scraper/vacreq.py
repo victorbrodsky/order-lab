@@ -7,45 +7,13 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+#from scraper_base import login_to_site, initialize_driver
+import scraper_base
 
-def initialize_driver():
-    """Initializes the WebDriver."""
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)
-    driver = webdriver.Chrome(options=options)
-    return driver
-
-def login_to_site(driver, url, username_text, password_text):
-    """Logs in to the site."""
-    driver.get(url)
-    
-    # Find username and password fields and enter the credentials
-    username = driver.find_element(By.ID, "display-username")
-    password = driver.find_element(By.ID, "password")
-    username.send_keys(username_text)
-    password.send_keys(password_text)
-
-def select_option(driver, element_id, select_classname, option_text):
-    """Selects an option from the Select2 combobox."""
-    combobox = driver.find_element(By.ID, element_id)
-    
-    actions = ActionChains(driver)
-    actions.move_to_element(combobox).click().perform()
-    
-    #combobox.click()
-
-    search_box = driver.find_element(By.CLASS_NAME, select_classname)
-    search_box.send_keys(option_text)
-    search_box.send_keys(Keys.ENTER)
-
-def click_button(driver, className):
-    """Clicks the Log In button."""
-    button = driver.find_element(By.CLASS_NAME, className)
-    button.click()
 
 def main():
     """Main function to execute all actions."""
-    driver = initialize_driver()
+    driver = scraper_base.initialize_driver()
     # Set implicit wait
     driver.implicitly_wait(10)  # seconds
     
@@ -54,13 +22,13 @@ def main():
     password_text = "1234567890_demo"
     
     try:
-        login_to_site(driver, url, username_text, password_text)
+        scraper_base.login_to_site(driver, url, username_text, password_text)
         #time.sleep(1)  # Wait for the page to load
         
-        select_option(driver, "s2id_usernametypeid_show", "select2-input", "Local User")
+        scraper_base.select_option(driver, "s2id_usernametypeid_show", "select2-input", "Local User")
         #time.sleep(1)
         
-        click_button(driver, "btn-primary")
+        scraper_base.click_button(driver, "btn-primary")
         #time.sleep(1)  # Observe the result before quitting
         
         #Create a new vacation request
