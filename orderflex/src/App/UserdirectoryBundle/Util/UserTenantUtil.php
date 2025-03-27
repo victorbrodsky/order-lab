@@ -35,52 +35,56 @@ class UserTenantUtil
         Security $security,
         ContainerInterface $container,
         ManagerRegistry $doctrine
-    ) {
+    )
+    {
         $this->em = $em;
         $this->doctrine = $doctrine;
         $this->security = $security;
         $this->container = $container;
     }
 
-    public function getTenantRole() {
-        if( !$this->container->hasParameter('tenant_role') ) {
+    public function getTenantRole()
+    {
+        if (!$this->container->hasParameter('tenant_role')) {
             return null;
         }
         return $this->container->getParameter('tenant_role');
     }
 
     //return 'c/wcm/pathology', parameters.yml - tenant_base=c/wcm/pathology (used to be .env -> APP_SUBDIR=c/wcm/pathology)
-    public function getTenantUrlBase() {
-        if( !$this->container->hasParameter('tenant_base') ) {
+    public function getTenantUrlBase()
+    {
+        if (!$this->container->hasParameter('tenant_base')) {
             return null;
         }
         return $this->container->getParameter('tenant_base');
     }
 
-    public function getSingleTenantManager( $createIfEmpty=false ) {
+    public function getSingleTenantManager($createIfEmpty = false)
+    {
         $logger = $this->container->get('logger');
 
         $tenantManager = null;
         $tenantManagers = $this->em->getRepository(TenantManager::class)->findAll();
 
-        if( count($tenantManagers) == 1 ) {
+        if (count($tenantManagers) == 1) {
             return $tenantManagers[0];
         }
 
         //make sure sitesettings is initialized
-        if( count($tenantManagers) == 0 ) {
-            $logger->notice("getSingleTenantManager: TenantManager count=".count($tenantManagers)."; createIfEmpty=".$createIfEmpty);
-            if( $createIfEmpty ) {
+        if (count($tenantManagers) == 0) {
+            $logger->notice("getSingleTenantManager: TenantManager count=" . count($tenantManagers) . "; createIfEmpty=" . $createIfEmpty);
+            if ($createIfEmpty) {
                 $tenantManager = $this->generateTenantManager();
                 return $tenantManager;
             }
         }
 
-        if( count($tenantManagers) != 1 ) {
-            if( $createIfEmpty ) {
+        if (count($tenantManagers) != 1) {
+            if ($createIfEmpty) {
                 throw new \Exception(
-                    'getSingleTenantManager: Must have only one tenant manager object. Found '.
-                    count($tenantManagers).' object(s)'."; createIfEmpty=".$createIfEmpty
+                    'getSingleTenantManager: Must have only one tenant manager object. Found ' .
+                    count($tenantManagers) . ' object(s)' . "; createIfEmpty=" . $createIfEmpty
                 );
             } else {
                 return null;
@@ -89,6 +93,7 @@ class UserTenantUtil
 
         return null;
     }
+
     public function generateTenantManager()
     {
 
@@ -122,14 +127,15 @@ class UserTenantUtil
     //get available tenants based on haproxy config (/etc/haproxy/haproxy.cfg) and httpd (/etc/httpd/conf/tenantname-httpd.conf)
     //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
     // tenantapp1-httpd.conf, tenantapp2-httpd.conf
-    public function getTenants() {
+    public function getTenants()
+    {
         $tenantDataArr = array();
         $tenantDataArr['error'] = null;
         $tenantDataArr['existedTenantIds'] = null;
 
         //$tenants = array('homepagemanager', 'tenantmanager', 'tenantappdemo', 'tenantapptest');
         //testing
-        if(0) {
+        if (0) {
             //$tenantDataArr['existedTenantIds'][] = 'tenantmanager';
             //$tenantDataArr['existedTenantIds'][] = 'homepagemanager';
             //$tenantDataArr['existedTenantIds'][] = 'tenantapp2';
@@ -150,7 +156,9 @@ class UserTenantUtil
 
         return $tenantDataArr;
     }
-    function get_string_between($string, $start, $end){
+
+    function get_string_between($string, $start, $end)
+    {
         $string = ' ' . $string;
         $ini = strpos($string, $start);
         if ($ini == 0) return '';
@@ -158,14 +166,16 @@ class UserTenantUtil
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
     }
-    function getTextByStartEnd($text, $startStr, $endStr) {
+
+    function getTextByStartEnd($text, $startStr, $endStr)
+    {
         //echo "getTextByStartEnd: startStr=[$startStr]; endStr=[$endStr] <br>";
         //$startStr = '###START-FRONTEND';
         //$endStr = '###END-FRONTEND';
         //Get part of the text $matches by $startStr and $endStr
-        $pattern = '/('.$startStr.')(?:.|[\n\r])+(?='.$endStr.')/';
+        $pattern = '/(' . $startStr . ')(?:.|[\n\r])+(?=' . $endStr . ')/';
         preg_match($pattern, $text, $matches);
-        if( !isset($matches[0]) ) {
+        if (!isset($matches[0])) {
             //echo "getTextByStartEnd: text does not have $startStr and $endStr";
             //$errorMsg = "File does not have $startStr and $endStr";
             return array();
@@ -176,25 +186,26 @@ class UserTenantUtil
     }
 
     ////// 1) Check if tenant's htppd exists and get tenant list as array //////
-    public function getTenantDataFromHttpd( $tenantDataArr ) {
+    public function getTenantDataFromHttpd($tenantDataArr)
+    {
         //tenant's httpd: homepagemanager-httpd.conf, tenantmanager-httpd.conf, tenantappdemo-httpd.conf, tenantapptest-httpd.conf,
         // tenantapp1-httpd.conf, tenantapp2-httpd.conf in /etc/httpd/conf/tenantname-httpd.conf
         $httpdPath = '/etc/httpd/conf/';
 
-        if( file_exists($httpdPath) ) {
+        if (file_exists($httpdPath)) {
             //echo "The httpd directory $httpdPath exists";
             //$files = scandir($path);
             $tenantDataArr['existedTenantIds'] = null;
             $httpdFiles = array_diff(scandir($httpdPath), array('.', '..')); //remove . and .. from the returned array from scandir
             //dump($files);
             //exit('111');
-            foreach($httpdFiles as $httpdFile) {
-                if( str_contains($httpdFile, '-httpd.conf') ) {
+            foreach ($httpdFiles as $httpdFile) {
+                if (str_contains($httpdFile, '-httpd.conf')) {
                     //echo "file=[".$httpdFile."]<br>"; //tenantapp2-httpd.conf
                     //use tenantapp2 to get match between fronend tenantapp2_url and tenantapp2-httpd.conf
                     $tenantId = null;
                     $tenantIdArr = explode('-', $httpdFile);
-                    if( count($tenantIdArr) == 2 ) {
+                    if (count($tenantIdArr) == 2) {
                         $tenantId = $tenantIdArr[0];
                     }
                     $tenantDataArr['existedTenantIds'][] = $tenantId;
@@ -213,9 +224,10 @@ class UserTenantUtil
     }
 
     ////// 2) read haproxy (check if tenant is enabled) //////
-    public function getTenantDataFromHaproxy( $tenantDataArr ) {
+    public function getTenantDataFromHaproxy($tenantDataArr)
+    {
 
-        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+        if ($tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds'])) {
             //ok
         } else {
             $tenantDataArr['error'][] = "getTenantDataFromHaproxy: Tenants are not found";
@@ -248,7 +260,7 @@ class UserTenantUtil
         //get all tenants between: ###START-CUSTOM-TENANTS and ###END-CUSTOM-TENANTS
         $originalText = file_get_contents($haproxyConfig);
 
-        $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
+        $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
         //dump($finalArray);
         //exit('111');
         //Result:
@@ -260,13 +272,13 @@ class UserTenantUtil
 //        5 => "    use_backend tenantapp4backend if tenant_app4_url"
 
         //Get url '/c/wcm/333', enabled
-        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
+        foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
             $tenantDataArr[$tenantId]['enabled'] = true;
-            foreach($frontendTenantsArray as $frontendTenantLine) {
-                if( str_contains($frontendTenantLine, ' '.$tenantId.'_url') ) {
+            foreach ($frontendTenantsArray as $frontendTenantLine) {
+                if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
                     //echo "frontendTenantLine=$frontendTenantLine <br>";
                     $tenantUrlArr = explode('path_beg -i', $frontendTenantLine);
-                    if( count($tenantUrlArr) > 1 ) {
+                    if (count($tenantUrlArr) > 1) {
                         $tenantUrl = end($tenantUrlArr); //=>' /c/wcm/333'
                         if ($tenantUrl) {
                             $tenantUrl = trim($tenantUrl);
@@ -275,7 +287,7 @@ class UserTenantUtil
                         }
                     }
 
-                    if( str_contains($frontendTenantLine, '#') ) {
+                    if (str_contains($frontendTenantLine, '#')) {
                         $tenantDataArr[$tenantId]['enabled'] = false;
 //                        foreach ($tenantDataArr['existedTenantIds'] as $existedTenantId) {
 //                            if ($existedTenantId == $tenantId) {
@@ -290,7 +302,7 @@ class UserTenantUtil
                 $tenantDataArr[$tenantId]['primaryTenant'] = false;
                 //check for: 'use_backend tenantapp1_backend if homepagemanager_url'
                 //$logger->notice("getTenantDataFromHaproxy: frontendTenantLine=$frontendTenantLine");
-                if( str_contains($frontendTenantLine, 'use_backend '.$tenantId.'_backend if homepagemanager_url') ) {
+                if (str_contains($frontendTenantLine, 'use_backend ' . $tenantId . '_backend if homepagemanager_url')) {
                     $tenantDataArr[$tenantId]['primaryTenant'] = true;
                     //$logger->notice("getTenantDataFromHaproxy: primaryTenant=[$tenantId], frontendTenantLine=$frontendTenantLine"." => primaryTenant=".$tenantDataArr[$tenantId]['primaryTenant']);
                 }
@@ -301,15 +313,15 @@ class UserTenantUtil
         //Get port front backend between ###START-BACKEND and ###END-BACKEND
         //backend homepagemanager_backend
         //server homepagemanager_server *:8081 check
-        $backendTenantsArray = $this->getTextByStartEnd($originalText,'###START-BACKEND','###END-BACKEND');
-        foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
-            foreach($backendTenantsArray as $backendTenantLine) {
-                if( str_contains($backendTenantLine, ' '.$tenantId.'_server') ) {
+        $backendTenantsArray = $this->getTextByStartEnd($originalText, '###START-BACKEND', '###END-BACKEND');
+        foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
+            foreach ($backendTenantsArray as $backendTenantLine) {
+                if (str_contains($backendTenantLine, ' ' . $tenantId . '_server')) {
                     //echo "backendTenantLine=$backendTenantLine <br>"; // server tenantmanager_server *:8082 check
-                    $tenantPort = $this->get_string_between($backendTenantLine,$tenantId.'_server'," check"); //=>*:8081
+                    $tenantPort = $this->get_string_between($backendTenantLine, $tenantId . '_server', " check"); //=>*:8081
                     $tenantPort = trim($tenantPort);
                     //echo "1 tenantPort=[$tenantPort] <br>";
-                    $tenantPort = str_replace('*:','',$tenantPort); //=>8081
+                    $tenantPort = str_replace('*:', '', $tenantPort); //=>8081
                     //echo "2 tenantPort=[$tenantPort] <br>";
                     $tenantDataArr[$tenantId]['port'] = $tenantPort;
                 }
@@ -319,17 +331,19 @@ class UserTenantUtil
 
         return $tenantDataArr;
     }
-    public function getHaproxyConfig() {
+
+    public function getHaproxyConfig()
+    {
         $userServiceUtil = $this->container->get('user_service_utility');
         $haproxyConfig = '/etc/haproxy/haproxy.cfg';
 
-        if( $userServiceUtil->isWindows() ) {
+        if ($userServiceUtil->isWindows()) {
             //testing with packer's default haproxy config
             $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-            $haproxyConfig = $projectRoot.'/../packer/haproxy_testing.cfg';
+            $haproxyConfig = $projectRoot . '/../packer/haproxy_testing.cfg';
         }
 
-        if( file_exists($haproxyConfig) ) {
+        if (file_exists($haproxyConfig)) {
             //echo "The file $haproxyConfig exists";
         } else {
             //echo "The file $haproxyConfig does not exist";
@@ -341,9 +355,10 @@ class UserTenantUtil
     }
 
     ////// 3) read corresponding parameters.yml //////
-    public function getTenantDataFromParameters( $tenantDataArr ) {
+    public function getTenantDataFromParameters($tenantDataArr)
+    {
 
-        if( $tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds']) ) {
+        if ($tenantDataArr['existedTenantIds'] && isset($tenantDataArr['existedTenantIds'])) {
             //ok
         } else {
             $tenantDataArr['error'][] = "getTenantDataFromParameters: Tenants are not found";
@@ -351,15 +366,15 @@ class UserTenantUtil
         }
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $orderHolderFolder = $projectRoot.'/../../';
+        $orderHolderFolder = $projectRoot . '/../../';
         $orderFolders = array_diff(scandir($orderHolderFolder), array('.', '..')); //remove . and .. from the returned array from scandir
-        foreach($orderFolders as $orderFolder) {
+        foreach ($orderFolders as $orderFolder) {
             //echo "orderFolder=$orderFolder <br>";
-            if( str_contains($orderFolder, 'order-lab-') ) {
-                foreach($tenantDataArr['existedTenantIds'] as $tenantId) {
-                    $orderPath = $orderHolderFolder.DIRECTORY_SEPARATOR.'order-lab-'.$tenantId.DIRECTORY_SEPARATOR; //order-lab-tenantapp2
-                    $orderParameterPath = $orderPath . DIRECTORY_SEPARATOR.'orderflex'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
-                    if( file_exists($orderParameterPath) ) {
+            if (str_contains($orderFolder, 'order-lab-')) {
+                foreach ($tenantDataArr['existedTenantIds'] as $tenantId) {
+                    $orderPath = $orderHolderFolder . DIRECTORY_SEPARATOR . 'order-lab-' . $tenantId . DIRECTORY_SEPARATOR; //order-lab-tenantapp2
+                    $orderParameterPath = $orderPath . DIRECTORY_SEPARATOR . 'orderflex' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'parameters.yml';
+                    if (file_exists($orderParameterPath)) {
                         //echo "orderParameterPath=$orderParameterPath <br>";
                         $originalText = file_get_contents($orderParameterPath);
                         //echo "originalText=$originalText <br>";
@@ -369,29 +384,29 @@ class UserTenantUtil
                         $tenantDataArr[$tenantId]['databaseUser'] = 'Unknown';
                         $tenantDataArr[$tenantId]['databasePassword'] = 'Unknown';
 
-                        $parametersLines = $this->getTextByStartEnd($originalText,'parameters:','');
-                        foreach($parametersLines as $parametersLine) {
+                        $parametersLines = $this->getTextByStartEnd($originalText, 'parameters:', '');
+                        foreach ($parametersLines as $parametersLine) {
                             //echo "parametersLine=$parametersLine <br>";
-                            if( str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#') ) {
-                                $dbHost = str_replace('database_host:','',$parametersLine);
+                            if (str_contains($parametersLine, 'database_host:') && !str_contains($parametersLine, '#')) {
+                                $dbHost = str_replace('database_host:', '', $parametersLine);
                                 //echo "dbHost=$dbHost <br>";
                                 $dbHost = trim($dbHost);
                                 $tenantDataArr[$tenantId]['databaseHost'] = $dbHost;
                                 //exit('111');
                             }
-                            if( str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#') ) {
+                            if (str_contains($parametersLine, 'database_name:') && !str_contains($parametersLine, '#')) {
                                 //echo "database_name=$parametersLine <br>";
-                                $dbName = str_replace('database_name:','',$parametersLine);
+                                $dbName = str_replace('database_name:', '', $parametersLine);
                                 $dbName = trim($dbName);
                                 $tenantDataArr[$tenantId]['databaseName'] = $dbName;
                             }
-                            if( str_contains($parametersLine, 'database_user:') && !str_contains($parametersLine, '#') ) {
-                                $dbUser = str_replace('database_user:','',$parametersLine);
+                            if (str_contains($parametersLine, 'database_user:') && !str_contains($parametersLine, '#')) {
+                                $dbUser = str_replace('database_user:', '', $parametersLine);
                                 $dbUser = trim($dbUser);
                                 $tenantDataArr[$tenantId]['databaseUser'] = $dbUser;
                             }
-                            if( str_contains($parametersLine, 'database_password:') && !str_contains($parametersLine, '#') ) {
-                                $dbPass = str_replace('database_password:','',$parametersLine);
+                            if (str_contains($parametersLine, 'database_password:') && !str_contains($parametersLine, '#')) {
+                                $dbPass = str_replace('database_password:', '', $parametersLine);
                                 $dbPass = trim($dbPass);
                                 $tenantDataArr[$tenantId]['databasePassword'] = $dbPass;
                             }
@@ -412,7 +427,8 @@ class UserTenantUtil
 
     //Update server data according to DB data (DB -> server)
     //Best option is to have shell script to create and modify config files and to run restart
-    public function processDBTenants( $tenantManager ) {
+    public function processDBTenants($tenantManager)
+    {
 
         $logger = $this->container->get('logger');
         $userUtil = $this->container->get('user_utility');
@@ -430,7 +446,7 @@ class UserTenantUtil
         $createNewTenants = array();
 
         //testing
-        if(0) {
+        if (0) {
             $logger = $this->container->get('logger');
             $logger->notice("start restartHaproxy " . date('h:i:s'));
             $output = $this->restartHaproxy();
@@ -440,7 +456,7 @@ class UserTenantUtil
         }
 
 
-        foreach( $tenantManager->getTenants() as $tenant ) {
+        foreach ($tenantManager->getTenants() as $tenant) {
             //echo "tenant=".$tenant."; url=".$tenant->getUrlSlug()."<br>";
 
             $tenantId = $tenant->getName();
@@ -452,7 +468,7 @@ class UserTenantUtil
 //            ) { //newtenant tenantapptest
 //                continue;
 //            }
-            
+
             $haproxyConfig = $this->getHaproxyConfig();
 
             //Enable/Disable => haproxy
@@ -469,7 +485,7 @@ class UserTenantUtil
 
             //$tenantDataArr: for existing tenant, $tenantDataArr should have url and port (set and not null)
             //$httpdConfig: for existing tenant should be not null
-            if( $httpdConfig && isset($tenantDataArr[$tenantId]['url']) && isset($tenantDataArr[$tenantId]['port']) ) {
+            if ($httpdConfig && isset($tenantDataArr[$tenantId]['url']) && isset($tenantDataArr[$tenantId]['port'])) {
                 //tenant exists
                 $logger->notice("processDBTenants: tenant $tenantId exists");
             } else {
@@ -482,26 +498,26 @@ class UserTenantUtil
             }
 
             //echo "enable: ".$tenant->getEnabled()."?=".$tenantDataArr[$tenantId]['enabled']."<br>";
-            $logger->notice("compare url: "."enable: [".$tenant->getEnabled()."]?=[".$tenantDataArr[$tenantId]['enabled']."]");
-            if( $tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled'] ) {
+            $logger->notice("compare url: " . "enable: [" . $tenant->getEnabled() . "]?=[" . $tenantDataArr[$tenantId]['enabled'] . "]");
+            if ($tenant->getEnabled() != $tenantDataArr[$tenantId]['enabled']) {
                 //echo "Change enable <br>";
                 $originalText = file_get_contents($haproxyConfig);
                 //Disable or enabled according to DB value $tenant->getEnabled():
                 //comment out line frontend->'use_backend tenantappdemo_backend if tenantappdemo_url'
-                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-                foreach($frontendTenantsArray as $frontendTenantLine) {
+                $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
+                foreach ($frontendTenantsArray as $frontendTenantLine) {
                     $lineIdentifier = 'use_backend ' . $tenantId . '_backend';
                     //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
-                    if (str_contains($frontendTenantLine,$lineIdentifier)) {
+                    if (str_contains($frontendTenantLine, $lineIdentifier)) {
                         //$logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
-                        $res = $this->changeLineInFile($haproxyConfig,$lineIdentifier,'#',$tenant->getEnabled());
+                        $res = $this->changeLineInFile($haproxyConfig, $lineIdentifier, '#', $tenant->getEnabled());
                         //$logger->notice("changeLineInFile: status=[".$res['status']."]; message=".$res['message']);
-                        if( $res['status'] == 'error' ) {
+                        if ($res['status'] == 'error') {
                             $resultArr['haproxy-error'] = $res['message'];
                             $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                         } else {
                             $enabledStr = "disabled";
-                            if( $tenant->getEnabled() ) {
+                            if ($tenant->getEnabled()) {
                                 $enabledStr = "enabled";
                             }
                             $msg = "Tenant $tenantId has been $enabledStr in haproxy config";
@@ -511,7 +527,7 @@ class UserTenantUtil
 //                            );
                             $logger->notice(
                                 $msg
-                                //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
+                            //"Update haproxy config for tenant ".$tenantId.", updated to ".$enabledStr
                             );
                             $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; " . $msg;
                             $resultTenantArr['haproxy-message']['success'][] = $msg;
@@ -528,7 +544,7 @@ class UserTenantUtil
 //            $logger->notice(
 //                $tempMsg
 //            );
-            if( $tenant != 'homepagemanager' && $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant'] ) {
+            if ($tenant != 'homepagemanager' && $tenant->getPrimaryTenant() != $tenantDataArr[$tenantId]['primaryTenant']) {
                 //echo "Change primaryTenant '/' in HaProxy <br>";
                 $originalText = file_get_contents($haproxyConfig);
 
@@ -539,16 +555,16 @@ class UserTenantUtil
                 //With: #use_backend homepagemanager_backend if homepagemanager_url
                 //Add below: use_backend $tenantId_backend if homepagemanager_url
 
-                $frontendTenantsArray = $this->getTextByStartEnd($originalText,'###START-FRONTEND','###END-FRONTEND');
-                foreach($frontendTenantsArray as $frontendTenantLine) {
+                $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
+                foreach ($frontendTenantsArray as $frontendTenantLine) {
 
-                    if( !$tenant->getPrimaryTenant() ) {
+                    if (!$tenant->getPrimaryTenant()) {
                         // Not PrimaryTenant
                         $homepagemanagerLine = "use_backend homepagemanager_backend if homepagemanager_url";
                         $lineIdentifier = 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
                         //&& !str_contains($frontendTenantLine,'#')
-                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
+                        if (str_contains($frontendTenantLine, $lineIdentifier)) {
                             //remove tenant: 'use_backend $tenantId_backend if homepagemanager_url'
                             //$originalLine = "use_backend homepagemanager_backend if homepagemanager_url";
                             $originalLine = ''; //'#'.$originalLine;
@@ -563,8 +579,8 @@ class UserTenantUtil
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                             } else {
                                 $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
-                                    ."[".$homepagemanagerOldStr."]"
-                                    ." to [".$homepagemanagerNewStr."]";
+                                    . "[" . $homepagemanagerOldStr . "]"
+                                    . " to [" . $homepagemanagerNewStr . "]";
                                 $resultTenantArr['haproxy-message']['success'][] = $msg;
                             }
 
@@ -575,12 +591,12 @@ class UserTenantUtil
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                                 $logger->notice(
-                                    "PrimaryTenant Error: ".$res['message']
+                                    "PrimaryTenant Error: " . $res['message']
                                 );
                             } else {
                                 $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
-                                    ."[".$lineIdentifier."]"
-                                    ." to [".$originalLine."]";
+                                    . "[" . $lineIdentifier . "]"
+                                    . " to [" . $originalLine . "]";
                                 $logger->notice(
                                     $msg
                                 );
@@ -594,11 +610,11 @@ class UserTenantUtil
                         // PrimaryTenant
                         $lineIdentifier = "use_backend homepagemanager_backend if homepagemanager_url";
                         //$logger->notice("str_contains: lineIdentifier=[$lineIdentifier]");
-                        if( str_contains($frontendTenantLine,$lineIdentifier) ) {
+                        if (str_contains($frontendTenantLine, $lineIdentifier)) {
                             //replace tenant's homepage with original homepage
                             $newLine =
-                                '#'.$lineIdentifier.
-                                PHP_EOL.
+                                '#' . $lineIdentifier .
+                                PHP_EOL .
                                 'use_backend ' . $tenantId . '_backend if homepagemanager_url';
                             //$logger->notice("Tenant [$tenant] is primary => remove homepagemanager [".$lineIdentifier."]");
                             //$logger->notice("YES str_contains: lineIdentifier=[$lineIdentifier]");
@@ -608,12 +624,12 @@ class UserTenantUtil
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                                 $logger->notice(
-                                    "PrimaryTenant Error: ".$res['message']
+                                    "PrimaryTenant Error: " . $res['message']
                                 );
                             } else {
                                 $msg = "PrimaryTenant $tenantId has been updated in haproxy config from"
-                                    ."[".$lineIdentifier."]"
-                                    ." to [".$newLine."]";
+                                    . "[" . $lineIdentifier . "]"
+                                    . " to [" . $newLine . "]";
                                 $logger->notice(
                                     $msg
                                 );
@@ -629,8 +645,8 @@ class UserTenantUtil
 
             //update URL slug or tenant's port: modify files: haproxy and $tenantId-httpd.conf
             $tenantDbUrl = $tenant->getUrlSlug();
-            $tenantDbUrlTrim = trim(trim($tenantDbUrl,'/'));
-            $tenantServerUrlTrim = trim(trim($tenantDataArr[$tenantId]['url'],'/'));
+            $tenantDbUrlTrim = trim(trim($tenantDbUrl, '/'));
+            $tenantServerUrlTrim = trim(trim($tenantDataArr[$tenantId]['url'], '/'));
 
             $tenantDbPort = $tenant->getTenantPort();
             $tenantDbPortTrim = trim($tenantDbPort);
@@ -640,28 +656,28 @@ class UserTenantUtil
             $tenantDbPrimaryTenantTrim = trim($tenantDbPrimaryTenant);
             $tenantServerPrimaryTenantTrim = trim($tenantDataArr[$tenantId]['primaryTenant']);
 
-            $logger->notice("compare url: ".$tenantDbUrlTrim."?=".$tenantServerUrlTrim);
-            $logger->notice("compare port: ".$tenantDbPortTrim."?=".$tenantServerPortTrim);
-            $logger->notice("compare primaryTenant: ".$tenantDbPrimaryTenantTrim."?=".$tenantServerPrimaryTenantTrim);
+            $logger->notice("compare url: " . $tenantDbUrlTrim . "?=" . $tenantServerUrlTrim);
+            $logger->notice("compare port: " . $tenantDbPortTrim . "?=" . $tenantServerPortTrim);
+            $logger->notice("compare primaryTenant: " . $tenantDbPrimaryTenantTrim . "?=" . $tenantServerPrimaryTenantTrim);
 
-            if( $tenantDbUrlTrim != $tenantServerUrlTrim || $tenantDbPortTrim != $tenantServerPortTrim ) {
+            if ($tenantDbUrlTrim != $tenantServerUrlTrim || $tenantDbPortTrim != $tenantServerPortTrim) {
 
                 $originalText = file_get_contents($haproxyConfig);
 
                 //URL: modify URL in haproxy: 'acl tenantappdemo_url path_beg -i /c/demo-institution/demo-department'
-                if( $tenantDbUrlTrim != $tenantServerUrlTrim ) {
+                if ($tenantDbUrlTrim != $tenantServerUrlTrim) {
                     $frontendTenantsArray = $this->getTextByStartEnd($originalText, '###START-FRONTEND', '###END-FRONTEND');
-                    foreach($frontendTenantsArray as $frontendTenantLine) {
+                    foreach ($frontendTenantsArray as $frontendTenantLine) {
                         if (str_contains($frontendTenantLine, ' ' . $tenantId . '_url')) {
-                            $res = $this->replaceAllInFile($haproxyConfig,$tenantServerUrlTrim,$tenantDbUrlTrim);
+                            $res = $this->replaceAllInFile($haproxyConfig, $tenantServerUrlTrim, $tenantDbUrlTrim);
                             //$resultArr[$tenantId]['haproxy-url'] = $res;
                             if ($res['status'] == 'error') {
                                 $resultArr['haproxy-error'] = $res['message'];
                                 $resultTenantArr['haproxy-message']['error'][] = $res['message'];
                             } else {
                                 $msg = "URL for tenant $tenantId has been updated in haproxy config from"
-                                    ."[".$tenantServerUrlTrim."]"
-                                    ." to [".$tenantDbUrlTrim."]";
+                                    . "[" . $tenantServerUrlTrim . "]"
+                                    . " to [" . $tenantDbUrlTrim . "]";
 //                                $session->getFlashBag()->add(
 //                                    'note',
 //                                    $msg
@@ -680,9 +696,9 @@ class UserTenantUtil
 
 
                 //PORT: modify port in haproxy: 'server tenantmanager_server *:8082 check'
-                if( $tenantDbPortTrim != $tenantServerPortTrim ) {
+                if ($tenantDbPortTrim != $tenantServerPortTrim) {
                     $backendTenantsArray = $this->getTextByStartEnd($originalText, '###START-BACKEND', '###END-BACKEND');
-                    foreach($backendTenantsArray as $backendTenantLine) {
+                    foreach ($backendTenantsArray as $backendTenantLine) {
                         //modify 'server tenantmanager_server *:8082 check'
                         if (str_contains($backendTenantLine, 'server ' . $tenantId . '_server')) {
                             $res = $this->replaceAllInFile($haproxyConfig, $tenantServerPortTrim, $tenantDbPortTrim);
@@ -691,8 +707,8 @@ class UserTenantUtil
                                 $resultTenantArr['error-haproxy-message']['error'][] = $res['message'];
                             } else {
                                 $msg = "Port for tenant $tenantId has been updated in haproxy config from"
-                                    ."[".$tenantServerPortTrim."]"
-                                    ." to [".$tenantDbPortTrim."]";
+                                    . "[" . $tenantServerPortTrim . "]"
+                                    . " to [" . $tenantDbPortTrim . "]";
 //                                $session->getFlashBag()->add(
 //                                    'note',
 //                                    $msg
@@ -713,7 +729,7 @@ class UserTenantUtil
                 //URL: change URL in httpd config file
                 //$httpdConfig = $this->getTenantHttpd($tenantId);
                 //echo "httpdConfig=[$httpdConfig]<br>";
-                if( $httpdConfig ) {
+                if ($httpdConfig) {
                     $httpdOriginalText = file_get_contents($httpdConfig);
                     //dump($httpdOriginalText);
                     $updateThisHttpd = false;
@@ -721,7 +737,7 @@ class UserTenantUtil
                     //$tenantServerUrlTrim $tenantUrl = trim($tenantDataArr[$tenantId]['url'],'/');
 
                     //modify URL in httpd
-                    if( $tenantDbUrlTrim != $tenantServerUrlTrim ) {
+                    if ($tenantDbUrlTrim != $tenantServerUrlTrim) {
                         if (str_contains($httpdOriginalText, $tenantServerUrlTrim)) {
                             $res = $this->replaceAllInFile($httpdConfig, $tenantServerUrlTrim, $tenantDbUrlTrim);
                             if ($res['status'] == 'error') {
@@ -752,7 +768,7 @@ class UserTenantUtil
                     }
 
                     //modify port in httpd
-                    if( $tenantDbPortTrim != $tenantServerPortTrim ) {
+                    if ($tenantDbPortTrim != $tenantServerPortTrim) {
                         if (str_contains($httpdOriginalText, $tenantServerPortTrim)) {
                             $res = $this->replaceAllInFile($httpdConfig, $tenantServerPortTrim, $tenantDbPortTrim);
                             if ($res['status'] == 'error') {
@@ -763,7 +779,7 @@ class UserTenantUtil
                             } else {
                                 echo "processDBTenants: $tenantId: status=" . $res['status'] . "<br>";
                                 $msg = "Port for tenant $tenantId has been updated in httpd from "
-                                . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]";
+                                    . "[" . $tenantServerPortTrim . "] to [" . $tenantDbPortTrim . "]";
 //                                $session->getFlashBag()->add(
 //                                    'note',
 //                                    "Tenant's $tenantId port has been updated in httpd from "
@@ -781,8 +797,8 @@ class UserTenantUtil
                         }
                     }
 
-                    if( $updateThisHttpd === true ) {
-                        $msg = "Httpd httpd service for tenant ".$tenantId." has been restarted.";
+                    if ($updateThisHttpd === true) {
+                        $msg = "Httpd httpd service for tenant " . $tenantId . " has been restarted.";
                         $logger->notice($msg);
 //                        $session->getFlashBag()->add(
 //                            'notice',
@@ -799,7 +815,7 @@ class UserTenantUtil
 
         }//foreach tenant
 
-        if( $updateHttpd === true || $updateHaproxy === true ) {
+        if ($updateHttpd === true || $updateHaproxy === true) {
             $msg = "Restart haproxy service";
             $logger->notice($msg);
 //            $session->getFlashBag()->add(
@@ -809,12 +825,12 @@ class UserTenantUtil
             $resultArr['haproxy-ok'] = $resultArr['haproxy-ok'] . "; HAProxy service has been restarted.";
             $resultTenantArr['haproxy-message']['success'][] = $msg;
             $resHaproxy = $this->restartHaproxy();
-            $logger->notice('haproxy-message='.$resHaproxy);
+            $logger->notice('haproxy-message=' . $resHaproxy);
         }
 
-        if( $updateHttpd === false ) {
-            if( $resultArr['httpd-error'] == null ) {
-                $msg = "The Apache HTTPD configuration has not been restarted, as no differences".
+        if ($updateHttpd === false) {
+            if ($resultArr['httpd-error'] == null) {
+                $msg = "The Apache HTTPD configuration has not been restarted, as no differences" .
                     " were detected between the database and server configurations.";
             } else {
                 $msg = "The Apache HTTPD configuration has not been restarted due to an error.";
@@ -828,9 +844,9 @@ class UserTenantUtil
 //            );
         }
 
-        if( $updateHaproxy === false ) {
-            if( $resultArr['haproxy-error'] == null ) {
-                $msg = "The HAProxy configuration has not been restarted, as no differences".
+        if ($updateHaproxy === false) {
+            if ($resultArr['haproxy-error'] == null) {
+                $msg = "The HAProxy configuration has not been restarted, as no differences" .
                     " were detected between the database and server configurations.";
             } else {
                 $msg = "The HAProxy configuration has not been restarted due to an error.";
@@ -847,28 +863,30 @@ class UserTenantUtil
         //    $msgCreateNewTenant = $this->createNewTenant($tenant);
         //}
 
-       //exit('111');
+        //exit('111');
         return $resultTenantArr; //$resultArr;
     }
 
-    public function getTenantHttpd( $tenantId ) {
+    public function getTenantHttpd($tenantId)
+    {
         $httpdPath = '/etc/httpd/conf/';
         // /etc/httpd/conf/tenantappdemo-httpd.conf
-        $httpdFile = $httpdPath.$tenantId.'-httpd.conf';
-        if( file_exists($httpdFile) ) {
+        $httpdFile = $httpdPath . $tenantId . '-httpd.conf';
+        if (file_exists($httpdFile)) {
             return $httpdFile;
         }
         return null;
     }
 
-    public function createNewTenant($tenant) {
+    public function createNewTenant($tenant)
+    {
         //create new httpd file, add tenant to haproxy
         // order-lab/utils/executables/create-new-tenant.sh
         $logger = $this->container->get('logger');
 
         $tenantId = $tenant->getName();
 
-        if( $tenant->getEnabled() !== true ) {
+        if ($tenant->getEnabled() !== true) {
             $logger->notice("createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.");
             return "createNewTenant: Do not create new tenant $tenantId; tenant is not enabled.";
         }
@@ -876,10 +894,10 @@ class UserTenantUtil
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
 
         //don't create if already exists, if folder order-lab-$tenantId exists
-        $tenantOrderFolder = $projectRoot."/../../order-lab-$tenantId";
-        if( file_exists($tenantOrderFolder)===TRUE ) {
+        $tenantOrderFolder = $projectRoot . "/../../order-lab-$tenantId";
+        if (file_exists($tenantOrderFolder) === TRUE) {
             $tenantCreateMsg = "A new tenant $tenantId has not been created because it already exists.";
-            $logger->notice("createNewTenant: ".$tenantCreateMsg);
+            $logger->notice("createNewTenant: " . $tenantCreateMsg);
             return $tenantCreateMsg;
         }
 
@@ -888,17 +906,17 @@ class UserTenantUtil
         $port = $tenant->getTenantPort();
         $logger->notice("createNewTenant: create-new-tenant.sh: tenant=[$tenant], url=[$url], port=[$port]");
 
-        $createNewTenantScript = $projectRoot.'/../utils/executables/create-new-tenant.sh';
+        $createNewTenantScript = $projectRoot . '/../utils/executables/create-new-tenant.sh';
         $createNewTenantScript = realpath($createNewTenantScript);
 
-        if( file_exists($createNewTenantScript) === false ) {
+        if (file_exists($createNewTenantScript) === false) {
             $logger->notice("createNewTenant: file does not exist: [$createNewTenantScript]");
         }
 
-        $createNewTenantLog = $projectRoot."/var/log/create_$tenantId.log";
+        $createNewTenantLog = $projectRoot . "/var/log/create_$tenantId.log";
         $logger->notice("createNewTenant: createNewTenantLog=[$createNewTenantLog]");
 
-        if(1) {
+        if (1) {
             $createCmd = 'sudo /bin/bash ' . $createNewTenantScript . ' -t ' . $tenantId . ' -p ' . $port . ' -u ' . $url . " > $createNewTenantLog";
             $logger->notice("createNewTenant: create new tenant, createCmd=[$createCmd]");
             //create-new-tenant.sh -t newtenant -p 8087 -u newtenant
@@ -924,7 +942,7 @@ class UserTenantUtil
 //        );
 //        $output = $this->runProcess_new($commandArr);
 
-        return "A new tenant $tenantId has been created. ".$output."; HAProxy has been restarted.";
+        return "A new tenant $tenantId has been created. " . $output . "; HAProxy has been restarted.";
     }
 
     public function fileReplaceContent($path, $oldContent, $newContent)
@@ -933,6 +951,7 @@ class UserTenantUtil
         $str = str_replace($oldContent, $newContent, $str);
         file_put_contents($path, $str);
     }
+
     /**
      * Replaces a string in a file
      *
@@ -944,49 +963,38 @@ class UserTenantUtil
     function replaceAllInFile($FilePath, $OldText, $NewText)
     {
         $Result = array('status' => 'error', 'message' => '');
-        if(file_exists($FilePath)===TRUE)
-        {
-            if(is_writeable($FilePath))
-            {
-                try
-                {
+        if (file_exists($FilePath) === TRUE) {
+            if (is_writeable($FilePath)) {
+                try {
                     $FileContent = file_get_contents($FilePath);
                     $FileContent = str_replace($OldText, $NewText, $FileContent);
-                    if(file_put_contents($FilePath, $FileContent) > 0)
-                    {
+                    if (file_put_contents($FilePath, $FileContent) > 0) {
                         $Result["status"] = 'success';
-                    }
-                    else
-                    {
+                    } else {
                         $Result["message"] = 'Error while writing file';
                     }
+                } catch (Exception $e) {
+                    $Result["message"] = 'Error : ' . $e;
                 }
-                catch(Exception $e)
-                {
-                    $Result["message"] = 'Error : '.$e;
-                }
+            } else {
+                $Result["message"] = 'File ' . $FilePath . ' is not writable !';
             }
-            else
-            {
-                $Result["message"] = 'File '.$FilePath.' is not writable !';
-            }
-        }
-        else
-        {
-            $Result["message"] = 'File '.$FilePath.' does not exist !';
+        } else {
+            $Result["message"] = 'File ' . $FilePath . ' does not exist !';
         }
         return $Result;
     }
 
     //https://stackoverflow.com/questions/29182924/overwrite-a-specific-line-in-a-text-file-with-php
-    public function changeLineInFile( $filePath, $lineIdentifier, $appendStr, $enable ) {
+    public function changeLineInFile($filePath, $lineIdentifier, $appendStr, $enable)
+    {
         //echo "filePath=".$filePath."<br>";
         //echo "lineIdentifier=".$lineIdentifier."<br>";
         //echo "appendStr=".$appendStr."<br>";
 
         $result = array('status' => 'error', 'message' => '');
 
-        if(file_exists($filePath)===TRUE) {
+        if (file_exists($filePath) === TRUE) {
             if (is_writeable($filePath)) {
 
                 $content = file($filePath); // reads an array of lines
@@ -1018,27 +1026,21 @@ class UserTenantUtil
                 }
                 $allContent = implode("", $content);
 
-                try
-                {
-                    if(file_put_contents($filePath, $allContent) > 0)
-                    {
+                try {
+                    if (file_put_contents($filePath, $allContent) > 0) {
                         $result["status"] = 'success';
-                    }
-                    else
-                    {
+                    } else {
                         $result["message"] = 'Error while writing file';
                     }
-                }
-                catch(Exception $e)
-                {
-                    $result["message"] = 'Error : '.$e;
+                } catch (Exception $e) {
+                    $result["message"] = 'Error : ' . $e;
                 }
 
             } else {
-                $result["message"] = 'File '.$filePath.' is not writable !';
+                $result["message"] = 'File ' . $filePath . ' is not writable !';
             }//if is_writeable
         } else {
-            $result["message"] = 'File '.$filePath.' does not exist !';
+            $result["message"] = 'File ' . $filePath . ' does not exist !';
         }//if file_exists
 
         //dump($allContent);
@@ -1047,7 +1049,8 @@ class UserTenantUtil
     }
 
     //TODO: run in background as cron?
-    public function restartHaproxy() {
+    public function restartHaproxy()
+    {
         //https://stackoverflow.com/questions/8532304/execute-root-commands-via-php
         //create haproxy-restart.sh
         //chown root /usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh
@@ -1072,7 +1075,7 @@ class UserTenantUtil
         // /bin/su -s /bin/bash -c "/usr/local/bin/order-lab-tenantmanager/utils/executables/haproxy-restart.sh" apache
         //Permission denied:
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $haproxyRestartScript = $projectRoot.'/../utils/executables/haproxy-restart.sh';
+        $haproxyRestartScript = $projectRoot . '/../utils/executables/haproxy-restart.sh';
         $haproxyRestartScript = realpath($haproxyRestartScript);
 
         //$haproxyRestartScript = '/usr/bin/systemctl restart haproxy';
@@ -1087,12 +1090,13 @@ class UserTenantUtil
 
         //$this->runProcessShell("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy.sh");
 
-        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript);
+        $output = $this->runProcessShell('sudo /bin/bash ' . $haproxyRestartScript);
         //exit('end runProcessShell, output='.$output);
         return $output;
     }
 
-    public function restartTenantHttpd( $tenantId ) {
+    public function restartTenantHttpd($tenantId)
+    {
         //sudo systemctl restart haproxy
         //$output = shell_exec('sudo systemctl restart httpd'.$tenantId);
         //echo "<pre>$output</pre>";
@@ -1106,14 +1110,15 @@ class UserTenantUtil
 //        $this->runProcess($commandArr);
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-        $haproxyRestartScript = $projectRoot.'/../utils/executables/httpd-restart.sh';
+        $haproxyRestartScript = $projectRoot . '/../utils/executables/httpd-restart.sh';
         $haproxyRestartScript = realpath($haproxyRestartScript);
-        $output = $this->runProcessShell('sudo /bin/bash '.$haproxyRestartScript.' -t '.$tenantId);
+        $output = $this->runProcessShell('sudo /bin/bash ' . $haproxyRestartScript . ' -t ' . $tenantId);
         //exit('end runProcessShell, output='.$output);
         return $output;
     }
 
-    public function runProcess($commandArr) {
+    public function runProcess($commandArr)
+    {
         $logger = $this->container->get('logger');
         $process = new Process($commandArr);
         $process->setTimeout(3600); //sec; 3600 sec => 60 min
@@ -1128,13 +1133,14 @@ class UserTenantUtil
             //$logger->notice("runProcess: successfull");
         }
         $output = $process->getOutput();
-        $logger->notice("runProcess: output: ".$output);
+        $logger->notice("runProcess: output: " . $output);
 
         echo $output;
         return $output;
     }
 
-    public function runProcess_new($commandArr) {
+    public function runProcess_new($commandArr)
+    {
         $logger = $this->container->get('logger');
         $process = new Process($commandArr);
         $process->setTimeout(3600); //sec; 3600 sec => 60 min
@@ -1152,14 +1158,14 @@ class UserTenantUtil
 //            //$logger->notice("runProcess: successfull");
 //        }
         $output = $process->getOutput();
-        $logger->notice("runProcess: output: ".$output);
+        $logger->notice("runProcess: output: " . $output);
 
         echo $output;
         return $output;
     }
 
     //Run process asynchronously in new console
-    public function runProcessShell($script, $output=true)
+    public function runProcessShell($script, $output = true)
     {
         echo "runProcessShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
@@ -1168,7 +1174,8 @@ class UserTenantUtil
         return null;
     }
 
-    public function runProcessSyncShell($script, $output=true) {
+    public function runProcessSyncShell($script, $output = true)
+    {
         echo "runProcessSyncShell: script=[$script]<br>";
         $process = Process::fromShellCommandline($script);
         $process->setTimeout(3600); //sec; 3600 sec => 60 min
@@ -1219,7 +1226,8 @@ class UserTenantUtil
 //        return $output;
     }
 
-    public function runProcessWait($script) {
+    public function runProcessWait($script)
+    {
         $logger = $this->container->get('logger');
         $process = Process::fromShellCommandline($script);
         //$process = new Process([$script]);
@@ -1240,16 +1248,17 @@ class UserTenantUtil
             $logger->notice("runProcessWait: successfull");
         }
         $output = $process->getOutput();
-        $logger->notice("runProcessWait: output: ".$output);
+        $logger->notice("runProcessWait: output: " . $output);
         return $output;
     }
 
-    public function isTenantInitialized( $tenant ) {
+    public function isTenantInitialized($tenant)
+    {
         //return true; //testing
         $logger = $this->container->get('logger');
         $initialized = false;
 
-        if( !$tenant ) {
+        if (!$tenant) {
             $logger->notice("isTenantInitialized: tenant is null");
             return $initialized;
         }
@@ -1257,8 +1266,8 @@ class UserTenantUtil
         //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
 
-        if( !$conn ) {
-            $logger->notice("isTenantInitialized: connection is null for tenant DB=".$tenant->getDatabaseName());
+        if (!$conn) {
+            $logger->notice("isTenantInitialized: connection is null for tenant DB=" . $tenant->getDatabaseName());
             return $initialized;
         }
 
@@ -1268,22 +1277,23 @@ class UserTenantUtil
         //dump($userRows);
         //exit();
         //$id = $hostedGroupRows[0]['id'];
-        $logger->notice("isTenantInitialized: $tenant, found rows count=".count($userRows));
-        if( count($userRows) > 0 ) {
+        $logger->notice("isTenantInitialized: $tenant, found rows count=" . count($userRows));
+        if (count($userRows) > 0) {
             $initialized = true;
         }
 
         return $initialized;
     }
 
-    public function getTenantsFromTenantManager( $tenantManagerName = 'tenantmanager' ) {
+    public function getTenantsFromTenantManager($tenantManagerName = 'tenantmanager')
+    {
         $tenantDataArr['existedTenantIds'][] = $tenantManagerName;
         $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
 
         //dump($tenantDataArr);
         //exit('111');
 
-        if( !isset($tenantDataArr[$tenantManagerName]) ) {
+        if (!isset($tenantDataArr[$tenantManagerName])) {
             return array();
         }
 
@@ -1303,7 +1313,7 @@ class UserTenantUtil
         //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
 
-        if( !$conn ) {
+        if (!$conn) {
             return array();
         }
 
@@ -1323,10 +1333,11 @@ class UserTenantUtil
         return $tenantsRows;
     }
 
-    public function getTenantBaseUrls( $request ) {
+    public function getTenantBaseUrls($request)
+    {
         $tenantManagerName = 'tenantmanager';
         $tenantBaseUrlArr = array();
-        
+
         //get scheme: $request->getScheme() will give http if using HaProxy.
         //Therefore, use urlConnectionChannel from SiteSettings
         $userUtil = $this->container->get('user_utility');
@@ -1348,9 +1359,9 @@ class UserTenantUtil
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
-            if($tenantArr) {
+            if ($tenantArr) {
 
-                if( $currentTenantArr['urlslug'] == $tenantArr['urlslug'] ) {
+                if ($currentTenantArr['urlslug'] == $tenantArr['urlslug']) {
                     //skip the current tenant in the list of available tenants
                     continue;
                 }
@@ -1367,7 +1378,7 @@ class UserTenantUtil
                 $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
 
                 $showOnHomepage = $tenant->getShowOnHomepage();
-                if( $showOnHomepage !== true ) {
+                if ($showOnHomepage !== true) {
                     continue;
                 }
 
@@ -1384,7 +1395,7 @@ class UserTenantUtil
                         $tenantBaseUrl = $baseUrl . '/' . $url;
                     }
 
-                    if( !$instTitle ) {
+                    if (!$instTitle) {
                         $instTitle = $tenantBaseUrl;
                     }
 
@@ -1393,14 +1404,14 @@ class UserTenantUtil
                     $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
 
                     $enabled = $tenant->getEnabled();
-                    if( !$enabled ) {
+                    if (!$enabled) {
                         $tenantBaseUrl = $tenantBaseUrl . " (Disabled)";
                     }
 
                     //isTenantInitialized
-                    if( $this->isTenantInitialized($tenant) === false ) {
+                    if ($this->isTenantInitialized($tenant) === false) {
                         //$initializeUrl = $userTenantUtil->getInitUrl($tenant,$tenantManagerUrl);
-                        $tenantBaseUrl = $tenantBaseUrl . " ("."not initialized".")";
+                        $tenantBaseUrl = $tenantBaseUrl . " (" . "not initialized" . ")";
                     }
 
                     $tenantBaseUrlArr[] = $tenantBaseUrl;
@@ -1418,13 +1429,14 @@ class UserTenantUtil
     }
 
     //check if current tenant is marked as a primaryTenant in tenantmanager's DB
-    public function isPrimaryTenant( $request ) {
+    public function isPrimaryTenant($request)
+    {
 
         $currentTenantArr = $this->getCurrentTenantArr($request);
 
         //dump($currentTenantArr);
 
-        if( !$currentTenantArr || count($currentTenantArr) == 0 ) {
+        if (!$currentTenantArr || count($currentTenantArr) == 0) {
             return FALSE;
         }
 
@@ -1434,25 +1446,27 @@ class UserTenantUtil
     }
 
     //TODO: check newtenantt init: http://143.198.22.81:8089/ - ok, http://143.198.22.81/newtenantt - not ok
-    public function getInitUrl( $tenant, $tenantManagerUrl ) {
+    public function getInitUrl($tenant, $tenantManagerUrl)
+    {
         //first-time-login-generation-init
         $url = $this->container->get('router')->generate('first-time-login-generation-init');
 
         //replace baseUrl with the tenant's baseUrl
         $tenantUrl = $tenant->getUrlSlug();
-        $tenantUrl = trim($tenantUrl,'/');
+        $tenantUrl = trim($tenantUrl, '/');
         //replace 'tenant-manager'.'/directory' with $tenantUrl.'/directory'
         //$url = str_replace($tenantManagerUrl.'/directory',$tenantUrl.'/directory',$url);
-        $url = str_replace($tenantManagerUrl,$tenantUrl,$url);
+        $url = str_replace($tenantManagerUrl, $tenantUrl, $url);
         //echo '$tenantManagerUrl='.$tenantManagerUrl.'; $url='.$url.'; $tenantUrl='.$tenantUrl.'<br>';
         //exit('111');
         //url=directory/admin/first-time-login-generation-init
 
-        $href = " <a href=".$url." target='_blank'>Initialize Tenant</a> ";
+        $href = " <a href=" . $url . " target='_blank'>Initialize Tenant</a> ";
         return $href;
     }
 
-    public function getConnectionTenantDB( $tenant ) {
+    public function getConnectionTenantDB($tenant)
+    {
 
         $config = new \Doctrine\DBAL\Configuration();
         $config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
@@ -1493,7 +1507,8 @@ class UserTenantUtil
     }
 
     //Get current tenant data based on the current url based on request.
-    public function getCurrentTenantArr( $request ) {
+    public function getCurrentTenantArr($request)
+    {
         $tenantManagerName = 'tenantmanager';
         $tenants = $this->getTenantsFromTenantManager($tenantManagerName);
         //echo "tenants=".count($tenants)."<br>";
@@ -1504,25 +1519,25 @@ class UserTenantUtil
         $currentFullUri = $request->getUri();
         //echo "currentFullUri=$currentFullUri <br>"; //http://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
 
-        $currentFullUriPath = parse_url($currentFullUri,PHP_URL_PATH); // '/tenant-manager/' or '/c/wcm/pathology/' or '/'
+        $currentFullUriPath = parse_url($currentFullUri, PHP_URL_PATH); // '/tenant-manager/' or '/c/wcm/pathology/' or '/'
         //echo "currentFullUriPath=$currentFullUriPath <br>";
 
         foreach ($tenants as $tenantArr) {
             //$tenant as array
-            if($tenantArr) {
+            if ($tenantArr) {
                 $urlslug = $tenantArr['urlslug'];
                 //echo "urlslug=$urlslug <br>"; //c/wcm/pathology
 
                 $primarytenant = $tenantArr['primarytenant'];
                 //echo "primarytenant=$primarytenant <br>";
                 //For primarytenant, the $currentFullUriPath will always be '/' on the main home page
-                if( $primarytenant ) {
-                    if( $currentFullUriPath == '/' ) {
+                if ($primarytenant) {
+                    if ($currentFullUriPath == '/') {
                         return $tenantArr;
                     }
                 }
 
-                if( $urlslug != '/' ) {
+                if ($urlslug != '/') {
                     if ($urlslug && $currentFullUri && str_contains($currentFullUri, $urlslug)) {
                         return $tenantArr;
                     }
@@ -1546,7 +1561,7 @@ class UserTenantUtil
     // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
     //$paramArr - array of parameters (i.e. array('id'=>123))
     //Used in generateApplicationPdf
-    public function routerGenerateWrapper( $routName, $paramArr, $replaceContext=true )
+    public function routerGenerateWrapper($routName, $paramArr, $replaceContext = true)
     {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1559,7 +1574,7 @@ class UserTenantUtil
         }
 
         $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        if( !$connectionChannel ) {
+        if (!$connectionChannel) {
             $connectionChannel = 'http';
         }
         //$connectionChannel = 'https'; //testing
@@ -1568,7 +1583,7 @@ class UserTenantUtil
 
         //$replaceContext = true;
         //$replaceContext = false;
-        if( $replaceContext ) {
+        if ($replaceContext) {
             //$context = $this->container->get('router')->getContext();
             //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
             $context->setHost('localhost');
@@ -1588,17 +1603,17 @@ class UserTenantUtil
             $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
-        $logger->notice("1 routerGenerateWrapper: pageUrl=[".$pageUrl."]");
+        $logger->notice("1 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
 
         //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
         //// replace tenant base in $pageUrl //////
         $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        $logger->notice("routerGenerateWrapper: tenantUrlBase=[".$tenantUrlBase."]");
-        if( str_contains($pageUrl, $tenantUrlBase) === false ) {
+        $logger->notice("routerGenerateWrapper: tenantUrlBase=[" . $tenantUrlBase . "]");
+        if (str_contains($pageUrl, $tenantUrlBase) === false) {
             //$pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
             //$logger->notice("1a routerGenerateWrapper: pageUrl=[".$pageUrl."]");
 
-            $context->setBaseUrl("/".$tenantUrlBase);
+            $context->setBaseUrl("/" . $tenantUrlBase);
 
             $pageUrl = $router->generate(
                 $routName,
@@ -1609,7 +1624,32 @@ class UserTenantUtil
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
         }
-        $logger->notice("2 routerGenerateWrapper: pageUrl=[".$pageUrl."]");
+        $logger->notice("2 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
+
+        return $pageUrl;
+    }
+
+    public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceContext = true) {
+
+        if( $replaceContext ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $context = $this->container->get('router')->getContext();
+            $urlConnectionChannel = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
+            if (!$urlConnectionChannel) {
+                $urlConnectionChannel = 'http';
+            }
+            $context->setScheme($urlConnectionChannel);
+        }
+
+        $router = $this->container->get('router');
+        $pageUrl = $router->generate(
+            $routName,
+            //array(
+            //    'id' => $applicationId
+            //),
+            $paramArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
 
         return $pageUrl;
     }

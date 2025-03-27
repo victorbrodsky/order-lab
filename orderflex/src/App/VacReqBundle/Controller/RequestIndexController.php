@@ -122,6 +122,8 @@ class RequestIndexController extends OrderAbstractController
     public function listRequests( $params, $request ) {
 
         $vacreqUtil = $this->container->get('vacreq_util');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+
         $em = $this->getDoctrine()->getManager();
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
@@ -308,11 +310,12 @@ class RequestIndexController extends OrderAbstractController
 //                        $pageTitle = $indexTitle . " (" . $downloadLink . ")";
 //                    }
 
-                    $downloadUrl = $this->container->get('router')->generate(
-                        'vacreq_download_spreadsheet',
-                        array(),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
+//                    $downloadUrl = $this->container->get('router')->generate(
+//                        'vacreq_download_spreadsheet',
+//                        array(),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+                    $downloadUrl = $userTenantUtil->routerGenerateExternalChanelWrapper('vacreq_download_spreadsheet');
                     $downloadLink =
                         '<form action="' . $downloadUrl . '" method="post" style="display: inline;"' .
                         ' ' . $warningOnclick .
@@ -350,11 +353,12 @@ class RequestIndexController extends OrderAbstractController
                 //current academic year
                 //TODO: Summary Report By Name, make in the same line
                 $currentYearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
-                $downloadUrl2 = $this->container->get('router')->generate(
-                    'vacreq_download_summary_report_spreadsheet',
-                    array(),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
+//                $downloadUrl2 = $this->container->get('router')->generate(
+//                    'vacreq_download_summary_report_spreadsheet',
+//                    array(),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+                $downloadUrl2 = $userTenantUtil->routerGenerateExternalChanelWrapper('vacreq_download_summary_report_spreadsheet');
                 $downloadLink2 =
                     '<form action="' . $downloadUrl2 . '" method="post" style="display: inline;"' .
                     ' ' . $warningOnclick .
@@ -369,11 +373,12 @@ class RequestIndexController extends OrderAbstractController
 
                 //previous academic year
                 $previousYearRangeStr = $vacreqUtil->getPreviousAcademicYearRange();
-                $downloadUrl3 = $this->container->get('router')->generate(
-                    'vacreq_download_summary_report_spreadsheet',
-                    array(),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
+//                $downloadUrl3 = $this->container->get('router')->generate(
+//                    'vacreq_download_summary_report_spreadsheet',
+//                    array(),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+                $downloadUrl3 = $userTenantUtil->routerGenerateExternalChanelWrapper('vacreq_download_summary_report_spreadsheet');
                 $downloadLink3 =
                     '<form action="' . $downloadUrl3 . '" method="post" style="display: inline;"' .
                     ' ' . $warningOnclick .
