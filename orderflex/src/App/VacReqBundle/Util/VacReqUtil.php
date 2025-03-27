@@ -7956,7 +7956,7 @@ class VacReqUtil
 
         set_time_limit(600);
 
-        //echo "userIds=".count($userIds)."<br>";
+        //echo "userIdsStr=".$userIdsStr."<br>";
         //exit('1');
 
         $userIds = explode("-",$userIdsStr);
@@ -8042,12 +8042,14 @@ class VacReqUtil
         $row = 2;
         foreach( $userIds as $userId ) {
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            if( !$userId ) {
+                continue;
+            }
+
             $subjectUser = $this->em->getRepository(User::class)->find($userId);
             if( !$subjectUser ) {
                 continue;
             }
-
 //            //check if author can have access to view this request
 //            if( false == $this->security->isGranted("read", $vacreq) ) {
 //                continue; //skip this applicant because the current user does not permission to view this applicant
