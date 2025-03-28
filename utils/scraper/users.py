@@ -12,9 +12,9 @@ from web_automation import WebAutomation
 
 
 class Users:
-    def __init__(self):
-        #self.automation = WebAutomation()
-        pass
+    def __init__(self, automation):
+        self.automation = automation
+        #pass
     
     def get_users(self):
         """
@@ -60,19 +60,21 @@ class Users:
         ]
         return users
 
-    def create_user(self, driver):
+    def create_user(self):
         url = "https://view.online/c/demo-institution/demo-department/directory/user/new"
-        automation = WebAutomation()
-        automation.set_driver(driver)
+        #automation = WebAutomation()
+        automation = self.automation
+        #automation.set_driver(driver)
+        driver = automation.get_driver()
         
         for user in self.get_users():
             print(user['userid'])
             driver.get(url)
-            time.sleep(3)
+            time.sleep(1)
             
             #$client->executeScript("$('#s2id_oleg_userdirectorybundle_user_keytype').select2('val','4')");
             #$("#select").select2("val", $("#select option:contains('Text')").val() );
-            automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "s2id_autogen2_search", None, "Local User")
+            automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search", "Local User")
             #primaryPublicUserId = driver.find_element(By.ID, "oleg_userdirectorybundle_user_primaryPublicUserId")
             #primaryPublicUserId.send_keys(user['userid'])
             
@@ -111,17 +113,17 @@ class Users:
             field.send_keys(user['password'])
             
             #$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val',[".$roleStr."])");
-            automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "s2id_autogen4", None, user['rolesStr'])
+            automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "ID", "s2id_autogen4", user['rolesStr'])
             #automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "s2id_autogen4", None, "EmployeeDirectory Observer")
-            automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "s2id_autogen4", None, user['rolesStr'])
+            automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "ID", "s2id_autogen4", user['rolesStr'])
                 
             automation.click_button("btn-success")
             
-            time.sleep(10)
+            time.sleep(3)
             
             break
         
-        automation.quit_driver()
+        #automation.quit_driver()
 
 def main():
     
@@ -137,8 +139,13 @@ def main():
     # automation.click_button("button_class_name")    
     
     #Create user
-    users = Users()
-    users.create_user(driver)
+    users = Users(automation)
+    users.create_user()
+
+    #Create Vacation Requests
+    #vacreq = VacReq()
+    #vacreq.create_group()
+    #vacreq.create_vacreqs()
 
 
 # Execute the main function

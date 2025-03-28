@@ -11,6 +11,10 @@ class WebAutomation:
     def __init__(self):
         """Initialize the class and set up the WebDriver."""
         self.driver = None
+        self.initialize_driver()
+
+    def get_driver(self):
+        return self.driver
 
     def initialize_driver(self):
         """Initializes the WebDriver."""
@@ -27,11 +31,11 @@ class WebAutomation:
         username.send_keys(username_text)
         password.send_keys(password_text)
         
-        self.select_option("s2id_usernametypeid_show", None, "select2-input", "Local User")
+        self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
         time.sleep(1)
         self.click_button("btn-primary")
 
-    def select_option(self, element_id, select_id, select_classname, option_text):
+    def select_option(self, element_id, selector_option, selector_text, option_text):
         #print("ID=",select_id,", CLASS=", select_classname)
         #"""Selects an option from the Select2 combobox."""
         combobox = self.driver.find_element(By.ID, element_id)
@@ -40,12 +44,15 @@ class WebAutomation:
         
         time.sleep(1)
 
-        if select_id != None:
-            search_box = self.driver.find_element(By.ID, select_id)
-            print("search by ID=",select_id)
-        if select_classname != None:
-            search_box = self.driver.find_element(By.CLASS_NAME, select_classname)
-            print("search by CLASS_NAME=",select_classname)
+        if selector_option == "ID":
+            search_box = self.driver.find_element(By.ID, selector_text)
+            print("search by ID=",selector_text)
+        if selector_option == "CLASS_NAME":
+            search_box = self.driver.find_element(By.CLASS_NAME, selector_text)
+            print("search by CLASS_NAME=",selector_text)
+        if selector_option == "CSS_SELECTOR":
+            search_box = self.driver.find_element(By.CSS_SELECTOR, selector_text)
+            print("search by CSS_SELECTOR=",selector_text)
             
         time.sleep(1)
         search_box.send_keys(option_text)
