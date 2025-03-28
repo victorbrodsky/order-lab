@@ -7,7 +7,7 @@
 #2) git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 #3) cd /usr/local/bin/order-lab/packer
 #4) bash order_install.sh symfony symfony alma9 | tee install.log
-#5) Open webbrowser: http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/
+#5) Open webbrowser: http://$DROPLETIP/directory/admin/first-time-login-generation-init/
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -106,7 +106,7 @@ echo -e ${COLOR} Restart Apache and Postgresql ${NC}
 sudo systemctl restart httpd.service
 sudo systemctl restart postgresql-15
 
-#Open init http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/
+#Open init http://$DROPLETIP/directory/admin/first-time-login-generation-init/
 
 
 

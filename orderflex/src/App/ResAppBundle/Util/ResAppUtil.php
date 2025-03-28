@@ -688,7 +688,7 @@ class ResAppUtil {
         /////////////// Configuring the Request Context per Command ///////////////
         // http://symfony.com/doc/current/cookbook/console/request_context.html
         //replace by $router = $userSecUtil->getRequestContextRouter();
-        $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
+        $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/
         $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
         //echo "liveSiteHost=".$liveSiteHost."; ";
 

@@ -263,7 +263,7 @@ echo "droplet IP=$DROPLETIP"
 
 sleep 120
 
-#DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+#DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/"
 
 echo "Before creating domainname=$domainname"
 if [ ! -z "$domainname" ] && [ "$domainname" != "domainname" ]
@@ -303,9 +303,9 @@ fi
 
 if [ ! -z "$protocol" ] && [ "$protocol" = "https" ]
   then 	
-	DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/https"
+	DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/https"
   else
-    DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
+    DROPLETIPWEB="http://$DROPLETIP/directory/admin/first-time-login-generation-init/"
 fi
 
 echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
