@@ -9,12 +9,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from web_automation import WebAutomation
 from selenium.webdriver.common.alert import Alert
 from selenium.common.exceptions import UnexpectedAlertPresentException
+from users import Users
 
 
 
 class VacReq:
     def __init__(self, automation):
         self.automation = automation
+        self.users = Users(automation)
+
         #pass
 
     def create_group(self):
@@ -55,84 +58,76 @@ class VacReq:
         driver.get(url)
         time.sleep(1)
 
+        #self.automation.click_button("btn-info")
+        # button = WebDriverWait(driver, 10).until(
+        #     EC.element_to_be_clickable((By.XPATH, "//button[a(text(), 'Manage')]"))
+        # )
+        link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//a[contains(text(), 'Manage') and contains(@class, 'btn-sm btn-info')]"))
+        )
+        link.click()
+        time.sleep(3)
+
+        # Add approver
         try:
-            #self.automation.click_button("btn-info")
-            # button = WebDriverWait(driver, 10).until(
-            #     EC.element_to_be_clickable((By.XPATH, "//button[a(text(), 'Manage')]"))
-            # )
-            link = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, "//a[contains(text(), 'Manage') and contains(@class, 'btn-sm btn-info')]"))
-            )
-            link.click()
-            time.sleep(3)
-
-            #Add approver
-            # self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
-            #                               "#vacreq-organizational-group-approver .select2-input",
-            #                               "administrator")
-            active_input = driver.find_element(By.XPATH,
-                                               "//div[@id='vacreq-organizational-group-approver']//input[not(@disabled)]")
-            actions = ActionChains(driver)
-            actions.move_to_element(active_input).click().perform()
-            time.sleep(1)
-            active_input.send_keys("administrator")
-            time.sleep(1)
-            active_input.send_keys(Keys.ENTER)
-            button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Approver(s)')]"))
-            )
-            button.click()
-            print("Button Add Submitter(s) clicked after waiting!")
-
-            ################
-
-            # button = WebDriverWait(driver, 10).until(
-            #     EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Approver(s)')]"))
-            # )
-            # button.click()
-            # print("Button Add Approver(s) clicked after waiting!")
-
-            #Add submitter
-            active_input = driver.find_element(By.XPATH,
-                                               "//div[@id='vacreq-organizational-group-approver']//input[not(@disabled)]")
-            actions = ActionChains(driver)
-            actions.move_to_element(active_input).click().perform()
-            time.sleep(1)
-            active_input.send_keys("John Doe")
-            time.sleep(1)
-            active_input.send_keys(Keys.ENTER)
-            button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Submitter(s)')]"))
-            )
-            button.click()
-            print("Button Add Submitter(s) clicked after waiting!")
+            if 1:
+                #Add approver
+                # self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
+                #                               "#vacreq-organizational-group-approver .select2-input",
+                #                               "administrator")
+                active_input = driver.find_element(By.XPATH,
+                                                   "//div[@id='vacreq-organizational-group-approver']//input[not(@disabled)]")
+                actions = ActionChains(driver)
+                actions.move_to_element(active_input).click().perform()
+                time.sleep(1)
+                active_input.send_keys("administrator")
+                time.sleep(1)
+                active_input.send_keys(Keys.ENTER)
+                time.sleep(1)
+                button = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Approver(s)')]"))
+                )
+                button.click()
+                print("Button Add Approver(s) clicked after waiting!")
+                time.sleep(1)
 
         except Exception as e:
             print(f"An error occurred in add_user_to_group: {e}")
 
+        # Add submitter
+        try:
+            if 1:
+                for user in self.users.get_users():
+                    active_input = driver.find_element(
+                        By.XPATH,
+                        "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
+                    )
+                    actions = ActionChains(driver)
+                    actions.move_to_element(active_input).click().perform()
+                    time.sleep(1)
+                    active_input.send_keys(user['displayName'])
+                    time.sleep(1)
+                    active_input.send_keys(Keys.ENTER)
+                    time.sleep(1)
+                    button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Submitter(s)')]"))
+                    )
+                    button.click()
+                    time.sleep(3)
+                    print("Button Add Submitter(s) clicked after waiting!")
+        except Exception as e:
+            print(f"An error occurred in add_user_to_group: {e}")
+
+        print("EOF add_user_to_group")
+
     def create_vacreq(self):
         """Main function to execute all actions."""
-        #driver = scraper_base.initialize_driver()
-        automation = WebAutomation()
-        driver = self.automation.initialize_driver()
+        driver = self.automation.get_driver()
         # Set implicit wait
         driver.implicitly_wait(10)  # seconds
 
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/login"
-        username_text = "administrator"
-        password_text = "1234567890_demo"
-
         try:
-            automation.login_to_site(driver, url, username_text, password_text)
-            #time.sleep(1)  # Wait for the page to load
-
-            automation.select_option(driver, "s2id_usernametypeid_show", "select2-input", "Local User")
-            #time.sleep(1)
-
-            automation.click_button(driver, "btn-primary")
-            #time.sleep(1)  # Observe the result before quitting
-
             #Create a new vacation request
             url = "https://view.online/c/demo-institution/demo-department/time-away-request/"
             driver.get(url)
@@ -150,14 +145,18 @@ class VacReq:
     #         time.sleep(3)
     #         search_box.send_keys(Keys.ENTER)
 
-            script = """
-                var selectElement = document.getElementById('oleg_vacreqbundle_request_institution');
-                selectElement.value = '29';  // Corresponds to "Pathology and Laboratory Medicine"
-                var event = new Event('change', { bubbles: true });
-                selectElement.dispatchEvent(event);
-                """
-            driver.execute_script(script)
-            time.sleep(5)
+            # script = """
+            #     var selectElement = document.getElementById('oleg_vacreqbundle_request_institution');
+            #     selectElement.value = '29';  // Corresponds to "Pathology and Laboratory Medicine"
+            #     var event = new Event('change', { bubbles: true });
+            #     selectElement.dispatchEvent(event);
+            #     """
+            #driver.execute_script(script)
+
+            self.automation.select_option("s2id_oleg_vacreqbundle_request_institution", "CSS_SELECTOR",
+                                          "#select2-drop .select2-input",
+                                          "Pathology and Laboratory Medicine")
+            time.sleep(3)
 
             #combobox = driver.find_element(By.ID, "s2id_oleg_vacreqbundle_request_institution")
             #combobox.click()
@@ -183,14 +182,18 @@ class VacReq:
     #         time.sleep(2)
     #         search_box.send_keys(Keys.ENTER)
 
-            script = """
-                var selectElement = document.querySelector('#oleg_vacreqbundle_request_user');
-                selectElement.value = '12';  // Corresponds to "John Doe"
-                var event = new Event('change', { bubbles: true });
-                selectElement.dispatchEvent(event);
-                """
-            driver.execute_script(script)
-            time.sleep(5)
+            # script = """
+            #     var selectElement = document.querySelector('#oleg_vacreqbundle_request_user');
+            #     selectElement.value = '12';  // Corresponds to "John Doe"
+            #     var event = new Event('change', { bubbles: true });
+            #     selectElement.dispatchEvent(event);
+            #     """
+            # driver.execute_script(script)
+
+            self.automation.select_option("s2id_oleg_vacreqbundle_request_user", "CSS_SELECTOR",
+                                          "#select2-drop .select2-input",
+                                          "John Doe")
+            time.sleep(3)
 
             #Select start date
             # Calculate the date for 1 week ago
@@ -248,7 +251,10 @@ def main():
 
     vacreq = VacReq(automation)
     #vacreq.create_group()
-    vacreq.add_user_to_group()
+    #vacreq.add_user_to_group()
+    vacreq.create_vacreq()
+
+    automation.quit_driver()
 
 # Execute the main function
 if __name__ == "__main__":
