@@ -25,7 +25,7 @@ class Trp:
                                       pi['displayName']
                                       )
         time.sleep(3)
-        #click cancel on add new user modal
+        #TODO: click cancel on add new user modal
         #self.automation.click_button_by_id("user-add-btn-cancel")
         #cancel_button = driver.find_element(By.ID, "user-add-btn-cancel")
         #cancel_button.click()
@@ -52,9 +52,22 @@ class Trp:
         # # Click the "Cancel" button
         # time.sleep(3)
         # cancel_button.click()
-        cancel_button = driver.find_element(By.ID, "user-add-btn-cancel")
-        # Execute JavaScript to click the "Cancel" button
-        driver.execute_script("arguments[0].click();", cancel_button)
+        # script = """
+        #     var selectElement = document.getElementById('oleg_vacreqbundle_request_institution');
+        #     selectElement.value = '29';  // Corresponds to "Pathology and Laboratory Medicine"
+        #     var event = new Event('change', { bubbles: true });
+        #     selectElement.dispatchEvent(event);
+        #     """
+        # script = """
+        #     var cancelButton = $("#user-add-btn-cancel");
+        #     cancelButton.click(function() {
+        #         alert("Cancel button clicked!");
+        #     });
+        # """
+        script = """
+            $("#user-add-btn-cancel").trigger("click");
+        """
+        driver.execute_script(script)
 
         time.sleep(3)
 
