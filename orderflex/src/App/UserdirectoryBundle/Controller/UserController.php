@@ -277,7 +277,7 @@ class UserController extends OrderAbstractController
         //$userSecUtil = $this->container->get('user_security_utility');
         // Retrieve the context key from parameters
         //$firewallContextName = $this->container->getParameter('firewall_context_name');
-        //test
+        test
         //echo $firewallContextName; // Prints the value of the firewall context key
         //$context = $userSecUtil->getFirewallContextKey();
         //dump($context);
