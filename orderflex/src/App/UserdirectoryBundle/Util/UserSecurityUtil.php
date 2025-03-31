@@ -631,22 +631,6 @@ class UserSecurityUtil {
         //$logger->debug("samlLogout: End of SAML logout");
         return false;
     }
-
-    function getFirewallContextKey() {
-        $token = $this->tokenStorage->getToken();
-
-        if ($token) {
-            //$user = $token->getUser();
-            //$roles = $token->getRoles();
-
-            // Accessing context-related information
-            $context = $token->getAttributes(); // Context attributes are here, if defined
-            //var_dump($context);
-        } else {
-            echo "No security token is available.";
-        }
-        return $context;
-    }
     
     function getLoggedInUsers($request) {
         //to list logged in users we can search for users with following:
