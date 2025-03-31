@@ -274,13 +274,13 @@ class UserController extends OrderAbstractController
 //        $contextScheme = $context->getScheme();
 //        echo '$contextScheme='.$contextScheme.'<br>';
         //$securityContext = $this->container->get('security.authentication.ldap_employees_firewall.context');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         // Retrieve the context key from parameters
-        $firewallContextName = $this->container->getParameter('firewall_context_name');
+        //$firewallContextName = $this->container->getParameter('firewall_context_name');
         //test
-        echo $firewallContextName; // Prints the value of the firewall context key
-        $context = $userSecUtil->getFirewallContextKey();
-        dump($context);
+        //echo $firewallContextName; // Prints the value of the firewall context key
+        //$context = $userSecUtil->getFirewallContextKey();
+        //dump($context);
         //exit("111");
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
