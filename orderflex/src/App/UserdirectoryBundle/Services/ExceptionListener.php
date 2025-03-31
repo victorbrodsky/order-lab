@@ -203,6 +203,10 @@ class ExceptionListener {
             //exit("dateStr=".$dateStr);
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
             $msg = "On $dateStr the following error has been logged on the $domain";
+            //$securityContext = $this->container->get('router')->getContext();
+            //$securityContext = $this->container->get('security.context');
+            $securityContext = $this->container->get('security.authentication.ldap_employees_firewall.context');
+            $msg = $msg . " (securityContext=". $securityContext . ")";
             $msg = $msg . ": <br>" . $message;
             $emailUtil->sendEmail($emails,$subject,$msg);
 

@@ -273,6 +273,8 @@ class UserController extends OrderAbstractController
 //        $context = $router->getContext();
 //        $contextScheme = $context->getScheme();
 //        echo '$contextScheme='.$contextScheme.'<br>';
+        $securityContext = $this->container->get('security.authentication.ldap_employees_firewall.context');
+        exit("securityContext=$securityContext");
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
