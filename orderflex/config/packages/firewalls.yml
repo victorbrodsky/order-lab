@@ -46,7 +46,13 @@ security:
               #pattern: ^/(system|default)/directory
               #context: scan_auth
               #context: "scan_auth_{%tenant_role%}"
-              context: "%firewall_context_name%"
+              #### context note ####
+              #The firewall context key is stored in session,
+              #so every firewall using it must set its stateless option to false.
+              #Otherwise, the context is ignored and you won't be
+              #able to authenticate on multiple firewalls at the same time.
+              #### eof context note ####
+              context: "%firewall_context_name%" #to use context, set stateless option to false
               #stateless: true
               switch_user: true
               custom_authenticators:

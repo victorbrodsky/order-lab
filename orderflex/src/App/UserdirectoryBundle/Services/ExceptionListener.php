@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class ExceptionListener {
 
@@ -42,8 +43,9 @@ class ExceptionListener {
     //protected $secAuthChecker;
     protected $security;
     private $logger;
+    private $firewallMap;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security, FirewallMapInterface $firewallMap)
     {
         $this->container = $container;
         $this->em = $em;
@@ -52,6 +54,7 @@ class ExceptionListener {
         //$this->secAuthChecker = $container->get('security.authorization_checker');
         //$this->secTokenStorage = $container->get('security.token_storage');
         $this->security = $security;
+        $this->firewallMap = $firewallMap;
     }
 
 
@@ -203,10 +206,18 @@ class ExceptionListener {
             //exit("dateStr=".$dateStr);
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
             $msg = "On $dateStr the following error has been logged on the $domain";
-            //$securityContext = $this->container->get('router')->getContext();
-            //$securityContext = $this->container->get('security.context');
-            $securityContext = $this->container->get('security.authentication.ldap_employees_firewall.context');
-            $msg = $msg . " (securityContext=". $securityContext . ")";
+
+            //$contextKey = $this->container->get('router')->getContext();
+            //$contextKey = $this->container->get('security.context');
+            //$contextKey = $this->container->get('security.authentication.ldap_employees_firewall.context');
+            //$contextKey = $this->security->get('ldap_employees_firewall.context');
+            $firewallConfig = $this->firewallMap->getFirewallConfig($request);
+            if (null === $firewallConfig) {
+                return;
+            }
+            $firewallName = $firewallConfig->getName();
+            $msg = $msg . " (firewallName=". $firewallName . ")";
+
             $msg = $msg . ": <br>" . $message;
             $emailUtil->sendEmail($emails,$subject,$msg);
 
