@@ -19,7 +19,7 @@ class WebAutomation:
     def initialize_driver(self):
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
-        #options.add_experimental_option("detach", True)
+        options.add_experimental_option("detach", True)
         self.driver = webdriver.Chrome(options=options)
         return self.driver
 
@@ -63,6 +63,11 @@ class WebAutomation:
     def click_button(self, class_name):
         """Clicks a button with the specified class name."""
         button = self.driver.find_element(By.CLASS_NAME, class_name)
+        button.click()
+
+    def click_button_by_id(self, element_id):
+        """Clicks a button with the specified class name."""
+        button = self.driver.find_element(By.ID, element_id)
         button.click()
 
     def set_driver(self,driver):

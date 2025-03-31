@@ -17,15 +17,21 @@ def main():
     # automation.click_button("button_class_name")
 
     # Create user
-    users = Users(automation)
-    users.create_user()
+    if 0:
+        users = Users(automation)
+        users.create_user()
 
     time.sleep(3)
 
     # Create Vacation Requests
-    vacreq = VacReq(automation)
-    vacreq.create_group()
-    # vacreq.create_vacreqs()
+    if 0:
+        vacreq = VacReq(automation)
+        vacreq.create_group()
+        vacreq.create_vacreqs()
+
+    if 1:
+        trp = Trp(automation)
+        trp.create_project()
 
     automation.quit_driver()
 
