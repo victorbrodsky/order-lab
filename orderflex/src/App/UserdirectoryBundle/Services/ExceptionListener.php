@@ -216,7 +216,8 @@ class ExceptionListener {
                 return;
             }
             $firewallName = $firewallConfig->getName();
-            $msg = $msg . " (firewallName=". $firewallName . ")";
+            $context = $firewallConfig->getContext();
+            $msg = $msg . " (firewallName=". $firewallName . ", context=". $context . ")";
 
             $msg = $msg . ": <br>" . $message;
             $emailUtil->sendEmail($emails,$subject,$msg);
