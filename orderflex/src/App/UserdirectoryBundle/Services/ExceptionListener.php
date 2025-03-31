@@ -219,11 +219,11 @@ class ExceptionListener {
             $context = $firewallConfig->getContext();
             $stateless = $firewallConfig->isStateless();
             if ($stateless) {
-                $statelessStr = "This firewall is stateless.";
+                $statelessStr = "true";
             } else {
-                $statelessStr = "This firewall is not stateless.";
+                $statelessStr = "false";
             }
-            $msg = $msg . " (firewallName=". $firewallName . ", context=". $context . ", " . $statelessStr . ")";
+            $msg = $msg . " (firewallName=". $firewallName . ", context=". $context . ", stateless=" . $statelessStr . ")";
 
             $msg = $msg . ": <br>" . $message;
             $emailUtil->sendEmail($emails,$subject,$msg);
