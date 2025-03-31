@@ -207,6 +207,7 @@ class ExceptionListener {
             //On MM/DD/YYYY, at HH:MM:SS the following error has been logged on the [server domain name/C.MED.CORNELL.EDU vs Collage, or IP address etc]: [text of error]
             $msg = "On $dateStr the following error has been logged on the $domain";
 
+            ////// Firewall info //////
             //$contextKey = $this->container->get('router')->getContext();
             //$contextKey = $this->container->get('security.context');
             //$contextKey = $this->container->get('security.authentication.ldap_employees_firewall.context');
@@ -223,7 +224,8 @@ class ExceptionListener {
             } else {
                 $statelessStr = "false";
             }
-            $msg = $msg . " (firewallName=". $firewallName . ", context=". $context . ", stateless=" . $firewallConfig->isStateless() . ")";
+            $msg = $msg . " (firewallName=". $firewallName . ", context=". $context . ", stateless=" . $statelessStr . ")";
+            ////// EOF Firewall info //////
 
             $msg = $msg . ": <br>" . $message;
             $emailUtil->sendEmail($emails,$subject,$msg);
