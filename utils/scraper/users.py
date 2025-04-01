@@ -6,6 +6,8 @@ import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
+
 
 #from scraper_base import login_to_site, initialize_driver
 from web_automation import WebAutomation
@@ -59,6 +61,19 @@ class Users:
             }
         ]
         return users
+
+    def get_existing_user(self, display_name):
+        automation = self.automation
+        # automation.set_driver(driver)
+        driver = automation.get_driver()
+        john_doe_row = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
+        # Optionally, print or interact with the row
+        print(john_doe_row.text)
+
+        id_from_link = re.search(r'/user/(\d+)', john_doe_row.text).group(1)
+        print(f"Extracted ID: {id_from_link}")
+
+        return id_from_link
 
     def create_user(self):
         url = "https://view.online/c/demo-institution/demo-department/directory/user/new"
