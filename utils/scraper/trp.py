@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from users import Users
 import time
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 
 class Trp:
     def __init__(self, automation):
@@ -45,7 +48,7 @@ class Trp:
         ]
         return projects
 
-    def create_project(self):
+    def create_projects(self):
         for project in self.get_trp_projects():
             self.create_single_project(project)
             break
@@ -108,18 +111,21 @@ class Trp:
         # $client->executeScript(
         #     "$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$piArr['userId']."')");
         #user_id = self.users.get_existing_user('John Doe')
-        user_id = self.existing_users['John Doe']
-        print(f"User ID: {user_id}")
+        user_id = self.existing_users[pi['displayName']]
+        print(f"pi User ID: {user_id}")
         time.sleep(3)
 
-        script = """
-            $("#s2id_oleg_translationalresearchbundle_project_principalInvestigators").select2('val','12');
+        # script = """
+        #     $("#s2id_oleg_translationalresearchbundle_project_principalInvestigators").select2('val','12');
+        # """
+        script = f"""
+            $("#s2id_oleg_translationalresearchbundle_project_principalInvestigators").select2('val','{user_id}');
         """
         driver.execute_script(script)
 
         time.sleep(3)
 
-        # billing_contact = users[1]
+        billing_contact = users[1]
         # self.automation.select_option("s2id_oleg_translationalresearchbundle_project_billingContact",
         #                               "CSS_SELECTOR",
         #                               ".select2-search .select2-input",
@@ -128,8 +134,14 @@ class Trp:
         #                               )
         # self.automation.click_button_by_id("user-add-btn-cancel")
 
-        script = """
-                    $("#s2id_oleg_translationalresearchbundle_project_billingContact").select2('val','15');
+        user_id = self.existing_users[billing_contact['displayName']]
+        print(f"billing_contact User ID: {user_id}")
+        time.sleep(3)
+        # script = """
+        #             $("#s2id_oleg_translationalresearchbundle_project_billingContact").select2('val','15');
+        #         """
+        script = f"""
+                    $("#s2id_oleg_translationalresearchbundle_project_billingContact").select2('val','{user_id}');
                 """
         driver.execute_script(script)
 
@@ -139,10 +151,24 @@ class Trp:
         #                               ".select2-search .select2-input",
         #                               "Exempt"
         #                               )
-        script = """
-                    $("#oleg_translationalresearchbundle_project_exemptIrbApproval").select2('val','2');
-                """
-        driver.execute_script(script)
+        # script = """
+        #             $("#oleg_translationalresearchbundle_project_exemptIrbApproval").select2('val','2');
+        #         """
+        # driver.execute_script(script)
+        irb_exp_date = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_irbNumber")
+        irb_exp_date.send_keys('2634793');
+
+        #set exp date 1 year plus
+        #one_year_plus = (datetime.date.today() + datetime.timedelta(year=1)).strftime("%m-%d-%Y")  # "%Y-%m-%d"
+        today = date.today()
+        # Add one year
+        one_year_plus = today + relativedelta(years=1)
+        print("one_year_plus=", one_year_plus)
+        # Find the datepicker input field
+        datepicker = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_irbExpirationDate")
+        # Clear the field and enter the calculated date
+        datepicker.clear()
+        datepicker.send_keys(one_year_plus)
 
         time.sleep(3)
         title = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_title")
@@ -173,8 +199,27 @@ class Trp:
 
         time.sleep(3)
 
-        #self.automation.click_button_by_id("oleg_translationalresearchbundle_project_submitIrbReview")
+        self.automation.click_button_by_id("oleg_translationalresearchbundle_project_submitIrbReview")
         time.sleep(10)
+
+        #Approve the project
+        current_url = driver.current_url
+        print(f"Current URL: {current_url}")
+        project_id = current_url.split('/')[-1]
+        print(f"Extracted Project ID: {project_id}")
+        #driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
+        driver.get(f'https://view.online/c/demo-institution/demo-department/translational-research/approve-project/{project_id}')
+        time.sleep(5)
+        # #click on approve-project/9
+        # try:
+        #     approve_link = WebDriverWait(driver, 10).until(
+        #         EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, 'approve-project/{project_id}')]"))
+        #     )
+        #     approve_link.click()
+        #     print("Link clicked successfully!")
+        # except Exception as e:
+        #     print(f"An error occurred: {e}")
+
 
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
@@ -184,7 +229,7 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     trp = Trp(automation)
-    trp.create_project()
+    trp.create_projects()
 
     automation.quit_driver()
 

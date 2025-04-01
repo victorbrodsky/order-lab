@@ -67,16 +67,26 @@ class Users:
         automation = self.automation
         driver = automation.get_driver()
         driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
-
+        time.sleep(3)
         for user in self.get_users():
-            user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '12')]")
+            time.sleep(1)
+            #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]")
             #user_link = WebDriverWait(driver, 10).until(
             #    EC.presence_of_element_located((By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]"))
             #)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(normalize-space(text()), 'John Doe')]")
+            #user_link = driver.find_element(By.XPATH, "//a/strong[contains(text(), 'John Doe')]")
+            user_link = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//a[strong[contains(text(), '"+user['displayName']+"')]]"))
+            )
+            # attributes = driver.execute_script(
+            #     'var items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;',
+            #     user_link)
+            # print("Attributes:", attributes)
             # Optionally, print or interact with the row
-            print(user_link.text)
+            #print("user_link:",user_link.text)
+            #print("user_link.href:", user_link.href)
             #id_from_link = re.search(r'/user/(\d+)', user_link.text).group(1)
             href = user_link.get_attribute('href')
             id_from_link = href.split('/')[-1]  # Assumes the ID is the last part of the URL

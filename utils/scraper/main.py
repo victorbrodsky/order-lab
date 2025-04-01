@@ -31,7 +31,7 @@ def main():
 
     if 1:
         trp = Trp(automation)
-        trp.create_project()
+        trp.create_projects()
 
     automation.quit_driver()
 
