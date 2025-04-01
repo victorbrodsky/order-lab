@@ -164,11 +164,13 @@ class Trp:
         # Add one year
         one_year_plus = today + relativedelta(years=1)
         print("one_year_plus=", one_year_plus)
+        one_year_plus_str = one_year_plus.strftime("%m-%d-%Y")
+        print("one_year_plus_str=", one_year_plus_str)
         # Find the datepicker input field
         datepicker = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_irbExpirationDate")
         # Clear the field and enter the calculated date
         datepicker.clear()
-        datepicker.send_keys(one_year_plus)
+        datepicker.send_keys(one_year_plus_str)
 
         time.sleep(3)
         title = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_title")
