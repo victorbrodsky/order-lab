@@ -9,6 +9,7 @@ class Trp:
     def __init__(self, automation):
         self.automation = automation
         self.users = Users(automation)
+        self.existing_users = self.users.get_existing_users()
 
     def get_trp_projects(self):
         projects = [
@@ -106,7 +107,8 @@ class Trp:
         # """
         # $client->executeScript(
         #     "$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$piArr['userId']."')");
-        user_id = self.users.get_existing_user('John Doe')
+        #user_id = self.users.get_existing_user('John Doe')
+        user_id = self.existing_users['John Doe']
         print(f"User ID: {user_id}")
         time.sleep(3)
 

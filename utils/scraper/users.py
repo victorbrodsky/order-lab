@@ -16,6 +16,7 @@ from web_automation import WebAutomation
 class Users:
     def __init__(self, automation):
         self.automation = automation
+        self.existing_users = {}
         #pass
     
     def get_users(self):
@@ -62,10 +63,33 @@ class Users:
         ]
         return users
 
+    def get_existing_users(self):
+        automation = self.automation
+        driver = automation.get_driver()
+        driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
+
+        for user in self.get_users():
+            user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '12')]")
+            #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]")
+            #user_link = WebDriverWait(driver, 10).until(
+            #    EC.presence_of_element_located((By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]"))
+            #)
+            #user_link = driver.find_element(By.XPATH, "//td/a[contains(normalize-space(text()), 'John Doe')]")
+            # Optionally, print or interact with the row
+            print(user_link.text)
+            #id_from_link = re.search(r'/user/(\d+)', user_link.text).group(1)
+            href = user_link.get_attribute('href')
+            id_from_link = href.split('/')[-1]  # Assumes the ID is the last part of the URL
+            print(f"Extracted ID: {id_from_link}")
+            self.existing_users[user['displayName']] = id_from_link
+
+        return self.existing_users
+
     def get_existing_user(self, display_name):
         automation = self.automation
         # automation.set_driver(driver)
         driver = automation.get_driver()
+        driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
         john_doe_row = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
         # Optionally, print or interact with the row
         print(john_doe_row.text)
