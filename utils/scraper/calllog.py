@@ -104,26 +104,34 @@ class CallLog:
             alert.accept()  # Click "OK" to accept the confirmation box
 
         print("Filling out new call log")
-        #s2id_oleg_calllogformbundle_messagetype_messageCategory
         # self.automation.select_option("s2id_oleg_calllogformbundle_messagetype_messageCategory",
         #                               "CSS_SELECTOR",
-        #                               "#select2-drop .select2-input",
+        #                               ".select2-search .select2-input",
         #                               calllog['service']
         #                               )
-        # Locate the label element with text containing "Service"
-        label = driver.find_element(By.XPATH, "//label[contains(text(), 'Service')]")
-        # Extract the value of the 'for' attribute (associates the label with the element's ID)
-        target_id = label.get_attribute('for')
-        # Use the extracted ID to locate the desired element
-        service = driver.find_element(By.ID, "s2id_oleg_calllogformbundle_messagetype_messageCategory")
-        actions = ActionChains(driver)
-        actions.move_to_element(service).click().perform()
-        time.sleep(1)
-        search_box = driver.find_element(By.CSS_SELECTOR, ".select2-search .select2-input")
-        search_box.send_keys(calllog['service'])
-        time.sleep(1)
-        search_box.send_keys(Keys.ENTER)
-        # time.sleep(3)
+        # # Locate the label element with text containing "Service"
+        # label = driver.find_element(By.XPATH, "//label[contains(text(), 'Service')]")
+        # # Extract the value of the 'for' attribute (associates the label with the element's ID)
+        # target_id = label.get_attribute('for')
+        # # Use the extracted ID to locate the desired element
+        # service = driver.find_element(By.ID, target_id)
+        # actions = ActionChains(driver)
+        # actions.move_to_element(service).click().perform()
+        # time.sleep(1)
+        # search_box = driver.find_element(By.CSS_SELECTOR, ".select2-search .select2-input")
+        # search_box.send_keys(calllog['service'])
+        # time.sleep(1)
+        # search_box.send_keys(Keys.ENTER)
+        # # time.sleep(3)
+
+        time.sleep(3)
+        blocking_element = driver.find_element(By.ID, "user-headroom-header")
+        driver.execute_script("arguments[0].style.display = 'none';", blocking_element)
+
+        element = driver.find_element(By.ID, "s2id_oleg_calllogformbundle_messagetype_messageCategory")
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        time.sleep(10)
 
 
 def main():
