@@ -48,6 +48,29 @@ class Trp:
         ]
         return projects
 
+    def get_trp_work_requests(self):
+        requests = [
+            {
+                'serviceId': '1',
+                'quantity': '3',
+                'comment': 'Request for RNA extraction. For each case below, annotated H&E slide is provided.',
+            },
+            {
+                'serviceId': '2',
+                'quantity': '4',
+                'comment': ('Test included in this Panel are:\n'
+                            'Albumin, Alkaline Phosphatase, Total Bilirubin, Carbon Dioxide (CO2), Aspartate'),
+            },
+            {
+                'serviceId': '3',
+                'quantity': '5',
+                'comment': ('For case S12-257 A9, already in TRP:\n'
+                            '1. Please cut 3 additional unstained slides 5-micron.\n'
+                            '2. Please label each slide with Research ID only'),
+            }
+        ]
+        return requests
+
     def create_projects(self):
         for project in self.get_trp_projects():
             self.create_single_project(project)
@@ -79,37 +102,6 @@ class Trp:
         # Click the button
         #cancel_button.click()
 
-        # Wait for the modal dialog to be visible
-        # modal = WebDriverWait(driver, 10).until(
-        #     EC.visibility_of_element_located((By.CLASS_NAME, "modal-dialog"))
-        # )
-        # # Now locate and click the "Cancel" button
-        # cancel_button = modal.find_element(By.ID, "user-add-btn-cancel")
-        # cancel_button.click()
-
-        # modal_dialog = driver.find_element(By.CLASS_NAME, "modal-dialog")
-        # # Print or interact with the modal
-        # print("Modal dialog found:", modal_dialog)
-        # time.sleep(3)
-        # #cancel_button = modal_dialog.find_element(By.ID, "user-add-btn-cancel")
-        # cancel_button = modal_dialog.find_element(By.CLASS_NAME,"btn btn-primary")
-        # # Click the "Cancel" button
-        # time.sleep(3)
-        # cancel_button.click()
-        # script = """
-        #     var selectElement = document.getElementById('oleg_vacreqbundle_request_institution');
-        #     selectElement.value = '29';  // Corresponds to "Pathology and Laboratory Medicine"
-        #     var event = new Event('change', { bubbles: true });
-        #     selectElement.dispatchEvent(event);
-        #     """
-        # script = """
-        #     var cancelButton = $("#user-add-btn-cancel");
-        #     cancelButton.click(function() {
-        #         alert("Cancel button clicked!");
-        #     });
-        # """
-        # $client->executeScript(
-        #     "$('#s2id_oleg_translationalresearchbundle_project_principalInvestigators').select2('val','".$piArr['userId']."')");
         #user_id = self.users.get_existing_user('John Doe')
         user_id = self.existing_users[pi['displayName']]
         print(f"pi User ID: {user_id}")
@@ -163,9 +155,9 @@ class Trp:
         today = date.today()
         # Add one year
         one_year_plus = today + relativedelta(years=1)
-        print("one_year_plus=", one_year_plus)
+        #print("one_year_plus=", one_year_plus)
         one_year_plus_str = one_year_plus.strftime("%m-%d-%Y")
-        print("one_year_plus_str=", one_year_plus_str)
+        #print("one_year_plus_str=", one_year_plus_str)
         # Find the datepicker input field
         datepicker = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_irbExpirationDate")
         # Clear the field and enter the calculated date
@@ -202,7 +194,7 @@ class Trp:
         time.sleep(3)
 
         self.automation.click_button_by_id("oleg_translationalresearchbundle_project_submitIrbReview")
-        time.sleep(10)
+        time.sleep(3)
 
         #Approve the project
         current_url = driver.current_url
@@ -211,16 +203,48 @@ class Trp:
         print(f"Extracted Project ID: {project_id}")
         #driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
         driver.get(f'https://view.online/c/demo-institution/demo-department/translational-research/approve-project/{project_id}')
-        time.sleep(5)
-        # #click on approve-project/9
-        # try:
-        #     approve_link = WebDriverWait(driver, 10).until(
-        #         EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, 'approve-project/{project_id}')]"))
-        #     )
-        #     approve_link.click()
-        #     print("Link clicked successfully!")
-        # except Exception as e:
-        #     print(f"An error occurred: {e}")
+        print(f"Approved Project ID: {project_id}")
+        time.sleep(3)
+
+        #Create 3 work requests for this project
+        #self.create_work_requests(project_id)
+
+    def create_work_requests(self, project_id):
+        for work_requests in self.get_trp_work_requests():
+            self.create_single_work_requests(project_id,work_requests)
+            break
+
+    def create_single_work_requests(self, project_id, work_requests):
+        driver = self.automation.get_driver()
+        url = f"https://view.online/c/demo-institution/demo-department/translational-research/project/{project_id}/work-request/new/"
+        driver.get(url)
+        time.sleep(1)
+
+        users = self.users.get_users()
+
+        #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId.
+        #"_requested').val('".$trpRequestArr['quantity'].
+        #"')");
+        #s2id_oleg_translationalresearchbundle_request_products_0_category
+        #.select2-search .select2-input
+        self.automation.select_option("s2id_oleg_translationalresearchbundle_request_products_0_category",
+                                      "CSS_SELECTOR",
+                                      ".select2-search .select2-input",
+                                      "TRP-1"
+                                      )
+
+        #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_comment').val('".$trpRequestArr['comment']."')");
+
+        #$client->executeScript("$('#s2id_oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
+            #$client->executeScript('$("#s2id_oleg_translationalresearchbundle_request_businessPurposes")[0].scrollIntoView(false);');
+
+        #//Check #confirmationSubmit
+        #$client->executeScript("$('#confirmationSubmit').prop('checked', true)");
+        #$client->executeScript('$("#confirmationSubmit")[0].scrollIntoView(false);');
+
+        #submit form #oleg_translationalresearchbundle_request_saveAsComplete
+
+### End of class ###
 
 
 def main():
@@ -231,7 +255,9 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     trp = Trp(automation)
-    trp.create_projects()
+    #trp.create_projects()
+    #trp.create_work_requests()
+    trp.create_work_requests(15) #project ID 15 - testing
 
     automation.quit_driver()
 
