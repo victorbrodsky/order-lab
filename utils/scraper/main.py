@@ -2,6 +2,8 @@ import time
 from web_automation import WebAutomation
 from users import Users
 from vacreq import VacReq
+from trp import Trp
+from calllog import CallLog
 
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
@@ -29,9 +31,13 @@ def main():
         vacreq.create_group()
         vacreq.create_vacreqs()
 
-    if 1:
+    if 0:
         trp = Trp(automation)
         trp.create_projects()
+
+    if 1:
+        callog = CallLog(automation)
+        callog.create_calllog()
 
     automation.quit_driver()
 

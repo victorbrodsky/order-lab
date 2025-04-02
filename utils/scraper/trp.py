@@ -52,17 +52,20 @@ class Trp:
         requests = [
             {
                 'serviceId': '1',
+                'serviceName': 'TRP-1001',
                 'quantity': '3',
                 'comment': 'Request for RNA extraction. For each case below, annotated H&E slide is provided.',
             },
             {
                 'serviceId': '2',
+                'serviceName': 'TRP-1002',
                 'quantity': '4',
                 'comment': ('Test included in this Panel are:\n'
                             'Albumin, Alkaline Phosphatase, Total Bilirubin, Carbon Dioxide (CO2), Aspartate'),
             },
             {
                 'serviceId': '3',
+                'serviceName': 'TRP-1003',
                 'quantity': '5',
                 'comment': ('For case S12-257 A9, already in TRP:\n'
                             '1. Please cut 3 additional unstained slides 5-micron.\n'
@@ -74,7 +77,7 @@ class Trp:
     def create_projects(self):
         for project in self.get_trp_projects():
             self.create_single_project(project)
-            break
+            #break
 
     def create_single_project(self, project):
         driver = self.automation.get_driver()
@@ -105,7 +108,7 @@ class Trp:
         #user_id = self.users.get_existing_user('John Doe')
         user_id = self.existing_users[pi['displayName']]
         print(f"pi User ID: {user_id}")
-        time.sleep(3)
+        time.sleep(1)
 
         # script = """
         #     $("#s2id_oleg_translationalresearchbundle_project_principalInvestigators").select2('val','12');
@@ -128,7 +131,7 @@ class Trp:
 
         user_id = self.existing_users[billing_contact['displayName']]
         print(f"billing_contact User ID: {user_id}")
-        time.sleep(3)
+        time.sleep(1)
         # script = """
         #             $("#s2id_oleg_translationalresearchbundle_project_billingContact").select2('val','15');
         #         """
@@ -148,7 +151,7 @@ class Trp:
         #         """
         # driver.execute_script(script)
         irb_exp_date = driver.find_element(By.ID, "oleg_translationalresearchbundle_project_irbNumber")
-        irb_exp_date.send_keys('2634793');
+        irb_exp_date.send_keys('2634793')
 
         #set exp date 1 year plus
         #one_year_plus = (datetime.date.today() + datetime.timedelta(year=1)).strftime("%m-%d-%Y")  # "%Y-%m-%d"
@@ -207,20 +210,21 @@ class Trp:
         time.sleep(3)
 
         #Create 3 work requests for this project
-        #self.create_work_requests(project_id)
+        self.create_work_requests(project_id)
 
     def create_work_requests(self, project_id):
         for work_requests in self.get_trp_work_requests():
             self.create_single_work_requests(project_id,work_requests)
-            break
+            #break
 
     def create_single_work_requests(self, project_id, work_requests):
         driver = self.automation.get_driver()
         url = f"https://view.online/c/demo-institution/demo-department/translational-research/project/{project_id}/work-request/new/"
         driver.get(url)
-        time.sleep(1)
+        time.sleep(3)
 
         users = self.users.get_users()
+        time.sleep(3)
 
         #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId.
         #"_requested').val('".$trpRequestArr['quantity'].
@@ -229,20 +233,83 @@ class Trp:
         #.select2-search .select2-input
         self.automation.select_option("s2id_oleg_translationalresearchbundle_request_products_0_category",
                                       "CSS_SELECTOR",
-                                      ".select2-search .select2-input",
-                                      "TRP-1"
+                                      "#select2-drop .select2-input",
+                                      #"TRP-1002",
+                                      work_requests['serviceName']
                                       )
 
         #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_comment').val('".$trpRequestArr['comment']."')");
+        time.sleep(3)
+        quantity = driver.find_element(By.ID, "oleg_translationalresearchbundle_request_products_0_requested")
+        quantity.send_keys(work_requests['quantity'])
+
+        time.sleep(3)
+        comment = driver.find_element(By.ID, "oleg_translationalresearchbundle_request_products_0_comment")
+        comment.send_keys(work_requests['comment'])
 
         #$client->executeScript("$('#s2id_oleg_translationalresearchbundle_request_businessPurposes').select2('val','1')");
             #$client->executeScript('$("#s2id_oleg_translationalresearchbundle_request_businessPurposes")[0].scrollIntoView(false);');
+        time.sleep(5)
+        self.automation.select_option("s2id_oleg_translationalresearchbundle_request_businessPurposes",
+                                      "CSS_SELECTOR",
+                                      "#s2id_oleg_translationalresearchbundle_request_businessPurposes .select2-choices .select2-input",
+                                      "Deliverable for the main project"
+                                      )
 
-        #//Check #confirmationSubmit
+        #Check #confirmationSubmit
+        time.sleep(5)
         #$client->executeScript("$('#confirmationSubmit').prop('checked', true)");
         #$client->executeScript('$("#confirmationSubmit")[0].scrollIntoView(false);');
+        # checkbox = driver.find_element(By.ID, 'confirmationSubmit')
+        # if not checkbox.is_selected():
+        #     checkbox.click()  # Check the checkbox
+        # assert checkbox.is_selected(), "Checkbox is not selected!"
+
+        try:
+            blocking_element = driver.find_element(By.ID, 'select2-drop-mask')
+            driver.execute_script("arguments[0].style.display = 'none';", blocking_element)  # Hide the element
+        except Exception as e:
+            print("Blocking element could not be removed:", e)
+        # Now click the checkbox
+        checkbox = driver.find_element(By.ID, 'confirmationSubmit')
+        checkbox.click()
+        time.sleep(3)
 
         #submit form #oleg_translationalresearchbundle_request_saveAsComplete
+        self.automation.click_button_by_id("oleg_translationalresearchbundle_request_saveAsComplete")
+        print("New work request submitted")
+
+        #get work request id
+        time.sleep(3)
+        #"https://view.online/c/demo-institution/demo-department/translational-research/work-request/show/20"
+        current_url = driver.current_url
+        print(f"Current URL: {current_url}")
+        work_request_id = current_url.split('/')[-1] #Assume work request id is the last element
+        print(f"Extracted Work Request ID: {work_request_id}")
+        # driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
+        time.sleep(3)
+        if work_request_id == None or work_request_id == '':
+            print("Warning: work_request_id is empty")
+            return None
+
+        time.sleep(3)
+        self.create_invoice(work_request_id)
+
+
+    def create_invoice(self, work_request_id):
+        if work_request_id == None or work_request_id == '':
+            print("New invoice not created, work_request_id is not provided")
+            return None
+
+        driver = self.automation.get_driver()
+        url = f"https://view.online/c/demo-institution/demo-department/translational-research/invoice/new/{work_request_id}"
+        driver.get(url)
+        time.sleep(3)
+
+        #click oleg_translationalresearchbundle_invoice_saveAndGeneratePdf
+        self.automation.click_button_by_id("oleg_translationalresearchbundle_invoice_saveAndGeneratePdf")
+        print("New invoice submitted")
+        time.sleep(3)
 
 ### End of class ###
 
@@ -255,9 +322,10 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     trp = Trp(automation)
-    #trp.create_projects()
-    #trp.create_work_requests()
-    trp.create_work_requests(15) #project ID 15 - testing
+    trp.create_projects()
+    #trp.create_work_requests(15) #project ID 15 - testing
+
+    print("TRP done!")
 
     automation.quit_driver()
 

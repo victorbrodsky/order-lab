@@ -129,7 +129,7 @@ class VacReq:
 
         for user in self.users.get_users():
             self.create_single_vacreq(user);
-            break;
+            #break
 
 
     def create_single_vacreq(self, user):
@@ -263,6 +263,7 @@ def main():
     #vacreq.create_group()
     #vacreq.add_user_to_group()
     vacreq.create_vacreqs()
+    print("Vacation Request done!")
 
     automation.quit_driver()
 

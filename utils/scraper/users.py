@@ -67,7 +67,7 @@ class Users:
         automation = self.automation
         driver = automation.get_driver()
         driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
-        time.sleep(3)
+        time.sleep(1)
         for user in self.get_users():
             time.sleep(1)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
