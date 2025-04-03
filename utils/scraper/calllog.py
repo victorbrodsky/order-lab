@@ -7,6 +7,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
 
 
 class CallLog:
@@ -157,9 +158,19 @@ class CallLog:
         print(f"Number of matching elements: {count}")
         if matching_elements:
             last_element = matching_elements[-1]
+            print("last_element class:",last_element.get_attribute("class"))
             last_element.click()
         else:
             print("No matching elements found!")
+
+        # time.sleep(10)
+        # wait = WebDriverWait(driver, 20)  # 10 seconds timeout
+        # #last_row = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@id="s2id_oleg_calllogformbundle_messagetype_messageCategory"]/following-sibling::div[last()]')))
+        # #all_rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//div[@class="ajax-combobox-messageCategory"]/following-sibling::div')))
+        #
+        # all_rows = wait.until(visibility_of_all_elements_located((By.XPATH,'//div[@class="ajax-combobox-messageCategory"]/following-sibling::div')))
+        #
+        # print("all_rows=",len(all_rows))
 
         time.sleep(10)
 
