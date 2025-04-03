@@ -139,10 +139,27 @@ class CallLog:
         # search_box.send_keys('Transfusion')
 
         #select2-result-label-65
-        script = f"""
-                    $("#s2id_oleg_calllogformbundle_messagetype_messageCategory").select2('val','1');
-                """
-        driver.execute_script(script)
+        # script = f"""
+        #             $("#s2id_oleg_calllogformbundle_messagetype_messageCategory").select2('val','1');
+        #         """
+        # script = """
+        #             $(".ajax-combobox-messageCategory").click();
+        #         """
+        # driver.execute_script(script)
+
+        parent_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'composite-tree-holder'))
+        )
+        time.sleep(3)
+        # Find child elements after ensuring the parent is present
+        matching_elements = parent_element.find_elements(By.CLASS_NAME,'ajax-combobox-messageCategory')
+        count = len(matching_elements)
+        print(f"Number of matching elements: {count}")
+        if matching_elements:
+            last_element = matching_elements[-1]
+            last_element.click()
+        else:
+            print("No matching elements found!")
 
         time.sleep(10)
 
