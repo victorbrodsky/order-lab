@@ -63,7 +63,7 @@ class CallLog:
     def create_calllogs(self) -> None:
         for calllog in self.get_call_logs():
             self.create_single_calllog(calllog)
-            #break
+            break
 
     def create_single_calllog(self, calllog):
         driver = self.automation.get_driver()
@@ -76,6 +76,7 @@ class CallLog:
         time.sleep(3)
         mrn = driver.find_element(By.ID, "oleg_calllogformbundle_messagetype_patient_0_mrn_0_field")
         mrn.send_keys(calllog['mrn'])
+        time.sleep(3)
 
         #oleg_calllogformbundle_messagetype_patient_0_dob_0_field
         dob = driver.find_element(By.ID, "oleg_calllogformbundle_messagetype_patient_0_dob_0_field")
@@ -124,14 +125,28 @@ class CallLog:
         # search_box.send_keys(Keys.ENTER)
         # # time.sleep(3)
 
-        time.sleep(3)
-        blocking_element = driver.find_element(By.ID, "user-headroom-header")
-        driver.execute_script("arguments[0].style.display = 'none';", blocking_element)
+        # time.sleep(3)
+        # blocking_element = driver.find_element(By.ID, "user-headroom-header")
+        # driver.execute_script("arguments[0].style.display = 'none';", blocking_element)
+        #
+        # element = driver.find_element(By.ID, "s2id_oleg_calllogformbundle_messagetype_messageCategory")
+        # time.sleep(3)
+        # driver.execute_script("arguments[0].scrollIntoView();", element)
+        # element.click()
+        # time.sleep(3)
+        # search_box = driver.find_element(By.CSS_SELECTOR, ".select2-search .select2-input") #or #select2-drop .select2-input
+        # time.sleep(3)
+        # search_box.send_keys('Transfusion')
 
-        element = driver.find_element(By.ID, "s2id_oleg_calllogformbundle_messagetype_messageCategory")
-        driver.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
+        #select2-result-label-65
+        script = f"""
+                    $("#s2id_oleg_calllogformbundle_messagetype_messageCategory").select2('val','1');
+                """
+        driver.execute_script(script)
+
         time.sleep(10)
+
+
 
 
 def main():
