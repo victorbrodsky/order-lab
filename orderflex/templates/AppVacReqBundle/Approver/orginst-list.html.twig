@@ -313,18 +313,18 @@
                                                 <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
                                                 >{{ submitter.getUserNameStr(true) ~ eploymentInfo }}</a>
 
-                                                {% if employmentData['effort'] or employmentData['group'] %}
-                                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
-                                                    >{{ submitter.getUserNameStr(true) }}
-                                                    (
-                                                        ignore: {{ employmentData['ignore'] }},
-                                                        effort: {{ employmentData['effort'] }}%,
-                                                        group: {{ employmentData['group'] }}
-                                                    )</a>
-                                                {% else %}
-                                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
-                                                    >{{ submitter.getUserNameStr(true) }}</a>
-                                                {% endif %}
+                                                {#{% if employmentData['effort'] or employmentData['group'] %}#}
+                                                    {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                                    {#>{{ submitter.getUserNameStr(true) }}#}
+                                                    {#(#}
+                                                        {#ignore: {{ employmentData['ignore'] }},#}
+                                                        {#effort: {{ employmentData['effort'] }}%,#}
+                                                        {#group: {{ employmentData['group'] }}#}
+                                                    {#)</a>#}
+                                                {#{% else %}#}
+                                                    {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"#}
+                                                    {#>{{ submitter.getUserNameStr(true) }}</a>#}
+                                                {#{% endif %}#}
                                             </td>
                                         {% endif %}
                                         <td>
