@@ -153,7 +153,8 @@ class CallLog:
         )
         time.sleep(3)
         # Find child elements after ensuring the parent is present
-        matching_elements = parent_element.find_elements(By.CLASS_NAME,'ajax-combobox-messageCategory')
+        #matching_elements = parent_element.find_elements(By.CLASS_NAME,'treenode')
+        matching_elements = parent_element.find_elements(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
         count = len(matching_elements)
         print(f"Number of matching elements: {count}")
         if matching_elements:

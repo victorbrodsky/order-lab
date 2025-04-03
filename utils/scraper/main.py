@@ -35,9 +35,14 @@ def main():
         trp = Trp(automation)
         trp.create_projects()
 
-    if 1:
+    if 0:
+        #NOT DONE
         callog = CallLog(automation)
-        callog.create_calllog()
+        callog.create_calllogs()
+
+    if 1:
+        fellapp = FellApp(automation)
+        fellapp.create_fellapps()
 
     automation.quit_driver()
 
