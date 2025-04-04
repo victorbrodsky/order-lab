@@ -5022,6 +5022,33 @@ Pathology and Laboratory Medicine",
         return $url;
     }
 
+    public function getListUrlByName( $name ) {
+        //PlatformListManagerRootList find by ListObjectName and get LinkToListID
+        $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByName($name);
+        echo "listEntity=$listEntity <br>";
+        if( !$listEntity ) {
+            return NULL;
+        }
+
+        $linkToListId = $listEntity->getLinkToListId();
+
+        if( !$linkToListId ) {
+            return NULL;
+        }
+
+        $url = $this->container->get('router')->generate(
+        //'platformlistmanager_edit',
+            'platform_list_manager',
+            array(
+                'listId' => $linkToListId,
+            )
+        //,
+        //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $url;
+    }
+
     //Used for list Excel generation 
     public function createtListExcelSpout( $repository, $entityClass, $search, $fileName ) {
         //echo "userIds=".count($userIds)."<br>";

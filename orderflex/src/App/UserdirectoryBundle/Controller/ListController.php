@@ -4094,7 +4094,6 @@ class ListController extends OrderAbstractController
             $em = $this->getDoctrine()->getManager();
             //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
             //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
             $rootList = $em->getRepository(PlatformListManagerRootList::class)->findOneByListName($className);
 //            if( !$rootList ) {
 //                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
@@ -4431,6 +4430,22 @@ class ListController extends OrderAbstractController
             ->getForm()
         ;
     }
+
+    //http://127.0.0.1/directory/admin/list/edit-by-listname/FellowshipSubspecialty
+    #[Route(path: '/list/edit-by-listname/{name}', name: 'employees_edit_by_listname', methods: ['GET'])]
+    public function editByListnameAction(Request $request, $name)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $url = $userServiceUtil->getListUrlByName($name);
+        exit('url='.$url);
+
+        return $this->redirect($url);
+    }
+
     /////////////////// DELETE IS NOT USED /////////////////////////
     /**
      * Platform List Manager Root List
