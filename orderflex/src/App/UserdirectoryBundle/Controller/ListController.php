@@ -4432,16 +4432,16 @@ class ListController extends OrderAbstractController
     }
 
     //http://127.0.0.1/directory/admin/list/edit-by-listname/FellowshipSubspecialty
-    #[Route(path: '/list/edit-by-listname/{name}', name: 'employees_edit_by_listname', methods: ['GET'])]
-    public function editByListnameAction(Request $request, $name)
+    #[Route(path: '/list/edit-by-listname/{listName}', name: 'employees_edit_by_listname', methods: ['GET'])]
+    public function editByListnameAction(Request $request, $listName)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $userServiceUtil = $this->container->get('user_service_utility');
-        $url = $userServiceUtil->getListUrlByName($name);
-        exit('url='.$url);
+        $url = $userServiceUtil->getSiteParamListUrl($listName);
+        echo 'url='.$url."<br>";
 
         return $this->redirect($url);
     }
