@@ -25,21 +25,21 @@ class FellApp:
         driver.get(fellapp_type_url)
         time.sleep(1)
 
+        # Wait for the table to load
         wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
-        rows = wait.until(EC.presence_of_all_elements_located(
-            (By.CLASS_NAME, 'treenode')))  # Locate all rows with the class name 'treenode'
+        table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
 
-        # Check if any row contains the text "Clinical Informatics"
-        found = False
-        for row in rows:
-            if "Clinical Informatics" in row.text:
-                found = True
-                break
+        # Locate the <td> with the exact text "Clinical Informatics"
+        try:
+            target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
+            print("Found <td> with text 'Clinical Informatics'.")
+            print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
 
-        if found:
-            print("Row with 'Clinical Informatics' exists.")
-        else:
-            print("Row with 'Clinical Informatics' does not exist.")
+            # Example action: Click the <td> (if clickable)
+            target_td.click()
+        except:
+            print("<td> with text 'Clinical Informatics' not found.")
+        time.sleep(10)
 
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
