@@ -4443,6 +4443,9 @@ class ListController extends OrderAbstractController
         $url = $userServiceUtil->getSiteParamListUrl($listName);
         echo 'url='.$url."<br>";
 
+        $logger = $this->container->get('logger');
+        $logger->notice("url for $listName=$url");
+
         return $this->redirect($url);
     }
 

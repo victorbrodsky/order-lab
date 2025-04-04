@@ -20,9 +20,26 @@ class FellApp:
     def configs(self):
         driver = self.automation.get_driver()
         #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-        driver.get(url)
+        #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
+        fellapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/FellowshipSubspecialty"
+        driver.get(fellapp_type_url)
         time.sleep(1)
+
+        wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
+        rows = wait.until(EC.presence_of_all_elements_located(
+            (By.CLASS_NAME, 'treenode')))  # Locate all rows with the class name 'treenode'
+
+        # Check if any row contains the text "Clinical Informatics"
+        found = False
+        for row in rows:
+            if "Clinical Informatics" in row.text:
+                found = True
+                break
+
+        if found:
+            print("Row with 'Clinical Informatics' exists.")
+        else:
+            print("Row with 'Clinical Informatics' does not exist.")
 
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
