@@ -32,13 +32,41 @@ class FellApp:
         # Locate the <td> with the exact text "Clinical Informatics"
         try:
             target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
-            print("Found <td> with text 'Clinical Informatics'.")
-            print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
+            if target_td:
+                print("<td> with text 'Clinical Informatics' already exists.")
+                #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
+                #pass
+            else:
+                #create
+                create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
+                create_link.click()
+                time.sleep(3)
 
-            # Example action: Click the <td> (if clickable)
-            target_td.click()
+                name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
+                name.send_keys("Clinical Informatics")
+
+                #s2id_oleg_userdirectorybundle_genericlist_institution
+                self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
+                                              ".select2-search .select2-input",
+                                              "Pathology and Laboratory Medicine"
+                                              )
+                time.sleep(3)
+
+                self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
+
         except:
-            print("<td> with text 'Clinical Informatics' not found.")
+            print("Unable to find or create")
+
+        #Create fellowship type
+        #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
+        fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
+        if fellowship_type:
+            pass
+        else:
+            #create new fellowship type "Clinical Informatics"
+            self.automation.click_button("btn-primary")
+            time.sleep(3)
+
         time.sleep(10)
 
     def create_fellapps(self):
