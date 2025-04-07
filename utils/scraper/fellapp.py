@@ -9,6 +9,8 @@ import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
+from selenium.common.exceptions import NoSuchElementException
+
 
 
 class FellApp:
@@ -88,20 +90,28 @@ class FellApp:
         #Create fellowship type
         fellowship_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
         driver.get(fellowship_type_url)
+        time.sleep(3)
 
         #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
         #fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
-        fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-        if fellowship_type:
+        #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+        # fellowship_type = WebDriverWait(driver, 10).until(
+        #     EC.presence_of_element_located((By.XPATH, "//h4/a[contains(text(), 'Clinical Informatics')]"))
+        # )
+        try:
+            # Try to find the element
+            fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            print("Element found!")
+            # You can perform actions on the element here
             fellowship_type.click()
             time.sleep(3)
 
             users = self.users.get_users()
 
-            #add coordinator
+            # add coordinator
             coordinator = users[2]
 
-            #s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
             self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
                                           ".select2-choices .select2-input",
                                           coordinator["displayName"]
@@ -109,17 +119,30 @@ class FellApp:
 
             time.sleep(3)
 
-            WebDriverWait(driver, 10).until(
-                EC.invisibility_of_element((By.ID, "select2-drop-mask"))
-            )
+            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
 
-            #click Update button btn btn-warning
+            # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
-
-        else:
-            #create new fellowship type "Clinical Informatics"
+        except NoSuchElementException:
+            # create new fellowship type "Clinical Informatics"
+            print("create new fellowship type Clinical Informatics")
             self.automation.click_button("btn-primary")
             time.sleep(3)
+
+            self.automation.select_option(
+                "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
+                ".select2-search .select2-input",
+                "Clinical Informatics"
+                )
+
+            time.sleep(3)
+            self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
+            time.sleep(3)
+
+
+        #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
+        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/new/"
+        driver.get(fellowship_type_url)
 
         time.sleep(10)
 
