@@ -7,8 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 import time
 import datetime
-#from datetime import date
-#from dateutil.relativedelta import relativedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
 from selenium.common.exceptions import NoSuchElementException
 
@@ -23,34 +23,39 @@ class ResApp:
     def get_res_apps(self):
         users = []
         users.append({
-            'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Joe',
-            'lastName': 'Simpson',
-            'displayName': 'Joe Simpson',
-            'email': 'cinava@yahoo.com'
+            'type': '1',  # 'AP/CP'
+            'firstName': 'Bilal ',
+            'lastName': 'Taylor',
+            'displayName': 'Bilal Taylor',
+            'email': 'cinava@yahoo.com',
+            'u2': '234',
+            'medschool': 'Baylor College of Medicine'
         })
         users.append({
-            'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Soleil',
-            'lastName': 'Teresia',
-            'displayName': 'Soleil Teresia',
-            'email': 'cinava@yahoo.com'
+            'type': '1',  # 'AP/CP'
+            'firstName': 'Elif',
+            'lastName': 'Collier',
+            'displayName': 'Elif Collier',
+            'email': 'cinava@yahoo.com',
+            'u2': '235',
+            'medschool': 'Southem Medical University'
         })
         users.append({
-            'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Haides',
-            'lastName': 'Neon',
-            'displayName': 'Haides Neon',
-            'email': 'cinava@yahoo.com'
+            'type': '1',  # 'AP/CP'
+            'firstName': 'Myrtle',
+            'lastName': 'Santos',
+            'displayName': 'Myrtle Santos',
+            'email': 'cinava@yahoo.com',
+            'u2': '236',
+            'medschool': 'Harvard Medical School'
         })
 
         return users
 
     def configs(self):
         driver = self.automation.get_driver()
-        #Add Residency Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
-        #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-        resapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/FellowshipSubspecialty"
+        #Add Residency Track: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
+        resapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/ResidencyTrackList"
         driver.get(resapp_type_url)
         time.sleep(1)
 
@@ -58,44 +63,48 @@ class ResApp:
         wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
         table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
 
-        # Locate the <td> with the exact text "Clinical Informatics"
+        # Locate the <td> with the exact text "AP/CP"
         try:
-            target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
+            target_td = table.find_element(By.XPATH, './/td[text()="AP/CP"]')
             if target_td:
-                print("<td> with text 'Clinical Informatics' already exists.")
+                print("<td> with text 'AP/CP' already exists.")
                 #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
                 #pass
             else:
                 #create
+                print("Create a new entry AP/CP")
                 create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
                 create_link.click()
                 time.sleep(3)
 
                 name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
-                name.send_keys("Clinical Informatics")
+                name.send_keys("AP/CP")
 
-                #s2id_oleg_userdirectorybundle_genericlist_institution
-                self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
-                                              ".select2-search .select2-input",
-                                              "Pathology and Laboratory Medicine"
-                                              )
+                # #s2id_oleg_userdirectorybundle_genericlist_institution
+                # self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
+                #                               ".select2-search .select2-input",
+                #                               "Pathology and Laboratory Medicine"
+                #                               )
+
+                name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_duration")
+                name.send_keys("4")
+
                 time.sleep(3)
 
                 self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
-
         except:
             print("Unable to find or create")
 
         time.sleep(3)
 
         #Create residency type
-        residency_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
+        residency_type_url = "https://view.online/c/demo-institution/demo-department/residency-applications/residency-types-settings"
         driver.get(residency_type_url)
         time.sleep(3)
 
         try:
             # Try to find the element
-            residency_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            residency_type = driver.find_element("xpath", "//h4/a[contains(text(), 'AP/CP')]")
             print("Element found!")
             # You can perform actions on the element here
             residency_type.click()
@@ -107,7 +116,7 @@ class ResApp:
             coordinator = users[2]
 
             # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
+            self.automation.select_option("s2id_oleg_resappbundle_residencytracklist_coordinators", "CSS_SELECTOR",
                                           ".select2-choices .select2-input",
                                           coordinator["displayName"]
                                           )
@@ -119,68 +128,74 @@ class ResApp:
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
         except NoSuchElementException:
-            # create new fellowship type "Clinical Informatics"
-            print("create new fellowship type Clinical Informatics")
-            self.automation.click_button("btn-primary")
-            time.sleep(3)
-
-            self.automation.select_option(
-                "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
-                ".select2-search .select2-input",
-                "Clinical Informatics"
-                )
-
-            time.sleep(3)
-            self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
+            # create new fellowship type "AP/CP"
+            print("residency track AP/CP does not exist")
 
         time.sleep(3)
 
     def create_resapps(self):
         for resapp in self.get_res_apps():
             self.create_single_resapp(resapp)
-            #break
+            break
 
     def create_single_resapp(self, resapp):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/new/"
+        url = "https://view.online/c/demo-institution/demo-department/residency-applications/new/"
         driver.get(url)
         time.sleep(1)
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
-        print("create new fellowship application")
+        print("create new residency application")
 
         applicant_data_element = driver.find_element(By.CSS_SELECTOR,
-                                                     "h4.panel-title > a[href='#fellowshipApplicantData']")
+                                                     "h4.panel-title > a[href='#residencyApplicantData']")
         applicant_data_element.click()
         time.sleep(3)
 
         self.automation.select_option(
-            "s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty", "CSS_SELECTOR",
+            "s2id_oleg_resappbundle_residencyapplication_residencyTrack", "CSS_SELECTOR",
             "#select2-drop .select2-input",
-            "Clinical Informatics"
+            "AP/CP"
         )
         time.sleep(3)
 
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
-        first_name = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName")
+        first_name = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_user_infos_0_firstName")
         first_name.send_keys(resapp["firstName"])
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_lastName
-        last_name = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_lastName")
+        last_name = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_user_infos_0_lastName")
         last_name.send_keys(resapp["lastName"])
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_email
-        email = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_email")
-        email.send_keys(fellapp["email"])
+        email = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_user_infos_0_email")
+        email.send_keys(resapp["email"])
 
-        signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureName")
-        signature.send_keys(resapp["displayName"])
+        # #Open section #residencyQuestionnaireResponses
+        # questionnaire = driver.find_element(By.CSS_SELECTOR,
+        #                                              "h4.panel-title > a[href='#residencyQuestionnaireResponses']")
+        # time.sleep(3)
 
-        today = datetime.date.today().strftime("%m-%d-%Y")
-        signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
-        signature_date.clear()
-        signature_date.send_keys(today)
+        #oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore
+        ck_score = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore")
+        ck_score.send_keys(resapp["u2"])
+
+        self.automation.select_option(
+            "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
+            ".select2-search .select2-input",
+            resapp["medschool"]
+        )
+
+        today = date.today()
+        # Add one year
+        one_year_plus = today + relativedelta(years=1)
+        one_year_plus_str = one_year_plus.strftime("%m-%d-%Y")
+        #print("one_year_plus_str=", one_year_plus_str)
+        datepicker = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_completionDate")
+        # Clear the field and enter the calculated date
+        datepicker.clear()
+        datepicker.send_keys(one_year_plus_str)
 
         #click submit btn-warning
-        self.automation.click_button("btn-warning")
+        #self.automation.click_button("btn-warning")
 
         print("Finish new resapp")
         time.sleep(10)
