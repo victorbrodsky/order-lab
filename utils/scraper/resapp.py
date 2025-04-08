@@ -14,13 +14,13 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 
-class FellApp:
+class ResApp:
     def __init__(self, automation):
         self.automation = automation
         self.users = Users(automation)
         self.existing_users = self.users.get_existing_users()
 
-    def get_fell_apps(self):
+    def get_res_apps(self):
         users = []
         users.append({
             'type': '1',  # 'Clinical Informatics'
@@ -48,10 +48,10 @@ class FellApp:
 
     def configs(self):
         driver = self.automation.get_driver()
-        #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
+        #Add Residency Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
         #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-        fellapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/FellowshipSubspecialty"
-        driver.get(fellapp_type_url)
+        resapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/FellowshipSubspecialty"
+        driver.get(resapp_type_url)
         time.sleep(1)
 
         # Wait for the table to load
@@ -88,23 +88,17 @@ class FellApp:
 
         time.sleep(3)
 
-        #Create fellowship type
-        fellowship_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
-        driver.get(fellowship_type_url)
+        #Create residency type
+        residency_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
+        driver.get(residency_type_url)
         time.sleep(3)
 
-        #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
-        #fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
-        #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-        # fellowship_type = WebDriverWait(driver, 10).until(
-        #     EC.presence_of_element_located((By.XPATH, "//h4/a[contains(text(), 'Clinical Informatics')]"))
-        # )
         try:
             # Try to find the element
-            fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            residency_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
             print("Element found!")
             # You can perform actions on the element here
-            fellowship_type.click()
+            residency_type.click()
             time.sleep(3)
 
             users = self.users.get_users()
@@ -141,12 +135,12 @@ class FellApp:
 
         time.sleep(3)
 
-    def create_fellapps(self):
-        for fellapp in self.get_fell_apps():
-            self.create_single_fellapp(fellapp)
+    def create_resapps(self):
+        for resapp in self.get_res_apps():
+            self.create_single_resapp(resapp)
             #break
 
-    def create_single_fellapp(self, fellapp):
+    def create_single_resapp(self, resapp):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/new/"
         driver.get(url)
@@ -169,16 +163,16 @@ class FellApp:
 
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
         first_name = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName")
-        first_name.send_keys(fellapp["firstName"])
+        first_name.send_keys(resapp["firstName"])
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_lastName
         last_name = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_lastName")
-        last_name.send_keys(fellapp["lastName"])
+        last_name.send_keys(resapp["lastName"])
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_email
         email = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_user_infos_0_email")
         email.send_keys(fellapp["email"])
 
         signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureName")
-        signature.send_keys(fellapp["displayName"])
+        signature.send_keys(resapp["displayName"])
 
         today = datetime.date.today().strftime("%m-%d-%Y")
         signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
@@ -188,7 +182,7 @@ class FellApp:
         #click submit btn-warning
         self.automation.click_button("btn-warning")
 
-        print("Finish new fellapp")
+        print("Finish new resapp")
         time.sleep(10)
 
 
@@ -199,11 +193,11 @@ def main():
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
 
-    fellapp = FellApp(automation)
-    fellapp.configs()
-    fellapp.create_fellapps()
+    resapp = ResApp(automation)
+    resapp.configs()
+    resapp.create_resapps()
 
-    print("FellApp done!")
+    print("ResApp done!")
 
     automation.quit_driver()
 

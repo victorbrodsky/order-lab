@@ -4,6 +4,8 @@ from users import Users
 from vacreq import VacReq
 from trp import Trp
 from calllog import CallLog
+from fellapp import FellApp
+from resapp import ResApp
 
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
@@ -40,9 +42,15 @@ def main():
         callog = CallLog(automation)
         callog.create_calllogs()
 
-    if 1:
+    if 0:
         fellapp = FellApp(automation)
+        fellapp.configs()
         fellapp.create_fellapps()
+
+    if 1:
+        resapp = ResApp(automation)
+        resapp.configs()
+        resapp.create_resapps()
 
     automation.quit_driver()
 
